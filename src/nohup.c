@@ -106,7 +106,7 @@ main (int argc, char **argv)
 
   parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE_NAME,
                                    Version, false, usage, AUTHORS,
-                                   (char const *) NULL);
+                                   (char const *) nullptr);
 
   if (argc <= optind)
     {
@@ -137,7 +137,7 @@ main (int argc, char **argv)
      $HOME/nohup.out without redirecting anything.  */
   if (redirecting_stdout || (redirecting_stderr && stdout_is_closed))
     {
-      char *in_home = NULL;
+      char *in_home = nullptr;
       char const *file = "nohup.out";
       int flags = O_CREAT | O_WRONLY | O_APPEND;
       mode_t mode = S_IRUSR | S_IWUSR;
@@ -152,7 +152,7 @@ main (int argc, char **argv)
           char const *home = getenv ("HOME");
           if (home)
             {
-              in_home = file_name_concat (home, file, NULL);
+              in_home = file_name_concat (home, file, nullptr);
               out_fd = (redirecting_stdout
                         ? fd_reopen (STDOUT_FILENO, in_home, flags, mode)
                         : open (in_home, flags, mode));

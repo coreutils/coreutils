@@ -32,7 +32,7 @@
    the buffer size, and more problematically does not give any indication
    that the new size request was ignored:
 
-       setvbuf (stdout, NULL, _IOFBF, 8192);
+       setvbuf (stdout, nullptr, _IOFBF, 8192);
 
    The ISO C99 standard section 7.19.5.6 on the setvbuf function says:
 
@@ -50,9 +50,9 @@
    buffer allocation as usual.  If it is not zero, then except for
    unbuffered files, the buf argument should point to a buffer at least size
    bytes long; this buffer will be used instead of the current buffer.  (If
-   the size argument is not zero but buf is NULL, a buffer of the given size
+   the size argument is not zero but buf is null, a buffer of the given size
    will be allocated immediately, and released on close.  This is an extension
-   to ANSI C; portable code should use a size of 0 with any NULL buffer.)
+   to ANSI C; portable code should use a size of 0 with any null buffer.)
    --------------------
    Another issue is that on glibc-2.7 the following doesn't buffer
    the first write if it's greater than 1 byte.
@@ -67,7 +67,7 @@
 static char const *
 fileno_to_name (const int fd)
 {
-  char const *ret = NULL;
+  char const *ret = nullptr;
 
   switch (fd)
     {
@@ -91,7 +91,7 @@ fileno_to_name (const int fd)
 static void
 apply_mode (FILE *stream, char const *mode)
 {
-  char *buf = NULL;
+  char *buf = nullptr;
   int setvbuf_mode;
   uintmax_t size = 0;
 
@@ -111,11 +111,11 @@ apply_mode (FILE *stream, char const *mode)
           return;
         }
 
-      buf = size <= SIZE_MAX ? malloc (size) : NULL;
+      buf = size <= SIZE_MAX ? malloc (size) : nullptr;
       if (!buf)
         {
           /* We could defer the allocation to libc, however since
-             glibc currently ignores the combination of NULL buffer
+             glibc currently ignores the combination of null buffer
              with non zero size, we'll fail here.  */
           fprintf (stderr,
                    _("failed to allocate a %" PRIuMAX

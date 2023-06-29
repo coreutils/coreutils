@@ -62,32 +62,32 @@ enum interactive_type
 
 static struct option const long_opts[] =
 {
-  {"force", no_argument, NULL, 'f'},
-  {"interactive", optional_argument, NULL, INTERACTIVE_OPTION},
+  {"force", no_argument, nullptr, 'f'},
+  {"interactive", optional_argument, nullptr, INTERACTIVE_OPTION},
 
-  {"one-file-system", no_argument, NULL, ONE_FILE_SYSTEM},
-  {"no-preserve-root", no_argument, NULL, NO_PRESERVE_ROOT},
-  {"preserve-root", optional_argument, NULL, PRESERVE_ROOT},
+  {"one-file-system", no_argument, nullptr, ONE_FILE_SYSTEM},
+  {"no-preserve-root", no_argument, nullptr, NO_PRESERVE_ROOT},
+  {"preserve-root", optional_argument, nullptr, PRESERVE_ROOT},
 
   /* This is solely for testing.  Do not document.  */
   /* It is relatively difficult to ensure that there is a tty on stdin.
      Since rm acts differently depending on that, without this option,
      it'd be harder to test the parts of rm that depend on that setting.  */
-  {"-presume-input-tty", no_argument, NULL, PRESUME_INPUT_TTY_OPTION},
+  {"-presume-input-tty", no_argument, nullptr, PRESUME_INPUT_TTY_OPTION},
 
-  {"recursive", no_argument, NULL, 'r'},
-  {"dir", no_argument, NULL, 'd'},
-  {"verbose", no_argument, NULL, 'v'},
+  {"recursive", no_argument, nullptr, 'r'},
+  {"dir", no_argument, nullptr, 'd'},
+  {"verbose", no_argument, nullptr, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 static char const *const interactive_args[] =
 {
   "never", "no", "none",
   "once",
-  "always", "yes", NULL
+  "always", "yes", nullptr
 };
 static enum interactive_type const interactive_types[] =
 {
@@ -195,7 +195,7 @@ rm_option_init (struct rm_options *x)
   x->one_file_system = false;
   x->remove_empty_directories = false;
   x->recursive = false;
-  x->root_dev_ino = NULL;
+  x->root_dev_ino = nullptr;
   x->preserve_all_root = false;
   x->stdin_tty = isatty (STDIN_FILENO);
   x->verbose = false;
@@ -226,7 +226,7 @@ main (int argc, char **argv)
   /* Try to disable the ability to unlink a directory.  */
   priv_set_remove_linkdir ();
 
-  while ((c = getopt_long (argc, argv, "dfirvIR", long_opts, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "dfirvIR", long_opts, nullptr)) != -1)
     {
       switch (c)
         {
@@ -344,7 +344,7 @@ main (int argc, char **argv)
     {
       static struct dev_ino dev_ino_buf;
       x.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
-      if (x.root_dev_ino == NULL)
+      if (x.root_dev_ino == nullptr)
         die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
              quoteaf ("/"));
     }

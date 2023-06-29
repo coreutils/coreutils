@@ -91,14 +91,14 @@ enum
 
 static struct option const long_options[] =
 {
-  {"check-order", no_argument, NULL, CHECK_ORDER_OPTION},
-  {"nocheck-order", no_argument, NULL, NOCHECK_ORDER_OPTION},
-  {"output-delimiter", required_argument, NULL, OUTPUT_DELIMITER_OPTION},
-  {"total", no_argument, NULL, TOTAL_OPTION},
-  {"zero-terminated", no_argument, NULL, 'z'},
+  {"check-order", no_argument, nullptr, CHECK_ORDER_OPTION},
+  {"nocheck-order", no_argument, nullptr, NOCHECK_ORDER_OPTION},
+  {"output-delimiter", required_argument, nullptr, OUTPUT_DELIMITER_OPTION},
+  {"total", no_argument, nullptr, TOTAL_OPTION},
+  {"zero-terminated", no_argument, nullptr, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 
@@ -258,7 +258,7 @@ compare_files (char **infiles)
   struct linebuffer lba[2][4];
 
   /* thisline[i] points to the linebuffer holding the next available line
-     in file i, or is NULL if there are no lines left in that file.  */
+     in file i, or is null if there are no lines left in that file.  */
   struct linebuffer *thisline[2];
 
   /* all_line[i][alt[i][0]] also points to the linebuffer holding the
@@ -443,7 +443,7 @@ main (int argc, char **argv)
   check_input_order = CHECK_ORDER_DEFAULT;
   total_option = false;
 
-  while ((c = getopt_long (argc, argv, "123z", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "123z", long_options, nullptr)) != -1)
     switch (c)
       {
       case '1':

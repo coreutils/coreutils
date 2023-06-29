@@ -48,12 +48,12 @@ static struct
 
 static struct option const longopts[] =
 {
-  {"input", required_argument, NULL, 'i'},
-  {"output", required_argument, NULL, 'o'},
-  {"error", required_argument, NULL, 'e'},
+  {"input", required_argument, nullptr, 'i'},
+  {"output", required_argument, nullptr, 'o'},
+  {"error", required_argument, nullptr, 'e'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* Set size to the value of STR, interpreted as a decimal integer,
@@ -66,7 +66,8 @@ static int
 parse_size (char const *str, size_t *size)
 {
   uintmax_t tmp_size;
-  enum strtol_error e = xstrtoumax (str, NULL, 10, &tmp_size, "EGkKMPQRTYZ0");
+  enum strtol_error e = xstrtoumax (str, nullptr, 10,
+                                    &tmp_size, "EGkKMPQRTYZ0");
   if (e == LONGINT_OK && SIZE_MAX < tmp_size)
     e = LONGINT_OVERFLOW;
 
@@ -149,9 +150,10 @@ set_program_path (char const *arg)
         {
           char *dir;
           path = xstrdup (path);
-          for (dir = strtok (path, ":"); dir != NULL; dir = strtok (NULL, ":"))
+          for (dir = strtok (path, ":"); dir != nullptr;
+               dir = strtok (nullptr, ":"))
             {
-              char *candidate = file_name_concat (dir, arg, NULL);
+              char *candidate = file_name_concat (dir, arg, nullptr);
               if (access (candidate, X_OK) == 0)
                 {
                   program_path = dir_name (candidate);
@@ -217,7 +219,7 @@ set_LD_PRELOAD (void)
   char const *const search_path[] = {
     program_path,
     PKGLIBEXECDIR,
-    NULL
+    nullptr
   };
 
   char const *const *path = search_path;
@@ -323,7 +325,7 @@ main (int argc, char **argv)
   initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "+i:o:e:", longopts, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "+i:o:e:", longopts, nullptr)) != -1)
     {
       int opt_fileno;
 
@@ -383,7 +385,7 @@ main (int argc, char **argv)
      stdbuf is running from.  */
   set_program_path (program_name);
   if (!program_path)
-    program_path = xstrdup (PKGLIBDIR);  /* Need to init to non-NULL.  */
+    program_path = xstrdup (PKGLIBDIR);  /* Need to init to non-null.  */
   set_LD_PRELOAD ();
   free (program_path);
 

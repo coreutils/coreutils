@@ -60,17 +60,17 @@ static enum output_error output_error;
 
 static struct option const long_options[] =
 {
-  {"append", no_argument, NULL, 'a'},
-  {"ignore-interrupts", no_argument, NULL, 'i'},
-  {"output-error", optional_argument, NULL, 'p'},
+  {"append", no_argument, nullptr, 'a'},
+  {"ignore-interrupts", no_argument, nullptr, 'i'},
+  {"output-error", optional_argument, nullptr, 'p'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 static char const *const output_error_args[] =
 {
-  "warn", "warn-nopipe", "exit", "exit-nopipe", NULL
+  "warn", "warn-nopipe", "exit", "exit-nopipe", nullptr
 };
 static enum output_error const output_error_types[] =
 {
@@ -132,7 +132,7 @@ main (int argc, char **argv)
   ignore_interrupts = false;
 
   int optc;
-  while ((optc = getopt_long (argc, argv, "aip", long_options, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "aip", long_options, nullptr)) != -1)
     {
       switch (optc)
         {
@@ -184,8 +184,8 @@ main (int argc, char **argv)
 }
 
 
-/* Return the index of the first non-NULL descriptor after idx,
-   or -1 if all are NULL.  */
+/* Return the index of the first non-null descriptor after idx,
+   or -1 if all are null.  */
 
 static int
 get_next_out (FILE **descriptors, int nfiles, int idx)
@@ -214,7 +214,7 @@ fail_output (FILE **descriptors, char **files, int i)
              || output_error == output_error_exit_nopipe,
              w_errno, "%s", quotef (files[i]));
     }
-  descriptors[i] = NULL;
+  descriptors[i] = nullptr;
   return fail;
 }
 
@@ -228,11 +228,11 @@ tee_files (int nfiles, char **files, bool pipe_check)
 {
   size_t n_outputs = 0;
   FILE **descriptors;
-  bool *out_pollable IF_LINT ( = NULL);
+  bool *out_pollable IF_LINT ( = nullptr);
   char buffer[BUFSIZ];
   ssize_t bytes_read = 0;
   int i;
-  int first_out = 0;  /* idx of first non-NULL output in descriptors */
+  int first_out = 0;  /* idx of first non-null output in descriptors */
   bool ok = true;
   char const *mode_string =
     (O_BINARY
@@ -254,14 +254,14 @@ tee_files (int nfiles, char **files, bool pipe_check)
   if (pipe_check)
     out_pollable[0] = iopoll_output_ok (fileno (descriptors[0]));
   files[0] = bad_cast (_("standard output"));
-  setvbuf (stdout, NULL, _IONBF, 0);
+  setvbuf (stdout, nullptr, _IONBF, 0);
   n_outputs++;
 
   for (i = 1; i <= nfiles; i++)
     {
       /* Do not treat "-" specially - as mandated by POSIX.  */
        descriptors[i] = fopen (files[i], mode_string);
-      if (descriptors[i] == NULL)
+      if (descriptors[i] == nullptr)
         {
           if (pipe_check)
             out_pollable[i] = false;
@@ -274,7 +274,7 @@ tee_files (int nfiles, char **files, bool pipe_check)
         {
           if (pipe_check)
             out_pollable[i] = iopoll_output_ok (fileno (descriptors[i]));
-          setvbuf (descriptors[i], NULL, _IONBF, 0);
+          setvbuf (descriptors[i], nullptr, _IONBF, 0);
           n_outputs++;
         }
     }

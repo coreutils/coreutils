@@ -109,7 +109,7 @@ typedef Hash_table sparse_map;
 static sparse_map *
 sparse_new (size_t size_hint)
 {
-  return hash_initialize (size_hint, NULL, sparse_hash_, sparse_cmp_, free);
+  return hash_initialize (size_hint, nullptr, sparse_hash_, sparse_cmp_, free);
 }
 
 /* Swap the values for I and J.  If a value is not already present
@@ -154,7 +154,7 @@ sparse_free (sparse_map *sv)
 
 /* From R, allocate and return a malloc'd array of the first H elements
    of a random permutation of N elements.  H must not exceed N.
-   Return NULL if H is zero.  */
+   Return nullptr if H is zero.  */
 
 size_t *
 randperm_new (struct randint_source *r, size_t h, size_t n)
@@ -164,7 +164,7 @@ randperm_new (struct randint_source *r, size_t h, size_t n)
   switch (h)
     {
     case 0:
-      v = NULL;
+      v = nullptr;
       break;
 
     case 1:
@@ -209,13 +209,13 @@ randperm_new (struct randint_source *r, size_t h, size_t n)
         if (sparse)
           {
             sv = sparse_new (h * 2);
-            if (sv == NULL)
+            if (sv == nullptr)
               xalloc_die ();
             v = xnmalloc (h, sizeof *v);
           }
         else
           {
-            sv = NULL; /* To placate GCC's -Wuninitialized.  */
+            sv = nullptr; /* To placate GCC's -Wuninitialized.  */
             v = xnmalloc (n, sizeof *v);
             for (i = 0; i < n; i++)
               v[i] = i;

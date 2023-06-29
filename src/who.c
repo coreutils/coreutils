@@ -161,24 +161,24 @@ enum
 
 static struct option const longopts[] =
 {
-  {"all", no_argument, NULL, 'a'},
-  {"boot", no_argument, NULL, 'b'},
-  {"count", no_argument, NULL, 'q'},
-  {"dead", no_argument, NULL, 'd'},
-  {"heading", no_argument, NULL, 'H'},
-  {"login", no_argument, NULL, 'l'},
-  {"lookup", no_argument, NULL, LOOKUP_OPTION},
-  {"message", no_argument, NULL, 'T'},
-  {"mesg", no_argument, NULL, 'T'},
-  {"process", no_argument, NULL, 'p'},
-  {"runlevel", no_argument, NULL, 'r'},
-  {"short", no_argument, NULL, 's'},
-  {"time", no_argument, NULL, 't'},
-  {"users", no_argument, NULL, 'u'},
-  {"writable", no_argument, NULL, 'T'},
+  {"all", no_argument, nullptr, 'a'},
+  {"boot", no_argument, nullptr, 'b'},
+  {"count", no_argument, nullptr, 'q'},
+  {"dead", no_argument, nullptr, 'd'},
+  {"heading", no_argument, nullptr, 'H'},
+  {"login", no_argument, nullptr, 'l'},
+  {"lookup", no_argument, nullptr, LOOKUP_OPTION},
+  {"message", no_argument, nullptr, 'T'},
+  {"mesg", no_argument, nullptr, 'T'},
+  {"process", no_argument, nullptr, 'p'},
+  {"runlevel", no_argument, nullptr, 'r'},
+  {"short", no_argument, nullptr, 's'},
+  {"time", no_argument, nullptr, 't'},
+  {"users", no_argument, nullptr, 'u'},
+  {"writable", no_argument, nullptr, 'T'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* Return a string representing the time between WHEN and now.
@@ -375,8 +375,8 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
   if (utmp_ent->ut_host[0])
     {
       char ut_host[sizeof (utmp_ent->ut_host) + 1];
-      char *host = NULL;
-      char *display = NULL;
+      char *host = nullptr;
+      char *display = nullptr;
 
       /* Copy the host name into UT_HOST, and ensure it's nul terminated. */
       stzncpy (ut_host, utmp_ent->ut_host, sizeof (utmp_ent->ut_host));
@@ -568,7 +568,7 @@ print_heading (void)
 static void
 scan_entries (size_t n, const STRUCT_UTMP *utmp_buf)
 {
-  char *ttyname_b IF_LINT ( = NULL);
+  char *ttyname_b IF_LINT ( = nullptr);
   time_t boottime = TYPE_MINIMUM (time_t);
 
   if (include_heading)
@@ -698,7 +698,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "abdlmpqrstuwHT", longopts, NULL))
+  while ((optc = getopt_long (argc, argv, "abdlmpqrstuwHT", longopts, nullptr))
          != -1)
     {
       switch (optc)

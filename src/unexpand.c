@@ -59,12 +59,12 @@ enum
 
 static struct option const longopts[] =
 {
-  {"tabs", required_argument, NULL, 't'},
-  {"all", no_argument, NULL, 'a'},
-  {"first-only", no_argument, NULL, CONVERT_FIRST_ONLY_OPTION},
+  {"tabs", required_argument, nullptr, 't'},
+  {"all", no_argument, nullptr, 'a'},
+  {"first-only", no_argument, nullptr, CONVERT_FIRST_ONLY_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -105,7 +105,7 @@ static void
 unexpand (void)
 {
   /* Input stream.  */
-  FILE *fp = next_file (NULL);
+  FILE *fp = next_file (nullptr);
 
   /* The array of pending blanks.  In non-POSIX locales, blanks can
      include characters other than spaces, so the blanks must be
@@ -271,7 +271,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, ",0123456789at:", longopts, NULL))
+  while ((c = getopt_long (argc, argv, ",0123456789at:", longopts, nullptr))
          != -1)
     {
       switch (c)
@@ -315,7 +315,7 @@ main (int argc, char **argv)
 
   finalize_tab_stops ();
 
-  set_file_list ((optind < argc) ? &argv[optind] : NULL);
+  set_file_list ((optind < argc) ? &argv[optind] : nullptr);
 
   unexpand ();
 

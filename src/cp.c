@@ -84,7 +84,7 @@ static bool remove_trailing_slashes;
 
 static char const *const sparse_type_string[] =
 {
-  "never", "auto", "always", NULL
+  "never", "auto", "always", nullptr
 };
 static enum Sparse_type const sparse_type[] =
 {
@@ -94,7 +94,7 @@ ARGMATCH_VERIFY (sparse_type_string, sparse_type);
 
 static char const *const reflink_type_string[] =
 {
-  "auto", "always", "never", NULL
+  "auto", "always", "never", nullptr
 };
 static enum Reflink_type const reflink_type[] =
 {
@@ -104,7 +104,7 @@ ARGMATCH_VERIFY (reflink_type_string, reflink_type);
 
 static char const *const update_type_string[] =
 {
-  "all", "none", "older", NULL
+  "all", "none", "older", nullptr
 };
 static enum Update_type const update_type[] =
 {
@@ -114,37 +114,38 @@ ARGMATCH_VERIFY (update_type_string, update_type);
 
 static struct option const long_opts[] =
 {
-  {"archive", no_argument, NULL, 'a'},
-  {"attributes-only", no_argument, NULL, ATTRIBUTES_ONLY_OPTION},
-  {"backup", optional_argument, NULL, 'b'},
-  {"copy-contents", no_argument, NULL, COPY_CONTENTS_OPTION},
-  {"debug", no_argument, NULL, DEBUG_OPTION},
-  {"dereference", no_argument, NULL, 'L'},
-  {"force", no_argument, NULL, 'f'},
-  {"interactive", no_argument, NULL, 'i'},
-  {"link", no_argument, NULL, 'l'},
-  {"no-clobber", no_argument, NULL, 'n'},
-  {"no-dereference", no_argument, NULL, 'P'},
-  {"no-preserve", required_argument, NULL, NO_PRESERVE_ATTRIBUTES_OPTION},
-  {"no-target-directory", no_argument, NULL, 'T'},
-  {"one-file-system", no_argument, NULL, 'x'},
-  {"parents", no_argument, NULL, PARENTS_OPTION},
-  {"path", no_argument, NULL, PARENTS_OPTION},   /* Deprecated.  */
-  {"preserve", optional_argument, NULL, PRESERVE_ATTRIBUTES_OPTION},
-  {"recursive", no_argument, NULL, 'R'},
-  {"remove-destination", no_argument, NULL, UNLINK_DEST_BEFORE_OPENING},
-  {"sparse", required_argument, NULL, SPARSE_OPTION},
-  {"reflink", optional_argument, NULL, REFLINK_OPTION},
-  {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
-  {"suffix", required_argument, NULL, 'S'},
-  {"symbolic-link", no_argument, NULL, 's'},
-  {"target-directory", required_argument, NULL, 't'},
-  {"update", optional_argument, NULL, 'u'},
-  {"verbose", no_argument, NULL, 'v'},
+  {"archive", no_argument, nullptr, 'a'},
+  {"attributes-only", no_argument, nullptr, ATTRIBUTES_ONLY_OPTION},
+  {"backup", optional_argument, nullptr, 'b'},
+  {"copy-contents", no_argument, nullptr, COPY_CONTENTS_OPTION},
+  {"debug", no_argument, nullptr, DEBUG_OPTION},
+  {"dereference", no_argument, nullptr, 'L'},
+  {"force", no_argument, nullptr, 'f'},
+  {"interactive", no_argument, nullptr, 'i'},
+  {"link", no_argument, nullptr, 'l'},
+  {"no-clobber", no_argument, nullptr, 'n'},
+  {"no-dereference", no_argument, nullptr, 'P'},
+  {"no-preserve", required_argument, nullptr, NO_PRESERVE_ATTRIBUTES_OPTION},
+  {"no-target-directory", no_argument, nullptr, 'T'},
+  {"one-file-system", no_argument, nullptr, 'x'},
+  {"parents", no_argument, nullptr, PARENTS_OPTION},
+  {"path", no_argument, nullptr, PARENTS_OPTION},   /* Deprecated.  */
+  {"preserve", optional_argument, nullptr, PRESERVE_ATTRIBUTES_OPTION},
+  {"recursive", no_argument, nullptr, 'R'},
+  {"remove-destination", no_argument, nullptr, UNLINK_DEST_BEFORE_OPENING},
+  {"sparse", required_argument, nullptr, SPARSE_OPTION},
+  {"reflink", optional_argument, nullptr, REFLINK_OPTION},
+  {"strip-trailing-slashes", no_argument, nullptr,
+   STRIP_TRAILING_SLASHES_OPTION},
+  {"suffix", required_argument, nullptr, 'S'},
+  {"symbolic-link", no_argument, nullptr, 's'},
+  {"target-directory", required_argument, nullptr, 't'},
+  {"update", optional_argument, nullptr, 'u'},
+  {"verbose", no_argument, nullptr, 'v'},
   {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -408,7 +409,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
   char *dst_dir;	/* Leading directory of DIR.  */
   idx_t dirlen = dir_len (const_dir);
 
-  *attr_list = NULL;
+  *attr_list = nullptr;
 
   /* Succeed immediately if the parent of CONST_DIR must already exist,
      as the target directory has already been checked.  */
@@ -517,7 +518,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
                 }
               else
                 {
-                  if (verbose_fmt_string != NULL)
+                  if (verbose_fmt_string != nullptr)
                     printf (verbose_fmt_string, src, dir);
                 }
 
@@ -726,7 +727,7 @@ do_copy (int n_files, char **file, char const *target_directory,
               parent_exists =
                 (make_dir_parents_private
                  (dst_name, arg_in_concat - dst_name, target_dirfd,
-                  (x->verbose ? "%s -> %s\n" : NULL),
+                  (x->verbose ? "%s -> %s\n" : nullptr),
                   &attr_list, &new_dst, x));
             }
           else
@@ -755,7 +756,7 @@ do_copy (int n_files, char **file, char const *target_directory,
 
               bool copy_into_self;
               ok &= copy (arg, dst_name, target_dirfd, dst_relname,
-                          new_dst, x, &copy_into_self, NULL);
+                          new_dst, x, &copy_into_self, nullptr);
 
               if (parents_option)
                 ok &= re_protect (dst_name, arg_in_concat, target_dirfd,
@@ -813,7 +814,7 @@ do_copy (int n_files, char **file, char const *target_directory,
           x = &x_tmp;
         }
 
-      ok = copy (source, dest, AT_FDCWD, dest, -new_dst, x, &unused, NULL);
+      ok = copy (source, dest, AT_FDCWD, dest, -new_dst, x, &unused, nullptr);
     }
 
   return ok;
@@ -841,7 +842,7 @@ cp_option_init (struct cp_options *x)
   x->explicit_no_preserve_mode = false;
   x->preserve_security_context = false; /* -a or --preserve=context.  */
   x->require_preserve_context = false;  /* --preserve=context.  */
-  x->set_security_context = NULL;       /* -Z, set sys default context. */
+  x->set_security_context = nullptr;       /* -Z, set sys default context. */
   x->preserve_xattr = false;
   x->reduce_diagnostics = false;
   x->require_preserve_xattr = false;
@@ -864,10 +865,10 @@ cp_option_init (struct cp_options *x)
      in general one cannot do that safely, give the current semantics of
      open's O_EXCL flag, (which POSIX doesn't even allow cp to use, btw).
      But POSIX requires it.  */
-  x->open_dangling_dest_symlink = getenv ("POSIXLY_CORRECT") != NULL;
+  x->open_dangling_dest_symlink = getenv ("POSIXLY_CORRECT") != nullptr;
 
-  x->dest_info = NULL;
-  x->src_info = NULL;
+  x->dest_info = nullptr;
+  x->src_info = nullptr;
 }
 
 /* Given a string, ARG, containing a comma-separated list of arguments
@@ -895,7 +896,7 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
   static char const *const preserve_args[] =
     {
       "mode", "timestamps",
-      "ownership", "links", "context", "xattr", "all", NULL
+      "ownership", "links", "context", "xattr", "all", nullptr
     };
   ARGMATCH_VERIFY (preserve_args, preserve_vals);
 
@@ -970,13 +971,13 @@ main (int argc, char **argv)
   int c;
   bool ok;
   bool make_backups = false;
-  char const *backup_suffix = NULL;
-  char *version_control_string = NULL;
+  char const *backup_suffix = nullptr;
+  char *version_control_string = nullptr;
   struct cp_options x;
   bool copy_contents = false;
-  char *target_directory = NULL;
+  char *target_directory = nullptr;
   bool no_target_directory = false;
-  char const *scontext = NULL;
+  char const *scontext = nullptr;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -990,7 +991,7 @@ main (int argc, char **argv)
   cp_option_init (&x);
 
   while ((c = getopt_long (argc, argv, "abdfHilLnprst:uvxPRS:TZ",
-                           long_opts, NULL))
+                           long_opts, nullptr))
          != -1)
     {
       switch (c)
@@ -1001,7 +1002,7 @@ main (int argc, char **argv)
           break;
 
         case REFLINK_OPTION:
-          if (optarg == NULL)
+          if (optarg == nullptr)
             x.reflink_mode = REFLINK_ALWAYS;
           else
             x.reflink_mode = XARGMATCH ("--reflink", optarg,
@@ -1079,7 +1080,7 @@ main (int argc, char **argv)
           break;
 
         case PRESERVE_ATTRIBUTES_OPTION:
-          if (optarg == NULL)
+          if (optarg == nullptr)
             {
               /* Fall through to the case for 'p' below.  */
             }
@@ -1131,7 +1132,7 @@ main (int argc, char **argv)
           break;
 
         case 'u':
-          if (optarg == NULL)
+          if (optarg == nullptr)
             x.update = true;
           else if (x.interactive != I_ALWAYS_NO)  /* -n takes precedence.  */
             {
@@ -1174,7 +1175,7 @@ main (int argc, char **argv)
               else
                 {
                   x.set_security_context = selabel_open (SELABEL_CTX_FILE,
-                                                         NULL, 0);
+                                                         nullptr, 0);
                   if (! x.set_security_context)
                     error (0, errno, _("warning: ignoring --context"));
                 }
@@ -1258,7 +1259,7 @@ main (int argc, char **argv)
   /* FIXME: This handles new files.  But what about existing files?
      I.e., if updating a tree, new files would have the specified context,
      but shouldn't existing files be updated for consistency like this?
-       if (scontext && !restorecon (NULL, dst_path, 0))
+       if (scontext && !restorecon (nullptr, dst_path, 0))
           error (...);
    */
   if (scontext && setfscreatecon (scontext) < 0)

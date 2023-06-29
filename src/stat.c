@@ -210,7 +210,7 @@ enum cached_mode
 
 static char const *const cached_args[] =
 {
-  "default", "never", "always", NULL
+  "default", "never", "always", nullptr
 };
 
 static enum cached_mode const cached_modes[] =
@@ -220,15 +220,15 @@ static enum cached_mode const cached_modes[] =
 
 static struct option const long_options[] =
 {
-  {"dereference", no_argument, NULL, 'L'},
-  {"file-system", no_argument, NULL, 'f'},
-  {"format", required_argument, NULL, 'c'},
-  {"printf", required_argument, NULL, PRINTF_OPTION},
-  {"terse", no_argument, NULL, 't'},
-  {"cached", required_argument, NULL, 0},
+  {"dereference", no_argument, nullptr, 'L'},
+  {"file-system", no_argument, nullptr, 'f'},
+  {"format", required_argument, nullptr, 'c'},
+  {"printf", required_argument, nullptr, PRINTF_OPTION},
+  {"terse", no_argument, nullptr, 't'},
+  {"cached", required_argument, nullptr, 0},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* Whether to follow symbolic links;  True for --dereference (-L).  */
@@ -743,7 +743,7 @@ out_epoch_sec (char *pformat, size_t prefix_len,
 
       if (ISDIGIT (dot[1]))
         {
-          long int lprec = strtol (dot + 1, NULL, 10);
+          long int lprec = strtol (dot + 1, nullptr, 10);
           precision = (lprec <= INT_MAX ? lprec : INT_MAX);
         }
       else
@@ -763,7 +763,7 @@ out_epoch_sec (char *pformat, size_t prefix_len,
             --p;
           while (ISDIGIT (p[-1]));
 
-          long int lwidth = strtol (p, NULL, 10);
+          long int lwidth = strtol (p, nullptr, 10);
           width = (lwidth <= INT_MAX ? lwidth : INT_MAX);
           if (1 < width)
             {
@@ -846,7 +846,7 @@ out_file_context (char *pformat, size_t prefix_len, char const *filename)
     {
       error (0, errno, _("failed to get security context of %s"),
              quoteaf (filename));
-      scontext = NULL;
+      scontext = nullptr;
       fail = true;
     }
   strcpy (pformat + prefix_len, "s");
@@ -946,12 +946,12 @@ print_statfs (char *pformat, size_t prefix_len, MAYBE_UNUSED char mod, char m,
 
 /* Return any bind mounted source for a path.
    The caller should not free the returned buffer.
-   Return NULL if no bind mount found.  */
+   Return nullptr if no bind mount found.  */
 NODISCARD
 static char const *
 find_bind_mount (char const * name)
 {
-  char const * bind_mount = NULL;
+  char const * bind_mount = nullptr;
 
   static struct mount_entry *mount_list;
   static bool tried_mount_list = false;
@@ -964,7 +964,7 @@ find_bind_mount (char const * name)
 
   struct stat name_stats;
   if (stat (name, &name_stats) != 0)
-    return NULL;
+    return nullptr;
 
   struct mount_entry *me;
   for (me = mount_list; me; me = me->me_next)
@@ -993,8 +993,8 @@ out_mount_point (char const *filename, char *pformat, size_t prefix_len,
                  const struct stat *statp)
 {
 
-  char const *np = "?", *bp = NULL;
-  char *mp = NULL;
+  char const *np = "?", *bp = nullptr;
+  char *mp = nullptr;
   bool fail = true;
 
   /* Look for bind mounts first.  Note we output the immediate alias,
@@ -1057,20 +1057,20 @@ getenv_quoting_style (void)
     {
       int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
       if (0 <= i)
-        set_quoting_style (NULL, quoting_style_vals[i]);
+        set_quoting_style (nullptr, quoting_style_vals[i]);
       else
         {
-          set_quoting_style (NULL, shell_escape_always_quoting_style);
+          set_quoting_style (nullptr, shell_escape_always_quoting_style);
           error (0, 0, _("ignoring invalid value of environment "
                          "variable QUOTING_STYLE: %s"), quote (q_style));
         }
     }
   else
-    set_quoting_style (NULL, shell_escape_always_quoting_style);
+    set_quoting_style (nullptr, shell_escape_always_quoting_style);
 }
 
 /* Equivalent to quotearg(), but explicit to avoid syntax checks.  */
-#define quoteN(x) quotearg_style (get_quoting_style (NULL), x)
+#define quoteN(x) quotearg_style (get_quoting_style (nullptr), x)
 
 /* Output a single-character \ escape.  */
 
@@ -1523,7 +1523,7 @@ print_stat (char *pformat, size_t prefix_len, char mod, char m,
       if (S_ISLNK (statbuf->st_mode))
         {
           char *linkname = areadlink_with_size (filename, statbuf->st_size);
-          if (linkname == NULL)
+          if (linkname == nullptr)
             {
               error (0, errno, _("cannot read symbolic link %s"),
                      quoteaf (filename));
@@ -1883,7 +1883,7 @@ main (int argc, char *argv[])
   int c;
   bool fs = false;
   bool terse = false;
-  char *format = NULL;
+  char *format = nullptr;
   char *format2;
   bool ok = true;
 
@@ -1899,7 +1899,7 @@ main (int argc, char *argv[])
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "c:fLt", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "c:fLt", long_options, nullptr)) != -1)
     {
       switch (c)
         {

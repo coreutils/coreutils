@@ -46,7 +46,7 @@ size_t max_column_width;
 /* Array of the explicit column numbers of the tab stops;
    after 'tab_list' is exhausted, each additional tab is replaced
    by a space.  The first column is column 0.  */
-static uintmax_t *tab_list = NULL;
+static uintmax_t *tab_list = nullptr;
 
 /* The number of allocated entries in 'tab_list'.  */
 static size_t n_tabs_allocated = 0;
@@ -56,12 +56,12 @@ static size_t n_tabs_allocated = 0;
 static size_t first_free_tab = 0;
 
 /* Null-terminated array of input filenames.  */
-static char **file_list = NULL;
+static char **file_list = nullptr;
 
 /* Default for 'file_list' if no files are given on the command line.  */
 static char *stdin_argv[] =
 {
-  (char *) "-", NULL
+  (char *) "-", nullptr
 };
 
 /* True if we have ever read standard input.  */
@@ -134,7 +134,7 @@ parse_tab_stops (char const *stops)
   uintmax_t tabval = 0;
   bool extend_tabval = false;
   bool increment_tabval = false;
-  char const *num_start = NULL;
+  char const *num_start = nullptr;
   bool ok = true;
 
   for (; *stops; stops++)
@@ -324,10 +324,10 @@ set_file_list (char **list)
     file_list = list;
 }
 
-/* Close the old stream pointer FP if it is non-NULL,
+/* Close the old stream pointer FP if it is non-null,
    and return a new one opened to read the next input file.
    Open a filename of '-' as the standard input.
-   Return NULL if there are no more input files.  */
+   Return nullptr if there are no more input files.  */
 
 extern FILE *
 next_file (FILE *fp)
@@ -352,7 +352,7 @@ next_file (FILE *fp)
         }
     }
 
-  while ((file = *file_list++) != NULL)
+  while ((file = *file_list++) != nullptr)
     {
       if (STREQ (file, "-"))
         {
@@ -370,7 +370,7 @@ next_file (FILE *fp)
       error (0, errno, "%s", quotef (file));
       exit_status = EXIT_FAILURE;
     }
-  return NULL;
+  return nullptr;
 }
 
 /* */

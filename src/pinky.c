@@ -76,7 +76,7 @@ static struct option const longopts[] =
 {
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* Count and return the number of ampersands in STR.  */
@@ -237,7 +237,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
 
       stzncpy (name, UT_USER (utmp_ent), UT_USER_SIZE);
       pw = getpwnam (name);
-      if (pw == NULL)
+      if (pw == nullptr)
         /* TRANSLATORS: Real name is unknown; at most 19 characters. */
         printf (" %19s", _("        ???"));
       else
@@ -272,8 +272,8 @@ print_entry (const STRUCT_UTMP *utmp_ent)
   if (include_where && utmp_ent->ut_host[0])
     {
       char ut_host[sizeof (utmp_ent->ut_host) + 1];
-      char *host = NULL;
-      char *display = NULL;
+      char *host = nullptr;
+      char *display = nullptr;
 
       /* Copy the host name into UT_HOST, and ensure it's nul terminated. */
       stzncpy (ut_host, utmp_ent->ut_host, sizeof (utmp_ent->ut_host));
@@ -315,7 +315,7 @@ print_long_entry (const char name[])
   printf ("%-28s", name);
 
   printf (_("In real life: "));
-  if (pw == NULL)
+  if (pw == nullptr)
     {
       /* TRANSLATORS: Real name is unknown; no hard limit. */
       printf (" %s", _("???\n"));
@@ -463,7 +463,7 @@ short_pinky (char const *filename,
              const int argc_names, char *const argv_names[])
 {
   size_t n_users;
-  STRUCT_UTMP *utmp_buf = NULL;
+  STRUCT_UTMP *utmp_buf = nullptr;
 
   if (read_utmp (filename, &n_users, &utmp_buf, 0) != 0)
     die (EXIT_FAILURE, errno, "%s", quotef (filename));
@@ -528,7 +528,8 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "sfwiqbhlp", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "sfwiqbhlp", longopts, nullptr))
+         != -1)
     {
       switch (optc)
         {

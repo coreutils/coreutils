@@ -674,7 +674,7 @@ main (int argc, char **argv)
 
   exit_status = EXIT_SUCCESS;
 
-  posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
+  posixly_correct = (getenv ("POSIXLY_CORRECT") != nullptr);
 
   /* We directly parse options, rather than use parse_long_options, in
      order to avoid accepting abbreviations.  */
@@ -686,7 +686,7 @@ main (int argc, char **argv)
       if (STREQ (argv[1], "--version"))
         {
           version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
-                       (char *) NULL);
+                       (char *) nullptr);
           return EXIT_SUCCESS;
         }
     }

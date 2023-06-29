@@ -40,7 +40,7 @@ __xnumtoint (char const *n_str, int base, __xdectoint_t min, __xdectoint_t max,
   strtol_error s_err;
 
   __xdectoint_t tnum;
-  s_err = __xstrtol (n_str, NULL, base, &tnum, suffixes);
+  s_err = __xstrtol (n_str, nullptr, base, &tnum, suffixes);
 
   if (s_err == LONGINT_OK)
     {

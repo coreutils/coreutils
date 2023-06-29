@@ -113,17 +113,17 @@ enum
 
 static struct option const longopts[] =
 {
-  {"bytes", no_argument, NULL, 'c'},
-  {"chars", no_argument, NULL, 'm'},
-  {"lines", no_argument, NULL, 'l'},
-  {"words", no_argument, NULL, 'w'},
-  {"debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
-  {"files0-from", required_argument, NULL, FILES0_FROM_OPTION},
-  {"max-line-length", no_argument, NULL, 'L'},
-  {"total", required_argument, NULL, TOTAL_OPTION},
+  {"bytes", no_argument, nullptr, 'c'},
+  {"chars", no_argument, nullptr, 'm'},
+  {"lines", no_argument, nullptr, 'l'},
+  {"words", no_argument, nullptr, 'w'},
+  {"debug", no_argument, nullptr, DEBUG_PROGRAM_OPTION},
+  {"files0-from", required_argument, nullptr, FILES0_FROM_OPTION},
+  {"max-line-length", no_argument, nullptr, 'L'},
+  {"total", required_argument, nullptr, TOTAL_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 enum total_type
@@ -135,7 +135,7 @@ enum total_type
   };
 static char const *const total_args[] =
 {
-  "auto", "always", "only", "never", NULL
+  "auto", "always", "only", "never", nullptr
 };
 static enum total_type const total_types[] =
 {
@@ -221,7 +221,7 @@ isnbspace (int c)
   return iswnbspace (btowc (c));
 }
 
-/* FILE is the name of the file (or NULL for standard input)
+/* FILE is the name of the file (or null for standard input)
    associated with the specified counters.  */
 static void
 write_counts (uintmax_t lines,
@@ -329,7 +329,7 @@ wc_lines (char const *file, int fd, uintmax_t *lines_out, uintmax_t *bytes_out)
   return true;
 }
 
-/* Count words.  FILE_X is the name of the file (or NULL for standard
+/* Count words.  FILE_X is the name of the file (or null for standard
    input) that is open on descriptor FD.  *FSTATUS is its status.
    CURRENT_POS is the current file offset if known, negative if unknown.
    Return true if successful.  */
@@ -782,7 +782,7 @@ main (int argc, char **argv)
   int optc;
   size_t nfiles;
   char **files;
-  char *files_from = NULL;
+  char *files_from = nullptr;
   struct fstatus *fstatus;
   struct Tokens tok;
 
@@ -797,15 +797,15 @@ main (int argc, char **argv)
   page_size = getpagesize ();
   /* Line buffer stdout to ensure lines are written atomically and immediately
      so that processes running in parallel do not intersperse their output.  */
-  setvbuf (stdout, NULL, _IOLBF, 0);
+  setvbuf (stdout, nullptr, _IOLBF, 0);
 
-  posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
+  posixly_correct = (getenv ("POSIXLY_CORRECT") != nullptr);
 
   print_lines = print_words = print_chars = print_bytes = false;
   print_linelength = false;
   total_lines = total_words = total_chars = total_bytes = max_line_length = 0;
 
-  while ((optc = getopt_long (argc, argv, "clLmw", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "clLmw", longopts, nullptr)) != -1)
     switch (optc)
       {
       case 'c':
@@ -873,7 +873,7 @@ main (int argc, char **argv)
       else
         {
           stream = fopen (files_from, "r");
-          if (stream == NULL)
+          if (stream == nullptr)
             die (EXIT_FAILURE, errno, _("cannot open %s for reading"),
                  quoteaf (files_from));
         }
@@ -896,14 +896,14 @@ main (int argc, char **argv)
         }
       else
         {
-          files = NULL;
+          files = nullptr;
           nfiles = 0;
           ai = argv_iter_init_stream (stream);
         }
     }
   else
     {
-      static char *stdin_only[] = { NULL };
+      static char *stdin_only[] = { nullptr };
       files = (optind < argc ? argv + optind : stdin_only);
       nfiles = (optind < argc ? argc - optind : 1);
       ai = argv_iter_init_argv (files);
@@ -957,7 +957,7 @@ main (int argc, char **argv)
              among many, knowing the record number may help.
              FIXME: currently print the record number only with
              --files0-from=FILE.  Maybe do it for argv, too?  */
-          if (files_from == NULL)
+          if (files_from == nullptr)
             error (0, 0, "%s", _("invalid zero-length file name"));
           else
             {
@@ -985,7 +985,7 @@ main (int argc, char **argv)
      However, no arguments on the --files0-from input stream is an error
      means don't read anything.  */
   if (ok && !files_from && argv_iter_n_args (ai) == 0)
-    ok &= wc_file (NULL, &fstatus[0]);
+    ok &= wc_file (nullptr, &fstatus[0]);
 
   if (read_tokens)
     readtokens0_free (&tok);
@@ -1020,7 +1020,7 @@ main (int argc, char **argv)
 
       write_counts (total_lines, total_words, total_chars, total_bytes,
                     max_line_length,
-                    total_mode != total_only ? _("total") : NULL);
+                    total_mode != total_only ? _("total") : nullptr);
     }
 
   argv_iter_free (ai);

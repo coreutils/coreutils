@@ -109,17 +109,17 @@ enum
 
 static struct option const longopts[] =
 {
-  {"bytes", required_argument, NULL, 'b'},
-  {"characters", required_argument, NULL, 'c'},
-  {"fields", required_argument, NULL, 'f'},
-  {"delimiter", required_argument, NULL, 'd'},
-  {"only-delimited", no_argument, NULL, 's'},
-  {"output-delimiter", required_argument, NULL, OUTPUT_DELIMITER_OPTION},
-  {"complement", no_argument, NULL, COMPLEMENT_OPTION},
-  {"zero-terminated", no_argument, NULL, 'z'},
+  {"bytes", required_argument, nullptr, 'b'},
+  {"characters", required_argument, nullptr, 'c'},
+  {"fields", required_argument, nullptr, 'f'},
+  {"delimiter", required_argument, nullptr, 'd'},
+  {"only-delimited", no_argument, nullptr, 's'},
+  {"output-delimiter", required_argument, nullptr, OUTPUT_DELIMITER_OPTION},
+  {"complement", no_argument, nullptr, COMPLEMENT_OPTION},
+  {"zero-terminated", no_argument, nullptr, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -304,7 +304,7 @@ cut_fields (FILE *stream)
           if (len < 0)
             {
               free (field_1_buffer);
-              field_1_buffer = NULL;
+              field_1_buffer = nullptr;
               if (ferror (stream) || feof (stream))
                 break;
               xalloc_die ();
@@ -426,7 +426,7 @@ cut_file (char const *file, void (*cut_stream) (FILE *))
   else
     {
       stream = fopen (file, "r");
-      if (stream == NULL)
+      if (stream == nullptr)
         {
           error (0, errno, "%s", quotef (file));
           return false;
@@ -461,7 +461,7 @@ main (int argc, char **argv)
   bool ok;
   bool delim_specified = false;
   bool byte_mode = false;
-  char *spec_list_string = NULL;
+  char *spec_list_string = nullptr;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -477,7 +477,8 @@ main (int argc, char **argv)
   delim = '\0';
   have_read_stdin = false;
 
-  while ((optc = getopt_long (argc, argv, "b:c:d:f:nsz", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "b:c:d:f:nsz", longopts, nullptr))
+         != -1)
     {
       switch (optc)
         {
@@ -555,7 +556,7 @@ main (int argc, char **argv)
   if (!delim_specified)
     delim = '\t';
 
-  if (output_delimiter_string == NULL)
+  if (output_delimiter_string == nullptr)
     {
       output_delimiter_default[0] = delim;
       output_delimiter_string = output_delimiter_default;

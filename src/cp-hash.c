@@ -86,7 +86,7 @@ forget_created (ino_t ino, dev_t dev)
 
   probe.st_ino = ino;
   probe.st_dev = dev;
-  probe.name = NULL;
+  probe.name = nullptr;
 
   ent = hash_remove (src_to_dest, &probe);
   if (ent)
@@ -94,7 +94,7 @@ forget_created (ino_t ino, dev_t dev)
 }
 
 /* If INO/DEV correspond to an already-copied source file, return the
-   name of the corresponding destination file.  Otherwise, return NULL.  */
+   name of the corresponding destination file.  Otherwise, return nullptr.  */
 
 extern char *
 src_to_dest_lookup (ino_t ino, dev_t dev)
@@ -104,12 +104,12 @@ src_to_dest_lookup (ino_t ino, dev_t dev)
   ent.st_ino = ino;
   ent.st_dev = dev;
   e = hash_lookup (src_to_dest, &ent);
-  return e ? e->name : NULL;
+  return e ? e->name : nullptr;
 }
 
 /* Add file NAME, copied from inode number INO and device number DEV,
    to the list of files we have copied.
-   Return NULL if inserted, otherwise non-NULL. */
+   Return nullptr if inserted, otherwise a non-null pointer. */
 
 extern char *
 remember_copied (char const *name, ino_t ino, dev_t dev)
@@ -123,7 +123,7 @@ remember_copied (char const *name, ino_t ino, dev_t dev)
   ent->st_dev = dev;
 
   ent_from_table = hash_insert (src_to_dest, ent);
-  if (ent_from_table == NULL)
+  if (ent_from_table == nullptr)
     {
       /* Insertion failed due to lack of memory.  */
       xalloc_die ();
@@ -139,17 +139,17 @@ remember_copied (char const *name, ino_t ino, dev_t dev)
     }
 
   /* New key;  insertion succeeded.  */
-  return NULL;
+  return nullptr;
 }
 
 /* Initialize the hash table.  */
 extern void
 hash_init (void)
 {
-  src_to_dest = hash_initialize (INITIAL_TABLE_SIZE, NULL,
+  src_to_dest = hash_initialize (INITIAL_TABLE_SIZE, nullptr,
                                  src_to_dest_hash,
                                  src_to_dest_compare,
                                  src_to_dest_free);
-  if (src_to_dest == NULL)
+  if (src_to_dest == nullptr)
     xalloc_die ();
 }

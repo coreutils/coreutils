@@ -58,14 +58,15 @@ static char const *const slack_codes[] =
   "CHR", "CHAR", "DOOR", "EXEC", "LEFT", "LEFTCODE", "RIGHT", "RIGHTCODE",
   "END", "ENDCODE", "SUID", "SETUID", "SGID", "SETGID", "STICKY",
   "OTHER_WRITABLE", "OWR", "STICKY_OTHER_WRITABLE", "OWT", "CAPABILITY",
-  "MULTIHARDLINK", "CLRTOEOL", NULL
+  "MULTIHARDLINK", "CLRTOEOL", nullptr
 };
 
 static char const *const ls_codes[] =
 {
   "no", "no", "fi", "rs", "di", "ln", "ln", "ln", "or", "mi", "pi", "pi",
   "so", "bd", "bd", "cd", "cd", "do", "ex", "lc", "lc", "rc", "rc", "ec", "ec",
-  "su", "su", "sg", "sg", "st", "ow", "ow", "tw", "tw", "ca", "mh", "cl", NULL
+  "su", "su", "sg", "sg", "st", "ow", "ow", "tw", "tw", "ca", "mh", "cl",
+  nullptr
 };
 static_assert (ARRAY_CARDINALITY (slack_codes) == ARRAY_CARDINALITY (ls_codes));
 
@@ -81,15 +82,15 @@ enum
 
 static struct option const long_options[] =
   {
-    {"bourne-shell", no_argument, NULL, 'b'},
-    {"sh", no_argument, NULL, 'b'},
-    {"csh", no_argument, NULL, 'c'},
-    {"c-shell", no_argument, NULL, 'c'},
-    {"print-database", no_argument, NULL, 'p'},
-    {"print-ls-colors", no_argument, NULL, PRINT_LS_COLORS_OPTION},
+    {"bourne-shell", no_argument, nullptr, 'b'},
+    {"sh", no_argument, nullptr, 'b'},
+    {"csh", no_argument, nullptr, 'c'},
+    {"c-shell", no_argument, nullptr, 'c'},
+    {"print-database", no_argument, nullptr, 'p'},
+    {"print-ls-colors", no_argument, nullptr, PRINT_LS_COLORS_OPTION},
     {GETOPT_HELP_OPTION_DECL},
     {GETOPT_VERSION_OPTION_DECL},
-    {NULL, 0, NULL, 0}
+    {nullptr, 0, nullptr, 0}
   };
 
 void
@@ -132,7 +133,7 @@ guess_shell_syntax (void)
   char *shell;
 
   shell = getenv ("SHELL");
-  if (shell == NULL || *shell == '\0')
+  if (shell == nullptr || *shell == '\0')
     return SHELL_SYNTAX_UNKNOWN;
 
   shell = last_component (shell);
@@ -150,8 +151,8 @@ parse_line (char const *line, char **keyword, char **arg)
   char const *keyword_start;
   char const *arg_start;
 
-  *keyword = NULL;
-  *arg = NULL;
+  *keyword = nullptr;
+  *arg = nullptr;
 
   for (p = line; isspace (to_uchar (*p)); ++p)
     continue;
@@ -267,7 +268,7 @@ dc_parse_stream (FILE *fp, char const *filename)
 {
   size_t line_number = 0;
   char const *next_G_line = G_line;
-  char *input_line = NULL;
+  char *input_line = nullptr;
   size_t input_line_size = 0;
   char const *line;
   char const *term;
@@ -279,12 +280,12 @@ dc_parse_stream (FILE *fp, char const *filename)
 
   /* Get terminal type */
   term = getenv ("TERM");
-  if (term == NULL || *term == '\0')
+  if (term == nullptr || *term == '\0')
     term = "none";
 
   /* Also match $COLORTERM.  */
   colorterm = getenv ("COLORTERM");
-  if (colorterm == NULL)
+  if (colorterm == nullptr)
     colorterm = "";  /* Doesn't match default "?*"  */
 
   while (true)
@@ -318,10 +319,10 @@ dc_parse_stream (FILE *fp, char const *filename)
 
       parse_line (line, &keywd, &arg);
 
-      if (keywd == NULL)
+      if (keywd == nullptr)
         continue;
 
-      if (arg == NULL)
+      if (arg == nullptr)
         {
           error (0, 0, _("%s:%lu: invalid line;  missing second token"),
                  quotef (filename), (unsigned long int) line_number);
@@ -362,11 +363,11 @@ dc_parse_stream (FILE *fp, char const *filename)
                 {
                   int i;
 
-                  for (i = 0; slack_codes[i] != NULL; ++i)
+                  for (i = 0; slack_codes[i] != nullptr; ++i)
                     if (c_strcasecmp (keywd, slack_codes[i]) == 0)
                       break;
 
-                  if (slack_codes[i] != NULL)
+                  if (slack_codes[i] != nullptr)
                     append_entry (0, ls_codes[i], arg);
                   else
                     unrecognized = true;
@@ -396,7 +397,7 @@ dc_parse_file (char const *filename)
 {
   bool ok;
 
-  if (! STREQ (filename, "-") && freopen (filename, "r", stdin) == NULL)
+  if (! STREQ (filename, "-") && freopen (filename, "r", stdin) == nullptr)
     {
       error (0, errno, "%s", quotef (filename));
       return false;
@@ -429,7 +430,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "bcp", long_options, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "bcp", long_options, nullptr)) != -1)
     switch (optc)
       {
       case 'b':	/* Bourne shell syntax.  */
@@ -512,7 +513,7 @@ main (int argc, char **argv)
 
       obstack_init (&lsc_obstack);
       if (argc == 0)
-        ok = dc_parse_stream (NULL, NULL);
+        ok = dc_parse_stream (nullptr, nullptr);
       else
         ok = dc_parse_file (argv[0]);
 

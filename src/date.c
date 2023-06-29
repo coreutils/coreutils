@@ -63,7 +63,7 @@ static char const *const time_spec_string[] =
   /* Put "hours" and "minutes" first, since they aren't valid for
      --rfc-3339.  */
   "hours", "minutes",
-  "date", "seconds", "ns", NULL
+  "date", "seconds", "ns", nullptr
 };
 static enum Time_spec const time_spec[] =
 {
@@ -88,23 +88,23 @@ static char const short_options[] = "d:f:I::r:Rs:u";
 
 static struct option const long_options[] =
 {
-  {"date", required_argument, NULL, 'd'},
-  {"debug", no_argument, NULL, DEBUG_DATE_PARSING_OPTION},
-  {"file", required_argument, NULL, 'f'},
-  {"iso-8601", optional_argument, NULL, 'I'},
-  {"reference", required_argument, NULL, 'r'},
-  {"resolution", no_argument, NULL, RESOLUTION_OPTION},
-  {"rfc-email", no_argument, NULL, 'R'},
-  {"rfc-822", no_argument, NULL, 'R'},
-  {"rfc-2822", no_argument, NULL, 'R'},
-  {"rfc-3339", required_argument, NULL, RFC_3339_OPTION},
-  {"set", required_argument, NULL, 's'},
-  {"uct", no_argument, NULL, 'u'},
-  {"utc", no_argument, NULL, 'u'},
-  {"universal", no_argument, NULL, 'u'},
+  {"date", required_argument, nullptr, 'd'},
+  {"debug", no_argument, nullptr, DEBUG_DATE_PARSING_OPTION},
+  {"file", required_argument, nullptr, 'f'},
+  {"iso-8601", optional_argument, nullptr, 'I'},
+  {"reference", required_argument, nullptr, 'r'},
+  {"resolution", no_argument, nullptr, RESOLUTION_OPTION},
+  {"rfc-email", no_argument, nullptr, 'R'},
+  {"rfc-822", no_argument, nullptr, 'R'},
+  {"rfc-2822", no_argument, nullptr, 'R'},
+  {"rfc-3339", required_argument, nullptr, RFC_3339_OPTION},
+  {"set", required_argument, nullptr, 's'},
+  {"uct", no_argument, nullptr, 'u'},
+  {"utc", no_argument, nullptr, 'u'},
+  {"universal", no_argument, nullptr, 'u'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* flags for parse_datetime2 */
@@ -307,12 +307,12 @@ res_width (long int res)
 
 /* Return a newly allocated copy of FORMAT with each "%-N" adjusted to
    be "%9N", "%6N", or whatever other resolution is appropriate for
-   the current platform.  If no "%-N" appears, return NULL.  */
+   the current platform.  If no "%-N" appears, return nullptr.  */
 
 static char *
 adjust_resolution (char const *format)
 {
-  char *copy = NULL;
+  char *copy = nullptr;
 
   for (char const *f = format; *f; f++)
     if (f[0] == '%')
@@ -354,13 +354,13 @@ batch_convert (char const *input_filename, char const *format,
   else
     {
       in_stream = fopen (input_filename, "r");
-      if (in_stream == NULL)
+      if (in_stream == nullptr)
         {
           die (EXIT_FAILURE, errno, "%s", quotef (input_filename));
         }
     }
 
-  line = NULL;
+  line = nullptr;
   buflen = 0;
   ok = true;
   while (true)
@@ -374,7 +374,7 @@ batch_convert (char const *input_filename, char const *format,
           break;
         }
 
-      if (! parse_datetime2 (&when, line, NULL,
+      if (! parse_datetime2 (&when, line, nullptr,
                              parse_datetime_flags, tz, tzstring))
         {
           if (line[line_length - 1] == '\n')
@@ -400,14 +400,14 @@ int
 main (int argc, char **argv)
 {
   int optc;
-  char const *datestr = NULL;
-  char const *set_datestr = NULL;
+  char const *datestr = nullptr;
+  char const *set_datestr = nullptr;
   struct timespec when;
   bool set_date = false;
-  char const *format = NULL;
+  char const *format = nullptr;
   bool get_resolution = false;
-  char *batch_file = NULL;
-  char *reference = NULL;
+  char *batch_file = nullptr;
+  char *reference = nullptr;
   struct stat refstats;
   bool ok;
   bool discarded_datestr = false;
@@ -421,10 +421,10 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, short_options, long_options, NULL))
+  while ((optc = getopt_long (argc, argv, short_options, long_options, nullptr))
          != -1)
     {
-      char const *new_format = NULL;
+      char const *new_format = nullptr;
 
       switch (optc)
         {
@@ -580,7 +580,7 @@ main (int argc, char **argv)
   char const *tzstring = getenv ("TZ");
   timezone_t tz = tzalloc (tzstring);
 
-  if (batch_file != NULL)
+  if (batch_file != nullptr)
     ok = batch_convert (batch_file, format_res, tz, tzstring);
   else
     {
@@ -610,7 +610,7 @@ main (int argc, char **argv)
       else
         {
           /* (option_specified_date || set_date) */
-          if (reference != NULL)
+          if (reference != nullptr)
             {
               if (stat (reference, &refstats) != 0)
                 die (EXIT_FAILURE, errno, "%s", quotef (reference));
@@ -626,7 +626,7 @@ main (int argc, char **argv)
             {
               if (set_datestr)
                 datestr = set_datestr;
-              valid_date = parse_datetime2 (&when, datestr, NULL,
+              valid_date = parse_datetime2 (&when, datestr, nullptr,
                                             parse_datetime_flags,
                                             tz, tzstring);
             }

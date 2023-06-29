@@ -44,7 +44,7 @@ enum { x_suffix_len = sizeof "XXXXXX" - 1 };
 enum { smallsize = 256 };
 
 /* Return a template for a file in the same directory as DSTNAME.
-   Use BUF if the template fits, otherwise use malloc and return NULL
+   Use BUF if the template fits, otherwise use malloc and return nullptr
    (setting errno) if unsuccessful.  */
 
 static char *

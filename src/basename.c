@@ -30,12 +30,12 @@
 
 static struct option const longopts[] =
 {
-  {"multiple", no_argument, NULL, 'a'},
-  {"suffix", required_argument, NULL, 's'},
-  {"zero", no_argument, NULL, 'z'},
+  {"multiple", no_argument, nullptr, 'a'},
+  {"suffix", required_argument, nullptr, 's'},
+  {"zero", no_argument, nullptr, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -97,7 +97,7 @@ remove_suffix (char *name, char const *suffix)
     *np = '\0';
 }
 
-/* Perform the basename operation on STRING.  If SUFFIX is non-NULL, remove
+/* Perform the basename operation on STRING.  If SUFFIX is non-null, remove
    the trailing SUFFIX.  Finally, output the result string.  */
 
 static void
@@ -125,7 +125,7 @@ main (int argc, char **argv)
 {
   bool multiple_names = false;
   bool use_nuls = false;
-  char const *suffix = NULL;
+  char const *suffix = nullptr;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -137,7 +137,7 @@ main (int argc, char **argv)
 
   while (true)
     {
-      int c = getopt_long (argc, argv, "+as:z", longopts, NULL);
+      int c = getopt_long (argc, argv, "+as:z", longopts, nullptr);
 
       if (c == -1)
         break;
@@ -184,7 +184,8 @@ main (int argc, char **argv)
     }
   else
     perform_basename (argv[optind],
-                      optind + 2 == argc ? argv[optind + 1] : NULL, use_nuls);
+                      optind + 2 == argc ? argv[optind + 1] : nullptr,
+                      use_nuls);
 
   return EXIT_SUCCESS;
 }

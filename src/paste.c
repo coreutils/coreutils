@@ -72,12 +72,12 @@ static unsigned char line_delim = '\n';
 
 static struct option const longopts[] =
 {
-  {"serial", no_argument, NULL, 's'},
-  {"delimiters", required_argument, NULL, 'd'},
-  {"zero-terminated", no_argument, NULL, 'z'},
+  {"serial", no_argument, nullptr, 's'},
+  {"delimiters", required_argument, nullptr, 'd'},
+  {"zero-terminated", no_argument, nullptr, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* Set globals delims and delim_end.  Copy STRPTR to DELIMS, converting
@@ -185,7 +185,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
      store the delimiters for closed files. */
   char *delbuf = xmalloc (nfiles + 2);
 
-  /* Streams open to the files to process; NULL if the corresponding
+  /* Streams open to the files to process; null if the corresponding
      stream is closed.  */
   FILE **fileptr = xnmalloc (nfiles + 1, sizeof *fileptr);
 
@@ -209,7 +209,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
       else
         {
           fileptr[files_open] = fopen (fnamptr[files_open], "r");
-          if (fileptr[files_open] == NULL)
+          if (fileptr[files_open] == nullptr)
             die (EXIT_FAILURE, errno, "%s", quotef (fnamptr[files_open]));
           else if (fileno (fileptr[files_open]) == STDIN_FILENO)
             opened_stdin = true;
@@ -277,7 +277,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
                       ok = false;
                     }
 
-                  fileptr[i] = NULL;
+                  fileptr[i] = nullptr;
                   files_open--;
                 }
 
@@ -362,7 +362,7 @@ paste_serial (size_t nfiles, char **fnamptr)
       else
         {
           fileptr = fopen (*fnamptr, "r");
-          if (fileptr == NULL)
+          if (fileptr == nullptr)
             {
               error (0, errno, "%s", quotef (*fnamptr));
               ok = false;
@@ -474,7 +474,7 @@ main (int argc, char **argv)
   have_read_stdin = false;
   serial_merge = false;
 
-  while ((optc = getopt_long (argc, argv, "d:sz", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "d:sz", longopts, nullptr)) != -1)
     {
       switch (optc)
         {

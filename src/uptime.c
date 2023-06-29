@@ -63,7 +63,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
   FILE *fp;
 
   fp = fopen ("/proc/uptime", "r");
-  if (fp != NULL)
+  if (fp != nullptr)
     {
       char buf[BUFSIZ];
       char *b = fgets (buf, BUFSIZ, fp);
@@ -88,7 +88,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
     struct timeval result;
     size_t result_len = sizeof result;
 
-    if (sysctl (request, 2, &result, &result_len, NULL, 0) >= 0)
+    if (sysctl (request, 2, &result, &result_len, nullptr, 0) >= 0)
       boot_time = result.tv_sec;
   }
 #endif
@@ -117,7 +117,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
   (void) this;
 #endif
 
-  time_now = time (NULL);
+  time_now = time (nullptr);
 #if defined HAVE_PROC_UPTIME
   if (uptime == 0)
 #endif
@@ -177,7 +177,7 @@ static _Noreturn void
 uptime (char const *filename, int options)
 {
   size_t n_users;
-  STRUCT_UTMP *utmp_buf = NULL;
+  STRUCT_UTMP *utmp_buf = nullptr;
 
 #if HAVE_STRUCT_UTMP_UT_TYPE || HAVE_STRUCT_UTMPX_UT_TYPE
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
@@ -236,7 +236,7 @@ main (int argc, char **argv)
 
   parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE_NAME,
                                    Version, true, usage, AUTHORS,
-                                   (char const *) NULL);
+                                   (char const *) nullptr);
 
   switch (argc - optind)
     {

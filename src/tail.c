@@ -105,7 +105,7 @@ enum Follow_mode
 
 static char const *const follow_mode_string[] =
 {
-  "descriptor", "name", NULL
+  "descriptor", "name", nullptr
 };
 
 static enum Follow_mode const follow_mode_map[] =
@@ -233,24 +233,25 @@ enum
 
 static struct option const long_options[] =
 {
-  {"bytes", required_argument, NULL, 'c'},
-  {"follow", optional_argument, NULL, LONG_FOLLOW_OPTION},
-  {"lines", required_argument, NULL, 'n'},
-  {"max-unchanged-stats", required_argument, NULL, MAX_UNCHANGED_STATS_OPTION},
-  {"-disable-inotify", no_argument, NULL,
+  {"bytes", required_argument, nullptr, 'c'},
+  {"follow", optional_argument, nullptr, LONG_FOLLOW_OPTION},
+  {"lines", required_argument, nullptr, 'n'},
+  {"max-unchanged-stats", required_argument, nullptr,
+   MAX_UNCHANGED_STATS_OPTION},
+  {"-disable-inotify", no_argument, nullptr,
    DISABLE_INOTIFY_OPTION}, /* do not document */
-  {"pid", required_argument, NULL, PID_OPTION},
-  {"-presume-input-pipe", no_argument, NULL,
+  {"pid", required_argument, nullptr, PID_OPTION},
+  {"-presume-input-pipe", no_argument, nullptr,
    PRESUME_INPUT_PIPE_OPTION}, /* do not document */
-  {"quiet", no_argument, NULL, 'q'},
-  {"retry", no_argument, NULL, RETRY_OPTION},
-  {"silent", no_argument, NULL, 'q'},
-  {"sleep-interval", required_argument, NULL, 's'},
-  {"verbose", no_argument, NULL, 'v'},
-  {"zero-terminated", no_argument, NULL, 'z'},
+  {"quiet", no_argument, nullptr, 'q'},
+  {"retry", no_argument, nullptr, RETRY_OPTION},
+  {"silent", no_argument, nullptr, 'q'},
+  {"sleep-interval", required_argument, nullptr, 's'},
+  {"verbose", no_argument, nullptr, 'v'},
+  {"zero-terminated", no_argument, nullptr, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -551,7 +552,7 @@ file_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
         {
           char const *nl;
           nl = memrchr (buffer, line_end, n);
-          if (nl == NULL)
+          if (nl == nullptr)
             break;
           n = nl - buffer;
           if (n_lines-- == 0)
@@ -616,7 +617,7 @@ pipe_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
 
   first = last = xmalloc (sizeof (LBUFFER));
   first->nbytes = first->nlines = 0;
-  first->next = NULL;
+  first->next = nullptr;
   tmp = xmalloc (sizeof (LBUFFER));
 
   /* Input is always read into a fresh buffer.  */
@@ -628,7 +629,7 @@ pipe_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
       tmp->nbytes = n_read;
       *read_pos += n_read;
       tmp->nlines = 0;
-      tmp->next = NULL;
+      tmp->next = nullptr;
 
       /* Count the number of newlines just read.  */
       {
@@ -754,7 +755,7 @@ pipe_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
 
   first = last = xmalloc (sizeof (CBUFFER));
   first->nbytes = 0;
-  first->next = NULL;
+  first->next = nullptr;
   tmp = xmalloc (sizeof (CBUFFER));
 
   /* Input is always read into a fresh buffer.  */
@@ -765,7 +766,7 @@ pipe_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
         break;
       *read_pos += n_read;
       tmp->nbytes = n_read;
-      tmp->next = NULL;
+      tmp->next = nullptr;
 
       total_bytes += tmp->nbytes;
       /* If there is enough room in the last buffer read, just append the new
@@ -1462,7 +1463,8 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
   size_t evbuf_off = 0;
   size_t len = 0;
 
-  wd_to_name = hash_initialize (n_files, NULL, wd_hasher, wd_comparator, NULL);
+  wd_to_name = hash_initialize (n_files, nullptr, wd_hasher, wd_comparator,
+                                nullptr);
   if (! wd_to_name)
     xalloc_die ();
   *wd_to_namep = wd_to_name;
@@ -1536,7 +1538,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
               continue;
             }
 
-          if (hash_insert (wd_to_name, &(f[i])) == NULL)
+          if (hash_insert (wd_to_name, &(f[i])) == nullptr)
             xalloc_die ();
 
           found_watchable_file = true;
@@ -1762,7 +1764,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
                   close_fd (prev->fd, pretty_name (prev));
                 }
 
-              if (hash_insert (wd_to_name, fspec) == NULL)
+              if (hash_insert (wd_to_name, fspec) == nullptr)
                 xalloc_die ();
             }
 
@@ -2128,7 +2130,7 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
 
   if (n_string == n_string_end)
     *n_units = default_count;
-  else if ((xstrtoumax (n_string, NULL, 10, n_units, "b")
+  else if ((xstrtoumax (n_string, nullptr, 10, n_units, "b")
             & ~LONGINT_INVALID_SUFFIX_CHAR)
            != LONGINT_OK)
     {
@@ -2152,7 +2154,7 @@ parse_options (int argc, char **argv,
   int c;
 
   while ((c = getopt_long (argc, argv, "c:n:fFqs:vz0123456789",
-                           long_options, NULL))
+                           long_options, nullptr))
          != -1)
     {
       switch (c)
@@ -2180,7 +2182,7 @@ parse_options (int argc, char **argv,
         case 'f':
         case LONG_FOLLOW_OPTION:
           forever = true;
-          if (optarg == NULL)
+          if (optarg == nullptr)
             follow_mode = DEFAULT_FOLLOW_MODE;
           else
             follow_mode = XARGMATCH ("--follow", optarg,
@@ -2217,7 +2219,7 @@ parse_options (int argc, char **argv,
         case 's':
           {
             double s;
-            if (! (xstrtod (optarg, NULL, &s, cl_strtod) && 0 <= s))
+            if (! (xstrtod (optarg, nullptr, &s, cl_strtod) && 0 <= s))
               die (EXIT_FAILURE, 0,
                    _("invalid number of seconds: %s"), quote (optarg));
             *sleep_interval = s;

@@ -133,25 +133,25 @@ enum
 
 static struct option const longopts[] =
 {
-  {"bytes", required_argument, NULL, 'b'},
-  {"lines", required_argument, NULL, 'l'},
-  {"line-bytes", required_argument, NULL, 'C'},
-  {"number", required_argument, NULL, 'n'},
-  {"elide-empty-files", no_argument, NULL, 'e'},
-  {"unbuffered", no_argument, NULL, 'u'},
-  {"suffix-length", required_argument, NULL, 'a'},
-  {"additional-suffix", required_argument, NULL,
+  {"bytes", required_argument, nullptr, 'b'},
+  {"lines", required_argument, nullptr, 'l'},
+  {"line-bytes", required_argument, nullptr, 'C'},
+  {"number", required_argument, nullptr, 'n'},
+  {"elide-empty-files", no_argument, nullptr, 'e'},
+  {"unbuffered", no_argument, nullptr, 'u'},
+  {"suffix-length", required_argument, nullptr, 'a'},
+  {"additional-suffix", required_argument, nullptr,
    ADDITIONAL_SUFFIX_OPTION},
-  {"numeric-suffixes", optional_argument, NULL, 'd'},
-  {"hex-suffixes", optional_argument, NULL, 'x'},
-  {"filter", required_argument, NULL, FILTER_OPTION},
-  {"verbose", no_argument, NULL, VERBOSE_OPTION},
-  {"separator", required_argument, NULL, 't'},
-  {"-io-blksize", required_argument, NULL,
+  {"numeric-suffixes", optional_argument, nullptr, 'd'},
+  {"hex-suffixes", optional_argument, nullptr, 'x'},
+  {"filter", required_argument, nullptr, FILTER_OPTION},
+  {"verbose", no_argument, nullptr, VERBOSE_OPTION},
+  {"separator", required_argument, nullptr, 't'},
+  {"-io-blksize", required_argument, nullptr,
    IO_BLKSIZE_OPTION}, /* do not document */
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* Return true if the errno value, ERR, is ignorable.  */
@@ -182,7 +182,7 @@ set_suffix_length (intmax_t n_units, enum Split_type split_type)
       if (numeric_suffix_start)
         {
           intmax_t n_start;
-          strtol_error e = xstrtoimax (numeric_suffix_start, NULL, 10,
+          strtol_error e = xstrtoimax (numeric_suffix_start, nullptr, 10,
                                        &n_start, "");
           if (e == LONGINT_OK && n_start < n_units)
             {
@@ -505,7 +505,7 @@ create (char const *name)
       int fd_pair[2];
       pid_t child_pid;
       char const *shell_prog = getenv ("SHELL");
-      if (shell_prog == NULL)
+      if (shell_prog == nullptr)
         shell_prog = "/bin/sh";
       if (setenv ("FILE", name, 1) != 0)
         die (EXIT_FAILURE, errno,
@@ -540,7 +540,7 @@ create (char const *name)
           if (default_SIGPIPE)
             signal (SIGPIPE, SIG_DFL);
           execl (shell_prog, last_component (shell_prog), "-c",
-                 filter_command, (char *) NULL);
+                 filter_command, (char *) nullptr);
           die (EXIT_FAILURE, errno, _("failed to run command: \"%s -c %s\""),
                shell_prog, filter_command);
         }
@@ -563,11 +563,11 @@ create (char const *name)
 static void
 closeout (FILE *fp, int fd, pid_t pid, char const *name)
 {
-  if (fp != NULL && fclose (fp) != 0 && ! ignorable (errno))
+  if (fp != nullptr && fclose (fp) != 0 && ! ignorable (errno))
     die (EXIT_FAILURE, errno, "%s", quotef (name));
   if (fd >= 0)
     {
-      if (fp == NULL && close (fd) < 0)
+      if (fp == nullptr && close (fd) < 0)
         die (EXIT_FAILURE, errno, "%s", quotef (name));
       int j;
       for (j = 0; j < n_open_pipes; ++j)
@@ -625,7 +625,7 @@ cwrite (bool new_file_flag, char const *bp, idx_t bytes)
     {
       if (!bp && bytes == 0 && elide_empty_files)
         return true;
-      closeout (NULL, output_desc, filter_pid, outfile);
+      closeout (nullptr, output_desc, filter_pid, outfile);
       next_file_name ();
       output_desc = create (outfile);
       if (output_desc < 0)
@@ -719,7 +719,7 @@ bytes_split (intmax_t n_bytes, intmax_t rem_bytes,
      any existing files or notifies any consumers on fifos.
      FIXME: Should we do this before EXIT_FAILURE?  */
   while (opened++ < max_files)
-    cwrite (true, NULL, 0);
+    cwrite (true, nullptr, 0);
 }
 
 /* Split into pieces of exactly N_LINES lines.
@@ -778,7 +778,7 @@ line_bytes_split (intmax_t n_bytes, char *buf, idx_t bufsize)
   ssize_t n_read;
   intmax_t n_out = 0;      /* for each split.  */
   idx_t n_hold = 0;
-  char *hold = NULL;        /* for lines > bufsize.  */
+  char *hold = nullptr;        /* for lines > bufsize.  */
   idx_t hold_size = 0;
   bool split_line = false;  /* Whether a \n was output in a split.  */
 
@@ -792,7 +792,7 @@ line_bytes_split (intmax_t n_bytes, char *buf, idx_t bufsize)
       while (n_left)
         {
           idx_t split_rest = 0;
-          char *eoc = NULL;
+          char *eoc = nullptr;
           char *eol;
 
           /* Determine End Of Chunk and/or End of Line,
@@ -986,7 +986,7 @@ lines_chunk_split (intmax_t k, intmax_t n, char *buf, idx_t bufsize,
               if (chunk_end <= n_written)
                 {
                   if (! k)
-                    cwrite (true, NULL, 0);
+                    cwrite (true, nullptr, 0);
                 }
               else
                 next = false;
@@ -1002,7 +1002,7 @@ lines_chunk_split (intmax_t k, intmax_t n, char *buf, idx_t bufsize,
      FIXME: Should we do this before EXIT_FAILURE?  */
   if (!k)
     while (chunk_no++ <= n)
-      cwrite (true, NULL, 0);
+      cwrite (true, nullptr, 0);
 }
 
 /* -n K/N: Extract Kth of N chunks.  */
@@ -1132,7 +1132,7 @@ ofile_open (of_t *files, idx_t i_check, idx_t nfiles)
 
           if (fclose (files[i_reopen].ofile) != 0)
             die (EXIT_FAILURE, errno, "%s", quotef (files[i_reopen].of_name));
-          files[i_reopen].ofile = NULL;
+          files[i_reopen].ofile = nullptr;
           files[i_reopen].ofd = OFD_APPEND;
         }
 
@@ -1162,7 +1162,7 @@ lines_rr (intmax_t k, intmax_t n, char *buf, idx_t bufsize, of_t **filesp)
   bool wrote = false;
   bool file_limit;
   idx_t i_file;
-  of_t *files IF_LINT (= NULL);
+  of_t *files IF_LINT (= nullptr);
   intmax_t line_no;
 
   if (k)
@@ -1179,7 +1179,7 @@ lines_rr (intmax_t k, intmax_t n, char *buf, idx_t bufsize, of_t **filesp)
           next_file_name ();
           files[i_file].of_name = xstrdup (outfile);
           files[i_file].ofd = OFD_NEW;
-          files[i_file].ofile = NULL;
+          files[i_file].ofile = nullptr;
           files[i_file].opid = 0;
         }
       i_file = 0;
@@ -1259,7 +1259,7 @@ lines_rr (intmax_t k, intmax_t n, char *buf, idx_t bufsize, of_t **filesp)
                       die (EXIT_FAILURE, errno, "%s",
                            quotef (files[i_file].of_name));
                     }
-                  files[i_file].ofile = NULL;
+                  files[i_file].ofile = nullptr;
                   files[i_file].ofd = OFD_APPEND;
                 }
               if (next && ++i_file == n)
@@ -1327,7 +1327,7 @@ static intmax_t
 parse_n_units (char const *arg, char const *multipliers, char const *msgid)
 {
   intmax_t n;
-  if (OVERFLOW_OK < xstrtoimax (arg, NULL, 10, &n, multipliers) || n < 1)
+  if (OVERFLOW_OK < xstrtoimax (arg, nullptr, 10, &n, multipliers) || n < 1)
     strtoint_die (msgid, arg);
   return n;
 }
@@ -1386,7 +1386,7 @@ main (int argc, char **argv)
       int this_optind = optind ? optind : 1;
 
       c = getopt_long (argc, argv, "0123456789C:a:b:del:n:t:ux",
-                       longopts, NULL);
+                       longopts, nullptr);
       if (c == -1)
         break;
 
@@ -1703,7 +1703,7 @@ main (int argc, char **argv)
 
   if (close (STDIN_FILENO) != 0)
     die (EXIT_FAILURE, errno, "%s", quotef (infile));
-  closeout (NULL, output_desc, filter_pid, outfile);
+  closeout (nullptr, output_desc, filter_pid, outfile);
 
   main_exit (EXIT_SUCCESS);
 }

@@ -85,9 +85,9 @@ static enum Format output_format = UNKNOWN_FORMAT;
                                 /* output format */
 
 static bool ignore_case = false;	/* fold lower to upper for sorting */
-static char const *break_file = NULL;	/* name of the 'Break chars' file */
-static char const *only_file = NULL;	/* name of the 'Only words' file */
-static char const *ignore_file = NULL;	/* name of the 'Ignore words' file */
+static char const *break_file = nullptr;	/* name of the 'Break chars' file */
+static char const *only_file = nullptr;	/* name of the 'Only words' file */
+static char const *ignore_file = nullptr;	/* name of the 'Ignore words' file */
 
 /* Options that use regular expressions.  */
 struct regex_data
@@ -185,7 +185,8 @@ static BLOCK *text_buffers;	/* files to study */
   if (word_regex.string)						\
     {									\
       regoff_t count;							\
-      count = re_match (&word_regex.pattern, cursor, limit - cursor, 0, NULL); \
+      count = re_match (&word_regex.pattern, cursor, limit - cursor,	\
+                        0, nullptr);					\
       if (count == -2)							\
         matcher_error ();						\
       cursor += count == -1 ? 1 : count;				\
@@ -406,10 +407,10 @@ compile_regex (struct regex_data *regex)
   char const *string = regex->string;
   char const *message;
 
-  pattern->buffer = NULL;
+  pattern->buffer = nullptr;
   pattern->allocated = 0;
   pattern->fastmap = regex->fastmap;
-  pattern->translate = ignore_case ? folded_chars : NULL;
+  pattern->translate = ignore_case ? folded_chars : nullptr;
 
   message = re_compile_pattern (string, strlen (string), pattern);
   if (message)
@@ -441,14 +442,14 @@ initialize_regex (void)
   /* Unless the user already provided a description of the end of line or
      end of sentence sequence, select an end of line sequence to compile.
      If the user provided an empty definition, thus disabling end of line
-     or sentence feature, make it NULL to speed up tests.  If GNU
+     or sentence feature, make it null to speed up tests.  If GNU
      extensions are enabled, use end of sentence like in GNU emacs.  If
      disabled, use end of lines.  */
 
   if (context_regex.string)
     {
       if (!*context_regex.string)
-        context_regex.string = NULL;
+        context_regex.string = nullptr;
     }
   else if (gnu_extensions && !input_reference)
     context_regex.string = "[.?!][]\"')}]*\\($\\|\t\\|  \\)[ \t\n]*";
@@ -494,7 +495,7 @@ initialize_regex (void)
 /*------------------------------------------------------------------------.
 | This routine will attempt to swallow a whole file name FILE_NAME into a |
 | contiguous region of memory and return a description of it into BLOCK.  |
-| Standard input is assumed whenever FILE_NAME is NULL, empty or "-".	  |
+| Standard input is assumed whenever FILE_NAME is null, empty or "-".	  |
 |									  |
 | Previously, in some cases, white space compression was attempted while  |
 | inputting text.  This was defeating some regexps like default end of	  |
@@ -507,7 +508,7 @@ swallow_file_in_memory (char const *file_name, BLOCK *block)
 {
   size_t used_length;		/* used length in memory buffer */
 
-  /* As special cases, a file name which is NULL or "-" indicates standard
+  /* As special cases, a file name which is null or "-" indicates standard
      input, which is already opened.  In all other cases, open the file from
      its name.  */
   bool using_stdin = !file_name || !*file_name || STREQ (file_name, "-");
@@ -693,7 +694,7 @@ digest_word_file (char const *file_name, WORD_TABLE *table)
 
   swallow_file_in_memory (file_name, &file_contents);
 
-  table->start = NULL;
+  table->start = nullptr;
   table->alloc = 0;
   table->length = 0;
 
@@ -1145,14 +1146,14 @@ fix_output_parameters (void)
   before_max_width = half_line_width - gap_size;
   keyafter_max_width = half_line_width;
 
-  /* If truncation_string is the empty string, make it NULL to speed up
+  /* If truncation_string is the empty string, make it null to speed up
      tests.  In this case, truncation_string_length will never get used, so
      there is no need to set it.  */
 
   if (truncation_string && *truncation_string)
     truncation_string_length = strlen (truncation_string);
   else
-    truncation_string = NULL;
+    truncation_string = nullptr;
 
   if (gnu_extensions)
     {
@@ -1367,8 +1368,8 @@ define_all_fields (OCCURS *occurs)
 
       /* No place left for a tail field.  */
 
-      tail.start = NULL;
-      tail.end = NULL;
+      tail.start = nullptr;
+      tail.end = nullptr;
       tail_truncation = false;
     }
 
@@ -1406,8 +1407,8 @@ define_all_fields (OCCURS *occurs)
 
       /* No place left for a head field.  */
 
-      head.start = NULL;
-      head.end = NULL;
+      head.start = nullptr;
+      head.end = nullptr;
       head_truncation = false;
     }
 
@@ -1646,12 +1647,12 @@ generate_all_output (void)
      line contexts or references are not used, in which case these variables
      would never be computed.  */
 
-  tail.start = NULL;
-  tail.end = NULL;
+  tail.start = nullptr;
+  tail.end = nullptr;
   tail_truncation = false;
 
-  head.start = NULL;
-  head.end = NULL;
+  head.start = nullptr;
+  head.end = nullptr;
   head_truncation = false;
 
   /* Loop over all keyword occurrences.  */
@@ -1758,30 +1759,30 @@ Output a permuted index, including context, of the words in the input files.\n\
 /* Long options equivalences.  */
 static struct option const long_options[] =
 {
-  {"auto-reference", no_argument, NULL, 'A'},
-  {"break-file", required_argument, NULL, 'b'},
-  {"flag-truncation", required_argument, NULL, 'F'},
-  {"ignore-case", no_argument, NULL, 'f'},
-  {"gap-size", required_argument, NULL, 'g'},
-  {"ignore-file", required_argument, NULL, 'i'},
-  {"macro-name", required_argument, NULL, 'M'},
-  {"only-file", required_argument, NULL, 'o'},
-  {"references", no_argument, NULL, 'r'},
-  {"right-side-refs", no_argument, NULL, 'R'},
-  {"format", required_argument, NULL, 10},
-  {"sentence-regexp", required_argument, NULL, 'S'},
-  {"traditional", no_argument, NULL, 'G'},
-  {"typeset-mode", no_argument, NULL, 't'},
-  {"width", required_argument, NULL, 'w'},
-  {"word-regexp", required_argument, NULL, 'W'},
+  {"auto-reference", no_argument, nullptr, 'A'},
+  {"break-file", required_argument, nullptr, 'b'},
+  {"flag-truncation", required_argument, nullptr, 'F'},
+  {"ignore-case", no_argument, nullptr, 'f'},
+  {"gap-size", required_argument, nullptr, 'g'},
+  {"ignore-file", required_argument, nullptr, 'i'},
+  {"macro-name", required_argument, nullptr, 'M'},
+  {"only-file", required_argument, nullptr, 'o'},
+  {"references", no_argument, nullptr, 'r'},
+  {"right-side-refs", no_argument, nullptr, 'R'},
+  {"format", required_argument, nullptr, 10},
+  {"sentence-regexp", required_argument, nullptr, 'S'},
+  {"traditional", no_argument, nullptr, 'G'},
+  {"typeset-mode", no_argument, nullptr, 't'},
+  {"width", required_argument, nullptr, 'w'},
+  {"word-regexp", required_argument, nullptr, 'W'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0},
+  {nullptr, 0, nullptr, 0},
 };
 
 static char const *const format_args[] =
 {
-  "roff", "tex", NULL
+  "roff", "tex", nullptr
 };
 
 static enum Format const format_vals[] =
@@ -1806,11 +1807,11 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
 #if HAVE_SETCHRCLASS
-  setchrclass (NULL);
+  setchrclass (nullptr);
 #endif
 
   while (optchar = getopt_long (argc, argv, "AF:GM:ORS:TW:b:i:fg:o:trw:",
-                                long_options, NULL),
+                                long_options, nullptr),
          optchar != EOF)
     {
       switch (optchar)
@@ -1833,7 +1834,7 @@ main (int argc, char **argv)
         case 'g':
           {
             intmax_t tmp;
-            if (! (xstrtoimax (optarg, NULL, 0, &tmp, "") == LONGINT_OK
+            if (! (xstrtoimax (optarg, nullptr, 0, &tmp, "") == LONGINT_OK
                    && 0 < tmp && tmp <= PTRDIFF_MAX))
               die (EXIT_FAILURE, 0, _("invalid gap width: %s"),
                    quote (optarg));
@@ -1860,7 +1861,7 @@ main (int argc, char **argv)
         case 'w':
           {
             intmax_t tmp;
-            if (! (xstrtoimax (optarg, NULL, 0, &tmp, "") == LONGINT_OK
+            if (! (xstrtoimax (optarg, nullptr, 0, &tmp, "") == LONGINT_OK
                    && 0 < tmp && tmp <= PTRDIFF_MAX))
               die (EXIT_FAILURE, 0, _("invalid line width: %s"),
                    quote (optarg));
@@ -1902,7 +1903,7 @@ main (int argc, char **argv)
           word_regex.string = optarg;
           unescape_string (optarg);
           if (!*word_regex.string)
-            word_regex.string = NULL;
+            word_regex.string = nullptr;
           break;
 
         case 10:
@@ -1929,7 +1930,7 @@ main (int argc, char **argv)
       file_line_count = xmalloc (sizeof *file_line_count);
       text_buffers =    xmalloc (sizeof *text_buffers);
       number_input_files = 1;
-      input_file_name[0] = NULL;
+      input_file_name[0] = nullptr;
     }
   else if (gnu_extensions)
     {
@@ -1941,7 +1942,7 @@ main (int argc, char **argv)
       for (file_index = 0; file_index < number_input_files; file_index++)
         {
           if (!*argv[optind] || STREQ (argv[optind], "-"))
-            input_file_name[file_index] = NULL;
+            input_file_name[file_index] = nullptr;
           else
             input_file_name[file_index] = argv[optind];
           optind++;
@@ -1957,7 +1958,7 @@ main (int argc, char **argv)
       file_line_count = xmalloc (sizeof *file_line_count);
       text_buffers    = xmalloc (sizeof *text_buffers);
       if (!*argv[optind] || STREQ (argv[optind], "-"))
-        input_file_name[0] = NULL;
+        input_file_name[0] = nullptr;
       else
         input_file_name[0] = argv[optind];
       optind++;
@@ -1996,21 +1997,21 @@ main (int argc, char **argv)
     digest_break_file (break_file);
 
   /* Read 'Ignore words' file and 'Only words' files, if any.  If any of
-     these files is empty, reset the name of the file to NULL, to avoid
+     these files is empty, reset the name of the file to null, to avoid
      unnecessary calls to search_table. */
 
   if (ignore_file)
     {
       digest_word_file (ignore_file, &ignore_table);
       if (ignore_table.length == 0)
-        ignore_file = NULL;
+        ignore_file = nullptr;
     }
 
   if (only_file)
     {
       digest_word_file (only_file, &only_table);
       if (only_table.length == 0)
-        only_file = NULL;
+        only_file = nullptr;
     }
 
   /* Prepare to study all the input files.  */

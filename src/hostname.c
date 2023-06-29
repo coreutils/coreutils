@@ -86,7 +86,7 @@ main (int argc, char **argv)
 
   parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE_NAME,
                                    Version, true, usage, AUTHORS,
-                                   (char const *) NULL);
+                                   (char const *) nullptr);
 
   if (optind + 1 < argc)
      {
@@ -105,7 +105,7 @@ main (int argc, char **argv)
   else
     {
       hostname = xgethostname ();
-      if (hostname == NULL)
+      if (hostname == nullptr)
         die (EXIT_FAILURE, errno, _("cannot determine hostname"));
       puts (hostname);
     }

@@ -377,7 +377,7 @@ static struct mode_info const mode_info[] =
   {"crt", combination, OMIT, 0, 0},
   {"dec", combination, OMIT, 0, 0},
 
-  {NULL, control, 0, 0, 0}
+  {nullptr, control, 0, 0, 0}
 };
 
 /* Control character settings.  */
@@ -434,7 +434,7 @@ static struct control_info const control_info[] =
   /* These must be last because of the display routines. */
   {"min", 1, VMIN},
   {"time", 0, VTIME},
-  {NULL, 0, 0}
+  {nullptr, 0, 0}
 };
 
 static char const *visible (cc_t ch);
@@ -489,13 +489,13 @@ enum
 
 static struct option const longopts[] =
 {
-  {"all", no_argument, NULL, 'a'},
-  {"save", no_argument, NULL, 'g'},
-  {"file", required_argument, NULL, 'F'},
-  {"-debug", no_argument, NULL, DEV_DEBUG_OPTION},
+  {"all", no_argument, nullptr, 'a'},
+  {"save", no_argument, nullptr, 'g'},
+  {"file", required_argument, nullptr, 'F'},
+  {"-debug", no_argument, nullptr, DEV_DEBUG_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* Print format string MESSAGE and optional args.
@@ -1134,7 +1134,7 @@ apply_settings (bool checking, char const *device_name,
           tcsetattr_options = reversed ? TCSANOW : TCSADRAIN;
           continue;
         }
-      for (i = 0; mode_info[i].name != NULL; ++i)
+      for (i = 0; mode_info[i].name != nullptr; ++i)
         {
           if (STREQ (arg, mode_info[i].name))
             {
@@ -1155,7 +1155,7 @@ apply_settings (bool checking, char const *device_name,
         }
       if (!match_found)
         {
-          for (i = 0; control_info[i].name != NULL; ++i)
+          for (i = 0; control_info[i].name != nullptr; ++i)
             {
               if (STREQ (arg, control_info[i].name))
                 {
@@ -1302,7 +1302,7 @@ main (int argc, char **argv)
   bool verbose_output;
   bool recoverable_output;
   bool noargs = true;
-  char *file_name = NULL;
+  char *file_name = nullptr;
   char const *device_name;
 
   initialize_main (&argc, &argv);
@@ -1328,7 +1328,7 @@ main (int argc, char **argv)
      short and long options, --, POSIXLY_CORRECT, etc.  */
 
   while ((optc = getopt_long (argc - argi, argv + argi, "-agF:",
-                              longopts, NULL))
+                              longopts, nullptr))
          != -1)
     {
       switch (optc)
@@ -1377,7 +1377,7 @@ main (int argc, char **argv)
 
       /* Clear fully-parsed arguments, so they don't confuse the 2nd pass.  */
       while (opti < optind)
-        argv[argi + opti++] = NULL;
+        argv[argi + opti++] = nullptr;
     }
 
   /* Specifying both -a and -g gets an error.  */
@@ -1498,7 +1498,7 @@ set_mode (struct mode_info const *info, bool reversed, struct termios *mode)
 
   bitsp = mode_type_flag (info->type, mode);
 
-  if (bitsp == NULL)
+  if (bitsp == nullptr)
     {
       /* Combination mode. */
       if (STREQ (info->name, "evenp") || STREQ (info->name, "parity"))
@@ -1856,8 +1856,8 @@ screen_columns (void)
     /* Use $COLUMNS if it's in [1..INT_MAX].  */
     char *col_string = getenv ("COLUMNS");
     long int n_columns;
-    if (!(col_string != NULL
-          && xstrtol (col_string, NULL, 0, &n_columns, "") == LONGINT_OK
+    if (!(col_string != nullptr
+          && xstrtol (col_string, nullptr, 0, &n_columns, "") == LONGINT_OK
           && 0 < n_columns
           && n_columns <= INT_MAX))
       n_columns = 80;
@@ -1884,7 +1884,7 @@ mode_type_flag (enum mode_type type, struct termios *mode)
       return &mode->c_lflag;
 
     case combination:
-      return NULL;
+      return nullptr;
 
     default:
       abort ();
@@ -1966,7 +1966,7 @@ display_changed (struct termios *mode)
   current_col = 0;
 
   empty_line = true;
-  for (i = 0; mode_info[i].name != NULL; ++i)
+  for (i = 0; mode_info[i].name != nullptr; ++i)
     {
       if (mode_info[i].flags & OMIT)
         continue;
@@ -1984,7 +1984,7 @@ display_changed (struct termios *mode)
       bitsp = mode_type_flag (mode_info[i].type, mode);
       mask = mode_info[i].mask ? mode_info[i].mask : mode_info[i].bits;
 
-      /* bitsp would be NULL only for "combination" modes, yet those
+      /* bitsp would be null only for "combination" modes, yet those
          are filtered out above via the OMIT flag.  Tell static analysis
          tools that it's ok to dereference bitsp here.  */
       assert (bitsp);
@@ -2058,7 +2058,7 @@ display_all (struct termios *mode, char const *device_name)
     putchar ('\n');
   current_col = 0;
 
-  for (i = 0; mode_info[i].name != NULL; ++i)
+  for (i = 0; mode_info[i].name != nullptr; ++i)
     {
       if (mode_info[i].flags & OMIT)
         continue;
@@ -2257,14 +2257,14 @@ static struct speed_map const speeds[] =
 #ifdef B4000000
   {"4000000", B4000000, 4000000},
 #endif
-  {NULL, 0, 0}
+  {nullptr, 0, 0}
 };
 
 ATTRIBUTE_PURE
 static speed_t
 string_to_baud (char const *arg)
 {
-  for (int i = 0; speeds[i].string != NULL; ++i)
+  for (int i = 0; speeds[i].string != nullptr; ++i)
     if (STREQ (arg, speeds[i].string))
       return speeds[i].speed;
   return (speed_t) -1;
@@ -2274,7 +2274,7 @@ ATTRIBUTE_PURE
 static unsigned long int
 baud_to_value (speed_t speed)
 {
-  for (int i = 0; speeds[i].string != NULL; ++i)
+  for (int i = 0; speeds[i].string != nullptr; ++i)
     if (speed == speeds[i].speed)
       return speeds[i].value;
   return 0;
@@ -2295,7 +2295,7 @@ sane_mode (struct termios *mode)
       mode->c_cc[control_info[i].offset] = control_info[i].saneval;
     }
 
-  for (i = 0; mode_info[i].name != NULL; ++i)
+  for (i = 0; mode_info[i].name != nullptr; ++i)
     {
       if (mode_info[i].flags & NO_SETATTR)
         continue;

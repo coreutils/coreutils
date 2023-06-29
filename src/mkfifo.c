@@ -38,10 +38,10 @@
 static struct option const longopts[] =
 {
   {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
-  {"mode", required_argument, NULL, 'm'},
+  {"mode", required_argument, nullptr, 'm'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -77,11 +77,11 @@ int
 main (int argc, char **argv)
 {
   mode_t newmode;
-  char const *specified_mode = NULL;
+  char const *specified_mode = nullptr;
   int exit_status = EXIT_SUCCESS;
   int optc;
-  char const *scontext = NULL;
-  struct selabel_handle *set_security_context = NULL;
+  char const *scontext = nullptr;
+  struct selabel_handle *set_security_context = nullptr;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -91,7 +91,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "m:Z", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "m:Z", longopts, nullptr)) != -1)
     {
       switch (optc)
         {
@@ -111,7 +111,7 @@ main (int argc, char **argv)
               else
                 {
                   set_security_context = selabel_open (SELABEL_CTX_FILE,
-                                                       NULL, 0);
+                                                       nullptr, 0);
                   if (! set_security_context)
                     error (0, errno, _("warning: ignoring --context"));
                 }
@@ -159,7 +159,7 @@ main (int argc, char **argv)
         die (EXIT_FAILURE, 0, _("invalid mode"));
       umask_value = umask (0);
       umask (umask_value);
-      newmode = mode_adjust (newmode, false, umask_value, change, NULL);
+      newmode = mode_adjust (newmode, false, umask_value, change, nullptr);
       free (change);
       if (newmode & ~S_IRWXUGO)
         die (EXIT_FAILURE, 0,

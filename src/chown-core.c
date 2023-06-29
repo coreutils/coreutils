@@ -58,12 +58,12 @@ extern void
 chopt_init (struct Chown_option *chopt)
 {
   chopt->verbosity = V_off;
-  chopt->root_dev_ino = NULL;
+  chopt->root_dev_ino = nullptr;
   chopt->affect_symlink_referent = true;
   chopt->recurse = false;
   chopt->force_silent = false;
-  chopt->user_name = NULL;
-  chopt->group_name = NULL;
+  chopt->user_name = nullptr;
+  chopt->group_name = nullptr;
 }
 
 extern void
@@ -122,7 +122,7 @@ uid_to_name (uid_t uid)
 static char *
 user_group_str (char const *user, char const *group)
 {
-  char *spec = NULL;
+  char *spec = nullptr;
 
   if (user)
     {
@@ -145,7 +145,7 @@ user_group_str (char const *user, char const *group)
 }
 
 /* Tell the user how/if the user and group of FILE have been changed.
-   If USER is NULL, give the group-oriented messages.
+   If USER is null, give the group-oriented messages.
    CHANGED describes what (if anything) has happened. */
 
 static void
@@ -165,7 +165,8 @@ describe_change (char const *file, enum Change_status changed,
     }
 
   spec = user_group_str (user, group);
-  old_spec = user_group_str (user ? old_user : NULL, group ? old_group : NULL);
+  old_spec = user_group_str (user ? old_user : nullptr,
+                             group ? old_group : nullptr);
 
   switch (changed)
     {
@@ -188,7 +189,7 @@ describe_change (char const *file, enum Change_status changed,
                  : _("failed to change ownership of %s\n"));
           free (old_spec);
           old_spec = spec;
-          spec = NULL;
+          spec = nullptr;
         }
       break;
     case CH_NO_CHANGE_REQUESTED:
@@ -370,7 +371,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
   if (!ok)
     {
       do_chown = false;
-      file_stats = NULL;
+      file_stats = nullptr;
     }
   else if (required_uid == (uid_t) -1 && required_gid == (gid_t) -1
            && chopt->verbosity == V_off
@@ -498,14 +499,16 @@ change_file_owner (FTS *fts, FTSENT *ent,
              : !symlink_changed ? CH_NOT_APPLIED
              : !changed ? CH_NO_CHANGE_REQUESTED
              : CH_SUCCEEDED);
-          char *old_usr = file_stats ? uid_to_name (file_stats->st_uid) : NULL;
-          char *old_grp = file_stats ? gid_to_name (file_stats->st_gid) : NULL;
+          char *old_usr = (file_stats
+                           ? uid_to_name (file_stats->st_uid) : nullptr);
+          char *old_grp = (file_stats
+                           ? gid_to_name (file_stats->st_gid) : nullptr);
           char *new_usr = chopt->user_name
                           ? chopt->user_name : uid != -1
-                                               ? uid_to_str (uid) : NULL;
+                                               ? uid_to_str (uid) : nullptr;
           char *new_grp = chopt->group_name
                           ? chopt->group_name : gid != -1
-                                               ? gid_to_str (gid) : NULL;
+                                               ? gid_to_str (gid) : nullptr;
           describe_change (file_full_name, ch_status,
                            old_usr, old_grp,
                            new_usr, new_grp);
@@ -548,14 +551,14 @@ chown_files (char **files, int bit_flags,
                     ? 0
                     : FTS_NOSTAT);
 
-  FTS *fts = xfts_open (files, bit_flags | stat_flags, NULL);
+  FTS *fts = xfts_open (files, bit_flags | stat_flags, nullptr);
 
   while (true)
     {
       FTSENT *ent;
 
       ent = fts_read (fts);
-      if (ent == NULL)
+      if (ent == nullptr)
         {
           if (errno != 0)
             {

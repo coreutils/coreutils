@@ -71,8 +71,8 @@ mode_to_security_class (mode_t m)
 static int
 computecon (char const *path, mode_t mode, char **con)
 {
-  char *scon = NULL;
-  char *tcon = NULL;
+  char *scon = nullptr;
+  char *tcon = nullptr;
   security_class_t tclass;
   int rc = -1;
 
@@ -111,12 +111,12 @@ defaultcon (struct selabel_handle *selabel_handle,
             char const *path, mode_t mode)
 {
   int rc = -1;
-  char *scon = NULL;
-  char *tcon = NULL;
+  char *scon = nullptr;
+  char *tcon = nullptr;
   context_t scontext = 0, tcontext = 0;
   char const *contype;
   char const *constr;
-  char *newpath = NULL;
+  char *newpath = nullptr;
 
   if (! IS_ABSOLUTE_FILE_NAME (path))
     {
@@ -179,8 +179,8 @@ restorecon_private (struct selabel_handle *selabel_handle, char const *path)
 {
   int rc = -1;
   struct stat sb;
-  char *scon = NULL;
-  char *tcon = NULL;
+  char *scon = nullptr;
+  char *tcon = nullptr;
   context_t scontext = 0, tcontext = 0;
   char const *contype;
   char const *constr;
@@ -285,7 +285,7 @@ bool
 restorecon (struct selabel_handle *selabel_handle,
             char const *path, bool recurse)
 {
-  char *newpath = NULL;
+  char *newpath = nullptr;
 
   if (! IS_ABSOLUTE_FILE_NAME (path))
     {
@@ -307,8 +307,8 @@ restorecon (struct selabel_handle *selabel_handle,
       return ok;
     }
 
-  char const *ftspath[2] = { path, NULL };
-  FTS *fts = xfts_open ((char *const *) ftspath, FTS_PHYSICAL, NULL);
+  char const *ftspath[2] = { path, nullptr };
+  FTS *fts = xfts_open ((char *const *) ftspath, FTS_PHYSICAL, nullptr);
 
   int err = 0;
   for (FTSENT *ent; (ent = fts_read (fts)); )

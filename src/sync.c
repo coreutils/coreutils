@@ -47,11 +47,11 @@ enum sync_mode
 
 static struct option const long_options[] =
 {
-  {"data", no_argument, NULL, 'd'},
-  {"file-system", no_argument, NULL, 'f'},
+  {"data", no_argument, nullptr, 'd'},
+  {"file-system", no_argument, nullptr, 'f'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -185,7 +185,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "df", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "df", long_options, nullptr))
          != -1)
     {
       switch (c)

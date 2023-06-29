@@ -550,37 +550,37 @@ static char const short_options[] = "-bcCdfghik:mMno:rRsS:t:T:uVy:z";
 
 static struct option const long_options[] =
 {
-  {"ignore-leading-blanks", no_argument, NULL, 'b'},
-  {"check", optional_argument, NULL, CHECK_OPTION},
-  {"compress-program", required_argument, NULL, COMPRESS_PROGRAM_OPTION},
-  {"debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
-  {"dictionary-order", no_argument, NULL, 'd'},
-  {"ignore-case", no_argument, NULL, 'f'},
-  {"files0-from", required_argument, NULL, FILES0_FROM_OPTION},
-  {"general-numeric-sort", no_argument, NULL, 'g'},
-  {"ignore-nonprinting", no_argument, NULL, 'i'},
-  {"key", required_argument, NULL, 'k'},
-  {"merge", no_argument, NULL, 'm'},
-  {"month-sort", no_argument, NULL, 'M'},
-  {"numeric-sort", no_argument, NULL, 'n'},
-  {"human-numeric-sort", no_argument, NULL, 'h'},
-  {"version-sort", no_argument, NULL, 'V'},
-  {"random-sort", no_argument, NULL, 'R'},
-  {"random-source", required_argument, NULL, RANDOM_SOURCE_OPTION},
-  {"sort", required_argument, NULL, SORT_OPTION},
-  {"output", required_argument, NULL, 'o'},
-  {"reverse", no_argument, NULL, 'r'},
-  {"stable", no_argument, NULL, 's'},
-  {"batch-size", required_argument, NULL, NMERGE_OPTION},
-  {"buffer-size", required_argument, NULL, 'S'},
-  {"field-separator", required_argument, NULL, 't'},
-  {"temporary-directory", required_argument, NULL, 'T'},
-  {"unique", no_argument, NULL, 'u'},
-  {"zero-terminated", no_argument, NULL, 'z'},
-  {"parallel", required_argument, NULL, PARALLEL_OPTION},
+  {"ignore-leading-blanks", no_argument, nullptr, 'b'},
+  {"check", optional_argument, nullptr, CHECK_OPTION},
+  {"compress-program", required_argument, nullptr, COMPRESS_PROGRAM_OPTION},
+  {"debug", no_argument, nullptr, DEBUG_PROGRAM_OPTION},
+  {"dictionary-order", no_argument, nullptr, 'd'},
+  {"ignore-case", no_argument, nullptr, 'f'},
+  {"files0-from", required_argument, nullptr, FILES0_FROM_OPTION},
+  {"general-numeric-sort", no_argument, nullptr, 'g'},
+  {"ignore-nonprinting", no_argument, nullptr, 'i'},
+  {"key", required_argument, nullptr, 'k'},
+  {"merge", no_argument, nullptr, 'm'},
+  {"month-sort", no_argument, nullptr, 'M'},
+  {"numeric-sort", no_argument, nullptr, 'n'},
+  {"human-numeric-sort", no_argument, nullptr, 'h'},
+  {"version-sort", no_argument, nullptr, 'V'},
+  {"random-sort", no_argument, nullptr, 'R'},
+  {"random-source", required_argument, nullptr, RANDOM_SOURCE_OPTION},
+  {"sort", required_argument, nullptr, SORT_OPTION},
+  {"output", required_argument, nullptr, 'o'},
+  {"reverse", no_argument, nullptr, 'r'},
+  {"stable", no_argument, nullptr, 's'},
+  {"batch-size", required_argument, nullptr, NMERGE_OPTION},
+  {"buffer-size", required_argument, nullptr, 'S'},
+  {"field-separator", required_argument, nullptr, 't'},
+  {"temporary-directory", required_argument, nullptr, 'T'},
+  {"unique", no_argument, nullptr, 'u'},
+  {"zero-terminated", no_argument, nullptr, 'z'},
+  {"parallel", required_argument, nullptr, PARALLEL_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0},
+  {nullptr, 0, nullptr, 0},
 };
 
 #define CHECK_TABLE \
@@ -591,7 +591,7 @@ static struct option const long_options[] =
 static char const *const check_args[] =
 {
 #define _ct_(_s, _c) _s,
-  CHECK_TABLE NULL
+  CHECK_TABLE nullptr
 #undef  _ct_
 };
 static char const check_types[] =
@@ -612,7 +612,7 @@ static char const check_types[] =
 static char const *const sort_args[] =
 {
 #define _st_(_s, _c) _s,
-  SORT_TABLE NULL
+  SORT_TABLE nullptr
 #undef  _st_
 };
 static char const sort_types[] =
@@ -647,7 +647,7 @@ cs_leave (struct cs_status const *status)
   if (status->valid)
     {
       /* Ignore failure when restoring the signal mask. */
-      pthread_sigmask (SIG_SETMASK, &status->sigs, NULL);
+      pthread_sigmask (SIG_SETMASK, &status->sigs, nullptr);
     }
 }
 
@@ -737,10 +737,10 @@ register_proc (struct tempnode *temp)
 {
   if (! proctab)
     {
-      proctab = hash_initialize (INIT_PROCTAB_SIZE, NULL,
+      proctab = hash_initialize (INIT_PROCTAB_SIZE, nullptr,
                                  proctab_hasher,
                                  proctab_comparator,
-                                 NULL);
+                                 nullptr);
       if (! proctab)
         xalloc_die ();
     }
@@ -814,7 +814,7 @@ cleanup (void)
 
   for (node = temphead; node; node = node->next)
     unlink (node->name);
-  temphead = NULL;
+  temphead = nullptr;
 }
 
 /* Cleanup actions to take when exiting.  */
@@ -837,7 +837,7 @@ exit_cleanup (void)
 
 /* Create a new temporary file, returning its newly allocated tempnode.
    Store into *PFD the file descriptor open for writing.
-   If the creation fails, return NULL and store -1 into *PFD if the
+   If the creation fails, return nullptr and store -1 into *PFD if the
    failure is due to file descriptor exhaustion and
    SURVIVE_FD_EXHAUSTION; otherwise, die.  */
 
@@ -857,7 +857,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
 
   memcpy (file, temp_dir, len);
   memcpy (file + len, slashbase, sizeof slashbase);
-  node->next = NULL;
+  node->next = nullptr;
   if (++temp_dir_index == temp_dir_count)
     temp_dir_index = 0;
 
@@ -879,14 +879,14 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
         die (SORT_FAILURE, errno, _("cannot create temporary file in %s"),
              quoteaf (temp_dir));
       free (node);
-      node = NULL;
+      node = nullptr;
     }
 
   *pfd = fd;
   return node;
 }
 
-/* Return a pointer to stdout status, or NULL on failure.  */
+/* Return a pointer to stdout status, or nullptr on failure.  */
 
 static struct stat *
 get_outstatus (void)
@@ -895,7 +895,7 @@ get_outstatus (void)
   static struct stat outstat;
   if (outstat_errno == 0)
     outstat_errno = fstat (STDOUT_FILENO, &outstat) == 0 ? -1 : errno;
-  return outstat_errno < 0 ? &outstat : NULL;
+  return outstat_errno < 0 ? &outstat : nullptr;
 }
 
 /* Return a stream for FILE, opened with mode HOW.  If HOW is "w",
@@ -903,7 +903,7 @@ get_outstatus (void)
    truncated unless FILE is null.  When opening for input, "-"
    means standard input.  To avoid confusion, do not return file
    descriptors STDIN_FILENO, STDOUT_FILENO, or STDERR_FILENO when
-   opening an ordinary FILE.  Return NULL if unsuccessful.
+   opening an ordinary FILE.  Return nullptr if unsuccessful.
 
    Use fadvise to specify an access pattern for input files.
    There are a few hints we could possibly provide,
@@ -961,7 +961,7 @@ stream_open (char const *file, char const *how)
       else
         {
           int fd = open (file, O_RDONLY | O_CLOEXEC);
-          fp = fd < 0 ? NULL : fdopen (fd, how);
+          fp = fd < 0 ? nullptr : fdopen (fd, how);
         }
       fadvise (fp, FADVISE_SEQUENTIAL);
     }
@@ -1067,7 +1067,7 @@ pipe_fork (int pipefds[2], size_t tries)
          if it receives a signal before exec-ing.  */
       cs_enter (&cs);
       saved_temphead = temphead;
-      temphead = NULL;
+      temphead = nullptr;
 
       pid = fork ();
       saved_errno = errno;
@@ -1112,7 +1112,7 @@ pipe_fork (int pipefds[2], size_t tries)
 /* Create a temporary file and, if asked for, start a compressor
    to that file.  Set *PFP to the file handle and return
    the address of the new temp node.  If the creation
-   fails, return NULL if the failure is due to file descriptor
+   fails, return nullptr if the failure is due to file descriptor
    exhaustion and SURVIVE_FD_EXHAUSTION; otherwise, die.  */
 
 static struct tempnode *
@@ -1121,7 +1121,7 @@ maybe_create_temp (FILE **pfp, bool survive_fd_exhaustion)
   int tempfd;
   struct tempnode *node = create_temp_file (&tempfd, survive_fd_exhaustion);
   if (! node)
-    return NULL;
+    return nullptr;
 
   node->state = UNCOMPRESSED;
 
@@ -1146,7 +1146,7 @@ maybe_create_temp (FILE **pfp, bool survive_fd_exhaustion)
           move_fd (tempfd, STDOUT_FILENO);
           move_fd (pipefds[0], STDIN_FILENO);
 
-          execlp (compress_program, compress_program, (char *) NULL);
+          execlp (compress_program, compress_program, (char *) nullptr);
 
           async_safe_die (errno, "couldn't execute compress program");
         }
@@ -1170,7 +1170,7 @@ create_temp (FILE **pfp)
 }
 
 /* Open a compressed temp file and start a decompression process through
-   which to filter the input.  Return NULL (setting errno to
+   which to filter the input.  Return nullptr (setting errno to
    EMFILE) if we ran out of file descriptors, and die on any other
    kind of failure.  */
 
@@ -1178,14 +1178,14 @@ static FILE *
 open_temp (struct tempnode *temp)
 {
   int tempfd, pipefds[2];
-  FILE *fp = NULL;
+  FILE *fp = nullptr;
 
   if (temp->state == UNREAPED)
     wait_proc (temp->pid);
 
   tempfd = open (temp->name, O_RDONLY);
   if (tempfd < 0)
-    return NULL;
+    return nullptr;
 
   pid_t child = pipe_fork (pipefds, MAX_FORK_TRIES_DECOMPRESS);
 
@@ -1206,7 +1206,7 @@ open_temp (struct tempnode *temp)
       move_fd (tempfd, STDIN_FILENO);
       move_fd (pipefds[1], STDOUT_FILENO);
 
-      execlp (compress_program, compress_program, "-d", (char *) NULL);
+      execlp (compress_program, compress_program, "-d", (char *) nullptr);
 
       async_safe_die (errno, "couldn't execute compress program (with -d)");
 
@@ -1333,7 +1333,7 @@ specify_nmerge (int oi, char c, char const *s)
 {
   uintmax_t n;
   struct rlimit rlimit;
-  enum strtol_error e = xstrtoumax (s, NULL, 10, &n, "");
+  enum strtol_error e = xstrtoumax (s, nullptr, 10, &n, "");
 
   /* Try to find out how many file descriptors we'll be able
      to open.  We need at least nmerge + 3 (STDIN_FILENO,
@@ -1447,7 +1447,7 @@ static size_t
 specify_nthreads (int oi, char c, char const *s)
 {
   uintmax_t nthreads;
-  enum strtol_error e = xstrtoumax (s, NULL, 10, &nthreads, "");
+  enum strtol_error e = xstrtoumax (s, nullptr, 10, &nthreads, "");
   if (e == LONGINT_OVERFLOW)
     return SIZE_MAX;
   if (e != LONGINT_OK)
@@ -2141,7 +2141,7 @@ compare_random (char *restrict texta, size_t lena,
   char stackbuf[4000];
   char *buf = stackbuf;
   size_t bufsize = sizeof stackbuf;
-  void *allocated = NULL;
+  void *allocated = nullptr;
   uint32_t dig[2][MD5_DIGEST_SIZE / sizeof (uint32_t)];
   struct md5_ctx s[2];
   s[0] = s[1] = random_md5_state;
@@ -2186,7 +2186,7 @@ compare_random (char *restrict texta, size_t lena,
           bool a_fits = sizea <= bufsize;
           size_t sizeb =
             (textb < limb
-             ? (xstrxfrm ((a_fits ? buf + sizea : NULL), textb,
+             ? (xstrxfrm ((a_fits ? buf + sizea : nullptr), textb,
                           (a_fits ? bufsize - sizea : 0))
                 + 1)
              : 0);
@@ -2505,9 +2505,9 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
 
       /* Flag global options not copied or specified in any key.  */
       if (ugkey.ignore && (ugkey.ignore == key->ignore))
-        ugkey.ignore = NULL;
+        ugkey.ignore = nullptr;
       if (ugkey.translate && (ugkey.translate == key->translate))
-        ugkey.translate = NULL;
+        ugkey.translate = nullptr;
       ugkey.skipsblanks &= !key->skipsblanks;
       ugkey.skipeblanks &= !key->skipeblanks;
       ugkey.month &= !key->month;
@@ -2653,7 +2653,7 @@ keycompare (struct line const *a, struct line const *b)
           char enda = ta[tlena];
           char endb = tb[tlenb];
 
-          void *allocated = NULL;
+          void *allocated = nullptr;
           char stackbuf[4000];
 
           if (ignore || translate)
@@ -2697,7 +2697,7 @@ keycompare (struct line const *a, struct line const *b)
           else if (key->human_numeric)
             diff = human_numcompare (ta, tb);
           else if (key->month)
-            diff = getmonth (ta, NULL) - getmonth (tb, NULL);
+            diff = getmonth (ta, nullptr) - getmonth (tb, nullptr);
           else if (key->random)
             diff = compare_random (ta, tlena, tb, tlenb);
           else if (key->version)
@@ -2910,7 +2910,7 @@ check (char const *file_name, char checkonly)
 
   initbuf (&buf, sizeof (struct line),
            MAX (merge_buffer_size, sort_size));
-  temp.text = NULL;
+  temp.text = nullptr;
 
   while (fillbuf (&buf, fp, file_name))
     {
@@ -3008,7 +3008,7 @@ open_input_files (struct sortfile *files, size_t nfiles, FILE ***pfps)
    NFILES is the number of files; 0 <= NTEMPS <= NFILES <= NMERGE.
    FPS is the vector of open stream corresponding to the files.
    Close input and output streams before returning.
-   OUTPUT_FILE gives the name of the output file.  If it is NULL,
+   OUTPUT_FILE gives the name of the output file.  If it is null,
    the output file is standard output.  */
 
 static void
@@ -3018,7 +3018,7 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
   struct buffer *buffer = xnmalloc (nfiles, sizeof *buffer);
                                 /* Input buffers for each file. */
   struct line saved;		/* Saved line storage for unique check. */
-  struct line const *savedline = NULL;
+  struct line const *savedline = nullptr;
                                 /* &saved if there is a saved line. */
   size_t savealloc = 0;		/* Size allocated for the saved line. */
   struct line const **cur = xnmalloc (nfiles, sizeof *cur);
@@ -3033,7 +3033,7 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
   size_t j;
   size_t t;
   struct keyfield const *key = keylist;
-  saved.text = NULL;
+  saved.text = nullptr;
 
   /* Read initial lines from each input file. */
   for (i = 0; i < nfiles; )
@@ -3086,7 +3086,7 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
         {
           if (savedline && compare (savedline, smallest))
             {
-              savedline = NULL;
+              savedline = nullptr;
               write_line (&saved, ofp, output_file);
             }
           if (!savedline)
@@ -3339,13 +3339,13 @@ merge_tree_init (size_t nthreads, size_t nlines, struct line *dest)
   struct merge_node *merge_tree = xmalloc (2 * sizeof *merge_tree * nthreads);
 
   struct merge_node *root = merge_tree;
-  root->lo = root->hi = root->end_lo = root->end_hi = NULL;
-  root->dest = NULL;
+  root->lo = root->hi = root->end_lo = root->end_hi = nullptr;
+  root->dest = nullptr;
   root->nlo = root->nhi = nlines;
-  root->parent = NULL;
+  root->parent = nullptr;
   root->level = MERGE_END;
   root->queued = false;
-  pthread_mutex_init (&root->lock, NULL);
+  pthread_mutex_init (&root->lock, nullptr);
 
   init_node (root, root + 1, dest, nthreads, nlines, false);
   return merge_tree;
@@ -3396,7 +3396,7 @@ init_node (struct merge_node *restrict parent,
   node->parent = parent;
   node->level = parent->level + 1;
   node->queued = false;
-  pthread_mutex_init (&node->lock, NULL);
+  pthread_mutex_init (&node->lock, nullptr);
 
   if (nthreads > 1)
     {
@@ -3411,8 +3411,8 @@ init_node (struct merge_node *restrict parent,
     }
   else
     {
-      node->lo_child = NULL;
-      node->hi_child = NULL;
+      node->lo_child = nullptr;
+      node->hi_child = nullptr;
     }
   return node_pool;
 }
@@ -3463,11 +3463,11 @@ static void
 queue_init (struct merge_node_queue *queue, size_t nthreads)
 {
   /* Though it's highly unlikely all nodes are in the heap at the same
-     time, the heap should accommodate all of them.  Counting a NULL
+     time, the heap should accommodate all of them.  Counting a null
      dummy head for the heap, reserve 2 * NTHREADS nodes.  */
   queue->priority_queue = heap_alloc (compare_nodes, 2 * nthreads);
-  pthread_mutex_init (&queue->mutex, NULL);
-  pthread_cond_init (&queue->cond, NULL);
+  pthread_mutex_init (&queue->mutex, nullptr);
+  pthread_cond_init (&queue->cond, nullptr);
 }
 
 /* Insert NODE into QUEUE.  The caller either holds a lock on NODE, or
@@ -3696,7 +3696,7 @@ sortlines_thread (void *data)
   sortlines (args->lines, args->nthreads, args->total_lines,
              args->node, args->queue, args->tfp,
              args->output_temp);
-  return NULL;
+  return nullptr;
 }
 
 /* Sort lines, possibly in parallel.  The arguments are as in struct
@@ -3738,11 +3738,11 @@ sortlines (struct line *restrict lines, size_t nthreads,
                              node->lo_child, queue, tfp, temp_output};
 
   if (nthreads > 1 && SUBTHREAD_LINES_HEURISTIC <= nlines
-      && pthread_create (&thread, NULL, sortlines_thread, &args) == 0)
+      && pthread_create (&thread, nullptr, sortlines_thread, &args) == 0)
     {
       sortlines (lines - node->nlo, hi_threads, total_lines,
                  node->hi_child, queue, tfp, temp_output);
-      pthread_join (thread, NULL);
+      pthread_join (thread, nullptr);
     }
   else
     {
@@ -3788,7 +3788,7 @@ static void
 avoid_trashing_input (struct sortfile *files, size_t ntemps,
                       size_t nfiles, char const *outfile)
 {
-  struct tempnode *tempcopy = NULL;
+  struct tempnode *tempcopy = nullptr;
 
   for (size_t i = ntemps; i < nfiles; i++)
     {
@@ -4041,7 +4041,7 @@ sort (char *const *files, size_t nfiles, char const *output_file,
               break;
             }
 
-          saved_line.text = NULL;
+          saved_line.text = nullptr;
           line = buffer_linelim (&buf);
           if (buf.eof && !nfiles && !ntemps && !buf.left)
             {
@@ -4110,7 +4110,7 @@ insertkey (struct keyfield *key_arg)
   for (p = &keylist; *p; p = &(*p)->next)
     continue;
   *p = key;
-  key->next = NULL;
+  key->next = nullptr;
 }
 
 /* Report a bad field specification SPEC, with extra info MSGID.  */
@@ -4153,7 +4153,7 @@ check_ordering_compatibility (void)
 /* Parse the leading integer in STRING and store the resulting value
    (which must fit into size_t) into *VAL.  Return the address of the
    suffix after the integer.  If the value is too large, silently
-   substitute SIZE_MAX.  If MSGID is NULL, return NULL after
+   substitute SIZE_MAX.  If MSGID is null, return nullptr after
    failure; otherwise, report MSGID and exit on failure.  */
 
 static char const *
@@ -4179,7 +4179,7 @@ parse_field_count (char const *string, size_t *val, char const *msgid)
       if (msgid)
         die (SORT_FAILURE, 0, _("%s: invalid count at start of %s"),
              _(msgid), quote (string));
-      return NULL;
+      return nullptr;
     }
 
   return suffix;
@@ -4279,17 +4279,17 @@ main (int argc, char **argv)
   int c = 0;
   char checkonly = 0;
   bool mergeonly = false;
-  char *random_source = NULL;
+  char *random_source = nullptr;
   bool need_random = false;
   size_t nthreads = 0;
   size_t nfiles = 0;
-  bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
+  bool posixly_correct = (getenv ("POSIXLY_CORRECT") != nullptr);
   int posix_ver = posix2_version ();
   bool traditional_usage = ! (200112 <= posix_ver && posix_ver < 200809);
   char **files;
-  char *files_from = NULL;
+  char *files_from = nullptr;
   struct Tokens tok;
-  char const *outfile = NULL;
+  char const *outfile = nullptr;
   bool locale_ok;
 
   initialize_main (&argc, &argv);
@@ -4357,7 +4357,7 @@ main (int argc, char **argv)
     sigemptyset (&caught_signals);
     for (i = 0; i < nsigs; i++)
       {
-        sigaction (sig[i], NULL, &act);
+        sigaction (sig[i], nullptr, &act);
         if (act.sa_handler != SIG_IGN)
           sigaddset (&caught_signals, sig[i]);
       }
@@ -4368,7 +4368,7 @@ main (int argc, char **argv)
 
     for (i = 0; i < nsigs; i++)
       if (sigismember (&caught_signals, sig[i]))
-        sigaction (sig[i], &act, NULL);
+        sigaction (sig[i], &act, nullptr);
 #else
     for (i = 0; i < nsigs; i++)
       if (signal (sig[i], SIG_IGN) != SIG_IGN)
@@ -4414,7 +4414,7 @@ main (int argc, char **argv)
       else switch (c)
         {
         case 1:
-          key = NULL;
+          key = nullptr;
           if (optarg[0] == '+')
             {
               bool minus_pos_usage = (optind != argc && argv[optind][0] == '-'
@@ -4425,13 +4425,13 @@ main (int argc, char **argv)
                   /* Treat +POS1 [-POS2] as a key if possible; but silently
                      treat an operand as a file if it is not a valid +POS1.  */
                   key = key_init (&key_buf);
-                  s = parse_field_count (optarg + 1, &key->sword, NULL);
+                  s = parse_field_count (optarg + 1, &key->sword, nullptr);
                   if (s && *s == '.')
-                    s = parse_field_count (s + 1, &key->schar, NULL);
+                    s = parse_field_count (s + 1, &key->schar, nullptr);
                   if (! (key->sword || key->schar))
                     key->sword = SIZE_MAX;
                   if (! s || *set_ordering (s, key, bl_start))
-                    key = NULL;
+                    key = nullptr;
                   else
                     {
                       if (minus_pos_usage)
@@ -4439,9 +4439,10 @@ main (int argc, char **argv)
                           char const *optarg1 = argv[optind++];
                           s = parse_field_count (optarg1 + 1, &key->eword,
                                              N_("invalid number after '-'"));
-                          /* When called with a non-NULL message ID,
-                             parse_field_count cannot return NULL.  Tell static
-                             analysis tools that dereferencing S is safe.  */
+                          /* When called with a non-null message ID,
+                             parse_field_count cannot return a null pointer.
+                             Tell static analysis tools that
+                             dereferencing S is safe.  */
                           assert (s);
                           if (*s == '.')
                             s = parse_field_count (s + 1, &key->echar,
@@ -4765,7 +4766,7 @@ main (int argc, char **argv)
           error (0, 0, "%s", _("failed to set locale"));
       if (hard_LC_COLLATE)
         error (0, 0, _("text ordering performed using %s sorting rules"),
-               quote (setlocale (LC_COLLATE, NULL)));
+               quote (setlocale (LC_COLLATE, nullptr)));
       else
         error (0, 0, "%s",
                _("text ordering performed using simple byte comparison"));

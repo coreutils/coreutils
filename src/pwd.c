@@ -40,11 +40,11 @@ struct file_name
 
 static struct option const longopts[] =
 {
-  {"logical", no_argument, NULL, 'L'},
-  {"physical", no_argument, NULL, 'P'},
+  {"logical", no_argument, nullptr, 'L'},
+  {"physical", no_argument, nullptr, 'P'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -160,7 +160,7 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
   bool found;
 
   dirp = opendir ("..");
-  if (dirp == NULL)
+  if (dirp == nullptr)
     die (EXIT_FAILURE, errno, _("cannot open directory %s"),
          quote (nth_parent (parent_height)));
 
@@ -185,7 +185,7 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
       ino_t ino;
 
       errno = 0;
-      if ((dp = readdir_ignoring_dot_and_dotdot (dirp)) == NULL)
+      if ((dp = readdir_ignoring_dot_and_dotdot (dirp)) == nullptr)
         {
           if (errno)
             {
@@ -195,7 +195,7 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
               errno = e;
 
               /* Arrange to give a diagnostic after exiting this loop.  */
-              dirp = NULL;
+              dirp = nullptr;
             }
           break;
         }
@@ -225,7 +225,7 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
         }
     }
 
-  if (dirp == NULL || closedir (dirp) != 0)
+  if (dirp == nullptr || closedir (dirp) != 0)
     {
       /* Note that this diagnostic serves for both readdir
          and closedir failures.  */
@@ -272,7 +272,7 @@ robust_getcwd (struct file_name *file_name)
   struct dev_ino *root_dev_ino = get_root_dev_ino (&dev_ino_buf);
   struct stat dot_sb;
 
-  if (root_dev_ino == NULL)
+  if (root_dev_ino == nullptr)
     die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
          quoteaf ("/"));
 
@@ -295,7 +295,7 @@ robust_getcwd (struct file_name *file_name)
 
 
 /* Return PWD from the environment if it is acceptable for 'pwd -L'
-   output, otherwise NULL.  */
+   output, otherwise nullptr.  */
 static char *
 logical_getcwd (void)
 {
@@ -306,20 +306,20 @@ logical_getcwd (void)
 
   /* Textual validation first.  */
   if (!wd || wd[0] != '/')
-    return NULL;
+    return nullptr;
   p = wd;
   while ((p = strstr (p, "/.")))
     {
       if (!p[2] || p[2] == '/'
           || (p[2] == '.' && (!p[3] || p[3] == '/')))
-        return NULL;
+        return nullptr;
       p++;
     }
 
   /* System call validation.  */
   if (stat (wd, &st1) == 0 && stat (".", &st2) == 0 && SAME_INODE (st1, st2))
     return wd;
-  return NULL;
+  return nullptr;
 }
 
 
@@ -330,7 +330,7 @@ main (int argc, char **argv)
   /* POSIX requires a default of -L, but most scripts expect -P.
      Currently shells default to -L, while stand-alone
      pwd implementations default to -P.  */
-  bool logical = (getenv ("POSIXLY_CORRECT") != NULL);
+  bool logical = (getenv ("POSIXLY_CORRECT") != nullptr);
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -342,7 +342,7 @@ main (int argc, char **argv)
 
   while (true)
     {
-      int c = getopt_long (argc, argv, "LP", longopts, NULL);
+      int c = getopt_long (argc, argv, "LP", longopts, nullptr);
       if (c == -1)
         break;
       switch (c)
@@ -377,7 +377,7 @@ main (int argc, char **argv)
     }
 
   wd = xgetcwd ();
-  if (wd != NULL)
+  if (wd != nullptr)
     {
       puts (wd);
       free (wd);

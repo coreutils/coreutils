@@ -47,14 +47,14 @@ enum
 
 static struct option const longopts[] =
 {
-  {"directory", no_argument, NULL, 'd'},
-  {"quiet", no_argument, NULL, 'q'},
-  {"dry-run", no_argument, NULL, 'u'},
-  {"suffix", required_argument, NULL, SUFFIX_OPTION},
-  {"tmpdir", optional_argument, NULL, 'p'},
+  {"directory", no_argument, nullptr, 'd'},
+  {"quiet", no_argument, nullptr, 'q'},
+  {"dry-run", no_argument, nullptr, 'u'},
+  {"suffix", required_argument, nullptr, SUFFIX_OPTION},
+  {"tmpdir", optional_argument, nullptr, 'p'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -146,12 +146,12 @@ int
 main (int argc, char **argv)
 {
   char const *dest_dir;
-  char const *dest_dir_arg = NULL;
+  char const *dest_dir_arg = nullptr;
   bool suppress_file_err = false;
   int c;
   unsigned int n_args;
   char *template;
-  char *suffix = NULL;
+  char *suffix = nullptr;
   bool use_dest_dir = false;
   bool deprecated_t_option = false;
   bool create_directory = false;
@@ -169,7 +169,7 @@ main (int argc, char **argv)
 
   atexit (maybe_close_stdout);
 
-  while ((c = getopt_long (argc, argv, "dp:qtuV", longopts, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "dp:qtuV", longopts, nullptr)) != -1)
     {
       switch (c)
         {
@@ -293,7 +293,7 @@ main (int argc, char **argv)
                  quote (template));
         }
 
-      dest_name = file_name_concat (dest_dir, template, NULL);
+      dest_name = file_name_concat (dest_dir, template, nullptr);
       free (template);
       template = dest_name;
       /* Note that suffix is now invalid.  */

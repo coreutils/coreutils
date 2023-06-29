@@ -518,7 +518,7 @@ copy_cat (void)
      unsupported or the input file seems empty.  */
 
   for (bool some_copied = false; ; some_copied = true)
-    switch (copy_file_range (input_desc, NULL, STDOUT_FILENO, NULL,
+    switch (copy_file_range (input_desc, nullptr, STDOUT_FILENO, nullptr,
                              copy_max, 0))
       {
       case 0:
@@ -554,16 +554,16 @@ main (int argc, char **argv)
 
   static struct option const long_options[] =
   {
-    {"number-nonblank", no_argument, NULL, 'b'},
-    {"number", no_argument, NULL, 'n'},
-    {"squeeze-blank", no_argument, NULL, 's'},
-    {"show-nonprinting", no_argument, NULL, 'v'},
-    {"show-ends", no_argument, NULL, 'E'},
-    {"show-tabs", no_argument, NULL, 'T'},
-    {"show-all", no_argument, NULL, 'A'},
+    {"number-nonblank", no_argument, nullptr, 'b'},
+    {"number", no_argument, nullptr, 'n'},
+    {"squeeze-blank", no_argument, nullptr, 's'},
+    {"show-nonprinting", no_argument, nullptr, 'v'},
+    {"show-ends", no_argument, nullptr, 'E'},
+    {"show-tabs", no_argument, nullptr, 'T'},
+    {"show-all", no_argument, nullptr, 'A'},
     {GETOPT_HELP_OPTION_DECL},
     {GETOPT_VERSION_OPTION_DECL},
-    {NULL, 0, NULL, 0}
+    {nullptr, 0, nullptr, 0}
   };
 
   initialize_main (&argc, &argv);
@@ -581,7 +581,7 @@ main (int argc, char **argv)
   /* Parse command line options.  */
 
   int c;
-  while ((c = getopt_long (argc, argv, "benstuvAET", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "benstuvAET", long_options, nullptr))
          != -1)
     {
       switch (c)
@@ -731,7 +731,7 @@ main (int argc, char **argv)
             out_isreg && S_ISREG (stat_buf.st_mode) ? copy_cat () : 0;
           if (copy_cat_status != 0)
             {
-              inbuf = NULL;
+              inbuf = nullptr;
               ok &= 0 < copy_cat_status;
             }
           else

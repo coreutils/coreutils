@@ -89,7 +89,7 @@ static struct option const long_options[] =
 #endif
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -588,7 +588,7 @@ z85_length (int len)
 static bool
 isz85 (char ch)
 {
-  return c_isalnum (ch) || (strchr (".-:+=^!/*?&<>()[]{}@%$#", ch) != NULL);
+  return c_isalnum (ch) || strchr (".-:+=^!/*?&<>()[]{}@%$#", ch) != nullptr;
 }
 
 static char const z85_encoding[85] =
@@ -1018,7 +1018,7 @@ do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
   outbuf = xmalloc (DEC_BLOCKSIZE);
 
 #if BASE_TYPE == 42
-  ctx.inbuf = NULL;
+  ctx.inbuf = nullptr;
 #endif
   base_decode_ctx_init (&ctx);
 
@@ -1099,7 +1099,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((opt = getopt_long (argc, argv, "diw:", long_options, NULL)) != -1)
+  while ((opt = getopt_long (argc, argv, "diw:", long_options, nullptr)) != -1)
     switch (opt)
       {
       case 'd':
@@ -1109,7 +1109,7 @@ main (int argc, char **argv)
       case 'w':
         {
           intmax_t w;
-          strtol_error s_err = xstrtoimax (optarg, NULL, 10, &w, "");
+          strtol_error s_err = xstrtoimax (optarg, nullptr, 10, &w, "");
           if (LONGINT_OVERFLOW < s_err || w < 0)
             die (EXIT_FAILURE, 0, "%s: %s",
                  _("invalid wrap size"), quote (optarg));
@@ -1235,7 +1235,7 @@ main (int argc, char **argv)
   else
     {
       input_fh = fopen (infile, "rb");
-      if (input_fh == NULL)
+      if (input_fh == nullptr)
         die (EXIT_FAILURE, errno, "%s", quotef (infile));
     }
 

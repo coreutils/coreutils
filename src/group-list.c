@@ -38,12 +38,12 @@ print_group_list (char const *username,
                   bool use_names, char delim)
 {
   bool ok = true;
-  struct passwd *pwd = NULL;
+  struct passwd *pwd = nullptr;
 
   if (username)
     {
       pwd = getpwuid (ruid);
-      if (pwd == NULL)
+      if (pwd == nullptr)
         ok = false;
     }
 
@@ -102,13 +102,13 @@ gidtostr_ptr (gid_t const *gid)
 extern bool
 print_group (gid_t gid, bool use_name)
 {
-  struct group *grp = NULL;
+  struct group *grp = nullptr;
   bool ok = true;
 
   if (use_name)
     {
       grp = getgrgid (gid);
-      if (grp == NULL)
+      if (grp == nullptr)
         {
           error (0, 0, _("cannot find name for group ID %lu"),
                  (unsigned long int) gid);

@@ -48,12 +48,12 @@ static char const shortopts[] = "bsw:0::1::2::3::4::5::6::7::8::9::";
 
 static struct option const longopts[] =
 {
-  {"bytes", no_argument, NULL, 'b'},
-  {"spaces", no_argument, NULL, 's'},
-  {"width", required_argument, NULL, 'w'},
+  {"bytes", no_argument, nullptr, 'b'},
+  {"spaces", no_argument, nullptr, 's'},
+  {"width", required_argument, nullptr, 'w'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -123,7 +123,7 @@ fold_file (char const *filename, size_t width)
   int c;
   size_t column = 0;		/* Screen column where next char will go. */
   size_t offset_out = 0;	/* Index in 'line_out' for next char. */
-  static char *line_out = NULL;
+  static char *line_out = nullptr;
   static size_t allocated_out = 0;
   int saved_errno;
 
@@ -135,7 +135,7 @@ fold_file (char const *filename, size_t width)
   else
     istream = fopen (filename, "r");
 
-  if (istream == NULL)
+  if (istream == nullptr)
     {
       error (0, errno, "%s", quotef (filename));
       return false;
@@ -254,7 +254,7 @@ main (int argc, char **argv)
 
   break_spaces = count_bytes = have_read_stdin = false;
 
-  while ((optc = getopt_long (argc, argv, shortopts, longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, shortopts, longopts, nullptr)) != -1)
     {
       char optargbuf[2];
 

@@ -57,15 +57,15 @@ static struct option const longopts[] =
 {
   /* Don't name this '--force' because it's not close enough in meaning
      to e.g. rm's -f option.  */
-  {"ignore-fail-on-non-empty", no_argument, NULL,
+  {"ignore-fail-on-non-empty", no_argument, nullptr,
    IGNORE_FAIL_ON_NON_EMPTY_OPTION},
 
-  {"path", no_argument, NULL, 'p'},  /* Deprecated.  */
-  {"parents", no_argument, NULL, 'p'},
-  {"verbose", no_argument, NULL, 'v'},
+  {"path", no_argument, nullptr, 'p'},  /* Deprecated.  */
+  {"parents", no_argument, nullptr, 'p'},
+  {"verbose", no_argument, nullptr, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* Return true if ERROR_NUMBER is one of the values associated
@@ -119,7 +119,7 @@ remove_parents (char *dir)
   while (true)
     {
       slash = strrchr (dir, '/');
-      if (slash == NULL)
+      if (slash == nullptr)
         break;
       /* Remove any characters after the slash, skipping any extra
          slashes in a row. */
@@ -210,7 +210,7 @@ main (int argc, char **argv)
 
   remove_empty_parents = false;
 
-  while ((optc = getopt_long (argc, argv, "pv", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "pv", longopts, nullptr)) != -1)
     {
       switch (optc)
         {

@@ -52,10 +52,10 @@ finalize_tab_stops (void);
 extern void
 set_file_list (char **file_list);
 
-/* Close the old stream pointer FP if it is non-NULL,
+/* Close the old stream pointer FP if it is non-null,
    and return a new one opened to read the next input file.
    Open a filename of '-' as the standard input.
-   Return NULL if there are no more input files.  */
+   Return nullptr if there are no more input files.  */
 extern FILE *
 next_file (FILE *fp);
 

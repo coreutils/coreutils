@@ -126,11 +126,11 @@ enum
     STATUS_PROGRESS = 4
   };
 
-/* The name of the input file, or NULL for the standard input. */
-static char const *input_file = NULL;
+/* The name of the input file, or nullptr for the standard input. */
+static char const *input_file = nullptr;
 
-/* The name of the output file, or NULL for the standard output. */
-static char const *output_file = NULL;
+/* The name of the output file, or nullptr for the standard output. */
+static char const *output_file = nullptr;
 
 /* The page size on this host.  */
 static idx_t page_size;
@@ -875,7 +875,7 @@ install_signal_handlers (void)
   sigemptyset (&caught_signals);
   if (catch_siginfo)
     sigaddset (&caught_signals, SIGINFO);
-  sigaction (SIGINT, NULL, &act);
+  sigaction (SIGINT, nullptr, &act);
   if (act.sa_handler != SIG_IGN)
     sigaddset (&caught_signals, SIGINT);
   act.sa_mask = caught_signals;
@@ -887,14 +887,14 @@ install_signal_handlers (void)
          handle EINTR explicitly in iftruncate etc.
          to avoid blocking on noncommitted read/write calls.  */
       act.sa_flags = 0;
-      sigaction (SIGINFO, &act, NULL);
+      sigaction (SIGINFO, &act, nullptr);
     }
 
   if (sigismember (&caught_signals, SIGINT))
     {
       act.sa_handler = interrupt_handler;
       act.sa_flags = SA_NODEFER | SA_RESETHAND;
-      sigaction (SIGINT, &act, NULL);
+      sigaction (SIGINT, &act, nullptr);
     }
 
 #else
@@ -975,7 +975,7 @@ process_signals (void)
       if (infos)
         info_signal_count = infos - 1;
 
-      sigprocmask (SIG_SETMASK, &oldset, NULL);
+      sigprocmask (SIG_SETMASK, &oldset, nullptr);
 
       if (interrupt)
         cleanup ();
@@ -1495,7 +1495,7 @@ scanargs (int argc, char *const *argv)
       char const *name = argv[i];
       char const *val = strchr (name, '=');
 
-      if (val == NULL)
+      if (val == nullptr)
         {
           diagnose (0, _("unrecognized operand %s"), quoteaf (name));
           usage (EXIT_FAILURE);
@@ -1525,7 +1525,7 @@ scanargs (int argc, char *const *argv)
           bool has_B = !!strchr (val, 'B');
           intmax_t n_min = 0;
           intmax_t n_max = INTMAX_MAX;
-          idx_t *converted_idx = NULL;
+          idx_t *converted_idx = nullptr;
 
           /* Maximum blocksize.  Keep it smaller than IDX_MAX, so that
              it fits into blocksize vars even if 1 is added for conv=swab.
@@ -2432,7 +2432,8 @@ main (int argc, char **argv)
   page_size = getpagesize ();
 
   parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE, Version,
-                                   true, usage, AUTHORS, (char const *) NULL);
+                                   true, usage, AUTHORS,
+                                   (char const *) nullptr);
   close_stdout_required = false;
 
   /* Initialize translation table to identity translation. */
@@ -2444,7 +2445,7 @@ main (int argc, char **argv)
 
   apply_translations ();
 
-  if (input_file == NULL)
+  if (input_file == nullptr)
     {
       input_file = _("standard input");
       set_fd_flags (STDIN_FILENO, input_flags, input_file);
@@ -2461,7 +2462,7 @@ main (int argc, char **argv)
   input_offset = MAX (0, offset);
   input_seek_errno = errno;
 
-  if (output_file == NULL)
+  if (output_file == nullptr)
     {
       output_file = _("standard output");
       set_fd_flags (STDOUT_FILENO, output_flags, output_file);

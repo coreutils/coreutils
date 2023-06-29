@@ -59,12 +59,12 @@ static char const short_options[] =
 
 static struct option const long_options[] =
 {
-  {"list", no_argument, NULL, 'l'},
-  {"signal", required_argument, NULL, 's'},
-  {"table", no_argument, NULL, 't'},
+  {"list", no_argument, nullptr, 'l'},
+  {"signal", required_argument, nullptr, 's'},
+  {"table", no_argument, nullptr, 't'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -235,7 +235,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, short_options, long_options, NULL))
+  while ((optc = getopt_long (argc, argv, short_options, long_options, nullptr))
          != -1)
     switch (optc)
       {
@@ -310,6 +310,6 @@ main (int argc, char **argv)
     }
 
   return (list
-          ? list_signals (table, optind < argc ? argv + optind : NULL)
+          ? list_signals (table, optind < argc ? argv + optind : nullptr)
           : send_signals (signum, argv + optind));
 }

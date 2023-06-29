@@ -126,7 +126,8 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE_NAME,
-                                   VERSION, true, usage, AUTHORS, NULL);
+                                   VERSION, true, usage, AUTHORS,
+                                   (char const *) nullptr);
 
 #define print_int(TYPE)                                                  \
   sprintf (limit + 1, "%"PRIuMAX, (uintmax_t) TYPE##_MAX);               \

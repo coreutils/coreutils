@@ -23,14 +23,14 @@
 #include <stdlib.h>
 
 /* Call lstat to get the device and inode numbers for '/'.
-   Upon failure, return NULL.  Otherwise, set the members of
+   Upon failure, return nullptr.  Otherwise, set the members of
    *ROOT_D_I accordingly and return ROOT_D_I.  */
 struct dev_ino *
 get_root_dev_ino (struct dev_ino *root_d_i)
 {
   struct stat statbuf;
   if (lstat ("/", &statbuf))
-    return NULL;
+    return nullptr;
   root_d_i->st_ino = statbuf.st_ino;
   root_d_i->st_dev = statbuf.st_dev;
   return root_d_i;

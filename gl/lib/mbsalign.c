@@ -111,8 +111,8 @@ mbsalign (char const *src, char *dest, size_t dest_size,
 {
   size_t ret = SIZE_MAX;
   size_t src_size = strlen (src) + 1;
-  char *newstr = NULL;
-  wchar_t *str_wc = NULL;
+  char *newstr = nullptr;
+  wchar_t *str_wc = nullptr;
   char const *str_to_print = src;
   size_t n_cols = src_size - 1;
   size_t n_used_bytes = n_cols; /* Not including NUL */
@@ -125,7 +125,7 @@ mbsalign (char const *src, char *dest, size_t dest_size,
      of screen columns used.  */
   if (!(flags & MBA_UNIBYTE_ONLY) && MB_CUR_MAX > 1)
     {
-      size_t src_chars = mbstowcs (NULL, src, 0);
+      size_t src_chars = mbstowcs (nullptr, src, 0);
       if (src_chars == SIZE_MAX)
         {
           if (flags & MBA_UNIBYTE_FALLBACK)
@@ -135,7 +135,7 @@ mbsalign (char const *src, char *dest, size_t dest_size,
         }
       src_chars += 1; /* make space for NUL */
       str_wc = malloc (src_chars * sizeof (wchar_t));
-      if (str_wc == NULL)
+      if (str_wc == nullptr)
         {
           if (flags & MBA_UNIBYTE_FALLBACK)
             goto mbsalign_unibyte;
@@ -159,10 +159,10 @@ mbsalign (char const *src, char *dest, size_t dest_size,
           {
              /* May have increased the size by converting
                 \t to \uFFFD for example.  */
-            src_size = wcstombs (NULL, str_wc, 0) + 1;
+            src_size = wcstombs (nullptr, str_wc, 0) + 1;
           }
         newstr = malloc (src_size);
-        if (newstr == NULL)
+        if (newstr == nullptr)
         {
           if (flags & MBA_UNIBYTE_FALLBACK)
             goto mbsalign_unibyte;
@@ -239,7 +239,7 @@ mbsalign_cleanup:
 
 /* A wrapper around mbsalign() to dynamically allocate the
    minimum amount of memory to store the result.
-   Return NULL on failure.  */
+   Return nullptr on failure.  */
 
 char *
 ambsalign (char const *src, size_t *width, mbs_align_t align, int flags)
@@ -247,17 +247,17 @@ ambsalign (char const *src, size_t *width, mbs_align_t align, int flags)
   size_t orig_width = *width;
   size_t size = *width;         /* Start with enough for unibyte mode.  */
   size_t req = size;
-  char *buf = NULL;
+  char *buf = nullptr;
 
   while (req >= size)
     {
       char *nbuf;
       size = req + 1;           /* Space for NUL.  */
       nbuf = realloc (buf, size);
-      if (nbuf == NULL)
+      if (nbuf == nullptr)
         {
           free (buf);
-          buf = NULL;
+          buf = nullptr;
           break;
         }
       buf = nbuf;
@@ -266,7 +266,7 @@ ambsalign (char const *src, size_t *width, mbs_align_t align, int flags)
       if (req == SIZE_MAX)
         {
           free (buf);
-          buf = NULL;
+          buf = nullptr;
           break;
         }
     }

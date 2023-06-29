@@ -83,20 +83,20 @@ enum
 
 static struct option const longopts[] =
 {
-  {"time", required_argument, NULL, TIME_OPTION},
-  {"no-create", no_argument, NULL, 'c'},
-  {"date", required_argument, NULL, 'd'},
-  {"reference", required_argument, NULL, 'r'},
-  {"no-dereference", no_argument, NULL, 'h'},
+  {"time", required_argument, nullptr, TIME_OPTION},
+  {"no-create", no_argument, nullptr, 'c'},
+  {"date", required_argument, nullptr, 'd'},
+  {"reference", required_argument, nullptr, 'r'},
+  {"no-dereference", no_argument, nullptr, 'h'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* Valid arguments to the '--time' option. */
 static char const *const time_args[] =
 {
-  "atime", "access", "use", "mtime", "modify", NULL
+  "atime", "access", "use", "mtime", "modify", nullptr
 };
 
 /* The bits in 'change_times' that those arguments set. */
@@ -151,12 +151,12 @@ touch (char const *file)
 
   if (amtime_now)
     {
-      /* Pass NULL to futimens so it will not fail if we have
+      /* Pass nullptr to futimens so it will not fail if we have
          write access to the file, but don't own it.  */
-      t = NULL;
+      t = nullptr;
     }
 
-  char const *file_opt = fd == STDOUT_FILENO ? NULL : file;
+  char const *file_opt = fd == STDOUT_FILENO ? nullptr : file;
   int atflag = no_dereference ? AT_SYMLINK_NOFOLLOW : 0;
   int utime_errno = (fdutimensat (fd, AT_FDCWD, file_opt, t, atflag) == 0
                      ? 0 : errno);
@@ -263,7 +263,7 @@ main (int argc, char **argv)
   int c;
   bool date_set = false;
   bool ok = true;
-  char const *flex_date = NULL;
+  char const *flex_date = nullptr;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -276,7 +276,7 @@ main (int argc, char **argv)
   change_times = 0;
   no_create = use_ref = false;
 
-  while ((c = getopt_long (argc, argv, "acd:fhmr:t:", longopts, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "acd:fhmr:t:", longopts, nullptr)) != -1)
     {
       switch (c)
         {
@@ -404,7 +404,7 @@ main (int argc, char **argv)
           struct tm const *tm = localtime (&newtime[0].tv_sec);
 
           /* Technically, it appears that even a deliberate attempt to cause
-             the above localtime to return NULL will always fail because our
+             the above localtime to return nullptr will always fail because our
              posixtime implementation rejects all dates for which localtime
              would fail.  However, skip the warning if it ever fails.  */
           if (tm)

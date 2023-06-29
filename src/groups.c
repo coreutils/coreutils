@@ -41,7 +41,7 @@ static struct option const longopts[] =
 {
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -83,7 +83,7 @@ main (int argc, char **argv)
   /* Processing the arguments this way makes groups.c behave differently to
    * groups.sh if one of the arguments is "--".
    */
-  while ((optc = getopt_long (argc, argv, "", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "", longopts, nullptr)) != -1)
     {
       switch (optc)
         {
@@ -115,7 +115,7 @@ main (int argc, char **argv)
       if (rgid == NO_GID && errno)
         die (EXIT_FAILURE, errno, _("cannot get real GID"));
 
-      if (!print_group_list (NULL, ruid, rgid, egid, true, ' '))
+      if (!print_group_list (nullptr, ruid, rgid, egid, true, ' '))
         ok = false;
       putchar ('\n');
     }
@@ -125,7 +125,7 @@ main (int argc, char **argv)
       for ( ; optind < argc; optind++)
         {
           struct passwd *pwd = getpwnam (argv[optind]);
-          if (pwd == NULL)
+          if (pwd == nullptr)
             {
               error (0, 0, _("%s: no such user"), quote (argv[optind]));
               ok = false;

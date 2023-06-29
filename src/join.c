@@ -88,7 +88,7 @@ struct seq
   };
 
 /* The previous line read from each file.  */
-static struct line *prevline[2] = {NULL, NULL};
+static struct line *prevline[2] = {nullptr, nullptr};
 
 /* The number of lines read from each file.  */
 static uintmax_t line_no[2] = {0, 0};
@@ -99,7 +99,7 @@ static char *g_names[2];
 /* This provides an extra line buffer for each file.  We need these if we
    try to read two consecutive lines into the same buffer, since we don't
    want to overwrite the previous buffer before we check order. */
-static struct line *spareline[2] = {NULL, NULL};
+static struct line *spareline[2] = {nullptr, nullptr};
 
 /* True if the LC_COLLATE locale is hard.  */
 static bool hard_LC_COLLATE;
@@ -159,14 +159,14 @@ enum
 
 static struct option const longopts[] =
 {
-  {"ignore-case", no_argument, NULL, 'i'},
-  {"check-order", no_argument, NULL, CHECK_ORDER_OPTION},
-  {"nocheck-order", no_argument, NULL, NOCHECK_ORDER_OPTION},
-  {"zero-terminated", no_argument, NULL, 'z'},
-  {"header", no_argument, NULL, HEADER_LINE_OPTION},
+  {"ignore-case", no_argument, nullptr, 'i'},
+  {"check-order", no_argument, nullptr, CHECK_ORDER_OPTION},
+  {"nocheck-order", no_argument, nullptr, NOCHECK_ORDER_OPTION},
+  {"zero-terminated", no_argument, nullptr, 'z'},
+  {"header", no_argument, nullptr, HEADER_LINE_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* Used to print non-joining lines */
@@ -283,7 +283,7 @@ xfields (struct line *line)
   if (0 <= tab && tab != '\n')
     {
       char *sep;
-      for (; (sep = memchr (ptr, tab, lim - ptr)) != NULL; ptr = sep + 1)
+      for (; (sep = memchr (ptr, tab, lim - ptr)) != nullptr; ptr = sep + 1)
         extract_field (line, ptr, sep - ptr);
     }
   else if (tab < 0)
@@ -313,12 +313,12 @@ xfields (struct line *line)
 static void
 freeline (struct line *line)
 {
-  if (line == NULL)
+  if (line == nullptr)
     return;
   free (line->fields);
-  line->fields = NULL;
+  line->fields = nullptr;
   free (line->buf.buffer);
-  line->buf.buffer = NULL;
+  line->buf.buffer = nullptr;
 }
 
 /* Return <0 if the join field in LINE1 compares less than the one in LINE2;
@@ -345,7 +345,7 @@ keycmp (struct line const *line1, struct line const *line2,
     }
   else
     {
-      beg1 = NULL;
+      beg1 = nullptr;
       len1 = 0;
     }
 
@@ -356,7 +356,7 @@ keycmp (struct line const *line1, struct line const *line2,
     }
   else
     {
-      beg2 = NULL;
+      beg2 = nullptr;
       len2 = 0;
     }
 
@@ -499,7 +499,7 @@ initseq (struct seq *seq)
 {
   seq->count = 0;
   seq->alloc = 0;
-  seq->lines = NULL;
+  seq->lines = nullptr;
 }
 
 /* Read a line from FP and add it to SEQ.  Return true if successful.  */
@@ -511,7 +511,7 @@ getseq (FILE *fp, struct seq *seq, int whichfile)
     {
       seq->lines = X2NREALLOC (seq->lines, &seq->alloc);
       for (size_t i = seq->count; i < seq->alloc; i++)
-        seq->lines[i] = NULL;
+        seq->lines[i] = nullptr;
     }
 
   if (get_line (fp, &seq->lines[seq->count], whichfile))
@@ -624,7 +624,7 @@ prjoin (struct line const *line1, struct line const *line2)
             }
           prfield (field, line);
           o = o->next;
-          if (o == NULL)
+          if (o == nullptr)
             break;
           putchar (output_separator);
         }
@@ -683,8 +683,8 @@ join (FILE *fp1, FILE *fp2)
       struct line const *hline1 = seq1.count ? seq1.lines[0] : &uni_blank;
       struct line const *hline2 = seq2.count ? seq2.lines[0] : &uni_blank;
       prjoin (hline1, hline2);
-      prevline[0] = NULL;
-      prevline[1] = NULL;
+      prevline[0] = nullptr;
+      prevline[1] = nullptr;
       if (seq1.count)
         advance_seq (fp1, &seq1, true, 1);
       if (seq2.count)
@@ -769,7 +769,7 @@ join (FILE *fp1, FILE *fp2)
      tail ends of both inputs to verify that they are in order.  We
      skip the rest of the tail once we have issued a warning for that
      file, unless we actually need to print the unpairable lines.  */
-  struct line *line = NULL;
+  struct line *line = nullptr;
   bool checktail = false;
 
   if (check_input_order != CHECK_ORDER_DISABLED
@@ -826,7 +826,7 @@ add_field (int file, size_t field)
   o = xmalloc (sizeof *o);
   o->file = file;
   o->field = field;
-  o->next = NULL;
+  o->next = nullptr;
 
   /* Add to the end of the list so the fields are in the right order.  */
   outlist_end->next = o;
@@ -845,7 +845,7 @@ string_to_join_field (char const *str)
   size_t result;
   uintmax_t val;
 
-  strtol_error s_err = xstrtoumax (str, NULL, 10, &val, "");
+  strtol_error s_err = xstrtoumax (str, nullptr, 10, &val, "");
   if (s_err == LONGINT_OVERFLOW || (s_err == LONGINT_OK && SIZE_MAX < val))
     val = SIZE_MAX;
   else if (s_err != LONGINT_OK || val == 0)
@@ -1030,7 +1030,7 @@ main (int argc, char **argv)
   check_input_order = CHECK_ORDER_DEFAULT;
 
   while ((optc = getopt_long (argc, argv, "-a:e:i1:2:j:o:t:v:z",
-                              longopts, NULL))
+                              longopts, nullptr))
          != -1)
     {
       optc_status = MUST_BE_OPERAND;
@@ -1044,7 +1044,7 @@ main (int argc, char **argv)
         case 'a':
           {
             unsigned long int val;
-            if (xstrtoul (optarg, NULL, 10, &val, "") != LONGINT_OK
+            if (xstrtoul (optarg, nullptr, 10, &val, "") != LONGINT_OK
                 || (val != 1 && val != 2))
               die (EXIT_FAILURE, 0,
                    _("invalid field number: %s"), quote (optarg));

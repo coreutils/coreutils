@@ -246,12 +246,12 @@ static size_t bytes_per_block;
    It differs from file_list[-1] only when file_list[-1] is "-".  */
 static char const *input_filename;
 
-/* A NULL-terminated list of the file-arguments from the command line.  */
+/* A null-terminated list of the file-arguments from the command line.  */
 static char const *const *file_list;
 
 /* Initializer for file_list if no file-arguments
    were specified on the command line.  */
-static char const *const default_file_list[] = {"-", NULL};
+static char const *const default_file_list[] = {"-", nullptr};
 
 /* The input stream associated with the current file.  */
 static FILE *in_stream;
@@ -290,7 +290,7 @@ enum endian_type
 
 static char const *const endian_args[] =
 {
-  "little", "big", NULL
+  "little", "big", nullptr
 };
 
 static enum endian_type const endian_types[] =
@@ -300,19 +300,19 @@ static enum endian_type const endian_types[] =
 
 static struct option const long_options[] =
 {
-  {"skip-bytes", required_argument, NULL, 'j'},
-  {"address-radix", required_argument, NULL, 'A'},
-  {"read-bytes", required_argument, NULL, 'N'},
-  {"format", required_argument, NULL, 't'},
-  {"output-duplicates", no_argument, NULL, 'v'},
-  {"strings", optional_argument, NULL, 'S'},
-  {"traditional", no_argument, NULL, TRADITIONAL_OPTION},
-  {"width", optional_argument, NULL, 'w'},
-  {"endian", required_argument, NULL, ENDIAN_OPTION },
+  {"skip-bytes", required_argument, nullptr, 'j'},
+  {"address-radix", required_argument, nullptr, 'A'},
+  {"read-bytes", required_argument, nullptr, 'N'},
+  {"format", required_argument, nullptr, 't'},
+  {"output-duplicates", no_argument, nullptr, 'v'},
+  {"strings", optional_argument, nullptr, 'S'},
+  {"traditional", no_argument, nullptr, TRADITIONAL_OPTION},
+  {"width", optional_argument, nullptr, 'w'},
+  {"endian", required_argument, nullptr, ENDIAN_OPTION },
 
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -616,7 +616,7 @@ simple_strtoul (char const *s, char const **p, unsigned long int *val)
 
 /* If S points to a single valid modern od format string, put
    a description of that format in *TSPEC, make *NEXT point at the
-   character following the just-decoded format (if *NEXT is non-NULL),
+   character following the just-decoded format (if *NEXT is non-null),
    and return true.  If S is not valid, don't modify *NEXT or *TSPEC,
    give a diagnostic, and return false.  For example, if S were
    "d4afL" *NEXT would be set to "afL" and *TSPEC would be
@@ -646,7 +646,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
   char c;
   int field_width;
 
-  assert (tspec != NULL);
+  assert (tspec != nullptr);
 
   switch (*s)
     {
@@ -887,7 +887,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
   if (tspec->hexl_mode_trailer)
     s++;
 
-  if (next != NULL)
+  if (next != nullptr)
     *next = s;
 
   return true;
@@ -908,7 +908,7 @@ open_next_file (void)
   do
     {
       input_filename = *file_list;
-      if (input_filename == NULL)
+      if (input_filename == nullptr)
         return ok;
       ++file_list;
 
@@ -922,17 +922,17 @@ open_next_file (void)
       else
         {
           in_stream = fopen (input_filename, (O_BINARY ? "rb" : "r"));
-          if (in_stream == NULL)
+          if (in_stream == nullptr)
             {
               error (0, errno, "%s", quotef (input_filename));
               ok = false;
             }
         }
     }
-  while (in_stream == NULL);
+  while (in_stream == nullptr);
 
   if (limit_bytes_to_format && !flag_dump_strings)
-    setvbuf (in_stream, NULL, _IONBF, 0);
+    setvbuf (in_stream, nullptr, _IONBF, 0);
 
   return ok;
 }
@@ -949,7 +949,7 @@ check_and_close (int in_errno)
 {
   bool ok = true;
 
-  if (in_stream != NULL)
+  if (in_stream != nullptr)
     {
       if (!ferror (in_stream))
         in_errno = 0;
@@ -963,7 +963,7 @@ check_and_close (int in_errno)
           ok = false;
         }
 
-      in_stream = NULL;
+      in_stream = nullptr;
     }
 
   if (ferror (stdout))
@@ -983,7 +983,7 @@ static bool
 decode_format_string (char const *s)
 {
   char const *s_orig = s;
-  assert (s != NULL);
+  assert (s != nullptr);
 
   while (*s != '\0')
     {
@@ -1019,7 +1019,7 @@ skip (uintmax_t n_skip)
   if (n_skip == 0)
     return true;
 
-  while (in_stream != NULL)	/* EOF.  */
+  while (in_stream != nullptr)	/* EOF.  */
     {
       struct stat file_stats;
 
@@ -1257,7 +1257,7 @@ read_char (int *c)
 
   *c = EOF;
 
-  while (in_stream != NULL)	/* EOF.  */
+  while (in_stream != nullptr)	/* EOF.  */
     {
       *c = fgetc (in_stream);
 
@@ -1295,7 +1295,7 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
 
   *n_bytes_in_buffer = 0;
 
-  while (in_stream != NULL)	/* EOF.  */
+  while (in_stream != nullptr)	/* EOF.  */
     {
       size_t n_needed;
       size_t n_read;
@@ -1348,7 +1348,7 @@ parse_old_offset (char const *s, uintmax_t *offset)
   /* Determine the radix we'll use to interpret S.  If there is a '.',
      it's decimal, otherwise, if the string begins with '0X'or '0x',
      it's hexadecimal, else octal.  */
-  if (strchr (s, '.') != NULL)
+  if (strchr (s, '.') != nullptr)
     radix = 10;
   else
     {
@@ -1358,7 +1358,7 @@ parse_old_offset (char const *s, uintmax_t *offset)
         radix = 8;
     }
 
-  return xstrtoumax (s, NULL, radix, offset, "Bb") == LONGINT_OK;
+  return xstrtoumax (s, nullptr, radix, offset, "Bb") == LONGINT_OK;
 }
 
 /* Read a chunk of size BYTES_PER_BLOCK from the input files, write the
@@ -1616,7 +1616,7 @@ main (int argc, char **argv)
 
   n_specs = 0;
   n_specs_allocated = 0;
-  spec = NULL;
+  spec = nullptr;
 
   format_address = format_address_std;
   address_base = 8;
@@ -1668,7 +1668,8 @@ main (int argc, char **argv)
 
         case 'j':
           modern = true;
-          s_err = xstrtoumax (optarg, NULL, 0, &n_bytes_to_skip, multipliers);
+          s_err = xstrtoumax (optarg, nullptr, 0,
+                              &n_bytes_to_skip, multipliers);
           if (s_err != LONGINT_OK)
             xstrtol_fatal (s_err, oi, c, long_options, optarg);
           break;
@@ -1677,7 +1678,7 @@ main (int argc, char **argv)
           modern = true;
           limit_bytes_to_format = true;
 
-          s_err = xstrtoumax (optarg, NULL, 0, &max_bytes_to_format,
+          s_err = xstrtoumax (optarg, nullptr, 0, &max_bytes_to_format,
                               multipliers);
           if (s_err != LONGINT_OK)
             xstrtol_fatal (s_err, oi, c, long_options, optarg);
@@ -1685,11 +1686,11 @@ main (int argc, char **argv)
 
         case 'S':
           modern = true;
-          if (optarg == NULL)
+          if (optarg == nullptr)
             string_min = 3;
           else
             {
-              s_err = xstrtoumax (optarg, NULL, 0, &tmp, multipliers);
+              s_err = xstrtoumax (optarg, nullptr, 0, &tmp, multipliers);
               if (s_err != LONGINT_OK)
                 xstrtol_fatal (s_err, oi, c, long_options, optarg);
 
@@ -1766,14 +1767,14 @@ main (int argc, char **argv)
         case 'w':
           modern = true;
           width_specified = true;
-          if (optarg == NULL)
+          if (optarg == nullptr)
             {
               desired_width = 32;
             }
           else
             {
               uintmax_t w_tmp;
-              s_err = xstrtoumax (optarg, NULL, 10, &w_tmp, "");
+              s_err = xstrtoumax (optarg, nullptr, 10, &w_tmp, "");
               if (s_err != LONGINT_OK)
                 xstrtol_fatal (s_err, oi, c, long_options, optarg);
               if (SIZE_MAX < w_tmp)
@@ -1917,12 +1918,12 @@ main (int argc, char **argv)
 
   /* open the first input file */
   ok = open_next_file ();
-  if (in_stream == NULL)
+  if (in_stream == nullptr)
     goto cleanup;
 
   /* skip over any unwanted header bytes */
   ok &= skip (n_bytes_to_skip);
-  if (in_stream == NULL)
+  if (in_stream == nullptr)
     goto cleanup;
 
   pseudo_offset = (flag_pseudo_start ? pseudo_start - n_bytes_to_skip : 0);

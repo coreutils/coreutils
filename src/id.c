@@ -66,7 +66,7 @@ static gid_t rgid, egid;
 
 /* The SELinux context.  Start with a known invalid value so print_full_info
    knows when 'context' has not been set to a meaningful value.  */
-static char *context = NULL;
+static char *context = nullptr;
 
 static void print_user (uid_t uid);
 static void print_full_info (char const *username);
@@ -74,16 +74,16 @@ static void print_stuff (char const *pw_name);
 
 static struct option const longopts[] =
 {
-  {"context", no_argument, NULL, 'Z'},
-  {"group", no_argument, NULL, 'g'},
-  {"groups", no_argument, NULL, 'G'},
-  {"name", no_argument, NULL, 'n'},
-  {"real", no_argument, NULL, 'r'},
-  {"user", no_argument, NULL, 'u'},
-  {"zero", no_argument, NULL, 'z'},
+  {"context", no_argument, nullptr, 'Z'},
+  {"group", no_argument, nullptr, 'g'},
+  {"groups", no_argument, nullptr, 'G'},
+  {"name", no_argument, nullptr, 'n'},
+  {"real", no_argument, nullptr, 'r'},
+  {"user", no_argument, nullptr, 'u'},
+  {"zero", no_argument, nullptr, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -136,7 +136,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "agnruzGZ", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "agnruzGZ", longopts, nullptr)) != -1)
     {
       switch (optc)
         {
@@ -234,18 +234,18 @@ main (int argc, char **argv)
       /* For each username/userid to get its pw_name field */
       for (; optind < n_ids; optind++)
         {
-          char *pw_name = NULL;
-          struct passwd *pwd = NULL;
+          char *pw_name = nullptr;
+          struct passwd *pwd = nullptr;
           char const *spec = argv[optind];
           /* Disallow an empty spec here as parse_user_spec() doesn't
              give an error for that as it seems it's a valid way to
              specify a noop or "reset special bits" depending on the system.  */
           if (*spec)
             {
-              if (parse_user_spec (spec, &euid, NULL, &pw_name, NULL) == NULL)
+              if (! parse_user_spec (spec, &euid, nullptr, &pw_name, nullptr))
                 pwd = pw_name ? getpwnam (pw_name) : getpwuid (euid);
             }
-          if (pwd == NULL)
+          if (pwd == nullptr)
             {
               error (0, errno, _("%s: no such user"), quote (spec));
               ok &= false;
@@ -299,7 +299,7 @@ main (int argc, char **argv)
           if (rgid == NO_GID && errno)
             die (EXIT_FAILURE, errno, _("cannot get real GID"));
         }
-        print_stuff (NULL);
+        print_stuff (nullptr);
     }
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
@@ -332,12 +332,12 @@ uidtostr_ptr (uid_t const *uid)
 static void
 print_user (uid_t uid)
 {
-  struct passwd *pwd = NULL;
+  struct passwd *pwd = nullptr;
 
   if (use_name)
     {
       pwd = getpwuid (uid);
-      if (pwd == NULL)
+      if (pwd == nullptr)
         {
           error (0, 0, _("cannot find name for user ID %s"),
                  uidtostr (uid));

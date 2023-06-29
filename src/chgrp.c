@@ -58,19 +58,19 @@ enum
 
 static struct option const long_options[] =
 {
-  {"recursive", no_argument, NULL, 'R'},
-  {"changes", no_argument, NULL, 'c'},
-  {"dereference", no_argument, NULL, DEREFERENCE_OPTION},
-  {"no-dereference", no_argument, NULL, 'h'},
-  {"no-preserve-root", no_argument, NULL, NO_PRESERVE_ROOT},
-  {"preserve-root", no_argument, NULL, PRESERVE_ROOT},
-  {"quiet", no_argument, NULL, 'f'},
-  {"silent", no_argument, NULL, 'f'},
-  {"reference", required_argument, NULL, REFERENCE_FILE_OPTION},
-  {"verbose", no_argument, NULL, 'v'},
+  {"recursive", no_argument, nullptr, 'R'},
+  {"changes", no_argument, nullptr, 'c'},
+  {"dereference", no_argument, nullptr, DEREFERENCE_OPTION},
+  {"no-dereference", no_argument, nullptr, 'h'},
+  {"no-preserve-root", no_argument, nullptr, NO_PRESERVE_ROOT},
+  {"preserve-root", no_argument, nullptr, PRESERVE_ROOT},
+  {"quiet", no_argument, nullptr, 'f'},
+  {"silent", no_argument, nullptr, 'f'},
+  {"reference", required_argument, nullptr, REFERENCE_FILE_OPTION},
+  {"verbose", no_argument, nullptr, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* Return the group ID of NAME, or -1 if no name was specified.  */
@@ -88,7 +88,7 @@ parse_group (char const *name)
       else
         {
           uintmax_t tmp;
-          if (! (xstrtoumax (name, NULL, 10, &tmp, "") == LONGINT_OK
+          if (! (xstrtoumax (name, nullptr, 10, &tmp, "") == LONGINT_OK
                  && tmp <= GID_T_MAX))
             die (EXIT_FAILURE, 0, _("invalid group: %s"),
                  quote (name));
@@ -196,7 +196,7 @@ main (int argc, char **argv)
 
   chopt_init (&chopt);
 
-  while ((optc = getopt_long (argc, argv, "HLPRcfhv", long_options, NULL))
+  while ((optc = getopt_long (argc, argv, "HLPRcfhv", long_options, nullptr))
          != -1)
     {
       switch (optc)
@@ -295,7 +295,7 @@ main (int argc, char **argv)
   else
     {
       char *group_name = argv[optind++];
-      chopt.group_name = (*group_name ? xstrdup (group_name) : NULL);
+      chopt.group_name = (*group_name ? xstrdup (group_name) : nullptr);
       gid = parse_group (group_name);
     }
 
@@ -303,7 +303,7 @@ main (int argc, char **argv)
     {
       static struct dev_ino dev_ino_buf;
       chopt.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
-      if (chopt.root_dev_ino == NULL)
+      if (chopt.root_dev_ino == nullptr)
         die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
              quoteaf ("/"));
     }

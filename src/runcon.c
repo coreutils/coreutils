@@ -58,14 +58,14 @@
 
 static struct option const long_options[] =
 {
-  {"role", required_argument, NULL, 'r'},
-  {"type", required_argument, NULL, 't'},
-  {"user", required_argument, NULL, 'u'},
-  {"range", required_argument, NULL, 'l'},
-  {"compute", no_argument, NULL, 'c'},
+  {"role", required_argument, nullptr, 'r'},
+  {"type", required_argument, nullptr, 't'},
+  {"user", required_argument, nullptr, 'u'},
+  {"range", required_argument, nullptr, 'l'},
+  {"compute", no_argument, nullptr, 'c'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -105,14 +105,14 @@ With neither CONTEXT nor COMMAND, print the current security context.\n\
 int
 main (int argc, char **argv)
 {
-  char *role = NULL;
-  char *range = NULL;
-  char *user = NULL;
-  char *type = NULL;
-  char *context = NULL;
-  char *cur_context = NULL;
-  char *file_context = NULL;
-  char *new_context = NULL;
+  char *role = nullptr;
+  char *range = nullptr;
+  char *user = nullptr;
+  char *type = nullptr;
+  char *context = nullptr;
+  char *cur_context = nullptr;
+  char *file_context = nullptr;
+  char *new_context = nullptr;
   bool compute_trans = false;
 
   context_t con;
@@ -254,7 +254,7 @@ main (int argc, char **argv)
   if (setexeccon (context_str (con)) != 0)
     die (EXIT_CANCELED, errno, _("unable to set security context %s"),
          quote (context_str (con)));
-  if (cur_context != NULL)
+  if (cur_context != nullptr)
     freecon (cur_context);
 
   (compute_trans ? execv : execvp) (argv[optind], argv + optind);

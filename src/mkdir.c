@@ -41,12 +41,12 @@
 static struct option const longopts[] =
 {
   {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
-  {"mode", required_argument, NULL, 'm'},
-  {"parents", no_argument, NULL, 'p'},
-  {"verbose", no_argument, NULL, 'v'},
+  {"mode", required_argument, nullptr, 'm'},
+  {"parents", no_argument, nullptr, 'p'},
+  {"verbose", no_argument, nullptr, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 void
@@ -85,7 +85,7 @@ Create the DIRECTORY(ies), if they do not already exist.\n\
 /* Options passed to subsidiary functions.  */
 struct mkdir_options
 {
-  /* Function to make an ancestor, or NULL if ancestors should not be
+  /* Function to make an ancestor, or nullptr if ancestors should not be
      made.  */
   int (*make_ancestor_function) (char const *, char const *, void *);
 
@@ -192,16 +192,16 @@ process_dir (char *dir, struct savewd *wd, void *options)
 int
 main (int argc, char **argv)
 {
-  char const *specified_mode = NULL;
+  char const *specified_mode = nullptr;
   int optc;
-  char const *scontext = NULL;
+  char const *scontext = nullptr;
   struct mkdir_options options;
 
-  options.make_ancestor_function = NULL;
+  options.make_ancestor_function = nullptr;
   options.mode = S_IRWXUGO;
   options.mode_bits = 0;
-  options.created_directory_format = NULL;
-  options.set_security_context = NULL;
+  options.created_directory_format = nullptr;
+  options.set_security_context = nullptr;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -211,7 +211,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "pm:vZ", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "pm:vZ", longopts, nullptr)) != -1)
     {
       switch (optc)
         {
@@ -237,7 +237,7 @@ main (int argc, char **argv)
               else
                 {
                   options.set_security_context = selabel_open (SELABEL_CTX_FILE,
-                                                               NULL, 0);
+                                                               nullptr, 0);
                   if (! options.set_security_context)
                     error (0, errno, _("warning: ignoring --context"));
                 }

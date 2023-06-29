@@ -113,10 +113,10 @@ static void delete_all_files (bool);
 static void save_line_to_file (const struct cstring *line);
 
 /* Start of buffer list. */
-static struct buffer_record *head = NULL;
+static struct buffer_record *head = nullptr;
 
 /* Partially read line. */
-static char *hold_area = NULL;
+static char *hold_area = nullptr;
 
 /* Number of bytes in 'hold_area'. */
 static idx_t hold_count = 0;
@@ -131,13 +131,13 @@ static intmax_t current_line = 0;
 static bool have_read_eof = false;
 
 /* Name of output files. */
-static char *volatile filename_space = NULL;
+static char *volatile filename_space = nullptr;
 
 /* Prefix part of output file names. */
-static char const *volatile prefix = NULL;
+static char const *volatile prefix = nullptr;
 
 /* Suffix part of output file names. */
-static char *volatile suffix = NULL;
+static char *volatile suffix = nullptr;
 
 /* Number of digits to use in output file names. */
 static int volatile digits = 2;
@@ -149,10 +149,10 @@ static int volatile files_created = 0;
 static intmax_t bytes_written;
 
 /* Output file pointer. */
-static FILE *output_stream = NULL;
+static FILE *output_stream = nullptr;
 
 /* Output file name. */
-static char *output_filename = NULL;
+static char *output_filename = nullptr;
 
 /* Perhaps it would be cleaner to pass arg values instead of indexes. */
 static char **global_argv;
@@ -188,17 +188,17 @@ enum
 
 static struct option const longopts[] =
 {
-  {"digits", required_argument, NULL, 'n'},
-  {"quiet", no_argument, NULL, 'q'},
-  {"silent", no_argument, NULL, 's'},
-  {"keep-files", no_argument, NULL, 'k'},
-  {"elide-empty-files", no_argument, NULL, 'z'},
-  {"prefix", required_argument, NULL, 'f'},
-  {"suffix-format", required_argument, NULL, 'b'},
-  {"suppress-matched", no_argument, NULL, SUPPRESS_MATCHED_OPTION},
+  {"digits", required_argument, nullptr, 'n'},
+  {"quiet", no_argument, nullptr, 'q'},
+  {"silent", no_argument, nullptr, 's'},
+  {"keep-files", no_argument, nullptr, 'k'},
+  {"elide-empty-files", no_argument, nullptr, 'z'},
+  {"prefix", required_argument, nullptr, 'f'},
+  {"suffix-format", required_argument, nullptr, 'b'},
+  {"suppress-matched", no_argument, nullptr, SUPPRESS_MATCHED_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* Optionally remove files created so far; then exit.
@@ -213,7 +213,7 @@ cleanup (void)
 
   sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
   delete_all_files (false);
-  sigprocmask (SIG_SETMASK, &oldset, NULL);
+  sigprocmask (SIG_SETMASK, &oldset, nullptr);
 }
 
 static _Noreturn void
@@ -294,7 +294,7 @@ new_line_control (void)
 {
   struct line *p = xmalloc (sizeof *p);
 
-  p->next = NULL;
+  p->next = nullptr;
   clear_line_control (p);
 
   return p;
@@ -309,7 +309,7 @@ keep_new_line (struct buffer_record *b, char *line_start, idx_t line_len)
   struct line *l;
 
   /* If there is no existing area to keep line info, get some. */
-  if (b->line_start == NULL)
+  if (b->line_start == nullptr)
     b->line_start = b->curr_line = new_line_control ();
 
   /* If existing area for lines is full, get more. */
@@ -410,13 +410,13 @@ get_new_buffer (idx_t min_size)
 {
   struct buffer_record *new_buffer = xmalloc (sizeof *new_buffer);
   new_buffer->bytes_alloc = 0;
-  new_buffer->buffer = xpalloc (NULL, &new_buffer->bytes_alloc, min_size,
+  new_buffer->buffer = xpalloc (nullptr, &new_buffer->bytes_alloc, min_size,
                                 -1, 1);
   new_buffer->bytes_used = 0;
   new_buffer->start_line = new_buffer->first_available = last_line_number + 1;
   new_buffer->num_lines = 0;
-  new_buffer->line_start = new_buffer->curr_line = NULL;
-  new_buffer->next = NULL;
+  new_buffer->line_start = new_buffer->curr_line = nullptr;
+  new_buffer->next = nullptr;
 
   return new_buffer;
 }
@@ -429,10 +429,10 @@ save_buffer (struct buffer_record *buf)
 {
   struct buffer_record *p;
 
-  buf->next = NULL;
+  buf->next = nullptr;
   buf->curr_line = buf->line_start;
 
-  if (head == NULL)
+  if (head == nullptr)
     head = buf;
   else
     {
@@ -503,7 +503,7 @@ load_buffer (void)
 static intmax_t
 get_first_line_in_buffer (void)
 {
-  if (head == NULL && !load_buffer ())
+  if (head == nullptr && !load_buffer ())
     die (EXIT_FAILURE, errno, _("input disappeared"));
 
   return head->first_available;
@@ -511,15 +511,15 @@ get_first_line_in_buffer (void)
 
 /* Return a pointer to the logical first line in the buffer and make the
    next line the logical first line.
-   Return NULL if there is no more input. */
+   Return nullptr if there is no more input. */
 
 static struct cstring *
 remove_line (void)
 {
-  /* If non-NULL, this is the buffer for which the previous call
+  /* If non-null, this is the buffer for which the previous call
      returned the final line.  So now, presuming that line has been
      processed, we can free the buffer and reset this pointer.  */
-  static struct buffer_record *prev_buf = NULL;
+  static struct buffer_record *prev_buf = nullptr;
 
   struct cstring *line;		/* Return value. */
   struct line *l;		/* For convenience. */
@@ -527,11 +527,11 @@ remove_line (void)
   if (prev_buf)
     {
       free_buffer (prev_buf);
-      prev_buf = NULL;
+      prev_buf = nullptr;
     }
 
-  if (head == NULL && !load_buffer ())
-    return NULL;
+  if (head == nullptr && !load_buffer ())
+    return nullptr;
 
   if (current_line < head->first_available)
     current_line = head->first_available;
@@ -547,7 +547,7 @@ remove_line (void)
     {
       /* Go on to the next line record. */
       head->curr_line = l->next;
-      if (head->curr_line == NULL || head->curr_line->used == 0)
+      if (head->curr_line == nullptr || head->curr_line->used == 0)
         {
           /* Go on to the next data block.
              but first record the current one so we can free it
@@ -561,18 +561,18 @@ remove_line (void)
 }
 
 /* Search the buffers for line LINENUM, reading more input if necessary.
-   Return a pointer to the line, or NULL if it is not found in the file. */
+   Return a pointer to the line, or nullptr if it is not found in the file. */
 
 static struct cstring *
 find_line (intmax_t linenum)
 {
   struct buffer_record *b;
 
-  if (head == NULL && !load_buffer ())
-    return NULL;
+  if (head == nullptr && !load_buffer ())
+    return nullptr;
 
   if (linenum < head->start_line)
-    return NULL;
+    return nullptr;
 
   for (b = head;;)
     {
@@ -593,8 +593,8 @@ find_line (intmax_t linenum)
             }
           return &l->starts[offset];
         }
-      if (b->next == NULL && !load_buffer ())
-        return NULL;
+      if (b->next == nullptr && !load_buffer ())
+        return nullptr;
       b = b->next;		/* Try the next data block. */
     }
 }
@@ -604,7 +604,7 @@ find_line (intmax_t linenum)
 static bool
 no_more_lines (void)
 {
-  return find_line (current_line + 1) == NULL;
+  return find_line (current_line + 1) == nullptr;
 }
 
 /* Open NAME as standard input.  */
@@ -644,7 +644,7 @@ write_to_file (intmax_t last_line, bool ignore, int argnum)
   for (i = 0; i < lines; i++)
     {
       line = remove_line ();
-      if (line == NULL)
+      if (line == nullptr)
         {
           error (0, 0, _("%s: line number out of range"),
                  quote (global_argv[argnum]));
@@ -662,7 +662,7 @@ dump_rest_of_file (void)
 {
   struct cstring *line;
 
-  while ((line = remove_line ()) != NULL)
+  while ((line = remove_line ()) != nullptr)
     save_line_to_file (line);
 }
 
@@ -707,7 +707,7 @@ process_line_count (const struct control *p, intmax_t repetition)
   while (linenum++ < last_line_to_save)
     {
       struct cstring *line = remove_line ();
-      if (line == NULL)
+      if (line == nullptr)
         handle_line_error (p, repetition);
       save_line_to_file (line);
     }
@@ -769,7 +769,7 @@ process_regexp (struct control *p, intmax_t repetition)
       while (true)
         {
           line = find_line (++current_line);
-          if (line == NULL)
+          if (line == nullptr)
             {
               if (p->repeat_forever)
                 {
@@ -787,7 +787,7 @@ process_regexp (struct control *p, intmax_t repetition)
           if (line->str[line_len - 1] == '\n')
             line_len--;
           ret = re_search (&p->re_compiled, line->str, line_len,
-                           0, line_len, NULL);
+                           0, line_len, nullptr);
           if (ret == -2)
             {
               error (0, 0, _("error in regular expression search"));
@@ -809,7 +809,7 @@ process_regexp (struct control *p, intmax_t repetition)
       while (true)
         {
           line = find_line (++current_line);
-          if (line == NULL)
+          if (line == nullptr)
             {
               if (p->repeat_forever)
                 {
@@ -827,7 +827,7 @@ process_regexp (struct control *p, intmax_t repetition)
           if (line->str[line_len - 1] == '\n')
             line_len--;
           ret = re_search (&p->re_compiled, line->str, line_len,
-                           0, line_len, NULL);
+                           0, line_len, nullptr);
           if (ret == -2)
             {
               error (0, 0, _("error in regular expression search"));
@@ -920,10 +920,10 @@ create_output_file (void)
       sigset_t oldset;
       sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
       output_stream = fopen (output_filename, "w");
-      fopen_ok = (output_stream != NULL);
+      fopen_ok = (output_stream != nullptr);
       fopen_errno = errno;
       files_created = nfiles + fopen_ok;
-      sigprocmask (SIG_SETMASK, &oldset, NULL);
+      sigprocmask (SIG_SETMASK, &oldset, nullptr);
     }
 
   if (! fopen_ok)
@@ -964,13 +964,13 @@ close_output_file (void)
       if (ferror (output_stream))
         {
           error (0, 0, _("write error for %s"), quoteaf (output_filename));
-          output_stream = NULL;
+          output_stream = nullptr;
           cleanup_fatal ();
         }
       if (fclose (output_stream) != 0)
         {
           error (0, errno, "%s", quotef (output_filename));
-          output_stream = NULL;
+          output_stream = nullptr;
           cleanup_fatal ();
         }
       if (bytes_written == 0 && elide_empty_files)
@@ -984,7 +984,7 @@ close_output_file (void)
           unlink_ok = (unlink (output_filename) == 0);
           unlink_errno = errno;
           files_created--;
-          sigprocmask (SIG_SETMASK, &oldset, NULL);
+          sigprocmask (SIG_SETMASK, &oldset, nullptr);
 
           if (! unlink_ok && unlink_errno != ENOENT)
             error (0, unlink_errno, "%s", quotef (output_filename));
@@ -997,7 +997,7 @@ close_output_file (void)
               fprintf (stdout, "%s\n", imaxtostr (bytes_written, buf));
             }
         }
-      output_stream = NULL;
+      output_stream = nullptr;
     }
 }
 
@@ -1011,7 +1011,7 @@ save_line_to_file (const struct cstring *line)
   if (l != line->len)
     {
       error (0, errno, _("write error for %s"), quoteaf (output_filename));
-      output_stream = NULL;
+      output_stream = nullptr;
       cleanup_fatal ();
     }
   bytes_written += line->len;
@@ -1044,7 +1044,7 @@ new_control_record (void)
 static void
 check_for_offset (struct control *p, char const *str, char const *num)
 {
-  if (xstrtoimax (num, NULL, 10, &p->offset, "") != LONGINT_OK)
+  if (xstrtoimax (num, nullptr, 10, &p->offset, "") != LONGINT_OK)
     die (EXIT_FAILURE, 0, _("%s: integer expected after delimiter"),
          quote (str));
 }
@@ -1070,7 +1070,7 @@ parse_repeat_count (int argnum, struct control *p, char *str)
   else
     {
       uintmax_t val;
-      if (xstrtoumax (str + 1, NULL, 10, &val, "") != LONGINT_OK
+      if (xstrtoumax (str + 1, nullptr, 10, &val, "") != LONGINT_OK
           || INTMAX_MAX < val)
         {
           die (EXIT_FAILURE, 0,
@@ -1099,7 +1099,7 @@ extract_regexp (int argnum, bool ignore, char const *str)
   char const *err;
 
   closing_delim = strrchr (str + 1, delim);
-  if (closing_delim == NULL)
+  if (closing_delim == nullptr)
     die (EXIT_FAILURE, 0,
          _("%s: closing delimiter '%c' missing"), str, delim);
 
@@ -1109,10 +1109,10 @@ extract_regexp (int argnum, bool ignore, char const *str)
   p->ignore = ignore;
 
   p->regexpr = true;
-  p->re_compiled.buffer = NULL;
+  p->re_compiled.buffer = nullptr;
   p->re_compiled.allocated = 0;
   p->re_compiled.fastmap = xmalloc (UCHAR_MAX + 1);
-  p->re_compiled.translate = NULL;
+  p->re_compiled.translate = nullptr;
   re_syntax_options =
     RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP & ~RE_NO_EMPTY_RANGES;
   err = re_compile_pattern (str + 1, len, &p->re_compiled);
@@ -1149,7 +1149,7 @@ parse_patterns (int argc, int start, char **argv)
           p->argnum = i;
 
           uintmax_t val;
-          if (xstrtoumax (argv[i], NULL, 10, &val, "") != LONGINT_OK
+          if (xstrtoumax (argv[i], nullptr, 10, &val, "") != LONGINT_OK
               || INTMAX_MAX < val)
             die (EXIT_FAILURE, 0, _("%s: invalid pattern"), quote (argv[i]));
           if (val == 0)
@@ -1289,7 +1289,7 @@ max_out (char *format)
     die (EXIT_FAILURE, 0,
          _("missing %% conversion specification in suffix"));
 
-  int maxlen = snprintf (NULL, 0, format, INT_MAX);
+  int maxlen = snprintf (nullptr, 0, format, INT_MAX);
   if (maxlen < 0)
     xalloc_die ();
   return maxlen;
@@ -1309,14 +1309,15 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   global_argv = argv;
-  controls = NULL;
+  controls = nullptr;
   control_used = 0;
   suppress_count = false;
   remove_files = true;
   suppress_matched = false;
   prefix = DEFAULT_PREFIX;
 
-  while ((optc = getopt_long (argc, argv, "f:b:kn:sqz", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "f:b:kn:sqz", longopts, nullptr))
+         != -1)
     switch (optc)
       {
       case 'f':
@@ -1409,7 +1410,7 @@ main (int argc, char **argv)
     sigemptyset (&caught_signals);
     for (i = 0; i < nsigs; i++)
       {
-        sigaction (sig[i], NULL, &act);
+        sigaction (sig[i], nullptr, &act);
         if (act.sa_handler != SIG_IGN)
           sigaddset (&caught_signals, sig[i]);
       }
@@ -1420,7 +1421,7 @@ main (int argc, char **argv)
 
     for (i = 0; i < nsigs; i++)
       if (sigismember (&caught_signals, sig[i]))
-        sigaction (sig[i], &act, NULL);
+        sigaction (sig[i], &act, nullptr);
   }
 
   split_file ();

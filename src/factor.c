@@ -226,11 +226,11 @@ enum
 
 static struct option const long_options[] =
 {
-  {"exponents", no_argument, NULL, 'h'},
-  {"-debug", no_argument, NULL, DEV_DEBUG_OPTION},
+  {"exponents", no_argument, nullptr, 'h'},
+  {"-debug", no_argument, nullptr, DEV_DEBUG_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
+  {nullptr, 0, nullptr, 0}
 };
 
 /* If true, use p^e output format.  */
@@ -594,8 +594,8 @@ static void mp_factor (mpz_t, struct mp_factors *);
 static void
 mp_factor_init (struct mp_factors *factors)
 {
-  factors->p = NULL;
-  factors->e = NULL;
+  factors->p = nullptr;
+  factors->e = nullptr;
   factors->nfactors = 0;
 }
 
@@ -1389,7 +1389,7 @@ mp_prime_p (mpz_t n)
   if (mpz_cmp_ui (n, (long) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME) < 0)
     return true;
 
-  mpz_inits (q, a, nm1, tmp, NULL);
+  mpz_inits (q, a, nm1, tmp, nullptr);
 
   /* Precomputation for Miller-Rabin.  */
   mpz_sub_ui (nm1, n, 1);
@@ -1453,7 +1453,7 @@ mp_prime_p (mpz_t n)
   if (flag_prove_primality)
     mp_factor_clear (&factors);
  ret2:
-  mpz_clears (q, a, nm1, tmp, NULL);
+  mpz_clears (q, a, nm1, tmp, nullptr);
 
   return is_prime;
 }
@@ -1677,7 +1677,7 @@ mp_factor_using_pollard_rho (mpz_t n, unsigned long int a,
 
   devmsg ("[pollard-rho (%lu)] ", a);
 
-  mpz_inits (t, t2, NULL);
+  mpz_inits (t, t2, nullptr);
   mpz_init_set_si (y, 2);
   mpz_init_set_si (x, 2);
   mpz_init_set_si (z, 2);
@@ -1757,7 +1757,7 @@ mp_factor_using_pollard_rho (mpz_t n, unsigned long int a,
       mpz_mod (y, y, n);
     }
 
-  mpz_clears (P, t2, t, z, x, y, NULL);
+  mpz_clears (P, t2, t, z, x, y, nullptr);
 }
 
 #if USE_SQUFOF
@@ -2615,7 +2615,7 @@ main (int argc, char **argv)
   atexit (lbuf_flush);
 
   int c;
-  while ((c = getopt_long (argc, argv, "h", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "h", long_options, nullptr)) != -1)
     {
       switch (c)
         {
