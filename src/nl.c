@@ -440,6 +440,7 @@ nl_file (char const *file)
     {
       have_read_stdin = true;
       stream = stdin;
+      assume (stream);  /* Pacify GCC bug#109613.  */
     }
   else
     {
@@ -450,8 +451,6 @@ nl_file (char const *file)
           return false;
         }
     }
-
-  assume (stream);
 
   fadvise (stream, FADVISE_SEQUENTIAL);
 

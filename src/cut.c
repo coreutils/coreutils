@@ -421,6 +421,7 @@ cut_file (char const *file, void (*cut_stream) (FILE *))
     {
       have_read_stdin = true;
       stream = stdin;
+      assume (stream);  /* Pacify GCC bug#109613.  */
     }
   else
     {
@@ -431,8 +432,6 @@ cut_file (char const *file, void (*cut_stream) (FILE *))
           return false;
         }
     }
-
-  assume (stream);
 
   fadvise (stream, FADVISE_SEQUENTIAL);
 
