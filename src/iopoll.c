@@ -18,8 +18,6 @@
 
 #include <config.h>
 
-#include <assert.h>
-
 /* poll(2) is needed on AIX (where 'select' gives a readable
    event immediately) and Solaris (where 'select' never gave
    a readable event).  Also use poll(2) on systems we know work
@@ -43,6 +41,7 @@
 #endif
 
 #include "system.h"
+#include "assure.h"
 #include "iopoll.h"
 #include "isapipe.h"
 
@@ -61,7 +60,7 @@
 static int
 iopoll_internal (int fdin, int fdout, bool block, bool broken_output)
 {
-  assert (fdin != -1 || fdout != -1);
+  affirm (fdin != -1 || fdout != -1);
 
 #if IOPOLL_USES_POLL
   struct pollfd pfds[2] = {  /* POLLRDBAND needed for illumos, macOS.  */
@@ -85,7 +84,7 @@ iopoll_internal (int fdin, int fdout, bool block, bool broken_output)
         continue;
       if (ret == 0 && ! block)
         return 0;
-      assert (0 < ret);
+      affirm (0 < ret);
       if (pfds[0].revents) /* input available or pipe closed indicating EOF; */
         return 0;          /* should now be able to read() without blocking  */
       if (pfds[1].revents & check_out_events)
@@ -124,7 +123,7 @@ iopoll_internal (int fdin, int fdout, bool block, bool broken_output)
         continue;
       if (ret == 0 && ! block)
         return 0;
-      assert (0 < ret);
+      affirm (0 < ret);
       if (0 <= fdin && FD_ISSET (fdin, &fds))    /* input available or EOF; */
         return 0;          /* should now be able to read() without blocking */
       if (0 <= fdout && FD_ISSET (fdout, &fds))  /* equiv to POLLERR        */
@@ -228,7 +227,7 @@ fwrite_wait (char const *buf, ssize_t size, FILE *f)
     {
       const size_t written = fwrite (buf, 1, size, f);
       size -= written;
-      assert (size >= 0);
+      affirm (size >= 0);
       if (size <= 0)  /* everything written */
         return true;
 

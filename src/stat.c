@@ -28,7 +28,6 @@
 # define USE_STATVFS 0
 #endif
 
-#include <stddef.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <pwd.h>

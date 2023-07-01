@@ -20,11 +20,11 @@
 # define DIE_H
 
 # include <error.h>
-# include <verify.h>
+# include <stddef.h>
 
 /* Like 'error (STATUS, ...)', except STATUS must be a nonzero constant.
    This may pacify the compiler or help it generate better code.  */
 # define die(status, ...) \
-  verify_expr (status, (error (status, __VA_ARGS__), assume (false)))
+  verify_expr (status, (error (status, __VA_ARGS__), unreachable ()))
 
 #endif /* DIE_H */

@@ -44,6 +44,7 @@
 #endif
 
 #include "system.h"
+#include "assure.h"
 #include "quote.h"
 #include "stat-time.h"
 #include "strnumcmp.h"
@@ -377,7 +378,7 @@ binary_operator (bool l_is_l)
     }
 
   /* Not reached.  */
-  abort ();
+  affirm (false);
 }
 
 static bool
@@ -666,8 +667,7 @@ posixtest (int nargs)
         FALLTHROUGH;
       case 5:
       default:
-        if (nargs <= 0)
-          abort ();
+        affirm (0 < nargs);
         value = expr ();
     }
 

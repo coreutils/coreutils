@@ -31,6 +31,7 @@
 
 #include "system.h"
 
+#include "assure.h"
 #include "die.h"
 #include "error.h"
 #include "full-read.h"
@@ -160,7 +161,7 @@ diagnose_copy_fd_failure (enum Copy_fd_status err, char const *filename)
       error (0, errno, _("%s: file has shrunk too much"), quotef (filename));
       break;
     default:
-      abort ();
+      affirm (false);
     }
 }
 

@@ -77,7 +77,6 @@
 
 #include <getopt.h>
 #include <stdio.h>
-#include <assert.h>
 #include <setjmp.h>
 #include <sys/types.h>
 #if defined __linux__ && HAVE_SYS_MTIO_H
@@ -87,6 +86,7 @@
 #include "system.h"
 #include "alignalloc.h"
 #include "argmatch.h"
+#include "assure.h"
 #include "xdectoint.h"
 #include "die.h"
 #include "error.h"
@@ -768,7 +768,7 @@ genpattern (int *dest, size_t num, struct randint_source *s)
         }
     }
   top = num - randpasses;	/* Top of initialized data */
-  /* assert (d == dest + top); */
+  /* affirm (d == dest + top); */
 
   /*
    * We now have fixed patterns in the dest buffer up to
@@ -809,7 +809,7 @@ genpattern (int *dest, size_t num, struct randint_source *s)
         }
       accum -= randpasses;
     }
-  /* assert (top == num); */
+  /* affirm (top == num); */
 }
 
 /*
@@ -997,7 +997,6 @@ incname (char *name, size_t len)
 
       /* Given that NAME is composed of bytes from NAMESET,
          P will never be null here.  */
-      assert (p);
 
       /* If this character has a successor, use it.  */
       if (p[1])

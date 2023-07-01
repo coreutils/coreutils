@@ -16,7 +16,7 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* FIXME */
-#include <assert.h>
+#include "assure.h"
 
 #include "die.h"
 
@@ -144,7 +144,7 @@ line_ptr_decrement (const Buf *x, const Line_ptr *lp)
     }
   else
     {
-      assert (lp->i > 0);
+      affirm (lp->i > 0);
       lp_new.i = lp->i - 1;
       lp_new.ptr = ONE_PAST_END (x, lp->i - 1) - 1;
     }
@@ -156,7 +156,7 @@ line_ptr_increment (const Buf *x, const Line_ptr *lp)
 {
   Line_ptr lp_new;
 
-  assert (lp->ptr <= ONE_PAST_END (x, lp->i) - 1);
+  affirm (lp->ptr <= ONE_PAST_END (x, lp->i) - 1);
   if (lp->ptr < ONE_PAST_END (x, lp->i) - 1)
     {
       lp_new.i = lp->i;
@@ -164,7 +164,7 @@ line_ptr_increment (const Buf *x, const Line_ptr *lp)
     }
   else
     {
-      assert (lp->i < x->n_bufs - 1);
+      affirm (lp->i < x->n_bufs - 1);
       lp_new.i = lp->i + 1;
       lp_new.ptr = x->p[lp->i + 1].start;
     }

@@ -26,7 +26,6 @@
 #include <config.h>
 #include <getopt.h>
 #include <stdio.h>
-#include <assert.h>
 
 #include <sys/types.h>
 #include "system.h"
@@ -200,9 +199,9 @@ idle_string (time_t when, time_t boottime)
       else
         {
           static char idle_hhmm[IDLESTR_LEN];
-          /* FIXME-in-2018: see if this assert is still required in order
+          /* FIXME-in-2024: see if this is still required in order
              to suppress gcc's unwarranted -Wformat-length= warning.  */
-          assert (seconds_idle / (60 * 60) < 24);
+          assume (seconds_idle / (60 * 60) < 24);
           sprintf (idle_hhmm, "%02d:%02d",
                    seconds_idle / (60 * 60),
                    (seconds_idle % (60 * 60)) / 60);

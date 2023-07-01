@@ -67,6 +67,7 @@
 # define makedev(maj, min)  mkdev (maj, min)
 #endif
 
+#include <stddef.h>
 #include <string.h>
 #include <errno.h>
 

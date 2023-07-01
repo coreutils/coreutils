@@ -24,6 +24,7 @@
 
 #include "system.h"
 #include "argmatch.h"
+#include "assure.h"
 #include "backupfile.h"
 #include "copy.h"
 #include "cp-hash.h"
@@ -956,7 +957,7 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
           break;
 
         default:
-          abort ();
+          affirm (false);
         }
       s = comma;
     }

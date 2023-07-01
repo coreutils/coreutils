@@ -20,11 +20,11 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include <assert.h>
 #include <selinux/label.h>
 
 #include "system.h"
 #include "argmatch.h"
+#include "assure.h"
 #include "backupfile.h"
 #include "copy.h"
 #include "cp-hash.h"
@@ -238,7 +238,7 @@ do_move (char const *source, char const *dest,
           dir[1] = nullptr;
 
           status = rm ((void *) dir, &rm_options);
-          assert (VALID_STATUS (status));
+          affirm (VALID_STATUS (status));
           if (status == RM_ERROR)
             ok = false;
         }

@@ -38,6 +38,7 @@
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
 
+#include "assure.h"
 #include "minmax.h"
 #include "rand-isaac.h"
 #include "stdio-safer.h"
@@ -103,11 +104,10 @@ struct randread_source
 static void
 randread_error (void const *file_name)
 {
-  if (file_name)
-    error (exit_failure, errno,
-           errno == 0 ? _("%s: end of file") : _("%s: read error"),
-           quote (file_name));
-  abort ();
+  affirm (exit_failure);
+  error (exit_failure, errno,
+         errno == 0 ? _("%s: end of file") : _("%s: read error"),
+         quote (file_name));
 }
 
 /* Simply return a new randread_source object with the default error

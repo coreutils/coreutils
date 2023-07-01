@@ -20,13 +20,13 @@
 #include <config.h>
 
 #include <stdio.h>
-#include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include <wchar.h>
 #include <wctype.h>
 
 #include "system.h"
+#include "assure.h"
 #include "argmatch.h"
 #include "argv-iter.h"
 #include "die.h"
@@ -938,7 +938,7 @@ main (int argc, char **argv)
             case AI_ERR_MEM:
               xalloc_die ();
             default:
-              assert (!"unexpected error code from argv_iter");
+              affirm (!"unexpected error code from argv_iter");
             }
         }
       if (files_from && STREQ (files_from, "-") && STREQ (file_name, "-"))

@@ -409,7 +409,7 @@ printv (VALUE *v)
       puts (v->u.s);
       break;
     default:
-      abort ();
+      unreachable ();
     }
 }
 
@@ -441,7 +441,7 @@ null (VALUE *v)
         return true;
       }
     default:
-      abort ();
+      unreachable ();
     }
 }
 
@@ -479,7 +479,7 @@ tostring (VALUE *v)
     case string:
       break;
     default:
-      abort ();
+      unreachable ();
     }
 }
 
@@ -505,7 +505,7 @@ toarith (VALUE *v)
         return true;
       }
     default:
-      abort ();
+      unreachable ();
     }
 }
 
@@ -940,7 +940,7 @@ eval2 (bool evaluate)
             case not_equal:     val = (cmp != 0); break;
             case greater_equal: val = (cmp >= 0); break;
             case greater_than:  val = (cmp >  0); break;
-            default: abort ();
+            default: unreachable ();
             }
         }
 

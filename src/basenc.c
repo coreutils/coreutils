@@ -50,7 +50,7 @@
 #elif BASE_TYPE == 42
 # include "base32.h"
 # include "base64.h"
-# include <assert.h>
+# include "assure.h"
 # define PROGRAM_NAME "basenc"
 #else
 # error missing/invalid BASE_TYPE definition
@@ -449,7 +449,7 @@ base32hex_encode (char const *restrict in, idx_t inlen,
 
   for (char *p = out; outlen--; p++)
     {
-      assert (0x32 <= *p && *p <= 0x5a);          /* LCOV_EXCL_LINE */
+      affirm (0x32 <= *p && *p <= 0x5a);          /* LCOV_EXCL_LINE */
       *p = base32_norm_to_hex[*p - 0x32];
     }
 }

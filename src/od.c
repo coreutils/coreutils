@@ -19,11 +19,11 @@
 #include <config.h>
 
 #include <stdio.h>
-#include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
 #include "argmatch.h"
+#include "assure.h"
 #include "die.h"
 #include "error.h"
 #include "ftoastr.h"
@@ -633,7 +633,7 @@ simple_strtoul (char const *s, char const **p, unsigned long int *val)
    string argument.
    */
 
-static bool
+static bool ATTRIBUTE_NONNULL ()
 decode_one_format (char const *s_orig, char const *s, char const **next,
                    struct tspec *tspec)
 {
@@ -645,8 +645,6 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
   char const *p;
   char c;
   int field_width;
-
-  assert (tspec != nullptr);
 
   switch (*s)
     {
@@ -742,10 +740,8 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           break;
 
         default:
-          abort ();
+          unreachable ();
         }
-
-      assert (strlen (tspec->fmt_string) < FMT_BYTES_ALLOCATED);
 
       switch (size_spec)
         {
@@ -774,7 +770,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           break;
 
         default:
-          abort ();
+          affirm (false);
         }
       break;
 
@@ -850,7 +846,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
             break;
 
           default:
-            abort ();
+            affirm (false);
           }
 
         break;
@@ -887,9 +883,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
   if (tspec->hexl_mode_trailer)
     s++;
 
-  if (next != nullptr)
-    *next = s;
-
+  *next = s;
   return true;
 }
 
@@ -979,11 +973,10 @@ check_and_close (int in_errno)
    representation to the global array SPEC, reallocating SPEC if
    necessary.  Return true if S is valid.  */
 
-static bool
+static bool ATTRIBUTE_NONNULL ()
 decode_format_string (char const *s)
 {
   char const *s_orig = s;
-  assert (s != nullptr);
 
   while (*s != '\0')
     {
@@ -995,7 +988,7 @@ decode_format_string (char const *s)
       if (! decode_one_format (s_orig, s, &next, &spec[n_specs]))
         return false;
 
-      assert (s != next);
+      affirm (s != next);
       s = next;
       ++n_specs;
     }
@@ -1291,7 +1284,7 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
 {
   bool ok = true;
 
-  assert (0 < n && n <= bytes_per_block);
+  affirm (0 < n && n <= bytes_per_block);
 
   *n_bytes_in_buffer = 0;
 
@@ -1402,7 +1395,7 @@ dump (void)
           ok &= read_block (n_needed, block[idx], &n_bytes_read);
           if (n_bytes_read < bytes_per_block)
             break;
-          assert (n_bytes_read == bytes_per_block);
+          affirm (n_bytes_read == bytes_per_block);
           write_block (current_offset, n_bytes_read,
                        block[!idx], block[idx]);
           current_offset += n_bytes_read;
@@ -1416,7 +1409,7 @@ dump (void)
           ok &= read_block (bytes_per_block, block[idx], &n_bytes_read);
           if (n_bytes_read < bytes_per_block)
             break;
-          assert (n_bytes_read == bytes_per_block);
+          affirm (n_bytes_read == bytes_per_block);
           write_block (current_offset, n_bytes_read,
                        block[!idx], block[idx]);
           current_offset += n_bytes_read;
@@ -1971,8 +1964,8 @@ main (int argc, char **argv)
   for (i = 0; i < n_specs; i++)
     {
       int fields_per_block = bytes_per_block / width_bytes[spec[i].size];
-      assert (bytes_per_block % width_bytes[spec[i].size] == 0);
-      assert (1 <= spec[i].pad_width / fields_per_block);
+      affirm (bytes_per_block % width_bytes[spec[i].size] == 0);
+      affirm (1 <= spec[i].pad_width / fields_per_block);
       printf ("%d: fmt=\"%s\" in_width=%d out_width=%d pad=%d\n",
               i, spec[i].fmt_string, width_bytes[spec[i].size],
               spec[i].field_width, spec[i].pad_width);

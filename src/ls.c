@@ -50,7 +50,6 @@
 #endif
 
 #include <stdio.h>
-#include <assert.h>
 #include <setjmp.h>
 #include <pwd.h>
 #include <getopt.h>
@@ -86,6 +85,7 @@
 
 #include "acl.h"
 #include "argmatch.h"
+#include "assure.h"
 #include "c-strcase.h"
 #include "dev-ino.h"
 #include "die.h"
@@ -1052,7 +1052,7 @@ dev_ino_pop (void)
   void *vdi;
   struct dev_ino *di;
   int dev_ino_size = sizeof *di;
-  assert (dev_ino_size <= obstack_object_size (&dev_ino_obstack));
+  affirm (dev_ino_size <= obstack_object_size (&dev_ino_obstack));
   obstack_blank_fast (&dev_ino_obstack, -dev_ino_size);
   vdi = obstack_next_free (&dev_ino_obstack);
   di = vdi;
@@ -1062,11 +1062,10 @@ dev_ino_pop (void)
 static void
 assert_matching_dev_ino (char const *name, struct dev_ino di)
 {
-  struct stat sb;
-  assert (name);
-  assert (0 <= stat (name, &sb));
-  assert (sb.st_dev == di.st_dev);
-  assert (sb.st_ino == di.st_ino);
+  MAYBE_UNUSED struct stat sb;
+  assure (0 <= stat (name, &sb));
+  assure (sb.st_dev == di.st_dev);
+  assure (sb.st_ino == di.st_ino);
 }
 
 static char eolbyte = '\n';
@@ -1127,7 +1126,7 @@ time_type_to_statx (void)
     case time_btime:
       return STATX_BTIME;
     default:
-      abort ();
+      unreachable ();
     }
     return 0;
 }
@@ -1167,7 +1166,7 @@ calc_req_mask (void)
       mask |= STATX_SIZE;
       break;
     default:
-      abort ();
+      unreachable ();
     }
 
   return mask;
@@ -1659,8 +1658,8 @@ main (int argc, char **argv)
   initialize_exit_failure (LS_FAILURE);
   atexit (close_stdout);
 
-  assert (ARRAY_CARDINALITY (color_indicator) + 1
-          == ARRAY_CARDINALITY (indicator_name));
+  static_assert (ARRAY_CARDINALITY (color_indicator) + 1
+                 == ARRAY_CARDINALITY (indicator_name));
 
   exit_status = EXIT_SUCCESS;
   print_dir_name = true;
@@ -1804,7 +1803,7 @@ main (int argc, char **argv)
               struct dev_ino *found = hash_remove (active_dir_set, &di);
               if (false)
                 assert_matching_dev_ino (thispend->realname, di);
-              assert (found);
+              affirm (found);
               dev_ino_free (found);
               free_pending_ent (thispend);
               continue;
@@ -1856,7 +1855,7 @@ main (int argc, char **argv)
 
   if (LOOP_DETECT)
     {
-      assert (hash_get_n_entries (active_dir_set) == 0);
+      assure (hash_get_n_entries (active_dir_set) == 0);
       hash_free (active_dir_set);
     }
 
@@ -2679,7 +2678,7 @@ get_funky_string (char **dest, char const **src, bool equals_end,
           break;
 
         default:
-          abort ();
+          unreachable ();
         }
     }
 
@@ -2840,7 +2839,7 @@ parse_ls_color (void)
           goto done;
 
         default:
-          abort ();
+          affirm (false);
         }
     }
  done:
@@ -3378,7 +3377,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
   /* An inode value prior to gobble_file necessarily came from readdir,
      which is not used for command line arguments.  */
-  assert (! command_line_arg || inode == NOT_AN_INODE_NUMBER);
+  affirm (! command_line_arg || inode == NOT_AN_INODE_NUMBER);
 
   if (cwd_n_used == cwd_n_alloc)
     {
@@ -4114,7 +4113,7 @@ sort_files (void)
   else
     {
       use_strcmp = true;
-      assert (sort_type != sort_version);
+      affirm (sort_type != sort_version);
       initialize_ordering_vector ();
     }
 
@@ -4291,12 +4290,12 @@ format_group_width (gid_t g)
 }
 
 /* Return a pointer to a formatted version of F->stat.st_ino,
-   possibly using buffer, BUF, of length BUFLEN, which must be at least
+   possibly using buffer, which must be at least
    INT_BUFSIZE_BOUND (uintmax_t) bytes.  */
 static char *
-format_inode (char *buf, size_t buflen, const struct fileinfo *f)
+format_inode (char buf[INT_BUFSIZE_BOUND (uintmax_t)],
+              const struct fileinfo *f)
 {
-  assert (INT_BUFSIZE_BOUND (uintmax_t) <= buflen);
   return (f->stat_ok && f->stat.st_ino != NOT_AN_INODE_NUMBER
           ? umaxtostr (f->stat.st_ino, buf)
           : (char *) "?");
@@ -4356,7 +4355,7 @@ print_long_format (const struct fileinfo *f)
         btime_ok = false;
       break;
     default:
-      abort ();
+      unreachable ();
     }
 
   p = buf;
@@ -4364,8 +4363,7 @@ print_long_format (const struct fileinfo *f)
   if (print_inode)
     {
       char hbuf[INT_BUFSIZE_BOUND (uintmax_t)];
-      p += sprintf (p, "%*s ", inode_number_width,
-                    format_inode (hbuf, sizeof hbuf, f));
+      p += sprintf (p, "%*s ", inode_number_width, format_inode (hbuf, f));
     }
 
   if (print_block_size)
@@ -4880,7 +4878,7 @@ print_file_name_and_frills (const struct fileinfo *f, size_t start_col)
 
   if (print_inode)
     printf ("%*s ", format == with_commas ? 0 : inode_number_width,
-            format_inode (buf, sizeof buf, f));
+            format_inode (buf, f));
 
   if (print_block_size)
     printf ("%*s ", format == with_commas ? 0 : block_size_width,

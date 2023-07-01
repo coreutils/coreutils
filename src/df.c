@@ -22,12 +22,12 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
-#include <assert.h>
 #include <c-ctype.h>
 #include <wchar.h>
 #include <wctype.h>
 
 #include "system.h"
+#include "assure.h"
 #include "canonicalize.h"
 #include "die.h"
 #include "error.h"
@@ -129,15 +129,14 @@ static bool print_grand_total;
 static struct fs_usage grand_fsu;
 
 /* Display modes.  */
-enum
+static enum
 {
   DEFAULT_MODE,
   INODES_MODE,
   HUMAN_MODE,
   POSIX_MODE,
   OUTPUT_MODE
-};
-static int header_mode = DEFAULT_MODE;
+} header_mode = DEFAULT_MODE;
 
 /* Displayable fields.  */
 typedef enum
@@ -421,8 +420,7 @@ alloc_field (int f, char const *c)
   if (c != nullptr)
     columns[ncolumns - 1]->caption = c;
 
-  if (field_data[f].used)
-    assert (!"field used");
+  affirm (!field_data[f].used);
 
   /* Mark field as used.  */
   field_data[f].used = true;
@@ -493,7 +491,7 @@ decode_output_arg (char const *arg)
           break;
 
         default:
-          assert (!"invalid field");
+          affirm (!"invalid field");
         }
       s = comma;
     }
@@ -562,7 +560,7 @@ get_field_list (void)
       break;
 
     default:
-      assert (!"invalid header_mode");
+      unreachable ();
     }
 }
 
@@ -1148,8 +1146,7 @@ get_dev (char const *device, char const *mount_point, char const *file,
           v = nullptr;
           break;
         default:
-          v = nullptr; /* Avoid warnings where assert() is not __noreturn__.  */
-          assert (!"bad field_type");
+          affirm (!"bad field_type");
         }
 
       switch (columns[col]->field)
@@ -1251,11 +1248,10 @@ get_dev (char const *device, char const *mount_point, char const *file,
           break;
 
         default:
-          assert (!"unhandled field");
+          affirm (!"unhandled field");
         }
 
-      if (!cell)
-        assert (!"empty cell");
+      affirm (cell);
 
       replace_problematic_chars (cell);
       size_t cell_width = mbswidth (cell, 0);

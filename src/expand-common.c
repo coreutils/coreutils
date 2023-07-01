@@ -16,7 +16,6 @@
 
 #include <config.h>
 
-#include <assert.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include "system.h"
@@ -337,7 +336,6 @@ next_file (FILE *fp)
 
   if (fp)
     {
-      assert (prev_file);
       int err = errno;
       if (!ferror (fp))
         err = 0;

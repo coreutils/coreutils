@@ -52,9 +52,9 @@
 #endif
 #include <getopt.h>
 #include <stdarg.h>
-#include <assert.h>
 
 #include "system.h"
+#include "assure.h"
 #include "die.h"
 #include "error.h"
 #include "fd-reopen.h"
@@ -1726,7 +1726,7 @@ set_speed (enum speed_setting type, char const *arg, struct termios *mode)
      Therefore we don't report the device name in any errors.  */
 
   speed_t baud = string_to_baud (arg);
-  assert (baud != (speed_t) -1);
+  affirm (baud != (speed_t) -1);
 
   if (type == input_speed || type == both_speeds)
     {
@@ -1887,7 +1887,7 @@ mode_type_flag (enum mode_type type, struct termios *mode)
       return nullptr;
 
     default:
-      abort ();
+      unreachable ();
     }
 }
 
@@ -1987,7 +1987,7 @@ display_changed (struct termios *mode)
       /* bitsp would be null only for "combination" modes, yet those
          are filtered out above via the OMIT flag.  Tell static analysis
          tools that it's ok to dereference bitsp here.  */
-      assert (bitsp);
+      assume (bitsp);
 
       if ((*bitsp & mask) == mode_info[i].bits)
         {
@@ -2071,7 +2071,7 @@ display_all (struct termios *mode, char const *device_name)
 
       bitsp = mode_type_flag (mode_info[i].type, mode);
       mask = mode_info[i].mask ? mode_info[i].mask : mode_info[i].bits;
-      assert (bitsp); /* See the identical assertion and comment above.  */
+      assume (bitsp); /* See the identical assertion and comment above.  */
       if ((*bitsp & mask) == mode_info[i].bits)
         wrapf ("%s", mode_info[i].name);
       else if (mode_info[i].flags & REV)
@@ -2303,13 +2303,13 @@ sane_mode (struct termios *mode)
       if (mode_info[i].flags & SANE_SET)
         {
           bitsp = mode_type_flag (mode_info[i].type, mode);
-          assert (bitsp); /* combination modes will not have SANE_SET.  */
+          assume (bitsp); /* combination modes will not have SANE_SET.  */
           *bitsp = (*bitsp & ~mode_info[i].mask) | mode_info[i].bits;
         }
       else if (mode_info[i].flags & SANE_UNSET)
         {
           bitsp = mode_type_flag (mode_info[i].type, mode);
-          assert (bitsp); /* combination modes will not have SANE_UNSET.  */
+          assume (bitsp); /* combination modes will not have SANE_UNSET.  */
           *bitsp = *bitsp & ~mode_info[i].mask & ~mode_info[i].bits;
         }
     }

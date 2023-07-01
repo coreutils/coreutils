@@ -19,11 +19,11 @@
 #include <config.h>
 
 #include <stdio.h>
-#include <assert.h>
 #include <sys/types.h>
 #include <getopt.h>
 
 #include "system.h"
+#include "assure.h"
 #include "die.h"
 #include "error.h"
 #include "fadvise.h"
@@ -408,7 +408,7 @@ is_char_class_member (enum Char_class char_class, unsigned char c)
       result = isxdigit (c);
       break;
     default:
-      abort ();
+      unreachable ();
     }
 
   return !! result;
@@ -646,7 +646,6 @@ append_normal_char (struct Spec_list *list, unsigned char c)
   new->next = nullptr;
   new->type = RE_NORMAL_CHAR;
   new->u.normal_char = c;
-  assert (list->tail);
   list->tail->next = new;
   list->tail = new;
 }
@@ -676,7 +675,6 @@ append_range (struct Spec_list *list, unsigned char first, unsigned char last)
   new->type = RE_RANGE;
   new->u.range.first_char = first;
   new->u.range.last_char = last;
-  assert (list->tail);
   list->tail->next = new;
   list->tail = new;
   return true;
@@ -698,7 +696,6 @@ append_char_class (struct Spec_list *list,
   new->next = nullptr;
   new->type = RE_CHAR_CLASS;
   new->u.char_class = char_class;
-  assert (list->tail);
   list->tail->next = new;
   list->tail = new;
   return true;
@@ -718,7 +715,6 @@ append_repeated_char (struct Spec_list *list, unsigned char the_char,
   new->type = RE_REPEATED_CHAR;
   new->u.repeated_char.the_repeated_char = the_char;
   new->u.repeated_char.repeat_count = repeat_count;
-  assert (list->tail);
   list->tail->next = new;
   list->tail = new;
 }
@@ -740,7 +736,6 @@ append_equiv_class (struct Spec_list *list,
   new->next = nullptr;
   new->type = RE_EQUIV_CLASS;
   new->u.equiv_code = *equiv_class_str;
-  assert (list->tail);
   list->tail->next = new;
   list->tail = new;
   return true;
@@ -781,7 +776,7 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
                        unsigned char *char_to_repeat, count *repeat_count,
                        size_t *closing_bracket_idx)
 {
-  assert (start_idx + 1 < es->len);
+  affirm (start_idx + 1 < es->len);
   if (!es_match (es, start_idx + 1, '*'))
     return -1;
 
@@ -1076,10 +1071,10 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
           for (i = 0; i < N_CHARS; i++)
             if (is_char_class_member (p->u.char_class, i))
               break;
-          assert (i < N_CHARS);
+          affirm (i < N_CHARS);
           s->state = i;
         }
-      assert (is_char_class_member (p->u.char_class, s->state));
+      assure (is_char_class_member (p->u.char_class, s->state));
       return_val = s->state;
       for (i = s->state + 1; i < N_CHARS; i++)
         if (is_char_class_member (p->u.char_class, i))
@@ -1129,7 +1124,7 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
       break;
 
     default:
-      abort ();
+      unreachable ();
     }
 
   return return_val;
@@ -1172,8 +1167,7 @@ validate_case_classes (struct Spec_list *s1, struct Spec_list *s2)
   size_t n_lower = 0;
   int c1 = 0;
   int c2 = 0;
-  count old_s1_len = s1->length;
-  count old_s2_len = s2->length;
+  MAYBE_UNUSED count old_s1_len = s1->length, old_s2_len = s2->length;
   struct List_element *s1_tail = s1->tail;
   struct List_element *s2_tail = s2->tail;
   bool s1_new_element = true;
@@ -1221,7 +1215,7 @@ validate_case_classes (struct Spec_list *s1, struct Spec_list *s2)
       s2_new_element = s2->state == NEW_ELEMENT; /* Next element is new.  */
     }
 
-  assert (old_s1_len >= s1->length && old_s2_len >= s2->length);
+  affirm (old_s1_len >= s1->length && old_s2_len >= s2->length);
 
   s1->tail = s1_tail;
   s2->tail = s2_tail;
@@ -1262,7 +1256,7 @@ get_spec_stats (struct Spec_list *s)
           break;
 
         case RE_RANGE:
-          assert (p->u.range.last_char >= p->u.range.first_char);
+          affirm (p->u.range.last_char >= p->u.range.first_char);
           len = p->u.range.last_char - p->u.range.first_char + 1;
           break;
 
@@ -1300,7 +1294,7 @@ get_spec_stats (struct Spec_list *s)
           break;
 
         default:
-          abort ();
+          unreachable ();
         }
 
       /* Check for arithmetic overflow in computing length.  Also, reject
@@ -1374,9 +1368,9 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
   struct List_element *p;
   unsigned char char_to_repeat;
 
-  assert (translating);
-  assert (s1->length > s2->length);
-  assert (s2->length > 0);
+  affirm (translating);
+  affirm (s1->length > s2->length);
+  affirm (s2->length > 0);
 
   p = s2->tail;
   switch (p->type)
@@ -1403,10 +1397,10 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
     case RE_EQUIV_CLASS:
       /* This shouldn't happen, because validate exits with an error
          if it finds an equiv class in string2 when translating.  */
-      abort ();
+      affirm (false);
 
     default:
-      abort ();
+      unreachable ();
     }
 
   append_repeated_char (s2, char_to_repeat, s1->length - s2->length);
@@ -1837,7 +1831,7 @@ main (int argc, char **argv)
               if (!in_s1[i])
                 {
                   int ch = get_next (s2, nullptr);
-                  assert (ch != -1 || truncate_set1);
+                  affirm (ch != -1 || truncate_set1);
                   if (ch == -1)
                     {
                       /* This will happen when tr is invoked like e.g.
@@ -1890,7 +1884,7 @@ main (int argc, char **argv)
                   skip_construct (s2);
                 }
             }
-          assert (c1 == -1 || truncate_set1);
+          affirm (c1 == -1 || truncate_set1);
         }
       if (squeeze_repeats)
         {

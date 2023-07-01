@@ -26,13 +26,13 @@
 #include <config.h>
 
 #include <stdio.h>
-#include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>
 
 #include "system.h"
 #include "argmatch.h"
+#include "assure.h"
 #include "cl-strtod.h"
 #include "die.h"
 #include "error.h"
@@ -354,7 +354,7 @@ check_output_alive (void)
     die_pipe ();
 }
 
-static bool
+MAYBE_UNUSED static bool
 valid_file_spec (struct File_spec const *f)
 {
   /* Exactly one of the following subexpressions must be true. */
@@ -484,22 +484,21 @@ xlseek (int fd, off_t offset, int whence, char const *filename)
   switch (whence)
     {
     case SEEK_SET:
-      error (0, errno, _("%s: cannot seek to offset %s"),
+      error (EXIT_FAILURE, errno, _("%s: cannot seek to offset %s"),
              quotef (filename), s);
       break;
     case SEEK_CUR:
-      error (0, errno, _("%s: cannot seek to relative offset %s"),
+      error (EXIT_FAILURE, errno, _("%s: cannot seek to relative offset %s"),
              quotef (filename), s);
       break;
     case SEEK_END:
-      error (0, errno, _("%s: cannot seek to end-relative offset %s"),
+      error (EXIT_FAILURE, errno,
+             _("%s: cannot seek to end-relative offset %s"),
              quotef (filename), s);
       break;
     default:
-      abort ();
+      unreachable ();
     }
-
-  exit (EXIT_FAILURE);
 }
 
 /* Print the last N_LINES lines from the end of file FD.
@@ -931,21 +930,10 @@ fremote (int fd, char const *name)
     }
   else
     {
-      switch (is_local_fs_type (buf.f_type))
-        {
-        case 0:
-          break;
-        case -1:
-          /* Treat unrecognized file systems as "remote", so caller polls.
-             Note README-release has instructions for syncing the internal
-             list with the latest Linux kernel file system constants.  */
-          break;
-        case 1:
-          remote = false;
-          break;
-        default:
-          assert (!"unexpected return value from is_local_fs_type");
-        }
+      /* Treat unrecognized file systems as "remote", so caller polls.
+         Note README-release has instructions for syncing the internal
+         list with the latest Linux kernel file system constants.  */
+      remote = is_local_fs_type (buf.f_type) <= 0;
     }
 #endif
 
@@ -966,7 +954,7 @@ recheck (struct File_spec *f, bool blocking)
             ? STDIN_FILENO
             : open (f->name, O_RDONLY | (blocking ? 0 : O_NONBLOCK)));
 
-  assert (valid_file_spec (f));
+  affirm (valid_file_spec (f));
 
   /* If the open fails because the file doesn't exist,
      then mark the file as not tailable.  */
@@ -1043,7 +1031,7 @@ recheck (struct File_spec *f, bool blocking)
   else if (prev_errnum && prev_errnum != ENOENT)
     {
       new_file = true;
-      assert (f->fd == -1);
+      affirm (f->fd == -1);
       error (0, 0, _("%s has become accessible"), quoteaf (pretty_name (f)));
     }
   else if (f->fd == -1)
@@ -1218,7 +1206,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                     read_unchanged = true;
                 }
 
-              assert (fd == f[i].fd);
+              affirm (fd == f[i].fd);
 
               /* This file has changed.  Print out what we can, and
                  then keep looping.  */

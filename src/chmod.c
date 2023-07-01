@@ -22,6 +22,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "assure.h"
 #include "dev-ino.h"
 #include "die.h"
 #include "error.h"
@@ -191,7 +192,7 @@ describe_change (char const *file, struct change_status const *ch)
       printf (fmt, quoted_file, m, &perms[1]);
       return;
     default:
-      abort ();
+      affirm (false);
     }
   printf (fmt, quoted_file, old_m, &old_perms[1], m, &perms[1]);
 }

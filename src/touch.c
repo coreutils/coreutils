@@ -21,10 +21,10 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include <assert.h>
 
 #include "system.h"
 #include "argmatch.h"
+#include "assure.h"
 #include "die.h"
 #include "error.h"
 #include "fd-reopen.h"
@@ -144,7 +144,7 @@ touch (char const *file)
         newtime[0].tv_nsec = UTIME_OMIT;
       else
         {
-          assert (change_times == CH_ATIME);
+          affirm (change_times == CH_ATIME);
           newtime[1].tv_nsec = UTIME_OMIT;
         }
     }

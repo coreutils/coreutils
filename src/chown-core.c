@@ -23,6 +23,7 @@
 #include <grp.h>
 
 #include "system.h"
+#include "assure.h"
 #include "chown-core.h"
 #include "error.h"
 #include "ignore-value.h"
@@ -198,7 +199,7 @@ describe_change (char const *file, enum Change_status changed,
              : _("ownership of %s retained\n"));
       break;
     default:
-      abort ();
+      affirm (false);
     }
 
   printf (fmt, quoteaf (file), old_spec, spec);
@@ -467,7 +468,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
               break;
 
             default:
-              abort ();
+              unreachable ();
             }
         }
 

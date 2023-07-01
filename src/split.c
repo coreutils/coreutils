@@ -21,7 +21,6 @@
    * support --suppress-matched as in csplit.  */
 #include <config.h>
 
-#include <assert.h>
 #include <stdio.h>
 #include <getopt.h>
 #include <signal.h>
@@ -30,6 +29,7 @@
 
 #include "system.h"
 #include "alignalloc.h"
+#include "assure.h"
 #include "die.h"
 #include "error.h"
 #include "fadvise.h"
@@ -423,7 +423,7 @@ new_name:
 
       if (numeric_suffix_start)
         {
-          assert (! widen);
+          affirm (! widen);
 
           /* Update the output file name.  */
           idx_t i = strlen (numeric_suffix_start);
@@ -885,7 +885,7 @@ static void
 lines_chunk_split (intmax_t k, intmax_t n, char *buf, idx_t bufsize,
                    ssize_t initial_read, off_t file_size)
 {
-  assert (n && k <= n);
+  affirm (n && k <= n);
 
   intmax_t rem_bytes = file_size % n;
   off_t chunk_size = file_size / n;
@@ -1698,7 +1698,7 @@ main (int argc, char **argv)
       break;
 
     default:
-      abort ();
+      affirm (false);
     }
 
   if (close (STDIN_FILENO) != 0)

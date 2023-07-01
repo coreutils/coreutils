@@ -22,10 +22,10 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include <assert.h>
 
 #include "system.h"
 #include "argmatch.h"
+#include "assure.h"
 #include "die.h"
 #include "error.h"
 #include "remove.h"
@@ -368,6 +368,6 @@ main (int argc, char **argv)
     }
 
   enum RM_status status = rm (file, &x);
-  assert (VALID_STATUS (status));
+  affirm (VALID_STATUS (status));
   return status == RM_ERROR ? EXIT_FAILURE : EXIT_SUCCESS;
 }

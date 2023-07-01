@@ -19,9 +19,9 @@
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include <assert.h>
 
 #include "system.h"
+#include "assure.h"
 #include "error.h"
 #include "file-type.h"
 #include "filenamecat.h"
@@ -634,7 +634,7 @@ rm (char *const *file, struct rm_options const *x)
 
           enum RM_status s = rm_fts (fts, ent, x);
 
-          assert (VALID_STATUS (s));
+          affirm (VALID_STATUS (s));
           UPDATE_STATUS (rm_status, s);
         }
 

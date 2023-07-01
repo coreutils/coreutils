@@ -18,11 +18,11 @@
 
 #include <config.h>
 
-#include <assert.h>
 #include <sys/types.h>
 #include <getopt.h>
 
 #include "system.h"
+#include "assure.h"
 #include "die.h"
 #include "error.h"
 #include "fadvise.h"
@@ -820,8 +820,8 @@ add_field (int file, size_t field)
 {
   struct outlist *o;
 
-  assert (file == 0 || file == 1 || file == 2);
-  assert (file != 0 || field == 0);
+  affirm (file == 0 || file == 1 || file == 2);
+  affirm (file != 0 || field == 0);
 
   o = xmalloc (sizeof *o);
   o->file = file;
@@ -887,13 +887,6 @@ decode_field_spec (char const *s, int *file_index, size_t *field_index)
     default:
       die (EXIT_FAILURE, 0,
            _("invalid file number in field spec: %s"), quote (s));
-
-      /* Tell gcc -W -Wall that we can't get beyond this point.
-         This avoids a warning (otherwise legit) that the caller's copies
-         of *file_index and *field_index might be used uninitialized.  */
-      abort ();
-
-      break;
     }
 }
 

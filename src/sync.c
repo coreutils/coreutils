@@ -17,7 +17,6 @@
 /* Written by Jim Meyering */
 
 #include <config.h>
-#include <assert.h>
 #include <getopt.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -149,7 +148,7 @@ sync_arg (enum sync_mode mode, char const *file)
 #endif
 
         default:
-          assert ("invalid sync_mode");
+          unreachable ();
         }
 
       if (sync_status < 0)

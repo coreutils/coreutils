@@ -22,10 +22,10 @@
 
 #include <config.h>
 
-#include <assert.h>
 #include <sys/types.h>
 
 #include "system.h"
+#include "assure.h"
 #include "long-options.h"
 #include "die.h"
 #include "error.h"
@@ -123,8 +123,6 @@ search_item (struct item *root, char const *str)
   struct item *p, *q, *r, *s, *t;
   int a;
 
-  assert (root);
-
   /* Make sure the tree is not empty, since that is what the algorithm
      below expects.  */
   if (root->right == nullptr)
@@ -137,7 +135,6 @@ search_item (struct item *root, char const *str)
   while (true)
     {
       /* A2. Compare.  */
-      assert (str && p && p->str);
       a = strcmp (str, p->str);
       if (a == 0)
         return p;
@@ -160,28 +157,30 @@ search_item (struct item *root, char const *str)
             p->right = q;
 
           /* A6. Adjust balance factors.  */
-          assert (str && s && s->str && !STREQ (str, s->str));
-          if (strcmp (str, s->str) < 0)
+          a = strcmp (str, s->str);
+          if (a < 0)
             {
               r = p = s->left;
               a = -1;
             }
           else
             {
+              affirm (0 < a);
               r = p = s->right;
               a = 1;
             }
 
           while (p != q)
             {
-              assert (str && p && p->str && !STREQ (str, p->str));
-              if (strcmp (str, p->str) < 0)
+              int cmp = strcmp (str, p->str);
+              if (cmp < 0)
                 {
                   p->balance = -1;
                   p = p->left;
                 }
               else
                 {
+                  affirm (0 < cmp);
                   p->balance = 1;
                   p = p->right;
                 }
@@ -459,7 +458,7 @@ tsort (char const *file)
           break;
         }
 
-      assert (len != 0);
+      affirm (len != 0);
 
       k = search_item (root, tokenbuffer.buffer);
       if (j)

@@ -16,9 +16,9 @@
 
 #include <config.h>
 #include <stdio.h>
-#include <assert.h>
 #include <sys/types.h>
 #include "system.h"
+#include "assure.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "echo"
@@ -37,7 +37,7 @@ usage (int status)
 {
   /* STATUS should always be EXIT_SUCCESS (unlike in most other
      utilities which would call emit_try_help otherwise).  */
-  assert (status == EXIT_SUCCESS);
+  affirm (status == EXIT_SUCCESS);
 
   printf (_("\
 Usage: %s [SHORT-OPTION]... [STRING]...\n\

@@ -21,8 +21,8 @@
 
 #include <stdlib.h>
 #include <errno.h>
-#include <assert.h>
 
+#include "assure.h"
 #include "xalloc.h"
 #include "xfts.h"
 
@@ -37,7 +37,7 @@ xfts_open (char * const *argv, int options,
     {
       /* This can fail in two ways: out of memory or with errno==EINVAL,
          which indicates it was called with invalid bit_flags.  */
-      assert (errno != EINVAL);
+      affirm (errno != EINVAL);
       xalloc_die ();
     }
 

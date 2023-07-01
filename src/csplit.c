@@ -19,7 +19,6 @@
 
 #include <config.h>
 
-#include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>
@@ -576,7 +575,6 @@ find_line (intmax_t linenum)
 
   for (b = head;;)
     {
-      assert (b);
       if (linenum < b->start_line + b->num_lines)
         {
           /* The line is in this buffer. */

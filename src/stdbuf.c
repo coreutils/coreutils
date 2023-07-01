@@ -20,9 +20,9 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include <assert.h>
 
 #include "system.h"
+#include "assure.h"
 #include "die.h"
 #include "error.h"
 #include "filenamecat.h"
@@ -336,7 +336,7 @@ main (int argc, char **argv)
         case 'i':
         case 'o':
           opt_fileno = optc_to_fileno (c);
-          assert (0 <= opt_fileno && opt_fileno < ARRAY_CARDINALITY (stdbuf));
+          affirm (0 <= opt_fileno && opt_fileno < ARRAY_CARDINALITY (stdbuf));
           stdbuf[opt_fileno].optc = c;
           while (c_isspace (*optarg))
             optarg++;

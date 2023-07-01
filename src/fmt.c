@@ -20,7 +20,6 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
-#include <assert.h>
 
 /* Redefine.  Otherwise, systems (Unicos for one) with headers that define
    it to be a type get syntax errors for the variable declaration below.  */
@@ -621,7 +620,7 @@ get_paragraph (FILE *f)
 
   /* Tell static analysis tools that using word_limit[-1] is ok.
      word_limit is guaranteed to have been incremented by get_line.  */
-  assert (word < word_limit);
+  assume (word < word_limit);
 
   (word_limit - 1)->period = (word_limit - 1)->final = true;
   next_char = c;

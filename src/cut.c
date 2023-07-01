@@ -25,11 +25,11 @@
 #include <config.h>
 
 #include <stdio.h>
-#include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
 
+#include "assure.h"
 #include "error.h"
 #include "fadvise.h"
 #include "getndelim2.h"
@@ -311,7 +311,7 @@ cut_fields (FILE *stream)
             }
 
           n_bytes = len;
-          assert (n_bytes != 0);
+          affirm (n_bytes != 0);
 
           c = 0;
 

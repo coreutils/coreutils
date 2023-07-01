@@ -18,7 +18,6 @@
 
 #include <config.h>
 #include <stdio.h>
-#include <assert.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <selinux/selinux.h>
@@ -33,6 +32,7 @@
 #include "system.h"
 #include "acl.h"
 #include "alignalloc.h"
+#include "assure.h"
 #include "backupfile.h"
 #include "buffer-lcm.h"
 #include "canonicalize.h"
@@ -2063,7 +2063,7 @@ abandon_move (const struct cp_options *x,
               int dst_dirfd, char const *dst_relname,
               struct stat const *dst_sb)
 {
-  assert (x->move_mode);
+  affirm (x->move_mode);
   return (x->interactive == I_ALWAYS_NO
           || x->interactive == I_ALWAYS_SKIP
           || ((x->interactive == I_ASK_USER
@@ -2267,7 +2267,7 @@ copy_internal (char const *src_name, char const *dst_name,
   else
     {
 #if defined lint && (defined __clang__ || defined __COVERITY__)
-      assert (x->move_mode);
+      affirm (x->move_mode);
       memset (&src_sb, 0, sizeof src_sb);
 #endif
     }
@@ -3358,18 +3358,16 @@ un_backup:
   return false;
 }
 
-ATTRIBUTE_PURE
-static bool
+static void
 valid_options (const struct cp_options *co)
 {
-  assert (VALID_BACKUP_TYPE (co->backup_type));
-  assert (VALID_SPARSE_MODE (co->sparse_mode));
-  assert (VALID_REFLINK_MODE (co->reflink_mode));
-  assert (!(co->hard_link && co->symbolic_link));
-  assert (!
+  affirm (VALID_BACKUP_TYPE (co->backup_type));
+  affirm (VALID_SPARSE_MODE (co->sparse_mode));
+  affirm (VALID_REFLINK_MODE (co->reflink_mode));
+  affirm (!(co->hard_link && co->symbolic_link));
+  affirm (!
           (co->reflink_mode == REFLINK_ALWAYS
            && co->sparse_mode != SPARSE_AUTO));
-  return true;
 }
 
 /* Copy the file SRC_NAME to the file DST_NAME aka DST_DIRFD+DST_RELNAME.
@@ -3389,7 +3387,7 @@ copy (char const *src_name, char const *dst_name,
       int nonexistent_dst, const struct cp_options *options,
       bool *copy_into_self, bool *rename_succeeded)
 {
-  assert (valid_options (options));
+  valid_options (options);
 
   /* Record the file names: they're used in case of error, when copying
      a directory into itself.  I don't like to make these tools do *any*

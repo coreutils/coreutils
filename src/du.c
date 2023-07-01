@@ -26,10 +26,10 @@
 #include <config.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include <assert.h>
 #include "system.h"
 #include "argmatch.h"
 #include "argv-iter.h"
+#include "assure.h"
 #include "di-set.h"
 #include "die.h"
 #include "error.h"
@@ -523,8 +523,8 @@ process_file (FTS *fts, FTSENT *ent)
           if (info == FTS_NSOK)
             {
               fts_set (fts, ent, FTS_AGAIN);
-              FTSENT const *e = fts_read (fts);
-              assert (e == ent);
+              MAYBE_UNUSED FTSENT const *e = fts_read (fts);
+              affirm (e == ent);
               info = ent->fts_info;
             }
 
@@ -556,8 +556,8 @@ process_file (FTS *fts, FTSENT *ent)
           if (info == FTS_D)
             {
               fts_set (fts, ent, FTS_SKIP);
-              FTSENT const *e = fts_read (fts);
-              assert (e == ent);
+              MAYBE_UNUSED FTSENT const *e = fts_read (fts);
+              affirm (e == ent);
             }
 
           return true;
@@ -635,7 +635,7 @@ process_file (FTS *fts, FTSENT *ent)
              propagate sums from the children (prev_level) to the parent.
              Here, the current level is always one smaller than the
              previous one.  */
-          assert (level == prev_level - 1);
+          affirm (level == prev_level - 1);
           duinfo_add (&dui_to_print, &dulvl[prev_level].ent);
           if (!opt_separate_dirs)
             duinfo_add (&dui_to_print, &dulvl[prev_level].subdir);
@@ -1079,7 +1079,7 @@ main (int argc, char **argv)
             case AI_ERR_MEM:
               xalloc_die ();
             default:
-              assert (!"unexpected error code from argv_iter");
+              affirm (!"unexpected error code from argv_iter");
             }
         }
       if (files_from && STREQ (files_from, "-") && STREQ (file_name, "-"))
