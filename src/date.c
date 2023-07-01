@@ -26,8 +26,6 @@
 
 #include "system.h"
 #include "argmatch.h"
-#include "die.h"
-#include "error.h"
 #include "parse-datetime.h"
 #include "posixtm.h"
 #include "quote.h"
@@ -355,9 +353,7 @@ batch_convert (char const *input_filename, char const *format,
     {
       in_stream = fopen (input_filename, "r");
       if (in_stream == nullptr)
-        {
-          die (EXIT_FAILURE, errno, "%s", quotef (input_filename));
-        }
+        error (EXIT_FAILURE, errno, "%s", quotef (input_filename));
     }
 
   line = nullptr;
@@ -369,8 +365,8 @@ batch_convert (char const *input_filename, char const *format,
       if (line_length < 0)
         {
           if (ferror (in_stream))
-            die (EXIT_FAILURE, errno, _("%s: read error"),
-                 quotef (input_filename));
+            error (EXIT_FAILURE, errno, _("%s: read error"),
+                   quotef (input_filename));
           break;
         }
 
@@ -389,7 +385,7 @@ batch_convert (char const *input_filename, char const *format,
     }
 
   if (fclose (in_stream) == EOF)
-    die (EXIT_FAILURE, errno, "%s", quotef (input_filename));
+    error (EXIT_FAILURE, errno, "%s", quotef (input_filename));
 
   free (line);
 
@@ -502,7 +498,7 @@ main (int argc, char **argv)
       if (new_format)
         {
           if (format)
-            die (EXIT_FAILURE, 0, _("multiple output formats specified"));
+            error (EXIT_FAILURE, 0, _("multiple output formats specified"));
           format = new_format;
         }
     }
@@ -541,7 +537,7 @@ main (int argc, char **argv)
       if (argv[optind][0] == '+')
         {
           if (format)
-            die (EXIT_FAILURE, 0, _("multiple output formats specified"));
+            error (EXIT_FAILURE, 0, _("multiple output formats specified"));
           format = argv[optind++] + 1;
         }
       else if (set_date || option_specified_date)
@@ -613,7 +609,7 @@ main (int argc, char **argv)
           if (reference != nullptr)
             {
               if (stat (reference, &refstats) != 0)
-                die (EXIT_FAILURE, errno, "%s", quotef (reference));
+                error (EXIT_FAILURE, errno, "%s", quotef (reference));
               when = get_stat_mtime (&refstats);
             }
           else if (get_resolution)
@@ -633,7 +629,7 @@ main (int argc, char **argv)
         }
 
       if (! valid_date)
-        die (EXIT_FAILURE, 0, _("invalid date %s"), quote (datestr));
+        error (EXIT_FAILURE, 0, _("invalid date %s"), quote (datestr));
 
       if (set_date)
         {

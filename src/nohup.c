@@ -23,7 +23,6 @@
 
 #include "system.h"
 
-#include "error.h"
 #include "filenamecat.h"
 #include "fd-reopen.h"
 #include "long-options.h"

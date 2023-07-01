@@ -22,8 +22,6 @@
 
 #include "system.h"
 #include "long-options.h"
-#include "die.h"
-#include "error.h"
 #include "quote.h"
 #include "xgethostname.h"
 
@@ -99,14 +97,14 @@ main (int argc, char **argv)
       /* Set hostname to operand.  */
       char const *name = argv[optind];
       if (sethostname (name, strlen (name)) != 0)
-        die (EXIT_FAILURE, errno, _("cannot set name to %s"),
-             quote (name));
+        error (EXIT_FAILURE, errno, _("cannot set name to %s"),
+               quote (name));
     }
   else
     {
       hostname = xgethostname ();
       if (hostname == nullptr)
-        die (EXIT_FAILURE, errno, _("cannot determine hostname"));
+        error (EXIT_FAILURE, errno, _("cannot determine hostname"));
       puts (hostname);
     }
 

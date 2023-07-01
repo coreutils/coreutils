@@ -24,8 +24,6 @@
 #include "system.h"
 #include "assure.h"
 #include "dev-ino.h"
-#include "die.h"
-#include "error.h"
 #include "filemode.h"
 #include "ignore-value.h"
 #include "modechange.h"
@@ -539,8 +537,8 @@ main (int argc, char **argv)
     {
       change = mode_create_from_ref (reference_file);
       if (!change)
-        die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-             quoteaf (reference_file));
+        error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+               quoteaf (reference_file));
     }
   else
     {
@@ -558,8 +556,8 @@ main (int argc, char **argv)
       static struct dev_ino dev_ino_buf;
       root_dev_ino = get_root_dev_ino (&dev_ino_buf);
       if (root_dev_ino == nullptr)
-        die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-             quoteaf ("/"));
+        error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+               quoteaf ("/"));
     }
   else
     {

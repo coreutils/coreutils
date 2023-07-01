@@ -22,9 +22,7 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "die.h"
 #include "cl-strtod.h"
-#include "error.h"
 #include "quote.h"
 #include "xstrtod.h"
 
@@ -244,8 +242,8 @@ long_double_format (char const *fmt, struct layout *layout)
   for (i = 0; ! (fmt[i] == '%' && fmt[i + 1] != '%'); i += (fmt[i] == '%') + 1)
     {
       if (!fmt[i])
-        die (EXIT_FAILURE, 0,
-             _("format %s has no %% directive"), quote (fmt));
+        error (EXIT_FAILURE, 0,
+               _("format %s has no %% directive"), quote (fmt));
       prefix_len++;
     }
 
@@ -262,15 +260,15 @@ long_double_format (char const *fmt, struct layout *layout)
   has_L = (fmt[i] == 'L');
   i += has_L;
   if (fmt[i] == '\0')
-    die (EXIT_FAILURE, 0, _("format %s ends in %%"), quote (fmt));
+    error (EXIT_FAILURE, 0, _("format %s ends in %%"), quote (fmt));
   if (! strchr ("efgaEFGA", fmt[i]))
-    die (EXIT_FAILURE, 0,
-         _("format %s has unknown %%%c directive"), quote (fmt), fmt[i]);
+    error (EXIT_FAILURE, 0,
+           _("format %s has unknown %%%c directive"), quote (fmt), fmt[i]);
 
   for (i++; ; i += (fmt[i] == '%') + 1)
     if (fmt[i] == '%' && fmt[i + 1] != '%')
-      die (EXIT_FAILURE, 0, _("format %s has too many %% directives"),
-           quote (fmt));
+      error (EXIT_FAILURE, 0, _("format %s has too many %% directives"),
+             quote (fmt));
     else if (fmt[i])
       suffix_len++;
     else
@@ -292,7 +290,7 @@ io_error (void)
 {
   /* FIXME: consider option to silently ignore errno=EPIPE */
   clearerr (stdout);
-  die (EXIT_FAILURE, errno, _("write error"));
+  error (EXIT_FAILURE, errno, _("write error"));
 }
 
 /* Actually print the sequence of numbers in the specified range, with the

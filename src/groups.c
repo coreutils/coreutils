@@ -25,7 +25,6 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "die.h"
 #include "group-list.h"
 #include "quote.h"
 
@@ -103,17 +102,17 @@ main (int argc, char **argv)
       errno = 0;
       ruid = getuid ();
       if (ruid == NO_UID && errno)
-        die (EXIT_FAILURE, errno, _("cannot get real UID"));
+        error (EXIT_FAILURE, errno, _("cannot get real UID"));
 
       errno = 0;
       egid = getegid ();
       if (egid == NO_GID && errno)
-        die (EXIT_FAILURE, errno, _("cannot get effective GID"));
+        error (EXIT_FAILURE, errno, _("cannot get effective GID"));
 
       errno = 0;
       rgid = getgid ();
       if (rgid == NO_GID && errno)
-        die (EXIT_FAILURE, errno, _("cannot get real GID"));
+        error (EXIT_FAILURE, errno, _("cannot get real GID"));
 
       if (!print_group_list (nullptr, ruid, rgid, egid, true, ' '))
         ok = false;

@@ -24,8 +24,6 @@
 #include <grp.h>
 
 #include "system.h"
-#include "die.h"
-#include "error.h"
 #include "ignore-value.h"
 #include "mgetgroups.h"
 #include "quote.h"
@@ -329,11 +327,11 @@ main (int argc, char **argv)
     }
 
   if (chroot (newroot) != 0)
-    die (EXIT_CANCELED, errno, _("cannot change root directory to %s"),
-         quoteaf (newroot));
+    error (EXIT_CANCELED, errno, _("cannot change root directory to %s"),
+           quoteaf (newroot));
 
   if (! skip_chdir && chdir ("/"))
-    die (EXIT_CANCELED, errno, _("cannot chdir to root directory"));
+    error (EXIT_CANCELED, errno, _("cannot chdir to root directory"));
 
   if (argc == optind + 1)
     {
@@ -375,8 +373,8 @@ main (int argc, char **argv)
         }
       else if (gid_unset (gid))
         {
-          die (EXIT_CANCELED, errno,
-               _("no group specified for unknown uid: %d"), (int) uid);
+          error (EXIT_CANCELED, errno,
+                 _("no group specified for unknown uid: %d"), (int) uid);
         }
     }
 
@@ -400,8 +398,8 @@ main (int argc, char **argv)
       if (ngroups <= 0)
         {
           if (! n_gids)
-            die (EXIT_CANCELED, errno,
-                 _("failed to get supplemental groups"));
+            error (EXIT_CANCELED, errno,
+                   _("failed to get supplemental groups"));
           /* else look-up outside the chroot worked, then go with those.  */
         }
       else
@@ -413,16 +411,16 @@ main (int argc, char **argv)
 #endif
 
   if ((uid_set (uid) || groups) && setgroups (n_gids, gids) != 0)
-    die (EXIT_CANCELED, errno, _("failed to set supplemental groups"));
+    error (EXIT_CANCELED, errno, _("failed to set supplemental groups"));
 
   free (in_gids);
   free (out_gids);
 
   if (gid_set (gid) && setgid (gid))
-    die (EXIT_CANCELED, errno, _("failed to set group-ID"));
+    error (EXIT_CANCELED, errno, _("failed to set group-ID"));
 
   if (uid_set (uid) && setuid (uid))
-    die (EXIT_CANCELED, errno, _("failed to set user-ID"));
+    error (EXIT_CANCELED, errno, _("failed to set user-ID"));
 
   /* Execute the given command.  */
   execvp (argv[0], argv);

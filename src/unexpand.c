@@ -39,8 +39,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "die.h"
-
 #include "expand-common.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -177,7 +175,7 @@ unexpand (void)
                   if (convert)
                     {
                       if (next_tab_column < column)
-                        die (EXIT_FAILURE, 0, _("input line is too long"));
+                        error (EXIT_FAILURE, 0, _("input line is too long"));
 
                       if (c == '\t')
                         {
@@ -222,7 +220,7 @@ unexpand (void)
                 {
                   column++;
                   if (!column)
-                    die (EXIT_FAILURE, 0, _("input line is too long"));
+                    error (EXIT_FAILURE, 0, _("input line is too long"));
                 }
 
               if (pending)
@@ -230,7 +228,7 @@ unexpand (void)
                   if (pending > 1 && one_blank_before_tab_stop)
                     pending_blank[0] = '\t';
                   if (fwrite (pending_blank, 1, pending, stdout) != pending)
-                    die (EXIT_FAILURE, errno, _("write error"));
+                    error (EXIT_FAILURE, errno, _("write error"));
                   pending = 0;
                   one_blank_before_tab_stop = false;
                 }
@@ -246,7 +244,7 @@ unexpand (void)
             }
 
           if (putchar (c) < 0)
-            die (EXIT_FAILURE, errno, _("write error"));
+            error (EXIT_FAILURE, errno, _("write error"));
         }
       while (c != '\n');
     }
@@ -302,7 +300,7 @@ main (int argc, char **argv)
               have_tabval = true;
             }
           if (!DECIMAL_DIGIT_ACCUMULATE (tabval, c - '0', uintmax_t))
-            die (EXIT_FAILURE, 0, _("tab stop value is too large"));
+            error (EXIT_FAILURE, 0, _("tab stop value is too large"));
           break;
         }
     }

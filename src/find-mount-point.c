@@ -18,8 +18,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "die.h"
-#include "error.h"
 #include "save-cwd.h"
 #include "xgetcwd.h"
 #include "find-mount-point.h"
@@ -103,8 +101,8 @@ done:
   {
     int save_errno = errno;
     if (restore_cwd (&cwd) != 0)
-      die (EXIT_FAILURE, errno,
-           _("failed to return to initial working directory"));
+      error (EXIT_FAILURE, errno,
+             _("failed to return to initial working directory"));
     free_cwd (&cwd);
     errno = save_errno;
   }

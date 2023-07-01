@@ -22,10 +22,8 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "die.h"
 #include <regex.h>
 #include "argmatch.h"
-#include "error.h"
 #include "fadvise.h"
 #include "quote.h"
 #include "read-file.h"
@@ -286,7 +284,7 @@ static BLOCK reference;		/* reference field for input reference mode */
 static void
 matcher_error (void)
 {
-  die (EXIT_FAILURE, errno, _("error in regular expression matcher"));
+  error (EXIT_FAILURE, errno, _("error in regular expression matcher"));
 }
 
 /* Unescape STRING in-place.  */
@@ -414,7 +412,7 @@ compile_regex (struct regex_data *regex)
 
   message = re_compile_pattern (string, strlen (string), pattern);
   if (message)
-    die (EXIT_FAILURE, 0, _("%s (for regexp %s)"), message, quote (string));
+    error (EXIT_FAILURE, 0, _("%s (for regexp %s)"), message, quote (string));
 
   /* The fastmap should be compiled before 're_match'.  The following
      call is not mandatory, because 're_search' is always called sooner,
@@ -518,7 +516,7 @@ swallow_file_in_memory (char const *file_name, BLOCK *block)
     block->start = read_file (file_name, 0, &used_length);
 
   if (!block->start)
-    die (EXIT_FAILURE, errno, "%s", quotef (using_stdin ? "-" : file_name));
+    error (EXIT_FAILURE, errno, "%s", quotef (using_stdin ? "-" : file_name));
 
   if (using_stdin)
     clearerr (stdin);
@@ -816,9 +814,10 @@ find_occurs_in_text (int file_index)
             break;
 
           case 0:
-            die (EXIT_FAILURE, 0,
-                 _("error: regular expression has a match of length zero: %s"),
-                 quote (context_regex.string));
+            error (EXIT_FAILURE, 0,
+                   _("error: regular expression has a match of length zero:"
+                     " %s"),
+                   quote (context_regex.string));
 
           default:
             next_context_start = cursor + context_regs.end[0];
@@ -1836,8 +1835,8 @@ main (int argc, char **argv)
             intmax_t tmp;
             if (! (xstrtoimax (optarg, nullptr, 0, &tmp, "") == LONGINT_OK
                    && 0 < tmp && tmp <= PTRDIFF_MAX))
-              die (EXIT_FAILURE, 0, _("invalid gap width: %s"),
-                   quote (optarg));
+              error (EXIT_FAILURE, 0, _("invalid gap width: %s"),
+                     quote (optarg));
             gap_size = tmp;
             break;
           }
@@ -1863,8 +1862,8 @@ main (int argc, char **argv)
             intmax_t tmp;
             if (! (xstrtoimax (optarg, nullptr, 0, &tmp, "") == LONGINT_OK
                    && 0 < tmp && tmp <= PTRDIFF_MAX))
-              die (EXIT_FAILURE, 0, _("invalid line width: %s"),
-                   quote (optarg));
+              error (EXIT_FAILURE, 0, _("invalid line width: %s"),
+                     quote (optarg));
             line_width = tmp;
             break;
           }
@@ -1968,7 +1967,7 @@ main (int argc, char **argv)
       if (optind < argc)
         {
           if (! freopen (argv[optind], "w", stdout))
-            die (EXIT_FAILURE, errno, "%s", quotef (argv[optind]));
+            error (EXIT_FAILURE, errno, "%s", quotef (argv[optind]));
           optind++;
         }
 

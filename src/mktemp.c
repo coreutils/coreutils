@@ -23,8 +23,6 @@
 #include "system.h"
 
 #include "close-stream.h"
-#include "die.h"
-#include "error.h"
 #include "filenamecat.h"
 #include "quote.h"
 #include "tempname.h"
@@ -227,9 +225,9 @@ main (int argc, char **argv)
       size_t len = strlen (template);
       if (!len || template[len - 1] != 'X')
         {
-          die (EXIT_FAILURE, 0,
-               _("with --suffix, template %s must end in X"),
-               quote (template));
+          error (EXIT_FAILURE, 0,
+                 _("with --suffix, template %s must end in X"),
+                 quote (template));
         }
       suffix_len = strlen (suffix);
       dest_name = xcharalloc (len + suffix_len + 1);
@@ -252,13 +250,13 @@ main (int argc, char **argv)
   /* At this point, template is malloc'd, and suffix points into template.  */
   if (suffix_len && last_component (suffix) != suffix)
     {
-      die (EXIT_FAILURE, 0,
-           _("invalid suffix %s, contains directory separator"),
-           quote (suffix));
+      error (EXIT_FAILURE, 0,
+             _("invalid suffix %s, contains directory separator"),
+             quote (suffix));
     }
   x_count = count_consecutive_X_s (template, suffix - template);
   if (x_count < 3)
-    die (EXIT_FAILURE, 0, _("too few X's in template %s"), quote (template));
+    error (EXIT_FAILURE, 0, _("too few X's in template %s"), quote (template));
 
   if (use_dest_dir)
     {
@@ -273,9 +271,9 @@ main (int argc, char **argv)
             dest_dir = "/tmp";
 
           if (last_component (template) != template)
-            die (EXIT_FAILURE, 0,
-                 _("invalid template, %s, contains directory separator"),
-                 quote (template));
+            error (EXIT_FAILURE, 0,
+                   _("invalid template, %s, contains directory separator"),
+                   quote (template));
         }
       else
         {
@@ -287,10 +285,10 @@ main (int argc, char **argv)
               dest_dir = (env && *env ? env : "/tmp");
             }
           if (IS_ABSOLUTE_FILE_NAME (template))
-            die (EXIT_FAILURE, 0,
-                 _("invalid template, %s; with --tmpdir,"
-                   " it may not be absolute"),
-                 quote (template));
+            error (EXIT_FAILURE, 0,
+                   _("invalid template, %s; with --tmpdir,"
+                     " it may not be absolute"),
+                   quote (template));
         }
 
       dest_name = file_name_concat (dest_dir, template, nullptr);

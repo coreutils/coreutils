@@ -24,8 +24,6 @@
 #include <signal.h>
 
 #include "system.h"
-#include "die.h"
-#include "error.h"
 #include "idx.h"
 #include "operand2sig.h"
 #include "quote.h"
@@ -182,8 +180,8 @@ unset_envvars (void)
       devmsg ("unset:    %s\n", usvars[i]);
 
       if (unsetenv (usvars[i]))
-        die (EXIT_CANCELED, errno, _("cannot unset %s"),
-             quote (usvars[i]));
+        error (EXIT_CANCELED, errno, _("cannot unset %s"),
+               quote (usvars[i]));
     }
 }
 
@@ -424,8 +422,8 @@ build_argv (char const *str, int extra_argc, int *argc)
 
             case 'c':
               if (dq)
-                die (EXIT_CANCELED, 0,
-                     _("'\\c' must not appear in double-quoted -S string"));
+                error (EXIT_CANCELED, 0,
+                       _("'\\c' must not appear in double-quoted -S string"));
               goto eos; /* '\c' terminates the string.  */
 
             case 'f': newc = '\f'; break;
@@ -435,11 +433,12 @@ build_argv (char const *str, int extra_argc, int *argc)
             case 'v': newc = '\v'; break;
 
             case '\0':
-              die (EXIT_CANCELED, 0,
-                   _("invalid backslash at end of string in -S"));
+              error (EXIT_CANCELED, 0,
+                     _("invalid backslash at end of string in -S"));
 
             default:
-              die (EXIT_CANCELED, 0, _("invalid sequence '\\%c' in -S"), newc);
+              error (EXIT_CANCELED, 0,
+                     _("invalid sequence '\\%c' in -S"), newc);
             }
           break;
 
@@ -452,9 +451,9 @@ build_argv (char const *str, int extra_argc, int *argc)
           {
             char *n = extract_varname (str);
             if (!n)
-              die (EXIT_CANCELED, 0,
-                   _("only ${VARNAME} expansion is supported, error at: %s"),
-                   str);
+              error (EXIT_CANCELED, 0,
+                     _("only ${VARNAME} expansion is supported, error at: %s"),
+                     str);
 
             char *v = getenv (n);
             if (v)
@@ -478,7 +477,7 @@ build_argv (char const *str, int extra_argc, int *argc)
     }
 
   if (dq || sq)
-    die (EXIT_CANCELED, 0, _("no terminating quote in -S string"));
+    error (EXIT_CANCELED, 0, _("no terminating quote in -S string"));
 
  eos:
   splitbuf_append_byte (&ss, '\0');
@@ -594,16 +593,16 @@ reset_signal_handlers (void)
       int sig_err = sigaction (i, nullptr, &act);
 
       if (sig_err && !ignore_errors)
-        die (EXIT_CANCELED, errno,
-             _("failed to get signal action for signal %d"), i);
+        error (EXIT_CANCELED, errno,
+               _("failed to get signal action for signal %d"), i);
 
       if (! sig_err)
         {
           act.sa_handler = set_to_default ? SIG_DFL : SIG_IGN;
           sig_err = sigaction (i, &act, nullptr);
           if (sig_err && !ignore_errors)
-            die (EXIT_CANCELED, errno,
-                 _("failed to set signal action for signal %d"), i);
+            error (EXIT_CANCELED, errno,
+                   _("failed to set signal action for signal %d"), i);
         }
 
       if (dev_debug)
@@ -675,7 +674,7 @@ set_signal_proc_mask (void)
   sigemptyset (&set);
 
   if (sigprocmask (0, nullptr, &set))
-    die (EXIT_CANCELED, errno, _("failed to get signal process mask"));
+    error (EXIT_CANCELED, errno, _("failed to get signal process mask"));
 
   for (int i = 1; i <= SIGNUM_BOUND; i++)
     {
@@ -704,7 +703,7 @@ set_signal_proc_mask (void)
     }
 
   if (sigprocmask (SIG_SETMASK, &set, nullptr))
-    die (EXIT_CANCELED, errno, _("failed to set signal process mask"));
+    error (EXIT_CANCELED, errno, _("failed to set signal process mask"));
 }
 
 static void
@@ -715,7 +714,7 @@ list_signal_handling (void)
 
   sigemptyset (&set);
   if (sigprocmask (0, nullptr, &set))
-    die (EXIT_CANCELED, errno, _("failed to get signal process mask"));
+    error (EXIT_CANCELED, errno, _("failed to get signal process mask"));
 
   for (int i = 1; i <= SIGNUM_BOUND; i++)
     {
@@ -840,8 +839,8 @@ main (int argc, char **argv)
       if (putenv (argv[optind]))
         {
           *eq = '\0';
-          die (EXIT_CANCELED, errno, _("cannot set %s"),
-               quote (argv[optind]));
+          error (EXIT_CANCELED, errno, _("cannot set %s"),
+                 quote (argv[optind]));
         }
       optind++;
     }
@@ -881,8 +880,8 @@ main (int argc, char **argv)
       devmsg ("chdir:    %s\n", quoteaf (newdir));
 
       if (chdir (newdir) != 0)
-        die (EXIT_CANCELED, errno, _("cannot change directory to %s"),
-             quoteaf (newdir));
+        error (EXIT_CANCELED, errno, _("cannot change directory to %s"),
+               quoteaf (newdir));
     }
 
   if (dev_debug)

@@ -28,8 +28,6 @@
 #include "backupfile.h"
 #include "copy.h"
 #include "cp-hash.h"
-#include "die.h"
-#include "error.h"
 #include "filenamecat.h"
 #include "remove.h"
 #include "renameatu.h"
@@ -110,8 +108,8 @@ rm_option_init (struct rm_options *x)
     static struct dev_ino dev_ino_buf;
     x->root_dev_ino = get_root_dev_ino (&dev_ino_buf);
     if (x->root_dev_ino == nullptr)
-      die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-           quoteaf ("/"));
+      error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+             quoteaf ("/"));
   }
 
   x->preserve_all_root = false;
@@ -368,7 +366,7 @@ main (int argc, char **argv)
           break;
         case 't':
           if (target_directory)
-            die (EXIT_FAILURE, 0, _("multiple target directories specified"));
+            error (EXIT_FAILURE, 0, _("multiple target directories specified"));
           target_directory = optarg;
           break;
         case 'T':
@@ -445,9 +443,9 @@ main (int argc, char **argv)
   if (no_target_directory)
     {
       if (target_directory)
-        die (EXIT_FAILURE, 0,
-             _("cannot combine --target-directory (-t) "
-               "and --no-target-directory (-T)"));
+        error (EXIT_FAILURE, 0,
+               _("cannot combine --target-directory (-t) "
+                 "and --no-target-directory (-T)"));
       if (2 < n_files)
         {
           error (0, 0, _("extra operand %s"), quoteaf (file[2]));
@@ -458,8 +456,8 @@ main (int argc, char **argv)
     {
       target_dirfd = target_directory_operand (target_directory, &sb);
       if (! target_dirfd_valid (target_dirfd))
-        die (EXIT_FAILURE, errno, _("target directory %s"),
-             quoteaf (target_directory));
+        error (EXIT_FAILURE, errno, _("target directory %s"),
+               quoteaf (target_directory));
     }
   else
     {
@@ -494,7 +492,7 @@ main (int argc, char **argv)
                   || (O_PATHSEARCH == O_SEARCH && err == EACCES
                       && (sb.st_mode != 0 || stat (lastfile, &sb) == 0)
                       && S_ISDIR (sb.st_mode)))
-                die (EXIT_FAILURE, err, _("target %s"), quoteaf (lastfile));
+                error (EXIT_FAILURE, err, _("target %s"), quoteaf (lastfile));
             }
         }
     }

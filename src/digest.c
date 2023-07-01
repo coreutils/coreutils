@@ -52,8 +52,6 @@
 #if HASH_ALGO_CKSUM
 # include "sm3.h"
 #endif
-#include "die.h"
-#include "error.h"
 #include "fadvise.h"
 #include "stdio--.h"
 #include "xbinary-io.h"
@@ -1174,8 +1172,8 @@ digest_check (char const *checkfile_name)
 
       ++line_number;
       if (line_number == 0)
-        die (EXIT_FAILURE, 0, _("%s: too many checksum lines"),
-             quotef (checkfile_name));
+        error (EXIT_FAILURE, 0, _("%s: too many checksum lines"),
+               quotef (checkfile_name));
 
       line_length = getline (&line, &line_chars_allocated, checkfile_stream);
       if (line_length <= 0)
@@ -1402,7 +1400,7 @@ main (int argc, char **argv)
         if (digest_length % 8 != 0)
           {
             error (0, 0, _("invalid length: %s"), quote (digest_length_str));
-            die (EXIT_FAILURE, 0, _("length is not a multiple of 8"));
+            error (EXIT_FAILURE, 0, _("length is not a multiple of 8"));
           }
         break;
 #endif
@@ -1477,16 +1475,16 @@ main (int argc, char **argv)
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
 # if HASH_ALGO_CKSUM
   if (digest_length && cksum_algorithm != blake2b)
-    die (EXIT_FAILURE, 0,
-         _("--length is only supported with --algorithm=blake2b"));
+    error (EXIT_FAILURE, 0,
+           _("--length is only supported with --algorithm=blake2b"));
 # endif
   if (digest_length > BLAKE2B_MAX_LEN * 8)
     {
       error (0, 0, _("invalid length: %s"), quote (digest_length_str));
-      die (EXIT_FAILURE, 0,
-           _("maximum digest length for %s is %d bits"),
-           quote (DIGEST_TYPE_STRING),
-           BLAKE2B_MAX_LEN * 8);
+      error (EXIT_FAILURE, 0,
+             _("maximum digest length for %s is %d bits"),
+             quote (DIGEST_TYPE_STRING),
+             BLAKE2B_MAX_LEN * 8);
     }
   if (digest_length == 0)
     {
@@ -1508,8 +1506,8 @@ main (int argc, char **argv)
     case sysv:
     case crc:
         if (do_check && algorithm_specified)
-          die (EXIT_FAILURE, 0,
-              _("--check is not supported with --algorithm={bsd,sysv,crc}"));
+          error (EXIT_FAILURE, 0,
+                 _("--check is not supported with --algorithm={bsd,sysv,crc}"));
         break;
     default:
         break;
@@ -1600,10 +1598,8 @@ main (int argc, char **argv)
   if (optind == argc)
     *operand_lim++ = bad_cast ("-");
   else if (1 < argc - optind && raw_digest)
-    {
-       die (EXIT_FAILURE, 0,
-            _("the --raw option is not supported with multiple files"));
-    }
+    error (EXIT_FAILURE, 0,
+           _("the --raw option is not supported with multiple files"));
 
   for (char **operandp = argv + optind; operandp < operand_lim; operandp++)
     {
@@ -1627,7 +1623,7 @@ main (int argc, char **argv)
     }
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    die (EXIT_FAILURE, errno, _("standard input"));
+    error (EXIT_FAILURE, errno, _("standard input"));
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

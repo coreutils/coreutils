@@ -21,7 +21,6 @@
 #include <wchar.h>
 
 #include "system.h"
-#include "error.h"
 #include "quote.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */

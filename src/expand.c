@@ -38,8 +38,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "die.h"
-
 #include "expand-common.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -142,11 +140,11 @@ expand (void)
                     next_tab_column = column + 1;
 
                   if (next_tab_column < column)
-                    die (EXIT_FAILURE, 0, _("input line is too long"));
+                    error (EXIT_FAILURE, 0, _("input line is too long"));
 
                   while (++column < next_tab_column)
                     if (putchar (' ') < 0)
-                      die (EXIT_FAILURE, errno, _("write error"));
+                      error (EXIT_FAILURE, errno, _("write error"));
 
                   c = ' ';
                 }
@@ -161,7 +159,7 @@ expand (void)
                 {
                   column++;
                   if (!column)
-                    die (EXIT_FAILURE, 0, _("input line is too long"));
+                    error (EXIT_FAILURE, 0, _("input line is too long"));
                 }
 
               convert &= convert_entire_line || !! isblank (c);
@@ -171,7 +169,7 @@ expand (void)
             return;
 
           if (putchar (c) < 0)
-            die (EXIT_FAILURE, errno, _("write error"));
+            error (EXIT_FAILURE, errno, _("write error"));
         }
       while (c != '\n');
     }

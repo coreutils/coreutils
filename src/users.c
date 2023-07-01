@@ -22,8 +22,6 @@
 #include <sys/types.h>
 #include "system.h"
 
-#include "die.h"
-#include "error.h"
 #include "long-options.h"
 #include "quote.h"
 #include "readutmp.h"
@@ -88,7 +86,7 @@ users (char const *filename, int options)
   STRUCT_UTMP *utmp_buf;
 
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
-    die (EXIT_FAILURE, errno, "%s", quotef (filename));
+    error (EXIT_FAILURE, errno, "%s", quotef (filename));
 
   list_entries_users (n_users, utmp_buf);
 

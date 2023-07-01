@@ -29,8 +29,6 @@
 #include "system.h"
 #include "assure.h"
 #include "canonicalize.h"
-#include "die.h"
-#include "error.h"
 #include "fsusage.h"
 #include "human.h"
 #include "mbsalign.h"
@@ -1850,7 +1848,7 @@ main (int argc, char **argv)
       /* Print the "no FS processed" diagnostic only if there was no preceding
          diagnostic, e.g., if all have been excluded.  */
       if (exit_status == EXIT_SUCCESS)
-        die (EXIT_FAILURE, 0, _("no file systems processed"));
+        error (EXIT_FAILURE, 0, _("no file systems processed"));
     }
 
   main_exit (exit_status);

@@ -18,7 +18,6 @@
 
 #include <config.h>
 
-#include "error.h"
 #include "system.h"
 #include "relpath.h"
 

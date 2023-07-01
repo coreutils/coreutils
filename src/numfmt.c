@@ -24,8 +24,6 @@
 #include "mbsalign.h"
 #include "argmatch.h"
 #include "c-ctype.h"
-#include "die.h"
-#include "error.h"
 #include "quote.h"
 #include "system.h"
 #include "xstrtol.h"
@@ -768,8 +766,8 @@ double_to_human (long double val, int precision,
 
       num_size = snprintf (buf, buf_size, fmt, precision, val);
       if (num_size < 0 || num_size >= (int) buf_size)
-        die (EXIT_FAILURE, 0,
-             _("failed to prepare value '%Lf' for printing"), val);
+        error (EXIT_FAILURE, 0,
+               _("failed to prepare value '%Lf' for printing"), val);
       return;
     }
 
@@ -820,8 +818,8 @@ double_to_human (long double val, int precision,
   num_size = snprintf (buf, buf_size - 1, fmt, prec, val,
                        suffix_power_char (power));
   if (num_size < 0 || num_size >= (int) buf_size - 1)
-    die (EXIT_FAILURE, 0,
-         _("failed to prepare value '%Lf' for printing"), val);
+    error (EXIT_FAILURE, 0,
+           _("failed to prepare value '%Lf' for printing"), val);
 
   if (scale == scale_IEC_I && power > 0)
     strncat (buf, "i", buf_size - num_size - 1);
@@ -870,7 +868,7 @@ unit_to_umax (char const *n_string)
   if (s_err != LONGINT_OK || *end || n == 0)
     {
       free (t_string);
-      die (EXIT_FAILURE, 0, _("invalid unit size: %s"), quote (n_string));
+      error (EXIT_FAILURE, 0, _("invalid unit size: %s"), quote (n_string));
     }
 
   free (t_string);
@@ -1070,8 +1068,8 @@ parse_format_string (char const *fmt)
   for (i = 0; !(fmt[i] == '%' && fmt[i + 1] != '%'); i += (fmt[i] == '%') + 1)
     {
       if (!fmt[i])
-        die (EXIT_FAILURE, 0,
-             _("format %s has no %% directive"), quote (fmt));
+        error (EXIT_FAILURE, 0,
+               _("format %s has no %% directive"), quote (fmt));
       prefix_len++;
     }
 
@@ -1097,8 +1095,8 @@ parse_format_string (char const *fmt)
   errno = 0;
   pad = strtol (fmt + i, &endptr, 10);
   if (errno == ERANGE || pad < -LONG_MAX)
-    die (EXIT_FAILURE, 0,
-         _("invalid format %s (width overflow)"), quote (fmt));
+    error (EXIT_FAILURE, 0,
+           _("invalid format %s (width overflow)"), quote (fmt));
 
   if (endptr != (fmt + i) && pad != 0)
     {
@@ -1122,7 +1120,7 @@ parse_format_string (char const *fmt)
   i = endptr - fmt;
 
   if (fmt[i] == '\0')
-    die (EXIT_FAILURE, 0, _("format %s ends in %%"), quote (fmt));
+    error (EXIT_FAILURE, 0, _("format %s ends in %%"), quote (fmt));
 
   if (fmt[i] == '.')
     {
@@ -1137,23 +1135,23 @@ parse_format_string (char const *fmt)
              negative precision is only supported (and ignored)
              when used with '.*f'.  glibc at least will malform
              output when passed a direct negative precision.  */
-          die (EXIT_FAILURE, 0,
-               _("invalid precision in format %s"), quote (fmt));
+          error (EXIT_FAILURE, 0,
+                 _("invalid precision in format %s"), quote (fmt));
         }
       i = endptr - fmt;
     }
 
   if (fmt[i] != 'f')
-    die (EXIT_FAILURE, 0, _("invalid format %s,"
-                            " directive must be %%[0]['][-][N][.][N]f"),
+    error (EXIT_FAILURE, 0, _("invalid format %s,"
+                              " directive must be %%[0]['][-][N][.][N]f"),
          quote (fmt));
   i++;
   suffix_pos = i;
 
   for (; fmt[i] != '\0'; i += (fmt[i] == '%') + 1)
     if (fmt[i] == '%' && fmt[i + 1] != '%')
-      die (EXIT_FAILURE, 0, _("format %s has too many %% directives"),
-           quote (fmt));
+      error (EXIT_FAILURE, 0, _("format %s has too many %% directives"),
+             quote (fmt));
 
   if (prefix_len)
     format_str_prefix = ximemdup0 (fmt, prefix_len);
@@ -1513,8 +1511,8 @@ main (int argc, char **argv)
         case PADDING_OPTION:
           if (xstrtol (optarg, nullptr, 10, &padding_width, "") != LONGINT_OK
               || padding_width == 0 || padding_width < -LONG_MAX)
-            die (EXIT_FAILURE, 0, _("invalid padding value %s"),
-                 quote (optarg));
+            error (EXIT_FAILURE, 0, _("invalid padding value %s"),
+                   quote (optarg));
           if (padding_width < 0)
             {
               padding_alignment = MBS_ALIGN_LEFT;
@@ -1526,15 +1524,15 @@ main (int argc, char **argv)
 
         case FIELD_OPTION:
           if (n_frp)
-            die (EXIT_FAILURE, 0, _("multiple field specifications"));
+            error (EXIT_FAILURE, 0, _("multiple field specifications"));
           set_fields (optarg, SETFLD_ALLOW_DASH);
           break;
 
         case 'd':
           /* Interpret -d '' to mean 'use the NUL byte as the delimiter.'  */
           if (optarg[0] != '\0' && optarg[1] != '\0')
-            die (EXIT_FAILURE, 0,
-                 _("the delimiter must be a single character"));
+            error (EXIT_FAILURE, 0,
+                   _("the delimiter must be a single character"));
           delimiter = optarg[0];
           break;
 
@@ -1560,8 +1558,8 @@ main (int argc, char **argv)
             {
               if (xstrtoumax (optarg, nullptr, 10, &header, "") != LONGINT_OK
                   || header == 0)
-                die (EXIT_FAILURE, 0, _("invalid header value %s"),
-                     quote (optarg));
+                error (EXIT_FAILURE, 0, _("invalid header value %s"),
+                       quote (optarg));
             }
           else
             {
@@ -1587,7 +1585,7 @@ main (int argc, char **argv)
     }
 
   if (format_str != nullptr && grouping)
-    die (EXIT_FAILURE, 0, _("--grouping cannot be combined with --format"));
+    error (EXIT_FAILURE, 0, _("--grouping cannot be combined with --format"));
 
   if (debug && ! locale_ok)
     error (0, 0, _("failed to set locale"));
@@ -1603,7 +1601,7 @@ main (int argc, char **argv)
   if (grouping)
     {
       if (scale_to != scale_none)
-        die (EXIT_FAILURE, 0, _("grouping cannot be combined with --to"));
+        error (EXIT_FAILURE, 0, _("grouping cannot be combined with --to"));
       if (debug && (strlen (nl_langinfo (THOUSEP)) == 0))
         error (0, 0, _("grouping has no effect in this locale"));
     }
@@ -1643,7 +1641,7 @@ main (int argc, char **argv)
         }
 
       if (ferror (stdin))
-        die (EXIT_FAILURE, errno, _("error reading input"));
+        error (EXIT_FAILURE, errno, _("error reading input"));
     }
 
   if (debug && !valid_numbers)

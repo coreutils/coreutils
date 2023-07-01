@@ -31,8 +31,6 @@
 #include "system.h"
 #include "argmatch.h"
 #include "assure.h"
-#include "die.h"
-#include "error.h"
 #include "fadvise.h"
 #include "filevercmp.h"
 #include "flexmember.h"
@@ -404,8 +402,8 @@ async_safe_die (int errnum, char const *errstr)
 static void
 sort_die (char const *message, char const *file)
 {
-  die (SORT_FAILURE, errno, "%s: %s", message,
-       quotef (file ? file : _("standard output")));
+  error (SORT_FAILURE, errno, "%s: %s", message,
+         quotef (file ? file : _("standard output")));
 }
 
 void
@@ -716,13 +714,13 @@ reap (pid_t pid)
   pid_t cpid = waitpid ((pid ? pid : -1), &status, (pid ? 0 : WNOHANG));
 
   if (cpid < 0)
-    die (SORT_FAILURE, errno, _("waiting for %s [-d]"),
-         quoteaf (compress_program));
+    error (SORT_FAILURE, errno, _("waiting for %s [-d]"),
+           quoteaf (compress_program));
   else if (0 < cpid && (0 < pid || delete_proc (cpid)))
     {
       if (! WIFEXITED (status) || WEXITSTATUS (status))
-        die (SORT_FAILURE, 0, _("%s [-d] terminated abnormally"),
-             quoteaf (compress_program));
+        error (SORT_FAILURE, 0, _("%s [-d] terminated abnormally"),
+               quoteaf (compress_program));
       --nprocs;
     }
 
@@ -876,8 +874,8 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
   if (fd < 0)
     {
       if (! (survive_fd_exhaustion && errno == EMFILE))
-        die (SORT_FAILURE, errno, _("cannot create temporary file in %s"),
-             quoteaf (temp_dir));
+        error (SORT_FAILURE, errno, _("cannot create temporary file in %s"),
+               quoteaf (temp_dir));
       free (node);
       node = nullptr;
     }
@@ -972,8 +970,8 @@ stream_open (char const *file, char const *how)
           int ftruncate_errno = errno;
           struct stat *outst = get_outstatus ();
           if (!outst || S_ISREG (outst->st_mode) || S_TYPEISSHM (outst))
-            die (SORT_FAILURE, ftruncate_errno, _("%s: error truncating"),
-                 quotef (file));
+            error (SORT_FAILURE, ftruncate_errno, _("%s: error truncating"),
+                   quotef (file));
         }
       fp = stdout;
     }
@@ -1193,8 +1191,8 @@ open_temp (struct tempnode *temp)
     {
     case -1:
       if (errno != EMFILE)
-        die (SORT_FAILURE, errno, _("couldn't create process for %s -d"),
-             quoteaf (compress_program));
+        error (SORT_FAILURE, errno, _("couldn't create process for %s -d"),
+               quoteaf (compress_program));
       close (tempfd);
       errno = EMFILE;
       break;
@@ -1354,9 +1352,9 @@ specify_nmerge (int oi, char c, char const *s)
             {
               error (0, 0, _("invalid --%s argument %s"),
                      long_options[oi].name, quote (s));
-              die (SORT_FAILURE, 0,
-                   _("minimum --%s argument is %s"),
-                   long_options[oi].name, quote ("2"));
+              error (SORT_FAILURE, 0,
+                     _("minimum --%s argument is %s"),
+                     long_options[oi].name, quote ("2"));
             }
           else if (max_nmerge < nmerge)
             {
@@ -1372,10 +1370,10 @@ specify_nmerge (int oi, char c, char const *s)
       char max_nmerge_buf[INT_BUFSIZE_BOUND (max_nmerge)];
       error (0, 0, _("--%s argument %s too large"),
              long_options[oi].name, quote (s));
-      die (SORT_FAILURE, 0,
-           _("maximum --%s argument with current rlimit is %s"),
-           long_options[oi].name,
-           uinttostr (max_nmerge, max_nmerge_buf));
+      error (SORT_FAILURE, 0,
+             _("maximum --%s argument with current rlimit is %s"),
+             long_options[oi].name,
+             uinttostr (max_nmerge, max_nmerge_buf));
     }
   else
     xstrtol_fatal (e, oi, c, long_options, s);
@@ -1455,7 +1453,7 @@ specify_nthreads (int oi, char c, char const *s)
   if (SIZE_MAX < nthreads)
     nthreads = SIZE_MAX;
   if (nthreads == 0)
-    die (SORT_FAILURE, 0, _("number in parallel must be nonzero"));
+    error (SORT_FAILURE, 0, _("number in parallel must be nonzero"));
   return nthreads;
 }
 
@@ -2116,9 +2114,9 @@ xstrxfrm (char *restrict dest, char const *restrict src, size_t destsize)
     {
       error (0, errno, _("string transformation failed"));
       error (0, 0, _("set LC_ALL='C' to work around the problem"));
-      die (SORT_FAILURE, 0,
-           _("the untransformed string was %s"),
-           quotearg_n_style (0, locale_quoting_style, src));
+      error (SORT_FAILURE, 0,
+             _("the untransformed string was %s"),
+             quotearg_n_style (0, locale_quoting_style, src));
     }
 
   return translated_size;
@@ -4118,8 +4116,8 @@ insertkey (struct keyfield *key_arg)
 static void
 badfieldspec (char const *spec, char const *msgid)
 {
-  die (SORT_FAILURE, 0, _("%s: invalid field specification %s"),
-       _(msgid), quote (spec));
+  error (SORT_FAILURE, 0, _("%s: invalid field specification %s"),
+         _(msgid), quote (spec));
 }
 
 /* Report incompatible options.  */
@@ -4127,7 +4125,7 @@ badfieldspec (char const *spec, char const *msgid)
 static void
 incompatible_options (char const *opts)
 {
-  die (SORT_FAILURE, 0, _("options '-%s' are incompatible"), (opts));
+  error (SORT_FAILURE, 0, _("options '-%s' are incompatible"), (opts));
 }
 
 /* Check compatibility of ordering options.  */
@@ -4177,8 +4175,8 @@ parse_field_count (char const *string, size_t *val, char const *msgid)
 
     case LONGINT_INVALID:
       if (msgid)
-        die (SORT_FAILURE, 0, _("%s: invalid count at start of %s"),
-             _(msgid), quote (string));
+        error (SORT_FAILURE, 0, _("%s: invalid count at start of %s"),
+               _(msgid), quote (string));
       return nullptr;
     }
 
@@ -4501,7 +4499,7 @@ main (int argc, char **argv)
 
         case COMPRESS_PROGRAM_OPTION:
           if (compress_program && !STREQ (compress_program, optarg))
-            die (SORT_FAILURE, 0, _("multiple compress programs specified"));
+            error (SORT_FAILURE, 0, _("multiple compress programs specified"));
           compress_program = optarg;
           break;
 
@@ -4574,13 +4572,13 @@ main (int argc, char **argv)
 
         case 'o':
           if (outfile && !STREQ (outfile, optarg))
-            die (SORT_FAILURE, 0, _("multiple output files specified"));
+            error (SORT_FAILURE, 0, _("multiple output files specified"));
           outfile = optarg;
           break;
 
         case RANDOM_SOURCE_OPTION:
           if (random_source && !STREQ (random_source, optarg))
-            die (SORT_FAILURE, 0, _("multiple random sources specified"));
+            error (SORT_FAILURE, 0, _("multiple random sources specified"));
           random_source = optarg;
           break;
 
@@ -4596,7 +4594,7 @@ main (int argc, char **argv)
           {
             char newtab = optarg[0];
             if (! newtab)
-              die (SORT_FAILURE, 0, _("empty tab"));
+              error (SORT_FAILURE, 0, _("empty tab"));
             if (optarg[1])
               {
                 if (STREQ (optarg, "\\0"))
@@ -4607,12 +4605,12 @@ main (int argc, char **argv)
                        "multi-character tab" instead of "multibyte tab", so
                        that the diagnostic's wording does not need to be
                        changed once multibyte characters are supported.  */
-                    die (SORT_FAILURE, 0, _("multi-character tab %s"),
-                         quote (optarg));
+                    error (SORT_FAILURE, 0, _("multi-character tab %s"),
+                           quote (optarg));
                   }
               }
             if (tab != TAB_DEFAULT && tab != newtab)
-              die (SORT_FAILURE, 0, _("incompatible tabs"));
+              error (SORT_FAILURE, 0, _("incompatible tabs"));
             tab = newtab;
           }
           break;
@@ -4679,8 +4677,8 @@ main (int argc, char **argv)
       readtokens0_init (&tok);
 
       if (! readtokens0 (stream, &tok))
-        die (SORT_FAILURE, 0, _("cannot read file names from %s"),
-             quoteaf (files_from));
+        error (SORT_FAILURE, 0, _("cannot read file names from %s"),
+               quoteaf (files_from));
       xfclose (stream, files_from);
 
       if (tok.n_tok)
@@ -4691,24 +4689,24 @@ main (int argc, char **argv)
           for (size_t i = 0; i < nfiles; i++)
             {
               if (STREQ (files[i], "-"))
-                die (SORT_FAILURE, 0, _("when reading file names from stdin, "
-                                        "no file name of %s allowed"),
-                     quoteaf (files[i]));
+                error (SORT_FAILURE, 0, _("when reading file names from stdin, "
+                                          "no file name of %s allowed"),
+                       quoteaf (files[i]));
               else if (files[i][0] == '\0')
                 {
                   /* Using the standard 'filename:line-number:' prefix here is
                      not totally appropriate, since NUL is the separator,
                      not NL, but it might be better than nothing.  */
                   unsigned long int file_number = i + 1;
-                  die (SORT_FAILURE, 0,
-                       _("%s:%lu: invalid zero-length file name"),
-                       quotef (files_from), file_number);
+                  error (SORT_FAILURE, 0,
+                         _("%s:%lu: invalid zero-length file name"),
+                         quotef (files_from), file_number);
                 }
             }
         }
       else
-        die (SORT_FAILURE, 0, _("no input from %s"),
-             quoteaf (files_from));
+        error (SORT_FAILURE, 0, _("no input from %s"),
+               quoteaf (files_from));
     }
 
   /* Inheritance of global options to individual keys. */
@@ -4796,8 +4794,8 @@ main (int argc, char **argv)
   if (checkonly)
     {
       if (nfiles > 1)
-        die (SORT_FAILURE, 0, _("extra operand %s not allowed with -%c"),
-             quoteaf (files[1]), checkonly);
+        error (SORT_FAILURE, 0, _("extra operand %s not allowed with -%c"),
+               quoteaf (files[1]), checkonly);
 
       if (outfile)
         {

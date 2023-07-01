@@ -23,8 +23,6 @@
 
 #include "system.h"
 #include "chown-core.h"
-#include "die.h"
-#include "error.h"
 #include "fts_.h"
 #include "quote.h"
 #include "root-dev-ino.h"
@@ -264,8 +262,8 @@ main (int argc, char **argv)
       if (bit_flags == FTS_PHYSICAL)
         {
           if (dereference == 1)
-            die (EXIT_FAILURE, 0,
-                 _("-R --dereference requires either -H or -L"));
+            error (EXIT_FAILURE, 0,
+                   _("-R --dereference requires either -H or -L"));
           dereference = 0;
         }
     }
@@ -288,8 +286,8 @@ main (int argc, char **argv)
     {
       struct stat ref_stats;
       if (stat (reference_file, &ref_stats))
-        die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-             quoteaf (reference_file));
+        error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+               quoteaf (reference_file));
 
       uid = ref_stats.st_uid;
       gid = ref_stats.st_gid;
@@ -319,8 +317,8 @@ main (int argc, char **argv)
       static struct dev_ino dev_ino_buf;
       chopt.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
       if (chopt.root_dev_ino == nullptr)
-        die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-             quoteaf ("/"));
+        error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+               quoteaf ("/"));
     }
 
   bit_flags |= FTS_DEFER_STAT;

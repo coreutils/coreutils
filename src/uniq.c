@@ -24,8 +24,6 @@
 #include "system.h"
 #include "argmatch.h"
 #include "linebuffer.h"
-#include "die.h"
-#include "error.h"
 #include "fadvise.h"
 #include "posixver.h"
 #include "stdio--.h"
@@ -243,7 +241,7 @@ size_opt (char const *opt, char const *msgid)
       break;
 
     default:
-      die (EXIT_FAILURE, 0, "%s: %s", opt, _(msgid));
+      error (EXIT_FAILURE, 0, "%s: %s", opt, _(msgid));
     }
 
   return MIN (size, SIZE_MAX);
@@ -324,9 +322,9 @@ check_file (char const *infile, char const *outfile, char delimiter)
   struct linebuffer *thisline, *prevline;
 
   if (! (STREQ (infile, "-") || freopen (infile, "r", stdin)))
-    die (EXIT_FAILURE, errno, "%s", quotef (infile));
+    error (EXIT_FAILURE, errno, "%s", quotef (infile));
   if (! (STREQ (outfile, "-") || freopen (outfile, "w", stdout)))
-    die (EXIT_FAILURE, errno, "%s", quotef (outfile));
+    error (EXIT_FAILURE, errno, "%s", quotef (outfile));
 
   fadvise (stdin, FADVISE_SEQUENTIAL);
 
@@ -423,7 +421,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
           if (match_count == UINTMAX_MAX)
             {
               if (count_occurrences)
-                die (EXIT_FAILURE, 0, _("too many repeated lines"));
+                error (EXIT_FAILURE, 0, _("too many repeated lines"));
               match_count--;
             }
 
@@ -459,7 +457,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
 
  closefiles:
   if (ferror (stdin) || fclose (stdin) != 0)
-    die (EXIT_FAILURE, errno, _("error reading %s"), quoteaf (infile));
+    error (EXIT_FAILURE, errno, _("error reading %s"), quoteaf (infile));
 
   /* stdout is handled via the atexit-invoked close_stdout function.  */
 

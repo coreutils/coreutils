@@ -26,8 +26,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "die.h"
-#include "error.h"
 #include "quote.h"
 #include "stat-size.h"
 #include "xdectoint.h"
@@ -273,7 +271,7 @@ main (int argc, char **argv)
                              _("Invalid number"), 0);
           /* Rounding to multiple of 0 is nonsensical */
           if ((rel_mode == rm_rup || rel_mode == rm_rdn) && size == 0)
-            die (EXIT_FAILURE, 0, _("division by zero"));
+            error (EXIT_FAILURE, 0, _("division by zero"));
           got_size = true;
           break;
 
@@ -322,7 +320,7 @@ main (int argc, char **argv)
       struct stat sb;
       off_t file_size = -1;
       if (stat (ref_file, &sb) != 0)
-        die (EXIT_FAILURE, errno, _("cannot stat %s"), quoteaf (ref_file));
+        error (EXIT_FAILURE, errno, _("cannot stat %s"), quoteaf (ref_file));
       if (usable_st_size (&sb))
         file_size = sb.st_size;
       else
@@ -343,8 +341,8 @@ main (int argc, char **argv)
             }
         }
       if (file_size < 0)
-        die (EXIT_FAILURE, errno, _("cannot get the size of %s"),
-             quoteaf (ref_file));
+        error (EXIT_FAILURE, errno, _("cannot get the size of %s"),
+               quoteaf (ref_file));
       if (!got_size)
         size = file_size;
       else

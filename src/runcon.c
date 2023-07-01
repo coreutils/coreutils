@@ -47,8 +47,6 @@
 #include <selinux/context.h>
 #include <sys/types.h>
 #include "system.h"
-#include "die.h"
-#include "error.h"
 #include "quote.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -137,22 +135,22 @@ main (int argc, char **argv)
         {
         case 'r':
           if (role)
-            die (EXIT_CANCELED, 0, _("multiple roles"));
+            error (EXIT_CANCELED, 0, _("multiple roles"));
           role = optarg;
           break;
         case 't':
           if (type)
-            die (EXIT_CANCELED, 0, _("multiple types"));
+            error (EXIT_CANCELED, 0, _("multiple types"));
           type = optarg;
           break;
         case 'u':
           if (user)
-            die (EXIT_CANCELED, 0, _("multiple users"));
+            error (EXIT_CANCELED, 0, _("multiple users"));
           user = optarg;
           break;
         case 'l':
           if (range)
-            die (EXIT_CANCELED, 0, _("multiple levelranges"));
+            error (EXIT_CANCELED, 0, _("multiple levelranges"));
           range = optarg;
           break;
         case 'c':
@@ -170,7 +168,7 @@ main (int argc, char **argv)
   if (argc - optind == 0)
     {
       if (getcon (&cur_context) < 0)
-        die (EXIT_CANCELED, errno, _("failed to get current context"));
+        error (EXIT_CANCELED, errno, _("failed to get current context"));
       fputs (cur_context, stdout);
       fputc ('\n', stdout);
       return EXIT_SUCCESS;
@@ -193,34 +191,34 @@ main (int argc, char **argv)
     }
 
   if (is_selinux_enabled () != 1)
-    die (EXIT_CANCELED, 0, _("%s may be used only on a SELinux kernel"),
-         program_name);
+    error (EXIT_CANCELED, 0, _("%s may be used only on a SELinux kernel"),
+           program_name);
 
   if (context)
     {
       con = context_new (context);
       if (!con)
-        die (EXIT_CANCELED, errno, _("failed to create security context: %s"),
-             quote (context));
+        error (EXIT_CANCELED, errno, _("failed to create security context: %s"),
+               quote (context));
     }
   else
     {
       if (getcon (&cur_context) < 0)
-        die (EXIT_CANCELED, errno, _("failed to get current context"));
+        error (EXIT_CANCELED, errno, _("failed to get current context"));
 
       /* We will generate context based on process transition */
       if (compute_trans)
         {
           /* Get context of file to be executed */
           if (getfilecon (argv[optind], &file_context) == -1)
-            die (EXIT_CANCELED, errno,
-                 _("failed to get security context of %s"),
-                 quoteaf (argv[optind]));
+            error (EXIT_CANCELED, errno,
+                   _("failed to get security context of %s"),
+                   quoteaf (argv[optind]));
           /* compute result of process transition */
           if (security_compute_create (cur_context, file_context,
                                        string_to_security_class ("process"),
                                        &new_context) != 0)
-            die (EXIT_CANCELED, errno, _("failed to compute a new context"));
+            error (EXIT_CANCELED, errno, _("failed to compute a new context"));
           /* free contexts */
           freecon (file_context);
           freecon (cur_context);
@@ -231,29 +229,29 @@ main (int argc, char **argv)
 
       con = context_new (cur_context);
       if (!con)
-        die (EXIT_CANCELED, errno, _("failed to create security context: %s"),
-             quote (cur_context));
+        error (EXIT_CANCELED, errno, _("failed to create security context: %s"),
+               quote (cur_context));
       if (user && context_user_set (con, user))
-        die (EXIT_CANCELED, errno, _("failed to set new user: %s"),
-             quote (user));
+        error (EXIT_CANCELED, errno, _("failed to set new user: %s"),
+               quote (user));
       if (type && context_type_set (con, type))
-        die (EXIT_CANCELED, errno, _("failed to set new type: %s"),
-             quote (type));
+        error (EXIT_CANCELED, errno, _("failed to set new type: %s"),
+               quote (type));
       if (range && context_range_set (con, range))
-        die (EXIT_CANCELED, errno, _("failed to set new range: %s"),
-             quote (range));
+        error (EXIT_CANCELED, errno, _("failed to set new range: %s"),
+               quote (range));
       if (role && context_role_set (con, role))
-        die (EXIT_CANCELED, errno, _("failed to set new role: %s"),
-             quote (role));
+        error (EXIT_CANCELED, errno, _("failed to set new role: %s"),
+               quote (role));
     }
 
   if (security_check_context (context_str (con)) < 0)
-    die (EXIT_CANCELED, errno, _("invalid context: %s"),
-         quote (context_str (con)));
+    error (EXIT_CANCELED, errno, _("invalid context: %s"),
+           quote (context_str (con)));
 
   if (setexeccon (context_str (con)) != 0)
-    die (EXIT_CANCELED, errno, _("unable to set security context %s"),
-         quote (context_str (con)));
+    error (EXIT_CANCELED, errno, _("unable to set security context %s"),
+           quote (context_str (con)));
   if (cur_context != nullptr)
     freecon (cur_context);
 

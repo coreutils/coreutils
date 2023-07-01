@@ -28,8 +28,6 @@
 #include "backupfile.h"
 #include "copy.h"
 #include "cp-hash.h"
-#include "die.h"
-#include "error.h"
 #include "filenamecat.h"
 #include "ignore-value.h"
 #include "quote.h"
@@ -629,9 +627,9 @@ do_copy (int n_files, char **file, char const *target_directory,
   if (no_target_directory)
     {
       if (target_directory)
-        die (EXIT_FAILURE, 0,
-             _("cannot combine --target-directory (-t) "
-               "and --no-target-directory (-T)"));
+        error (EXIT_FAILURE, 0,
+               _("cannot combine --target-directory (-t) "
+                 "and --no-target-directory (-T)"));
       if (2 < n_files)
         {
           error (0, 0, _("extra operand %s"), quoteaf (file[2]));
@@ -642,8 +640,8 @@ do_copy (int n_files, char **file, char const *target_directory,
     {
       target_dirfd = target_directory_operand (target_directory, &sb);
       if (! target_dirfd_valid (target_dirfd))
-        die (EXIT_FAILURE, errno, _("target directory %s"),
-             quoteaf (target_directory));
+        error (EXIT_FAILURE, errno, _("target directory %s"),
+               quoteaf (target_directory));
     }
   else
     {
@@ -674,7 +672,7 @@ do_copy (int n_files, char **file, char const *target_directory,
               || (O_PATHSEARCH == O_SEARCH && err == EACCES
                   && (sb.st_mode || stat (lastfile, &sb) == 0)
                   && S_ISDIR (sb.st_mode)))
-            die (EXIT_FAILURE, err, _("target %s"), quoteaf (lastfile));
+            error (EXIT_FAILURE, err, _("target %s"), quoteaf (lastfile));
         }
     }
 
@@ -1123,8 +1121,8 @@ main (int argc, char **argv)
 
         case 't':
           if (target_directory)
-            die (EXIT_FAILURE, 0,
-                 _("multiple target directories specified"));
+            error (EXIT_FAILURE, 0,
+                   _("multiple target directories specified"));
           target_directory = optarg;
           break;
 
@@ -1249,13 +1247,13 @@ main (int argc, char **argv)
     x.preserve_security_context = false;
 
   if (x.preserve_security_context && (x.set_security_context || scontext))
-    die (EXIT_FAILURE, 0,
-         _("cannot set target context and preserve it"));
+    error (EXIT_FAILURE, 0,
+           _("cannot set target context and preserve it"));
 
   if (x.require_preserve_context && ! selinux_enabled)
-    die (EXIT_FAILURE, 0,
-         _("cannot preserve security context "
-           "without an SELinux-enabled kernel"));
+    error (EXIT_FAILURE, 0,
+           _("cannot preserve security context "
+             "without an SELinux-enabled kernel"));
 
   /* FIXME: This handles new files.  But what about existing files?
      I.e., if updating a tree, new files would have the specified context,
@@ -1264,14 +1262,14 @@ main (int argc, char **argv)
           error (...);
    */
   if (scontext && setfscreatecon (scontext) < 0)
-    die (EXIT_FAILURE, errno,
-         _("failed to set default file creation context to %s"),
-         quote (scontext));
+    error (EXIT_FAILURE, errno,
+           _("failed to set default file creation context to %s"),
+           quote (scontext));
 
 #if !USE_XATTR
   if (x.require_preserve_xattr)
-    die (EXIT_FAILURE, 0, _("cannot preserve extended attributes, cp is "
-                            "built without xattr support"));
+    error (EXIT_FAILURE, 0, _("cannot preserve extended attributes, cp is "
+                              "built without xattr support"));
 #endif
 
   /* Allocate space for remembering copied and created files.  */

@@ -26,8 +26,6 @@
 #include "system.h"
 #include "argmatch.h"
 #include "assure.h"
-#include "die.h"
-#include "error.h"
 #include "remove.h"
 #include "root-dev-ino.h"
 #include "yesno.h"
@@ -293,8 +291,8 @@ main (int argc, char **argv)
 
         case NO_PRESERVE_ROOT:
           if (! STREQ (argv[optind - 1], "--no-preserve-root"))
-            die (EXIT_FAILURE, 0,
-                 _("you may not abbreviate the --no-preserve-root option"));
+            error (EXIT_FAILURE, 0,
+                   _("you may not abbreviate the --no-preserve-root option"));
           preserve_root = false;
           break;
 
@@ -304,11 +302,9 @@ main (int argc, char **argv)
               if STREQ (optarg, "all")
                 x.preserve_all_root = true;
               else
-                {
-                  die (EXIT_FAILURE, 0,
+                error (EXIT_FAILURE, 0,
                        _("unrecognized --preserve-root argument: %s"),
                        quoteaf (optarg));
-                }
             }
           preserve_root = true;
           break;
@@ -345,8 +341,8 @@ main (int argc, char **argv)
       static struct dev_ino dev_ino_buf;
       x.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
       if (x.root_dev_ino == nullptr)
-        die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-             quoteaf ("/"));
+        error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+               quoteaf ("/"));
     }
 
   uintmax_t n_files = argc - optind;

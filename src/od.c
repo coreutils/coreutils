@@ -24,8 +24,6 @@
 #include "system.h"
 #include "argmatch.h"
 #include "assure.h"
-#include "die.h"
-#include "error.h"
 #include "ftoastr.h"
 #include "quote.h"
 #include "stat-size.h"
@@ -1101,7 +1099,7 @@ skip (uintmax_t n_skip)
     }
 
   if (n_skip != 0)
-    die (EXIT_FAILURE, 0, _("cannot skip past end of combined input"));
+    error (EXIT_FAILURE, 0, _("cannot skip past end of combined input"));
 
   return ok;
 }
@@ -1651,10 +1649,10 @@ main (int argc, char **argv)
               address_pad_len = 0;
               break;
             default:
-              die (EXIT_FAILURE, 0,
-                   _("invalid output address radix '%c';\
- it must be one character from [doxn]"),
-                   optarg[0]);
+              error (EXIT_FAILURE, 0,
+                     _("invalid output address radix '%c';"
+                       " it must be one character from [doxn]"),
+                     optarg[0]);
               break;
             }
           break;
@@ -1690,7 +1688,7 @@ main (int argc, char **argv)
               /* The minimum string length may be no larger than SIZE_MAX,
                  since we may allocate a buffer of this size.  */
               if (SIZE_MAX < tmp)
-                die (EXIT_FAILURE, 0, _("%s is too large"), quote (optarg));
+                error (EXIT_FAILURE, 0, _("%s is too large"), quote (optarg));
 
               string_min = tmp;
             }
@@ -1771,7 +1769,7 @@ main (int argc, char **argv)
               if (s_err != LONGINT_OK)
                 xstrtol_fatal (s_err, oi, c, long_options, optarg);
               if (SIZE_MAX < w_tmp)
-                die (EXIT_FAILURE, 0, _("%s is too large"), quote (optarg));
+                error (EXIT_FAILURE, 0, _("%s is too large"), quote (optarg));
               desired_width = w_tmp;
             }
           break;
@@ -1790,8 +1788,8 @@ main (int argc, char **argv)
     return EXIT_FAILURE;
 
   if (flag_dump_strings && n_specs > 0)
-    die (EXIT_FAILURE, 0,
-         _("no type may be specified when dumping strings"));
+    error (EXIT_FAILURE, 0,
+           _("no type may be specified when dumping strings"));
 
   n_files = argc - optind;
 
@@ -1887,7 +1885,7 @@ main (int argc, char **argv)
     {
       end_offset = n_bytes_to_skip + max_bytes_to_format;
       if (end_offset < n_bytes_to_skip)
-        die (EXIT_FAILURE, 0, _("skip-bytes + read-bytes is too large"));
+        error (EXIT_FAILURE, 0, _("skip-bytes + read-bytes is too large"));
     }
 
   if (n_specs == 0)
@@ -1977,7 +1975,7 @@ main (int argc, char **argv)
 cleanup:
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    die (EXIT_FAILURE, errno, _("standard input"));
+    error (EXIT_FAILURE, errno, _("standard input"));
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

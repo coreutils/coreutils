@@ -43,8 +43,6 @@ tac -r -s '.\|
 
 #include <regex.h>
 
-#include "die.h"
-#include "error.h"
 #include "filenamecat.h"
 #include "safe-read.h"
 #include "stdlib--.h"
@@ -273,7 +271,7 @@ tac_seekable (int input_fd, char const *file, off_t file_pos)
           regoff_t ret;
 
           if (1 < range)
-            die (EXIT_FAILURE, 0, _("record too large"));
+            error (EXIT_FAILURE, 0, _("record too large"));
 
           if (range == 1
               || ((ret = re_search (&compiled_separator, G_buffer,
@@ -281,10 +279,8 @@ tac_seekable (int input_fd, char const *file, off_t file_pos)
                   == -1))
             match_start = G_buffer - 1;
           else if (ret == -2)
-            {
-              die (EXIT_FAILURE, 0,
+            error (EXIT_FAILURE, 0,
                    _("error in regular expression search"));
-            }
           else
             {
               match_start = G_buffer + regs.start[0];
@@ -647,7 +643,7 @@ main (int argc, char **argv)
   if (sentinel_length == 0)
     {
       if (*separator == 0)
-        die (EXIT_FAILURE, 0, _("separator cannot be empty"));
+        error (EXIT_FAILURE, 0, _("separator cannot be empty"));
 
       compiled_separator.buffer = nullptr;
       compiled_separator.allocated = 0;
@@ -656,7 +652,7 @@ main (int argc, char **argv)
       error_message = re_compile_pattern (separator, strlen (separator),
                                           &compiled_separator);
       if (error_message)
-        die (EXIT_FAILURE, 0, "%s", (error_message));
+        error (EXIT_FAILURE, 0, "%s", (error_message));
     }
   else
     match_length = sentinel_length = *separator ? strlen (separator) : 1;

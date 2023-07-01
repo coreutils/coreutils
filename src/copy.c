@@ -38,8 +38,6 @@
 #include "canonicalize.h"
 #include "copy.h"
 #include "cp-hash.h"
-#include "die.h"
-#include "error.h"
 #include "fadvise.h"
 #include "fcntl--.h"
 #include "file-set.h"
@@ -2091,8 +2089,8 @@ static void
 restore_default_fscreatecon_or_die (void)
 {
   if (setfscreatecon (nullptr) != 0)
-    die (EXIT_FAILURE, errno,
-         _("failed to restore the default file creation context"));
+    error (EXIT_FAILURE, errno,
+           _("failed to restore the default file creation context"));
 }
 
 /* Return a newly-allocated string that is like STR

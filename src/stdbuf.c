@@ -23,8 +23,6 @@
 
 #include "system.h"
 #include "assure.h"
-#include "die.h"
-#include "error.h"
 #include "filenamecat.h"
 #include "quote.h"
 #include "xreadlink.h"
@@ -243,7 +241,7 @@ set_LD_PRELOAD (void)
 
       ++path;
       if ( ! *path)
-        die (EXIT_CANCELED, 0, _("failed to find %s"), quote (LIB_NAME));
+        error (EXIT_CANCELED, 0, _("failed to find %s"), quote (LIB_NAME));
     }
 
   /* FIXME: Do we need to support libstdbuf.dll, c:, '\' separators etc?  */
@@ -265,11 +263,9 @@ set_LD_PRELOAD (void)
 #endif
 
   if (ret != 0)
-    {
-      die (EXIT_CANCELED, errno,
+    error (EXIT_CANCELED, errno,
            _("failed to update the environment with %s"),
            quote (LD_PRELOAD));
-    }
 }
 
 /* Populate environ with _STDBUF_I=$MODE _STDBUF_O=$MODE _STDBUF_E=$MODE.
@@ -298,11 +294,9 @@ set_libstdbuf_options (void)
             xalloc_die ();
 
           if (putenv (var) != 0)
-            {
-              die (EXIT_CANCELED, errno,
+            error (EXIT_CANCELED, errno,
                    _("failed to update the environment with %s"),
                    quote (var));
-            }
 
           env_set = true;
         }
@@ -352,7 +346,7 @@ main (int argc, char **argv)
 
           if (!STREQ (optarg, "L")
               && parse_size (optarg, &stdbuf[opt_fileno].size) == -1)
-            die (EXIT_CANCELED, errno, _("invalid mode %s"), quote (optarg));
+            error (EXIT_CANCELED, errno, _("invalid mode %s"), quote (optarg));
 
           break;
 

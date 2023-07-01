@@ -22,7 +22,6 @@
 
 #include "system.h"
 
-#include "error.h"
 #include "full-write.h"
 #include "long-options.h"
 

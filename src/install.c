@@ -28,10 +28,8 @@
 
 #include "system.h"
 #include "backupfile.h"
-#include "error.h"
 #include "cp-hash.h"
 #include "copy.h"
-#include "die.h"
 #include "filenamecat.h"
 #include "full-read.h"
 #include "mkancesdirs.h"
@@ -507,7 +505,8 @@ strip (char const *name)
         if (name && *name == '-')
           safe_name = file_name_concat (".", name, nullptr);
         execlp (strip_program, strip_program, safe_name, nullptr);
-        die (EXIT_FAILURE, errno, _("cannot run %s"), quoteaf (strip_program));
+        error (EXIT_FAILURE, errno, _("cannot run %s"),
+               quoteaf (strip_program));
       }
     default:			/* Parent. */
       if (waitpid (pid, &status, 0) < 0)
@@ -537,8 +536,8 @@ get_ids (void)
           uintmax_t tmp;
           if (xstrtoumax (owner_name, nullptr, 0, &tmp, "") != LONGINT_OK
               || UID_T_MAX < tmp)
-            die (EXIT_FAILURE, 0, _("invalid user %s"),
-                 quote (owner_name));
+            error (EXIT_FAILURE, 0, _("invalid user %s"),
+                   quoteaf (owner_name));
           owner_id = tmp;
         }
       else
@@ -556,8 +555,8 @@ get_ids (void)
           uintmax_t tmp;
           if (xstrtoumax (group_name, nullptr, 0, &tmp, "") != LONGINT_OK
               || GID_T_MAX < tmp)
-            die (EXIT_FAILURE, 0, _("invalid group %s"),
-                 quote (group_name));
+            error (EXIT_FAILURE, 0, _("invalid group %s"),
+                   quoteaf (group_name));
           group_id = tmp;
         }
       else
@@ -668,7 +667,7 @@ install_file_in_file (char const *from, char const *to,
     if (! strip (to))
       {
         if (unlinkat (to_dirfd, to_relname, 0) != 0)  /* Cleanup.  */
-          die (EXIT_FAILURE, errno, _("cannot unlink %s"), quoteaf (to));
+          error (EXIT_FAILURE, errno, _("cannot unlink %s"), quoteaf (to));
         return false;
       }
   if (x->preserve_timestamps && (strip_files || ! S_ISREG (from_sb.st_mode))
@@ -865,8 +864,8 @@ main (int argc, char **argv)
           break;
         case 't':
           if (target_directory)
-            die (EXIT_FAILURE, 0,
-                 _("multiple target directories specified"));
+            error (EXIT_FAILURE, 0,
+                   _("multiple target directories specified"));
           target_directory = optarg;
           break;
         case 'T':
@@ -915,11 +914,11 @@ main (int argc, char **argv)
 
   /* Check for invalid combinations of arguments. */
   if (dir_arg && strip_files)
-    die (EXIT_FAILURE, 0,
-         _("the strip option may not be used when installing a directory"));
+    error (EXIT_FAILURE, 0,
+           _("the strip option may not be used when installing a directory"));
   if (dir_arg && target_directory)
-    die (EXIT_FAILURE, 0,
-         _("target directory not allowed when installing a directory"));
+    error (EXIT_FAILURE, 0,
+           _("target directory not allowed when installing a directory"));
 
   x.backup_type = (make_backups
                    ? xget_version (_("backup type"),
@@ -928,12 +927,12 @@ main (int argc, char **argv)
   set_simple_backup_suffix (backup_suffix);
 
   if (x.preserve_security_context && (x.set_security_context || scontext))
-    die (EXIT_FAILURE, 0,
-         _("cannot set target context and preserve it"));
+    error (EXIT_FAILURE, 0,
+           _("cannot set target context and preserve it"));
 
   if (scontext && setfscreatecon (scontext) < 0)
-    die (EXIT_FAILURE, errno,
-         _("failed to set default file creation context to %s"),
+    error (EXIT_FAILURE, errno,
+           _("failed to set default file creation context to %s"),
          quote (scontext));
 
   n_files = argc - optind;
@@ -954,9 +953,9 @@ main (int argc, char **argv)
   if (no_target_directory)
     {
       if (target_directory)
-        die (EXIT_FAILURE, 0,
-             _("cannot combine --target-directory (-t) "
-               "and --no-target-directory (-T)"));
+        error (EXIT_FAILURE, 0,
+               _("cannot combine --target-directory (-t) "
+                 "and --no-target-directory (-T)"));
       if (2 < n_files)
         {
           error (0, 0, _("extra operand %s"), quoteaf (file[2]));
@@ -968,8 +967,8 @@ main (int argc, char **argv)
       target_dirfd = target_directory_operand (target_directory, &sb);
       if (! (target_dirfd_valid (target_dirfd)
              || (mkdir_and_install && errno == ENOENT)))
-        die (EXIT_FAILURE, errno, _("failed to access %s"),
-             quoteaf (target_directory));
+        error (EXIT_FAILURE, errno, _("failed to access %s"),
+               quoteaf (target_directory));
     }
   else if (!dir_arg)
     {
@@ -982,14 +981,14 @@ main (int argc, char **argv)
           n_files--;
         }
       else if (2 < n_files)
-        die (EXIT_FAILURE, errno, _("target %s"), quoteaf (lastfile));
+        error (EXIT_FAILURE, errno, _("target %s"), quoteaf (lastfile));
     }
 
   if (specified_mode)
     {
       struct mode_change *change = mode_compile (specified_mode);
       if (!change)
-        die (EXIT_FAILURE, 0, _("invalid mode %s"), quote (specified_mode));
+        error (EXIT_FAILURE, 0, _("invalid mode %s"), quote (specified_mode));
       mode = mode_adjust (0, false, 0, change, nullptr);
       dir_mode = mode_adjust (0, true, 0, change, &dir_mode_bits);
       free (change);

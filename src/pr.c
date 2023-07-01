@@ -312,8 +312,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "die.h"
-#include "error.h"
 #include "fadvise.h"
 #include "hard-locale.h"
 #include "mbswidth.h"
@@ -775,7 +773,7 @@ static struct option const long_options[] =
 static _Noreturn void
 integer_overflow (void)
 {
-  die (EXIT_FAILURE, 0, _("integer overflow"));
+  error (EXIT_FAILURE, 0, _("integer overflow"));
 }
 
 /* Return the number of columns that have either an open file or
@@ -914,11 +912,11 @@ main (int argc, char **argv)
         case PAGES_OPTION:	/* --pages=FIRST_PAGE[:LAST_PAGE] */
           {			/* dominates old opt +... */
             if (! optarg)
-              die (EXIT_FAILURE, 0,
-                   _("'--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"));
+              error (EXIT_FAILURE, 0,
+                     _("'--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"));
             else if (! first_last_page (oi, 0, optarg))
-              die (EXIT_FAILURE, 0, _("invalid page range %s"),
-                   quote (optarg));
+              error (EXIT_FAILURE, 0, _("invalid page range %s"),
+                     quote (optarg));
             break;
           }
 
@@ -1070,12 +1068,12 @@ main (int argc, char **argv)
     first_page_number = 1;
 
   if (parallel_files && explicit_columns)
-    die (EXIT_FAILURE, 0,
-         _("cannot specify number of columns when printing in parallel"));
+    error (EXIT_FAILURE, 0,
+           _("cannot specify number of columns when printing in parallel"));
 
   if (parallel_files && print_across_flag)
-    die (EXIT_FAILURE, 0,
-       _("cannot specify both printing across and printing in parallel"));
+    error (EXIT_FAILURE, 0,
+           _("cannot specify both printing across and printing in parallel"));
 
 /* Translate some old short options to new/long options.
    To meet downward compatibility with other UNIX pr utilities
@@ -1146,7 +1144,7 @@ main (int argc, char **argv)
   cleanup ();
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    die (EXIT_FAILURE, errno, _("standard input"));
+    error (EXIT_FAILURE, errno, _("standard input"));
   main_exit (failed_opens ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
@@ -1294,7 +1292,7 @@ init_parameters (int number_of_files)
   chars_per_column = useful_chars / columns;
 
   if (chars_per_column < 1)
-    die (EXIT_FAILURE, 0, _("page width too narrow"));
+    error (EXIT_FAILURE, 0, _("page width too narrow"));
 
   if (numbered_lines)
     {
@@ -1528,7 +1526,7 @@ close_file (COLUMN *p)
   else if (fclose (p->fp) != 0 && !err)
     err = errno;
   if (err)
-    die (EXIT_FAILURE, err, "%s", quotef (p->name));
+    error (EXIT_FAILURE, err, "%s", quotef (p->name));
 
   if (!parallel_files)
     {
@@ -2383,7 +2381,7 @@ print_header (void)
   print_white_space ();
 
   if (page_number == 0)
-    die (EXIT_FAILURE, 0, _("page number overflow"));
+    error (EXIT_FAILURE, 0, _("page number overflow"));
 
   /* The translator must ensure that formatting the translation of
      "Page %"PRIuMAX does not generate more than (sizeof page_text - 1)

@@ -25,8 +25,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "die.h"
-#include "error.h"
 #include "long-options.h"
 #include "quote.h"
 
@@ -82,7 +80,7 @@ main (int argc, char **argv)
     }
 
   if (unlink (argv[optind]) != 0)
-    die (EXIT_FAILURE, errno, _("cannot unlink %s"), quoteaf (argv[optind]));
+    error (EXIT_FAILURE, errno, _("cannot unlink %s"), quoteaf (argv[optind]));
 
   return EXIT_SUCCESS;
 }

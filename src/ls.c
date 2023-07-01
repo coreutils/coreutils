@@ -88,8 +88,6 @@
 #include "assure.h"
 #include "c-strcase.h"
 #include "dev-ino.h"
-#include "die.h"
-#include "error.h"
 #include "filenamecat.h"
 #include "hard-locale.h"
 #include "hash.h"
@@ -2025,8 +2023,8 @@ decode_switches (int argc, char **argv)
         case 'w':
           width_opt = decode_line_length (optarg);
           if (width_opt < 0)
-            die (LS_FAILURE, 0, "%s: %s", _("invalid line width"),
-                 quote (optarg));
+            error (LS_FAILURE, 0, "%s: %s", _("invalid line width"),
+                   quote (optarg));
           break;
 
         case 'x':
@@ -2376,7 +2374,7 @@ decode_switches (int argc, char **argv)
   dired &= (format == long_format) & !print_hyperlink;
 
   if (eolbyte < dired)
-    die (LS_FAILURE, 0, _("--dired and --zero are incompatible"));
+    error (LS_FAILURE, 0, _("--dired and --zero are incompatible"));
 
   /* If -c or -u is specified and not -l (or any other option that implies -l),
      and no sort-type was specified, then sort by the ctime (-c) or atime (-u).
@@ -2417,8 +2415,8 @@ decode_switches (int argc, char **argv)
           else
             {
               if (strchr (p1 + 1, '\n'))
-                die (LS_FAILURE, 0, _("invalid time style format %s"),
-                     quote (p0));
+                error (LS_FAILURE, 0, _("invalid time style format %s"),
+                       quote (p0));
               *p1++ = '\0';
             }
           long_time_format[0] = p0;

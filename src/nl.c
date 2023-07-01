@@ -27,8 +27,6 @@
 
 #include <regex.h>
 
-#include "die.h"
-#include "error.h"
 #include "fadvise.h"
 #include "linebuffer.h"
 #include "quote.h"
@@ -266,7 +264,7 @@ build_type_arg (char const **typep,
         RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP & ~RE_NO_EMPTY_RANGES;
       errmsg = re_compile_pattern (optarg, strlen (optarg), regexp);
       if (errmsg)
-        die (EXIT_FAILURE, 0, "%s", (errmsg));
+        error (EXIT_FAILURE, 0, "%s", (errmsg));
       break;
     default:
       rval = false;
@@ -281,7 +279,7 @@ static void
 print_lineno (void)
 {
   if (line_no_overflow)
-    die (EXIT_FAILURE, 0, _("line number overflow"));
+    error (EXIT_FAILURE, 0, _("line number overflow"));
 
   printf (lineno_format, lineno_width, line_no, separator_str);
 
@@ -369,7 +367,7 @@ proc_text (void)
                          0, line_buf.length - 1, nullptr))
         {
         case -2:
-          die (EXIT_FAILURE, errno, _("error in regular expression search"));
+          error (EXIT_FAILURE, errno, _("error in regular expression search"));
 
         case -1:
           fputs (print_no_line_fmt, stdout);
@@ -615,7 +613,7 @@ main (int argc, char **argv)
       ok &= nl_file (argv[optind]);
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    die (EXIT_FAILURE, errno, "-");
+    error (EXIT_FAILURE, errno, "-");
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

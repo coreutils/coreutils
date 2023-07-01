@@ -27,7 +27,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "error.h"
 #include "quote.h"
 
 /* Exit statuses.  */

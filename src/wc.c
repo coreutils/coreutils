@@ -29,8 +29,6 @@
 #include "assure.h"
 #include "argmatch.h"
 #include "argv-iter.h"
-#include "die.h"
-#include "error.h"
 #include "fadvise.h"
 #include "mbchar.h"
 #include "physmem.h"
@@ -874,8 +872,8 @@ main (int argc, char **argv)
         {
           stream = fopen (files_from, "r");
           if (stream == nullptr)
-            die (EXIT_FAILURE, errno, _("cannot open %s for reading"),
-                 quoteaf (files_from));
+            error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
+                   quoteaf (files_from));
         }
 
       /* Read the file list into RAM if we can detect its size and that
@@ -888,8 +886,8 @@ main (int argc, char **argv)
           read_tokens = true;
           readtokens0_init (&tok);
           if (! readtokens0 (stream, &tok) || fclose (stream) != 0)
-            die (EXIT_FAILURE, 0, _("cannot read file names from %s"),
-                 quoteaf (files_from));
+            error (EXIT_FAILURE, 0, _("cannot read file names from %s"),
+                   quoteaf (files_from));
           files = tok.tok;
           nfiles = tok.n_tok;
           ai = argv_iter_init_argv (files);
@@ -1028,7 +1026,7 @@ main (int argc, char **argv)
   free (fstatus);
 
   if (have_read_stdin && close (STDIN_FILENO) != 0)
-    die (EXIT_FAILURE, errno, "-");
+    error (EXIT_FAILURE, errno, "-");
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

@@ -29,8 +29,6 @@
 # include <sys/resource.h>
 #endif
 
-#include "die.h"
-#include "error.h"
 #include "quote.h"
 #include "xstrtol.h"
 
@@ -171,8 +169,8 @@ main (int argc, char **argv)
       enum { MIN_ADJUSTMENT = 1 - 2 * NZERO, MAX_ADJUSTMENT = 2 * NZERO - 1 };
       long int tmp;
       if (LONGINT_OVERFLOW < xstrtol (adjustment_given, nullptr, 10, &tmp, ""))
-        die (EXIT_CANCELED, 0, _("invalid adjustment %s"),
-             quote (adjustment_given));
+        error (EXIT_CANCELED, 0, _("invalid adjustment %s"),
+               quote (adjustment_given));
       adjustment = MAX (MIN_ADJUSTMENT, MIN (tmp, MAX_ADJUSTMENT));
     }
 
@@ -187,7 +185,7 @@ main (int argc, char **argv)
       errno = 0;
       current_niceness = GET_NICENESS ();
       if (current_niceness == -1 && errno != 0)
-        die (EXIT_CANCELED, errno, _("cannot get niceness"));
+        error (EXIT_CANCELED, errno, _("cannot get niceness"));
       printf ("%d\n", current_niceness);
       return EXIT_SUCCESS;
     }
@@ -198,7 +196,7 @@ main (int argc, char **argv)
 #else
   current_niceness = GET_NICENESS ();
   if (current_niceness == -1 && errno != 0)
-    die (EXIT_CANCELED, errno, _("cannot get niceness"));
+    error (EXIT_CANCELED, errno, _("cannot get niceness"));
   ok = (setpriority (PRIO_PROCESS, 0, current_niceness + adjustment) == 0);
 #endif
   if (!ok)

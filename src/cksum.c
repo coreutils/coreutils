@@ -137,9 +137,6 @@ main (void)
 
 #else /* !CRCTAB */
 
-# include "die.h"
-# include "error.h"
-
 # include "cksum.h"
 
 /* Number of bytes to read at once.  */

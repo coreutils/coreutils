@@ -26,8 +26,6 @@
 #include <selinux/selinux.h>
 
 #include "system.h"
-#include "die.h"
-#include "error.h"
 #include "mgetgroups.h"
 #include "quote.h"
 #include "group-list.h"
@@ -148,13 +146,13 @@ main (int argc, char **argv)
           /* politely decline if we're not on a SELinux/SMACK-enabled kernel. */
 #ifdef HAVE_SMACK
           if (!selinux_enabled && !smack_enabled)
-            die (EXIT_FAILURE, 0,
-                 _("--context (-Z) works only on "
-                   "an SELinux/SMACK-enabled kernel"));
+            error (EXIT_FAILURE, 0,
+                   _("--context (-Z) works only on "
+                     "an SELinux/SMACK-enabled kernel"));
 #else
           if (!selinux_enabled)
-            die (EXIT_FAILURE, 0,
-                 _("--context (-Z) works only on an SELinux-enabled kernel"));
+            error (EXIT_FAILURE, 0,
+                   _("--context (-Z) works only on an SELinux-enabled kernel"));
 #endif
           just_context = true;
           break;
@@ -187,11 +185,11 @@ main (int argc, char **argv)
   size_t n_ids = argc - optind;
 
   if (n_ids && just_context)
-    die (EXIT_FAILURE, 0,
-         _("cannot print security context when user specified"));
+    error (EXIT_FAILURE, 0,
+           _("cannot print security context when user specified"));
 
   if (just_user + just_group + just_group_list + just_context > 1)
-    die (EXIT_FAILURE, 0, _("cannot print \"only\" of more than one choice"));
+    error (EXIT_FAILURE, 0, _("cannot print \"only\" of more than one choice"));
 
   bool default_format = ! (just_user
                            || just_group
@@ -199,12 +197,12 @@ main (int argc, char **argv)
                            || just_context);
 
   if (default_format && (use_real || use_name))
-    die (EXIT_FAILURE, 0,
-         _("cannot print only names or real IDs in default format"));
+    error (EXIT_FAILURE, 0,
+           _("cannot print only names or real IDs in default format"));
 
   if (default_format && opt_zero)
-    die (EXIT_FAILURE, 0,
-         _("option --zero not permitted in default format"));
+    error (EXIT_FAILURE, 0,
+           _("option --zero not permitted in default format"));
 
   /* If we are on a SELinux/SMACK-enabled kernel, no user is specified, and
      either --context is specified or none of (-u,-g,-G) is specified,
@@ -220,7 +218,7 @@ main (int argc, char **argv)
           || (smack_enabled
               && smack_new_label_from_self (&context) < 0
               && just_context))
-        die (EXIT_FAILURE, 0, _("can't get process context"));
+        error (EXIT_FAILURE, 0, _("can't get process context"));
     }
 
   if (n_ids >= 1)
@@ -275,7 +273,7 @@ main (int argc, char **argv)
           errno = 0;
           euid = geteuid ();
           if (euid == NO_UID && errno)
-            die (EXIT_FAILURE, errno, _("cannot get effective UID"));
+            error (EXIT_FAILURE, errno, _("cannot get effective UID"));
         }
 
       if (just_user ? use_real
@@ -284,7 +282,7 @@ main (int argc, char **argv)
           errno = 0;
           ruid = getuid ();
           if (ruid == NO_UID && errno)
-            die (EXIT_FAILURE, errno, _("cannot get real UID"));
+            error (EXIT_FAILURE, errno, _("cannot get real UID"));
         }
 
       if (!just_user && (just_group || just_group_list || !just_context))
@@ -292,12 +290,12 @@ main (int argc, char **argv)
           errno = 0;
           egid = getegid ();
           if (egid == NO_GID && errno)
-            die (EXIT_FAILURE, errno, _("cannot get effective GID"));
+            error (EXIT_FAILURE, errno, _("cannot get effective GID"));
 
           errno = 0;
           rgid = getgid ();
           if (rgid == NO_GID && errno)
-            die (EXIT_FAILURE, errno, _("cannot get real GID"));
+            error (EXIT_FAILURE, errno, _("cannot get real GID"));
         }
         print_stuff (nullptr);
     }

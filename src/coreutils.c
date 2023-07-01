@@ -27,8 +27,6 @@
 #endif
 
 #include "system.h"
-#include "die.h"
-#include "error.h"
 #include "quote.h"
 
 #ifdef SINGLE_BINARY
@@ -176,8 +174,8 @@ main (int argc, char **argv)
         {
           argv[nskip] = arg_name; /* XXX: Discards any specified path.  */
           launch_program (prog_name, argc - nskip, argv + nskip);
-          die (EXIT_FAILURE, 0, _("unknown program %s"),
-               quote (prog_name));
+          error (EXIT_FAILURE, 0, _("unknown program %s"),
+                 quote (prog_name));
         }
     }
 

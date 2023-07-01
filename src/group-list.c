@@ -25,7 +25,6 @@
 #include <grp.h>
 
 #include "system.h"
-#include "error.h"
 #include "mgetgroups.h"
 #include "quote.h"
 #include "group-list.h"

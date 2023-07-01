@@ -24,8 +24,6 @@
 #include "system.h"
 #include "dircolors.h"
 #include "c-strcase.h"
-#include "die.h"
-#include "error.h"
 #include "obstack.h"
 #include "quote.h"
 #include "stdio--.h"
@@ -505,10 +503,9 @@ main (int argc, char **argv)
         {
           syntax = guess_shell_syntax ();
           if (syntax == SHELL_SYNTAX_UNKNOWN)
-            {
-              die (EXIT_FAILURE, 0,
-         _("no SHELL environment variable, and no shell type option given"));
-            }
+            error (EXIT_FAILURE, 0,
+                   _("no SHELL environment variable,"
+                     " and no shell type option given"));
         }
 
       obstack_init (&lsc_obstack);

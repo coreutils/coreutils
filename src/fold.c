@@ -23,8 +23,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "die.h"
-#include "error.h"
 #include "fadvise.h"
 #include "xdectoint.h"
 
@@ -303,7 +301,7 @@ main (int argc, char **argv)
     }
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    die (EXIT_FAILURE, errno, "-");
+    error (EXIT_FAILURE, errno, "-");
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

@@ -25,7 +25,6 @@
 #include "system.h"
 #include "assure.h"
 #include "chown-core.h"
-#include "error.h"
 #include "ignore-value.h"
 #include "root-dev-ino.h"
 #include "xfts.h"

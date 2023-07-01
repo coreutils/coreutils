@@ -59,7 +59,6 @@
 #include "xstrtod.h"
 #include "sig2str.h"
 #include "operand2sig.h"
-#include "error.h"
 #include "quote.h"
 
 #if HAVE_SETRLIMIT

@@ -24,8 +24,6 @@
 
 #include "system.h"
 #include "c-ctype.h"
-#include "die.h"
-#include "error.h"
 #include "fadvise.h"
 #include "idx.h"
 #include "quote.h"
@@ -614,8 +612,8 @@ z85_encode (char const *restrict in, idx_t inlen,
             return;
 
           /* currently, there's no way to return an error in encoding.  */
-          die (EXIT_FAILURE, 0,
-               _("invalid input (length must be multiple of 4 characters)"));
+          error (EXIT_FAILURE, 0,
+                 _("invalid input (length must be multiple of 4 characters)"));
         }
       else
         {
@@ -926,7 +924,7 @@ wrap_write (char const *buffer, idx_t len,
     {
       /* Simple write. */
       if (fwrite (buffer, 1, len, stdout) < len)
-        die (EXIT_FAILURE, errno, _("write error"));
+        error (EXIT_FAILURE, errno, _("write error"));
     }
   else
     for (idx_t written = 0; written < len; )
@@ -936,13 +934,13 @@ wrap_write (char const *buffer, idx_t len,
         if (to_write == 0)
           {
             if (fputc ('\n', out) == EOF)
-              die (EXIT_FAILURE, errno, _("write error"));
+              error (EXIT_FAILURE, errno, _("write error"));
             *current_column = 0;
           }
         else
           {
             if (fwrite (buffer + written, 1, to_write, stdout) < to_write)
-              die (EXIT_FAILURE, errno, _("write error"));
+              error (EXIT_FAILURE, errno, _("write error"));
             *current_column += to_write;
             written += to_write;
           }
@@ -955,9 +953,9 @@ finish_and_exit (FILE *in, char const *infile)
   if (fclose (in) != 0)
     {
       if (STREQ (infile, "-"))
-        die (EXIT_FAILURE, errno, _("closing standard input"));
+        error (EXIT_FAILURE, errno, _("closing standard input"));
       else
-        die (EXIT_FAILURE, errno, "%s", quotef (infile));
+        error (EXIT_FAILURE, errno, "%s", quotef (infile));
     }
 
   exit (EXIT_SUCCESS);
@@ -999,10 +997,10 @@ do_encode (FILE *in, char const *infile, FILE *out, idx_t wrap_column)
 
   /* When wrapping, terminate last line. */
   if (wrap_column && current_column > 0 && fputc ('\n', out) == EOF)
-    die (EXIT_FAILURE, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
 
   if (ferror (in))
-    die (EXIT_FAILURE, errno, _("read error"));
+    error (EXIT_FAILURE, errno, _("read error"));
 
   finish_and_exit (in, infile);
 }
@@ -1046,7 +1044,7 @@ do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
           sum += n;
 
           if (ferror (in))
-            die (EXIT_FAILURE, errno, _("read error"));
+            error (EXIT_FAILURE, errno, _("read error"));
         }
       while (sum < BASE_LENGTH (DEC_BLOCKSIZE) && !feof (in));
 
@@ -1062,10 +1060,10 @@ do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
           ok = base_decode_ctx (&ctx, inbuf, (k == 0 ? sum : 0), outbuf, &n);
 
           if (fwrite (outbuf, 1, n, out) < n)
-            die (EXIT_FAILURE, errno, _("write error"));
+            error (EXIT_FAILURE, errno, _("write error"));
 
           if (!ok)
-            die (EXIT_FAILURE, 0, _("invalid input"));
+            error (EXIT_FAILURE, 0, _("invalid input"));
         }
     }
   while (!feof (in));
@@ -1111,8 +1109,8 @@ main (int argc, char **argv)
           intmax_t w;
           strtol_error s_err = xstrtoimax (optarg, nullptr, 10, &w, "");
           if (LONGINT_OVERFLOW < s_err || w < 0)
-            die (EXIT_FAILURE, 0, "%s: %s",
-                 _("invalid wrap size"), quote (optarg));
+            error (EXIT_FAILURE, 0, "%s: %s",
+                   _("invalid wrap size"), quote (optarg));
           wrap_column = s_err == LONGINT_OVERFLOW || IDX_MAX < w ? 0 : w;
         }
         break;
@@ -1236,7 +1234,7 @@ main (int argc, char **argv)
     {
       input_fh = fopen (infile, "rb");
       if (input_fh == nullptr)
-        die (EXIT_FAILURE, errno, "%s", quotef (infile));
+        error (EXIT_FAILURE, errno, "%s", quotef (infile));
     }
 
   fadvise (input_fh, FADVISE_SEQUENTIAL);

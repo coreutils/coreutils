@@ -30,7 +30,6 @@
 #include "system.h"
 
 #include "assure.h"
-#include "error.h"
 #include "fadvise.h"
 #include "getndelim2.h"
 

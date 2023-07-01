@@ -22,7 +22,6 @@
 
 #include "system.h"
 #include "assure.h"
-#include "error.h"
 #include "file-type.h"
 #include "filenamecat.h"
 #include "ignore-value.h"

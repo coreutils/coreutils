@@ -23,8 +23,6 @@
 
 #include "system.h"
 #include "assure.h"
-#include "die.h"
-#include "error.h"
 #include "fadvise.h"
 #include "hard-locale.h"
 #include "linebuffer.h"
@@ -466,7 +464,7 @@ get_line (FILE *fp, struct line **linep, int which)
   if (! readlinebuffer_delim (&line->buf, fp, eolchar))
     {
       if (ferror (fp))
-        die (EXIT_FAILURE, errno, _("read error"));
+        error (EXIT_FAILURE, errno, _("read error"));
       freeline (line);
       return false;
     }
@@ -849,7 +847,7 @@ string_to_join_field (char const *str)
   if (s_err == LONGINT_OVERFLOW || (s_err == LONGINT_OK && SIZE_MAX < val))
     val = SIZE_MAX;
   else if (s_err != LONGINT_OK || val == 0)
-    die (EXIT_FAILURE, 0, _("invalid field number: %s"), quote (str));
+    error (EXIT_FAILURE, 0, _("invalid field number: %s"), quote (str));
 
   result = val - 1;
 
@@ -870,7 +868,7 @@ decode_field_spec (char const *s, int *file_index, size_t *field_index)
       if (s[1])
         {
           /* '0' must be all alone -- no '.FIELD'.  */
-          die (EXIT_FAILURE, 0, _("invalid field specifier: %s"), quote (s));
+          error (EXIT_FAILURE, 0, _("invalid field specifier: %s"), quote (s));
         }
       *file_index = 0;
       *field_index = 0;
@@ -879,14 +877,14 @@ decode_field_spec (char const *s, int *file_index, size_t *field_index)
     case '1':
     case '2':
       if (s[1] != '.')
-        die (EXIT_FAILURE, 0, _("invalid field specifier: %s"), quote (s));
+        error (EXIT_FAILURE, 0, _("invalid field specifier: %s"), quote (s));
       *file_index = s[0] - '0';
       *field_index = string_to_join_field (s + 2);
       break;
 
     default:
-      die (EXIT_FAILURE, 0,
-           _("invalid file number in field spec: %s"), quote (s));
+      error (EXIT_FAILURE, 0,
+             _("invalid file number in field spec: %s"), quote (s));
     }
 }
 
@@ -922,8 +920,8 @@ set_join_field (size_t *var, size_t val)
     {
       unsigned long int var1 = *var + 1;
       unsigned long int val1 = val + 1;
-      die (EXIT_FAILURE, 0,
-           _("incompatible join fields %lu, %lu"), var1, val1);
+      error (EXIT_FAILURE, 0,
+             _("incompatible join fields %lu, %lu"), var1, val1);
     }
   *var = val;
 }
@@ -1039,8 +1037,8 @@ main (int argc, char **argv)
             unsigned long int val;
             if (xstrtoul (optarg, nullptr, 10, &val, "") != LONGINT_OK
                 || (val != 1 && val != 2))
-              die (EXIT_FAILURE, 0,
-                   _("invalid field number: %s"), quote (optarg));
+              error (EXIT_FAILURE, 0,
+                     _("invalid field number: %s"), quote (optarg));
             if (val == 1)
               print_unpairables_1 = true;
             else
@@ -1050,8 +1048,8 @@ main (int argc, char **argv)
 
         case 'e':
           if (empty_filler && ! STREQ (empty_filler, optarg))
-            die (EXIT_FAILURE, 0,
-                 _("conflicting empty-field replacement strings"));
+            error (EXIT_FAILURE, 0,
+                   _("conflicting empty-field replacement strings"));
           empty_filler = optarg;
           break;
 
@@ -1103,11 +1101,11 @@ main (int argc, char **argv)
                 if (STREQ (optarg, "\\0"))
                   newtab = '\0';
                 else
-                  die (EXIT_FAILURE, 0, _("multi-character tab %s"),
-                       quote (optarg));
+                  error (EXIT_FAILURE, 0, _("multi-character tab %s"),
+                         quote (optarg));
               }
             if (0 <= tab && tab != newtab)
-              die (EXIT_FAILURE, 0, _("incompatible tabs"));
+              error (EXIT_FAILURE, 0, _("incompatible tabs"));
             tab = newtab;
           }
           break;
@@ -1175,21 +1173,21 @@ main (int argc, char **argv)
 
   fp1 = STREQ (g_names[0], "-") ? stdin : fopen (g_names[0], "r");
   if (!fp1)
-    die (EXIT_FAILURE, errno, "%s", quotef (g_names[0]));
+    error (EXIT_FAILURE, errno, "%s", quotef (g_names[0]));
   fp2 = STREQ (g_names[1], "-") ? stdin : fopen (g_names[1], "r");
   if (!fp2)
-    die (EXIT_FAILURE, errno, "%s", quotef (g_names[1]));
+    error (EXIT_FAILURE, errno, "%s", quotef (g_names[1]));
   if (fp1 == fp2)
-    die (EXIT_FAILURE, errno, _("both files cannot be standard input"));
+    error (EXIT_FAILURE, errno, _("both files cannot be standard input"));
   join (fp1, fp2);
 
   if (fclose (fp1) != 0)
-    die (EXIT_FAILURE, errno, "%s", quotef (g_names[0]));
+    error (EXIT_FAILURE, errno, "%s", quotef (g_names[0]));
   if (fclose (fp2) != 0)
-    die (EXIT_FAILURE, errno, "%s", quotef (g_names[1]));
+    error (EXIT_FAILURE, errno, "%s", quotef (g_names[1]));
 
   if (issued_disorder_warning[0] || issued_disorder_warning[1])
-    die (EXIT_FAILURE, 0, _("input is not in sorted order"));
+    error (EXIT_FAILURE, 0, _("input is not in sorted order"));
   else
     return EXIT_SUCCESS;
 }

@@ -24,7 +24,6 @@
 #include "system.h"
 #include "alignalloc.h"
 #include "close-stream.h"
-#include "die.h"
 #include "fd-reopen.h"
 #include "gethrxtime.h"
 #include "human.h"
@@ -674,11 +673,11 @@ alloc_ibuf (void)
   if (!ibuf)
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
-      die (EXIT_FAILURE, 0,
-           _("memory exhausted by input buffer of size %td bytes (%s)"),
-           input_blocksize,
-           human_readable (input_blocksize, hbuf,
-                           human_opts | human_base_1024, 1, 1));
+      error (EXIT_FAILURE, 0,
+             _("memory exhausted by input buffer of size %td bytes (%s)"),
+             input_blocksize,
+             human_readable (input_blocksize, hbuf,
+                             human_opts | human_base_1024, 1, 1));
     }
 }
 
@@ -696,12 +695,12 @@ alloc_obuf (void)
       if (!obuf)
         {
           char hbuf[LONGEST_HUMAN_READABLE + 1];
-          die (EXIT_FAILURE, 0,
-               _("memory exhausted by output buffer of size %td"
-                 " bytes (%s)"),
-               output_blocksize,
-               human_readable (output_blocksize, hbuf,
-                               human_opts | human_base_1024, 1, 1));
+          error (EXIT_FAILURE, 0,
+                 _("memory exhausted by output buffer of size %td"
+                   " bytes (%s)"),
+                 output_blocksize,
+                 human_readable (output_blocksize, hbuf,
+                                 human_opts | human_base_1024, 1, 1));
         }
     }
   else
@@ -942,14 +941,15 @@ cleanup (void)
     }
 
   if (iclose (STDIN_FILENO) != 0)
-    die (EXIT_FAILURE, errno, _("closing input file %s"), quoteaf (input_file));
+    error (EXIT_FAILURE, errno, _("closing input file %s"),
+           quoteaf (input_file));
 
   /* Don't remove this call to close, even though close_stdout
      closes standard output.  This close is necessary when cleanup
      is called as a consequence of signal handling.  */
   if (iclose (STDOUT_FILENO) != 0)
-    die (EXIT_FAILURE, errno,
-         _("closing output file %s"), quoteaf (output_file));
+    error (EXIT_FAILURE, errno,
+           _("closing output file %s"), quoteaf (output_file));
 }
 
 /* Process any pending signals.  If signals are caught, this function
@@ -1585,8 +1585,8 @@ scanargs (int argc, char *const *argv)
             invalid = LONGINT_OVERFLOW;
 
           if (invalid != LONGINT_OK)
-            die (EXIT_FAILURE, invalid == LONGINT_OVERFLOW ? EOVERFLOW : 0,
-                 "%s: %s", _("invalid number"), quoteaf (val));
+            error (EXIT_FAILURE, invalid == LONGINT_OVERFLOW ? EOVERFLOW : 0,
+                   "%s: %s", _("invalid number"), quoteaf (val));
           else if (converted_idx)
             *converted_idx = n;
         }
@@ -1663,16 +1663,16 @@ scanargs (int argc, char *const *argv)
   input_flags &= ~O_FULLBLOCK;
 
   if (multiple_bits_set (conversions_mask & (C_ASCII | C_EBCDIC | C_IBM)))
-    die (EXIT_FAILURE, 0, _("cannot combine any two of {ascii,ebcdic,ibm}"));
+    error (EXIT_FAILURE, 0, _("cannot combine any two of {ascii,ebcdic,ibm}"));
   if (multiple_bits_set (conversions_mask & (C_BLOCK | C_UNBLOCK)))
-    die (EXIT_FAILURE, 0, _("cannot combine block and unblock"));
+    error (EXIT_FAILURE, 0, _("cannot combine block and unblock"));
   if (multiple_bits_set (conversions_mask & (C_LCASE | C_UCASE)))
-    die (EXIT_FAILURE, 0, _("cannot combine lcase and ucase"));
+    error (EXIT_FAILURE, 0, _("cannot combine lcase and ucase"));
   if (multiple_bits_set (conversions_mask & (C_EXCL | C_NOCREAT)))
-    die (EXIT_FAILURE, 0, _("cannot combine excl and nocreat"));
+    error (EXIT_FAILURE, 0, _("cannot combine excl and nocreat"));
   if (multiple_bits_set (input_flags & (O_DIRECT | O_NOCACHE))
       || multiple_bits_set (output_flags & (O_DIRECT | O_NOCACHE)))
-    die (EXIT_FAILURE, 0, _("cannot combine direct and nocache"));
+    error (EXIT_FAILURE, 0, _("cannot combine direct and nocache"));
 
   if (input_flags & O_NOCACHE)
     {
@@ -1811,7 +1811,7 @@ skip (int fdesc, char const *file, intmax_t records, idx_t blocksize,
         {
            struct stat st;
            if (ifstat (STDIN_FILENO, &st) != 0)
-             die (EXIT_FAILURE, errno, _("cannot fstat %s"), quoteaf (file));
+             error (EXIT_FAILURE, errno, _("cannot fstat %s"), quoteaf (file));
            if (usable_st_size (&st) && 0 <= input_offset
                && st.st_size - input_offset < offset)
              {
@@ -2088,7 +2088,7 @@ set_fd_flags (int fd, int add_flags, char const *name)
         }
 
       if (!ok)
-        die (EXIT_FAILURE, errno, _("setting flags for %s"), quoteaf (name));
+        error (EXIT_FAILURE, errno, _("setting flags for %s"), quoteaf (name));
     }
 }
 
@@ -2453,8 +2453,8 @@ main (int argc, char **argv)
   else
     {
       if (ifd_reopen (STDIN_FILENO, input_file, O_RDONLY | input_flags, 0) < 0)
-        die (EXIT_FAILURE, errno, _("failed to open %s"),
-             quoteaf (input_file));
+        error (EXIT_FAILURE, errno, _("failed to open %s"),
+               quoteaf (input_file));
     }
 
   offset = lseek (STDIN_FILENO, 0, SEEK_CUR);
@@ -2480,11 +2480,11 @@ main (int argc, char **argv)
       if ((INT_MULTIPLY_WRAPV (seek_records, output_blocksize, &size)
            || INT_ADD_WRAPV (seek_bytes, size, &size))
           && !(conversions_mask & C_NOTRUNC))
-        die (EXIT_FAILURE, 0,
-             _("offset too large: "
-               "cannot truncate to a length of seek=%"PRIdMAX""
-               " (%td-byte) blocks"),
-             seek_records, output_blocksize);
+        error (EXIT_FAILURE, 0,
+               _("offset too large: "
+                 "cannot truncate to a length of seek=%"PRIdMAX""
+                 " (%td-byte) blocks"),
+               seek_records, output_blocksize);
 
       /* Open the output file with *read* access only if we might
          need to read to satisfy a 'seek=' request.  If we can't read
@@ -2493,8 +2493,8 @@ main (int argc, char **argv)
            || ifd_reopen (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)
           && (ifd_reopen (STDOUT_FILENO, output_file, O_WRONLY | opts, perms)
               < 0))
-        die (EXIT_FAILURE, errno, _("failed to open %s"),
-             quoteaf (output_file));
+        error (EXIT_FAILURE, errno, _("failed to open %s"),
+               quoteaf (output_file));
 
       if (seek_records != 0 && !(conversions_mask & C_NOTRUNC))
         {

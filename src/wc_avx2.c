@@ -17,7 +17,6 @@
 #include <config.h>
 
 #include "system.h"
-#include "error.h"
 #include "safe-read.h"
 
 #include <x86intrin.h>

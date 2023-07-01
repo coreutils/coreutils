@@ -27,8 +27,6 @@
 
 #include "c-ctype.h"
 #include "system.h"
-#include "error.h"
-#include "die.h"
 #include "fadvise.h"
 #include "xdectoint.h"
 
@@ -447,7 +445,7 @@ main (int argc, char **argv)
     }
 
   if (have_read_stdin && fclose (stdin) != 0)
-    die (EXIT_FAILURE, errno, "%s", _("closing standard input"));
+    error (EXIT_FAILURE, errno, "%s", _("closing standard input"));
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

@@ -23,7 +23,6 @@
 
 #include "system.h"
 #include "long-options.h"
-#include "error.h"
 #include "quote.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */

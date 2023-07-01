@@ -19,8 +19,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "die.h"
-#include "error.h"
 #include "long-options.h"
 #include "quote.h"
 
@@ -75,7 +73,7 @@ main (int argc, char **argv)
      using a fallback technique.  */
   cp = getlogin ();
   if (! cp)
-    die (EXIT_FAILURE, 0, _("no login name"));
+    error (EXIT_FAILURE, 0, _("no login name"));
 
   puts (cp);
   return EXIT_SUCCESS;

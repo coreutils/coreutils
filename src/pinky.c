@@ -25,8 +25,6 @@
 #include "system.h"
 
 #include "canon-host.h"
-#include "die.h"
-#include "error.h"
 #include "hard-locale.h"
 #include "readutmp.h"
 
@@ -466,7 +464,7 @@ short_pinky (char const *filename,
   STRUCT_UTMP *utmp_buf = nullptr;
 
   if (read_utmp (filename, &n_users, &utmp_buf, 0) != 0)
-    die (EXIT_FAILURE, errno, "%s", quotef (filename));
+    error (EXIT_FAILURE, errno, "%s", quotef (filename));
 
   scan_entries (n_users, utmp_buf, argc_names, argv_names);
   exit (EXIT_SUCCESS);

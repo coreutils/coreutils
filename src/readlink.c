@@ -23,7 +23,6 @@
 
 #include "system.h"
 #include "canonicalize.h"
-#include "error.h"
 #include "areadlink.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */

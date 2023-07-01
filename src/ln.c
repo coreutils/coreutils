@@ -23,8 +23,6 @@
 
 #include "system.h"
 #include "backupfile.h"
-#include "die.h"
-#include "error.h"
 #include "fcntl-safer.h"
 #include "filenamecat.h"
 #include "file-set.h"
@@ -530,16 +528,16 @@ main (int argc, char **argv)
           break;
         case 't':
           if (target_directory)
-            die (EXIT_FAILURE, 0, _("multiple target directories specified"));
+            error (EXIT_FAILURE, 0, _("multiple target directories specified"));
           else
             {
               struct stat st;
               if (stat (optarg, &st) != 0)
-                die (EXIT_FAILURE, errno, _("failed to access %s"),
-                     quoteaf (optarg));
+                error (EXIT_FAILURE, errno, _("failed to access %s"),
+                       quoteaf (optarg));
               if (! S_ISDIR (st.st_mode))
-                die (EXIT_FAILURE, 0, _("target %s is not a directory"),
-                     quoteaf (optarg));
+                error (EXIT_FAILURE, 0, _("target %s is not a directory"),
+                       quoteaf (optarg));
             }
           target_directory = optarg;
           break;
@@ -571,7 +569,7 @@ main (int argc, char **argv)
     }
 
   if (relative && !symbolic_link)
-    die (EXIT_FAILURE, 0, _("cannot do --relative without --symbolic"));
+    error (EXIT_FAILURE, 0, _("cannot do --relative without --symbolic"));
 
   if (!hard_dir_link)
     {
@@ -582,9 +580,9 @@ main (int argc, char **argv)
   if (no_target_directory)
     {
       if (target_directory)
-        die (EXIT_FAILURE, 0,
-             _("cannot combine --target-directory "
-               "and --no-target-directory"));
+        error (EXIT_FAILURE, 0,
+               _("cannot combine --target-directory "
+                 "and --no-target-directory"));
       if (n_files != 2)
         {
           if (n_files < 2)
@@ -631,7 +629,7 @@ main (int argc, char **argv)
               target_directory = d;
             }
           else if (! (n_files == 2 && !target_directory))
-            die (EXIT_FAILURE, err, _("target %s"), quoteaf (d));
+            error (EXIT_FAILURE, err, _("target %s"), quoteaf (d));
         }
     }
 

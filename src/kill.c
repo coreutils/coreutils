@@ -23,7 +23,6 @@
 #include <signal.h>
 
 #include "system.h"
-#include "error.h"
 #include "sig2str.h"
 #include "operand2sig.h"
 #include "quote.h"

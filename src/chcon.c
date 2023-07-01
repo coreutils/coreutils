@@ -22,8 +22,6 @@
 
 #include "system.h"
 #include "dev-ino.h"
-#include "die.h"
-#include "error.h"
 #include "ignore-value.h"
 #include "quote.h"
 #include "root-dev-ino.h"
@@ -515,14 +513,14 @@ main (int argc, char **argv)
       if (bit_flags == FTS_PHYSICAL)
         {
           if (dereference == 1)
-            die (EXIT_FAILURE, 0,
-                 _("-R --dereference requires either -H or -L"));
+            error (EXIT_FAILURE, 0,
+                   _("-R --dereference requires either -H or -L"));
           affect_symlink_referent = false;
         }
       else
         {
           if (dereference == 0)
-            die (EXIT_FAILURE, 0, _("-R -h requires -P"));
+            error (EXIT_FAILURE, 0, _("-R -h requires -P"));
           affect_symlink_referent = true;
         }
     }
@@ -546,8 +544,8 @@ main (int argc, char **argv)
       char *ref_context = nullptr;
 
       if (getfilecon (reference_file, &ref_context) < 0)
-        die (EXIT_FAILURE, errno, _("failed to get security context of %s"),
-             quoteaf (reference_file));
+        error (EXIT_FAILURE, errno, _("failed to get security context of %s"),
+               quoteaf (reference_file));
 
       specified_context = ref_context;
     }
@@ -561,8 +559,8 @@ main (int argc, char **argv)
       specified_context = argv[optind++];
       if (0 < is_selinux_enabled ()
           && security_check_context (specified_context) < 0)
-        die (EXIT_FAILURE, errno, _("invalid context: %s"),
-             quote (specified_context));
+        error (EXIT_FAILURE, errno, _("invalid context: %s"),
+               quote (specified_context));
     }
 
   if (reference_file && component_specified)
@@ -576,8 +574,8 @@ main (int argc, char **argv)
       static struct dev_ino dev_ino_buf;
       root_dev_ino = get_root_dev_ino (&dev_ino_buf);
       if (root_dev_ino == nullptr)
-        die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-             quoteaf ("/"));
+        error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+               quoteaf ("/"));
     }
   else
     {

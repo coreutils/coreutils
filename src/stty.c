@@ -55,8 +55,6 @@
 
 #include "system.h"
 #include "assure.h"
-#include "die.h"
-#include "error.h"
 #include "fd-reopen.h"
 #include "quote.h"
 #include "xdectoint.h"
@@ -1209,10 +1207,8 @@ apply_settings (bool checking, char const *device_name,
                 continue;
 
               if (ioctl (STDIN_FILENO, TIOCEXT, &val) != 0)
-                {
-                  die (EXIT_FAILURE, errno, _("%s: error setting %s"),
+                error (EXIT_FAILURE, errno, _("%s: error setting %s"),
                        quotef_n (0, device_name), quote_n (1, arg));
-                }
             }
 #endif
 #ifdef TIOCGWINSZ
@@ -1345,7 +1341,7 @@ main (int argc, char **argv)
 
         case 'F':
           if (file_name)
-            die (EXIT_FAILURE, 0, _("only one device may be specified"));
+            error (EXIT_FAILURE, 0, _("only one device may be specified"));
           file_name = optarg;
           break;
 
@@ -1382,14 +1378,14 @@ main (int argc, char **argv)
 
   /* Specifying both -a and -g gets an error.  */
   if (verbose_output && recoverable_output)
-    die (EXIT_FAILURE, 0,
-         _("the options for verbose and stty-readable output styles are\n"
-           "mutually exclusive"));
+    error (EXIT_FAILURE, 0,
+           _("the options for verbose and stty-readable output styles are\n"
+             "mutually exclusive"));
 
   /* Specifying any other arguments with -a or -g gets an error.  */
   if (!noargs && (verbose_output || recoverable_output))
-    die (EXIT_FAILURE, 0,
-         _("when specifying an output style, modes may not be set"));
+    error (EXIT_FAILURE, 0,
+           _("when specifying an output style, modes may not be set"));
 
   device_name = file_name ? file_name : _("standard input");
 
@@ -1404,15 +1400,15 @@ main (int argc, char **argv)
     {
       int fdflags;
       if (fd_reopen (STDIN_FILENO, device_name, O_RDONLY | O_NONBLOCK, 0) < 0)
-        die (EXIT_FAILURE, errno, "%s", quotef (device_name));
+        error (EXIT_FAILURE, errno, "%s", quotef (device_name));
       if ((fdflags = fcntl (STDIN_FILENO, F_GETFL)) == -1
           || fcntl (STDIN_FILENO, F_SETFL, fdflags & ~O_NONBLOCK) < 0)
-        die (EXIT_FAILURE, errno, _("%s: couldn't reset non-blocking mode"),
-             quotef (device_name));
+        error (EXIT_FAILURE, errno, _("%s: couldn't reset non-blocking mode"),
+               quotef (device_name));
     }
 
   if (tcgetattr (STDIN_FILENO, &mode))
-    die (EXIT_FAILURE, errno, "%s", quotef (device_name));
+    error (EXIT_FAILURE, errno, "%s", quotef (device_name));
 
   if (verbose_output || recoverable_output || noargs)
     {
@@ -1433,7 +1429,7 @@ main (int argc, char **argv)
       static struct termios new_mode;
 
       if (tcsetattr (STDIN_FILENO, tcsetattr_options, &mode))
-        die (EXIT_FAILURE, errno, "%s", quotef (device_name));
+        error (EXIT_FAILURE, errno, "%s", quotef (device_name));
 
       /* POSIX (according to Zlotnick's book) tcsetattr returns zero if
          it performs *any* of the requested operations.  This means it
@@ -1443,7 +1439,7 @@ main (int argc, char **argv)
          compare them to the requested ones.  */
 
       if (tcgetattr (STDIN_FILENO, &new_mode))
-        die (EXIT_FAILURE, errno, "%s", quotef (device_name));
+        error (EXIT_FAILURE, errno, "%s", quotef (device_name));
 
       if (! eq_mode (&mode, &new_mode))
         {
@@ -1459,9 +1455,9 @@ main (int argc, char **argv)
                 }
             }
 
-          die (EXIT_FAILURE, 0,
-                _("%s: unable to perform all requested operations"),
-                quotef (device_name));
+          error (EXIT_FAILURE, 0,
+                 _("%s: unable to perform all requested operations"),
+                 quotef (device_name));
         }
     }
 
@@ -1732,13 +1728,13 @@ set_speed (enum speed_setting type, char const *arg, struct termios *mode)
     {
       last_ibaud = baud;
       if (cfsetispeed (mode, baud))
-        die (EXIT_FAILURE, 0, "unsupported ispeed %s", quoteaf (arg));
+        error (EXIT_FAILURE, 0, "unsupported ispeed %s", quoteaf (arg));
     }
   if (type == output_speed || type == both_speeds)
     {
       last_obaud = baud;
       if (cfsetospeed (mode, baud))
-        die (EXIT_FAILURE, 0, "unsupported ospeed %s", quoteaf (arg));
+        error (EXIT_FAILURE, 0, "unsupported ospeed %s", quoteaf (arg));
     }
 }
 
@@ -1759,7 +1755,7 @@ set_window_size (int rows, int cols, char const *device_name)
   if (get_win_size (STDIN_FILENO, &win))
     {
       if (errno != EINVAL)
-        die (EXIT_FAILURE, errno, "%s", quotef (device_name));
+        error (EXIT_FAILURE, errno, "%s", quotef (device_name));
       memset (&win, 0, sizeof (win));
     }
 
@@ -1801,16 +1797,16 @@ set_window_size (int rows, int cols, char const *device_name)
       win.ws_col = 1;
 
       if (ioctl (STDIN_FILENO, TIOCSWINSZ, (char *) &win))
-        die (EXIT_FAILURE, errno, "%s", quotef (device_name));
+        error (EXIT_FAILURE, errno, "%s", quotef (device_name));
 
       if (ioctl (STDIN_FILENO, TIOCSSIZE, (char *) &ttysz))
-        die (EXIT_FAILURE, errno, "%s", quotef (device_name));
+        error (EXIT_FAILURE, errno, "%s", quotef (device_name));
       return;
     }
 # endif
 
   if (ioctl (STDIN_FILENO, TIOCSWINSZ, (char *) &win))
-    die (EXIT_FAILURE, errno, "%s", quotef (device_name));
+    error (EXIT_FAILURE, errno, "%s", quotef (device_name));
 }
 
 static void
@@ -1821,11 +1817,11 @@ display_window_size (bool fancy, char const *device_name)
   if (get_win_size (STDIN_FILENO, &win))
     {
       if (errno != EINVAL)
-        die (EXIT_FAILURE, errno, "%s", quotef (device_name));
+        error (EXIT_FAILURE, errno, "%s", quotef (device_name));
       if (!fancy)
-        die (EXIT_FAILURE, 0,
-             _("%s: no size information for this device"),
-             quotef (device_name));
+        error (EXIT_FAILURE, 0,
+               _("%s: no size information for this device"),
+               quotef (device_name));
     }
   else
     {
@@ -2092,9 +2088,9 @@ check_speed (struct termios *mode)
     {
       if (cfgetispeed (mode) != last_ibaud
           || cfgetospeed (mode) != last_obaud)
-        die (EXIT_FAILURE, 0,
-             _("asymmetric input (%lu), output (%lu) speeds not supported"),
-             baud_to_value (last_ibaud), baud_to_value (last_obaud));
+        error (EXIT_FAILURE, 0,
+               _("asymmetric input (%lu), output (%lu) speeds not supported"),
+               baud_to_value (last_ibaud), baud_to_value (last_obaud));
     }
 }
 
