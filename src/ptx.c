@@ -85,9 +85,9 @@ static enum Format output_format = UNKNOWN_FORMAT;
                                 /* output format */
 
 static bool ignore_case = false;	/* fold lower to upper for sorting */
-static char const *break_file = nullptr;	/* name of the 'Break chars' file */
+static char const *break_file = nullptr; /* name of the 'Break chars' file */
 static char const *only_file = nullptr;	/* name of the 'Only words' file */
-static char const *ignore_file = nullptr;	/* name of the 'Ignore words' file */
+static char const *ignore_file = nullptr; /* name of the 'Ignore words' file */
 
 /* Options that use regular expressions.  */
 struct regex_data
