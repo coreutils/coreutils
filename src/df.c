@@ -1769,8 +1769,6 @@ main (int argc, char **argv)
       return EXIT_FAILURE;
   }
 
-  assume (0 < optind);
-
   if (optind < argc)
     {
       /* stat each of the given entries to make sure any corresponding

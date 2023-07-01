@@ -475,9 +475,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
       for (soff = 0; soff < lim; soff += ssize)
         {
           ssize = write (fd, pbuf + soff, lim - soff);
-          if (0 < ssize)
-            assume (ssize <= lim - soff);
-          else
+          if (ssize <= 0)
             {
               if (! known (size) && (ssize == 0 || errno == ENOSPC))
                 {
