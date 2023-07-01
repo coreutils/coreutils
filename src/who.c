@@ -189,17 +189,16 @@ idle_string (time_t when, time_t boottime)
   if (now == TYPE_MINIMUM (time_t))
     time (&now);
 
-  if (boottime < when && now - 24 * 60 * 60 < when && when <= now)
+  int seconds_idle;
+  if (boottime < when && when <= now
+      && ! INT_SUBTRACT_WRAPV (now, when, &seconds_idle)
+      && seconds_idle < 24 * 60 * 60)
     {
-      int seconds_idle = now - when;
       if (seconds_idle < 60)
         return "  .  ";
       else
         {
           static char idle_hhmm[IDLESTR_LEN];
-          /* FIXME-in-2024: see if this is still required in order
-             to suppress gcc's unwarranted -Wformat-length= warning.  */
-          assume (seconds_idle / (60 * 60) < 24);
           sprintf (idle_hhmm, "%02d:%02d",
                    seconds_idle / (60 * 60),
                    (seconds_idle % (60 * 60)) / 60);
