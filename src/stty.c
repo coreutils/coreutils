@@ -1979,12 +1979,6 @@ display_changed (struct termios *mode)
 
       bitsp = mode_type_flag (mode_info[i].type, mode);
       mask = mode_info[i].mask ? mode_info[i].mask : mode_info[i].bits;
-
-      /* bitsp would be null only for "combination" modes, yet those
-         are filtered out above via the OMIT flag.  Tell static analysis
-         tools that it's ok to dereference bitsp here.  */
-      assume (bitsp);
-
       if ((*bitsp & mask) == mode_info[i].bits)
         {
           if (mode_info[i].flags & SANE_UNSET)
@@ -2067,7 +2061,6 @@ display_all (struct termios *mode, char const *device_name)
 
       bitsp = mode_type_flag (mode_info[i].type, mode);
       mask = mode_info[i].mask ? mode_info[i].mask : mode_info[i].bits;
-      assume (bitsp); /* See the identical assertion and comment above.  */
       if ((*bitsp & mask) == mode_info[i].bits)
         wrapf ("%s", mode_info[i].name);
       else if (mode_info[i].flags & REV)

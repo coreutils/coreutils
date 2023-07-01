@@ -616,10 +616,6 @@ get_paragraph (FILE *f)
         c = get_line (f, c);
     }
 
-  /* Tell static analysis tools that using word_limit[-1] is ok.
-     word_limit is guaranteed to have been incremented by get_line.  */
-  assume (word < word_limit);
-
   (word_limit - 1)->period = (word_limit - 1)->final = true;
   next_char = c;
   return true;
