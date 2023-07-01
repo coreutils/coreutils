@@ -23,6 +23,7 @@
 
 #include <config.h>
 
+#include <stdckdint.h>
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
@@ -766,9 +767,9 @@ main (int argc, char **argv)
              on some paging implementations.  */
 
           idx_t bufsize;
-          if (INT_MULTIPLY_WRAPV (insize, 4, &bufsize)
-              || INT_ADD_WRAPV (bufsize, outsize, &bufsize)
-              || INT_ADD_WRAPV (bufsize, LINE_COUNTER_BUF_LEN - 1, &bufsize))
+          if (ckd_mul (&bufsize, insize, 4)
+              || ckd_add (&bufsize, bufsize, outsize)
+              || ckd_add (&bufsize, bufsize, LINE_COUNTER_BUF_LEN - 1))
             xalloc_die ();
           char *outbuf = xalignalloc (page_size, bufsize);
 

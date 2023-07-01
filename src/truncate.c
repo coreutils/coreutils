@@ -21,6 +21,7 @@
    to better fit the "GNU" environment.  */
 
 #include <config.h>             /* sets _FILE_OFFSET_BITS=64 etc. */
+#include <stdckdint.h>
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
@@ -116,7 +117,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
     {
       ptrdiff_t blksize = ST_BLKSIZE (sb);
       intmax_t ssize0 = ssize;
-      if (INT_MULTIPLY_WRAPV (ssize, blksize, &ssize))
+      if (ckd_mul (&ssize, ssize, blksize))
         {
           error (0, 0,
                  _("overflow in %" PRIdMAX
@@ -172,7 +173,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
               off_t r = fsize % ssize;
               ssize = r == 0 ? 0 : ssize - r;
             }
-          if (INT_ADD_WRAPV (fsize, ssize, &nsize))
+          if (ckd_add (&nsize, fsize, ssize))
             {
               error (0, 0, _("overflow extending size of file %s"),
                      quoteaf (fname));

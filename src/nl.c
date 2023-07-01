@@ -19,6 +19,7 @@
 
 #include <config.h>
 
+#include <stdckdint.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
@@ -283,7 +284,7 @@ print_lineno (void)
 
   printf (lineno_format, lineno_width, line_no, separator_str);
 
-  if (INT_ADD_WRAPV (line_no, page_incr, &line_no))
+  if (ckd_add (&line_no, line_no, page_incr))
     line_no_overflow = true;
 }
 

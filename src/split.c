@@ -21,6 +21,7 @@
    * support --suppress-matched as in csplit.  */
 #include <config.h>
 
+#include <stdckdint.h>
 #include <stdio.h>
 #include <getopt.h>
 #include <signal.h>
@@ -188,7 +189,7 @@ set_suffix_length (intmax_t n_units, enum Split_type split_type)
                  incrementing a suffix size arbitrarily,
                  as that would break sort order for files
                  generated from multiple split runs.  */
-              if (INT_ADD_WRAPV (n_units_end, n_start, &n_units_end))
+              if (ckd_add (&n_units_end, n_units_end, n_start))
                 n_units_end = INTMAX_MAX;
             }
 
@@ -288,7 +289,7 @@ copy_to_tmpfile (int fd, char *buf, idx_t bufsize)
     {
       if (fwrite (buf, 1, r, tmp) != r)
         return -1;
-      if (INT_ADD_WRAPV (copied, r, &copied))
+      if (ckd_add (&copied, copied, r))
         {
           errno = EOVERFLOW;
           return -1;
@@ -338,7 +339,7 @@ input_file_size (int fd, struct stat const *st, char *buf, idx_t bufsize)
     }
 
   if (end == OFF_T_MAX /* E.g., /dev/zero on GNU/Hurd.  */
-      || (cur < end && INT_ADD_WRAPV (size, end - cur, &size)))
+      || (cur < end && ckd_add (&size, size, end - cur)))
     {
       errno = EOVERFLOW;
       return -1;
@@ -379,8 +380,8 @@ new_name:
 
           outbase_length = strlen (outbase);
           addsuf_length = additional_suffix ? strlen (additional_suffix) : 0;
-          overflow = INT_ADD_WRAPV (outbase_length + addsuf_length,
-                                    suffix_length, &outfile_length);
+          overflow = ckd_add (&outfile_length, outbase_length + addsuf_length,
+                              suffix_length);
         }
       else
         {
@@ -389,12 +390,12 @@ new_name:
              the generated suffix into the prefix (base), and
              reinitializing the now one longer suffix.  */
 
-          overflow = INT_ADD_WRAPV (outfile_length, 2, &outfile_length);
+          overflow = ckd_add (&outfile_length, outfile_length, 2);
           suffix_length++;
         }
 
       idx_t outfile_size;
-      overflow |= INT_ADD_WRAPV (outfile_length, 1, &outfile_size);
+      overflow |= ckd_add (&outfile_size, outfile_length, 1);
       if (overflow)
         xalloc_die ();
       outfile = xirealloc (outfile, outfile_size);
@@ -1500,8 +1501,8 @@ main (int argc, char **argv)
           if (digits_optind != 0 && digits_optind != this_optind)
             n_units = 0;	/* More than one number given; ignore other. */
           digits_optind = this_optind;
-          if (INT_MULTIPLY_WRAPV (n_units, 10, &n_units)
-              || INT_ADD_WRAPV (n_units, c - '0', &n_units))
+          if (ckd_mul (&n_units, n_units, 10)
+              || ckd_add (&n_units, n_units, c - '0'))
             n_units = INTMAX_MAX;
           break;
 

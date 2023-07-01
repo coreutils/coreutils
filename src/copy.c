@@ -17,6 +17,7 @@
 /* Extracted from cp.c and librarified by Jim Meyering.  */
 
 #include <config.h>
+#include <stdckdint.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
@@ -458,7 +459,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
             }
           else  /* Coalesce writes/seeks.  */
             {
-              if (INT_ADD_WRAPV (psize, csize, &psize))
+              if (ckd_add (&psize, psize, csize))
                 {
                   error (0, 0, _("overflow reading %s"), quoteaf (src_name));
                   return false;

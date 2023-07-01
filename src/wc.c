@@ -19,6 +19,7 @@
 
 #include <config.h>
 
+#include <stdckdint.h>
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
@@ -666,13 +667,13 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
   if (total_mode != total_only)
     write_counts (lines, words, chars, bytes, linelength, file_x);
 
-  if (INT_ADD_WRAPV (total_lines, lines, &total_lines))
+  if (ckd_add (&total_lines, total_lines, lines))
     total_lines_overflow = true;
-  if (INT_ADD_WRAPV (total_words, words, &total_words))
+  if (ckd_add (&total_words, total_words, words))
     total_words_overflow = true;
-  if (INT_ADD_WRAPV (total_chars, chars, &total_chars))
+  if (ckd_add (&total_chars, total_chars, chars))
     total_chars_overflow = true;
-  if (INT_ADD_WRAPV (total_bytes, bytes, &total_bytes))
+  if (ckd_add (&total_bytes, total_bytes, bytes))
     total_bytes_overflow = true;
 
   if (linelength > max_line_length)

@@ -22,6 +22,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>
+#include <stdckdint.h>
 
 #include "system.h"
 
@@ -490,7 +491,7 @@ load_buffer (void)
       free_buffer (b);
       if (have_read_eof)
         return false;
-      if (INT_ADD_WRAPV (bytes_alloc, bytes_alloc >> 1, &bytes_wanted))
+      if (ckd_add (&bytes_wanted, bytes_alloc, bytes_alloc >> 1))
         xalloc_die ();
     }
 }
@@ -1370,7 +1371,7 @@ main (int argc, char **argv)
        ? max_out (suffix)
        : MAX (INT_STRLEN_BOUND (int), digits));
   idx_t filename_size;
-  if (INT_ADD_WRAPV (prefix_len, max_digit_string_len + 1, &filename_size))
+  if (ckd_add (&filename_size, prefix_len, max_digit_string_len + 1))
     xalloc_die ();
   filename_space = ximalloc (filename_size);
 

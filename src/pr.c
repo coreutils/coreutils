@@ -310,6 +310,7 @@
 #include <config.h>
 
 #include <getopt.h>
+#include <stdckdint.h>
 #include <sys/types.h>
 #include "system.h"
 #include "fadvise.h"
@@ -1284,10 +1285,10 @@ init_parameters (int number_of_files)
     }
 
   int sep_chars, useful_chars;
-  if (INT_MULTIPLY_WRAPV (columns - 1, col_sep_length, &sep_chars))
+  if (ckd_mul (&sep_chars, columns - 1, col_sep_length))
     sep_chars = INT_MAX;
-  if (INT_SUBTRACT_WRAPV (chars_per_line - chars_used_by_number, sep_chars,
-                          &useful_chars))
+  if (ckd_sub (&useful_chars, chars_per_line - chars_used_by_number,
+               sep_chars))
     useful_chars = 0;
   chars_per_column = useful_chars / columns;
 
@@ -1908,11 +1909,10 @@ static void
 init_store_cols (void)
 {
   int total_lines, total_lines_1, chars_per_column_1, chars_if_truncate;
-  if (INT_MULTIPLY_WRAPV (lines_per_body, columns, &total_lines)
-      || INT_ADD_WRAPV (total_lines, 1, &total_lines_1)
-      || INT_ADD_WRAPV (chars_per_column, 1, &chars_per_column_1)
-      || INT_MULTIPLY_WRAPV (total_lines, chars_per_column_1,
-                             &chars_if_truncate))
+  if (ckd_mul (&total_lines, lines_per_body, columns)
+      || ckd_add (&total_lines_1, total_lines, 1)
+      || ckd_add (&chars_per_column_1, chars_per_column, 1)
+      || ckd_mul (&chars_if_truncate, total_lines, chars_per_column_1))
     integer_overflow ();
 
   free (line_vector);

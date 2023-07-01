@@ -25,6 +25,7 @@
 
 #include <config.h>
 #include <getopt.h>
+#include <stdckdint.h>
 #include <stdio.h>
 
 #include <sys/types.h>
@@ -191,7 +192,7 @@ idle_string (time_t when, time_t boottime)
 
   int seconds_idle;
   if (boottime < when && when <= now
-      && ! INT_SUBTRACT_WRAPV (now, when, &seconds_idle)
+      && ! ckd_sub (&seconds_idle, now, when)
       && seconds_idle < 24 * 60 * 60)
     {
       if (seconds_idle < 60)

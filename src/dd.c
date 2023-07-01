@@ -20,6 +20,7 @@
 
 #include <sys/types.h>
 #include <signal.h>
+#include <stdckdint.h>
 
 #include "system.h"
 #include "alignalloc.h"
@@ -1015,7 +1016,7 @@ cache_round (int fd, off_t len)
   if (len)
     {
       intmax_t c_pending;
-      if (INT_ADD_WRAPV (*pending, len, &c_pending))
+      if (ckd_add (&c_pending, *pending, len))
         c_pending = INTMAX_MAX;
       *pending = c_pending % IO_BUFSIZE;
       if (c_pending > *pending)
@@ -1445,7 +1446,7 @@ parse_integer (char const *str, strtol_error *invalid)
           e = f;
           result = indeterminate;
         }
-      else if (INT_MULTIPLY_WRAPV (n, o, &result)
+      else if (ckd_mul (&result, n, o)
                || (result != 0 && ((e | f) & LONGINT_OVERFLOW)))
         {
           e = LONGINT_OVERFLOW;
@@ -1780,7 +1781,7 @@ swab_buffer (char *buf, idx_t *nread, int *saved_byte)
 static void
 advance_input_offset (intmax_t offset)
 {
-  if (0 <= input_offset && INT_ADD_WRAPV (input_offset, offset, &input_offset))
+  if (0 <= input_offset && ckd_add (&input_offset, input_offset, offset))
     input_offset = -1;
 }
 
@@ -1803,8 +1804,8 @@ skip (int fdesc, char const *file, intmax_t records, idx_t blocksize,
 
   errno = 0;
   off_t offset;
-  if (! INT_MULTIPLY_WRAPV (records, blocksize, &offset)
-      && ! INT_ADD_WRAPV (offset, *bytes, &offset)
+  if (! ckd_mul (&offset, records, blocksize)
+      && ! ckd_add (&offset, offset, *bytes)
       && 0 <= lseek (fdesc, offset, SEEK_CUR))
     {
       if (fdesc == STDIN_FILENO)
@@ -2111,8 +2112,8 @@ dd_copy (void)
     {
       intmax_t us_bytes;
       bool us_bytes_overflow =
-        (INT_MULTIPLY_WRAPV (skip_records, input_blocksize, &us_bytes)
-         || INT_ADD_WRAPV (skip_bytes, us_bytes, &us_bytes));
+        (ckd_mul (&us_bytes, skip_records, input_blocksize)
+         || ckd_add (&us_bytes, skip_bytes, us_bytes));
       off_t input_offset0 = input_offset;
       intmax_t us_blocks = skip (STDIN_FILENO, input_file,
                                  skip_records, input_blocksize, &skip_bytes);
@@ -2477,8 +2478,8 @@ main (int argc, char **argv)
            | (seek_records || (conversions_mask & C_NOTRUNC) ? 0 : O_TRUNC));
 
       off_t size;
-      if ((INT_MULTIPLY_WRAPV (seek_records, output_blocksize, &size)
-           || INT_ADD_WRAPV (seek_bytes, size, &size))
+      if ((ckd_mul (&size, seek_records, output_blocksize)
+           || ckd_add (&size, seek_bytes, size))
           && !(conversions_mask & C_NOTRUNC))
         error (EXIT_FAILURE, 0,
                _("offset too large: "

@@ -17,6 +17,7 @@
 /* Written by Paul Eggert.  */
 
 #include <config.h>
+#include <stdckdint.h>
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
@@ -200,7 +201,7 @@ send_signals (int signum, char *const *argv)
       intmax_t n = (errno = 0, strtoimax (arg, &endp, 10));
       pid_t pid;
 
-      if (errno == ERANGE || INT_ADD_WRAPV (n, 0, &pid)
+      if (errno == ERANGE || ckd_add (&pid, n, 0)
           || arg == endp || *endp)
         {
           error (0, 0, _("%s: invalid process id"), quote (arg));

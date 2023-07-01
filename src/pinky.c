@@ -19,6 +19,7 @@
 #include <config.h>
 #include <getopt.h>
 #include <pwd.h>
+#include <stdckdint.h>
 #include <stdio.h>
 
 #include <sys/types.h>
@@ -110,8 +111,8 @@ create_fullname (char const *gecos_name, char const *user_name)
     {
       size_t ulen = strlen (user_name);
       size_t product;
-      if (INT_MULTIPLY_WRAPV (ulen, ampersands - 1, &product)
-          || INT_ADD_WRAPV (rsize, product, &rsize))
+      if (ckd_mul (&product, ulen, ampersands - 1)
+          || ckd_add (&rsize, rsize, product))
         xalloc_die ();
     }
 
