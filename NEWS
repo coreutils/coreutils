@@ -19,6 +19,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   cksum again diagnoses read errors in its default CRC32 mode.
   [bug introduced in coreutils-9.0]
 
+  'cksum --check' now ensures filenames with a leading backslash character
+  are escaped appropriately in the status output.
+  This also applies to the standalone checksumming utilities.
+  [bug introduced in coreutils-8.25]
+
   dd again supports more than two multipliers for numbers.
   Previously numbers of the form '1024x1024x32' gave "invalid number" errors.
   [bug introduced in coreutils-9.1]

@@ -4162,6 +4162,8 @@ Without @option{--zero}, if @var{file} contains a backslash, newline,
 or carriage return, the line is started with a backslash, and each
 problematic character in the file name is escaped with a backslash,
 making the output unambiguous even in the presence of arbitrary file names.
+Since the backslash character itself is escaped, any other backslash
+escape sequences are reserved for future use.
 
 If @var{file} is omitted or specified as @samp{-}, standard input is read.
 
@@ -4258,8 +4260,8 @@ indicating there was a failure.
 @cindex BSD output
 Output BSD style checksums, which indicate the checksum algorithm used.
 As a GNU extension, if @option{--zero} is not used, file names with problematic
-characters are escaped as described above, with the same escaping indicator of
-@samp{\} at the start of the line, being used.
+characters are escaped as described above, using the same escaping indicator of
+@samp{\} at the start of the line, as used with the other output format.
 The @option{--tag} option implies binary mode, and is disallowed with
 @option{--text} mode as supporting that would unnecessarily complicate
 the output format, while providing little benefit.

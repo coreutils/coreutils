@@ -74,13 +74,17 @@ md5sum --strict -c check.md5 || fail=1
 # with the GNU extension of escaped newlines
 nl='
 '
-tab='	'
+t='	'
 rm check.md5
-for i in 'a\b' 'a\' "a${nl}b" "a${tab}b"; do
+for i in 'a\b' 'a\' '\a' "a${nl}b" "a${t}b"; do
   : > "$i"
   md5sum --tag "$i" >> check.md5 || fail=1
 done
-md5sum --strict -c check.md5 || fail=1
+md5sum --strict -c check.md5 > out || fail=1
+printf '%s: OK\n' '\a\\b' '\a\\' '\\\a' '\a\nb' "a${t}b" > exp ||
+  framework_failure_
+compare exp out || fail=1
+
 
 # Ensure BSD traditional format with GNU extension escapes
 # is in the expected format
