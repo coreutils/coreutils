@@ -183,6 +183,12 @@ my @Tests =
        check_tmp $f, 'F'; unlink $f; rmdir 'a' or die "rmdir a: $!\n" }}
      ],
 
+     ['priority-t-tmpdir', "-t -p $bad_dir foo.XXX",
+      {ENV=>"TMPDIR=."},
+      {OUT_SUBST => 's,....$,.ZZZ,'},
+      {OUT => "./foo.ZZZ\n"},
+     ],
+
      ['pipe-bad-tmpdir',
       {ENV => "TMPDIR=$bad_dir"},
       {ERR_SUBST => "s,($bad_dir/)[^']+': .*,\$1...,"},
