@@ -47,6 +47,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   due to -i, or -u.  Instead they only output this information with --debug.
   I.e., 'cp -u -v' etc. will have the same verbosity as before coreutils-9.3.
 
+  'cksum -b' no longer prints base64-encoded checksums.  Rather that
+  short option is reserved to better support emulation of the standalone
+  checksum utilities with cksum.
+
 ** Improvements
 
   cp, mv, and install now avoid copy_file_range on linux kernels before 5.3

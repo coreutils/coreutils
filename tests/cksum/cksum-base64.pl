@@ -51,9 +51,9 @@ sub fmt ($$) {
 
 my @Tests =
   (
-   # Ensure that each of the above works with -b:
+   # Ensure that each of the above works with --base64:
    (map {my ($h,$v)= @$_; my $o=fmt $h,$v;
-         [$h, "-ba $h", {IN=>{f=>''}}, {OUT=>"$o\n"}]} @pairs),
+         [$h, "--base64 -a $h", {IN=>{f=>''}}, {OUT=>"$o\n"}]} @pairs),
 
    # For each that accepts --check, ensure that works with base64 digests:
    (map {my ($h,$v)= @$_; my $o=fmt $h,$v;

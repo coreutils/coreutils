@@ -367,6 +367,7 @@ enum
   UNTAG_OPTION,
   DEBUG_PROGRAM_OPTION,
   RAW_OPTION,
+  BASE64_OPTION,
 };
 
 static struct option const long_options[] =
@@ -387,14 +388,13 @@ static struct option const long_options[] =
 
 # if HASH_ALGO_CKSUM
   { "algorithm", required_argument, nullptr, 'a'},
-  { "base64", no_argument, nullptr, 'b' },
+  { "base64", no_argument, nullptr, BASE64_OPTION },
   { "debug", no_argument, nullptr, DEBUG_PROGRAM_OPTION},
   { "raw", no_argument, nullptr, RAW_OPTION},
   { "untagged", no_argument, nullptr, UNTAG_OPTION },
-# else
+# endif
   { "binary", no_argument, nullptr, 'b' },
   { "text", no_argument, nullptr, 't' },
-# endif
 
 #else
   {"sysv", no_argument, nullptr, 's'},
@@ -445,7 +445,7 @@ Print or check %s (%d-bit) checksums.\n\
 \n\
 "), stdout);
         fputs (_("\
-  -b, --base64          emit base64-encoded digests, not hexadecimal\
+      --base64          emit base64-encoded digests, not hexadecimal\
 \n\
 "), stdout);
 #endif
@@ -1074,14 +1074,7 @@ output_file (char const *file, int binary_file, void const *digest,
   if (!tagged)
     {
       putchar (' ');
-
-# if HASH_ALGO_CKSUM
-      /* Simplify output as always in binary mode.  */
-      putchar (' ');
-# else
       putchar (binary_file ? '*' : ' ');
-# endif
-
       print_filename (file, needs_escape);
     }
 
@@ -1344,11 +1337,10 @@ main (int argc, char **argv)
   bool do_check = false;
   int opt;
   bool ok = true;
+  int binary = -1;
 #if HASH_ALGO_CKSUM
-  int binary = 1;
   bool prefix_tag = true;
 #else
-  int binary = -1;
   bool prefix_tag = false;
 #endif
 
@@ -1413,14 +1405,12 @@ main (int argc, char **argv)
         warn = false;
         quiet = false;
         break;
-# if !HASH_ALGO_CKSUM
       case 'b':
         binary = 1;
         break;
       case 't':
         binary = 0;
         break;
-# endif
       case 'w':
         status_only = false;
         warn = true;
@@ -1438,7 +1428,7 @@ main (int argc, char **argv)
         strict = true;
         break;
 # if HASH_ALGO_CKSUM
-      case 'b':
+      case BASE64_OPTION:
         base64_digest = true;
         break;
       case RAW_OPTION:
@@ -1527,7 +1517,11 @@ main (int argc, char **argv)
         However that's invasive enough that it was agreed to
         not support this mode with --tag, as --text use cases
         are adequately supported by the default output format.  */
+#if !HASH_ALGO_CKSUM
      error (0, 0, _("--tag does not support --text mode"));
+#else
+     error (0, 0, _("--text mode is only supported with --untagged"));
+#endif
      usage (EXIT_FAILURE);
    }
 
@@ -1546,14 +1540,12 @@ main (int argc, char **argv)
     }
 #endif
 
-#if !HASH_ALGO_CKSUM
   if (0 <= binary && do_check)
     {
       error (0, 0, _("the --binary and --text options are meaningless when "
                      "verifying checksums"));
       usage (EXIT_FAILURE);
     }
-#endif
 
   if (ignore_missing && !do_check)
     {
