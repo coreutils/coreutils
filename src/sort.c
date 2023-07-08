@@ -1025,9 +1025,9 @@ move_fd (int oldfd, int newfd)
 {
   if (oldfd != newfd)
     {
-      /* This should never fail for our usage.  */
-      dup2 (oldfd, newfd);
-      close (oldfd);
+      /* These should never fail for our usage.  */
+      ignore_value (dup2 (oldfd, newfd));
+      ignore_value (close (oldfd));
     }
 }
 
