@@ -174,6 +174,7 @@ all_tests =					\
   tests/cp/no-ctx.sh				\
   tests/tty/tty-eof.pl				\
   tests/misc/read-errors.sh			\
+  tests/misc/write-errors.sh			\
   tests/tail/inotify-hash-abuse.sh		\
   tests/tail/inotify-hash-abuse2.sh		\
   tests/tail/F-vs-missing.sh			\
