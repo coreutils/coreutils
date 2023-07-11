@@ -1380,7 +1380,7 @@ dump (void)
 
   if (limit_bytes_to_format)
     {
-      while (true)
+      while (ok)
         {
           size_t n_needed;
           if (current_offset >= end_offset)
@@ -1396,13 +1396,15 @@ dump (void)
           affirm (n_bytes_read == bytes_per_block);
           write_block (current_offset, n_bytes_read,
                        block[!idx], block[idx]);
+          if (ferror (stdout))
+            ok = false;
           current_offset += n_bytes_read;
           idx = !idx;
         }
     }
   else
     {
-      while (true)
+      while (ok)
         {
           ok &= read_block (bytes_per_block, block[idx], &n_bytes_read);
           if (n_bytes_read < bytes_per_block)
@@ -1410,6 +1412,8 @@ dump (void)
           affirm (n_bytes_read == bytes_per_block);
           write_block (current_offset, n_bytes_read,
                        block[!idx], block[idx]);
+          if (ferror (stdout))
+            ok = false;
           current_offset += n_bytes_read;
           idx = !idx;
         }
