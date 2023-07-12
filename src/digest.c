@@ -564,6 +564,7 @@ or equivalent standalone program.\
    that need escaping.  Note we escape '\' itself to provide some forward
    compat to introduce escaping of other characters.  */
 
+ATTRIBUTE_PURE
 static bool
 problematic_chars (char const *s)
 {
