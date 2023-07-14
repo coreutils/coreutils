@@ -568,7 +568,8 @@ ATTRIBUTE_PURE
 static bool
 problematic_chars (char const *s)
 {
-  return strchr (s, '\\') || strchr (s, '\n') || strchr (s, '\r');
+  size_t length = strcspn (s, "\\\n\r");
+  return s[length] != '\0';
 }
 
 #define ISWHITE(c) ((c) == ' ' || (c) == '\t')
