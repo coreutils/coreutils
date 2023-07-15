@@ -650,6 +650,9 @@ prjoin (struct line const *line1, struct line const *line2)
 
       putchar (eolchar);
     }
+
+  if (ferror (stdout))
+    write_error ();
 }
 
 /* Print the join of the files in FP1 and FP2.  */

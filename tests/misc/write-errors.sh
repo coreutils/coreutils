@@ -36,7 +36,7 @@ factor --version; yes 1 | factor
 # TODO: fmt /dev/zero
 # TODO: fold -b /dev/zero
 head -z -n-1 /dev/zero
-# TODO: join -a 1 -z /dev/zero /dev/null
+join -a 1 -z /dev/zero /dev/null
 # TODO: nl --version; yes | nl
 # TODO: numfmt --version; yes 1 | numfmt
 od -v /dev/zero

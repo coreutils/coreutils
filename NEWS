@@ -62,7 +62,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   irrespective of which kernel version coreutils is built against,
   reinstating that behaviour from coreutils-9.0.
 
-  comm, cut, od, and uniq will now exit immediately upon receiving a
+  comm, cut, join, od, and uniq will now exit immediately upon receiving a
   write error, which is significant when reading large / unbounded inputs.
 
   split now uses more tuned access patterns for its potentially large input.
