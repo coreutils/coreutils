@@ -27,7 +27,7 @@ fi
 # First word in command line is checked against built programs
 echo "\
 cat /dev/zero
-# TODO: comm -z /dev/zero /dev/zero
+comm -z /dev/zero /dev/zero
 cut -z -c1- /dev/zero
 cut -z -f1- /dev/zero
 dd if=/dev/zero

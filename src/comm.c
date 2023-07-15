@@ -163,13 +163,13 @@ Examples:\n\
   exit (status);
 }
 
-/* Output the line in linebuffer LINE to stream STREAM
+/* Output the line in linebuffer LINE to stdout
    provided the switches say it should be output.
    CLASS is 1 for a line found only in file 1,
    2 for a line only in file 2, 3 for a line in both. */
 
 static void
-writeline (struct linebuffer const *line, FILE *stream, int class)
+writeline (struct linebuffer const *line, int class)
 {
   switch (class)
     {
@@ -182,20 +182,23 @@ writeline (struct linebuffer const *line, FILE *stream, int class)
       if (!only_file_2)
         return;
       if (only_file_1)
-        fwrite (col_sep, 1, col_sep_len, stream);
+        fwrite (col_sep, 1, col_sep_len, stdout);
       break;
 
     case 3:
       if (!both)
         return;
       if (only_file_1)
-        fwrite (col_sep, 1, col_sep_len, stream);
+        fwrite (col_sep, 1, col_sep_len, stdout);
       if (only_file_2)
-        fwrite (col_sep, 1, col_sep_len, stream);
+        fwrite (col_sep, 1, col_sep_len, stdout);
       break;
     }
 
-  fwrite (line->buffer, sizeof (char), line->length, stream);
+  fwrite (line->buffer, sizeof (char), line->length, stdout);
+
+  if (ferror (stdout))
+    write_error ();
 }
 
 /* Check that successive input lines PREV and CURRENT from input file
@@ -329,7 +332,7 @@ compare_files (char **infiles)
         {
           /* Line is seen in both files.  */
           total[2]++;
-          writeline (thisline[1], stdout, 3);
+          writeline (thisline[1], 3);
         }
       else
         {
@@ -338,13 +341,13 @@ compare_files (char **infiles)
             {
               /* Line is seen in file 1 only.  */
               total[0]++;
-              writeline (thisline[0], stdout, 1);
+              writeline (thisline[0], 1);
             }
           else
             {
               /* Line is seen in file 2 only.  */
               total[1]++;
-              writeline (thisline[1], stdout, 2);
+              writeline (thisline[1], 2);
             }
         }
 
