@@ -28,7 +28,8 @@ fi
 echo "\
 cat /dev/zero
 # TODO: comm -z /dev/zero /dev/zero
-# TODO: cut -z -c1- /dev/zero
+cut -z -c1- /dev/zero
+cut -z -f1- /dev/zero
 dd if=/dev/zero
 expand /dev/zero
 factor --version; yes 1 | factor

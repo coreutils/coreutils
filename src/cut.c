@@ -232,7 +232,8 @@ cut_bytes (FILE *stream)
 
       if (c == line_delim)
         {
-          putchar (c);
+          if (putchar (c) < 0)
+            write_error ();
           byte_idx = 0;
           print_delimiter = false;
           current_rp = frp;
@@ -252,13 +253,16 @@ cut_bytes (FILE *stream)
                 {
                   if (print_delimiter && is_range_start_index (byte_idx))
                     {
-                      fwrite (output_delimiter_string, sizeof (char),
-                              output_delimiter_length, stdout);
+                      if (fwrite (output_delimiter_string, sizeof (char),
+                                  output_delimiter_length, stdout)
+                          != output_delimiter_length)
+                        write_error ();
                     }
                   print_delimiter = true;
                 }
 
-              putchar (c);
+              if (putchar (c) < 0)
+                write_error ();
             }
         }
     }
@@ -325,7 +329,9 @@ cut_fields (FILE *stream)
                 }
               else
                 {
-                  fwrite (field_1_buffer, sizeof (char), n_bytes, stdout);
+                  if (fwrite (field_1_buffer, sizeof (char), n_bytes, stdout)
+                      != n_bytes)
+                    write_error ();
                   /* Make sure the output line is newline terminated.  */
                   if (field_1_buffer[n_bytes - 1] != line_delim)
                     putchar (line_delim);
@@ -336,7 +342,9 @@ cut_fields (FILE *stream)
           if (print_kth (1))
             {
               /* Print the field, but not the trailing delimiter.  */
-              fwrite (field_1_buffer, sizeof (char), n_bytes - 1, stdout);
+              if (fwrite (field_1_buffer, sizeof (char), n_bytes - 1, stdout)
+                  != n_bytes - 1)
+                write_error ();
 
               /* With -d$'\n' don't treat the last '\n' as a delimiter.  */
               if (delim == line_delim)
@@ -360,14 +368,17 @@ cut_fields (FILE *stream)
         {
           if (found_any_selected_field)
             {
-              fwrite (output_delimiter_string, sizeof (char),
-                      output_delimiter_length, stdout);
+              if (fwrite (output_delimiter_string, sizeof (char),
+                          output_delimiter_length, stdout)
+                  != output_delimiter_length)
+                write_error ();
             }
           found_any_selected_field = true;
 
           while ((c = getc (stream)) != delim && c != line_delim && c != EOF)
             {
-              putchar (c);
+              if (putchar (c) < 0)
+                write_error ();
               prev_c = c;
             }
         }
@@ -398,7 +409,8 @@ cut_fields (FILE *stream)
             {
               if (c == line_delim || prev_c != line_delim
                   || delim == line_delim)
-                putchar (line_delim);
+                if (putchar (line_delim) < 0)
+                  write_error ();
             }
           if (c == EOF)
             break;
