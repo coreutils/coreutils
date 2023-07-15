@@ -46,7 +46,7 @@ tail -n+1 -z /dev/zero
 tee < /dev/zero
 tr . . < /dev/zero
 unexpand /dev/zero
-# TODO: uniq -z -D /dev/zero
+uniq -z -D /dev/zero
 yes
 " |
 sort -k 1b,1 > all_writers || framework_failure_

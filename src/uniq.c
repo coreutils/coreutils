@@ -309,7 +309,9 @@ writeline (struct linebuffer const *line,
   if (countmode == count_occurrences)
     printf ("%7" PRIuMAX " ", linecount + 1);
 
-  fwrite (line->buffer, sizeof (char), line->length, stdout);
+  if (fwrite (line->buffer, sizeof (char), line->length, stdout)
+      != line->length)
+    write_error ();
 }
 
 /* Process input file INFILE with output to OUTFILE.
@@ -378,8 +380,9 @@ check_file (char const *infile, char const *outfile, char delimiter)
 
           if (new_group || grouping != GM_NONE)
             {
-              fwrite (thisline->buffer, sizeof (char),
-                      thisline->length, stdout);
+              if (fwrite (thisline->buffer, sizeof (char), thisline->length,
+                  stdout) != thisline->length)
+                write_error ();
 
               SWAP_LINES (prevline, thisline);
               prevfield = thisfield;
