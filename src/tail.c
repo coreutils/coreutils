@@ -1263,7 +1263,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
         }
 
       if ((!any_input || blocking) && fflush (stdout) != 0)
-        error (EXIT_FAILURE, errno, _("write error"));
+        write_error ();
 
       check_output_alive ();
 
@@ -1417,7 +1417,7 @@ check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
     {
       *prev_fspec = fspec;
       if (fflush (stdout) != 0)
-        error (EXIT_FAILURE, errno, _("write error"));
+        write_error ();
     }
 }
 
@@ -2454,7 +2454,7 @@ main (int argc, char **argv)
                  tail_forever_inotify flushes only after writing,
                  not before reading.  */
               if (fflush (stdout) != 0)
-                error (EXIT_FAILURE, errno, _("write error"));
+                write_error ();
 
               Hash_table *ht;
               tail_forever_inotify (wd, F, n_files, sleep_interval, &ht);

@@ -2361,7 +2361,7 @@ lbuf_flush (void)
 {
   size_t size = lbuf.end - lbuf.buf;
   if (full_write (STDOUT_FILENO, lbuf.buf, size) != size)
-    error (EXIT_FAILURE, errno, "%s", _("write error"));
+    write_error ();
   lbuf.end = lbuf.buf;
 }
 

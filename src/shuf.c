@@ -597,7 +597,7 @@ main (int argc, char **argv)
     }
 
   if (i != 0)
-    error (EXIT_FAILURE, errno, _("write error"));
+    write_error ();
 
   main_exit (EXIT_SUCCESS);
 }

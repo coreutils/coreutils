@@ -957,7 +957,7 @@ lines_chunk_split (intmax_t k, intmax_t n, char *buf, idx_t bufsize,
                  large chunks from an existing file, so it's more efficient
                  to write out directly.  */
               if (full_write (STDOUT_FILENO, bp, to_write) != to_write)
-                error (EXIT_FAILURE, errno, "%s", _("write error"));
+                write_error ();
             }
           else if (! k)
             cwrite (new_file_flag, bp, to_write);
@@ -1214,12 +1214,11 @@ lines_rr (intmax_t k, intmax_t n, char *buf, idx_t bufsize, of_t **filesp)
               if (line_no == k && unbuffered)
                 {
                   if (full_write (STDOUT_FILENO, bp, to_write) != to_write)
-                    error (EXIT_FAILURE, errno, "%s", _("write error"));
+                    write_error ();
                 }
               else if (line_no == k && fwrite (bp, to_write, 1, stdout) != 1)
                 {
-                  clearerr (stdout); /* To silence close_stdout().  */
-                  error (EXIT_FAILURE, errno, "%s", _("write error"));
+                  write_error ();
                 }
               if (next)
                 line_no = (line_no == n) ? 1 : line_no + 1;

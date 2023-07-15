@@ -503,6 +503,12 @@ sc_prohibit_man_see_also_period:
 	  { echo '$(ME): do not end "SEE ALSO" section with a period'	\
 	      1>&2; exit 1; } || :
 
+sc_prohibit_exit_write_error:
+	@prohibit='error.*EXIT_FAILURE.*write error' \
+	in_vc_files='\.c$$' \
+	halt='Use write_error() instead' \
+	  $(_sc_search_regexp)
+
 # Don't use "indent-tabs-mode: nil" anymore.  No longer needed.
 sc_prohibit_emacs__indent_tabs_mode__setting:
 	@prohibit='^( *[*#] *)?indent-tabs-mode:'			\
@@ -620,7 +626,8 @@ sc_prohibit_test_empty:
 sc_some_programs_must_avoid_exit_failure:
 	@cd $(srcdir)							\
 	&& grep -nw EXIT_FAILURE					\
-	    $$(git grep -El '[^T]_FAILURE|EXIT_CANCELED' $(srcdir)/src)	\
+	    $$(git grep -El '[^T]_FAILURE|EXIT_CANCELED' src/)		\
+	  | grep -v '^src/system\.h:'					\
 	  | grep -vE '= EXIT_FAILURE|return .* \?' | grep .		\
 	    && { echo '$(ME): do not use EXIT_FAILURE in the above'	\
 		  1>&2; exit 1; } || :

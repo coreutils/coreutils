@@ -178,7 +178,7 @@ simple_cat (char *buf, idx_t bufsize)
       /* Write this block out.  */
 
       if (full_write (STDOUT_FILENO, buf, n_read) != n_read)
-        error (EXIT_FAILURE, errno, _("write error"));
+        write_error ();
     }
 }
 
@@ -193,7 +193,7 @@ write_pending (char *outbuf, char **bpout)
   if (0 < n_write)
     {
       if (full_write (STDOUT_FILENO, outbuf, n_write) != n_write)
-        error (EXIT_FAILURE, errno, _("write error"));
+        write_error ();
       *bpout = outbuf;
     }
 }
@@ -257,7 +257,7 @@ cat (char *inbuf, idx_t insize, char *outbuf, idx_t outsize,
               do
                 {
                   if (full_write (STDOUT_FILENO, wp, outsize) != outsize)
-                    error (EXIT_FAILURE, errno, _("write error"));
+                    write_error ();
                   wp += outsize;
                   remaining_bytes = bpout - wp;
                 }
@@ -794,7 +794,7 @@ main (int argc, char **argv)
   if (pending_cr)
     {
       if (full_write (STDOUT_FILENO, "\r", 1) != 1)
-        error (EXIT_FAILURE, errno, _("write error"));
+        write_error ();
     }
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)

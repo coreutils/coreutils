@@ -31,9 +31,7 @@ cat /dev/zero
 # TODO: cut -z -c1- /dev/zero
 dd if=/dev/zero
 expand /dev/zero
-# TODO: avoid double error from expand
 factor --version; yes 1 | factor
-# TODO: avoid double error from factor
 # TODO: fmt /dev/zero
 # TODO: fold -b /dev/zero
 head -z -n-1 /dev/zero
@@ -42,16 +40,12 @@ head -z -n-1 /dev/zero
 # TODO: numfmt --version; yes 1 | numfmt
 # TODO: od -v /dev/zero
 paste /dev/zero
-# TODO: avoid double error from paste
 # TODO: pr /dev/zero
 seq inf
-# TODO: avoid double error from shuf
 tail -n+1 -z /dev/zero
 tee < /dev/zero
 tr . . < /dev/zero
-# TODO: avoid double error from tr
 unexpand /dev/zero
-# TODO: avoid double error from unexpand
 # TODO: uniq -z -D /dev/zero
 yes
 " |

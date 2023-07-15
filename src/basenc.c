@@ -924,7 +924,7 @@ wrap_write (char const *buffer, idx_t len,
     {
       /* Simple write. */
       if (fwrite (buffer, 1, len, stdout) < len)
-        error (EXIT_FAILURE, errno, _("write error"));
+        write_error ();
     }
   else
     for (idx_t written = 0; written < len; )
@@ -934,13 +934,13 @@ wrap_write (char const *buffer, idx_t len,
         if (to_write == 0)
           {
             if (fputc ('\n', out) == EOF)
-              error (EXIT_FAILURE, errno, _("write error"));
+              write_error ();
             *current_column = 0;
           }
         else
           {
             if (fwrite (buffer + written, 1, to_write, stdout) < to_write)
-              error (EXIT_FAILURE, errno, _("write error"));
+              write_error ();
             *current_column += to_write;
             written += to_write;
           }
@@ -997,7 +997,7 @@ do_encode (FILE *in, char const *infile, FILE *out, idx_t wrap_column)
 
   /* When wrapping, terminate last line. */
   if (wrap_column && current_column > 0 && fputc ('\n', out) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
+    write_error ();
 
   if (ferror (in))
     error (EXIT_FAILURE, errno, _("read error"));
@@ -1060,7 +1060,7 @@ do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
           ok = base_decode_ctx (&ctx, inbuf, (k == 0 ? sum : 0), outbuf, &n);
 
           if (fwrite (outbuf, 1, n, out) < n)
-            error (EXIT_FAILURE, errno, _("write error"));
+            write_error ();
 
           if (!ok)
             error (EXIT_FAILURE, 0, _("invalid input"));

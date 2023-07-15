@@ -144,7 +144,7 @@ expand (void)
 
                   while (++column < next_tab_column)
                     if (putchar (' ') < 0)
-                      error (EXIT_FAILURE, errno, _("write error"));
+                      write_error ();
 
                   c = ' ';
                 }
@@ -169,7 +169,7 @@ expand (void)
             return;
 
           if (putchar (c) < 0)
-            error (EXIT_FAILURE, errno, _("write error"));
+            write_error ();
         }
       while (c != '\n');
     }

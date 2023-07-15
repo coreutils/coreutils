@@ -152,14 +152,6 @@ collapse_escapes (char const *strptr)
   return backslash_at_end ? 1 : 0;
 }
 
-/* Report a write error and exit.  */
-
-static void
-write_error (void)
-{
-  error (EXIT_FAILURE, errno, _("write error"));
-}
-
 /* Output a single byte, reporting any write errors.  */
 
 static inline void

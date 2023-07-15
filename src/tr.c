@@ -1571,7 +1571,7 @@ squeeze_filter (char *buf, size_t size, size_t (*reader) (char *, size_t))
             }
           if (out_len > 0
               && fwrite (&buf[begin], 1, out_len, stdout) != out_len)
-            error (EXIT_FAILURE, errno, _("write error"));
+            write_error ();
         }
 
       if (char_to_squeeze != NOT_A_CHAR)
@@ -1797,7 +1797,7 @@ main (int argc, char **argv)
           if (nr == 0)
             break;
           if (fwrite (io_buf, 1, nr, stdout) != nr)
-            error (EXIT_FAILURE, errno, _("write error"));
+            write_error ();
         }
     }
   else if (squeeze_repeats && delete && non_option_args == 2)
@@ -1889,7 +1889,7 @@ main (int argc, char **argv)
               if (bytes_read == 0)
                 break;
               if (fwrite (io_buf, 1, bytes_read, stdout) != bytes_read)
-                error (EXIT_FAILURE, errno, _("write error"));
+                write_error ();
             }
         }
     }

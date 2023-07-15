@@ -285,14 +285,6 @@ long_double_format (char const *fmt, struct layout *layout)
       }
 }
 
-static void
-io_error (void)
-{
-  /* FIXME: consider option to silently ignore errno=EPIPE */
-  clearerr (stdout);
-  error (EXIT_FAILURE, errno, _("write error"));
-}
-
 /* Actually print the sequence of numbers in the specified range, with the
    given or default stepping and format.  */
 
@@ -311,7 +303,7 @@ print_numbers (char const *fmt, struct layout layout,
         {
           long double x0 = x;
           if (printf (fmt, x) < 0)
-            io_error ();
+            write_error ();
           if (out_of_range)
             break;
           x = first + i * step;
@@ -358,11 +350,11 @@ print_numbers (char const *fmt, struct layout layout,
             }
 
           if (fputs (separator, stdout) == EOF)
-            io_error ();
+            write_error ();
         }
 
       if (fputs (terminator, stdout) == EOF)
-        io_error ();
+        write_error ();
     }
 }
 
@@ -539,7 +531,7 @@ seq_fast (char const *a, char const *b, uintmax_t step)
           if (buf_end - (p_len + 1) < bufp)
             {
               if (fwrite (buf, bufp - buf, 1, stdout) != 1)
-                io_error ();
+                write_error ();
               bufp = buf;
             }
         }
@@ -547,7 +539,7 @@ seq_fast (char const *a, char const *b, uintmax_t step)
       /* Write any remaining buffered output, and the terminator.  */
       *bufp++ = *terminator;
       if (fwrite (buf, bufp - buf, 1, stdout) != 1)
-        io_error ();
+        write_error ();
     }
 
   if (ok)

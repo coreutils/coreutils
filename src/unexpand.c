@@ -228,7 +228,7 @@ unexpand (void)
                   if (pending > 1 && one_blank_before_tab_stop)
                     pending_blank[0] = '\t';
                   if (fwrite (pending_blank, 1, pending, stdout) != pending)
-                    error (EXIT_FAILURE, errno, _("write error"));
+                    write_error ();
                   pending = 0;
                   one_blank_before_tab_stop = false;
                 }
@@ -244,7 +244,7 @@ unexpand (void)
             }
 
           if (putchar (c) < 0)
-            error (EXIT_FAILURE, errno, _("write error"));
+            write_error ();
         }
       while (c != '\n');
     }
