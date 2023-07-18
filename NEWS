@@ -68,6 +68,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   split now uses more tuned access patterns for its potentially large input.
   This was seen to improve throughput by 5% when reading from SSD.
 
+  split now supports a configurable $TMPDIR for handling any temporary files.
+
   tac now falls back to '/tmp' if a configured $TMPDIR is unavailable.
 
 

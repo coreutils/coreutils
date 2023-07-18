@@ -40,6 +40,7 @@
 #include "quote.h"
 #include "sig2str.h"
 #include "sys-limits.h"
+#include "temp-stream.h"
 #include "xbinary-io.h"
 #include "xdectoint.h"
 #include "xstrtol.h"
@@ -279,8 +280,8 @@ CHUNKS may be:\n\
 static off_t
 copy_to_tmpfile (int fd, char *buf, idx_t bufsize)
 {
-  FILE *tmp = tmpfile ();
-  if (!tmp)
+  FILE *tmp;
+  if (!temp_stream (&tmp, nullptr))
     return -1;
   off_t copied = 0;
   off_t r;

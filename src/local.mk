@@ -396,6 +396,7 @@ src_arch_SOURCES = src/uname.c src/uname-arch.c
 src_cut_SOURCES = src/cut.c src/set-fields.c
 src_numfmt_SOURCES = src/numfmt.c src/set-fields.c
 
+src_split_SOURCES = src/split.c src/temp-stream.c
 src_tac_SOURCES = src/tac.c src/temp-stream.c
 
 src_tail_SOURCES = src/tail.c src/iopoll.c
