@@ -137,6 +137,7 @@ all_root_tests =				\
   tests/rm/one-file-system.sh			\
   tests/rm/read-only.sh				\
   tests/rm/empty-immutable-skip.sh		\
+  tests/split/l-chunk-root.sh			\
   tests/tail/append-only.sh			\
   tests/tail/end-of-device.sh			\
   tests/touch/now-owned-by-other.sh

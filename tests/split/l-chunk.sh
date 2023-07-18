@@ -35,18 +35,6 @@ split -n l/10 /dev/null || fail=1
 test "$(stat -c %s x* | uniq -c | sed 's/^ *//; s/ /x/')" = "10x0" || fail=1
 rm x??
 
-# 'split' should reject any attempt to create an infinitely
-# long output file.
-# This test is very expensive as it runs out of /tmp space.
-if test "${RUN_VERY_EXPENSIVE_TESTS+set}" = set; then
-  returns_ 1 split -n l/2 /dev/zero || fail=1
-  rm x??
-
-  # Repeat the above,  but with 1/2, not l/2:
-  returns_ 1 split -n 1/2 /dev/zero || fail=1
-  rm x??
-fi
-
 # Ensure --elide-empty-files is honored
 split -e -n l/10 /dev/null || fail=1
 returns_ 1 stat x?? 2>/dev/null || fail=1
