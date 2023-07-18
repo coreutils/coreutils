@@ -45,7 +45,7 @@ tac -r -s '.\|
 
 #include "filenamecat.h"
 #include "safe-read.h"
-#include "stdlib--.h"
+#include "temp-stream.h"
 #include "xbinary-io.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -55,18 +55,6 @@ tac -r -s '.\|
   proper_name ("Jay Lepreau"), \
   proper_name ("David MacKenzie")
 
-#if defined __MSDOS__ || defined _WIN32
-/* Define this to non-zero on systems for which the regular mechanism
-   (of unlinking an open file and expecting to be able to write, seek
-   back to the beginning, then reread it) doesn't work.  E.g., on Windows
-   and DOS systems.  */
-# define DONT_UNLINK_WHILE_OPEN 1
-#endif
-
-
-#ifndef DEFAULT_TMPDIR
-# define DEFAULT_TMPDIR "/tmp"
-#endif
 
 /* The number of bytes per atomic read. */
 #define INITIAL_READSIZE 8192
@@ -379,113 +367,6 @@ tac_seekable (int input_fd, char const *file, off_t file_pos)
             match_start -= match_length - 1;
         }
     }
-}
-
-#if DONT_UNLINK_WHILE_OPEN
-
-/* FIXME-someday: remove all of this DONT_UNLINK_WHILE_OPEN junk.
-   Using atexit like this is wrong, since it can fail
-   when called e.g. 32 or more times.
-   But this isn't a big deal, since the code is used only on WOE/DOS
-   systems, and few people invoke tac on that many nonseekable files.  */
-
-static char const *file_to_remove;
-static FILE *fp_to_close;
-
-static void
-unlink_tempfile (void)
-{
-  fclose (fp_to_close);
-  unlink (file_to_remove);
-}
-
-static void
-record_or_unlink_tempfile (char const *fn, FILE *fp)
-{
-  if (!file_to_remove)
-    {
-      file_to_remove = fn;
-      fp_to_close = fp;
-      atexit (unlink_tempfile);
-    }
-}
-
-#else
-
-static void
-record_or_unlink_tempfile (char const *fn, MAYBE_UNUSED FILE *fp)
-{
-  unlink (fn);
-}
-
-#endif
-
-/* A wrapper around mkstemp that gives us both an open stream pointer,
-   FP, and the corresponding FILE_NAME.  Always return the same FP/name
-   pair, rewinding/truncating it upon each reuse.  */
-static bool
-temp_stream (FILE **fp, char **file_name)
-{
-  static char *tempfile = nullptr;
-  static FILE *tmp_fp;
-  if (tempfile == nullptr)
-    {
-      char const *t = getenv ("TMPDIR");
-      char const *tempdir = t ? t : DEFAULT_TMPDIR;
-      tempfile = mfile_name_concat (tempdir, "tacXXXXXX", nullptr);
-      if (tempdir == nullptr)
-        {
-          error (0, 0, _("memory exhausted"));
-          return false;
-        }
-
-      /* FIXME: there's a small window between a successful mkstemp call
-         and the unlink that's performed by record_or_unlink_tempfile.
-         If we're interrupted in that interval, this code fails to remove
-         the temporary file.  On systems that define DONT_UNLINK_WHILE_OPEN,
-         the window is much larger -- it extends to the atexit-called
-         unlink_tempfile.
-         FIXME: clean up upon fatal signal.  Don't block them, in case
-         $TMPFILE is a remote file system.  */
-
-      int fd = mkstemp (tempfile);
-      if (fd < 0)
-        {
-          error (0, errno, _("failed to create temporary file in %s"),
-                 quoteaf (tempdir));
-          goto Reset;
-        }
-
-      tmp_fp = fdopen (fd, (O_BINARY ? "w+b" : "w+"));
-      if (! tmp_fp)
-        {
-          error (0, errno, _("failed to open %s for writing"),
-                 quoteaf (tempfile));
-          close (fd);
-          unlink (tempfile);
-        Reset:
-          free (tempfile);
-          tempfile = nullptr;
-          return false;
-        }
-
-      record_or_unlink_tempfile (tempfile, tmp_fp);
-    }
-  else
-    {
-      clearerr (tmp_fp);
-      if (fseeko (tmp_fp, 0, SEEK_SET) < 0
-          || ftruncate (fileno (tmp_fp), 0) < 0)
-        {
-          error (0, errno, _("failed to rewind stream for %s"),
-                 quoteaf (tempfile));
-          return false;
-        }
-    }
-
-  *fp = tmp_fp;
-  *file_name = tempfile;
-  return true;
 }
 
 /* Copy from file descriptor INPUT_FD (corresponding to the named FILE) to

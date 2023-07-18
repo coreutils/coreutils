@@ -68,6 +68,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   split now uses more tuned access patterns for its potentially large input.
   This was seen to improve throughput by 5% when reading from SSD.
 
+  tac now falls back to '/tmp' if a configured $TMPDIR is unavailable.
+
 
 * Noteworthy changes in release 9.3 (2023-04-18) [stable]
 

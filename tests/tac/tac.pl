@@ -74,9 +74,7 @@ my @Tests =
   ['pipe-bad-tmpdir',
    {ENV => "TMPDIR=$bad_dir"},
    {IN_PIPE => "a\n"},
-   {ERR_SUBST => "s,'$bad_dir': .*,...,"},
-   {ERR => "$prog: failed to create temporary file in ...\n"},
-   {EXIT => 1}],
+   {OUT=>"a\n"}],
 
   # coreutils-8.5's tac would double-free its primary buffer.
   ['double-free', {IN=>$long_line}, {OUT=>$long_line}],

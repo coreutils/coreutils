@@ -59,6 +59,7 @@ noinst_HEADERS =		\
   src/set-fields.h		\
   src/statx.h			\
   src/system.h			\
+  src/temp-stream.h		\
   src/uname.h
 
 EXTRA_DIST +=		\
@@ -394,6 +395,8 @@ src_arch_SOURCES = src/uname.c src/uname-arch.c
 
 src_cut_SOURCES = src/cut.c src/set-fields.c
 src_numfmt_SOURCES = src/numfmt.c src/set-fields.c
+
+src_tac_SOURCES = src/tac.c src/temp-stream.c
 
 src_tail_SOURCES = src/tail.c src/iopoll.c
 src_tee_SOURCES = src/tee.c src/iopoll.c
