@@ -3090,8 +3090,9 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -c
 @opindex --bytes
 Output the last @var{num} bytes, instead of final lines.
-However, if @var{num} is prefixed with a @samp{+}, start printing with
-byte @var{num} from the start of each file, instead of from the end.
+If @var{num} is prefixed with a @samp{+}, start printing with
+byte @var{num} from the start of each file. For example to skip the first byte
+use @code{tail -c +2}, while to skip all but the last byte use @code{tail -c 1}.
 @multiplierSuffixes{num}
 
 @item -f
@@ -3178,8 +3179,9 @@ and when following by name.
 @opindex -n
 @opindex --lines
 Output the last @var{num} lines.
-However, if @var{num} is prefixed with a @samp{+}, start printing with
-line @var{num} from the start of each file, instead of from the end.
+If @var{num} is prefixed with a @samp{+}, start printing with
+line @var{num} from the start of each file. For example to skip the first line
+use @code{tail -n +2}, while to skip all but the last line use @code{tail -n 1}.
 Size multiplier suffixes are the same as with the @option{-c} option.
 
 @item --pid=@var{pid}

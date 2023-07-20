@@ -283,7 +283,11 @@ With more than one FILE, precede each with a header giving the file name.\n\
 "), stdout);
      printf (_("\
   -n, --lines=[+]NUM       output the last NUM lines, instead of the last %d;\n\
-                             or use -n +NUM to output starting with line NUM\n\
+                             or use -n +NUM to skip NUM-1 lines at the start\n\
+"),
+             DEFAULT_N_LINES
+             );
+     printf (_("\
       --max-unchanged-stats=N\n\
                            with --follow=name, reopen a FILE which has not\n\
                              changed size after N (default %d) iterations\n\
@@ -291,7 +295,6 @@ With more than one FILE, precede each with a header giving the file name.\n\
                              (this is the usual case of rotated log files);\n\
                              with inotify, this option is rarely useful\n\
 "),
-             DEFAULT_N_LINES,
              DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS
              );
      fputs (_("\
