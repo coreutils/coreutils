@@ -2840,9 +2840,23 @@ skip:
              If the permissions on the directory containing the source or
              destination file are made too restrictive, the rename will
              fail.  Etc.  */
-          error (0, rename_errno,
-                 _("cannot move %s to %s"),
-                 quoteaf_n (0, src_name), quoteaf_n (1, dst_name));
+          char const *quoted_dst_name = quoteaf_n (1, dst_name);
+          switch (rename_errno)
+            {
+            case EDQUOT: case EEXIST: case EISDIR: case EMLINK:
+            case ENOSPC: case ENOTEMPTY: case ETXTBSY:
+              /* The destination must be the problem.  Don't mention
+                 the source as that is more likely to confuse the user
+                 than be helpful.  */
+              error (0, rename_errno, _("cannot overwrite %s"),
+                     quoted_dst_name);
+              break;
+
+            default:
+              error (0, rename_errno, _("cannot move %s to %s"),
+                     quoteaf_n (0, src_name), quoted_dst_name);
+              break;
+            }
           forget_created (src_sb.st_ino, src_sb.st_dev);
           return false;
         }

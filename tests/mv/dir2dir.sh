@@ -34,7 +34,7 @@ sed             's/: File exists/: Directory not empty/'<out>o1;mv o1 out
 sed 's/: Device or resource busy/: Directory not empty/'<out>o1;mv o1 out
 
 cat <<\EOF > exp || framework_failure_
-mv: cannot move 'b/t' to 'a/t': Directory not empty
+mv: cannot overwrite 'a/t': Directory not empty
 EOF
 
 compare exp out || fail=1

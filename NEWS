@@ -56,6 +56,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   short option is reserved to better support emulation of the standalone
   checksum utilities with cksum.
 
+  'mv dir x' now complains differently if x/dir is a nonempty directory.
+  Previously it said "mv: cannot move 'dir' to 'x/dir': Directory not empty",
+  where it was unclear whether 'dir' or 'x/dir' was the problem.
+  Now it says "mv: cannot overwrite 'x/dir': Directory not empty".
+  Similarly for other renames where the destination must be the problem.
+  [problem introduced in coreutils-6.0]
+
 ** Improvements
 
   cp, mv, and install now avoid copy_file_range on linux kernels before 5.3
