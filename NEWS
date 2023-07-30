@@ -46,6 +46,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'pr --length=1 --double-space' no longer enters an infinite loop.
   [This bug was present in "the beginning".]
 
+  'uptime' no longer incorrectly prints "0 users" on OpenBSD.
+  [bug introduced in coreutils-9.2]
+
   'wc -l' and 'cksum' no longer crash with an "Illegal instruction" error
   on x86 Linux kernels that disable XSAVE YMM.  This was seen on Xen VMs.
   [bug introduced in coreutils-9.0]
