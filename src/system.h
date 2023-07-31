@@ -781,8 +781,8 @@ write_error (void)
 static inline char *
 stzncpy (char *restrict dest, char const *restrict src, size_t len)
 {
-  char const *src_end = src + len;
-  while (src < src_end && *src)
+  size_t i;
+  for (i = 0; i < len && *src; i++)
     *dest++ = *src++;
   *dest = 0;
   return dest;
