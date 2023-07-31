@@ -333,14 +333,13 @@ main (int argc, char **argv)
 
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle '--' here.  */
-  unsigned int u_argc = argc;
-  if (1 < u_argc && STREQ (argv[1], "--"))
+  if (1 < argc && STREQ (argv[1], "--"))
     {
-      --u_argc;
+      --argc;
       ++argv;
     }
 
-  if (u_argc <= 1)
+  if (argc <= 1)
     {
       error (0, 0, _("missing operand"));
       usage (EXPR_INVALID);

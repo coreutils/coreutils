@@ -264,7 +264,7 @@ append_entry (char prefix, char const *item, char const *arg)
 static bool
 dc_parse_stream (FILE *fp, char const *filename)
 {
-  size_t line_number = 0;
+  idx_t line_number = 0;
   char const *next_G_line = G_line;
   char *input_line = nullptr;
   size_t input_line_size = 0;
@@ -322,8 +322,8 @@ dc_parse_stream (FILE *fp, char const *filename)
 
       if (arg == nullptr)
         {
-          error (0, 0, _("%s:%lu: invalid line;  missing second token"),
-                 quotef (filename), (unsigned long int) line_number);
+          error (0, 0, _("%s:%td: invalid line;  missing second token"),
+                 quotef (filename), line_number);
           ok = false;
           free (keywd);
           continue;
@@ -377,9 +377,9 @@ dc_parse_stream (FILE *fp, char const *filename)
 
       if (unrecognized && (state == ST_TERMSURE || state == ST_TERMYES))
         {
-          error (0, 0, _("%s:%lu: unrecognized keyword %s"),
+          error (0, 0, _("%s:%td: unrecognized keyword %s"),
                  (filename ? quotef (filename) : _("<internal>")),
-                 (unsigned long int) line_number, keywd);
+                 line_number, keywd);
           ok = false;
         }
 

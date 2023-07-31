@@ -150,7 +150,7 @@ static bool opt_separate_dirs = false;
 /* Show the total for each directory (and file if --all) that is at
    most MAX_DEPTH levels down from the root of the hierarchy.  The root
    is at level 0, so 'du --max-depth=0' is equivalent to 'du -s'.  */
-static size_t max_depth = SIZE_MAX;
+static idx_t max_depth = IDX_MAX;
 
 /* Only output entries with at least this SIZE if positive,
    or at most if negative.  See --threshold option.  */
@@ -806,9 +806,9 @@ main (int argc, char **argv)
 
         case 'd':		/* --max-depth=N */
           {
-            uintmax_t tmp;
-            if (xstrtoumax (optarg, nullptr, 0, &tmp, "") == LONGINT_OK
-                && tmp <= SIZE_MAX)
+            intmax_t tmp;
+            if (xstrtoimax (optarg, nullptr, 0, &tmp, "") == LONGINT_OK
+                && tmp <= IDX_MAX)
               {
                 max_depth_specified = true;
                 max_depth = tmp;
@@ -940,8 +940,8 @@ main (int argc, char **argv)
 
   if (opt_summarize_only && max_depth_specified && max_depth != 0)
     {
-      unsigned long int d = max_depth;
-      error (0, 0, _("warning: summarizing conflicts with --max-depth=%lu"), d);
+      error (0, 0, _("warning: summarizing conflicts with --max-depth=%td"),
+             max_depth);
       usage (EXIT_FAILURE);
     }
 
@@ -1107,8 +1107,8 @@ main (int argc, char **argv)
               /* Using the standard 'filename:line-number:' prefix here is
                  not totally appropriate, since NUL is the separator, not NL,
                  but it might be better than nothing.  */
-              unsigned long int file_number = argv_iter_n_args (ai);
-              error (0, 0, "%s:%lu: %s", quotef (files_from),
+              idx_t file_number = argv_iter_n_args (ai);
+              error (0, 0, "%s:%td: %s", quotef (files_from),
                      file_number, _("invalid zero-length file name"));
             }
           skip_file = true;
