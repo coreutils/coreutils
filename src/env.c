@@ -24,7 +24,6 @@
 #include <signal.h>
 
 #include "system.h"
-#include "idx.h"
 #include "operand2sig.h"
 #include "quote.h"
 #include "sig2str.h"

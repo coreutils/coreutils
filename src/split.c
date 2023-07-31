@@ -35,7 +35,6 @@
 #include "fd-reopen.h"
 #include "fcntl--.h"
 #include "full-write.h"
-#include "idx.h"
 #include "ioblksize.h"
 #include "quote.h"
 #include "sig2str.h"

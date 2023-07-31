@@ -241,6 +241,7 @@ struct group *getgrgid (gid_t);
 uid_t getuid (void);
 #endif
 
+#include "idx.h"
 #include "xalloc.h"
 #include "verify.h"
 

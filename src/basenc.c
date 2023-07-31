@@ -25,7 +25,6 @@
 #include "system.h"
 #include "c-ctype.h"
 #include "fadvise.h"
-#include "idx.h"
 #include "quote.h"
 #include "xstrtol.h"
 #include "xdectoint.h"

@@ -29,7 +29,6 @@
 #include <regex.h>
 
 #include "fd-reopen.h"
-#include "idx.h"
 #include "quote.h"
 #include "safe-read.h"
 #include "stdio--.h"

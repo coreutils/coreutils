@@ -35,7 +35,6 @@
 
 #include "system.h"
 #include "alignalloc.h"
-#include "idx.h"
 #include "ioblksize.h"
 #include "fadvise.h"
 #include "full-write.h"
