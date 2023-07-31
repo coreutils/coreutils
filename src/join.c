@@ -55,7 +55,7 @@ struct outlist
     int file;
 
     /* Field index (zero-based), specified only when FILE is 1 or 2.  */
-    size_t field;
+    idx_t field;
 
     struct outlist *next;
   };
@@ -64,15 +64,15 @@ struct outlist
 struct field
   {
     char *beg;			/* First character in field.  */
-    size_t len;			/* The length of the field.  */
+    idx_t len;			/* The length of the field.  */
   };
 
 /* A line read from an input file.  */
 struct line
   {
     struct linebuffer buf;	/* The line itself.  */
-    size_t nfields;		/* Number of elements in 'fields'.  */
-    size_t nfields_allocated;	/* Number of elements allocated for 'fields'. */
+    idx_t nfields;		/* Number of elements in 'fields'.  */
+    idx_t nfields_allocated;	/* Number of elements allocated for 'fields'. */
     struct field *fields;
   };
 
@@ -80,8 +80,8 @@ struct line
    same join field value.  */
 struct seq
   {
-    size_t count;			/* Elements used in 'lines'.  */
-    size_t alloc;			/* Elements allocated in 'lines'.  */
+    idx_t count;		/* Elements used in 'lines'.  */
+    idx_t alloc;		/* Elements allocated in 'lines'.  */
     struct line **lines;
   };
 
@@ -121,12 +121,12 @@ static char const *empty_filler;
 static bool autoformat;
 /* The number of fields to output for each line.
    Only significant when autoformat is true.  */
-static size_t autocount_1;
-static size_t autocount_2;
+static idx_t autocount_1;
+static idx_t autocount_2;
 
-/* Field to join on; SIZE_MAX means they haven't been determined yet.  */
-static size_t join_field_1 = SIZE_MAX;
-static size_t join_field_2 = SIZE_MAX;
+/* Field to join on; -1 means they haven't been determined yet.  */
+static ptrdiff_t join_field_1 = -1;
+static ptrdiff_t join_field_2 = -1;
 
 /* List of fields to print.  */
 static struct outlist outlist_head;
@@ -256,12 +256,11 @@ warning message will be given.\n\
 /* Record a field in LINE, with location FIELD and size LEN.  */
 
 static void
-extract_field (struct line *line, char *field, size_t len)
+extract_field (struct line *line, char *field, idx_t len)
 {
   if (line->nfields >= line->nfields_allocated)
-    {
-      line->fields = X2NREALLOC (line->fields, &line->nfields_allocated);
-    }
+    line->fields = xpalloc (line->fields, &line->nfields_allocated, 1,
+                            -1, sizeof *line->fields);
   line->fields[line->nfields].beg = field;
   line->fields[line->nfields].len = len;
   ++(line->nfields);
@@ -326,14 +325,14 @@ freeline (struct line *line)
 
 static int
 keycmp (struct line const *line1, struct line const *line2,
-        size_t jf_1, size_t jf_2)
+        idx_t jf_1, idx_t jf_2)
 {
   /* Start of field to compare in each file.  */
   char *beg1;
   char *beg2;
 
-  size_t len1;
-  size_t len2;		/* Length of fields to compare.  */
+  idx_t len1;
+  idx_t len2;		/* Length of fields to compare.  */
   int diff;
 
   if (jf_1 < line1->nfields)
@@ -402,11 +401,11 @@ check_order (const struct line *prev,
     {
       if (!issued_disorder_warning[whatfile - 1])
         {
-          size_t join_field = whatfile == 1 ? join_field_1 : join_field_2;
+          idx_t join_field = whatfile == 1 ? join_field_1 : join_field_2;
           if (keycmp (prev, current, join_field, join_field) > 0)
             {
               /* Exclude any trailing newline. */
-              size_t len = current->buf.length;
+              idx_t len = current->buf.length;
               if (0 < len && current->buf.buffer[len - 1] == '\n')
                 --len;
 
@@ -437,7 +436,7 @@ reset_line (struct line *line)
 static struct line *
 init_linep (struct line **linep)
 {
-  struct line *line = xcalloc (1, sizeof *line);
+  struct line *line = xzalloc (sizeof *line);
   *linep = line;
   return line;
 }
@@ -482,7 +481,7 @@ get_line (FILE *fp, struct line **linep, int which)
 static void
 free_spareline (void)
 {
-  for (size_t i = 0; i < ARRAY_CARDINALITY (spareline); i++)
+  for (idx_t i = 0; i < ARRAY_CARDINALITY (spareline); i++)
     {
       if (spareline[i])
         {
@@ -507,8 +506,8 @@ getseq (FILE *fp, struct seq *seq, int whichfile)
 {
   if (seq->count == seq->alloc)
     {
-      seq->lines = X2NREALLOC (seq->lines, &seq->alloc);
-      for (size_t i = seq->count; i < seq->alloc; i++)
+      seq->lines = xpalloc (seq->lines, &seq->alloc, 1, -1, sizeof *seq->lines);
+      for (idx_t i = seq->count; i < seq->alloc; i++)
         seq->lines[i] = nullptr;
     }
 
@@ -534,7 +533,7 @@ advance_seq (FILE *fp, struct seq *seq, bool first, int whichfile)
 static void
 delseq (struct seq *seq)
 {
-  for (size_t i = 0; i < seq->alloc; i++)
+  for (idx_t i = 0; i < seq->alloc; i++)
     {
       freeline (seq->lines[i]);
       free (seq->lines[i]);
@@ -547,13 +546,11 @@ delseq (struct seq *seq)
    'empty_filler' if it is nonempty.  */
 
 static void
-prfield (size_t n, struct line const *line)
+prfield (idx_t n, struct line const *line)
 {
-  size_t len;
-
   if (n < line->nfields)
     {
-      len = line->fields[n].len;
+      idx_t len = line->fields[n].len;
       if (len)
         fwrite (line->fields[n].beg, 1, len, stdout);
       else if (empty_filler)
@@ -566,10 +563,10 @@ prfield (size_t n, struct line const *line)
 /* Output all the fields in line, other than the join field.  */
 
 static void
-prfields (struct line const *line, size_t join_field, size_t autocount)
+prfields (struct line const *line, idx_t join_field, idx_t autocount)
 {
-  size_t i;
-  size_t nfields = autoformat ? autocount : line->nfields;
+  idx_t i;
+  idx_t nfields = autoformat ? autocount : line->nfields;
   char output_separator = tab < 0 ? ' ' : tab;
 
   for (i = 0; i < join_field && i < nfields; ++i)
@@ -591,7 +588,7 @@ prjoin (struct line const *line1, struct line const *line2)
 {
   const struct outlist *outlist;
   char output_separator = tab < 0 ? ' ' : tab;
-  size_t field;
+  idx_t field;
   struct line const *line;
 
   outlist = outlist_head.next;
@@ -741,9 +738,9 @@ join (FILE *fp1, FILE *fp2)
 
       if (print_pairables)
         {
-          for (size_t i = 0; i < seq1.count - 1; ++i)
+          for (idx_t i = 0; i < seq1.count - 1; ++i)
             {
-              size_t j;
+              idx_t j;
               for (j = 0; j < seq2.count - 1; ++j)
                 prjoin (seq1.lines[i], seq2.lines[j]);
             }
@@ -817,7 +814,7 @@ join (FILE *fp1, FILE *fp2)
 /* Add a field spec for field FIELD of file FILE to 'outlist'.  */
 
 static void
-add_field (int file, size_t field)
+add_field (int file, idx_t field)
 {
   struct outlist *o;
 
@@ -837,24 +834,21 @@ add_field (int file, size_t field)
 /* Convert a string of decimal digits, STR (the 1-based join field number),
    to an integral value.  Upon successful conversion, return one less
    (the zero-based field number).  Silently convert too-large values
-   to SIZE_MAX - 1.  Otherwise, if a value cannot be converted, give a
+   to PTRDIFF_MAX.  Otherwise, if a value cannot be converted, give a
    diagnostic and exit.  */
 
-static size_t
+static idx_t
 string_to_join_field (char const *str)
 {
-  size_t result;
-  uintmax_t val;
+  intmax_t val;
 
-  strtol_error s_err = xstrtoumax (str, nullptr, 10, &val, "");
-  if (s_err == LONGINT_OVERFLOW || (s_err == LONGINT_OK && SIZE_MAX < val))
-    val = SIZE_MAX;
-  else if (s_err != LONGINT_OK || val == 0)
+  strtol_error s_err = xstrtoimax (str, nullptr, 10, &val, "");
+  if (s_err == LONGINT_OVERFLOW || (s_err == LONGINT_OK && PTRDIFF_MAX < val))
+    val = PTRDIFF_MAX;
+  else if (s_err != LONGINT_OK || val <= 0)
     error (EXIT_FAILURE, 0, _("invalid field number: %s"), quote (str));
 
-  result = val - 1;
-
-  return result;
+  return val - 1;
 }
 
 /* Convert a single field specifier string, S, to a *FILE_INDEX, *FIELD_INDEX
@@ -862,7 +856,7 @@ string_to_join_field (char const *str)
    If S is valid, return true.  Otherwise, give a diagnostic and exit.  */
 
 static void
-decode_field_spec (char const *s, int *file_index, size_t *field_index)
+decode_field_spec (char const *s, int *file_index, idx_t *field_index)
 {
   /* The first character must be 0, 1, or 2.  */
   switch (s[0])
@@ -901,7 +895,7 @@ add_field_list (char *str)
   do
     {
       int file_index;
-      size_t field_index;
+      idx_t field_index;
       char const *spec_item = p;
 
       p = strpbrk (p, ", \t");
@@ -917,15 +911,11 @@ add_field_list (char *str)
    more than once to incompatible values.  */
 
 static void
-set_join_field (size_t *var, size_t val)
+set_join_field (ptrdiff_t *var, idx_t val)
 {
-  if (*var != SIZE_MAX && *var != val)
-    {
-      unsigned long int var1 = *var + 1;
-      unsigned long int val1 = val + 1;
-      error (EXIT_FAILURE, 0,
-             _("incompatible join fields %lu, %lu"), var1, val1);
-    }
+  if (0 <= *var && *var != val)
+    error (EXIT_FAILURE, 0,
+           _("incompatible join fields %td, %td"), *var, val);
   *var = val;
 }
 
@@ -1037,8 +1027,8 @@ main (int argc, char **argv)
 
         case 'a':
           {
-            unsigned long int val;
-            if (xstrtoul (optarg, nullptr, 10, &val, "") != LONGINT_OK
+            long int val;
+            if (xstrtol (optarg, nullptr, 10, &val, "") != LONGINT_OK
                 || (val != 1 && val != 2))
               error (EXIT_FAILURE, 0,
                      _("invalid field number: %s"), quote (optarg));
@@ -1169,9 +1159,9 @@ main (int argc, char **argv)
         set_join_field (&join_field_2, i);
       }
 
-  if (join_field_1 == SIZE_MAX)
+  if (join_field_1 < 0)
     join_field_1 = 0;
-  if (join_field_2 == SIZE_MAX)
+  if (join_field_2 < 0)
     join_field_2 = 0;
 
   fp1 = STREQ (g_names[0], "-") ? stdin : fopen (g_names[0], "r");
