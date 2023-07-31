@@ -44,6 +44,7 @@ tac -r -s '.\|
 #include <regex.h>
 
 #include "filenamecat.h"
+#include "full-read.h"
 #include "safe-read.h"
 #include "temp-stream.h"
 #include "xbinary-io.h"
@@ -336,7 +337,7 @@ tac_seekable (int input_fd, char const *file, off_t file_pos)
           else
             match_start = past_end;
 
-          if (safe_read (input_fd, G_buffer, read_size) != read_size)
+          if (full_read (input_fd, G_buffer, read_size) != read_size)
             {
               error (0, errno, _("%s: read error"), quotef (file));
               return false;

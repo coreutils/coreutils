@@ -46,6 +46,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'pr --length=1 --double-space' no longer enters an infinite loop.
   [This bug was present in "the beginning".]
 
+  tac now handles short reads on its input.  Previously it may have exited
+  erroneously, especially with large input files with no separators.
+  [This bug was present in "the beginning".]
+
   'uptime' no longer incorrectly prints "0 users" on OpenBSD.
   [bug introduced in coreutils-9.2]
 
