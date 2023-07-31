@@ -18,6 +18,7 @@
 
 #include <config.h>
 
+#include <stdckdint.h>
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
@@ -122,16 +123,16 @@ struct tspec
    10	unsigned decimal
    8	unsigned hexadecimal  */
 
-static unsigned int const bytes_to_oct_digits[] =
+static char const bytes_to_oct_digits[] =
 {0, 3, 6, 8, 11, 14, 16, 19, 22, 25, 27, 30, 32, 35, 38, 41, 43};
 
-static unsigned int const bytes_to_signed_dec_digits[] =
+static char const bytes_to_signed_dec_digits[] =
 {1, 4, 6, 8, 11, 13, 16, 18, 20, 23, 25, 28, 30, 33, 35, 37, 40};
 
-static unsigned int const bytes_to_unsigned_dec_digits[] =
+static char const bytes_to_unsigned_dec_digits[] =
 {0, 3, 5, 8, 10, 13, 15, 17, 20, 22, 25, 27, 29, 32, 34, 37, 39};
 
-static unsigned int const bytes_to_hex_digits[] =
+static char const bytes_to_hex_digits[] =
 {0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32};
 
 /* It'll be a while before we see integral types wider than 16 bytes,
@@ -587,26 +588,21 @@ print_ascii (size_t fields, size_t blank, void const *block,
 }
 
 /* Convert a null-terminated (possibly zero-length) string S to an
-   unsigned long integer value.  If S points to a non-digit set *P to S,
+   int value.  If S points to a non-digit set *P to S,
    *VAL to 0, and return true.  Otherwise, accumulate the integer value of
    the string of digits.  If the string of digits represents a value
-   larger than ULONG_MAX, don't modify *VAL or *P and return false.
+   larger than INT_MAX, don't modify *VAL or *P and return false.
    Otherwise, advance *P to the first non-digit after S, set *VAL to
    the result of the conversion and return true.  */
 
 static bool
-simple_strtoul (char const *s, char const **p, unsigned long int *val)
+simple_strtoi (char const *s, char const **p, int *val)
 {
-  unsigned long int sum;
+  int sum;
 
-  sum = 0;
-  while (ISDIGIT (*s))
-    {
-      int c = *s++ - '0';
-      if (sum > (ULONG_MAX - c) / 10)
-        return false;
-      sum = sum * 10 + c;
-    }
+  for (sum = 0; ISDIGIT (*s); s++)
+    if (ckd_mul (&sum, sum, 10) || ckd_add (&sum, sum, *s - '0'))
+      return false;
   *p = s;
   *val = sum;
   return true;
@@ -636,7 +632,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
                    struct tspec *tspec)
 {
   enum size_spec size_spec;
-  unsigned long int size;
+  int size;
   enum output_format fmt;
   void (*print_function) (size_t, size_t, void const *, char const *,
                           int, int);
@@ -675,9 +671,9 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           break;
 
         default:
-          if (! simple_strtoul (s, &p, &size))
+          if (! simple_strtoi (s, &p, &size))
             {
-              /* The integer at P in S would overflow an unsigned long int.
+              /* The integer at P in S would overflow an int.
                  A digit string that long is sufficiently odd looking
                  that the following diagnostic is sufficient.  */
               error (0, 0, _("invalid type string %s"), quote (s_orig));
@@ -691,7 +687,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
                   || integral_type_size[size] == NO_SIZE)
                 {
                   error (0, 0, _("invalid type string %s;\nthis system"
-                                 " doesn't provide a %lu-byte integral type"),
+                                 " doesn't provide a %d-byte integral type"),
                          quote (s_orig), size);
                   return false;
                 }
@@ -793,9 +789,9 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           break;
 
         default:
-          if (! simple_strtoul (s, &p, &size))
+          if (! simple_strtoi (s, &p, &size))
             {
-              /* The integer at P in S would overflow an unsigned long int.
+              /* The integer at P in S would overflow an int.
                  A digit string that long is sufficiently odd looking
                  that the following diagnostic is sufficient.  */
               error (0, 0, _("invalid type string %s"), quote (s_orig));
@@ -810,7 +806,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
                 {
                   error (0, 0,
                          _("invalid type string %s;\n"
-                           "this system doesn't provide a %lu-byte"
+                           "this system doesn't provide a %d-byte"
                            " floating point type"),
                          quote (s_orig), size);
                   return false;
@@ -1567,7 +1563,7 @@ main (int argc, char **argv)
   int n_files;
   size_t i;
   int l_c_m;
-  size_t desired_width IF_LINT ( = 0);
+  idx_t desired_width IF_LINT ( = 0);
   bool modern = false;
   bool width_specified = false;
   bool ok = true;
@@ -1768,13 +1764,12 @@ main (int argc, char **argv)
             }
           else
             {
-              uintmax_t w_tmp;
-              s_err = xstrtoumax (optarg, nullptr, 10, &w_tmp, "");
-              if (s_err != LONGINT_OK)
+              intmax_t w_tmp;
+              s_err = xstrtoimax (optarg, nullptr, 10, &w_tmp, "");
+              if (s_err != LONGINT_OK || w_tmp <= 0)
                 xstrtol_fatal (s_err, oi, c, long_options, optarg);
-              if (SIZE_MAX < w_tmp)
+              if (ckd_add (&desired_width, w_tmp, 0))
                 error (EXIT_FAILURE, 0, _("%s is too large"), quote (optarg));
-              desired_width = w_tmp;
             }
           break;
 
@@ -1932,8 +1927,8 @@ main (int argc, char **argv)
         bytes_per_block = desired_width;
       else
         {
-          error (0, 0, _("warning: invalid width %lu; using %d instead"),
-                 (unsigned long int) desired_width, l_c_m);
+          error (0, 0, _("warning: invalid width %jt; using %d instead"),
+                 desired_width, l_c_m);
           bytes_per_block = l_c_m;
         }
     }
