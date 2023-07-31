@@ -131,10 +131,10 @@ list_signals (bool table, char *const *argv)
 
   if (table)
     {
-      unsigned int name_width = 0;
+      int name_width = 0;
 
       /* Compute the maximum width of a signal number.  */
-      unsigned int num_width = 1;
+      int num_width = 1;
       for (signum = 1; signum <= SIGNUM_BOUND / 10; signum *= 10)
         num_width++;
 
@@ -142,7 +142,7 @@ list_signals (bool table, char *const *argv)
       for (signum = 1; signum <= SIGNUM_BOUND; signum++)
         if (sig2str (signum, signame) == 0)
           {
-            size_t len = strlen (signame);
+            idx_t len = strlen (signame);
             if (name_width < len)
               name_width = len;
           }
