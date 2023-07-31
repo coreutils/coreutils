@@ -109,7 +109,7 @@ main (void)
       uint32_t crc = 0;
 
       crc = (crc << 8) ^ crctab[0][((crc >> 24) ^ (i & 0xFF)) & 0xFF];
-      for (unsigned int offset = 1; offset < 8; offset++)
+      for (idx_t offset = 1; offset < 8; offset++)
         {
           crc = (crc << 8) ^ crctab[0][((crc >> 24) ^ 0x00) & 0xFF];
           crctab[offset][i] = crc;

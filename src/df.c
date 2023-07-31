@@ -443,7 +443,7 @@ decode_output_arg (char const *arg)
 
       /* process S.  */
       display_field_t field = INVALID_FIELD;
-      for (unsigned int i = 0; i < ARRAY_CARDINALITY (field_data); i++)
+      for (idx_t i = 0; i < ARRAY_CARDINALITY (field_data); i++)
         {
           if (STREQ (field_data[i].arg, s))
             {

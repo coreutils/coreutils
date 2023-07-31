@@ -658,7 +658,7 @@ valid_digits (unsigned char const *s, size_t len)
 #endif
   if (len == digest_hex_bytes)
     {
-      for (unsigned int i = 0; i < digest_hex_bytes; i++)
+      for (idx_t i = 0; i < digest_hex_bytes; i++)
         {
           if (!isxdigit (*s))
             return false;
