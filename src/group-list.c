@@ -109,8 +109,16 @@ print_group (gid_t gid, bool use_name)
       grp = getgrgid (gid);
       if (grp == nullptr)
         {
-          error (0, 0, _("cannot find name for group ID %lu"),
-                 (unsigned long int) gid);
+          if (TYPE_SIGNED (gid_t))
+            {
+              intmax_t g = gid;
+              error (0, 0, _("cannot find name for group ID %"PRIdMAX), g);
+            }
+          else
+            {
+              uintmax_t g = gid;
+              error (0, 0, _("cannot find name for group ID %"PRIuMAX), g);
+            }
           ok = false;
         }
     }
