@@ -248,7 +248,7 @@ static bool
 validate_file_name (char *file, bool check_basic_portability,
                     bool check_extra_portability)
 {
-  size_t filelen = strlen (file);
+  idx_t filelen = strlen (file);
 
   /* Start of file name component being checked.  */
   char *start;
@@ -298,7 +298,7 @@ validate_file_name (char *file, bool check_basic_portability,
   if (check_basic_portability
       || (! file_exists && PATH_MAX_MINIMUM <= filelen))
     {
-      size_t maxsize;
+      idx_t maxsize;
 
       if (check_basic_portability)
         maxsize = _POSIX_PATH_MAX;
@@ -315,15 +315,13 @@ validate_file_name (char *file, bool check_basic_portability,
                      dir);
               return false;
             }
-          maxsize = MIN (size, SSIZE_MAX);
+          maxsize = MIN (size, MIN (SSIZE_MAX, IDX_MAX));
         }
 
       if (maxsize <= filelen)
         {
-          unsigned long int len = filelen;
-          unsigned long int maxlen = maxsize - 1;
-          error (0, 0, _("limit %lu exceeded by length %lu of file name %s"),
-                 maxlen, len, quoteaf (file));
+          error (0, 0, _("limit %td exceeded by length %td of file name %s"),
+                 maxsize - 1, filelen, quoteaf (file));
           return false;
         }
     }
@@ -356,14 +354,14 @@ validate_file_name (char *file, bool check_basic_portability,
          This defaults to NAME_MAX_MINIMUM, for the sake of non-POSIX
          systems (NFS, say?) where pathconf fails on "." or "/" with
          errno == ENOENT.  */
-      size_t name_max = NAME_MAX_MINIMUM;
+      idx_t name_max = NAME_MAX_MINIMUM;
 
       /* If nonzero, the known limit on file name components.  */
-      size_t known_name_max = (check_basic_portability ? _POSIX_NAME_MAX : 0);
+      idx_t known_name_max = check_basic_portability ? _POSIX_NAME_MAX : 0;
 
       for (start = file; *(start = component_start (start)); )
         {
-          size_t length;
+          idx_t length;
 
           if (known_name_max)
             name_max = known_name_max;
@@ -377,13 +375,13 @@ validate_file_name (char *file, bool check_basic_portability,
               len = pathconf (dir, _PC_NAME_MAX);
               *start = c;
               if (0 <= len)
-                name_max = MIN (len, SSIZE_MAX);
+                name_max = MIN (len, MIN (SSIZE_MAX, IDX_MAX));
               else
                 switch (errno)
                   {
                   case 0:
                     /* There is no limit.  */
-                    name_max = SIZE_MAX;
+                    name_max = IDX_MAX;
                     break;
 
                   case ENOENT:
@@ -403,15 +401,13 @@ validate_file_name (char *file, bool check_basic_portability,
 
           if (name_max < length)
             {
-              unsigned long int len = length;
-              unsigned long int maxlen = name_max;
-              char c = start[len];
-              start[len] = '\0';
+              char c = start[length];
+              start[length] = '\0';
               error (0, 0,
-                     _("limit %lu exceeded by length %lu "
+                     _("limit %td exceeded by length %td "
                        "of file name component %s"),
-                     maxlen, len, quote (start));
-              start[len] = c;
+                     name_max, length, quote (start));
+              start[length] = c;
               return false;
             }
 
