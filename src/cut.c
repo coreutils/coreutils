@@ -70,7 +70,7 @@ static char *field_1_buffer;
 /* The number of bytes allocated for FIELD_1_BUFFER.  */
 static size_t field_1_bufsize;
 
-/* If true do not output lines containing no delimiter characters.
+/* If true, do not output lines containing no delimiter characters.
    Otherwise, all such lines are printed.  This option is valid only
    with field mode.  */
 static bool suppress_non_delimited;
@@ -160,7 +160,7 @@ Print selected parts of lines from each FILE to standard output.\n\
                             the default is to use the input delimiter\n\
 "), stdout);
       fputs (_("\
-  -z, --zero-terminated    line delimiter is NUL, not newline\n\
+  -z, --zero-terminated   line delimiter is NUL, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -241,7 +241,10 @@ cut_bytes (FILE *stream)
       else if (c == EOF)
         {
           if (byte_idx > 0)
-            putchar (line_delim);
+          {
+            if (putchar (line_delim) < 0)
+              write_error ();
+          }
           break;
         }
       else
@@ -273,7 +276,7 @@ cut_bytes (FILE *stream)
 static void
 cut_fields (FILE *stream)
 {
-  int c;
+  int c;	/* Each character from the file.  */
   uintmax_t field_idx = 1;
   bool found_any_selected_field = false;
   bool buffer_first_field;
@@ -334,11 +337,15 @@ cut_fields (FILE *stream)
                     write_error ();
                   /* Make sure the output line is newline terminated.  */
                   if (field_1_buffer[n_bytes - 1] != line_delim)
-                    putchar (line_delim);
+                    {
+                      if (putchar (line_delim) < 0)
+                        write_error ();
+                    }
                   c = line_delim;
                 }
               continue;
             }
+
           if (print_kth (1))
             {
               /* Print the field, but not the trailing delimiter.  */
@@ -357,7 +364,9 @@ cut_fields (FILE *stream)
                     }
                 }
               else
-                found_any_selected_field = true;
+                {
+                  found_any_selected_field = true;
+                }
             }
           next_item (&field_idx);
         }
@@ -385,9 +394,7 @@ cut_fields (FILE *stream)
       else
         {
           while ((c = getc (stream)) != delim && c != line_delim && c != EOF)
-            {
-              prev_c = c;
-            }
+            prev_c = c;
         }
 
       /* With -d$'\n' don't treat the last '\n' as a delimiter.  */
@@ -407,13 +414,18 @@ cut_fields (FILE *stream)
           if (found_any_selected_field
               || !(suppress_non_delimited && field_idx == 1))
             {
+              /* Make sure the output line is newline terminated.  */
               if (c == line_delim || prev_c != line_delim
                   || delim == line_delim)
-                if (putchar (line_delim) < 0)
-                  write_error ();
+                {
+                  if (putchar (line_delim) < 0)
+                    write_error ();
+                }
             }
           if (c == EOF)
             break;
+
+          /* Start processing the next input line.  */
           field_idx = 1;
           current_rp = frp;
           found_any_selected_field = false;
@@ -537,9 +549,7 @@ main (int argc, char **argv)
           break;
 
         case_GETOPT_HELP_CHAR;
-
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-
         default:
           usage (EXIT_FAILURE);
         }
