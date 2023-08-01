@@ -55,7 +55,7 @@
 /* Pointer inside RP.  When checking if a byte or field is selected
    by a finite range, we check if it is between CURRENT_RP.LO
    and CURRENT_RP.HI.  If the byte or field index is greater than
-   CURRENT_RP.HI then we make CURRENT_RP to point to the next range pair. */
+   CURRENT_RP.HI then we make CURRENT_RP to point to the next range pair.  */
 static struct field_range_pair *current_rp;
 
 /* This buffer is used to support the semantics of the -s option
@@ -79,10 +79,10 @@ static bool suppress_non_delimited;
    those that were specified.  */
 static bool complement;
 
-/* The delimiter character for field mode. */
+/* The delimiter character for field mode.  */
 static unsigned char delim;
 
-/* The delimiter for each line/record. */
+/* The delimiter for each line/record.  */
 static unsigned char line_delim = '\n';
 
 /* The length of output_delimiter_string.  */
@@ -95,7 +95,7 @@ static char *output_delimiter_string;
 /* The output delimiter string contents, if the default.  */
 static char output_delimiter_default[1];
 
-/* True if we have ever read standard input. */
+/* True if we have ever read standard input.  */
 static bool have_read_stdin;
 
 /* For long options that have no equivalent short option, use a
@@ -195,7 +195,7 @@ next_item (uintmax_t *item_idx)
     current_rp++;
 }
 
-/* Return nonzero if the K'th field or byte is printable. */
+/* Return nonzero if the K'th field or byte is printable.  */
 
 static inline bool
 print_kth (uintmax_t k)
@@ -203,7 +203,7 @@ print_kth (uintmax_t k)
   return current_rp->lo <= k;
 }
 
-/* Return nonzero if K'th byte is the beginning of a range. */
+/* Return nonzero if K'th byte is the beginning of a range.  */
 
 static inline bool
 is_range_start_index (uintmax_t k)
@@ -216,7 +216,7 @@ is_range_start_index (uintmax_t k)
 static void
 cut_bytes (FILE *stream)
 {
-  uintmax_t byte_idx;	/* Number of bytes in the line so far. */
+  uintmax_t byte_idx;	/* Number of bytes in the line so far.  */
   /* Whether to begin printing delimiters between ranges for the current line.
      Set after we've begun printing data corresponding to the first range.  */
   bool print_delimiter;
@@ -226,7 +226,7 @@ cut_bytes (FILE *stream)
   current_rp = frp;
   while (true)
     {
-      int c;		/* Each character from the file. */
+      int c;		/* Each character from the file.  */
 
       c = getc (stream);
 
@@ -465,7 +465,7 @@ cut_file (char const *file, void (*cut_stream) (FILE *))
   if (!ferror (stream))
     err = 0;
   if (STREQ (file, "-"))
-    clearerr (stream);		/* Also clear EOF. */
+    clearerr (stream);		/* Also clear EOF.  */
   else if (fclose (stream) == EOF)
     err = errno;
   if (err)
@@ -506,18 +506,18 @@ main (int argc, char **argv)
         {
         case 'b':
         case 'c':
-          /* Build the byte list. */
+          /* Build the byte list.  */
           byte_mode = true;
           FALLTHROUGH;
         case 'f':
-          /* Build the field list. */
+          /* Build the field list.  */
           if (spec_list_string)
             FATAL_ERROR (_("only one list may be specified"));
           spec_list_string = optarg;
           break;
 
         case 'd':
-          /* New delimiter. */
+          /* New delimiter.  */
           /* Interpret -d '' to mean 'use the NUL byte as the delimiter.'  */
           if (optarg[0] != '\0' && optarg[1] != '\0')
             FATAL_ERROR (_("the delimiter must be a single character"));
