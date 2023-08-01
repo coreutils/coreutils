@@ -147,7 +147,6 @@ main (int argc, char **argv)
   char const *dest_dir_arg = nullptr;
   bool suppress_file_err = false;
   int c;
-  unsigned int n_args;
   char *template;
   char *suffix = nullptr;
   bool use_dest_dir = false;
@@ -203,7 +202,7 @@ main (int argc, char **argv)
         }
     }
 
-  n_args = argc - optind;
+  int n_args = argc - optind;
   if (2 <= n_args)
     {
       error (0, 0, _("too many templates"));

@@ -620,7 +620,7 @@ main (int argc, char **argv)
         }
     }
 
-  unsigned int n_args = argc - optind;
+  int n_args = argc - optind;
   if (n_args < 1)
     {
       error (0, 0, _("missing operand"));
