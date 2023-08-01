@@ -3,22 +3,21 @@ Coreutils Contribution Guidelines
 
 Prerequisites
 =============
-You will need the "git" version control tools.
-On Fedora-based systems, do "yum install git".
-On Debian-based ones install the "git-core" package.
-Then run "git --version".  If that says it's older than
-version 1.4.4, then you'd do well to get a newer version.
+You will need the "git" version control tools.  On Fedora-based
+systems, do "yum install git".  On Debian-based ones install the
+"git-core" package.  Then run "git --version".  If that says it's
+older than version 1.4.4, then you'd do well to get a newer version.
 At worst, just download the latest stable release from
 https://git-scm.com/ and build from source.
 
-For details on building the programs in this package, see
-the file, README-hacking.
+For details on building the programs in this package, see the file,
+README-hacking.
 
 
 Use the latest upstream sources
 ===============================
-Base any changes you make on the latest upstream sources.
-You can get a copy of the latest with this command:
+Base any changes you make on the latest upstream sources.  You can get
+a copy of the latest with this command:
 
     git clone https://git.savannah.gnu.org/git/coreutils.git
     cd coreutils
