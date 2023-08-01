@@ -17,7 +17,6 @@
 /* Include this file _after_ system headers if possible.  */
 
 /* sys/stat.h and minmax.h will already have been included by system.h. */
-#include "idx.h"
 #include "count-leading-zeros.h"
 #include "stat-size.h"
 

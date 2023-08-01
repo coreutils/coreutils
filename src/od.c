@@ -84,7 +84,7 @@ enum output_format
 enum
   {
     FMT_BYTES_ALLOCATED =
-           (sizeof "%*.99" - 1
+           (sizeof "%*.99" + 1
             + MAX (sizeof "ld",
                    MAX (sizeof PRIdMAX,
                         MAX (sizeof PRIoMAX,
@@ -1927,7 +1927,7 @@ main (int argc, char **argv)
         bytes_per_block = desired_width;
       else
         {
-          error (0, 0, _("warning: invalid width %jt; using %d instead"),
+          error (0, 0, _("warning: invalid width %td; using %d instead"),
                  desired_width, l_c_m);
           bytes_per_block = l_c_m;
         }
