@@ -147,7 +147,7 @@ static char const *
 idle_string (time_t when)
 {
   static time_t now = 0;
-  static char buf[INT_STRLEN_BOUND (long int) + 2];
+  static char buf[INT_STRLEN_BOUND (intmax_t) + 2];
   time_t seconds_idle;
 
   if (now == 0)
