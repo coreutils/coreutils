@@ -277,7 +277,7 @@ suffix_power (const char suf)
 }
 
 static inline char const *
-suffix_power_char (unsigned int power)
+suffix_power_char (int power)
 {
   switch (power)
     {
@@ -321,7 +321,7 @@ suffix_power_char (unsigned int power)
 
 /* Similar to 'powl(3)' but without requiring 'libm'.  */
 static long double
-powerld (long double base, unsigned int x)
+powerld (long double base, int x)
 {
   long double result = base;
   if (x == 0)
@@ -347,9 +347,9 @@ absld (long double val)
      Similar to "frexpl(3)" but without requiring 'libm',
      allowing only integer scale, limited functionality and error checking.  */
 static long double
-expld (long double val, unsigned int base, unsigned int /*output */ *x)
+expld (long double val, int base, int /*output */ *x)
 {
-  unsigned int power = 0;
+  int power = 0;
 
   if (val >= -LDBL_MAX && val <= LDBL_MAX)
     {
@@ -481,7 +481,7 @@ simple_strtod_int (char const *input_str,
   enum simple_strtod_error e = SSE_OK;
 
   long double val = 0;
-  unsigned int digits = 0;
+  int digits = 0;
   bool found_digit = false;
 
   if (*input_str == '-')
@@ -775,12 +775,12 @@ double_to_human (long double val, int precision,
   double scale_base = default_scale_base (scale);
 
   /* Normalize val to scale. */
-  unsigned int power = 0;
+  int power = 0;
   val = expld (val, scale_base, &power);
-  devmsg ("  scaled value to %Lf * %0.f ^ %u\n", val, scale_base, power);
+  devmsg ("  scaled value to %Lf * %0.f ^ %d\n", val, scale_base, power);
 
   /* Perform rounding. */
-  unsigned int power_adjust = 0;
+  int power_adjust = 0;
   if (user_precision != -1)
     power_adjust = MIN (power * 3, user_precision);
   else if (absld (val) < 10)
@@ -808,7 +808,7 @@ double_to_human (long double val, int precision,
   int show_decimal_point = (val != 0) && (absld (val) < 10) && (power > 0);
   /* && (absld (val) > simple_round_floor (val))) */
 
-  devmsg ("  after rounding, value=%Lf * %0.f ^ %u\n", val, scale_base, power);
+  devmsg ("  after rounding, value=%Lf * %0.f ^ %d\n", val, scale_base, power);
 
   stpcpy (pfmt, ".*Lf%s");
 
@@ -1212,7 +1212,7 @@ prepare_padded_number (const long double val, size_t precision)
   size_t precision_used = user_precision == -1 ? precision : user_precision;
 
   /* Can't reliably print too-large values without auto-scaling. */
-  unsigned int x;
+  int x;
   expld (val, 10, &x);
 
   if (scale_to == scale_none
@@ -1301,12 +1301,11 @@ process_suffixed_number (char *text, long double *result,
   char *p = text;
   while (*p && isblank (to_uchar (*p)))
     ++p;
-  const unsigned int skip_count = text - p;
 
   /* setup auto-padding.  */
   if (auto_padding)
     {
-      if (skip_count > 0 || field > 1)
+      if (text < p || field > 1)
         {
           padding_width = strlen (text);
           setup_padding_buffer (padding_width);
