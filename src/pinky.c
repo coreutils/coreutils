@@ -164,8 +164,8 @@ idle_string (time_t when)
     }
   else
     {
-      unsigned long int days = seconds_idle / (24 * 60 * 60);
-      sprintf (buf, "%lud", days);
+      intmax_t days = seconds_idle / (24 * 60 * 60);
+      sprintf (buf, "%"PRIdMAX, days);
     }
   return buf;
 }
