@@ -147,7 +147,7 @@ static char const *
 idle_string (time_t when)
 {
   static time_t now = 0;
-  static char buf[INT_STRLEN_BOUND (intmax_t) + 2];
+  static char buf[INT_STRLEN_BOUND (intmax_t) + sizeof "d"];
   time_t seconds_idle;
 
   if (now == 0)
@@ -165,7 +165,7 @@ idle_string (time_t when)
   else
     {
       intmax_t days = seconds_idle / (24 * 60 * 60);
-      sprintf (buf, "%"PRIdMAX, days);
+      sprintf (buf, "%"PRIdMAX"d", days);
     }
   return buf;
 }
