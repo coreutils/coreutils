@@ -406,36 +406,6 @@ AC_DEFUN([coreutils_DUMMY_1],
 ])
 coreutils_DUMMY_1
 
-AC_MSG_CHECKING([ut_host in struct utmp])
-AC_CACHE_VAL([su_cv_func_ut_host_in_utmp],
-[AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-                                   #include <utmp.h>
-                                   struct utmp ut;
-                                   int s = sizeof ut.ut_host;]])],
-  [su_cv_func_ut_host_in_utmp=yes],
-  [su_cv_func_ut_host_in_utmp=no])])
-AC_MSG_RESULT([$su_cv_func_ut_host_in_utmp])
-if test $su_cv_func_ut_host_in_utmp = yes; then
-  have_ut_host=1
-  AC_DEFINE([HAVE_UT_HOST], [1], [FIXME])
-fi
-
-if test -z "$have_ut_host"; then
-  AC_MSG_CHECKING([ut_host in struct utmpx])
-  AC_CACHE_VAL([su_cv_func_ut_host_in_utmpx],
-  [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
-                                     #include <utmpx.h>
-                                     struct utmpx ut;
-                                     int s = sizeof ut.ut_host;]])],
-    [su_cv_func_ut_host_in_utmpx=yes],
-    [su_cv_func_ut_host_in_utmpx=no])])
-  AC_MSG_RESULT([$su_cv_func_ut_host_in_utmpx])
-  if test $su_cv_func_ut_host_in_utmpx = yes; then
-    AC_DEFINE([HAVE_UTMPX_H], [1], [FIXME])
-    AC_DEFINE([HAVE_UT_HOST], [1], [FIXME])
-  fi
-fi
-
 GNULIB_BOOT_TIME([gl_ADD_PROG([optional_bin_progs], [uptime])])
 
 AC_SYS_POSIX_TERMIOS()

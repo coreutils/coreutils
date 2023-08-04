@@ -62,7 +62,7 @@ static bool include_home_and_shell = true;
 static bool do_short_format = true;
 
 /* if true, display the ut_host field. */
-#ifdef HAVE_UT_HOST
+#if HAVE_STRUCT_XTMP_UT_HOST
 static bool include_where = true;
 #endif
 
@@ -203,20 +203,32 @@ print_entry (const STRUCT_UTMP *utmp_ent)
   time_t last_change;
   char mesg;
 
-#define DEV_DIR_WITH_TRAILING_SLASH "/dev/"
-#define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
+#ifdef UT_LINE_SIZE
+  char line[UT_LINE_SIZE + 1];
+  stzncpy (line, utmp_ent->ut_line, UT_LINE_SIZE);
+#else
+  /* If ut_line contains a space, the device name starts after the space.  */
+  char *line = utmp_ent->ut_line;
+  char *space = strchr (line, ' ');
+  line = space ? space + 1 : line;
+#endif
 
-  char line[sizeof (utmp_ent->ut_line) + DEV_DIR_LEN + 1];
-  char *p = line;
+  int dirfd;
+  if (IS_ABSOLUTE_FILE_NAME (line))
+    dirfd = AT_FDCWD;
+  else
+    {
+      static int dev_dirfd;
+      if (!dev_dirfd)
+        {
+          dev_dirfd = open ("/dev", O_PATHSEARCH | O_DIRECTORY);
+          if (dev_dirfd < 0)
+            dev_dirfd = AT_FDCWD - 1;
+        }
+      dirfd = dev_dirfd;
+    }
 
-  /* Copy ut_line into LINE, prepending '/dev/' if ut_line is not
-     already an absolute file name.  Some system may put the full,
-     absolute file name in ut_line.  */
-  if ( ! IS_ABSOLUTE_FILE_NAME (utmp_ent->ut_line))
-    p = stpcpy (p, DEV_DIR_WITH_TRAILING_SLASH);
-  stzncpy (p, utmp_ent->ut_line, sizeof (utmp_ent->ut_line));
-
-  if (stat (line, &stats) == 0)
+  if (AT_FDCWD <= dirfd && fstatat (dirfd, line, &stats, 0) == 0)
     {
       mesg = (stats.st_mode & S_IWGRP) ? ' ' : '*';
       last_change = stats.st_atime;
@@ -227,15 +239,20 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       last_change = 0;
     }
 
-  printf ("%-8.*s", UT_USER_SIZE, UT_USER (utmp_ent));
+  if (0 <= UT_USER_SIZE || strnlen (UT_USER (utmp_ent), 8) < 8)
+    printf ("%-8.*s", UT_USER_SIZE, UT_USER (utmp_ent));
+  else
+    fputs (UT_USER (utmp_ent), stdout);
 
   if (include_fullname)
     {
-      struct passwd *pw;
+#ifdef UT_USER_SIZE
       char name[UT_USER_SIZE + 1];
-
       stzncpy (name, UT_USER (utmp_ent), UT_USER_SIZE);
-      pw = getpwnam (name);
+#else
+      char *name = UT_USER (utmp_ent);
+#endif
+      struct passwd *pw = getpwnam (name);
       if (pw == nullptr)
         /* TRANSLATORS: Real name is unknown; at most 19 characters. */
         printf (" %19s", _("        ???"));
@@ -253,8 +270,12 @@ print_entry (const STRUCT_UTMP *utmp_ent)
         }
     }
 
-  printf (" %c%-8.*s",
-          mesg, (int) sizeof (utmp_ent->ut_line), utmp_ent->ut_line);
+  fputc (' ', stdout);
+  fputc (mesg, stdout);
+  if (0 <= UT_LINE_SIZE || strnlen (utmp_ent->ut_line, 8) < 8)
+    printf ("%-8.*s", UT_LINE_SIZE, utmp_ent->ut_line);
+  else
+    fputs (utmp_ent->ut_line, stdout);
 
   if (include_idle)
     {
@@ -267,15 +288,18 @@ print_entry (const STRUCT_UTMP *utmp_ent)
 
   printf (" %s", time_string (utmp_ent));
 
-#ifdef HAVE_UT_HOST
+#ifdef HAVE_STRUCT_XTMP_UT_HOST
   if (include_where && utmp_ent->ut_host[0])
     {
-      char ut_host[sizeof (utmp_ent->ut_host) + 1];
       char *host = nullptr;
       char *display = nullptr;
 
-      /* Copy the host name into UT_HOST, and ensure it's nul terminated. */
-      stzncpy (ut_host, utmp_ent->ut_host, sizeof (utmp_ent->ut_host));
+# ifdef UT_HOST_SIZE
+      char ut_host[UT_HOST_SIZE + 1];
+      stzncpy (ut_host, utmp_ent->ut_host, UT_HOST_SIZE);
+# else
+      char *ut_host = utmp_ent->ut_host;
+# endif
 
       /* Look for an X display.  */
       display = strchr (ut_host, ':');
@@ -288,10 +312,13 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       if ( ! host)
         host = ut_host;
 
+      fputc (' ', stdout);
+      fputs (host, stdout);
       if (display)
-        printf (" %s:%s", host, display);
-      else
-        printf (" %s", host);
+        {
+          fputc (':', stdout);
+          fputs (display, stdout);
+        }
 
       if (host != ut_host)
         free (host);
@@ -408,17 +435,23 @@ print_heading (void)
   if (include_idle)
     printf (" %-6s", _("Idle"));
   printf (" %-*s", time_format_width, _("When"));
-#ifdef HAVE_UT_HOST
+#ifdef HAVE_STRUCT_XTMP_UT_HOST
   if (include_where)
     printf (" %s", _("Where"));
 #endif
   putchar ('\n');
 }
 
+/* Work around <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109614>,
+   triggered by STREQ_LEN with a negative length.  */
+#if 11 <= __GNUC__
+# pragma GCC diagnostic ignored "-Wstringop-overread"
+#endif
+
 /* Display UTMP_BUF, which should have N entries. */
 
 static void
-scan_entries (size_t n, const STRUCT_UTMP *utmp_buf,
+scan_entries (idx_t n, const STRUCT_UTMP *utmp_buf,
               const int argc_names, char *const argv_names[])
 {
   if (hard_locale (LC_TIME))
@@ -461,7 +494,7 @@ static void
 short_pinky (char const *filename,
              const int argc_names, char *const argv_names[])
 {
-  size_t n_users;
+  idx_t n_users;
   STRUCT_UTMP *utmp_buf = nullptr;
 
   if (read_utmp (filename, &n_users, &utmp_buf, 0) != 0)
@@ -550,14 +583,14 @@ main (int argc, char **argv)
 
         case 'i':
           include_fullname = false;
-#ifdef HAVE_UT_HOST
+#ifdef HAVE_STRUCT_XTMP_UT_HOST
           include_where = false;
 #endif
           break;
 
         case 'q':
           include_fullname = false;
-#ifdef HAVE_UT_HOST
+#ifdef HAVE_STRUCT_XTMP_UT_HOST
           include_where = false;
 #endif
           include_idle = false;

@@ -45,7 +45,7 @@
   proper_name ("Kaveh Ghazi")
 
 static void
-print_uptime (size_t n, const STRUCT_UTMP *this)
+print_uptime (idx_t n, const STRUCT_UTMP *this)
 {
   idx_t entries = 0;
   time_t boot_time = 0;
@@ -169,7 +169,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
 static _Noreturn void
 uptime (char const *filename, int options)
 {
-  size_t n_users;
+  idx_t n_users;
   STRUCT_UTMP *utmp_buf = nullptr;
 
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)

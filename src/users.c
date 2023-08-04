@@ -42,11 +42,11 @@ userid_compare (const void *v_a, const void *v_b)
 }
 
 static void
-list_entries_users (size_t n, const STRUCT_UTMP *this)
+list_entries_users (idx_t n, const STRUCT_UTMP *this)
 {
-  char **u = xnmalloc (n, sizeof *u);
-  size_t i;
-  size_t n_entries = 0;
+  char **u = xinmalloc (n, sizeof *u);
+  idx_t i;
+  idx_t n_entries = 0;
 
   while (n--)
     {
@@ -82,7 +82,7 @@ list_entries_users (size_t n, const STRUCT_UTMP *this)
 static void
 users (char const *filename, int options)
 {
-  size_t n_users;
+  idx_t n_users;
   STRUCT_UTMP *utmp_buf;
 
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)

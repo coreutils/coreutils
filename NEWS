@@ -41,6 +41,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   pinky, uptime, users, and who no longer misbehave on 32-bit GNU/Linux
   platforms like x86 and ARM where time_t was historically 32 bits.
+  A new configure-time option --enable-systemd enables experimental
+  support for using systemd, to let these programs continue to work on
+  these old platforms even after the year 2038, so long as systemd
+  is also installed.
   [bug introduced in coreutils-9.0]
 
   'pr --length=1 --double-space' no longer enters an infinite loop.

@@ -333,26 +333,38 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
   time_t last_change;
   char mesg;
   char idlestr[IDLESTR_LEN + 1];
+  PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
   static char *hoststr;
-#if HAVE_UT_HOST
-  static size_t hostlen;
+#if HAVE_STRUCT_XTMP_UT_HOST
+  static idx_t hostlen;
 #endif
 
-#define DEV_DIR_WITH_TRAILING_SLASH "/dev/"
-#define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
+#ifdef UT_LINE_SIZE
+  char line[UT_LINE_SIZE + 1];
+  stzncpy (line, utmp_ent->ut_line, UT_LINE_SIZE);
+#else
+  /* If ut_line contains a space, the device name starts after the space.  */
+  char *line = utmp_ent->ut_line;
+  char *space = strchr (line, ' ');
+  line = space ? space + 1 : line;
+#endif
 
-  char line[sizeof (utmp_ent->ut_line) + DEV_DIR_LEN + 1];
-  char *p = line;
-  PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
+  int dirfd;
+  if (IS_ABSOLUTE_FILE_NAME (line))
+    dirfd = AT_FDCWD;
+  else
+    {
+      static int dev_dirfd;
+      if (!dev_dirfd)
+        {
+          dev_dirfd = open ("/dev", O_PATHSEARCH | O_DIRECTORY);
+          if (dev_dirfd < 0)
+            dev_dirfd = AT_FDCWD - 1;
+        }
+      dirfd = dev_dirfd;
+    }
 
-  /* Copy ut_line into LINE, prepending '/dev/' if ut_line is not
-     already an absolute file name.  Some systems may put the full,
-     absolute file name in ut_line.  */
-  if ( ! IS_ABSOLUTE_FILE_NAME (utmp_ent->ut_line))
-    p = stpcpy (p, DEV_DIR_WITH_TRAILING_SLASH);
-  stzncpy (p, utmp_ent->ut_line, sizeof (utmp_ent->ut_line));
-
-  if (stat (line, &stats) == 0)
+  if (AT_FDCWD <= dirfd && fstatat (dirfd, line, &stats, 0) == 0)
     {
       mesg = is_tty_writable (&stats) ? '+' : '-';
       last_change = stats.st_atime;
@@ -368,15 +380,18 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
   else
     sprintf (idlestr, "  ?");
 
-#if HAVE_UT_HOST
+#if HAVE_STRUCT_XTMP_UT_HOST
   if (utmp_ent->ut_host[0])
     {
-      char ut_host[sizeof (utmp_ent->ut_host) + 1];
       char *host = nullptr;
       char *display = nullptr;
 
-      /* Copy the host name into UT_HOST, and ensure it's nul terminated. */
-      stzncpy (ut_host, utmp_ent->ut_host, sizeof (utmp_ent->ut_host));
+# ifdef UT_HOST_SIZE
+      char ut_host[UT_HOST_SIZE + 1];
+      stzncpy (ut_host, utmp_ent->ut_host, UT_HOST_SIZE);
+# else
+      char *ut_host = utmp_ent->ut_host;
+# endif
 
       /* Look for an X display.  */
       display = strchr (ut_host, ':');
@@ -394,23 +409,29 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
 
       if (display)
         {
-          if (hostlen < strlen (host) + strlen (display) + 4)
+          idx_t needed = strlen (host) + strlen (display) + 4;
+          if (hostlen < needed)
             {
-              hostlen = strlen (host) + strlen (display) + 4;
               free (hoststr);
-              hoststr = xmalloc (hostlen);
+              hoststr = xpalloc (nullptr, &hostlen, needed - hostlen, -1, 1);
             }
-          sprintf (hoststr, "(%s:%s)", host, display);
+          char *p = hoststr;
+          *p++ = '(';
+          p = stpcpy (p, host);
+          *p++ = ':';
+          strcpy (stpcpy (p, display), ")");
         }
       else
         {
-          if (hostlen < strlen (host) + 3)
+          idx_t needed = strlen (host) + 3;
+          if (hostlen < needed)
             {
-              hostlen = strlen (host) + 3;
               free (hoststr);
-              hoststr = xmalloc (hostlen);
+              hoststr = xpalloc (nullptr, &hostlen, needed - hostlen, -1, 1);
             }
-          sprintf (hoststr, "(%s)", host);
+          char *p = hoststr;
+          *p++ = '(';
+          strcpy (stpcpy (p, host), ")");
         }
 
       if (host != ut_host)
@@ -419,17 +440,13 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
   else
     {
       if (hostlen < 1)
-        {
-          hostlen = 1;
-          free (hoststr);
-          hoststr = xmalloc (hostlen);
-        }
+        hoststr = xpalloc (hoststr, &hostlen, 1, -1, 1);
       *hoststr = '\0';
     }
 #endif
 
-  print_line (sizeof UT_USER (utmp_ent), UT_USER (utmp_ent), mesg,
-              sizeof utmp_ent->ut_line, utmp_ent->ut_line,
+  print_line (UT_USER_SIZE, UT_USER (utmp_ent), mesg,
+              UT_LINE_SIZE, utmp_ent->ut_line,
               time_string (utmp_ent), idlestr, pidstr,
               hoststr ? hoststr : "", "");
 }
@@ -444,11 +461,14 @@ print_boottime (const STRUCT_UTMP *utmp_ent)
 static char *
 make_id_equals_comment (STRUCT_UTMP const *utmp_ent)
 {
-  size_t utmpsize = sizeof UT_ID (utmp_ent);
-  char *comment = xmalloc (strlen (_("id=")) + utmpsize + 1);
-
-  char *p = stpcpy (comment, _("id="));
-  stzncpy (p, UT_ID (utmp_ent), utmpsize);
+  char const *id = UT_ID (utmp_ent);
+  idx_t idlen = strnlen (id, UT_ID_SIZE);
+  char const *prefix = _("id=");
+  idx_t prefixlen = strlen (prefix);
+  char *comment = xmalloc (prefixlen + idlen + 1);
+  char *p = mempcpy (comment, prefix, prefixlen);
+  p = mempcpy (p, id, idlen);
+  *p = '\0';
   return comment;
 }
 
@@ -470,7 +490,7 @@ print_deadprocs (const STRUCT_UTMP *utmp_ent)
 
   /* FIXME: add idle time? */
 
-  print_line (-1, "", ' ', sizeof utmp_ent->ut_line, utmp_ent->ut_line,
+  print_line (-1, "", ' ', UT_LINE_SIZE, utmp_ent->ut_line,
               time_string (utmp_ent), "", pidstr, comment, exitstr);
   free (comment);
 }
@@ -483,7 +503,7 @@ print_login (const STRUCT_UTMP *utmp_ent)
 
   /* FIXME: add idle time? */
 
-  print_line (-1, _("LOGIN"), ' ', sizeof utmp_ent->ut_line, utmp_ent->ut_line,
+  print_line (-1, _("LOGIN"), ' ', UT_LINE_SIZE, utmp_ent->ut_line,
               time_string (utmp_ent), "", pidstr, comment, "");
   free (comment);
 }
@@ -494,7 +514,7 @@ print_initspawn (const STRUCT_UTMP *utmp_ent)
   char *comment = make_id_equals_comment (utmp_ent);
   PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
 
-  print_line (-1, "", ' ', sizeof utmp_ent->ut_line, utmp_ent->ut_line,
+  print_line (-1, "", ' ', UT_LINE_SIZE, utmp_ent->ut_line,
               time_string (utmp_ent), "", pidstr, comment, "");
   free (comment);
 }
@@ -531,9 +551,9 @@ print_runlevel (const STRUCT_UTMP *utmp_ent)
 /* Print the username of each valid entry and the number of valid entries
    in UTMP_BUF, which should have N elements. */
 static void
-list_entries_who (size_t n, const STRUCT_UTMP *utmp_buf)
+list_entries_who (idx_t n, const STRUCT_UTMP *utmp_buf)
 {
-  unsigned long int entries = 0;
+  idx_t entries = 0;
   char const *separator = "";
 
   while (n--)
@@ -551,7 +571,7 @@ list_entries_who (size_t n, const STRUCT_UTMP *utmp_buf)
         }
       utmp_buf++;
     }
-  printf (_("\n# users=%lu\n"), entries);
+  printf (_("\n# users=%td\n"), entries);
 }
 
 static void
@@ -561,9 +581,15 @@ print_heading (void)
               _("PID"), _("COMMENT"), _("EXIT"));
 }
 
+/* Work around <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109614>,
+   triggered by STREQ_LEN with a negative length.  */
+#if 11 <= __GNUC__
+# pragma GCC diagnostic ignored "-Wstringop-overread"
+#endif
+
 /* Display UTMP_BUF, which should have N entries. */
 static void
-scan_entries (size_t n, const STRUCT_UTMP *utmp_buf)
+scan_entries (idx_t n, const STRUCT_UTMP *utmp_buf)
 {
   char *ttyname_b IF_LINT ( = nullptr);
   time_t boottime = TYPE_MINIMUM (time_t);
@@ -576,15 +602,14 @@ scan_entries (size_t n, const STRUCT_UTMP *utmp_buf)
       ttyname_b = ttyname (STDIN_FILENO);
       if (!ttyname_b)
         return;
-      if (STRNCMP_LIT (ttyname_b, DEV_DIR_WITH_TRAILING_SLASH) == 0)
-        ttyname_b += DEV_DIR_LEN;	/* Discard /dev/ prefix.  */
+      if (STRNCMP_LIT (ttyname_b, "/dev/") == 0)
+        ttyname_b += sizeof "/dev/" - 1;	/* Discard /dev/ prefix.  */
     }
 
   while (n--)
     {
       if (!my_line_only
-          || STREQ_LEN (ttyname_b, utmp_buf->ut_line,
-                        sizeof (utmp_buf->ut_line)))
+          || STREQ_LEN (ttyname_b, utmp_buf->ut_line, UT_LINE_SIZE))
         {
           if (need_users && IS_USER_PROCESS (utmp_buf))
             print_user (utmp_buf, boottime);
@@ -617,7 +642,7 @@ scan_entries (size_t n, const STRUCT_UTMP *utmp_buf)
 static void
 who (char const *filename, int options)
 {
-  size_t n_users;
+  idx_t n_users;
   STRUCT_UTMP *utmp_buf;
 
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
