@@ -203,15 +203,10 @@ print_entry (const STRUCT_UTMP *utmp_ent)
   time_t last_change;
   char mesg;
 
-#ifdef UT_LINE_SIZE
-  char line[UT_LINE_SIZE + 1];
-  stzncpy (line, utmp_ent->ut_line, UT_LINE_SIZE);
-#else
   /* If ut_line contains a space, the device name starts after the space.  */
   char *line = utmp_ent->ut_line;
   char *space = strchr (line, ' ');
   line = space ? space + 1 : line;
-#endif
 
   int dirfd;
   if (IS_ABSOLUTE_FILE_NAME (line))
@@ -239,19 +234,14 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       last_change = 0;
     }
 
-  if (0 <= UT_USER_SIZE || strnlen (UT_USER (utmp_ent), 8) < 8)
-    printf ("%-8.*s", UT_USER_SIZE, UT_USER (utmp_ent));
+  if (strnlen (UT_USER (utmp_ent), 8) < 8)
+    printf ("%-8s", UT_USER (utmp_ent));
   else
     fputs (UT_USER (utmp_ent), stdout);
 
   if (include_fullname)
     {
-#ifdef UT_USER_SIZE
-      char name[UT_USER_SIZE + 1];
-      stzncpy (name, UT_USER (utmp_ent), UT_USER_SIZE);
-#else
       char *name = UT_USER (utmp_ent);
-#endif
       struct passwd *pw = getpwnam (name);
       if (pw == nullptr)
         /* TRANSLATORS: Real name is unknown; at most 19 characters. */
@@ -272,8 +262,8 @@ print_entry (const STRUCT_UTMP *utmp_ent)
 
   fputc (' ', stdout);
   fputc (mesg, stdout);
-  if (0 <= UT_LINE_SIZE || strnlen (utmp_ent->ut_line, 8) < 8)
-    printf ("%-8.*s", UT_LINE_SIZE, utmp_ent->ut_line);
+  if (strnlen (utmp_ent->ut_line, 8) < 8)
+    printf ("%-8s", utmp_ent->ut_line);
   else
     fputs (utmp_ent->ut_line, stdout);
 
@@ -293,13 +283,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
     {
       char *host = nullptr;
       char *display = nullptr;
-
-# ifdef UT_HOST_SIZE
-      char ut_host[UT_HOST_SIZE + 1];
-      stzncpy (ut_host, utmp_ent->ut_host, UT_HOST_SIZE);
-# else
       char *ut_host = utmp_ent->ut_host;
-# endif
 
       /* Look for an X display.  */
       display = strchr (ut_host, ':');
@@ -475,7 +459,7 @@ scan_entries (idx_t n, const STRUCT_UTMP *utmp_buf,
           if (argc_names)
             {
               for (int i = 0; i < argc_names; i++)
-                if (STREQ_LEN (UT_USER (utmp_buf), argv_names[i], UT_USER_SIZE))
+                if (STREQ (UT_USER (utmp_buf), argv_names[i]))
                   {
                     print_entry (utmp_buf);
                     break;

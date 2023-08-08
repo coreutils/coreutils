@@ -238,8 +238,8 @@ time_string (const STRUCT_UTMP *utmp_ent)
    will need tweaking if any of the localization stuff is done, or for 64 bit
    pids, etc. */
 static void
-print_line (int userlen, char const *user, const char state,
-            int linelen, char const *line,
+print_line (char const *user, const char state,
+            char const *line,
             char const *time_str, char const *idle, char const *pid,
             char const *comment, char const *exitstr)
 {
@@ -269,18 +269,18 @@ print_line (int userlen, char const *user, const char state,
     *x_exitstr = '\0';
 
   err = asprintf (&buf,
-                  "%-8.*s"
+                  "%-8s"
                   "%s"
-                  " %-12.*s"
+                  " %-12s"
                   " %-*s"
                   "%s"
                   "%s"
                   " %-8s"
                   "%s"
                   ,
-                  userlen, user ? user : "   .",
+                  user ? user : "   .",
                   include_mesg ? mesg : "",
-                  linelen, line,
+                  line,
                   time_format_width,
                   time_str,
                   x_idle,
@@ -339,15 +339,10 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
   static idx_t hostlen;
 #endif
 
-#ifdef UT_LINE_SIZE
-  char line[UT_LINE_SIZE + 1];
-  stzncpy (line, utmp_ent->ut_line, UT_LINE_SIZE);
-#else
   /* If ut_line contains a space, the device name starts after the space.  */
   char *line = utmp_ent->ut_line;
   char *space = strchr (line, ' ');
   line = space ? space + 1 : line;
-#endif
 
   int dirfd;
   if (IS_ABSOLUTE_FILE_NAME (line))
@@ -385,13 +380,7 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
     {
       char *host = nullptr;
       char *display = nullptr;
-
-# ifdef UT_HOST_SIZE
-      char ut_host[UT_HOST_SIZE + 1];
-      stzncpy (ut_host, utmp_ent->ut_host, UT_HOST_SIZE);
-# else
       char *ut_host = utmp_ent->ut_host;
-# endif
 
       /* Look for an X display.  */
       display = strchr (ut_host, ':');
@@ -445,8 +434,8 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
     }
 #endif
 
-  print_line (UT_USER_SIZE, UT_USER (utmp_ent), mesg,
-              UT_LINE_SIZE, utmp_ent->ut_line,
+  print_line (UT_USER (utmp_ent), mesg,
+              utmp_ent->ut_line,
               time_string (utmp_ent), idlestr, pidstr,
               hoststr ? hoststr : "", "");
 }
@@ -454,7 +443,7 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
 static void
 print_boottime (const STRUCT_UTMP *utmp_ent)
 {
-  print_line (-1, "", ' ', -1, _("system boot"),
+  print_line ("", ' ', _("system boot"),
               time_string (utmp_ent), "", "", "", "");
 }
 
@@ -462,7 +451,7 @@ static char *
 make_id_equals_comment (STRUCT_UTMP const *utmp_ent)
 {
   char const *id = UT_ID (utmp_ent);
-  idx_t idlen = strnlen (id, UT_ID_SIZE);
+  idx_t idlen = strlen (id);
   char const *prefix = _("id=");
   idx_t prefixlen = strlen (prefix);
   char *comment = xmalloc (prefixlen + idlen + 1);
@@ -490,7 +479,7 @@ print_deadprocs (const STRUCT_UTMP *utmp_ent)
 
   /* FIXME: add idle time? */
 
-  print_line (-1, "", ' ', UT_LINE_SIZE, utmp_ent->ut_line,
+  print_line ("", ' ', utmp_ent->ut_line,
               time_string (utmp_ent), "", pidstr, comment, exitstr);
   free (comment);
 }
@@ -503,7 +492,7 @@ print_login (const STRUCT_UTMP *utmp_ent)
 
   /* FIXME: add idle time? */
 
-  print_line (-1, _("LOGIN"), ' ', UT_LINE_SIZE, utmp_ent->ut_line,
+  print_line (_("LOGIN"), ' ', utmp_ent->ut_line,
               time_string (utmp_ent), "", pidstr, comment, "");
   free (comment);
 }
@@ -514,7 +503,7 @@ print_initspawn (const STRUCT_UTMP *utmp_ent)
   char *comment = make_id_equals_comment (utmp_ent);
   PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
 
-  print_line (-1, "", ' ', UT_LINE_SIZE, utmp_ent->ut_line,
+  print_line ("", ' ', utmp_ent->ut_line,
               time_string (utmp_ent), "", pidstr, comment, "");
   free (comment);
 }
@@ -523,7 +512,7 @@ static void
 print_clockchange (const STRUCT_UTMP *utmp_ent)
 {
   /* FIXME: handle NEW_TIME & OLD_TIME both */
-  print_line (-1, "", ' ', -1, _("clock change"),
+  print_line ("", ' ', _("clock change"),
               time_string (utmp_ent), "", "", "", "");
 }
 
@@ -542,7 +531,7 @@ print_runlevel (const STRUCT_UTMP *utmp_ent)
     comment = xmalloc (strlen (_("last=")) + 2);
   sprintf (comment, "%s%c", _("last="), (last == 'N') ? 'S' : last);
 
-  print_line (-1, "", ' ', -1, runlevline, time_string (utmp_ent),
+  print_line ("", ' ', runlevline, time_string (utmp_ent),
               "", "", c_isprint (last) ? comment : "", "");
 
   return;
@@ -577,7 +566,7 @@ list_entries_who (idx_t n, const STRUCT_UTMP *utmp_buf)
 static void
 print_heading (void)
 {
-  print_line (-1, _("NAME"), ' ', -1, _("LINE"), _("TIME"), _("IDLE"),
+  print_line (_("NAME"), ' ', _("LINE"), _("TIME"), _("IDLE"),
               _("PID"), _("COMMENT"), _("EXIT"));
 }
 
@@ -609,7 +598,7 @@ scan_entries (idx_t n, const STRUCT_UTMP *utmp_buf)
   while (n--)
     {
       if (!my_line_only
-          || STREQ_LEN (ttyname_b, utmp_buf->ut_line, UT_LINE_SIZE))
+          || STREQ (ttyname_b, utmp_buf->ut_line))
         {
           if (need_users && IS_USER_PROCESS (utmp_buf))
             print_user (utmp_buf, boottime);
