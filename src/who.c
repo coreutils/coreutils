@@ -50,31 +50,31 @@
   proper_name ("Michael Stone")
 
 #ifdef RUN_LVL
-# define UT_TYPE_RUN_LVL(U) UT_TYPE_EQ (U, RUN_LVL)
+# define UT_TYPE_RUN_LVL(U) ((U)->ut_type == RUN_LVL)
 #else
 # define UT_TYPE_RUN_LVL(U) false
 #endif
 
 #ifdef INIT_PROCESS
-# define UT_TYPE_INIT_PROCESS(U) UT_TYPE_EQ (U, INIT_PROCESS)
+# define UT_TYPE_INIT_PROCESS(U) ((U)->ut_type == INIT_PROCESS)
 #else
 # define UT_TYPE_INIT_PROCESS(U) false
 #endif
 
 #ifdef LOGIN_PROCESS
-# define UT_TYPE_LOGIN_PROCESS(U) UT_TYPE_EQ (U, LOGIN_PROCESS)
+# define UT_TYPE_LOGIN_PROCESS(U) ((U)->ut_type == LOGIN_PROCESS)
 #else
 # define UT_TYPE_LOGIN_PROCESS(U) false
 #endif
 
 #ifdef DEAD_PROCESS
-# define UT_TYPE_DEAD_PROCESS(U) UT_TYPE_EQ (U, DEAD_PROCESS)
+# define UT_TYPE_DEAD_PROCESS(U) ((U)->ut_type == DEAD_PROCESS)
 #else
 # define UT_TYPE_DEAD_PROCESS(U) false
 #endif
 
 #ifdef NEW_TIME
-# define UT_TYPE_NEW_TIME(U) UT_TYPE_EQ (U, NEW_TIME)
+# define UT_TYPE_NEW_TIME(U) ((U)->ut_type == NEW_TIME)
 #else
 # define UT_TYPE_NEW_TIME(U) false
 #endif
@@ -212,18 +212,10 @@ idle_string (time_t when, time_t boottime)
 
 /* Return a time string.  */
 static char const *
-time_string (const STRUCT_UTMP *utmp_ent)
+time_string (struct gl_utmp const *utmp_ent)
 {
   static char buf[INT_STRLEN_BOUND (intmax_t) + sizeof "-%m-%d %H:%M"];
-
-  /* Don't take the address of UT_TIME_MEMBER directly.
-     Ulrich Drepper wrote:
-     "... GNU libc (and perhaps other libcs as well) have extended
-     utmp file formats which do not use a simple time_t ut_time field.
-     In glibc, ut_time is a macro which selects for backward compatibility
-     the tv_sec member of a struct timeval value."  */
-  time_t t = UT_TIME_MEMBER (utmp_ent);
-  struct tm *tmp = localtime (&t);
+  struct tm *tmp = localtime (&utmp_ent->ut_ts.tv_sec);
 
   if (tmp)
     {
@@ -231,7 +223,7 @@ time_string (const STRUCT_UTMP *utmp_ent)
       return buf;
     }
   else
-    return timetostr (t, buf);
+    return timetostr (utmp_ent->ut_ts.tv_sec, buf);
 }
 
 /* Print formatted output line. Uses mostly arbitrary field sizes, probably
@@ -327,7 +319,7 @@ is_tty_writable (struct stat const *pstat)
 /* Send properly parsed USER_PROCESS info to print_line.  The most
    recent boot time is BOOTTIME. */
 static void
-print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
+print_user (struct gl_utmp const *utmp_ent, time_t boottime)
 {
   struct stat stats;
   time_t last_change;
@@ -434,21 +426,21 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
     }
 #endif
 
-  print_line (UT_USER (utmp_ent), mesg,
+  print_line (utmp_ent->ut_user, mesg,
               utmp_ent->ut_line,
               time_string (utmp_ent), idlestr, pidstr,
               hoststr ? hoststr : "", "");
 }
 
 static void
-print_boottime (const STRUCT_UTMP *utmp_ent)
+print_boottime (struct gl_utmp const *utmp_ent)
 {
   print_line ("", ' ', _("system boot"),
               time_string (utmp_ent), "", "", "", "");
 }
 
 static char *
-make_id_equals_comment (STRUCT_UTMP const *utmp_ent)
+make_id_equals_comment (struct gl_utmp const *utmp_ent)
 {
   char const *id = UT_ID (utmp_ent);
   idx_t idlen = strlen (id);
@@ -462,7 +454,7 @@ make_id_equals_comment (STRUCT_UTMP const *utmp_ent)
 }
 
 static void
-print_deadprocs (const STRUCT_UTMP *utmp_ent)
+print_deadprocs (struct gl_utmp const *utmp_ent)
 {
   static char *exitstr;
   char *comment = make_id_equals_comment (utmp_ent);
@@ -470,12 +462,12 @@ print_deadprocs (const STRUCT_UTMP *utmp_ent)
 
   if (!exitstr)
     exitstr = xmalloc (strlen (_("term="))
-                       + INT_STRLEN_BOUND (UT_EXIT_E_TERMINATION (utmp_ent)) + 1
+                       + INT_STRLEN_BOUND (utmp_ent->ut_exit.e_termination) + 1
                        + strlen (_("exit="))
-                       + INT_STRLEN_BOUND (UT_EXIT_E_EXIT (utmp_ent))
+                       + INT_STRLEN_BOUND (utmp_ent->ut_exit.e_exit)
                        + 1);
-  sprintf (exitstr, "%s%d %s%d", _("term="), UT_EXIT_E_TERMINATION (utmp_ent),
-           _("exit="), UT_EXIT_E_EXIT (utmp_ent));
+  sprintf (exitstr, "%s%d %s%d", _("term="), utmp_ent->ut_exit.e_termination,
+           _("exit="), utmp_ent->ut_exit.e_exit);
 
   /* FIXME: add idle time? */
 
@@ -485,7 +477,7 @@ print_deadprocs (const STRUCT_UTMP *utmp_ent)
 }
 
 static void
-print_login (const STRUCT_UTMP *utmp_ent)
+print_login (struct gl_utmp const *utmp_ent)
 {
   char *comment = make_id_equals_comment (utmp_ent);
   PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
@@ -498,7 +490,7 @@ print_login (const STRUCT_UTMP *utmp_ent)
 }
 
 static void
-print_initspawn (const STRUCT_UTMP *utmp_ent)
+print_initspawn (struct gl_utmp const *utmp_ent)
 {
   char *comment = make_id_equals_comment (utmp_ent);
   PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
@@ -509,7 +501,7 @@ print_initspawn (const STRUCT_UTMP *utmp_ent)
 }
 
 static void
-print_clockchange (const STRUCT_UTMP *utmp_ent)
+print_clockchange (struct gl_utmp const *utmp_ent)
 {
   /* FIXME: handle NEW_TIME & OLD_TIME both */
   print_line ("", ' ', _("clock change"),
@@ -517,11 +509,11 @@ print_clockchange (const STRUCT_UTMP *utmp_ent)
 }
 
 static void
-print_runlevel (const STRUCT_UTMP *utmp_ent)
+print_runlevel (struct gl_utmp const *utmp_ent)
 {
   static char *runlevline, *comment;
-  unsigned char last = UT_PID (utmp_ent) / 256;
-  unsigned char curr = UT_PID (utmp_ent) % 256;
+  unsigned char last = utmp_ent->ut_pid / 256;
+  unsigned char curr = utmp_ent->ut_pid % 256;
 
   if (!runlevline)
     runlevline = xmalloc (strlen (_("run-level")) + 3);
@@ -540,7 +532,7 @@ print_runlevel (const STRUCT_UTMP *utmp_ent)
 /* Print the username of each valid entry and the number of valid entries
    in UTMP_BUF, which should have N elements. */
 static void
-list_entries_who (idx_t n, const STRUCT_UTMP *utmp_buf)
+list_entries_who (idx_t n, struct gl_utmp const *utmp_buf)
 {
   idx_t entries = 0;
   char const *separator = "";
@@ -572,7 +564,7 @@ print_heading (void)
 
 /* Display UTMP_BUF, which should have N entries. */
 static void
-scan_entries (idx_t n, const STRUCT_UTMP *utmp_buf)
+scan_entries (idx_t n, struct gl_utmp const *utmp_buf)
 {
   char *ttyname_b IF_LINT ( = nullptr);
   time_t boottime = TYPE_MINIMUM (time_t);
@@ -614,7 +606,7 @@ scan_entries (idx_t n, const STRUCT_UTMP *utmp_buf)
         }
 
       if (UT_TYPE_BOOT_TIME (utmp_buf))
-        boottime = UT_TIME_MEMBER (utmp_buf);
+        boottime = utmp_buf->ut_ts.tv_sec;
 
       utmp_buf++;
     }
@@ -626,8 +618,7 @@ static void
 who (char const *filename, int options)
 {
   idx_t n_users;
-  STRUCT_UTMP *utmp_buf;
-
+  struct gl_utmp *utmp_buf;
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
     error (EXIT_FAILURE, errno, "%s", quotef (filename));
 

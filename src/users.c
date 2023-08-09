@@ -42,7 +42,7 @@ userid_compare (const void *v_a, const void *v_b)
 }
 
 static void
-list_entries_users (idx_t n, const STRUCT_UTMP *this)
+list_entries_users (idx_t n, struct gl_utmp const *this)
 {
   char **u = xinmalloc (n, sizeof *u);
   idx_t i;
@@ -83,8 +83,7 @@ static void
 users (char const *filename, int options)
 {
   idx_t n_users;
-  STRUCT_UTMP *utmp_buf;
-
+  struct gl_utmp *utmp_buf;
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
     error (EXIT_FAILURE, errno, "%s", quotef (filename));
 

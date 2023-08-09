@@ -45,7 +45,7 @@
   proper_name ("Kaveh Ghazi")
 
 static void
-print_uptime (idx_t n, const STRUCT_UTMP *this)
+print_uptime (idx_t n, struct gl_utmp const *this)
 {
   idx_t entries = 0;
   time_t boot_time = 0;
@@ -106,7 +106,7 @@ print_uptime (idx_t n, const STRUCT_UTMP *this)
     {
       entries += IS_USER_PROCESS (this);
       if (UT_TYPE_BOOT_TIME (this))
-        boot_time = UT_TIME_MEMBER (this);
+        boot_time = this->ut_ts.tv_sec;
       ++this;
     }
 
@@ -170,8 +170,7 @@ static _Noreturn void
 uptime (char const *filename, int options)
 {
   idx_t n_users;
-  STRUCT_UTMP *utmp_buf = nullptr;
-
+  struct gl_utmp *utmp_buf;
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
     error (EXIT_FAILURE, errno, "%s", quotef (filename));
 

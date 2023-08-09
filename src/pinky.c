@@ -172,18 +172,10 @@ idle_string (time_t when)
 
 /* Return a time string.  */
 static char const *
-time_string (const STRUCT_UTMP *utmp_ent)
+time_string (struct gl_utmp const *utmp_ent)
 {
   static char buf[INT_STRLEN_BOUND (intmax_t) + sizeof "-%m-%d %H:%M"];
-
-  /* Don't take the address of UT_TIME_MEMBER directly.
-     Ulrich Drepper wrote:
-     "... GNU libc (and perhaps other libcs as well) have extended
-     utmp file formats which do not use a simple time_t ut_time field.
-     In glibc, ut_time is a macro which selects for backward compatibility
-     the tv_sec member of a struct timeval value."  */
-  time_t t = UT_TIME_MEMBER (utmp_ent);
-  struct tm *tmp = localtime (&t);
+  struct tm *tmp = localtime (&utmp_ent->ut_ts.tv_sec);
 
   if (tmp)
     {
@@ -191,13 +183,13 @@ time_string (const STRUCT_UTMP *utmp_ent)
       return buf;
     }
   else
-    return timetostr (t, buf);
+    return timetostr (utmp_ent->ut_ts.tv_sec, buf);
 }
 
 /* Display a line of information about UTMP_ENT. */
 
 static void
-print_entry (const STRUCT_UTMP *utmp_ent)
+print_entry (struct gl_utmp const *utmp_ent)
 {
   struct stat stats;
   time_t last_change;
@@ -234,15 +226,15 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       last_change = 0;
     }
 
-  if (strnlen (UT_USER (utmp_ent), 8) < 8)
-    printf ("%-8s", UT_USER (utmp_ent));
+  char *ut_user = utmp_ent->ut_user;
+  if (strnlen (ut_user, 8) < 8)
+    printf ("%-8s", ut_user);
   else
-    fputs (UT_USER (utmp_ent), stdout);
+    fputs (ut_user, stdout);
 
   if (include_fullname)
     {
-      char *name = UT_USER (utmp_ent);
-      struct passwd *pw = getpwnam (name);
+      struct passwd *pw = getpwnam (ut_user);
       if (pw == nullptr)
         /* TRANSLATORS: Real name is unknown; at most 19 characters. */
         printf (" %19s", _("        ???"));
@@ -429,7 +421,7 @@ print_heading (void)
 /* Display UTMP_BUF, which should have N entries. */
 
 static void
-scan_entries (idx_t n, const STRUCT_UTMP *utmp_buf,
+scan_entries (idx_t n, struct gl_utmp const *utmp_buf,
               const int argc_names, char *const argv_names[])
 {
   if (hard_locale (LC_TIME))
@@ -453,7 +445,7 @@ scan_entries (idx_t n, const STRUCT_UTMP *utmp_buf,
           if (argc_names)
             {
               for (int i = 0; i < argc_names; i++)
-                if (STREQ (UT_USER (utmp_buf), argv_names[i]))
+                if (STREQ (utmp_buf->ut_user, argv_names[i]))
                   {
                     print_entry (utmp_buf);
                     break;
@@ -473,8 +465,7 @@ short_pinky (char const *filename,
              const int argc_names, char *const argv_names[])
 {
   idx_t n_users;
-  STRUCT_UTMP *utmp_buf = nullptr;
-
+  struct gl_utmp *utmp_buf;
   if (read_utmp (filename, &n_users, &utmp_buf, 0) != 0)
     error (EXIT_FAILURE, errno, "%s", quotef (filename));
 
