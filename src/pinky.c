@@ -426,12 +426,6 @@ print_heading (void)
   putchar ('\n');
 }
 
-/* Work around <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109614>,
-   triggered by STREQ_LEN with a negative length.  */
-#if 11 <= __GNUC__
-# pragma GCC diagnostic ignored "-Wstringop-overread"
-#endif
-
 /* Display UTMP_BUF, which should have N entries. */
 
 static void
