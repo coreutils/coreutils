@@ -619,6 +619,8 @@ who (char const *filename, int options)
 {
   idx_t n_users;
   struct gl_utmp *utmp_buf;
+  if (short_list)
+    options |= READ_UTMP_USER_PROCESS;
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
     error (EXIT_FAILURE, errno, "%s", quotef (filename));
 

@@ -466,7 +466,7 @@ short_pinky (char const *filename,
 {
   idx_t n_users;
   struct gl_utmp *utmp_buf;
-  if (read_utmp (filename, &n_users, &utmp_buf, 0) != 0)
+  if (read_utmp (filename, &n_users, &utmp_buf, READ_UTMP_USER_PROCESS) != 0)
     error (EXIT_FAILURE, errno, "%s", quotef (filename));
 
   scan_entries (n_users, utmp_buf, argc_names, argv_names);
