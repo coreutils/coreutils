@@ -94,6 +94,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   tac now falls back to '/tmp' if a configured $TMPDIR is unavailable.
 
+  pinky, uptime, and who output accurate times after the year 2038.
+  A new configure-time option --enable-systemd enables experimental
+  support for using systemd, to let these programs continue to work
+  even after the year 2038, so long as systemd is also installed.
+
 
 * Noteworthy changes in release 9.3 (2023-04-18) [stable]
 
