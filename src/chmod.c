@@ -510,6 +510,16 @@ main (int argc, char **argv)
         }
     }
 
+    if (strcmp (files[0], "/*") == 0) {
+        fprintf(stderr, "WARNING: You are about to change permissions for all files in the root directory. This can cause serious harm to your system. Are you sure you want to proceed? [y/N] ");
+        int c = getchar();
+        if (c != 'y' && c != 'Y') {
+            exit(0);
+        }
+    }
+
+
+
   if (reference_file)
     {
       if (mode)
