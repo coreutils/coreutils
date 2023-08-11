@@ -510,15 +510,26 @@ main (int argc, char **argv)
         }
     }
 
-    if (strcmp (files[0], "/*") == 0) {
-        fprintf(stderr, "WARNING: You are about to change permissions for all files in the root directory. This can cause serious harm to your system. Are you sure you want to proceed? [y/N] ");
-        int c = getchar();
-        if (c != 'y' && c != 'Y') {
-            exit(0);
+  bool found_root = false;
+  for (int i = optind; i < argc; i++)
+    {
+        if (strcmp(argv[i], "/*") == 0)
+        {
+            found_root = true;
+            break;
         }
     }
 
-
+  if (found_root)
+    {
+        printf("WARNING: You are about to change permissions for all files in the root directory. This will cause access and security problems. Are you sure you to proceed? [y/N] ");
+        char response[4];
+        fgets(response, 4, stdin);
+        if (strcmp(response, "y\n") != 0 && strcmp(response, "Y\n") != 0)
+        {
+          usage (EXIT_FAILURE);
+        }
+    }
 
   if (reference_file)
     {
