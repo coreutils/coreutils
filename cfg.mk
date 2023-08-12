@@ -299,17 +299,6 @@ sc_check-I18N-AUTHORS:
 		    '$$(LIBICONV)' 1>&2; exit 1; };			\
 	  done
 
-# Disallow the C99 printf size specifiers %z and %j as they're not portable.
-# The gnulib printf replacement does support them, however the printf
-# replacement is not currently explicitly depended on by the gnulib error()
-# module for example.  Also we use fprintf() in a few places to output simple
-# formats but don't use the gnulib module as it is seen as overkill at present.
-# We'd have to adjust the above gnulib items before disabling this.
-sc_prohibit-c99-printf-format:
-	@cd $(srcdir)/src && GIT_PAGER= git grep -n '%[0*]*[jz][udx]' *.c    \
-	  && { echo '$(ME): Use PRI*MAX instead of %j or %z' 1>&2; exit 1; } \
-	  || :
-
 # Ensure the alternative __attribute (keyword) form isn't used as
 # that form is not elided where required.  Also ensure that we don't
 # directly use attributes already defined by gnulib.
