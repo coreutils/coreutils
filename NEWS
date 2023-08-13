@@ -41,10 +41,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   pinky, uptime, users, and who no longer misbehave on 32-bit GNU/Linux
   platforms like x86 and ARM where time_t was historically 32 bits.
-  A new configure-time option --enable-systemd enables experimental
-  support for using systemd, to let these programs continue to work on
-  these old platforms even after the year 2038, so long as systemd
-  is also installed.
+  Also see the new --enable-systemd option mentioned below.
   [bug introduced in coreutils-9.0]
 
   'pr --length=1 --double-space' no longer enters an infinite loop.
@@ -94,10 +91,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   tac now falls back to '/tmp' if a configured $TMPDIR is unavailable.
 
-  pinky, uptime, and who output accurate times after the year 2038.
-  A new configure-time option --enable-systemd enables experimental
-  support for using systemd, to let these programs continue to work
-  even after the year 2038, so long as systemd is also installed.
+  On GNU/Linux platforms where utmp-format files have 32-bit timestamps,
+  pinky, uptime, and who can now work for times after the year 2038,
+  so long as systemd is installed, you configure with a new, experimental
+  option --enable-systemd, and you use the programs without file arguments.
+  (For example, with systemd 'who /var/log/wtmp' does not work because
+  systemd does not support the equivalent of /who/log/wtmp.)
 
 
 * Noteworthy changes in release 9.3 (2023-04-18) [stable]
