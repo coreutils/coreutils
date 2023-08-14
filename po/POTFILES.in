@@ -4,11 +4,11 @@
 # These are nominally temporary...
 lib/argmatch.c
 lib/argmatch.h
+lib/c-file-type.c
 lib/closein.c
 lib/closeout.c
 lib/copy-acl.c
 lib/error.c
-lib/file-type.c
 lib/gai_strerror.c
 lib/getopt.c
 lib/mkdir-p.c
