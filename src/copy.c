@@ -981,7 +981,7 @@ set_author (char const *dst_name, int dest_desc, const struct stat *src_sb)
   file_t file = (dest_desc < 0
                  ? file_name_lookup (dst_name, 0, 0)
                  : getdport (dest_desc));
-  if (file == MACH_PORT_nullptr)
+  if (file == MACH_PORT_NULL)
     error (0, errno, _("failed to lookup file %s"), quoteaf (dst_name));
   else
     {
