@@ -17,9 +17,11 @@
 /* Created by hacking who.c by Kaveh Ghazi ghazi@caip.rutgers.edu.  */
 
 #include <config.h>
-#include <stdio.h>
 
+#include <stdckdint.h>
+#include <stdio.h>
 #include <sys/types.h>
+
 #include "system.h"
 
 #if HAVE_SYSCTL && HAVE_SYS_SYSCTL_H && ! defined __GLIBC__
@@ -43,19 +45,11 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Kaveh Ghazi")
 
-static void
-print_uptime (idx_t n, struct gl_utmp const *this)
+static int
+print_uptime (idx_t n, struct gl_utmp const *utmp_buf)
 {
-  idx_t entries = 0;
+  int status = EXIT_SUCCESS;
   time_t boot_time = 0;
-  time_t time_now;
-  time_t uptime;
-  intmax_t updays;
-  int uphours;
-  int upmins;
-  struct tm *tmn;
-  double avg[3];
-  int loads;
 
 #if HAVE_SYSCTL && ! defined __GLIBC__ \
     && defined CTL_KERN && defined KERN_BOOTTIME
@@ -81,35 +75,47 @@ print_uptime (idx_t n, struct gl_utmp const *this)
 
   /* Loop through all the utmp entries we just read and count up the valid
      ones, also in the process possibly gleaning boottime. */
-  while (n--)
+  idx_t entries = 0;
+  for (idx_t i = 0; i < n; i++)
     {
+      struct gl_utmp const *this = &utmp_buf[i];
       entries += IS_USER_PROCESS (this);
       if (UT_TYPE_BOOT_TIME (this))
         boot_time = this->ut_ts.tv_sec;
-      ++this;
     }
   /* The gnulib module 'readutmp' is supposed to provide a BOOT_TIME entry
      on all platforms.  */
   if (boot_time == 0)
-    error (EXIT_FAILURE, errno, _("couldn't get boot time"));
+    {
+      error (0, errno, _("couldn't get boot time"));
+      status = EXIT_FAILURE;
+    }
 
-  time_now = time (nullptr);
-  uptime = time_now - boot_time;
-  updays = uptime / 86400;
-  uphours = uptime % 86400 / 3600;
-  upmins = uptime % 86400 % 3600 / 60;
-  tmn = localtime (&time_now);
+  time_t time_now = time (nullptr);
+  struct tm *tmn = time_now == (time_t) -1 ? nullptr : localtime (&time_now);
   /* procps' version of uptime also prints the seconds field, but
      previous versions of coreutils don't. */
   if (tmn)
     /* TRANSLATORS: This prints the current clock time. */
     fprintftime (stdout, _(" %H:%M:%S  "), tmn, 0, 0);
   else
-    printf (_(" ??:????  "));
-  if (uptime == (time_t) -1)
-    printf (_("up ???? days ??:??,  "));
+    {
+      printf (_(" ??:????  "));
+      status = EXIT_FAILURE;
+    }
+
+  intmax_t uptime;
+  if (time_now == (time_t) -1 || boot_time == 0
+      || ckd_sub (&uptime, time_now, boot_time) || uptime < 0)
+    {
+      printf (_("up ???? days ??:??,  "));
+      status = EXIT_FAILURE;
+    }
   else
     {
+      intmax_t updays = uptime / 86400;
+      int uphours = uptime % 86400 / 3600;
+      int upmins = uptime % 86400 % 3600 / 60;
       if (0 < updays)
         printf (ngettext ("up %"PRIdMAX" day %2d:%02d,  ",
                           "up %"PRIdMAX" days %2d:%02d,  ",
@@ -118,10 +124,12 @@ print_uptime (idx_t n, struct gl_utmp const *this)
       else
         printf (_("up  %2d:%02d,  "), uphours, upmins);
     }
+
   printf (ngettext ("%td user", "%td users", select_plural (entries)),
           entries);
 
-  loads = getloadavg (avg, 3);
+  double avg[3];
+  int loads = getloadavg (avg, 3);
 
   if (loads == -1)
     putchar ('\n');
@@ -136,6 +144,8 @@ print_uptime (idx_t n, struct gl_utmp const *this)
       if (loads > 0)
         putchar ('\n');
     }
+
+  return status;
 }
 
 /* Display the system uptime and the number of users on the system,
@@ -147,12 +157,17 @@ uptime (char const *filename, int options)
 {
   idx_t n_users;
   struct gl_utmp *utmp_buf;
-  if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
-    error (EXIT_FAILURE, errno, "%s", quotef (filename));
+  int read_utmp_status = (read_utmp (filename, &n_users, &utmp_buf, options) < 0
+                          ? EXIT_FAILURE : EXIT_SUCCESS);
+  if (read_utmp_status != EXIT_SUCCESS)
+    {
+      error (0, errno, "%s", quotef (filename));
+      n_users = 0;
+      utmp_buf = nullptr;
+    }
 
-  print_uptime (n_users, utmp_buf);
-
-  exit (EXIT_SUCCESS);
+  int print_uptime_status = print_uptime (n_users, utmp_buf);
+  exit (MAX (read_utmp_status, print_uptime_status));
 }
 
 void
