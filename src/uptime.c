@@ -30,7 +30,6 @@
 # include <OS.h>
 #endif
 
-#include "c-strtod.h"
 #include "long-options.h"
 #include "quote.h"
 #include "readutmp.h"
@@ -50,33 +49,13 @@ print_uptime (idx_t n, struct gl_utmp const *this)
   idx_t entries = 0;
   time_t boot_time = 0;
   time_t time_now;
-  time_t uptime = 0;
+  time_t uptime;
   intmax_t updays;
   int uphours;
   int upmins;
   struct tm *tmn;
   double avg[3];
   int loads;
-#ifdef HAVE_PROC_UPTIME
-  FILE *fp;
-
-  fp = fopen ("/proc/uptime", "r");
-  if (fp != nullptr)
-    {
-      char buf[BUFSIZ];
-      char *b = fgets (buf, BUFSIZ, fp);
-      if (b == buf)
-        {
-          char *end_ptr;
-          double upsecs = c_strtod (buf, &end_ptr);
-          if (buf != end_ptr)
-            uptime = (0 <= upsecs && upsecs < TYPE_MAXIMUM (time_t)
-                      ? upsecs : -1);
-        }
-
-      fclose (fp);
-    }
-#endif /* HAVE_PROC_UPTIME */
 
 #if HAVE_SYSCTL && ! defined __GLIBC__ \
     && defined CTL_KERN && defined KERN_BOOTTIME
@@ -109,16 +88,13 @@ print_uptime (idx_t n, struct gl_utmp const *this)
         boot_time = this->ut_ts.tv_sec;
       ++this;
     }
+  /* The gnulib module 'readutmp' is supposed to provide a BOOT_TIME entry
+     on all platforms.  */
+  if (boot_time == 0)
+    error (EXIT_FAILURE, errno, _("couldn't get boot time"));
 
   time_now = time (nullptr);
-#if defined HAVE_PROC_UPTIME
-  if (uptime == 0)
-#endif
-    {
-      if (boot_time == 0)
-        error (EXIT_FAILURE, errno, _("couldn't get boot time"));
-      uptime = time_now - boot_time;
-    }
+  uptime = time_now - boot_time;
   updays = uptime / 86400;
   uphours = uptime % 86400 / 3600;
   upmins = uptime % 86400 % 3600 / 60;
