@@ -51,7 +51,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   erroneously, especially with large input files with no separators.
   [This bug was present in "the beginning".]
 
-  'uptime' no longer incorrectly prints "0 users" on OpenBSD.
+  'uptime' no longer incorrectly prints "0 users" on OpenBSD,
+  and is being built again on FreeBSD and Haiku.
+  [bugs introduced in coreutils-9.2]
+
   [bug introduced in coreutils-9.2]
 
   'wc -l' and 'cksum' no longer crash with an "Illegal instruction" error
@@ -90,6 +93,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   split now supports a configurable $TMPDIR for handling any temporary files.
 
   tac now falls back to '/tmp' if a configured $TMPDIR is unavailable.
+
+  'who -a' now displays the boot time on Alpine Linux, OpenBSD,
+  Cygwin, Haiku, and some Android distributions
+
+  'uptime' now succeeds on some Android distributions, and now counts
+  VM saved/sleep time on GNU (Linux, Hurd, kFreeBSD), NetBSD, OpenBSD,
+  Minix, and Cygwin.
 
   On GNU/Linux platforms where utmp-format files have 32-bit timestamps,
   pinky, uptime, and who can now work for times after the year 2038,
