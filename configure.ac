@@ -406,8 +406,6 @@ AC_DEFUN([coreutils_DUMMY_1],
 ])
 coreutils_DUMMY_1
 
-GNULIB_BOOT_TIME([gl_ADD_PROG([optional_bin_progs], [uptime])])
-
 AC_SYS_POSIX_TERMIOS()
 gl_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL
 

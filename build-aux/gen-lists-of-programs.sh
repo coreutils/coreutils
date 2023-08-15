@@ -33,7 +33,6 @@ build_if_possible_progs='
     stdbuf
     stty
     timeout
-    uptime
     users
     who
 '
@@ -132,6 +131,7 @@ normal_progs='
     unexpand
     uniq
     unlink
+    uptime
     vdir
     wc
     whoami
