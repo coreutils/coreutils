@@ -320,6 +320,8 @@ f=$LOCALE_FR_UTF8
 
 : ${LOCALE_FR_UTF8=none}
 if test "$LOCALE_FR_UTF8" != "none"; then
+ LC_NUMERIC=$f LC_MESSAGES=C sort -g --debug /dev/null 2> debug.out
+ if grep 'numbers use .*,.* as a decimal point' debug.out >/dev/null; then
   (
   echo '   1²---++3   1,234  Mi' |
     LC_ALL=C sort --debug -k2g -k1b,1
@@ -331,7 +333,9 @@ if test "$LOCALE_FR_UTF8" != "none"; then
         -k2,2n -k2,2g -k2,2h \
         -k3,3n -k3,3g -k3,3h
   ) | sed 's/^^ .*/^ no match for key/' > out
-  compare exp out || fail=1
+  compare exp out || touch locale_fail
+ fi
+ test -f locale_fail && fail=1
 fi
 
 Exit $fail
