@@ -55,8 +55,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   and is being built again on FreeBSD and Haiku.
   [bugs introduced in coreutils-9.2]
 
-  [bug introduced in coreutils-9.2]
-
   'wc -l' and 'cksum' no longer crash with an "Illegal instruction" error
   on x86 Linux kernels that disable XSAVE YMM.  This was seen on Xen VMs.
   [bug introduced in coreutils-9.0]
