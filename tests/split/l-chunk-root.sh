@@ -31,7 +31,7 @@ mount -oloop blob mnt                     ||
   skip_ "insufficient mount/ext2 support"
 export TMPDIR="$cwd/mnt"
 
-# 'split' should fail eventially when
+# 'split' should fail eventually when
 # creating an infinitely long output file.
 
 returns_ 1 split -n l/2 /dev/zero || fail=1
