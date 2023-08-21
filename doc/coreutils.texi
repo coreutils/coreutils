@@ -266,8 +266,8 @@ Summarizing files
 * wc invocation::                Print newline, word, and byte counts
 * sum invocation::               Print checksum and block counts
 * cksum invocation::             Print CRC checksum and byte counts
-* b2sum invocation::             Print or check BLAKE2 digests
 * md5sum invocation::            Print or check MD5 digests
+* b2sum invocation::             Print or check BLAKE2 digests
 * sha1sum invocation::           Print or check SHA-1 digests
 * sha2 utilities::               Print or check SHA-2 digests
 
@@ -3773,8 +3773,8 @@ contents of files.
 * wc invocation::               Print newline, word, and byte counts.
 * sum invocation::              Print checksum and block counts.
 * cksum invocation::            Print CRC checksum and byte counts.
-* b2sum invocation::            Print or check BLAKE2 digests.
 * md5sum invocation::           Print or check MD5 digests.
+* b2sum invocation::            Print or check BLAKE2 digests.
 * sha1sum invocation::          Print or check SHA-1 digests.
 * sha2 utilities::              Print or check SHA-2 digests.
 @end menu
@@ -4009,16 +4009,57 @@ by comparing the @command{cksum} output for the received files with the
 @command{cksum} output for the original files (typically given in the
 distribution).
 
+@menu
+* cksum output modes::          Legacy and non Legacy output formats
+* cksum general options::       Options suppported only by cksum
+* cksum common options::        Options suppported also by standalone utilities
+@end menu
+
+@node cksum output modes
+
+@table @asis
+
+@item Legacy output format
 @command{cksum} by default prints the POSIX standard CRC checksum
 for each file along with the number of bytes in the file,
 and the file name unless no arguments were given.
 The 32-bit CRC used is based on the polynomial used
 for CRC error checking in the ISO/IEC 8802-3:1996 standard (Ethernet).
+Similar output formats are used for the other legacy checksums
+selectable with @option{--algorithm=sysv} or @option{--algorithm=bsd},
+detailed at @ref{sum invocation}.
 
-The same usage and options as the @command{b2sum}
-command are supported.  @xref{b2sum invocation}.
-In addition @command{cksum} supports the following options.
+@item Tagged output format
+With the @option{--algorithm} option selecting non legacy checksums,
+the @command{cksum} command defaults to output of the form:
+@example
+@var{digest_name} (@var{file name}) = @var{digest}
+@end example
+Note the standalone checksum utilities can select this output
+mode by using the @option{--tag} option.
 
+@item Untagged output format
+With the @option{--untagged} option and the @option{--algorithm} option
+selecting non legacy checksums, the following output format is used.
+Note this is the default output format of the standalone checksum utilities.
+For each @var{file}, we print the checksum, a space, a flag indicating
+binary or text input mode, and the file name.
+Binary mode is indicated with @samp{*}, text mode with @samp{ } (space).
+Binary mode is the default on systems where it's significant,
+otherwise text mode is the default.  The @command{cksum} command always
+uses binary mode and a @samp{ } (space) flag.
+
+@end table
+
+Note without @option{--zero}, and with non legacy output formats,
+if @var{file} contains a backslash, newline, or carriage return,
+the line is started with a backslash, and each problematic character
+in the file name is escaped with a backslash, making the output unambiguous
+even in the presence of arbitrary file names.
+Since the backslash character itself is escaped, any other backslash
+escape sequences are reserved for future use.
+
+@node cksum general options
 @table @samp
 
 @item -a
@@ -4065,6 +4106,19 @@ input digest string as what is output.  I.e., removing or adding any
 @opindex --debug
 Output extra information to stderr, like the checksum implementation being used.
 
+@macro cksumLengthOption
+@item -l
+@itemx --length
+@opindex -l
+@opindex --length
+@cindex BLAKE2 hash length
+Change (shorten) the default digest length.
+This is specified in bits and thus must be a multiple of 8.
+This option is ignored when @option{--check} is specified,
+as the length is automatically determined when checking.
+@end macro
+@cksumLengthOption
+
 @item --raw
 @opindex --raw
 @cindex raw binary checksum
@@ -4084,35 +4138,140 @@ This format has the checksum at the start of the line, and may be
 more amenable to further processing by other utilities,
 especially in combination with the @option{--zero} option.
 Note this does not identify the digest algorithm used for the checksum.
-@xref{md5sum invocation} for details of this format.
+@xref{cksum output modes} for details of this format.
 @end table
 
-
-@node b2sum invocation
-@section @command{b2sum}: Print or check BLAKE2 digests
-
-@pindex b2sum
-@cindex BLAKE2
-@cindex 512-bit checksum
-@cindex checksum, 512-bit
-@cindex fingerprint, 512-bit
-@cindex message-digest, 512-bit
-
-@command{b2sum} computes a 512-bit checksum for each specified
-@var{file}.  The same usage and options as the @command{md5sum}
-command are supported.  @xref{md5sum invocation}.
-In addition @command{b2sum} supports the following options.
-
+@node cksum common options
 @table @samp
-@item -l
-@itemx --length
-@opindex -l
-@opindex --length
-@cindex BLAKE2 hash length
-Change (shorten) the default digest length.
-This is specified in bits and thus must be a multiple of 8.
-This option is ignored when @option{--check} is specified,
-as the length is automatically determined when checking.
+
+@item -b
+@itemx --binary
+@opindex -b
+@opindex --binary
+@cindex binary input files
+Note this option is not supported by the @command{cksum} command,
+as it operates in binary mode exclusively.
+Treat each input file as binary, by reading it in binary mode and
+outputting a @samp{*} flag.  This is the inverse of @option{--text}.
+On systems like GNU that do not distinguish between binary
+and text files, this option merely flags each input mode as binary:
+the checksum is unaffected.  This option is the default on systems
+like MS-DOS that distinguish between binary and text files, except
+for reading standard input when standard input is a terminal.
+
+@item -c
+@itemx --check
+Read file names and checksum information (not data) from each
+@var{file} (or from standard input if no @var{file} was specified) and report
+whether the checksums match the contents of the named files.
+The input to this mode is usually the output of
+a prior, checksum-generating run of the command.
+
+Three input formats are supported.  Either the default output
+format described above, the @option{--tag} output format,
+or the BSD reversed mode format which is similar to the default mode,
+but doesn't use a character to distinguish binary and text modes.
+
+For the @command{cksum} command, the @option{--check} option
+supports auto-detecting the digest algorithm to use,
+when presented with checksum information in the @option{--tag} output format.
+
+Also for the @command{cksum} command, the @option{--check} option
+auto-detects the digest encoding, accepting both standard hexidecimal
+checksums and those generated via @command{cksum} with its
+@option{--base64} option.
+
+Output with @option{--zero} enabled is not supported by @option{--check}.
+@sp 1
+For each such line, @command{cksum} reads the named file and computes its
+checksum.  Then, if the computed message digest does not match the
+one on the line with the file name, the file is noted as having
+failed the test.  Otherwise, the file passes the test.
+By default, for each valid line, one line is written to standard
+output indicating whether the named file passed the test.
+After all checks have been performed, if there were any failures,
+a warning is issued to standard error.
+Use the @option{--status} option to inhibit that output.
+If any listed file cannot be opened or read, if any valid line has
+a checksum inconsistent with the associated file, or if no valid
+line is found, @command{cksum} exits with nonzero status.  Otherwise,
+it exits successfully.
+Note the @command{cksum} command doesn't support @option{--check}
+with the older @samp{sysv}, @samp{bsd}, or @samp{crc} algorithms.
+
+@item --ignore-missing
+@opindex --ignore-missing
+@cindex verifying checksums
+This option is useful only when verifying checksums.
+When verifying checksums, don't fail or report any status
+for missing files.  This is useful when verifying a subset
+of downloaded files given a larger list of checksums.
+
+@item --quiet
+@opindex --quiet
+@cindex verifying checksums
+This option is useful only when verifying checksums.
+When verifying checksums, don't generate an 'OK' message per successfully
+checked file.  Files that fail the verification are reported in the
+default one-line-per-file format.  If there is any checksum mismatch,
+print a warning summarizing the failures to standard error.
+
+@item --status
+@opindex --status
+@cindex verifying checksums
+This option is useful only when verifying checksums.
+When verifying checksums, don't generate the default one-line-per-file
+diagnostic and don't output the warning summarizing any failures.
+Failures to open or read a file still evoke individual diagnostics to
+standard error.
+If all listed files are readable and are consistent with the associated
+checksums, exit successfully.  Otherwise exit with a status code
+indicating there was a failure.
+
+@item --tag
+@opindex --tag
+@cindex BSD output
+Output BSD style checksums, which indicate the checksum algorithm used.
+As a GNU extension, if @option{--zero} is not used, file names with problematic
+characters are escaped as described above, using the same escaping indicator of
+@samp{\} at the start of the line, as used with the other output format.
+The @option{--tag} option implies binary mode, and is disallowed with
+@option{--text} mode as supporting that would unnecessarily complicate
+the output format, while providing little benefit.
+@xref{cksum output modes} for details of this format.
+The @command{cksum} command, uses @option{--tag} as its default output format.
+
+@item -t
+@itemx --text
+@opindex -t
+@opindex --text
+@cindex text input files
+Note this option is not supported by the @command{cksum} command.
+Treat each input file as text, by reading it in text mode and
+outputting a @samp{ } flag.  This is the inverse of @option{--binary}.
+This option is the default on systems like GNU that do not
+distinguish between binary and text files.  On other systems, it is
+the default for reading standard input when standard input is a
+terminal.  This mode is never defaulted to if @option{--tag} is used.
+
+@item -w
+@itemx --warn
+@opindex -w
+@opindex --warn
+@cindex verifying checksums
+When verifying checksums, warn about improperly formatted checksum lines.
+This option is useful only if all but a few lines in the checked input
+are valid.
+
+@item --strict
+@opindex --strict
+@cindex verifying checksums
+When verifying checksums,
+if one or more input line is invalid,
+exit nonzero after all warnings have been issued.
+
+@optZero
+Also file name escaping is not used.
 @end table
 
 @node md5sum invocation
@@ -4142,165 +4301,46 @@ consider using SHA-2, or the newer @command{b2sum} command.
 @end macro
 @weakHash{MD5}
 
+@macro checksumUsage{command}
 If a @var{file} is specified as @samp{-} or if no files are given
-@command{md5sum} computes the checksum for the standard input.
-@command{md5sum} can also determine whether a file and checksum are
+@command{\command\} computes the checksum for the standard input.
+@command{\command\} can also determine whether a file and checksum are
 consistent.  Synopsis:
 
 @example
-md5sum [@var{option}]@dots{} [@var{file}]@dots{}
+\command\ [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-For each @var{file}, @samp{md5sum} outputs by default, the MD5 checksum,
-a space, a flag indicating binary or text input mode, and the file name.
-Binary mode is indicated with @samp{*}, text mode with @samp{ } (space).
-Binary mode is the default on systems where it's significant,
-otherwise text mode is the default.  The @command{cksum} command always
-uses binary mode and a @samp{ } (space) flag.
+@command{\command\} uses the @samp{Untagged output format}
+for each specified file, as described at @ref{cksum output modes}.
 
-Without @option{--zero}, if @var{file} contains a backslash, newline,
-or carriage return, the line is started with a backslash, and each
-problematic character in the file name is escaped with a backslash,
-making the output unambiguous even in the presence of arbitrary file names.
-Since the backslash character itself is escaped, any other backslash
-escape sequences are reserved for future use.
-
-If @var{file} is omitted or specified as @samp{-}, standard input is read.
-
-The program accepts the following options.  Also see @ref{Common options}.
-
-@table @samp
-
-@item -b
-@itemx --binary
-@opindex -b
-@opindex --binary
-@cindex binary input files
-Note this option is not supported by the @command{cksum} command,
-as it operates in binary mode exclusively.
-Treat each input file as binary, by reading it in binary mode and
-outputting a @samp{*} flag.  This is the inverse of @option{--text}.
-On systems like GNU that do not distinguish between binary
-and text files, this option merely flags each input mode as binary:
-the MD5 checksum is unaffected.  This option is the default on systems
-like MS-DOS that distinguish between binary and text files, except
-for reading standard input when standard input is a terminal.
-
-@item -c
-@itemx --check
-Read file names and checksum information (not data) from each
-@var{file} (or from standard input if no @var{file} was specified) and report
-whether the checksums match the contents of the named files.
-The input to this mode of @command{md5sum} is usually the output of
-a prior, checksum-generating run of @samp{md5sum}.
-
-Three input formats are supported.  Either the default output
-format described above, the @option{--tag} output format,
-or the BSD reversed mode format which is similar to the default mode,
-but doesn't use a character to distinguish binary and text modes.
-
-For the @command{cksum} command, the @option{--check} option
-supports auto-detecting the digest algorithm to use,
-when presented with checksum information in the @option{--tag} output format.
-
-Also for the @command{cksum} command, the @option{--check} option
-auto-detects the digest encoding, accepting both standard hexidecimal
-checksums and those generated via @command{cksum} with its
-@option{--base64} option.
-
-Output with @option{--zero} enabled is not supported by @option{--check}.
-@sp 1
-For each such line, @command{md5sum} reads the named file and computes its
-MD5 checksum.  Then, if the computed message digest does not match the
-one on the line with the file name, the file is noted as having
-failed the test.  Otherwise, the file passes the test.
-By default, for each valid line, one line is written to standard
-output indicating whether the named file passed the test.
-After all checks have been performed, if there were any failures,
-a warning is issued to standard error.
-Use the @option{--status} option to inhibit that output.
-If any listed file cannot be opened or read, if any valid line has
-an MD5 checksum inconsistent with the associated file, or if no valid
-line is found, @command{md5sum} exits with nonzero status.  Otherwise,
-it exits successfully.
-Note the @command{cksum} command doesn't support @option{--check}
-with the older @samp{sysv}, @samp{bsd}, or @samp{crc} algorithms.
-
-@item --ignore-missing
-@opindex --ignore-missing
-@cindex verifying MD5 checksums
-This option is useful only when verifying checksums.
-When verifying checksums, don't fail or report any status
-for missing files.  This is useful when verifying a subset
-of downloaded files given a larger list of checksums.
-
-@item --quiet
-@opindex --quiet
-@cindex verifying MD5 checksums
-This option is useful only when verifying checksums.
-When verifying checksums, don't generate an 'OK' message per successfully
-checked file.  Files that fail the verification are reported in the
-default one-line-per-file format.  If there is any checksum mismatch,
-print a warning summarizing the failures to standard error.
-
-@item --status
-@opindex --status
-@cindex verifying MD5 checksums
-This option is useful only when verifying checksums.
-When verifying checksums, don't generate the default one-line-per-file
-diagnostic and don't output the warning summarizing any failures.
-Failures to open or read a file still evoke individual diagnostics to
-standard error.
-If all listed files are readable and are consistent with the associated
-MD5 checksums, exit successfully.  Otherwise exit with a status code
-indicating there was a failure.
-
-@item --tag
-@opindex --tag
-@cindex BSD output
-Output BSD style checksums, which indicate the checksum algorithm used.
-As a GNU extension, if @option{--zero} is not used, file names with problematic
-characters are escaped as described above, using the same escaping indicator of
-@samp{\} at the start of the line, as used with the other output format.
-The @option{--tag} option implies binary mode, and is disallowed with
-@option{--text} mode as supporting that would unnecessarily complicate
-the output format, while providing little benefit.
-The @command{cksum} command, uses @option{--tag} as its default output format.
-
-@item -t
-@itemx --text
-@opindex -t
-@opindex --text
-@cindex text input files
-Note this option is not supported by the @command{cksum} command.
-Treat each input file as text, by reading it in text mode and
-outputting a @samp{ } flag.  This is the inverse of @option{--binary}.
-This option is the default on systems like GNU that do not
-distinguish between binary and text files.  On other systems, it is
-the default for reading standard input when standard input is a
-terminal.  This mode is never defaulted to if @option{--tag} is used.
-
-@item -w
-@itemx --warn
-@opindex -w
-@opindex --warn
-@cindex verifying MD5 checksums
-When verifying checksums, warn about improperly formatted MD5 checksum lines.
-This option is useful only if all but a few lines in the checked input
-are valid.
-
-@item --strict
-@opindex --strict
-@cindex verifying MD5 checksums
-When verifying checksums,
-if one or more input line is invalid,
-exit nonzero after all warnings have been issued.
-
-@optZero
-Also file name escaping is not used.
-@end table
+The program accepts @ref{cksum common options}.  Also see @ref{Common options}.
+@end macro
+@checksumUsage{md5sum}
 
 @exitstatus
+
+
+@node b2sum invocation
+@section @command{b2sum}: Print or check BLAKE2 digests
+
+@pindex b2sum
+@cindex BLAKE2
+@cindex 512-bit checksum
+@cindex checksum, 512-bit
+@cindex fingerprint, 512-bit
+@cindex message-digest, 512-bit
+
+@command{b2sum} computes a 512-bit checksum for each specified
+@var{file}.
+
+@checksumUsage{b2sum}
+
+In addition @command{b2sum} supports the following options.
+
+@table @samp
+@cksumLengthOption
+@end table
 
 
 @node sha1sum invocation
@@ -4313,12 +4353,11 @@ Also file name escaping is not used.
 @cindex fingerprint, 160-bit
 @cindex message-digest, 160-bit
 
-@command{sha1sum} computes a 160-bit checksum for each specified
-@var{file}.  The usage and options of this command are precisely the
-same as for @command{md5sum}.  @xref{md5sum invocation}.
+@command{sha1sum} computes a 160-bit checksum for each specified @var{file}.
 
 @weakHash{SHA-1}
 
+@checksumUsage{sha1sum}
 
 @node sha2 utilities
 @section sha2 utilities: Print or check SHA-2 digests
@@ -4348,10 +4387,9 @@ same as for @command{md5sum}.  @xref{md5sum invocation}.
 The commands @command{sha224sum}, @command{sha256sum},
 @command{sha384sum} and @command{sha512sum} compute checksums of
 various lengths (respectively 224, 256, 384 and 512 bits),
-collectively known as the SHA-2 hashes.  The usage and options of
-these commands are precisely the same as for @command{md5sum}
-and @command{sha1sum}.
-@xref{md5sum invocation}.
+collectively known as the SHA-2 hashes.
+
+@checksumUsage{sha???sum}
 
 
 @node Operating on sorted files
