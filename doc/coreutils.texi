@@ -4047,9 +4047,7 @@ Supported more modern digest algorithms are:
 @samp{sm3}       only available through @command{cksum}
 @end example
 
-@item -b
-@itemx --base64
-@opindex -b
+@item --base64
 @opindex --base64
 @cindex base64 checksum encoding
 Print base64-encoded digests not hexadecimal.
