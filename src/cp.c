@@ -1201,6 +1201,13 @@ main (int argc, char **argv)
         }
     }
 
+  /* With --sparse=never, disable reflinking so we create a non sparse copy.
+     This will also have the effect of disabling copy offload as that may
+     propagate holes.  For e.g. FreeBSD documents that copy_file_range()
+     will try to propagate holes.  */
+  if (x.reflink_mode == REFLINK_AUTO && x.sparse_mode == SPARSE_NEVER)
+    x.reflink_mode = REFLINK_NEVER;
+
   if (x.hard_link && x.symbolic_link)
     {
       error (0, 0, _("cannot make both hard and symbolic links"));

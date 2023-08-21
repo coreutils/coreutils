@@ -48,4 +48,9 @@ cp --debug --reflink=never --sparse=always k k2 >cp.out || fail=1
 cmp k k2 || fail=1
 grep 'sparse detection: .*zeros' cp.out || { cat cp.out; fail=1; }
 
+# cp should disable reflink AND copy offload with --sparse=never
+cp --debug --sparse=never k k2 >cp.out || fail=1
+cmp k k2 || fail=1
+grep 'copy offload: avoided, reflink: no' cp.out || { cat cp.out; fail=1; }
+
 Exit $fail

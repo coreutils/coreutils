@@ -1139,6 +1139,8 @@ infer_scantype (int fd, struct stat const *sb,
 {
   scan_inference->ext_start = -1;  /* avoid -Wmaybe-uninitialized */
 
+  /* Only attempt SEEK_HOLE if this heuristic
+     suggests the file is sparse.  */
   if (! (HAVE_STRUCT_STAT_ST_BLOCKS
          && S_ISREG (sb->st_mode)
          && ST_NBLOCKS (*sb) < sb->st_size / ST_NBLOCKSIZE))
