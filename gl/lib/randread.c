@@ -132,7 +132,13 @@ get_nonce (void *buffer, size_t bufsize)
   char *buf = buffer, *buflim = buf + bufsize;
   while (buf < buflim)
     {
-      ssize_t nbytes = getrandom (buf, buflim - buf, 0);
+#if defined __sun
+# define MAX_GETRANDOM 1024
+#else
+# define MAX_GETRANDOM SIZE_MAX
+#endif
+      size_t max_bytes = MIN (buflim - buf, MAX_GETRANDOM);
+      ssize_t nbytes = getrandom (buf, max_bytes, 0);
       if (0 <= nbytes)
         buf += nbytes;
       else if (errno != EINTR)

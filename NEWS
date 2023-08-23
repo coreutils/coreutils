@@ -51,6 +51,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'pr --length=1 --double-space' no longer enters an infinite loop.
   [This bug was present in "the beginning".]
 
+  shred again operates on Solaris when built for 64 bits.
+  Previously it would have exited with a "getrandom: Invalid argument" error.
+  [bug introduced in coreutils-9.0]
+
   tac now handles short reads on its input.  Previously it may have exited
   erroneously, especially with large input files with no separators.
   [This bug was present in "the beginning".]
