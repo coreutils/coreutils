@@ -2846,7 +2846,10 @@ skip:
           switch (rename_errno)
             {
             case EDQUOT: case EEXIST: case EISDIR: case EMLINK:
-            case ENOSPC: case ENOTEMPTY: case ETXTBSY:
+            case ENOSPC: case ETXTBSY:
+#if ENOTEMPTY != EEXIST
+            case ENOTEMPTY:
+#endif
               /* The destination must be the problem.  Don't mention
                  the source as that is more likely to confuse the user
                  than be helpful.  */
