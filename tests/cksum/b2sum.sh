@@ -41,9 +41,8 @@ $prog --strict -c openssl.b2sum || fail=1
 rm -f check.vals || framework_failure_
 # Ensure we can check non tagged format
 [ "$prog" != 'b2sum' ] && tag_opt='--untagged' || tag_opt=''
-[ "$prog" == 'b2sum' ] && text_opt='--text' || text_opt=''
 for l in 0 128; do
-  $prog $tag_opt $text_opt -l $l /dev/null | tee -a check.vals > check.b2sum
+  $prog $tag_opt --text -l $l /dev/null | tee -a check.vals > check.b2sum
   $prog -l $l --strict -c check.b2sum || fail=1
   $prog --strict -c check.b2sum || fail=1
 done

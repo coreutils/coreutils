@@ -4046,8 +4046,7 @@ For each @var{file}, we print the checksum, a space, a flag indicating
 binary or text input mode, and the file name.
 Binary mode is indicated with @samp{*}, text mode with @samp{ } (space).
 Binary mode is the default on systems where it's significant,
-otherwise text mode is the default.  The @command{cksum} command always
-uses binary mode and a @samp{ } (space) flag.
+otherwise text mode is the default.
 
 @end table
 

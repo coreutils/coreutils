@@ -45,7 +45,7 @@ my @Tests =
 my $t;
 foreach $t (@Tests)
   {
-    splice @$t, 1, 0, '--untagged -a sm3'
+    splice @$t, 1, 0, '--untagged --text -a sm3'
   }
 
 my $save_temps = $ENV{DEBUG};
