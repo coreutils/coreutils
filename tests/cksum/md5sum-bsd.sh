@@ -70,30 +70,32 @@ for i in 'a' ' b' '*c' 'dd' ' '; do
 done
 md5sum --strict -c check.md5 || fail=1
 
-# Ensure we can --check BSD traditional format we produce
-# with the GNU extension of escaped newlines
-nl='
+if : > 'backslash\is\not\dir\sep'; then
+  # Ensure we can --check BSD traditional format we produce
+  # with the GNU extension of escaped newlines
+  nl='
 '
-t='	'
-rm check.md5
-for i in 'a\b' 'a\' '\a' "a${nl}b" "a${t}b"; do
-  : > "$i"
-  md5sum --tag "$i" >> check.md5 || fail=1
-done
-md5sum --strict -c check.md5 > out || fail=1
-printf '%s: OK\n' '\a\\b' '\a\\' '\\\a' '\a\nb' "a${t}b" > exp ||
-  framework_failure_
-compare exp out || fail=1
+  t='	'
+  rm check.md5
+  for i in 'a\b' 'a\' '\a' "a${nl}b" "a${t}b"; do
+    : > "$i"
+    md5sum --tag "$i" >> check.md5 || fail=1
+  done
+  md5sum --strict -c check.md5 > out || fail=1
+  printf '%s: OK\n' '\a\\b' '\a\\' '\\\a' '\a\nb' "a${t}b" > exp ||
+    framework_failure_
+  compare exp out || fail=1
 
 
-# Ensure BSD traditional format with GNU extension escapes
-# is in the expected format
-ex_file='test
+  # Ensure BSD traditional format with GNU extension escapes
+  # is in the expected format
+  ex_file='test
 \\file'
-ex_output='\MD5 (test\n\\\\file) = d41d8cd98f00b204e9800998ecf8427e'
-touch "$ex_file"
-printf "%s\n" "$ex_output" > exp
-md5sum --tag "$ex_file" > out || fail=1
-compare exp out || fail=1
+  ex_output='\MD5 (test\n\\\\file) = d41d8cd98f00b204e9800998ecf8427e'
+  touch "$ex_file"
+  printf "%s\n" "$ex_output" > exp
+  md5sum --tag "$ex_file" > out || fail=1
+  compare exp out || fail=1
+fi
 
 Exit $fail
