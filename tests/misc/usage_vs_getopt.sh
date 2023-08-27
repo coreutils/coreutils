@@ -87,7 +87,7 @@ for prg in $built_programs; do
     '[' | expr | stty )
       continue;;
     # Wrap some utilities known by the shell by env.
-    echo | false | kill | printf | pwd | test | true )
+    echo | false | kill | printf | pwd | sleep | test | true )
       prg="env $prg";;
   esac
   checkprg $prg
