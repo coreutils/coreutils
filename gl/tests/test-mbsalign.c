@@ -29,10 +29,19 @@ main (void)
   char dest[4 * 16 + 1];
   size_t width, n;
 
-  /* Test unibyte truncation.  */
-  width = 4;
-  n = mbsalign ("t\tés", dest, sizeof dest, &width, MBS_ALIGN_LEFT, 0);
-  ASSERT (n == 4);
+#ifdef __ANDROID__
+  /* On Android ≥ 5.0, the default locale is the "C.UTF-8" locale, not the
+     "C" locale.  Furthermore, when you attempt to set the "C" or "POSIX"
+     locale via setlocale(), what you get is a "C" locale with UTF-8 encoding,
+     that is, effectively the "C.UTF-8" locale.  */
+  if (MB_CUR_MAX == 1)
+#endif
+    {
+      /* Test unibyte truncation.  */
+      width = 4;
+      n = mbsalign ("t\tés", dest, sizeof dest, &width, MBS_ALIGN_LEFT, 0);
+      ASSERT (n == 4);
+    }
 
   /* Test center alignment.  */
   width = 4;
