@@ -61,9 +61,16 @@ done
 # This test finds the bug only with shells that do not close FDs on
 # exec, and will miss the bug (if present) on other shells, but it's
 # not easy to fix this without running afoul of the OpenBSD-like sh bugs.
+#
+# This script uses 'ulimit -n 10' with 7, 8 and 9 open
+# to limit 'sort' to at most 7 open files:
+# stdin, stdout, stderr, two input and one output files when merging,
+# and an extra.  The extra is for old-fashioned platforms like Solaris 10
+# where opening a temp file also requires opening /dev/urandom to
+# calculate the temp file's name.
 (seq 6 && echo 6) >exp || framework_failure_
 echo 6 >out || framework_failure_
-(exec 3<&- 4<&- 5<&- 6</dev/null 7<&6 8<&6 9<&6 &&
+(exec 3<&- 4<&- 5<&- 6<&- 7</dev/null 8<&7 9<&7 &&
  ulimit -n 10 &&
  sort -n -m --batch-size=7 -o out out in/1 in/2 in/3 in/4 in/5 out
 ) &&
