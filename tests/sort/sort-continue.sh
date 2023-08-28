@@ -19,8 +19,14 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ sort
 
+# This script uses 'ulimit -n 7' to limit 'sort' to at most 7 open files:
+# stdin, stdout, stderr, two input and one output files when merging,
+# and an extra.  The extra is for old-fashioned platforms like Solaris 10
+# where opening a temp file also requires opening /dev/urandom to
+# calculate the temp file's name.
+
 # Skip the test when running under valgrind.
-( ulimit -n 6; sort 3<&- 4<&- 5<&- < /dev/null ) \
+( ulimit -n 7; sort 3<&- 4<&- 5<&- 6<&- < /dev/null ) \
   || skip_ 'fd-limited sort failed; are you running under valgrind?'
 
 for i in $(seq 31); do
@@ -31,16 +37,16 @@ done
 test_files=$(echo __test.*)
 
 (
- ulimit -n 6
- sort -n -m $test_files 3<&- 4<&- 5<&- < /dev/null > out
+ ulimit -n 7
+ sort -n -m $test_files 3<&- 4<&- 5<&- 6<&- < /dev/null > out
 ) &&
 compare in out ||
   { fail=1; echo 'file descriptor exhaustion not handled' 1>&2; }
 
 echo 32 | tee -a in > in1
 (
- ulimit -n 6
- sort -n -m $test_files - 3<&- 4<&- 5<&- < in1 > out
+ ulimit -n 7
+ sort -n -m $test_files - 3<&- 4<&- 5<&- 6<&- < in1 > out
 ) &&
 compare in out || { fail=1; echo 'stdin not handled properly' 1>&2; }
 
