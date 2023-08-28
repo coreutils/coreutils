@@ -390,7 +390,6 @@ unary_operator (void)
     {
     default:
       test_syntax_error (_("%s: unary operator expected"), quote (argv[pos]));
-      return false;
 
       /* All of the following unary operators use unary_advance (), which
          checks to make sure that there is an argument, and then advances
