@@ -457,7 +457,7 @@ main (int argc, char **argv)
         case '=':
         case '0': case '1': case '2': case '3':
         case '4': case '5': case '6': case '7':
-          /* Support nonportable uses like "chmod -w", but diagnose
+          /* Support non-portable uses like "chmod -w", but diagnose
              surprises due to umask confusion.  Even though "--", "--r",
              etc., are valid modes, there is no "case '-'" here since
              getopt_long reserves leading "--" for long options.  */

@@ -268,7 +268,7 @@ static enum size_spec fp_type_size[MAX_FP_TYPE_SIZE + 1];
 # define WORDS_BIGENDIAN 0
 #endif
 
-/* Use native endianess by default.  */
+/* Use native endianness by default.  */
 static bool input_swap;
 
 static char const short_options[] = "A:aBbcDdeFfHhIij:LlN:OoS:st:vw::Xx";
@@ -1746,7 +1746,7 @@ main (int argc, char **argv)
           CASE_OLD_ARG ('i', "dI");
         case 'I': case 'L': /* obsolescent and undocumented aliases */
           CASE_OLD_ARG ('l', "dL");
-          CASE_OLD_ARG ('O', "o4"); /* obsolesent and undocumented */
+          CASE_OLD_ARG ('O', "o4"); /* obsolescent and undocumented */
         case 'B': /* obsolescent and undocumented alias */
           CASE_OLD_ARG ('o', "o2");
           CASE_OLD_ARG ('s', "d2");

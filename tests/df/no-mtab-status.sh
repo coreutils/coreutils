@@ -1,5 +1,5 @@
 #!/bin/sh
-# Test df's behaviour when the mount list cannot be read.
+# Test df's behavior when the mount list cannot be read.
 # This test is skipped on systems that lack LD_PRELOAD support; that's fine.
 
 # Copyright (C) 2012-2023 Free Software Foundation, Inc.

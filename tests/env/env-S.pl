@@ -105,7 +105,7 @@ my @Tests =
      ['e14',q[-i -S"A='B\\\\\\"C' ]."$env\"",  {OUT=>'A=B\"C'}],
 
      # Special escape sequences:
-     # \_ in duoble-quotes is a space - result is just one envvar 'A'
+     # \_ in double-quotes is a space - result is just one envvar 'A'
      ['e20', q[-i -S'A="B\_C=D" ]."$env'",    {OUT=>'A=B C=D'}],
      # \_ outside double-quotes is arg separator, the command to
      # execute should be 'env env'
@@ -123,7 +123,7 @@ my @Tests =
      # u3,u4: ${FOO} expanded by env itself before executing sh.
      #        \\$FOO expanded by sh.
      # ${FOO} should have value of the original environment
-     # and \\$FOO should be unset, regardlss where -uFOO is used.
+     # and \\$FOO should be unset, regardless where -uFOO is used.
      # 'u3' behavior differs from FreeBSD's but deemed preferable, in
      # https://lists.gnu.org/r/coreutils/2018-04/msg00014.html
      ['u3',  q[-uFOO -S'sh -c "echo x${FOO}x =\\$FOO="'],

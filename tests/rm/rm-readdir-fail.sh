@@ -1,5 +1,5 @@
 #!/bin/sh
-# Test rm's behaviour when the directory cannot be read.
+# Test rm's behavior when the directory cannot be read.
 # This test is skipped on systems that lack LD_PRELOAD support.
 
 # Copyright (C) 2016-2023 Free Software Foundation, Inc.

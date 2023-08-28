@@ -1,4 +1,4 @@
-/* expand-common - common functionality for expand/unexapnd
+/* expand-common - common functionality for expand/unexpand
    Copyright (C) 1989-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify

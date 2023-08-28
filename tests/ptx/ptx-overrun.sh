@@ -34,7 +34,7 @@ compare out empty || fail=1
 
 # Trigger an invalid heap reference noticed by gcc -fsanitize=address
 # from coreutils-8.22 and earlier.  As well as an invalid memory reference,
-# the issue can be seen in the output, with non deterministice whitespace
+# the issue can be seen in the output, with nondeterministic whitespace
 # trimming when multiple files are specified.
 printf '%s\n' 'This is a ptx whitespace Trimming test' > ws.in
 ptx ws.in ws.in | sort | uniq -u > out

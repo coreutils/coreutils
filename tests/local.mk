@@ -15,7 +15,7 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Indirections required so that we'll still be able to know the
+# Indirection required so that we'll still be able to know the
 # complete list of our tests even if the user overrides TESTS
 # from the command line (as permitted by the test harness API).
 TESTS = $(all_tests) $(factor_tests)

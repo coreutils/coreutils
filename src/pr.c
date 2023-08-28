@@ -97,7 +97,7 @@
    adapted to other UNIXes. A violation of downward compatibility has to
    be accepted.
    Some NEW CAPITAL LETTER options ( -J, -S, -W) has been introduced to
-   turn off unexpected interferences of small letter options (-s and -w
+   turn off unexpected interference of small letter options (-s and -w
    together with the three column options).
    -N option and the second argument LAST_PAGE of +FIRST_PAGE offer more
    flexibility; The detailed handling of form feeds set in the input
@@ -143,7 +143,7 @@
                 (a most frequently used form) still work as usual.
 
    -c, --show-control-chars
-                Print unprintable characters as control prefixes.
+                Print nonprintable characters as control prefixes.
                 Control-g is printed as ^G (use hat notation) and
                 octal backslash notation.
 
@@ -272,7 +272,7 @@
                 by form feeds set in the input files.
 
    -v, --show-nonprinting
-                Print unprintable characters as escape sequences. Use
+                Print nonprintable characters as escape sequences. Use
                 octal backslash notation. Control-G becomes \007.
 
    -w PAGE_WIDTH, --width=PAGE_WIDTH
@@ -663,11 +663,11 @@ static int number_width;
 /* Buffer sprintf uses to format a line number. */
 static char *number_buff;
 
-/* (-v) True means unprintable characters are printed as escape sequences.
+/* (-v) True means nonprintable characters are printed as escape sequences.
    control-g becomes \007. */
 static bool use_esc_sequence = false;
 
-/* (-c) True means unprintable characters are printed as control prefixes.
+/* (-c) True means nonprintable characters are printed as control prefixes.
    control-g becomes ^G. */
 static bool use_cntrl_prefix = false;
 

@@ -240,7 +240,7 @@ my @Tests =
      ],
 
      # Test for a bug fixed after coreutils-8.13
-     # where 'argetm' was errenously printed for dangling links
+     # where 'argetm' was erroneously printed for dangling links
      # when ln=target was used in LS_COLORS
      ['sl-dangle6', '-L --color=always d',
       {OUT => "s\n"},

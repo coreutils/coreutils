@@ -175,7 +175,7 @@ statfs (char const *filename, struct fs_info *buf)
 static char const digits[] = "0123456789";
 
 /* Flags that are portable for use in printf, for at least one
-   conversion specifier; make_format removes unportable flags as
+   conversion specifier; make_format removes non-portable flags as
    needed for particular specifiers.  The glibc 2.2 extension "I" is
    listed here; it is removed by make_format because it has undefined
    behavior elsewhere and because it is incompatible with

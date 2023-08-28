@@ -171,7 +171,7 @@ my @Tests =
 
 
    # Character classes: in the multibyte case, the regex engine understands
-   # there is a single multibyte characeter in the brackets.
+   # there is a single multibyte character in the brackets.
    # In the single byte case, the regex engine sees two octets in the character
    # class ('\xCE' and '\xB1') - and it matches the first one.
    ['mb-m7', "match \xCE\xB1bc\xCE\xB4e '\\([\xCE\xB1]\\)'", {OUT=>"\xCE\xB1"}],

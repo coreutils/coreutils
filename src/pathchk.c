@@ -86,7 +86,7 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION]... NAME...\n"), program_name);
       fputs (_("\
-Diagnose invalid or unportable file names.\n\
+Diagnose invalid or non-portable file names.\n\
 \n\
   -p                  check for most POSIX systems\n\
   -P                  check for empty names and leading \"-\"\n\
@@ -191,7 +191,7 @@ portable_chars_only (char const *file, size_t filelen)
       mbstate_t mbstate = { 0, };
       size_t charlen = mbrlen (invalid, filelen - validlen, &mbstate);
       error (0, 0,
-             _("nonportable character %s in file name %s"),
+             _("non-portable character %s in file name %s"),
              quotearg_n_style_mem (1, locale_quoting_style, invalid,
                                    (charlen <= MB_LEN_MAX ? charlen : 1)),
              quoteaf_n (0, file));

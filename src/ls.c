@@ -958,7 +958,7 @@ struct column_info
   size_t *col_arr;
 };
 
-/* Array with information about column filledness.  */
+/* Array with information about column fullness.  */
 static struct column_info *column_info;
 
 /* Maximum number of columns ever possible for this display.  */
@@ -4644,7 +4644,7 @@ quote_name_buf (char **inbuf, size_t bufsize, char *name,
                           }
                         else
                           {
-                            /* An unprintable multibyte character.
+                            /* An nonprintable multibyte character.
                                Replace it entirely with a question
                                mark.  */
                             p += bytes;

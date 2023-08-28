@@ -303,7 +303,7 @@ scan_zeros (struct item *k)
    loop, print the loop on standard error, remove a relation to break
    the loop, and return true.
 
-   The loop detection strategy is as follows: Realise that what we're
+   The loop detection strategy is as follows: Realize that what we're
    dealing with is essentially a directed graph.  If we find an item
    that is part of a graph that contains a cycle we traverse the graph
    in backwards direction.  In general there is no unique way to do
@@ -429,14 +429,13 @@ static _Noreturn void
 tsort (char const *file)
 {
   bool ok = true;
-  struct item *root;
   struct item *j = nullptr;
   struct item *k = nullptr;
   token_buffer tokenbuffer;
   bool is_stdin = STREQ (file, "-");
 
-  /* Intialize the head of the tree will hold the strings we're sorting.  */
-  root = new_item (nullptr);
+  /* Initialize the head of the tree holding the strings we're sorting.  */
+  struct item *root = new_item (nullptr);
 
   if (!is_stdin && ! freopen (file, "r", stdin))
     error (EXIT_FAILURE, errno, "%s", quotef (file));

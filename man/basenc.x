@@ -7,7 +7,7 @@
 basenc \- Encode/decode data and print to standard output
 [DESCRIPTION]
 .\" Add any additional description here
-[ENCODINGS EXAMPLES]
+[ENCODING EXAMPLES]
 .PP
 .nf
 .RS

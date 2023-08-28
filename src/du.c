@@ -18,7 +18,7 @@
    * Doesn't simply ignore the names of regular files given as arguments
      when -a is given.
 
-   By tege@sics.se, Torbjorn Granlund,
+   By tege@sics.se, Torbjörn Granlund,
    and djm@ai.mit.edu, David MacKenzie.
    Variable blocks added by lm@sgi.com and eggert@twinsun.com.
    Rewritten to use nftw, then to use fts by Jim Meyering.  */
@@ -49,7 +49,7 @@ extern bool fts_debug;
 #define PROGRAM_NAME "du"
 
 #define AUTHORS \
-  proper_name ("Torbjorn Granlund"), \
+  proper_name_lite ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
   proper_name ("David MacKenzie"), \
   proper_name ("Paul Eggert"), \
   proper_name ("Jim Meyering")

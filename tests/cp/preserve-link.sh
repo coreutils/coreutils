@@ -72,7 +72,7 @@ create_target_tree()
 # The path taken by cp is dependent on which cp encounters
 # first in the source, which is non deterministic currently
 # (I'm guessing that results are sorted by inode and
-# beauses they're the same here, and due to the sort
+# because they're the same here, and due to the sort
 # being unstable, either can be processed first).
 create_source_tree
 

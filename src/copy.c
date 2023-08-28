@@ -2996,7 +2996,7 @@ skip:
           omitted_permissions = 0;
 
           /* For directories, the process global context could be reset for
-             descendents, so use it to set the context for existing dirs here.
+             descendants, so use it to set the context for existing dirs here.
              This will also give earlier indication of failure to set ctx.  */
           if (x->set_security_context || x->preserve_security_context)
             if (! set_file_security_ctx (dst_name, false, x))

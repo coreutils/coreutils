@@ -296,10 +296,8 @@ src_ls_LDADD += $(FILE_HAS_ACL_LIB)
 # for various xattr functions
 copy_ldadd += $(LIB_XATTR)
 
-# for print_unicode_char, proper_name_utf8
-src_factor_LDADD += $(LIBICONV)
+# for print_unicode_char
 src_printf_LDADD += $(LIBICONV)
-src_ptx_LDADD += $(LIBICONV)
 
 # for libcrypto hash routines
 src_md5sum_LDADD += $(LIB_CRYPTO)

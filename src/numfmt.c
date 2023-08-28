@@ -605,7 +605,7 @@ simple_strtod_float (char const *input_str,
 
    TODO:
      support locale'd grouping
-     accept scentific and hex floats (probably use strtold directly)
+     accept scientific and hex floats (probably use strtold directly)
 
    Returns:
       SSE_OK - valid number.

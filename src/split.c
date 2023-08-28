@@ -48,7 +48,7 @@
 #define PROGRAM_NAME "split"
 
 #define AUTHORS \
-  proper_name ("Torbjorn Granlund"), \
+  proper_name_lite ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
   proper_name ("Richard M. Stallman")
 
 /* Shell command to filter through, instead of creating files.  */
@@ -1096,7 +1096,7 @@ ofile_open (of_t *files, idx_t i_check, idx_t nfiles)
                  where the other end has closed because of our
                  previous close.  In that case we'll immediately
                  get an error, rather than waiting indefinitely.
-                 In specialised cases the consumer can keep reading
+                 In specialized cases the consumer can keep reading
                  from the fifo, terminating on conditions in the data
                  itself, or perhaps never in the case of 'tail -f'.
                  I.e., for fifos it is valid to attempt this reopen.

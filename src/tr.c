@@ -206,7 +206,7 @@ static bool delete = false;
 static bool complement = false;
 
 /* When tr is performing translation and string1 is longer than string2,
-   POSIX says that the result is unspecified.  That gives the implementor
+   POSIX says that the result is unspecified.  That gives the implementer
    of a POSIX conforming version of tr two reasonable choices for the
    semantics of this case.
 

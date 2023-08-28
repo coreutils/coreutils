@@ -74,7 +74,7 @@
 
 #define PROGRAM_NAME "timeout"
 
-#define AUTHORS proper_name ("Padraig Brady")
+#define AUTHORS proper_name_lite ("Padraig Brady", "P\303\241draig Brady")
 
 static int timed_out;
 static int term_signal = SIGTERM;  /* same default as kill command.  */
@@ -592,7 +592,7 @@ main (int argc, char **argv)
                   unblock_signal (sig);
                   raise (sig);
                 }
-              /* Allow users to distinguish if command was forcably killed.
+              /* Allow users to distinguish if command was forcibly killed.
                  Needed with --foreground where we don't send SIGKILL to
                  the timeout process itself.  */
               if (timed_out && sig == SIGKILL)

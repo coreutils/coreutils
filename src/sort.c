@@ -2115,7 +2115,7 @@ xstrxfrm (char *restrict dest, char const *restrict src, size_t destsize)
       error (0, errno, _("string transformation failed"));
       error (0, 0, _("set LC_ALL='C' to work around the problem"));
       error (SORT_FAILURE, 0,
-             _("the untransformed string was %s"),
+             _("the original string was %s"),
              quotearg_n_style (0, locale_quoting_style, src));
     }
 

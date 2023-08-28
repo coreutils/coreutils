@@ -41,7 +41,7 @@ _path='export PATH='$srcdir':${PATH#*:}'
 pre='#!/bin/sh\n'"$_path"'\n'
 n=15 # stack trace depth
 log_fd=3 # One can redirect this to file like 3>vg.log
-test -e /tmp/cu-vg && suppressions='--supressions=/tmp/cu-vg'
+test -e /tmp/cu-vg && suppressions='--suppressions=/tmp/cu-vg'
 vg="exec /usr/bin/valgrind $suppressions --log-fd=$log_fd \
 --leak-check=yes --track-fds=yes --leak-check=full --num-callers=$n"
 cat <<EOF > src/vg/gen

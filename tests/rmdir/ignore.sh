@@ -40,7 +40,7 @@ fi
 
 test -d x/y || fail=1
 # Between 6.11 and 8.31, the following rmdir would mistakenly fail,
-# and also give a non descript error
+# and also give a nondescript error
 touch x/y/z || framework_failure_
 rmdir --ignore-fail-on-non-empty x/y || fail=1
 test -d x/y || fail=1

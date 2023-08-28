@@ -885,7 +885,7 @@ install_signal_handlers (void)
       act.sa_handler = siginfo_handler;
       /* Note we don't use SA_RESTART here and instead
          handle EINTR explicitly in iftruncate etc.
-         to avoid blocking on noncommitted read/write calls.  */
+         to avoid blocking on uncommitted read/write calls.  */
       act.sa_flags = 0;
       sigaction (SIGINFO, &act, nullptr);
     }
@@ -1418,7 +1418,7 @@ static intmax_t
 parse_integer (char const *str, strtol_error *invalid)
 {
   /* Call xstrtoumax, not xstrtoimax, since we don't want to
-     allow strings like " -0".  Initialize N to an interminate value;
+     allow strings like " -0".  Initialize N to an indeterminate value;
      calling code should not rely on this function returning 0
      when *INVALID represents a non-overflow error.  */
   int indeterminate = 0;

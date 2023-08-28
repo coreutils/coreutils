@@ -26,7 +26,6 @@ VC_LIST_ALWAYS_EXCLUDE_REGEX = src/blake2/.*$$
 
 # Tests not to run as part of "make distcheck".
 local-checks-to-skip = \
-  sc_proper_name_utf8_requires_ICONV \
   sc_indent
 
 # Tools used to bootstrap this package, used for "announcement".
@@ -49,7 +48,7 @@ export VERBOSE = yes
 # 4914152 9e
 export XZ_OPT = -8e
 
-old_NEWS_hash = ac6cb1c35890b53e56acbfbb078fcd53
+old_NEWS_hash = c550e6659b8350f62d9cd0483bf0c199
 
 # Add an exemption for sc_makefile_at_at_check.
 _makefile_at_at_check_exceptions = \
@@ -288,16 +287,6 @@ sc_check-AUTHORS: $(all_programs)
 	sed -n '/^[^ ][^ ]*:/p' $(srcdir)/AUTHORS > $(au_dotdot) \
 	  && diff $(au_actual) $(au_dotdot) \
 	  && rm -f $(au_actual) $(au_dotdot)
-
-# Each program with a non-ASCII author name must link with LIBICONV.
-sc_check-I18N-AUTHORS:
-	@cd $(srcdir)/src &&						\
-	  for i in $$(git grep -l -w proper_name_utf8 *.c|sed 's/\.c//'); do \
-	    grep -E "^src_$${i}_LDADD"' .?= .*\$$\(LIBICONV\)' local.mk	\
-		> /dev/null						\
-	      || { echo "$(ME): link rules for $$i do not include"	\
-		    '$$(LIBICONV)' 1>&2; exit 1; };			\
-	  done
 
 # Ensure the alternative __attribute (keyword) form isn't used as
 # that form is not elided where required.  Also ensure that we don't

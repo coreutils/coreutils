@@ -36,7 +36,7 @@
 /* TRANSLATORS: Please translate "F. Pinard" to "François Pinard"
    if "ç" (c-with-cedilla) is available in the translation's character
    set and encoding.  */
-#define AUTHORS proper_name_utf8 ("F. Pinard", "Fran\xc3\xa7ois Pinard")
+#define AUTHORS proper_name_lite ("F. Pinard", "Fran\xc3\xa7ois Pinard")
 
 /* Number of possible characters in a byte.  */
 #define CHAR_SET_SIZE 256
@@ -462,7 +462,7 @@ initialize_regex (void)
      a user provided Break character file, construct a fastmap of
      characters that may appear in a word.  If GNU extensions enabled,
      include only letters of the underlying character set.  If disabled,
-     include almost everything, even punctuations; stop only on white
+     include almost everything, even punctuation; stop only on white
      space.  */
 
   if (word_regex.string)

@@ -14,7 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-   Written by Torbjorn Granlund, David MacKenzie, and Jim Meyering. */
+   Written by Torbjörn Granlund, David MacKenzie, and Jim Meyering. */
 
 #include <config.h>
 #include <stdio.h>
@@ -40,7 +40,7 @@
 #define PROGRAM_NAME "cp"
 
 #define AUTHORS \
-  proper_name ("Torbjorn Granlund"), \
+  proper_name_lite ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
   proper_name ("David MacKenzie"), \
   proper_name ("Jim Meyering")
 

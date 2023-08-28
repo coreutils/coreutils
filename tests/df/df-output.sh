@@ -59,7 +59,7 @@ EOF
 df --output=target,source,target '.' 2>out && fail=1
 compare exp out || fail=1
 
-# Ensure that this limitation also works for splitted --output options.
+# Ensure that this limitation also works for split --output options.
 df --out=target,source --out=target '.' 2>out && fail=1
 compare exp out || fail=1
 

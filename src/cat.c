@@ -19,7 +19,7 @@
    * Usually much faster than other versions of cat, the difference
    is especially apparent when using the -v option.
 
-   By tege@sics.se, Torbjorn Granlund, advised by rms, Richard Stallman.  */
+   By tege@sics.se, Torbjörn Granlund, advised by rms, Richard Stallman.  */
 
 #include <config.h>
 
@@ -45,7 +45,7 @@
 #define PROGRAM_NAME "cat"
 
 #define AUTHORS \
-  proper_name ("Torbjorn Granlund"), \
+  proper_name_lite ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
   proper_name ("Richard M. Stallman")
 
 /* Name of input file.  May be "-".  */

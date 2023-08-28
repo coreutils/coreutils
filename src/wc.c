@@ -459,8 +459,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
          move the last incomplete character of the buffer to the front
          of the buffer.  This is needed because we don't know whether
          the 'mbrtowc' function updates the state when it returns -2, --
-         this is the ISO C 99 and glibc-2.2 behaviour - or not - amended
-         ANSI C, glibc-2.1 and Solaris 5.7 behaviour.  We don't have an
+         this is the ISO C 99 and glibc-2.2 behavior - or not - amended
+         ANSI C, glibc-2.1 and Solaris 5.7 behavior.  We don't have an
          autoconf test for this, yet.  */
       size_t prev = 0; /* number of bytes carried over from previous round */
 # else
@@ -556,7 +556,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                   if (wide && iswprint (wide_char))
                     {
                       /* wcwidth can be expensive on OSX for example,
-                         so avoid if uneeded.  */
+                         so avoid if not needed.  */
                       if (print_linelength)
                         {
                           int width = wcwidth (wide_char);

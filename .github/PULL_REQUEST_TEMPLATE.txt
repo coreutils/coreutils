@@ -22,7 +22,7 @@ contributing to the GNU Project, please read
 * Coreutils FAQ: https://www.gnu.org/software/coreutils/faq/coreutils-faq.html
 
 * Coreutils Gotchas: https://www.pixelbeat.org/docs/coreutils-gotchas.html
-  contains a list of some quirks and unexpected behaviour (which are often
+  contains a list of some quirks and unexpected behavior (which are often
   mistaken for bugs).
 
 * Online Manual:

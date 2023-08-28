@@ -33,8 +33,8 @@ grep '^#define HAVE_PTHREAD_T 1' "$CONFIG_HEADER" > /dev/null ||
   seq -f %-98f 10000 | shuf > in ||
   framework_failure_
 
-# On Fedora-17-beta (valgrind-3.7.0-2.fc17.x86_64), this evokes two
-# "Conditional jump or move depends on uninitialised value(s)" errors,
+# On Fedora-17-beta (valgrind-3.7.0-2.fc17.x86_64), this evokes two complaints
+# that a conditional jump or move depends on uninitialized values,
 # each originating from _dl_start.
 valgrind --quiet --error-exitcode=3 sort --version > /dev/null ||
   framework_failure_ 'valgrind fails for trivial sort invocation'

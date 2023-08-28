@@ -2,30 +2,30 @@ Here are the names of the programs in this package,
 each followed by the name(s) of its author(s).
 
 arch: David MacKenzie, Karel Zak
-b2sum: Padraig Brady, Samuel Neves
+b2sum: Pádraig Brady, Samuel Neves
 base32: Simon Josefsson
 base64: Simon Josefsson
 basename: David MacKenzie
 basenc: Simon Josefsson, Assaf Gordon
-cat: Torbjorn Granlund, Richard M. Stallman
+cat: Torbjörn Granlund, Richard M. Stallman
 chcon: Russell Coker, Jim Meyering
 chgrp: David MacKenzie, Jim Meyering
 chmod: David MacKenzie, Jim Meyering
 chown: David MacKenzie, Jim Meyering
 chroot: Roland McGrath
-cksum: Padraig Brady, Q. Frank Xia
+cksum: Pádraig Brady, Q. Frank Xia
 comm: Richard M. Stallman, David MacKenzie
 coreutils: Alex Deymo
-cp: Torbjorn Granlund, David MacKenzie, Jim Meyering
+cp: Torbjörn Granlund, David MacKenzie, Jim Meyering
 csplit: Stuart Kemp, David MacKenzie
 cut: David M. Ihnat, David MacKenzie, Jim Meyering
 date: David MacKenzie
 dd: Paul Rubin, David MacKenzie, Stuart Kemp
-df: Torbjorn Granlund, David MacKenzie, Paul Eggert
+df: Torbjörn Granlund, David MacKenzie, Paul Eggert
 dir: Richard M. Stallman, David MacKenzie
 dircolors: H. Peter Anvin
 dirname: David MacKenzie, Jim Meyering
-du: Torbjorn Granlund, David MacKenzie, Paul Eggert, Jim Meyering
+du: Torbjörn Granlund, David MacKenzie, Paul Eggert, Jim Meyering
 echo: Brian Fox, Chet Ramey
 env: Richard Mlynarik, David MacKenzie, Assaf Gordon
 expand: David MacKenzie
@@ -67,7 +67,7 @@ printf: David MacKenzie
 ptx: François Pinard
 pwd: Jim Meyering
 readlink: Dmitry V. Levin
-realpath: Padraig Brady
+realpath: Pádraig Brady
 rm: Paul Rubin, David MacKenzie, Richard M. Stallman, Jim Meyering
 rmdir: David MacKenzie
 runcon: Russell Coker
@@ -81,9 +81,9 @@ shred: Colin Plumb
 shuf: Paul Eggert
 sleep: Jim Meyering, Paul Eggert
 sort: Mike Haertel, Paul Eggert
-split: Torbjorn Granlund, Richard M. Stallman
+split: Torbjörn Granlund, Richard M. Stallman
 stat: Michael Meskes
-stdbuf: Padraig Brady
+stdbuf: Pádraig Brady
 stty: David MacKenzie
 sum: Kayvan Aghaiepour, David MacKenzie
 sync: Jim Meyering, Giuseppe Scrivano
@@ -91,11 +91,11 @@ tac: Jay Lepreau, David MacKenzie
 tail: Paul Rubin, David MacKenzie, Ian Lance Taylor, Jim Meyering
 tee: Mike Parker, Richard M. Stallman, David MacKenzie
 test: Kevin Braunsdorf, Matthew Bradburn
-timeout: Padraig Brady
+timeout: Pádraig Brady
 touch: Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, Randy Smith
 tr: Jim Meyering
 true: Jim Meyering
-truncate: Padraig Brady
+truncate: Pádraig Brady
 tsort: Mark Kettenis
 tty: David MacKenzie
 uname: David MacKenzie

@@ -547,7 +547,7 @@ AM_CONDITIONAL([USE_PCLMUL_CRC32],
 CFLAGS=$ac_save_CFLAGS
 
 CFLAGS="-mavx2 $CFLAGS"
-AC_MSG_CHECKING([if avx2 intrinstics exists])
+AC_MSG_CHECKING([for avx2 intrinsics])
 AC_LINK_IFELSE(
   [AC_LANG_SOURCE([[
     #include <x86intrin.h>

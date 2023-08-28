@@ -72,7 +72,7 @@ my @Tests =
    ['eq-wid-6',	qw(-w +1 2),  {OUT => [qw(1 2)]}],
    ['eq-wid-7',	qw(-w "    .1"  "    .1"),  {OUT => [qw(0.1)]}],
    ['eq-wid-8',	qw(-w 9 0.5 10),  {OUT => [qw(09.0 09.5 10.0)]}],
-   # Prior to 8.21, these tests involving numbers in scentific notation
+   # Prior to 8.21, these tests involving numbers in scientific notation
    # would fail with misalignment or wrong widths.
    ['eq-wid-9',	qw(-w -1e-3 1),  {OUT => [qw(-0.001 00.999)]}],
    ['eq-wid-10',qw(-w -1e-003 1),  {OUT => [qw(-0.001 00.999)]}],

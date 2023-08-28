@@ -24,7 +24,7 @@
 /* Efficiently factor numbers that fit in one or two words (word = uintmax_t),
    or, with GMP, numbers of any size.
 
-  Code organisation:
+  Code organization:
 
     There are several variants of many functions, for handling one word, two
     words, and GMP's mpz_t type.  If the one-word variant is called foo, the
@@ -48,7 +48,7 @@
         Status of found factors are checked again using Miller-Rabin and Lucas.
 
     We prefer using Hensel norm in the divisions, not the more familiar
-    Euclidian norm, since the former leads to much faster code.  In the
+    Euclidean norm, since the former leads to much faster code.  In the
     Pollard-Brent rho code and the prime testing code, we use Montgomery's
     trick of multiplying all n-residues by the word base, allowing cheap Hensel
     reductions mod n.
@@ -77,10 +77,10 @@
       using gcc 4.6 and 4.7.  Some software pipelining should help; 1, 2, and 4
       respectively cycles ought to be possible.
 
-    * The redcify function could be vastly improved by using (plain Euclidian)
+    * The redcify function could be vastly improved by using (plain Euclidean)
       pre-inversion (such as GMP's invert_limb) and udiv_qrnnd_preinv (from
       GMP's gmp-impl.h).  The redcify2 function could be vastly improved using
-      similar methoods.  These functions currently dominate run time when using
+      similar methods.  These functions currently dominate run time when using
       the -w option.
 */
 
@@ -118,8 +118,8 @@
 
 #define AUTHORS \
   proper_name ("Paul Rubin"),                                           \
-  proper_name_utf8 ("Torbjorn Granlund", "Torbj\303\266rn Granlund"),   \
-  proper_name_utf8 ("Niels Moller", "Niels M\303\266ller")
+  proper_name_lite ("Torbjorn Granlund", "Torbj\303\266rn Granlund"),   \
+  proper_name_lite ("Niels Moller", "Niels M\303\266ller")
 
 /* Token delimiters when reading from a file.  */
 #define DELIM "\n\t "
@@ -1201,7 +1201,7 @@ prime_p (uintmax_t n)
   if (n <= 1)
     return false;
 
-  /* We have already casted out small primes.  */
+  /* We have already cast out small primes.  */
   if (n < (uintmax_t) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME)
     return true;
 
@@ -1380,7 +1380,7 @@ mp_prime_p (mpz_t n)
   if (mpz_cmp_ui (n, 1) <= 0)
     return false;
 
-  /* We have already casted out small primes.  */
+  /* We have already cast out small primes.  */
   if (mpz_cmp_ui (n, (long) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME) < 0)
     return true;
 
@@ -1876,7 +1876,7 @@ static short const invtab[0x81] =
   };
 
 /* Compute q = [u/d], r = u mod d.  Avoids slow hardware division for the case
-   that q < 0x40; here it instead uses a table of (Euclidian) inverses.  */
+   that q < 0x40; here it instead uses a table of (Euclidean) inverses.  */
 # define div_smallq(q, r, u, d)                                          \
   do {                                                                  \
     if ((u) / 0x40 < (d))                                               \

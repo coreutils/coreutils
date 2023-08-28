@@ -2305,7 +2305,7 @@ sane_mode (struct termios *mode)
 }
 
 /* Return a string that is the printable representation of character CH.  */
-/* Adapted from 'cat' by Torbjorn Granlund.  */
+/* Adapted from 'cat' by Torbjörn Granlund.  */
 
 static char const *
 visible (cc_t ch)

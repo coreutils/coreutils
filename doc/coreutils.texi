@@ -4011,8 +4011,8 @@ distribution).
 
 @menu
 * cksum output modes::          Legacy and non Legacy output formats
-* cksum general options::       Options suppported only by cksum
-* cksum common options::        Options suppported also by standalone utilities
+* cksum general options::       Options supported only by cksum
+* cksum common options::        Options supported also by standalone utilities
 @end menu
 
 @node cksum output modes
@@ -4176,7 +4176,7 @@ supports auto-detecting the digest algorithm to use,
 when presented with checksum information in the @option{--tag} output format.
 
 Also for the @command{cksum} command, the @option{--check} option
-auto-detects the digest encoding, accepting both standard hexidecimal
+auto-detects the digest encoding, accepting both standard hexadecimal
 checksums and those generated via @command{cksum} with its
 @option{--base64} option.
 
@@ -4461,7 +4461,7 @@ specified for all GNU utilities) has no limit on input line length or
 restrictions on bytes allowed within lines.
 
 @command{sort} has three modes of operation: sort (the default), merge,
-and check for sortedness.  The following options change the operation
+and check for order.  The following options change the operation
 mode:
 
 @table @samp
@@ -4471,7 +4471,7 @@ mode:
 @itemx --check=diagnose-first
 @opindex -c
 @opindex --check
-@cindex checking for sortedness
+@cindex checking whether a file is sorted
 Check whether the given file is already sorted: if it is not all
 sorted, print a diagnostic containing the first out-of-order line and
 exit with a status of 1.
@@ -4483,7 +4483,7 @@ At most one input file can be given.
 @itemx --check=silent
 @opindex -c
 @opindex --check
-@cindex checking for sortedness
+@cindex checking whether a file is sorted
 Exit successfully if the given file is already sorted, and
 exit with status 1 otherwise.
 At most one input file can be given.
@@ -12173,7 +12173,7 @@ a mounted file system, @command{df} shows the space available on that
 file system rather than on the file system containing the device node.
 GNU @command{df} does not attempt to determine the usage
 on unmounted file systems, because on most kinds of systems doing so
-requires extremely nonportable intimate knowledge of file system structures.
+requires extremely non-portable intimate knowledge of file system structures.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -13387,7 +13387,7 @@ For example, @samp{printf '\400'} is equivalent to @samp{printf '\0'}.
 @cindex Unicode
 @cindex ISO/IEC 10646
 @vindex LC_CTYPE
-@command{printf} interprets two syntaxes for specifying Unicode
+@command{printf} interprets two syntax forms for specifying Unicode
 (ISO/IEC 10646) characters.
 @samp{\u} for 16-bit Unicode characters, specified as
 four hexadecimal digits @var{hhhh}, and @samp{\U} for 32-bit Unicode
@@ -13403,7 +13403,7 @@ The processing of @samp{\u} and @samp{\U} requires a full-featured
 or when @code{libiconv} is installed prior to this package.  Otherwise
 @samp{\u} and @samp{\U} will print as-is.
 
-The Unicode character syntaxes are useful for writing strings in a locale
+Unicode character syntax is useful for writing strings in a locale
 independent way.  For example, a string containing the Euro currency symbol
 
 @example

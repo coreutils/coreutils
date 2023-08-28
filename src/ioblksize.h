@@ -21,7 +21,7 @@
 #include "stat-size.h"
 
 
-/* As of May 2014, 128KiB is determined to be the minimium
+/* As of May 2014, 128KiB is determined to be the minimum
    blksize to best minimize system call overhead.
    This can be tested with this script:
 

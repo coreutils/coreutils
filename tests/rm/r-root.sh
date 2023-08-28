@@ -25,7 +25,7 @@ print_ver_ rm
 # enter the unlinkat() system call.  Therefore, limit the risk as much
 # as possible -- if there's a bug this test would wipe the system out!
 
-# Faint-hearted: skip this test for the 'root' user.
+# Fainthearted: skip this test for the 'root' user.
 skip_if_root_
 
 # Pull the teeth from rm(1) by intercepting the unlinkat() system call via the

@@ -24,6 +24,6 @@ shows the space available on that file system rather than on the
 file system containing the device node.  This version of
 .B df
 cannot show the space available on unmounted file systems, because on
-most kinds of systems doing so requires very nonportable intimate
+most kinds of systems doing so requires non-portable intimate
 knowledge of file system structures.
 .SH OPTIONS

@@ -1,4 +1,4 @@
-/* prog-fprintf.c - common formating output functions and definitions
+/* prog-fprintf.c - common formatting output functions and definitions
    Copyright (C) 2008-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify

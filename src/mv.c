@@ -180,7 +180,7 @@ do_move (char const *source, char const *dest,
           /* In general, when copy returns with copy_into_self set, SOURCE is
              the same as, or a parent of DEST.  In this case we know it's a
              parent.  It doesn't make sense to move a directory into itself, and
-             besides in some situations doing so would give highly nonintuitive
+             besides in some situations doing so would give highly unintuitive
              results.  Run this 'mkdir b; touch a c; mv * b' in an empty
              directory.  Here's the result of running echo $(find b -print):
              b b/a b/b b/b/a b/c.  Notice that only file 'a' was copied

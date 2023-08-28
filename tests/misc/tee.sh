@@ -78,7 +78,7 @@ test $(wc -l < err) = 0 || { cat err; fail=1; }
 test -f tee.exited || fail=1 ;;
 esac
 
-# Test with unwriteable files
+# Test with unwritable files
 if ! uid_is_privileged_; then  # root does not get EPERM.
   touch file.ro || framework_failure_
   chmod a-w file.ro || framework_failure_

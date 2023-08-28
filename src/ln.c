@@ -315,7 +315,7 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
          to link A to B.  But strictly following this has the counterintuitive
          effect of losing the contents of B if A does not exist.  Fortunately,
          POSIX 2008 clarified that an application is free to fail early if it
-         can prove that continuing onwards cannot succeed, so we can try to
+         can prove that continuing onward cannot succeed, so we can try to
          link A to B before blindly unlinking B, thus sometimes attempting to
          link a second time during a successful 'ln -f A B'.
 

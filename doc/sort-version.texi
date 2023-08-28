@@ -843,7 +843,7 @@ natsort -- how it works}).
 Ruby's @uref{https://github.com/github/version_sorter,version_sorter}.
 
 @item
-Perl has multiple packages for natual and version sorts
+Perl has multiple packages for natural and version sorts
 (each likely with its own rules and nuances):
 @uref{https://metacpan.org/pod/Sort::Naturally,Sort::Naturally},
 @uref{https://metacpan.org/pod/Sort::Versions,Sort::Versions},
@@ -865,7 +865,7 @@ glob modifier} @samp{*(n)} will expand to files in natural sort order.
 When writing C programs, the GNU libc library (@samp{glibc})
 provides the
 @uref{https://man7.org/linux/man-pages/man3/strverscmp.3.html,
-strvercmp(3)} function to compare two strings, and
+strverscmp(3)} function to compare two strings, and
 @uref{https://man7.org/linux/man-pages/man3/versionsort.3.html,versionsort(3)}
 function to compare two directory entries (despite the names, they are
 not identical to GNU Coreutils version sort ordering).

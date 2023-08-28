@@ -32,7 +32,7 @@ Older version (pre 7.2) mention 'tee','eaccess','futimens'.
 Details
 -------
 
-GLibC version 2.28 removed non-standed headre file (libio.h) and some
+GLibC version 2.28 removed a non-standard header file (libio.h) and some
 internal symbols which were used by gnulib (a core component of GNU coreutils).
 
 These were announced as 'deprecated' in version 2.27 [1], and removed in

@@ -126,7 +126,7 @@ my @csplit_tests =
 
 
 =pod
-The following loop translate the above @Tests to a Cureutils::run_tests()
+The following loop translate the above @Tests to a Coreutils::run_tests()
 compatible structure. It converts "OUTPUTS" key into "CMP" + "POST" keys:
 1. Each element in the OUTPUTS key is expected to be an output file
    from csplit (named xx00, xx01, xx02...)

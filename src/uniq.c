@@ -68,7 +68,7 @@ enum countmode
 static enum countmode countmode;
 
 /* Which lines to output: unique lines, the first of a group of
-   repeated lines, and the second and subsequented of a group of
+   repeated lines, and the second and subsequent of a group of
    repeated lines.  */
 static bool output_unique;
 static bool output_first_repeated;

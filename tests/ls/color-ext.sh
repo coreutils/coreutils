@@ -29,7 +29,7 @@ c_jpg=$(printf '\033[%sm' $code_jpg)
 c_JPG=$(printf '\033[%sm' $code_JPG)
 c_z=$(printf '\033[%sm' $code_z)
 
-# Case insenitive extensions
+# Case insensitive extensions
 LS_COLORS="*.jpg=$code_jpg:*.Z=$code_z" ls -U1 --color=always \
   img1.jpg IMG2.JPG file1.z file2.Z > out || fail=1
 printf "$c0\

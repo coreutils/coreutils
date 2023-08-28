@@ -370,12 +370,11 @@ enum
 #undef emit_bug_reporting_address
 
 #include "propername.h"
-/* Define away proper_name (leaving proper_name_utf8, which affects far
-   fewer programs), since it's not worth the cost of adding ~17KB to
+/* Define away proper_name, since it's not worth the cost of adding ~17KB to
    the x86_64 text size of every single program.  This avoids a 40%
    (almost ~2MB) increase in the file system space utilization for the set
    of the 100 binaries. */
-#define proper_name(x) (x)
+#define proper_name(x) proper_name_lite (x, x)
 
 #include "progname.h"
 
