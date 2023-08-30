@@ -1138,7 +1138,7 @@ card_of_complement (struct Spec_list *s)
 {
   int c;
   int cardinality = N_CHARS;
-  bool in_set[N_CHARS] = { 0, };
+  bool in_set[N_CHARS] = {0};
 
   s->state = BEGIN_STATE;
   while ((c = get_next (s, nullptr)) != -1)

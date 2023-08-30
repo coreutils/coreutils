@@ -117,7 +117,7 @@ settimeout (double duration, bool warn)
   /* timer_settime() provides potentially nanosecond resolution.  */
 
   struct timespec ts = dtotimespec (duration);
-  struct itimerspec its = { {0, 0}, ts };
+  struct itimerspec its = {.it_interval = {0}, .it_value = ts};
   timer_t timerid;
   if (timer_create (CLOCK_REALTIME, nullptr, &timerid) == 0)
     {
@@ -151,7 +151,7 @@ settimeout (double duration, bool warn)
       else
         tv.tv_usec--;
     }
-  struct itimerval it = { {0, 0}, tv };
+  struct itimerval it = {.it_interval = {0}, .it_value = tv };
   if (setitimer (ITIMER_REAL, &it, nullptr) == 0)
     return;
   else
@@ -447,7 +447,7 @@ disable_core_dumps (void)
 #elif HAVE_SETRLIMIT && defined RLIMIT_CORE
   /* Note this doesn't disable processing by a filter in
      /proc/sys/kernel/core_pattern on Linux.  */
-  if (setrlimit (RLIMIT_CORE, &(struct rlimit) {0,0}) == 0)
+  if (setrlimit (RLIMIT_CORE, &(struct rlimit) {0}) == 0)
     return true;
 
 #else

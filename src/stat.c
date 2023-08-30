@@ -1039,7 +1039,7 @@ neg_to_zero (struct timespec ts)
 {
   if (0 <= ts.tv_nsec)
     return ts;
-  struct timespec z = {0, 0};
+  struct timespec z = {0};
   return z;
 }
 
@@ -1370,11 +1370,11 @@ do_stat (char const *filename, char const *format, char const *format2)
   int fd = STREQ (filename, "-") ? 0 : AT_FDCWD;
   int flags = 0;
   struct stat st;
-  struct statx stx = { 0, };
+  struct statx stx = {0};
   char const *pathname = filename;
   struct print_args pa;
   pa.st = &st;
-  pa.btime = (struct timespec) {-1, -1};
+  pa.btime = (struct timespec) {.tv_sec = -1, .tv_nsec = -1};
 
   if (AT_FDCWD != fd)
     {
@@ -1460,7 +1460,7 @@ do_stat (char const *filename, char const *format,
   struct stat statbuf;
   struct print_args pa;
   pa.st = &statbuf;
-  pa.btime = (struct timespec) {-1, -1};
+  pa.btime = (struct timespec) {.tv_sec = -1, .tv_nsec = -1};
 
   if (0 <= fd)
     {

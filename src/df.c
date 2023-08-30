@@ -319,7 +319,7 @@ replace_invalid_chars (char *cell)
 {
   char *srcend = cell + strlen (cell);
   char *dst = cell;
-  mbstate_t mbstate = { 0, };
+  mbstate_t mbstate = {0};
   size_t n;
 
   for (char *src = cell; src != srcend; src += n)

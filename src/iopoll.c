@@ -113,7 +113,7 @@ iopoll_internal (int fdin, int fdout, bool block, bool broken_output)
       if (0 <= fdout)
         FD_SET (fdout, &fds);
 
-      struct timeval delay = { .tv_sec = 0, .tv_usec = 0 };
+      struct timeval delay = {0};
       ret = select (nfds,
                     broken_output ? &fds : nullptr,
                     broken_output ? nullptr : &fds,

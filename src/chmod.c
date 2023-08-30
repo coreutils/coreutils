@@ -205,7 +205,7 @@ process_file (FTS *fts, FTSENT *ent)
   char const *file_full_name = ent->fts_path;
   char const *file = ent->fts_accpath;
   const struct stat *file_stats = ent->fts_statp;
-  struct change_status ch = { 0, };
+  struct change_status ch = {0};
   ch.status = CH_NO_STAT;
 
   switch (ent->fts_info)

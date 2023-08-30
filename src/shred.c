@@ -1161,7 +1161,7 @@ int
 main (int argc, char **argv)
 {
   bool ok = true;
-  struct Options flags = { 0, };
+  struct Options flags = {0};
   char **file;
   int n_files;
   int c;

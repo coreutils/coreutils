@@ -172,7 +172,7 @@ FUNC_NAME (char const *s)						 \
                                                                          \
       if (MB_CUR_MAX > 1 && *(s + 1))					 \
         {								 \
-          mbstate_t mbstate = { 0, };					 \
+          mbstate_t mbstate = {0};					 \
           wchar_t wc;							 \
           size_t slen = strlen (s);					 \
           ssize_t bytes;						 \
