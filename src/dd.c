@@ -73,10 +73,6 @@
    and would interfere with our use of that name, below.  */
 #undef O_NOCACHE
 
-#if ! HAVE_FDATASYNC
-# define fdatasync(fd) (errno = ENOSYS, -1)
-#endif
-
 #define output_char(c)				\
   do						\
     {						\
