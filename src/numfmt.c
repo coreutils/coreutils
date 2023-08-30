@@ -17,13 +17,14 @@
 #include <config.h>
 #include <float.h>
 #include <getopt.h>
+#include <stdckdint.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <langinfo.h>
 
-#include "mbsalign.h"
 #include "argmatch.h"
 #include "c-ctype.h"
+#include "mbswidth.h"
 #include "quote.h"
 #include "system.h"
 #include "xstrtol.h"
@@ -173,9 +174,9 @@ static uintmax_t from_unit_size = 1;
 static uintmax_t to_unit_size = 1;
 static int grouping = 0;
 static char *padding_buffer = nullptr;
-static size_t padding_buffer_size = 0;
-static long int padding_width = 0;
-static long int zero_padding_width = 0;
+static idx_t padding_buffer_size = 0;
+static intmax_t padding_width = 0;
+static int zero_padding_width = 0;
 static long int user_precision = -1;
 static char const *format_str = nullptr;
 static char *format_str_prefix = nullptr;
@@ -187,7 +188,6 @@ static int conv_exit_code = EXIT_CONVERSION_WARNINGS;
 
 /* auto-pad each line based on skipped whitespace.  */
 static int auto_padding = 0;
-static mbs_align_t padding_alignment = MBS_ALIGN_RIGHT;
 
 /* field delimiter */
 static int delimiter = DELIMITER_DEFAULT;
@@ -728,19 +728,17 @@ simple_strtod_fatal (enum simple_strtod_error err, char const *input_str)
     error (conv_exit_code, 0, gettext (msgid), quote (input_str));
 }
 
-/* Convert VAL to a human format string in BUF.  */
-static void
+/* Convert VAL to a human format string using PRECISION in BUF of size
+   BUF_SIZE.  Use SCALE, GROUP, and ROUND to format.  Return
+   the number of bytes needed to represent VAL.  If this number is not
+   less than BUF_SIZE, the buffer is too small; if it is negative, the
+   formatting failed for some reason.  */
+static int
 double_to_human (long double val, int precision,
-                 char *buf, size_t buf_size,
+                 char *buf, idx_t buf_size,
                  enum scale_type scale, int group, enum round_type round)
 {
-  int num_size;
-  char fmt[64];
-  static_assert ((INT_BUFSIZE_BOUND (zero_padding_width)
-                  + INT_BUFSIZE_BOUND (precision)
-                  + 10 /* for %.Lf  etc.  */)
-                 < sizeof fmt);
-
+  char fmt[sizeof "%'0.*Lfi%s%s%s" + INT_STRLEN_BOUND (zero_padding_width)];
   char *pfmt = fmt;
   *pfmt++ = '%';
 
@@ -748,7 +746,7 @@ double_to_human (long double val, int precision,
     *pfmt++ = '\'';
 
   if (zero_padding_width)
-    pfmt += snprintf (pfmt, sizeof (fmt) - 2, "0%ld", zero_padding_width);
+    pfmt += sprintf (pfmt, "0%d", zero_padding_width);
 
   devmsg ("double_to_human:\n");
 
@@ -762,13 +760,10 @@ double_to_human (long double val, int precision,
               "  no scaling, returning (grouped) value: %'.*Lf\n" :
               "  no scaling, returning value: %.*Lf\n", precision, val);
 
-      stpcpy (pfmt, ".*Lf");
+      strcpy (pfmt, ".*Lf%s");
 
-      num_size = snprintf (buf, buf_size, fmt, precision, val);
-      if (num_size < 0 || num_size >= (int) buf_size)
-        error (EXIT_FAILURE, 0,
-               _("failed to prepare value '%Lf' for printing"), val);
-      return;
+      return snprintf (buf, buf_size, fmt, precision, val,
+                       suffix ? suffix : "");
     }
 
   /* Scaling requested by user. */
@@ -810,23 +805,14 @@ double_to_human (long double val, int precision,
 
   devmsg ("  after rounding, value=%Lf * %0.f ^ %d\n", val, scale_base, power);
 
-  stpcpy (pfmt, ".*Lf%s");
+  strcpy (pfmt, ".*Lf%s%s%s");
 
   int prec = user_precision == -1 ? show_decimal_point : user_precision;
 
-  /* buf_size - 1 used here to ensure place for possible scale_IEC_I suffix.  */
-  num_size = snprintf (buf, buf_size - 1, fmt, prec, val,
-                       suffix_power_char (power));
-  if (num_size < 0 || num_size >= (int) buf_size - 1)
-    error (EXIT_FAILURE, 0,
-           _("failed to prepare value '%Lf' for printing"), val);
-
-  if (scale == scale_IEC_I && power > 0)
-    strncat (buf, "i", buf_size - num_size - 1);
-
-  devmsg ("  returning value: %s\n", quote (buf));
-
-  return;
+  return snprintf (buf, buf_size, fmt, prec, val,
+                   suffix_power_char (power),
+                   &"i"[! (scale == scale_IEC_I && 0 < power)],
+                   suffix ? suffix : "");
 }
 
 /* Convert a string of decimal digits, N_STRING, with an optional suffix
@@ -874,17 +860,6 @@ unit_to_umax (char const *n_string)
   free (t_string);
 
   return n;
-}
-
-
-static void
-setup_padding_buffer (size_t min_size)
-{
-  if (padding_buffer_size > min_size)
-    return;
-
-  padding_buffer_size = min_size + 1;
-  padding_buffer = xrealloc (padding_buffer, padding_buffer_size);
 }
 
 void
@@ -1052,7 +1027,7 @@ Examples:\n\
 
    NOTES:
    1. This function sets the global variables:
-       padding_width, padding_alignment, grouping,
+       padding_width, grouping,
        format_str_prefix, format_str_suffix
    2. The function aborts on any errors.  */
 static void
@@ -1061,7 +1036,6 @@ parse_format_string (char const *fmt)
   size_t i;
   size_t prefix_len = 0;
   size_t suffix_pos;
-  long int pad = 0;
   char *endptr = nullptr;
   bool zero_padding = false;
 
@@ -1092,30 +1066,25 @@ parse_format_string (char const *fmt)
         break;
     }
 
-  errno = 0;
-  pad = strtol (fmt + i, &endptr, 10);
-  if (errno == ERANGE || pad < -LONG_MAX)
-    error (EXIT_FAILURE, 0,
-           _("invalid format %s (width overflow)"), quote (fmt));
+  intmax_t pad = strtoimax (fmt + i, &endptr, 10);
 
-  if (endptr != (fmt + i) && pad != 0)
+  if (pad != 0)
     {
       if (debug && padding_width && !(zero_padding && pad > 0))
         error (0, 0, _("--format padding overriding --padding"));
 
+      /* Set padding width and alignment.  On overflow, set widths to
+         large values that cause later code to avoid undefined behavior
+         and fail at a reasonable point.  */
       if (pad < 0)
-        {
-          padding_alignment = MBS_ALIGN_LEFT;
-          padding_width = -pad;
-        }
+        padding_width = pad;
       else
         {
           if (zero_padding)
-            zero_padding_width = pad;
+            zero_padding_width = MIN (pad, INT_MAX);
           else
             padding_width = pad;
         }
-
     }
   i = endptr - fmt;
 
@@ -1159,11 +1128,10 @@ parse_format_string (char const *fmt)
     format_str_suffix = xstrdup (fmt + suffix_pos);
 
   devmsg ("format String:\n  input: %s\n  grouping: %s\n"
-                   "  padding width: %ld\n  alignment: %s\n"
+                   "  padding width: %jd\n"
                    "  prefix: %s\n  suffix: %s\n",
           quote_n (0, fmt), (grouping) ? "yes" : "no",
           padding_width,
-          (padding_alignment == MBS_ALIGN_LEFT) ? "Left" : "Right",
           quote_n (1, format_str_prefix ? format_str_prefix : ""),
           quote_n (2, format_str_suffix ? format_str_suffix : ""));
 }
@@ -1203,12 +1171,11 @@ parse_human_number (char const *str, long double /*output */ *value,
 
 /* Print the given VAL, using the requested representation.
    The number is printed to STDOUT, with padding and alignment.  */
-static int
-prepare_padded_number (const long double val, size_t precision)
+static bool
+prepare_padded_number (const long double val, size_t precision,
+                       intmax_t *padding)
 {
   /* Generate Output. */
-  char buf[128];
-
   size_t precision_used = user_precision == -1 ? precision : user_precision;
 
   /* Can't reliably print too-large values without auto-scaling. */
@@ -1229,7 +1196,7 @@ prepare_padded_number (const long double val, size_t precision)
                    _("value too large to be printed: '%Lg'"
                      " (consider using --to)"), val);
         }
-      return 0;
+      return false;
     }
 
   if (x > MAX_ACCEPTABLE_DIGITS - 1)
@@ -1237,41 +1204,64 @@ prepare_padded_number (const long double val, size_t precision)
       if (inval_style != inval_ignore)
         error (conv_exit_code, 0, _("value too large to be printed: '%Lg'"
                                     " (cannot handle values > 999Q)"), val);
-      return 0;
+      return false;
     }
 
-  double_to_human (val, precision_used, buf, sizeof (buf),
-                   scale_to, grouping, round_style);
-  if (suffix)
-    strncat (buf, suffix, sizeof (buf) - strlen (buf) -1);
+  while (true)
+    {
+      int numlen = double_to_human (val, precision_used,
+                                    padding_buffer, padding_buffer_size,
+                                    scale_to, grouping, round_style);
+      ptrdiff_t growth;
+      if (numlen < 0 || ckd_sub (&growth, numlen, padding_buffer_size - 1))
+        error (EXIT_FAILURE, 0,
+               _("failed to prepare value '%Lf' for printing"), val);
+      if (growth <= 0)
+        break;
+      padding_buffer = xpalloc (padding_buffer, &padding_buffer_size,
+                                growth, -1, 1);
+    }
 
   devmsg ("formatting output:\n  value: %Lf\n  humanized: %s\n",
-          val, quote (buf));
+          val, quote (padding_buffer));
 
-  if (padding_width && strlen (buf) < padding_width)
+  intmax_t pad = 0;
+  if (padding_width)
     {
-      size_t w = padding_width;
-      mbsalign (buf, padding_buffer, padding_buffer_size, &w,
-                padding_alignment, MBA_UNIBYTE_ONLY);
-
-      devmsg ("  After padding: %s\n", quote (padding_buffer));
+      int buf_width = mbswidth (padding_buffer,
+                                MBSW_REJECT_INVALID | MBSW_REJECT_UNPRINTABLE);
+      if (0 <= buf_width)
+        {
+          if (padding_width < 0)
+            {
+              if (padding_width < -buf_width)
+                pad = padding_width + buf_width;
+            }
+          else
+            {
+              if (buf_width < padding_width)
+                pad = padding_width - buf_width;
+            }
+        }
     }
-  else
-    {
-      setup_padding_buffer (strlen (buf) + 1);
-      strcpy (padding_buffer, buf);
-    }
 
-  return 1;
+  *padding = pad;
+  return true;
 }
 
 static void
-print_padded_number (void)
+print_padded_number (intmax_t padding)
 {
   if (format_str_prefix)
     fputs (format_str_prefix, stdout);
 
+  for (intmax_t p = padding; 0 < p; p--)
+    putchar (' ');
+
   fputs (padding_buffer, stdout);
+
+  for (intmax_t p = padding; p < 0; p++)
+    putchar (' ');
 
   if (format_str_suffix)
     fputs (format_str_suffix, stdout);
@@ -1305,16 +1295,8 @@ process_suffixed_number (char *text, long double *result,
   /* setup auto-padding.  */
   if (auto_padding)
     {
-      if (text < p || field > 1)
-        {
-          padding_width = strlen (text);
-          setup_padding_buffer (padding_width);
-        }
-      else
-        {
-          padding_width = 0;
-        }
-     devmsg ("setting Auto-Padding to %ld characters\n", padding_width);
+      padding_width = text < p || 1 < field ? strlen (text) : 0;
+      devmsg ("setting Auto-Padding to %jd characters\n", padding_width);
     }
 
   long double val = 0;
@@ -1393,11 +1375,12 @@ process_field (char *text, uintmax_t field)
       valid_number =
         process_suffixed_number (text, &val, &precision, field);
 
+      intmax_t padding;
       if (valid_number)
-        valid_number = prepare_padded_number (val, precision);
+        valid_number = prepare_padded_number (val, precision, &padding);
 
       if (valid_number)
-        print_padded_number ();
+        print_padded_number (padding);
       else
         fputs (text, stdout);
     }
@@ -1508,15 +1491,12 @@ main (int argc, char **argv)
           break;
 
         case PADDING_OPTION:
-          if (xstrtol (optarg, nullptr, 10, &padding_width, "") != LONGINT_OK
-              || padding_width == 0 || padding_width < -LONG_MAX)
+          if (((xstrtoimax (optarg, nullptr, 10, &padding_width, "")
+                & ~LONGINT_OVERFLOW)
+               != LONGINT_OK)
+              || padding_width == 0)
             error (EXIT_FAILURE, 0, _("invalid padding value %s"),
                    quote (optarg));
-          if (padding_width < 0)
-            {
-              padding_alignment = MBS_ALIGN_LEFT;
-              padding_width = -padding_width;
-            }
           /* TODO: We probably want to apply a specific --padding
              to --header lines too.  */
           break;
@@ -1605,8 +1585,6 @@ main (int argc, char **argv)
         error (0, 0, _("grouping has no effect in this locale"));
     }
 
-
-  setup_padding_buffer (padding_width);
   auto_padding = (padding_width == 0 && delimiter == DELIMITER_DEFAULT);
 
   if (inval_style != inval_abort)

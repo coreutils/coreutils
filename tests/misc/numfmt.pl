@@ -159,6 +159,9 @@ my @Tests =
      # space(s) between number and suffix.  Note only field 1 is used
      # by default so specify the NUL delimiter to consider the whole "line".
      ['suf-19', "-d '' --from=si '4.0 K'",         {OUT => "4000"}],
+     ['suf-20',
+      '--suffix=Fooxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy 0',
+      {OUT => "0Fooxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy"}],
 
      ## GROUPING
 
@@ -177,9 +180,6 @@ my @Tests =
              {EXIT => '1'}],
      ['pad-3.1', '--padding=0 5',
              {ERR => "$prog: invalid padding value '0'\n"},
-             {EXIT => '1'}],
-     ['pad-3.2', "--padding=$limits->{LONG_MIN} 0",
-             {ERR => "$prog: invalid padding value '$limits->{LONG_MIN}'\n"},
              {EXIT => '1'}],
      ['pad-4', '--padding=10 --to=si 50000',             {OUT=>'       50K'}],
      ['pad-5', '--padding=-10 --to=si 50000',            {OUT=>'50K       '}],
@@ -674,10 +674,6 @@ my @Tests =
              {EXIT=>1}],
      ['fmt-err-6', '--format "%f %f"',
              {ERR=>"$prog: format '%f %f' has too many % directives\n"},
-             {EXIT=>1}],
-     ['fmt-err-7', '--format "%'.$limits->{LONG_OFLOW}.'f"',
-             {ERR=>"$prog: invalid format '%$limits->{LONG_OFLOW}f'".
-                   " (width overflow)\n"},
              {EXIT=>1}],
      ['fmt-err-9', '--format "%f" --grouping',
              {ERR=>"$prog: --grouping cannot be combined with --format\n"},

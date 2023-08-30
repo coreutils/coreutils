@@ -108,7 +108,6 @@
 #include "xstrtol.h"
 #include "xstrtol-error.h"
 #include "areadlink.h"
-#include "mbsalign.h"
 #include "dircolors.h"
 #include "xgethostname.h"
 #include "c-ctype.h"
@@ -1282,6 +1281,8 @@ file_escape_init (void)
     RFC3986[i] |= c_isalnum (i) || i == '~' || i == '-' || i == '.' || i == '_';
 }
 
+enum { MBSWIDTH_FLAGS = MBSW_REJECT_INVALID | MBSW_REJECT_UNPRINTABLE };
+
 /* Read the abbreviated month names from the locale, to align them
    and to determine the max width of the field and to truncate names
    greater than our max allowed.
@@ -1290,11 +1291,6 @@ file_escape_init (void)
    variable width abbreviated months and also precomputing/caching
    the names was seen to increase the performance of ls significantly.  */
 
-/* max number of display cells to use.
-   As of 2018 the abmon for Arabic has entries with width 12.
-   It doesn't make much sense to support wider than this
-   and locales should aim for abmon entries of width <= 5.  */
-enum { MAX_MON_WIDTH = 12 };
 /* abformat[RECENT][MON] is the format to use for timestamps with
    recentness RECENT and month MON.  */
 enum { ABFORMAT_SIZE = 128 };
@@ -1313,28 +1309,41 @@ abmon_init (char abmon[12][ABFORMAT_SIZE])
 #ifndef HAVE_NL_LANGINFO
   return false;
 #else
-  size_t required_mon_width = MAX_MON_WIDTH;
-  size_t curr_max_width;
-  do
+  int max_mon_width = 0;
+  int mon_width[12];
+  int mon_len[12];
+
+  for (int i = 0; i < 12; i++)
     {
-      curr_max_width = required_mon_width;
-      required_mon_width = 0;
-      for (int i = 0; i < 12; i++)
-        {
-          size_t width = curr_max_width;
-          char const *abbr = nl_langinfo (ABMON_1 + i);
-          if (strchr (abbr, '%'))
-            return false;
-          mbs_align_t alignment = isdigit (to_uchar (*abbr))
-                                  ? MBS_ALIGN_RIGHT : MBS_ALIGN_LEFT;
-          size_t req = mbsalign (abbr, abmon[i], ABFORMAT_SIZE,
-                                 &width, alignment, 0);
-          if (! (req < ABFORMAT_SIZE))
-            return false;
-          required_mon_width = MAX (required_mon_width, width);
-        }
+      char const *abbr = nl_langinfo (ABMON_1 + i);
+      mon_len[i] = strnlen (abbr, ABFORMAT_SIZE);
+      if (mon_len[i] == ABFORMAT_SIZE)
+        return false;
+      if (strchr (abbr, '%'))
+        return false;
+      mon_width[i] = mbswidth (strcpy (abmon[i], abbr), MBSWIDTH_FLAGS);
+      if (mon_width[i] < 0)
+        return false;
+      max_mon_width = MAX (max_mon_width, mon_width[i]);
     }
-  while (curr_max_width > required_mon_width);
+
+  for (int i = 0; i < 12; i++)
+    {
+      int fill = max_mon_width - mon_width[i];
+      if (ABFORMAT_SIZE - mon_len[i] <= fill)
+        return false;
+      bool align_left = !isdigit (to_uchar (abmon[i][0]));
+      int fill_offset;
+      if (align_left)
+        fill_offset = mon_len[i];
+      else
+        {
+          memmove (abmon[i] + fill, abmon[i], mon_len[i]);
+          fill_offset = 0;
+        }
+      memset (abmon[i] + fill_offset, ' ', fill);
+      abmon[i][mon_len[i] + fill] = '\0';
+    }
 
   return true;
 #endif
@@ -3607,7 +3616,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
           char buf[LONGEST_HUMAN_READABLE + 1];
           int len = mbswidth (human_readable (blocks, buf, human_output_opts,
                                               ST_NBLOCKSIZE, output_block_size),
-                              0);
+                              MBSWIDTH_FLAGS);
           if (block_size_width < len)
             block_size_width = len;
         }
@@ -3670,7 +3679,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
               int len = mbswidth (human_readable (size, buf,
                                                   file_human_output_opts,
                                                   1, file_output_block_size),
-                                  0);
+                                  MBSWIDTH_FLAGS);
               if (file_size_width < len)
                 file_size_width = len;
             }
@@ -4208,7 +4217,7 @@ long_time_expected_width (void)
           size_t len = align_nstrftime (buf, sizeof buf, false,
                                         &tm, localtz, 0);
           if (len != 0)
-            width = mbsnwidth (buf, len, 0);
+            width = mbsnwidth (buf, len, MBSWIDTH_FLAGS);
         }
 
       if (width < 0)
@@ -4226,7 +4235,8 @@ format_user_or_group (char const *name, uintmax_t id, int width)
 {
   if (name)
     {
-      int width_gap = width - mbswidth (name, 0);
+      int name_width = mbswidth (name, MBSWIDTH_FLAGS);
+      int width_gap = name_width < 0 ? 0 : width - name_width;
       int pad = MAX (0, width_gap);
       dired_outstring (name);
 
@@ -4257,21 +4267,19 @@ format_group (gid_t g, int width, bool stat_ok)
                         (numeric_ids ? nullptr : getgroup (g)), g, width);
 }
 
-/* Return the number of columns that format_user_or_group will print.  */
+/* Return the number of columns that format_user_or_group will print,
+   or -1 if unknown.  */
 
 static int
 format_user_or_group_width (char const *name, uintmax_t id)
 {
-  if (name)
-    {
-      int len = mbswidth (name, 0);
-      return MAX (0, len);
-    }
-  else
-    return snprintf (nullptr, 0, "%"PRIuMAX, id);
+  return (name
+          ? mbswidth (name, MBSWIDTH_FLAGS)
+          : snprintf (nullptr, 0, "%"PRIuMAX, id));
 }
 
-/* Return the number of columns that format_user will print.  */
+/* Return the number of columns that format_user will print,
+   or -1 if unknown.  */
 
 static int
 format_user_width (uid_t u)
@@ -4372,8 +4380,9 @@ print_long_format (const struct fileinfo *f)
          ? "?"
          : human_readable (ST_NBLOCKS (f->stat), hbuf, human_output_opts,
                            ST_NBLOCKSIZE, output_block_size));
-      int pad;
-      for (pad = block_size_width - mbswidth (blocks, 0); 0 < pad; pad--)
+      int blocks_width = mbswidth (blocks, MBSWIDTH_FLAGS);
+      for (int pad = blocks_width < 0 ? 0 : block_size_width - blocks_width;
+           0 < pad; pad--)
         *p++ = ' ';
       while ((*p++ = *blocks++))
         continue;
@@ -4432,8 +4441,9 @@ print_long_format (const struct fileinfo *f)
          : human_readable (unsigned_file_size (f->stat.st_size),
                            hbuf, file_human_output_opts, 1,
                            file_output_block_size));
-      int pad;
-      for (pad = file_size_width - mbswidth (size, 0); 0 < pad; pad--)
+      int size_width = mbswidth (size, MBSWIDTH_FLAGS);
+      for (int pad = size_width < 0 ? 0 : block_size_width - size_width;
+           0 < pad; pad--)
         *p++ = ' ';
       while ((*p++ = *size++))
         continue;
@@ -4677,7 +4687,10 @@ quote_name_buf (char **inbuf, size_t bufsize, char *name,
   else if (width != nullptr)
     {
       if (MB_CUR_MAX > 1)
-        displayed_width = mbsnwidth (buf, len, 0);
+        {
+          displayed_width = mbsnwidth (buf, len, MBSWIDTH_FLAGS);
+          displayed_width = MAX (0, displayed_width);
+        }
       else
         {
           char const *p = buf;
