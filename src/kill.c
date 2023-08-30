@@ -33,24 +33,6 @@
 
 #define AUTHORS proper_name ("Paul Eggert")
 
-#if ! (HAVE_DECL_STRSIGNAL || defined strsignal)
-# if ! (HAVE_DECL_SYS_SIGLIST || defined sys_siglist)
-#  if HAVE_DECL__SYS_SIGLIST || defined _sys_siglist
-#   define sys_siglist _sys_siglist
-#  elif HAVE_DECL___SYS_SIGLIST || defined __sys_siglist
-#   define sys_siglist __sys_siglist
-#  endif
-# endif
-# if HAVE_DECL_SYS_SIGLIST || defined sys_siglist
-#  define strsignal(signum) (0 <= (signum) && (signum) <= SIGNUM_BOUND \
-                             ? sys_siglist[signum] \
-                             : 0)
-# endif
-# ifndef strsignal
-#  define strsignal(signum) 0
-# endif
-#endif
-
 static char const short_options[] =
   "0::1::2::3::4::5::6::7::8::9::"
   "A::B::C::D::E::F::G::H::I::J::K::M::"

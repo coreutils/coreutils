@@ -471,11 +471,6 @@ if test $gl_cv_sys_tiocgwinsz_needs_termios_h = no && \
                    [Define if your system defines TIOCGWINSZ in sys/pty.h.])
 fi
 
-# For src/kill.c.
-AC_CHECK_DECLS([strsignal, sys_siglist, _sys_siglist, __sys_siglist], , ,
-  [AC_INCLUDES_DEFAULT
-#include <signal.h>])
-
 # Build df only if there's a point to it.
 if test $gl_cv_list_mounted_fs = yes && test $gl_cv_fs_space = yes; then
   gl_ADD_PROG([optional_bin_progs], [df])
