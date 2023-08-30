@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  numfmt options like --suffix no longer have an arbitrary 127-byte limit.
+  [bug introduced with numfmt in coreutils-8.21]
+
 
 * Noteworthy changes in release 9.4 (2023-08-29) [stable]
 

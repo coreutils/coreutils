@@ -294,15 +294,6 @@ struct cp_options
   Hash_table *src_info;
 };
 
-/* Arrange to make rename calls go through the wrapper function
-   on systems with a rename function that fails for a source file name
-   specified with a trailing slash.  */
-# if RENAME_TRAILING_SLASH_BUG
-int rpl_rename (char const *, char const *);
-#  undef rename
-#  define rename rpl_rename
-# endif
-
 bool copy (char const *src_name, char const *dst_name,
            int dst_dirfd, char const *dst_relname,
            int nonexistent_dst, const struct cp_options *options,
