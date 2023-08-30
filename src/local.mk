@@ -263,7 +263,7 @@ src_pr_LDADD += $(CLOCK_TIME_LIB)
 src_sort_LDADD += $(CLOCK_TIME_LIB)
 src_split_LDADD += $(CLOCK_TIME_LIB)
 src_tac_LDADD += $(CLOCK_TIME_LIB)
-src_timeout_LDADD += $(LIB_TIMER_TIME)
+src_timeout_LDADD += $(TIMER_TIME_LIB)
 src_touch_LDADD += $(CLOCK_TIME_LIB)
 
 # for gethrxtime
@@ -273,9 +273,9 @@ src_dd_LDADD += $(GETHRXTIME_LIB)
 src_ls_LDADD += $(LIB_CAP)
 
 # for fdatasync
-src_dd_LDADD += $(LIB_FDATASYNC)
-src_shred_LDADD += $(LIB_FDATASYNC)
-src_sync_LDADD += $(LIB_FDATASYNC)
+src_dd_LDADD += $(FDATASYNC_LIB)
+src_shred_LDADD += $(FDATASYNC_LIB)
+src_sync_LDADD += $(FDATASYNC_LIB)
 
 # for xnanosleep
 src_sleep_LDADD += $(NANOSLEEP_LIB)
