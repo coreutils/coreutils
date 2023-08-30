@@ -64,6 +64,22 @@ gl_SET_CRYPTO_CHECK_DEFAULT([auto-gpl-compat])
 gl_INIT
 coreutils_MACROS
 
+# These are safe, since 'sort', coreutils's only multithreaded app,
+# does not use the relevant modules.
+AC_DEFINE([GNULIB_EXCLUDE_SINGLE_THREAD], [1],
+  [Define to 1 if apps call 'exclude' functions from a single thread.])
+AC_DEFINE([GNULIB_REGEX_SINGLE_THREAD], [1],
+  [Define to 1 if apps call 'regex' functions from a single thread.])
+# This is unsafe, since 'sort' uses mbrtowc indirectly, possibly from
+# multiple threads.
+# AC_DEFINE([GNULIB_MBRTOWC_SINGLE_THREAD], [1],
+#   [Define to 1 if apps call mbrtowc, mbrtoc32, and 'regex' functions
+#    from a single thread.])
+# This is safe, since all apps set locale early.
+AC_DEFINE([GNULIB_WCHAR_SINGLE_LOCALE], [1],
+  [Define to 1 if apps don't set the locale after calling
+   locale-sensitive functions like mbrtowc and wcwidth.])
+
 # The test suite needs to know if we have a working perl.
 AM_CONDITIONAL([HAVE_PERL], [test "$gl_cv_prog_perl" != no])
 
