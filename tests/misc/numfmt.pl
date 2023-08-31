@@ -160,8 +160,8 @@ my @Tests =
      # by default so specify the NUL delimiter to consider the whole "line".
      ['suf-19', "-d '' --from=si '4.0 K'",         {OUT => "4000"}],
      ['suf-20',
-      '--suffix=Fooxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy 0',
-      {OUT => "0Fooxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy"}],
+      '--suffix=Foo' . 'x' x 122 . 'y 0',
+      {OUT => '0Foo' . 'x' x 122 . 'y'}],
 
      ## GROUPING
 
