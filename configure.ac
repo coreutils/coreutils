@@ -80,6 +80,10 @@ AC_DEFINE([GNULIB_WCHAR_SINGLE_LOCALE], [1],
   [Define to 1 if apps don't set the locale after calling
    locale-sensitive functions like mbrtowc and wcwidth.])
 
+AC_DEFINE([GNULIB_MBRTOC32_REGULAR], [1],
+  [Do not worry about rare encodings like CP864, EBCDIC, Johab, and Shift JIS
+   that glibc does not support.])
+
 # The test suite needs to know if we have a working perl.
 AM_CONDITIONAL([HAVE_PERL], [test "$gl_cv_prog_perl" != no])
 
