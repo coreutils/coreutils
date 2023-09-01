@@ -92,11 +92,6 @@
 # include <sys/clonefile.h>
 #endif
 
-#ifndef HAVE_FCHOWN
-# define HAVE_FCHOWN false
-# define fchown(fd, uid, gid) (-1)
-#endif
-
 #ifndef USE_ACL
 # define USE_ACL 0
 #endif
@@ -881,6 +876,34 @@ copy_dir (char const *src_name_in, char const *dst_name_in,
   return ok;
 }
 
+/* Change the file mode bits of the file identified by DESC or
+   DIRFD+NAME to MODE.  Use DESC if DESC is valid and fchmod is
+   available, DIRFD+NAME otherwise.  */
+
+static int
+fchmod_or_lchmod (int desc, int dirfd, char const *name, mode_t mode)
+{
+#if HAVE_FCHMOD
+  if (0 <= desc)
+    return fchmod (desc, mode);
+#endif
+  return lchmodat (dirfd, name, mode);
+}
+
+/* Change the ownership of the file identified by DESC or
+   DIRFD+NAME to UID+GID.  Use DESC if DESC is valid and fchown is
+   available, DIRFD+NAME otherwise.  */
+
+static int
+fchown_or_lchown (int desc, int dirfd, char const *name, uid_t uid, gid_t gid)
+{
+#if HAVE_FCHOWN
+  if (0 <= desc)
+    return fchown (desc, uid, gid);
+#endif
+  return lchownat (dirfd, name, uid, gid);
+}
+
 /* Set the owner and owning group of DEST_DESC to the st_uid and
    st_gid fields of SRC_SB.  If DEST_DESC is undefined (-1), set
    the owner and owning group of DST_NAME aka DST_DIRFD+DST_RELNAME
@@ -927,34 +950,16 @@ set_owner (const struct cp_options *x, char const *dst_name,
         }
     }
 
-  if (HAVE_FCHOWN && dest_desc != -1)
-    {
-      if (fchown (dest_desc, uid, gid) == 0)
-        return 1;
-      if (errno == EPERM || errno == EINVAL)
-        {
-          /* We've failed to set *both*.  Now, try to set just the group
-             ID, but ignore any failure here, and don't change errno.  */
-          int saved_errno = errno;
-          ignore_value (fchown (dest_desc, -1, gid));
-          errno = saved_errno;
-        }
-    }
-  else
-    {
-      if (lchownat (dst_dirfd, dst_relname, uid, gid) == 0)
-        return 1;
-      if (errno == EPERM || errno == EINVAL)
-        {
-          /* We've failed to set *both*.  Now, try to set just the group
-             ID, but ignore any failure here, and don't change errno.  */
-          int saved_errno = errno;
-          ignore_value (lchownat (dst_dirfd, dst_relname, -1, gid));
-          errno = saved_errno;
-        }
-    }
+  if (fchown_or_lchown (dest_desc, dst_dirfd, dst_relname, uid, gid) == 0)
+    return 1;
 
-  if (! chown_failure_ok (x))
+  /* The ownership change failed.  If the failure merely means we lack
+     privileges to change owner+group, try to change just the group
+     and ignore any failure of this.  Otherwise, report an error.  */
+  if (chown_failure_ok (x))
+    ignore_value (fchown_or_lchown (dest_desc, dst_dirfd, dst_relname,
+                                    -1, gid));
+  else
     {
       error (0, errno, _("failed to preserve ownership for %s"),
              quoteaf (dst_name));
@@ -1086,20 +1091,6 @@ set_file_security_ctx (char const *dst_name,
     }
 
   return true;
-}
-
-/* Change the file mode bits of the file identified by DESC or
-   DIRFD+NAME to MODE.  Use DESC if DESC is valid and fchmod is
-   available, DIRFD+NAME otherwise.  */
-
-static int
-fchmod_or_lchmod (int desc, int dirfd, char const *name, mode_t mode)
-{
-#if HAVE_FCHMOD
-  if (0 <= desc)
-    return fchmod (desc, mode);
-#endif
-  return lchmodat (dirfd, name, mode);
 }
 
 #ifndef HAVE_STRUCT_STAT_ST_BLOCKS
