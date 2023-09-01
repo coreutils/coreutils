@@ -260,16 +260,11 @@ restricted_chown (int cwd_fd, char const *file,
   else if ((required_uid == (uid_t) -1 || required_uid == st.st_uid)
            && (required_gid == (gid_t) -1 || required_gid == st.st_gid))
     {
+#if HAVE_FCHOWN
       if (fchown (fd, uid, gid) == 0)
-        {
-          status = (close (fd) == 0
-                    ? RC_ok : RC_error);
-          return status;
-        }
-      else
-        {
-          status = RC_error;
-        }
+        return close (fd) < 0 ? RC_error : RC_ok;
+#endif
+      status = RC_error;
     }
 
   int saved_errno = errno;
