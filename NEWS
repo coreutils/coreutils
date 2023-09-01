@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cp, mv, install no longer issue spurious "failed to preserve ownership"
+  diagnostics when copying to GNU/Linux CIFS filesystems.  They do
+  this by working around a Linux CIFS bug.
+
   numfmt options like --suffix no longer have an arbitrary 127-byte limit.
   [bug introduced with numfmt in coreutils-8.21]
 

@@ -3449,9 +3449,16 @@ chown_failure_ok (struct cp_options const *x)
 {
   /* If non-root uses -p, it's ok if we can't preserve ownership.
      But root probably wants to know, e.g. if NFS disallows it,
-     or if the target system doesn't support file ownership.  */
+     or if the target system doesn't support file ownership.
 
-  return ((errno == EPERM || errno == EINVAL) && !x->chown_privileges);
+     Treat EACCES like EPERM and EINVAL to work around a bug in Linux
+     CIFS <https://bugs.gnu.org/65599>.  Although this means coreutils
+     will ignore EACCES errors that it should report, problems should
+     occur only when some other process is racing with coreutils and
+     coreutils is not immune to races anyway.  */
+
+  return ((errno == EPERM || errno == EINVAL || errno == EACCES)
+          && !x->chown_privileges);
 }
 
 /* Similarly, return true if it's OK for chmod and similar operations
