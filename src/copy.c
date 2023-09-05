@@ -1220,20 +1220,21 @@ handle_clone_fail (int dst_dirfd, char const *dst_relname,
    *NEW_DST is initially as in copy_internal.
    If successful, set *NEW_DST to true if the destination file was created and
    to false otherwise; if unsuccessful, perhaps set *NEW_DST to some value.
-   SRC_SB is the result of calling follow_fstatat on SRC_NAME.  */
+   SRC_SB is the result of calling follow_fstatat on SRC_NAME;
+   it might be updated by calling fstat again on the same file,
+   to give it slightly more up-to-date contents.  */
 
 static bool
 copy_reg (char const *src_name, char const *dst_name,
           int dst_dirfd, char const *dst_relname,
           const struct cp_options *x,
           mode_t dst_mode, mode_t omitted_permissions, bool *new_dst,
-          struct stat const *src_sb)
+          struct stat *src_sb)
 {
   char *buf = nullptr;
   int dest_desc;
   int dest_errno;
   int source_desc;
-  mode_t src_mode = src_sb->st_mode;
   mode_t extra_permissions;
   struct stat sb;
   struct stat src_open_sb;
@@ -1272,6 +1273,11 @@ copy_reg (char const *src_name, char const *dst_name,
       return_val = false;
       goto close_src_desc;
     }
+
+  /* Might as well tell the caller about the latest version of the
+     source file status, since we have it already.  */
+  *src_sb = src_open_sb;
+  mode_t src_mode = src_sb->st_mode;
 
   /* The semantics of the following open calls are mandated
      by the specs for both cp and mv.  */
