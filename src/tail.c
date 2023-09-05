@@ -1841,7 +1841,7 @@ tail_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
           else if ((current_pos = lseek (fd, -n_bytes, SEEK_END)) != -1)
             end_pos = current_pos + n_bytes;
         }
-      if (end_pos <= (off_t) ST_BLKSIZE (stats))
+      if (end_pos <= (off_t) STP_BLKSIZE (&stats))
         return pipe_bytes (pretty_filename, fd, n_bytes, read_pos);
       if (current_pos == -1)
         current_pos = xlseek (fd, 0, SEEK_CUR, pretty_filename);

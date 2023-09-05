@@ -1134,7 +1134,7 @@ infer_scantype (int fd, struct stat const *sb,
      suggests the file is sparse.  */
   if (! (HAVE_STRUCT_STAT_ST_BLOCKS
          && S_ISREG (sb->st_mode)
-         && ST_NBLOCKS (*sb) < sb->st_size / ST_NBLOCKSIZE))
+         && STP_NBLOCKS (sb) < sb->st_size / ST_NBLOCKSIZE))
     return PLAIN_SCANTYPE;
 
 #ifdef SEEK_HOLE
@@ -1265,7 +1265,7 @@ copy_reg (char const *src_name, char const *dst_name,
 
   /* Compare the source dev/ino from the open file to the incoming,
      saved ones obtained via a previous call to stat.  */
-  if (! SAME_INODE (*src_sb, src_open_sb))
+  if (! psame_inode (src_sb, &src_open_sb))
     {
       error (0, 0,
              _("skipping file %s, as it was replaced while being copied"),
@@ -1544,8 +1544,8 @@ copy_reg (char const *src_name, char const *dst_name,
   if (data_copy_required)
     {
       /* Choose a suitable buffer size; it may be adjusted later.  */
-      size_t buf_size = io_blksize (sb);
-      size_t hole_size = ST_BLKSIZE (sb);
+      size_t buf_size = io_blksize (&sb);
+      size_t hole_size = STP_BLKSIZE (&sb);
 
       /* Deal with sparse files.  */
       enum scantype scantype = infer_scantype (source_desc, &src_open_sb,
@@ -1573,7 +1573,7 @@ copy_reg (char const *src_name, char const *dst_name,
              Note we read in multiples of the reported block size
              to support (unusual) devices that have this constraint.  */
           size_t blcm_max = MIN (SIZE_MAX, SSIZE_MAX);
-          size_t blcm = buffer_lcm (io_blksize (src_open_sb), buf_size,
+          size_t blcm = buffer_lcm (io_blksize (&src_open_sb), buf_size,
                                     blcm_max);
 
           /* Do not bother with a buffer larger than the input file, plus one
@@ -1743,7 +1743,7 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
   struct stat tmp_src_sb;
 
   bool same_link;
-  bool same = SAME_INODE (*src_sb, *dst_sb);
+  bool same = psame_inode (src_sb, dst_sb);
 
   *return_now = false;
 
@@ -1804,7 +1804,7 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
       src_sb_link = &tmp_src_sb;
       dst_sb_link = &tmp_dst_sb;
 
-      same_link = SAME_INODE (*src_sb_link, *dst_sb_link);
+      same_link = psame_inode (src_sb_link, dst_sb_link);
 
       /* If both are symlinks, then it's ok, but only if the destination
          will be unlinked before being opened.  This is like the test
@@ -1892,7 +1892,7 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
      hard links to the same file.  */
   if (!S_ISLNK (src_sb_link->st_mode) && !S_ISLNK (dst_sb_link->st_mode))
     {
-      if (!SAME_INODE (*src_sb_link, *dst_sb_link))
+      if (!psame_inode (src_sb_link, dst_sb_link))
         return true;
 
       /* If they are the same file, it's ok if we're making hard links.  */
@@ -1953,7 +1953,7 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
       else if (fstatat (dst_dirfd, dst_relname, &tmp_dst_sb, 0) != 0)
         return true;
 
-      if ( ! SAME_INODE (tmp_src_sb, tmp_dst_sb))
+      if (!psame_inode (&tmp_src_sb, &tmp_dst_sb))
         return true;
 
       if (x->hard_link)
@@ -2172,7 +2172,7 @@ source_is_dst_backup (char const *srcbase, struct stat const *src_st,
   struct stat dst_back_sb;
   int dst_back_status = fstatat (dst_dirfd, dst_back, &dst_back_sb, 0);
   free (dst_back);
-  return dst_back_status == 0 && SAME_INODE (*src_st, dst_back_sb);
+  return dst_back_status == 0 && psame_inode (src_st, &dst_back_sb);
 }
 
 /* Copy the file SRC_NAME to the file DST_NAME aka DST_DIRFD+DST_RELNAME.
@@ -3041,7 +3041,7 @@ skip:
                             || stat (".", &dot_sb) != 0
                             || (fstatat (dst_dirfd, dst_parent, &dst_parent_sb,
                                          0) != 0)
-                            || SAME_INODE (dot_sb, dst_parent_sb));
+                            || psame_inode (&dot_sb, &dst_parent_sb));
           free (dst_parent);
 
           if (! in_current_dir)

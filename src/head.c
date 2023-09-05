@@ -466,7 +466,7 @@ elide_tail_bytes_file (char const *filename, int fd, uintmax_t n_elide,
                        struct stat const *st, off_t current_pos)
 {
   off_t size = st->st_size;
-  if (presume_input_pipe || current_pos < 0 || size <= ST_BLKSIZE (*st))
+  if (presume_input_pipe || current_pos < 0 || size <= STP_BLKSIZE (st))
     return elide_tail_bytes_pipe (filename, fd, n_elide, current_pos);
   else
     {
@@ -756,7 +756,7 @@ elide_tail_lines_file (char const *filename, int fd, uintmax_t n_elide,
                        struct stat const *st, off_t current_pos)
 {
   off_t size = st->st_size;
-  if (presume_input_pipe || current_pos < 0 || size <= ST_BLKSIZE (*st))
+  if (presume_input_pipe || current_pos < 0 || size <= STP_BLKSIZE (st))
     return elide_tail_lines_pipe (filename, fd, n_elide, current_pos);
   else
     {

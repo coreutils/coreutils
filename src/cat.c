@@ -644,7 +644,7 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, _("standard output"));
 
   /* Optimal size of i/o operations of output.  */
-  idx_t outsize = io_blksize (stat_buf);
+  idx_t outsize = io_blksize (&stat_buf);
 
   /* Device and I-node number of the output.  */
   dev_t out_dev = stat_buf.st_dev;
@@ -698,7 +698,7 @@ main (int argc, char **argv)
         }
 
       /* Optimal size of i/o operations of input.  */
-      idx_t insize = io_blksize (stat_buf);
+      idx_t insize = io_blksize (&stat_buf);
 
       fdadvise (input_desc, 0, 0, FADVISE_SEQUENTIAL);
 

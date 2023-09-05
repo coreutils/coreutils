@@ -409,7 +409,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
             }
           else
             {
-              off_t hi_pos = end_pos - end_pos % (ST_BLKSIZE (fstatus->st) + 1);
+              off_t hi_pos = (end_pos
+                              - end_pos % (STP_BLKSIZE (&fstatus->st) + 1));
               if (0 <= current_pos && current_pos < hi_pos
                   && 0 <= lseek (fd, hi_pos, SEEK_CUR))
                 bytes = hi_pos - current_pos;

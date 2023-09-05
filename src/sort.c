@@ -3806,7 +3806,7 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
                     ? fstat (STDIN_FILENO, &instat)
                     : stat (files[i].name, &instat))
                    == 0)
-                  && SAME_INODE (instat, *outst));
+                  && psame_inode (&instat, outst));
         }
 
       if (same)

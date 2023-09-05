@@ -73,10 +73,10 @@
  */
 enum { IO_BUFSIZE = 128 * 1024 };
 static inline idx_t
-io_blksize (struct stat sb)
+io_blksize (struct stat const *st)
 {
   /* Treat impossible blocksizes as if they were IO_BUFSIZE.  */
-  idx_t blocksize = ST_BLKSIZE (sb) <= 0 ? IO_BUFSIZE : ST_BLKSIZE (sb);
+  idx_t blocksize = STP_BLKSIZE (st) <= 0 ? IO_BUFSIZE : STP_BLKSIZE (st);
 
   /* Use a blocksize of at least IO_BUFSIZE bytes, keeping it a
      multiple of the original blocksize.  */
@@ -88,8 +88,7 @@ io_blksize (struct stat sb)
      This misinformation can cause coreutils to use wrong-sized blocks.
      Work around some of the performance bug by substituting the next
      power of two when the reported blocksize is not a power of two.  */
-  if (S_ISREG (sb.st_mode)
-      && blocksize & (blocksize - 1))
+  if (S_ISREG (st->st_mode) && blocksize & (blocksize - 1))
     {
       int leading_zeros = count_leading_zeros_ll (blocksize);
       if (IDX_MAX < ULLONG_MAX || leading_zeros)

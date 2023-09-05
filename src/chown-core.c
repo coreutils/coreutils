@@ -43,7 +43,7 @@ enum RCH_status
     /* required_uid and/or required_gid are specified, but don't match */
     RC_excluded,
 
-    /* SAME_INODE check failed */
+    /* The file was replaced by another file during the requested change.  */
     RC_inode_changed,
 
     /* open/fchown isn't needed, isn't safe, or doesn't work due to
@@ -255,7 +255,7 @@ restricted_chown (int cwd_fd, char const *file,
 
   if (fstat (fd, &st) != 0)
     status = RC_error;
-  else if (! SAME_INODE (*orig_st, st))
+  else if (! psame_inode (orig_st, &st))
     status = RC_inode_changed;
   else if ((required_uid == (uid_t) -1 || required_uid == st.st_uid)
            && (required_gid == (gid_t) -1 || required_gid == st.st_gid))

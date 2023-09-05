@@ -115,7 +115,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
     }
   if (block_mode)
     {
-      ptrdiff_t blksize = ST_BLKSIZE (sb);
+      ptrdiff_t blksize = STP_BLKSIZE (&sb);
       intmax_t ssize0 = ssize;
       if (ckd_mul (&ssize, ssize, blksize))
         {

@@ -486,7 +486,7 @@ create (char const *name)
       struct stat out_stat_buf;
       if (fstat (fd, &out_stat_buf) != 0)
         error (EXIT_FAILURE, errno, _("failed to stat %s"), quoteaf (name));
-      if (SAME_INODE (in_stat_buf, out_stat_buf))
+      if (psame_inode (&in_stat_buf, &out_stat_buf))
         error (EXIT_FAILURE, 0, _("%s would overwrite input; aborting"),
                quoteaf (name));
       bool regularish
@@ -1626,7 +1626,7 @@ main (int argc, char **argv)
 
   if (in_blk_size == 0)
     {
-      in_blk_size = io_blksize (in_stat_buf);
+      in_blk_size = io_blksize (&in_stat_buf);
       if (SYS_BUFSIZE_MAX < in_blk_size)
         in_blk_size = SYS_BUFSIZE_MAX;
     }

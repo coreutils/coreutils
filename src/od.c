@@ -1031,7 +1031,7 @@ skip (uintmax_t n_skip)
              when st_size is no greater than the block size, because
              some kernels report nonsense small file sizes for
              proc-like file systems.  */
-          if (usable_size && ST_BLKSIZE (file_stats) < file_stats.st_size)
+          if (usable_size && STP_BLKSIZE (&file_stats) < file_stats.st_size)
             {
               if ((uintmax_t) file_stats.st_size < n_skip)
                 n_skip -= file_stats.st_size;

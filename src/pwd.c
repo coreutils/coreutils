@@ -280,7 +280,7 @@ robust_getcwd (struct file_name *file_name)
   while (true)
     {
       /* If we've reached the root, we're done.  */
-      if (SAME_INODE (dot_sb, *root_dev_ino))
+      if (PSAME_INODE (&dot_sb, root_dev_ino))
         break;
 
       find_dir_entry (&dot_sb, file_name, height++);
@@ -315,7 +315,7 @@ logical_getcwd (void)
     }
 
   /* System call validation.  */
-  if (stat (wd, &st1) == 0 && stat (".", &st2) == 0 && SAME_INODE (st1, st2))
+  if (stat (wd, &st1) == 0 && stat (".", &st2) == 0 && psame_inode (&st1, &st2))
     return wd;
   return nullptr;
 }

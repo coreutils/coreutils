@@ -28,7 +28,7 @@ get_root_dev_ino (struct dev_ino *root_d_i) _GL_ATTRIBUTE_NONNULL ();
    --preserve-root and --no-preserve-root options.  */
 
 # define ROOT_DEV_INO_CHECK(Root_dev_ino, Dir_statbuf) \
-    (Root_dev_ino && SAME_INODE (*Dir_statbuf, *Root_dev_ino))
+    (Root_dev_ino && PSAME_INODE (Dir_statbuf, Root_dev_ino))
 
 # define ROOT_DEV_INO_WARN(Dirname)					\
   do									\

@@ -972,7 +972,7 @@ find_bind_mount (char const * name)
           struct stat dev_stats;
 
           if (stat (me->me_devname, &dev_stats) == 0
-              && SAME_INODE (name_stats, dev_stats))
+              && psame_inode (&name_stats, &dev_stats))
             {
               bind_mount = me->me_devname;
               break;
@@ -1603,10 +1603,10 @@ print_stat (char *pformat, size_t prefix_len, char mod, char m,
       out_uint (pformat, prefix_len, ST_NBLOCKSIZE);
       break;
     case 'b':
-      out_uint (pformat, prefix_len, ST_NBLOCKS (*statbuf));
+      out_uint (pformat, prefix_len, STP_NBLOCKS (statbuf));
       break;
     case 'o':
-      out_uint (pformat, prefix_len, ST_BLKSIZE (*statbuf));
+      out_uint (pformat, prefix_len, STP_BLKSIZE (statbuf));
       break;
     case 'w':
       {

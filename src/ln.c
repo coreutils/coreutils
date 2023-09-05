@@ -259,7 +259,7 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
                   if (source_status != 0)
                     source_status = stat (source, &source_stats);
                   if (source_status == 0
-                      && SAME_INODE (source_stats, dest_stats)
+                      && psame_inode (&source_stats, &dest_stats)
                       && (source_stats.st_nlink == 1
                           || same_nameat (AT_FDCWD, source,
                                           destdir_fd, dest_base)))

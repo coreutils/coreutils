@@ -1403,7 +1403,7 @@ dev_ino_compare (void const *x, void const *y)
 {
   struct dev_ino const *a = x;
   struct dev_ino const *b = y;
-  return SAME_INODE (*a, *b) ? true : false;
+  return PSAME_INODE (a, b);
 }
 
 static void
@@ -3610,7 +3610,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
       else
         f->filetype = normal;
 
-      blocks = ST_NBLOCKS (f->stat);
+      blocks = STP_NBLOCKS (&f->stat);
       if (format == long_format || print_block_size)
         {
           char buf[LONGEST_HUMAN_READABLE + 1];
@@ -4378,7 +4378,7 @@ print_long_format (const struct fileinfo *f)
       char const *blocks =
         (! f->stat_ok
          ? "?"
-         : human_readable (ST_NBLOCKS (f->stat), hbuf, human_output_opts,
+         : human_readable (STP_NBLOCKS (&f->stat), hbuf, human_output_opts,
                            ST_NBLOCKSIZE, output_block_size));
       int blocks_width = mbswidth (blocks, MBSWIDTH_FLAGS);
       for (int pad = blocks_width < 0 ? 0 : block_size_width - blocks_width;
@@ -4894,7 +4894,7 @@ print_file_name_and_frills (const struct fileinfo *f, size_t start_col)
   if (print_block_size)
     printf ("%*s ", format == with_commas ? 0 : block_size_width,
             ! f->stat_ok ? "?"
-            : human_readable (ST_NBLOCKS (f->stat), buf, human_output_opts,
+            : human_readable (STP_NBLOCKS (&f->stat), buf, human_output_opts,
                               ST_NBLOCKSIZE, output_block_size));
 
   if (print_scontext)
@@ -5126,7 +5126,7 @@ length_of_file_name_and_frills (const struct fileinfo *f)
   if (print_block_size)
     len += 1 + (format == with_commas
                 ? strlen (! f->stat_ok ? "?"
-                          : human_readable (ST_NBLOCKS (f->stat), buf,
+                          : human_readable (STP_NBLOCKS (&f->stat), buf,
                                             human_output_opts, ST_NBLOCKSIZE,
                                             output_block_size))
                 : block_size_width);
