@@ -2217,12 +2217,6 @@ copy_internal (char const *src_name, char const *dst_name,
   bool dest_is_symlink = false;
   bool have_dst_lstat = false;
 
-  /* Whether the destination is (or was) known to be new, updated as
-     more info comes in.  This may become true if the destination is a
-     dangling symlink, in contexts where dangling symlinks should be
-     treated the same as nonexistent files.  */
-  bool new_dst = 0 < nonexistent_dst;
-
   *copy_into_self = false;
 
   int rename_errno = x->rename_errno;
@@ -2232,7 +2226,7 @@ copy_internal (char const *src_name, char const *dst_name,
         rename_errno = (renameatu (AT_FDCWD, src_name, dst_dirfd, drelname,
                                    RENAME_NOREPLACE)
                         ? errno : 0);
-      nonexistent_dst = *rename_succeeded = new_dst = rename_errno == 0;
+      nonexistent_dst = *rename_succeeded = rename_errno == 0;
     }
 
   if (rename_errno == 0
@@ -2290,7 +2284,13 @@ copy_internal (char const *src_name, char const *dst_name,
 
   bool dereference = should_dereference (x, command_line_arg);
 
-  if (nonexistent_dst <= 0)
+  /* Whether the destination is (or was) known to be new, updated as
+     more info comes in.  This may become true if the destination is a
+     dangling symlink, in contexts where dangling symlinks should be
+     treated the same as nonexistent files.  */
+  bool new_dst = 0 < nonexistent_dst;
+
+  if (! new_dst)
     {
       if (! (rename_errno == EEXIST
              && (x->interactive == I_ALWAYS_NO
@@ -2318,17 +2318,14 @@ copy_internal (char const *src_name, char const *dst_name,
               have_dst_lstat = use_lstat;
               rename_errno = EEXIST;
             }
+          else if (errno == ENOENT)
+            new_dst = true;
+          else if (errno == ELOOP && x->unlink_dest_after_failed_open)
+            /* Leave new_dst=false so we unlink later.  */;
           else
             {
-              if (errno == ELOOP && x->unlink_dest_after_failed_open)
-                /* leave new_dst=false so we unlink later.  */;
-              else if (errno != ENOENT)
-                {
-                  error (0, errno, _("cannot stat %s"), quoteaf (dst_name));
-                  return false;
-                }
-              else
-                new_dst = true;
+              error (0, errno, _("cannot stat %s"), quoteaf (dst_name));
+              return false;
             }
         }
 
@@ -2593,22 +2590,16 @@ skip:
       && ! x->move_mode
       && x->backup_type == no_backups)
     {
-      bool lstat_ok = true;
-      struct stat tmp_buf;
-      struct stat *dst_lstat_sb;
-
       /* If we did not follow symlinks above, good: use that data.
          Otherwise, use AT_SYMLINK_NOFOLLOW, in case dst_name is a symlink.  */
-      if (have_dst_lstat)
-        dst_lstat_sb = &dst_sb;
-      else if (fstatat (dst_dirfd, drelname, &tmp_buf, AT_SYMLINK_NOFOLLOW)
-               == 0)
-        dst_lstat_sb = &tmp_buf;
-      else
-        lstat_ok = false;
+      struct stat tmp_buf;
+      struct stat *dst_lstat_sb
+        = (have_dst_lstat ? &dst_sb
+           : fstatat (dst_dirfd, drelname, &tmp_buf, AT_SYMLINK_NOFOLLOW) < 0
+           ? nullptr : &tmp_buf);
 
       /* Never copy through a symlink we've just created.  */
-      if (lstat_ok
+      if (dst_lstat_sb
           && S_ISLNK (dst_lstat_sb->st_mode)
           && seen_file (x->dest_info, dst_relname, dst_lstat_sb))
         {
