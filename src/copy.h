@@ -129,8 +129,8 @@ struct cp_options
      if SET_MODE is nonzero.  */
   mode_t mode;
 
-  /* If true, copy all files except (directories and, if not dereferencing
-     them, symbolic links,) as if they were regular files.  */
+  /* If true, copy all files except directories (and, if not dereferencing
+     them, symbolic links) as if they were regular files.  */
   bool copy_as_regular;
 
   /* If true, remove each existing destination nondirectory before
