@@ -2309,11 +2309,10 @@ copy_internal (char const *src_name, char const *dst_name,
                || x->move_mode || x->symbolic_link || x->hard_link
                || x->backup_type != no_backups
                || x->unlink_dest_before_opening);
-          int fstatat_flags = use_lstat ? AT_SYMLINK_NOFOLLOW : 0;
           if (!use_lstat && nonexistent_dst < 0)
             new_dst = true;
-          else if (follow_fstatat (dst_dirfd, drelname, &dst_sb, fstatat_flags)
-                   == 0)
+          else if (0 <= follow_fstatat (dst_dirfd, drelname, &dst_sb,
+                                        use_lstat ? AT_SYMLINK_NOFOLLOW : 0))
             {
               have_dst_lstat = use_lstat;
               rename_errno = EEXIST;
