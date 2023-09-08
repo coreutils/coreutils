@@ -2292,6 +2292,13 @@ copy_internal (char const *src_name, char const *dst_name,
 
   if (! new_dst)
     {
+      /* Normally, fill in DST_SB or set NEW_DST so that later code
+         can use DST_SB if NEW_DST is false.  However, don't bother
+         doing this when rename_errno == EEXIST and X->interactive is
+         I_ALWAYS_NO or I_ALWAYS_SKIP, something that can happen only
+         with mv in which case x->update must be false which means
+         that even if !NEW_DST the move will be abandoned without
+         looking at DST_SB.  */
       if (! (rename_errno == EEXIST
              && (x->interactive == I_ALWAYS_NO
                  || x->interactive == I_ALWAYS_SKIP)))
