@@ -2319,8 +2319,12 @@ copy_internal (char const *src_name, char const *dst_name,
             }
           else if (errno == ENOENT)
             new_dst = true;
-          else if (errno == ELOOP && x->unlink_dest_after_failed_open)
-            /* Leave new_dst=false so we unlink later.  */;
+          else if (errno == ELOOP && !use_lstat
+                   && x->unlink_dest_after_failed_open)
+            {
+              /* cp -f's destination might be a symlink loop.
+                 Leave new_dst=false so that we try to unlink later.  */
+            }
           else
             {
               error (0, errno, _("cannot stat %s"), quoteaf (dst_name));
