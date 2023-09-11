@@ -4016,6 +4016,7 @@ distribution).
 @end menu
 
 @node cksum output modes
+@subsection cksum output modes
 
 @table @asis
 
@@ -4059,6 +4060,8 @@ Since the backslash character itself is escaped, any other backslash
 escape sequences are reserved for future use.
 
 @node cksum general options
+@subsection cksum general options
+
 @table @samp
 
 @item -a
@@ -4141,6 +4144,8 @@ Note this does not identify the digest algorithm used for the checksum.
 @end table
 
 @node cksum common options
+@subsection cksum common options
+
 @table @samp
 
 @item -b
