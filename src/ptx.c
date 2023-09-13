@@ -1111,7 +1111,7 @@ fix_output_parameters (void)
           if (file_index > 0)
             line_ordinal -= file_line_count[file_index - 1];
           char ordinal_string[INT_BUFSIZE_BOUND (intmax_t)];
-          reference_width = sprintf (ordinal_string, "%"PRIdMAX, line_ordinal);
+          reference_width = sprintf (ordinal_string, "%jd", line_ordinal);
           if (input_file_name[file_index])
             reference_width += strlen (input_file_name[file_index]);
           if (reference_width > reference_max_width)
@@ -1427,7 +1427,7 @@ define_all_fields (OCCURS *occurs)
         line_ordinal -= file_line_count[occurs->file_index - 1];
 
       char *file_end = stpcpy (reference.start, file_name);
-      reference.end = file_end + sprintf (file_end, ":%"PRIdMAX, line_ordinal);
+      reference.end = file_end + sprintf (file_end, ":%jd", line_ordinal);
     }
   else if (input_reference)
     {

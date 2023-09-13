@@ -287,9 +287,9 @@ set_libstdbuf_options (void)
             ret = asprintf (&var, "%s%c=L", "_STDBUF_",
                             toupper (stdbuf[i].optc));
           else
-            ret = asprintf (&var, "%s%c=%" PRIuMAX, "_STDBUF_",
+            ret = asprintf (&var, "%s%c=%zu", "_STDBUF_",
                             toupper (stdbuf[i].optc),
-                            (uintmax_t) stdbuf[i].size);
+                            stdbuf[i].size);
           if (ret < 0)
             xalloc_die ();
 

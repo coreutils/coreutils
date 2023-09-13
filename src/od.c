@@ -86,10 +86,10 @@ enum
     FMT_BYTES_ALLOCATED =
            (sizeof "%*.99" + 1
             + MAX (sizeof "ld",
-                   MAX (sizeof PRIdMAX,
-                        MAX (sizeof PRIoMAX,
-                             MAX (sizeof PRIuMAX,
-                                  sizeof PRIxMAX)))))
+                   MAX (sizeof "jd",
+                        MAX (sizeof "jd",
+                             MAX (sizeof "ju",
+                                  sizeof "jx")))))
   };
 
 /* Ensure that our choice for FMT_BYTES_ALLOCATED is reasonable.  */
@@ -709,28 +709,28 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           fmt = SIGNED_DECIMAL;
           field_width = bytes_to_signed_dec_digits[size];
           sprintf (tspec->fmt_string, "%%*%s",
-                   ISPEC_TO_FORMAT (size_spec, "d", "ld", PRIdMAX));
+                   ISPEC_TO_FORMAT (size_spec, "d", "ld", "jd"));
           break;
 
         case 'o':
           fmt = OCTAL;
           sprintf (tspec->fmt_string, "%%*.%d%s",
                    (field_width = bytes_to_oct_digits[size]),
-                   ISPEC_TO_FORMAT (size_spec, "o", "lo", PRIoMAX));
+                   ISPEC_TO_FORMAT (size_spec, "o", "lo", "jo"));
           break;
 
         case 'u':
           fmt = UNSIGNED_DECIMAL;
           field_width = bytes_to_unsigned_dec_digits[size];
           sprintf (tspec->fmt_string, "%%*%s",
-                   ISPEC_TO_FORMAT (size_spec, "u", "lu", PRIuMAX));
+                   ISPEC_TO_FORMAT (size_spec, "u", "lu", "ju"));
           break;
 
         case 'x':
           fmt = HEXADECIMAL;
           sprintf (tspec->fmt_string, "%%*.%d%s",
                    (field_width = bytes_to_hex_digits[size]),
-                   ISPEC_TO_FORMAT (size_spec, "x", "lx", PRIxMAX));
+                   ISPEC_TO_FORMAT (size_spec, "x", "lx", "jx"));
           break;
 
         default:
@@ -1956,8 +1956,7 @@ main (int argc, char **argv)
     }
 
 #ifdef DEBUG
-  printf ("lcm=%d, width_per_block=%"PRIuMAX"\n", l_c_m,
-          (uintmax_t) width_per_block);
+  printf ("lcm=%d, width_per_block=%zu\n", l_c_m, width_per_block);
   for (i = 0; i < n_specs; i++)
     {
       int fields_per_block = bytes_per_block / width_bytes[spec[i].size];

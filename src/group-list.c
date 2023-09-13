@@ -112,12 +112,12 @@ print_group (gid_t gid, bool use_name)
           if (TYPE_SIGNED (gid_t))
             {
               intmax_t g = gid;
-              error (0, 0, _("cannot find name for group ID %"PRIdMAX), g);
+              error (0, 0, _("cannot find name for group ID %jd"), g);
             }
           else
             {
               uintmax_t g = gid;
-              error (0, 0, _("cannot find name for group ID %"PRIuMAX), g);
+              error (0, 0, _("cannot find name for group ID %ju"), g);
             }
           ok = false;
         }

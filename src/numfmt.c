@@ -1189,8 +1189,8 @@ prepare_padded_number (const long double val, size_t precision,
         {
           if (precision_used)
             error (conv_exit_code, 0,
-                   _("value/precision too large to be printed: '%Lg/%"PRIuMAX"'"
-                     " (consider using --to)"), val, (uintmax_t)precision_used);
+                   _("value/precision too large to be printed: '%Lg/%zu'"
+                     " (consider using --to)"), val, precision_used);
           else
             error (conv_exit_code, 0,
                    _("value too large to be printed: '%Lg'"

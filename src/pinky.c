@@ -165,7 +165,7 @@ idle_string (time_t when)
   else
     {
       intmax_t days = seconds_idle / (24 * 60 * 60);
-      sprintf (buf, "%"PRIdMAX"d", days);
+      sprintf (buf, "%jdd", days);
     }
   return buf;
 }

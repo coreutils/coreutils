@@ -778,16 +778,16 @@ print_xfer_stats (xtime_t progress_time)
   int stats_len
     = (abbreviation_lacks_prefix (si)
        ? fprintf (stderr,
-                  ngettext ("%"PRIdMAX" byte copied, %s, %s",
-                            "%"PRIdMAX" bytes copied, %s, %s",
+                  ngettext ("%jd byte copied, %s, %s",
+                            "%jd bytes copied, %s, %s",
                             select_plural (w_bytes)),
                   w_bytes, delta_s_buf, bytes_per_second)
        : abbreviation_lacks_prefix (iec)
        ? fprintf (stderr,
-                  _("%"PRIdMAX" bytes (%s) copied, %s, %s"),
+                  _("%jd bytes (%s) copied, %s, %s"),
                   w_bytes, si, delta_s_buf, bytes_per_second)
        : fprintf (stderr,
-                  _("%"PRIdMAX" bytes (%s, %s) copied, %s, %s"),
+                  _("%jd bytes (%s, %s) copied, %s, %s"),
                   w_bytes, si, iec, delta_s_buf, bytes_per_second));
 
   if (progress_time)
@@ -821,14 +821,14 @@ print_stats (void)
     }
 
   fprintf (stderr,
-           _("%"PRIdMAX"+%"PRIdMAX" records in\n"
-             "%"PRIdMAX"+%"PRIdMAX" records out\n"),
+           _("%jd+%jd records in\n"
+             "%jd+%jd records out\n"),
            r_full, r_partial, w_full, w_partial);
 
   if (r_truncate != 0)
     fprintf (stderr,
-             ngettext ("%"PRIdMAX" truncated record\n",
-                       "%"PRIdMAX" truncated records\n",
+             ngettext ("%jd truncated record\n",
+                       "%jd truncated records\n",
                        select_plural (r_truncate)),
              r_truncate);
 
@@ -2357,7 +2357,7 @@ dd_copy (void)
             {
               if (iftruncate (STDOUT_FILENO, output_offset) != 0)
                 {
-                  diagnose (errno, _("failed to truncate to %" PRIdMAX " bytes"
+                  diagnose (errno, _("failed to truncate to %jd bytes"
                                      " in output file %s"),
                             (intmax_t) output_offset, quoteaf (output_file));
                   return EXIT_FAILURE;
@@ -2479,7 +2479,7 @@ main (int argc, char **argv)
           && !(conversions_mask & C_NOTRUNC))
         error (EXIT_FAILURE, 0,
                _("offset too large: "
-                 "cannot truncate to a length of seek=%"PRIdMAX""
+                 "cannot truncate to a length of seek=%jd"
                  " (%td-byte) blocks"),
                seek_records, output_blocksize);
 
@@ -2515,7 +2515,7 @@ main (int argc, char **argv)
                 {
                   intmax_t isize = size;
                   diagnose (ftruncate_errno,
-                            _("failed to truncate to %"PRIdMAX" bytes"
+                            _("failed to truncate to %jd bytes"
                               " in output file %s"),
                             isize, quoteaf (output_file));
                   exit_status = EXIT_FAILURE;

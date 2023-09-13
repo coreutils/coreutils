@@ -415,7 +415,7 @@ check_order (const struct line *prev,
 
               error ((check_input_order == CHECK_ORDER_ENABLED
                       ? EXIT_FAILURE : 0),
-                     0, _("%s:%"PRIuMAX": is not sorted: %.*s"),
+                     0, _("%s:%ju: is not sorted: %.*s"),
                      g_names[whatfile - 1], line_no[whatfile - 1],
                      (int) len, current->buf.buffer);
 

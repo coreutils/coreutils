@@ -1083,7 +1083,7 @@ dired_dump_obstack (char const *prefix, struct obstack *os)
       for (size_t i = 0; i < n_pos; i++)
         {
           intmax_t p = pos[i];
-          printf (" %"PRIdMAX, p);
+          printf (" %jd", p);
         }
       putchar ('\n');
     }
@@ -4245,7 +4245,7 @@ format_user_or_group (char const *name, uintmax_t id, int width)
       while (pad--);
     }
   else
-    dired_pos += printf ("%*"PRIuMAX" ", width, id);
+    dired_pos += printf ("%*ju ", width, id);
 }
 
 /* Print the name or id of the user with id U, using a print width of
@@ -4275,7 +4275,7 @@ format_user_or_group_width (char const *name, uintmax_t id)
 {
   return (name
           ? mbswidth (name, MBSWIDTH_FLAGS)
-          : snprintf (nullptr, 0, "%"PRIuMAX, id));
+          : snprintf (nullptr, 0, "%ju", id));
 }
 
 /* Return the number of columns that format_user will print,

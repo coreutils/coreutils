@@ -1052,12 +1052,12 @@ output_file (char const *file, int binary_file, void const *digest,
       fputs (DIGEST_TYPE_STRING, stdout);
 # if HASH_ALGO_BLAKE2
       if (digest_length < BLAKE2B_MAX_LEN * 8)
-        printf ("-%"PRIuMAX, digest_length);
+        printf ("-%ju", digest_length);
 # elif HASH_ALGO_CKSUM
       if (cksum_algorithm == blake2b)
         {
           if (digest_length < BLAKE2B_MAX_LEN * 8)
-            printf ("-%"PRIuMAX, digest_length);
+            printf ("-%ju", digest_length);
         }
 # endif
       fputs (" (", stdout);
@@ -1205,7 +1205,7 @@ digest_check (char const *checkfile_name)
           if (warn)
             {
               error (0, 0,
-                     _("%s: %" PRIuMAX
+                     _("%s: %ju"
                        ": improperly formatted %s checksum line"),
                      quotef (checkfile_name), line_number,
                      DIGEST_TYPE_STRING);
@@ -1301,24 +1301,24 @@ digest_check (char const *checkfile_name)
           if (n_misformatted_lines != 0)
             error (0, 0,
                    (ngettext
-                    ("WARNING: %" PRIuMAX " line is improperly formatted",
-                     "WARNING: %" PRIuMAX " lines are improperly formatted",
+                    ("WARNING: %ju line is improperly formatted",
+                     "WARNING: %ju lines are improperly formatted",
                      select_plural (n_misformatted_lines))),
                    n_misformatted_lines);
 
           if (n_open_or_read_failures != 0)
             error (0, 0,
                    (ngettext
-                    ("WARNING: %" PRIuMAX " listed file could not be read",
-                     "WARNING: %" PRIuMAX " listed files could not be read",
+                    ("WARNING: %ju listed file could not be read",
+                     "WARNING: %ju listed files could not be read",
                      select_plural (n_open_or_read_failures))),
                    n_open_or_read_failures);
 
           if (n_mismatched_checksums != 0)
             error (0, 0,
                    (ngettext
-                    ("WARNING: %" PRIuMAX " computed checksum did NOT match",
-                     "WARNING: %" PRIuMAX " computed checksums did NOT match",
+                    ("WARNING: %ju computed checksum did NOT match",
+                     "WARNING: %ju computed checksums did NOT match",
                      select_plural (n_mismatched_checksums))),
                    n_mismatched_checksums);
 

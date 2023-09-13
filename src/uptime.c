@@ -87,8 +87,8 @@ print_uptime (idx_t n, struct gl_utmp const *utmp_buf)
       int uphours = uptime % 86400 / 3600;
       int upmins = uptime % 86400 % 3600 / 60;
       if (0 < updays)
-        printf (ngettext ("up %"PRIdMAX" day %2d:%02d,  ",
-                          "up %"PRIdMAX" days %2d:%02d,  ",
+        printf (ngettext ("up %jd day %2d:%02d,  ",
+                          "up %jd days %2d:%02d,  ",
                           select_plural (updays)),
                 updays, uphours, upmins);
       else

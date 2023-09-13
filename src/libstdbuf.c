@@ -118,8 +118,7 @@ apply_mode (FILE *stream, char const *mode)
              glibc currently ignores the combination of null buffer
              with non zero size, we'll fail here.  */
           fprintf (stderr,
-                   _("failed to allocate a %" PRIuMAX
-                     " byte stdio buffer\n"),
+                   _("failed to allocate a %ju byte stdio buffer\n"),
                    size);
           return;
         }

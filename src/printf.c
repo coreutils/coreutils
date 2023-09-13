@@ -355,8 +355,8 @@ print_direc (char const *start, size_t length, char conversion,
     switch (conversion)
       {
       case 'd': case 'i': case 'o': case 'u': case 'x': case 'X':
-        length_modifier = PRIdMAX;
-        length_modifier_len = sizeof PRIdMAX - 2;
+        length_modifier = "j";
+        length_modifier_len = 1;
         break;
 
       case 'a': case 'e': case 'f': case 'g':

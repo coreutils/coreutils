@@ -2354,8 +2354,7 @@ skip_to_page (uintmax_t page)
           /* It's very helpful, normally the total number of pages is
              not known in advance.  */
           error (0, 0,
-                 _("starting page number %"PRIuMAX
-                   " exceeds page count %"PRIuMAX),
+                 _("starting page number %ju exceeds page count %ju"),
                  page, n);
           break;
         }
@@ -2384,9 +2383,9 @@ print_header (void)
     error (EXIT_FAILURE, 0, _("page number overflow"));
 
   /* The translator must ensure that formatting the translation of
-     "Page %"PRIuMAX does not generate more than (sizeof page_text - 1)
+     "Page %ju" does not generate more than (sizeof page_text - 1)
      bytes.  */
-  sprintf (page_text, _("Page %"PRIuMAX), page_number);
+  sprintf (page_text, _("Page %ju"), page_number);
   available_width = header_width_available - mbswidth (page_text, 0);
   available_width = MAX (0, available_width);
   lhs_spaces = available_width >> 1;

@@ -352,11 +352,11 @@ main (int argc, char **argv)
     {
       fprintf (stderr,
                (x.recursive
-                ? ngettext ("%s: remove %"PRIuMAX" argument recursively? ",
-                            "%s: remove %"PRIuMAX" arguments recursively? ",
+                ? ngettext ("%s: remove %ju argument recursively? ",
+                            "%s: remove %ju arguments recursively? ",
                             select_plural (n_files))
-                : ngettext ("%s: remove %"PRIuMAX" argument? ",
-                            "%s: remove %"PRIuMAX" arguments? ",
+                : ngettext ("%s: remove %ju argument? ",
+                            "%s: remove %ju arguments? ",
                             select_plural (n_files))),
                program_name, n_files);
       if (!yesno ())

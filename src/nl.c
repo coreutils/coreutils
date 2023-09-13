@@ -44,13 +44,13 @@
    value, and a string separator.  */
 
 /* Right justified, no leading zeroes.  */
-static char const FORMAT_RIGHT_NOLZ[] = "%*" PRIdMAX "%s";
+static char const FORMAT_RIGHT_NOLZ[] = "%*jd%s";
 
 /* Right justified, leading zeroes.  */
-static char const FORMAT_RIGHT_LZ[] = "%0*" PRIdMAX "%s";
+static char const FORMAT_RIGHT_LZ[] = "%0*jd%s";
 
 /* Left justified, no leading zeroes.  */
-static char const FORMAT_LEFT[] = "%-*" PRIdMAX "%s";
+static char const FORMAT_LEFT[] = "%-*jd%s";
 
 /* Default section delimiter characters.  */
 static char DEFAULT_SECTION_DELIMITERS[] = "\\:";

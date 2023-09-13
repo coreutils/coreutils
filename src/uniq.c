@@ -307,7 +307,7 @@ writeline (struct linebuffer const *line,
     return;
 
   if (countmode == count_occurrences)
-    printf ("%7" PRIuMAX " ", linecount + 1);
+    printf ("%7ju ", linecount + 1);
 
   if (fwrite (line->buffer, sizeof (char), line->length, stdout)
       != line->length)
