@@ -19,8 +19,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
 
+# Check with constant positions
 mkdir dir || framework_failure_
-
 
 LC_MESSAGES=C ls -lR --dired dir > out || fail=1
 cat <<EOF > exp
@@ -31,5 +31,40 @@ cat <<EOF > exp
 EOF
 
 compare exp out || fail=1
+
+
+# Check with varying positions (due to usernames etc.)
+# Also use multibyte characters to show --dired counts bytes not characters
+touch dir/1a dir/2á || framework_failure_
+mkdir -p dir/3dir || framework_failure_
+
+ls -l --dired dir | tee /tmp/pb.ls> out  || fail=1
+
+dired_values=$(grep "//DIRED//" out| cut -d' ' -f2-)
+expected_files="1a 2á 3dir"
+
+dired_count=$(printf '%s\n' $dired_values | wc -l)
+expected_count=$(printf '%s\n' $expected_files | wc -l)
+
+if test "$expected_count" -ne $(($dired_count / 2)); then
+  echo "Mismatch in number of files!" \
+       "Expected: $expected_count, Found: $(($dired_count / 2))"
+  fail=1
+fi
+
+# Split the values into pairs and extract the filenames
+index=1
+set -- $dired_values
+while test "$#" -gt 0; do
+  extracted_filename=$(head -c "$2" out | tail -c +"$(($1 + 1))")
+  expected_file=$(echo $expected_files | cut -d' ' -f$index)
+  if test "$extracted_filename" != "$expected_file"; then
+    echo "Mismatch! Expected: $expected_file, Found: $extracted_filename"
+    fail=1
+  fi
+  shift; shift
+  index=$(($index + 1))
+done
+
 
 Exit $fail
