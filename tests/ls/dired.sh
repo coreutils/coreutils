@@ -19,18 +19,20 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
 
+
 # Check with constant positions
 mkdir dir || framework_failure_
 
-LC_MESSAGES=C ls -lR --dired dir > out || fail=1
 cat <<EOF > exp
   dir:
   total 0
 //SUBDIRED// 2 5
 //DIRED-OPTIONS// --quoting-style=literal
 EOF
-
-compare exp out || fail=1
+for opt in '-l' '' '--hyperlink' '-x'; do
+  LC_MESSAGES=C ls $opt -R --dired dir > out || fail=1
+  compare exp out || fail=1
+done
 
 
 # Check with varying positions (due to usernames etc.)

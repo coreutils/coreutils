@@ -7890,9 +7890,9 @@ should either specify an explicit @option{--quoting-style=literal}
 (@option{-N}) option on the command line, or else be
 prepared to parse the escaped names.
 
-The @option{--dired} (@option{-D}) option has well-defined behavior
-only when long format is in effect and hyperlinks are disabled (e.g.,
-@option{--hyperlink=none}).
+The @option{--dired} (@option{-D}) option implies long format output
+with hyperlinks disabled, and takes precedence over previously specified
+output formats or hyperlink mode.
 
 @item --full-time
 @opindex --full-time

@@ -2054,6 +2054,8 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'D':
+          format_opt = long_format;
+          print_hyperlink = false;
           dired = true;
           break;
 
@@ -2377,9 +2379,8 @@ decode_switches (int argc, char **argv)
   dirname_quoting_options = clone_quoting_options (nullptr);
   set_char_quoting (dirname_quoting_options, ':', 1);
 
-  /* --dired is meaningful only with --format=long (-l) and sans --hyperlink.
-     Otherwise, ignore it.  FIXME: warn about this?
-     Alternatively, make --dired imply --format=long?  */
+  /* --dired implies --format=long (-l) and sans --hyperlink.
+     So ignore it if those overridden.  */
   dired &= (format == long_format) & !print_hyperlink;
 
   if (eolbyte < dired)
