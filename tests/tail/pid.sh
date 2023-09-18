@@ -33,6 +33,10 @@ for mode in '' '---disable-inotify'; do
   # Ensure that tail --pid=PID does not exit when PID is alive.
   returns_ 124 timeout 1 tail -f -s.1 --pid=$pid $mode here || fail=1
 
+  # Ensure that tail --pid=PID does not exit when at least one PID is alive.
+  returns_ 124 timeout 1 tail -f -s.1 --pid=$PID_T_MAX --pid=$pid $mode here \
+   || fail=1
+
   cleanup_
 
   # Ensure that tail --pid=PID exits with success status when PID is dead.

@@ -202,9 +202,10 @@ enum header_mode
 static uintmax_t max_n_unchanged_stats_between_opens =
   DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS;
 
-/* The process ID of the process (presumably on the current host)
-   that is writing to all followed files.  */
-static pid_t pid;
+/* The process IDs of the processes to watch (those writing the followed
+   files, or perhaps other processes the user cares about).  */
+static int nbpids = 0;
+static pid_t * pids = nullptr;
 
 /* True if we have ever read standard input.  */
 static bool have_read_stdin;
@@ -298,7 +299,8 @@ With more than one FILE, precede each with a header giving the file name.\n\
              DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS
              );
      fputs (_("\
-      --pid=PID            with -f, terminate after process ID, PID dies\n\
+      --pid=PID            with -f, terminate after process ID, PID dies;\n\
+                             can be repeated to watch multiple processes\n\
   -q, --quiet, --silent    never output headers giving file names\n\
       --retry              keep trying to open a file if it is inaccessible\n\
 "), stdout);
@@ -1111,6 +1113,25 @@ any_live_files (const struct File_spec *f, size_t n_files)
   return false;
 }
 
+/* Determine whether all watched writers are dead.
+   Returns true only if all processes' states can be determined,
+   and all processes no longer exist.  */
+
+static bool
+writers_are_dead (void)
+{
+  if (!nbpids)
+    return false;
+
+  for (int i = 0; i < nbpids; i++)
+    {
+      if (kill (pids[i], 0) == 0 || errno == EPERM)
+        return false;
+    }
+
+  return true;
+}
+
 /* Tail N_FILES files forever, or until killed.
    The pertinent information for each file is stored in an entry of F.
    Loop over each of them, doing an fstat to see if they have changed size,
@@ -1122,10 +1143,10 @@ static void
 tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
 {
   /* Use blocking I/O as an optimization, when it's easy.  */
-  bool blocking = (pid == 0 && follow_mode == Follow_descriptor
+  bool blocking = (!nbpids && follow_mode == Follow_descriptor
                    && n_files == 1 && f[0].fd != -1 && ! S_ISREG (f[0].mode));
   size_t last;
-  bool writer_is_dead = false;
+  bool writers_dead = false;
 
   last = n_files - 1;
 
@@ -1273,19 +1294,14 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
       /* If nothing was read, sleep and/or check for dead writers.  */
       if (!any_input)
         {
-          if (writer_is_dead)
+          if (writers_dead)
             break;
 
           /* Once the writer is dead, read the files once more to
              avoid a race condition.  */
-          writer_is_dead = (pid != 0
-                            && kill (pid, 0) != 0
-                            /* Handle the case in which you cannot send a
-                               signal to the writer, so kill fails and sets
-                               errno to EPERM.  */
-                            && errno != EPERM);
+          writers_dead = writers_are_dead ();
 
-          if (!writer_is_dead && xnanosleep (sleep_interval))
+          if (!writers_dead && xnanosleep (sleep_interval))
             error (EXIT_FAILURE, errno, _("cannot read realtime clock"));
 
         }
@@ -1445,7 +1461,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
   bool tailed_but_unwatchable = false;
   bool found_unwatchable_dir = false;
   bool no_inotify_resources = false;
-  bool writer_is_dead = false;
+  bool writers_dead = false;
   struct File_spec *prev_fspec;
   size_t evlen = 0;
   char *evbuf;
@@ -1611,14 +1627,14 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
               /* How many ms to wait for changes.  -1 means wait forever.  */
               int delay = -1;
 
-              if (pid)
+              if (nbpids)
                 {
-                  if (writer_is_dead)
+                  if (writers_dead)
                     exit (EXIT_SUCCESS);
 
-                  writer_is_dead = (kill (pid, 0) != 0 && errno != EPERM);
+                  writers_dead = writers_are_dead ();
 
-                  if (writer_is_dead || sleep_interval <= 0)
+                  if (writers_dead || sleep_interval <= 0)
                     delay = 0;
                   else if (sleep_interval < INT_MAX / 1000 - 1)
                     {
@@ -2192,7 +2208,11 @@ parse_options (int argc, char **argv,
           break;
 
         case PID_OPTION:
-          pid = xdectoumax (optarg, 0, PID_T_MAX, "", _("invalid PID"), 0);
+          pid_t pid =
+            xdectoumax (optarg, 0, PID_T_MAX, "", _("invalid PID"), 0);
+          pids = xreallocarray (pids, nbpids + 1, sizeof (pid_t));
+          pids[nbpids] = pid;
+          nbpids++;
           break;
 
         case PRESUME_INPUT_PIPE_OPTION:
@@ -2246,13 +2266,14 @@ parse_options (int argc, char **argv,
         error (0, 0, _("warning: --retry only effective for the initial open"));
     }
 
-  if (pid && !forever)
+  if (nbpids && !forever)
     error (0, 0,
            _("warning: PID ignored; --pid=PID is useful only when following"));
-  else if (pid && kill (pid, 0) != 0 && errno == ENOSYS)
+  else if (nbpids && kill (pids[0], 0) != 0 && errno == ENOSYS)
     {
       error (0, 0, _("warning: --pid=PID is not supported on this system"));
-      pid = 0;
+      nbpids = 0;
+      free (pids);
     }
 }
 
@@ -2365,7 +2386,7 @@ main (int argc, char **argv)
       {
         struct stat in_stat;
         bool blocking_stdin;
-        blocking_stdin = (pid == 0 && follow_mode == Follow_descriptor
+        blocking_stdin = (!nbpids && follow_mode == Follow_descriptor
                           && n_files == 1 && ! fstat (STDIN_FILENO, &in_stat)
                           && ! S_ISREG (in_stat.st_mode));
 
