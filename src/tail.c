@@ -2208,11 +2208,13 @@ parse_options (int argc, char **argv,
           break;
 
         case PID_OPTION:
-          pid_t pid =
-            xdectoumax (optarg, 0, PID_T_MAX, "", _("invalid PID"), 0);
-          pids = xreallocarray (pids, nbpids + 1, sizeof (pid_t));
-          pids[nbpids] = pid;
-          nbpids++;
+          {
+            pid_t pid =
+              xdectoumax (optarg, 0, PID_T_MAX, "", _("invalid PID"), 0);
+            pids = xreallocarray (pids, nbpids + 1, sizeof (pid_t));
+            pids[nbpids] = pid;
+            nbpids++;
+          }
           break;
 
         case PRESUME_INPUT_PIPE_OPTION:
