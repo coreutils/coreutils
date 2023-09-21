@@ -36,7 +36,7 @@
 #include <gmp.h>
 #include <regex.h>
 #include "long-options.h"
-#include "mbuiter.h"
+#include "mcel.h"
 #include "strnumcmp.h"
 #include "xstrtol.h"
 
@@ -122,38 +122,37 @@ mbs_logical_cspn (char const *s, char const *accept)
   /* General case.  */
   if (MB_CUR_MAX > 1)
     {
-      mbui_iterator_t iter;
-
-      for (mbui_init (iter, s); mbui_avail (iter); mbui_advance (iter))
+      for (char const *p = s; *p; )
         {
           ++idx;
-          if (mb_len (mbui_cur (iter)) == 1)
+          mcel_t g = mcel_scanz (p);
+          if (g.len == 1)
             {
-              if (mbschr (accept, *mbui_cur_ptr (iter)))
+              if (mbschr (accept, *p))
                 return idx;
             }
           else
-            {
-              mbui_iterator_t aiter;
-
-              for (mbui_init (aiter, accept);
-                   mbui_avail (aiter);
-                   mbui_advance (aiter))
-                if (mb_equal (mbui_cur (aiter), mbui_cur (iter)))
+            for (char const *a = accept; *a; )
+              {
+                mcel_t h = mcel_scanz (a);
+                if (mcel_cmp (g, h) == 0)
                   return idx;
-            }
+                a += h.len;
+              }
+          p += g.len;
         }
-
-      /* not found */
-      return 0;
     }
   else
     {
       /* single-byte locale,
          convert returned byte offset to 1-based index or zero if not found. */
       size_t i = strcspn (s, accept);
-      return (s[i] ? i + 1 : 0);
+      if (s[i])
+        return i + 1;
     }
+
+  /* not found */
+  return 0;
 }
 
 /* Extract the substring of S, from logical character
@@ -166,48 +165,43 @@ mbs_logical_cspn (char const *s, char const *accept)
 static char *
 mbs_logical_substr (char const *s, size_t pos, size_t len)
 {
-  char *v, *vlim;
-
-  size_t blen = strlen (s); /* byte length */
-  size_t llen = (MB_CUR_MAX > 1) ? mbslen (s) : blen; /* logical length */
-
-  if (llen < pos || pos == 0 || len == 0 || len == SIZE_MAX)
-    return xstrdup ("");
+  size_t mb_cur_max = MB_CUR_MAX;
+  idx_t llen = mb_cur_max <= 1 ? strlen (s) : mbslen (s); /* logical length */
 
   /* characters to copy */
-  size_t vlen = MIN (len, llen - pos + 1);
+  size_t vlen = MIN (len, pos <= llen ? llen - pos + 1 : 0);
 
-  if (MB_CUR_MAX == 1)
+  char const *substart = s;
+  idx_t sublen = 0;
+  if (pos == 0 || len == SIZE_MAX)
     {
-      /* Single-byte case */
-      v = xmalloc (vlen + 1);
-      vlim = mempcpy (v, s + pos - 1, vlen);
+      /* The request is invalid.  Silently yield an empty string.  */
+    }
+  else if (mb_cur_max <= 1)
+    {
+      substart += pos - 1;
+      sublen = vlen;
     }
   else
-    {
-      /* Multibyte case */
+    for (idx_t idx = 1; *s && vlen; idx++)
+      {
+        idx_t char_bytes = mcel_scanz (s).len;
 
-      /* FIXME: this is wasteful. Some memory can be saved by counting
-         how many bytes the matching characters occupy. */
-      vlim = v = xmalloc (blen + 1);
+        /* Skip until we reach the starting position.  */
+        if (pos <= idx)
+          {
+            if (pos == idx)
+              substart = s;
 
-      mbui_iterator_t iter;
-      size_t idx=1;
-      for (mbui_init (iter, s);
-           mbui_avail (iter) && vlen > 0;
-           mbui_advance (iter), ++idx)
-        {
-          /* Skip until we reach the starting position */
-          if (idx < pos)
-            continue;
+            /* Add one character's length in bytes.  */
+            vlen--;
+            sublen += char_bytes;
+          }
 
-          /* Copy one character */
-          --vlen;
-          vlim = mempcpy (vlim, mbui_cur_ptr (iter), mb_len (mbui_cur (iter)));
-        }
-    }
-  *vlim = '\0';
-  return v;
+        s += char_bytes;
+      }
+
+  return ximemdup0 (substart, sublen);
 }
 
 /* Return the number of logical characters (possibly multibyte)
@@ -221,15 +215,9 @@ mbs_logical_substr (char const *s, size_t pos, size_t len)
 static size_t
 mbs_offset_to_chars (char const *s, size_t ofs)
 {
-  mbui_iterator_t iter;
   size_t c = 0;
-  for (mbui_init (iter, s); mbui_avail (iter); mbui_advance (iter))
-    {
-      ptrdiff_t d = mbui_cur_ptr (iter) - s;
-      if (d >= ofs)
-        break;
-      ++c;
-    }
+  for (size_t d = 0; d < ofs && s[d]; d += mcel_scanz (s + d).len)
+    c++;
   return c;
 }
 
