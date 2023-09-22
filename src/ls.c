@@ -4609,7 +4609,7 @@ quote_name_buf (char **inbuf, size_t bufsize, char *name,
                      reach its end, replacing each non-printable multibyte
                      character with a single question mark.  */
                   {
-                    mbstate_t mbstate = {0};
+                    mbstate_t mbstate; mbszero (&mbstate);
                     do
                       {
                         wchar_t wc;

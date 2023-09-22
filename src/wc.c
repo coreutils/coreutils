@@ -452,7 +452,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
     {
       bool in_word = false;
       uintmax_t linepos = 0;
-      mbstate_t state = {0};
+      mbstate_t state; mbszero (&state);
       bool in_shift = false;
 # if SUPPORT_OLD_MBRTOWC
       /* Back-up the state before each multibyte character conversion and
