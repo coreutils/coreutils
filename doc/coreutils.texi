@@ -3792,8 +3792,9 @@ contents of files.
 
 @command{wc} counts the number of bytes, characters, words, and newlines
 in each given @var{file}, or standard input if none are given
-or for a @var{file} of @samp{-}.  A word is a nonzero length
-sequence of printable characters delimited by white space.  Synopsis:
+or for a @var{file} of @samp{-}.  A word is a nonempty sequence of non white
+space delimited by white space characters or by start or end of input.
+Synopsis:
 
 @example
 wc [@var{option}]@dots{} [@var{file}]@dots{}
@@ -3853,8 +3854,8 @@ Invalid characters are not counted.
 @itemx --words
 @opindex -w
 @opindex --words
-Print only the word counts.  A word is a nonzero length
-sequence of printable characters separated by white space.
+Print only the word counts.  A word is a nonempty sequence of non white
+space delimited by white space characters or by start or end of input.
 
 @item -l
 @itemx --lines

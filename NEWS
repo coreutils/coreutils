@@ -11,6 +11,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   numfmt options like --suffix no longer have an arbitrary 127-byte limit.
   [bug introduced with numfmt in coreutils-8.21]
 
+  wc no longer fails to count unprintable characters as parts of words.
+  [bug introduced in textutils-2.1]
+
 ** Changes in behavior
 
   ls --dired now implies long format output without hyperlinks enabled,

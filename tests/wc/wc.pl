@@ -41,6 +41,7 @@ my @Tests =
      ['c0', '-L',  {IN_PIPE=>"1\n12\n"},     {OUT=>"2\n"}],
      ['c1', '-L',  {IN_PIPE=>"1\n123\n1\n"}, {OUT=>"3\n"}],
      ['c2', '-L',  {IN_PIPE=>"\n123456"},    {OUT=>"6\n"}],
+     ['d1', '-w',  {IN_PIPE=>"\1\n"},        {OUT=>"1\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};

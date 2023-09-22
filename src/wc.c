@@ -167,8 +167,8 @@ Usage: %s [OPTION]... [FILE]...\n\
               program_name, program_name);
       fputs (_("\
 Print newline, word, and byte counts for each FILE, and a total line if\n\
-more than one FILE is specified.  A word is a non-zero-length sequence of\n\
-printable characters delimited by white space.\n\
+more than one FILE is specified.  A word is a nonempty sequence of non white\n\
+space delimited by white space characters or by start or end of input.\n\
 "), stdout);
 
       emit_stdin_note ();
@@ -479,15 +479,14 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
             {
               char32_t wide_char;
               size_t n;
-              bool wide = true;
+              bool single_byte_ascii = !in_shift && 0 <= *p && *p < 0x80;
 
-              if (!in_shift && 0 <= *p && *p < 0x80)
+              if (single_byte_ascii)
                 {
                   /* Handle most ASCII characters quickly, without calling
                      mbrtowc().  */
                   n = 1;
                   wide_char = *p;
-                  wide = false;
                 }
               else
                 {
@@ -543,31 +542,40 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                   FALLTHROUGH;
                 case '\v':
                 mb_word_separator:
-                  words += in_word;
                   in_word = false;
                   break;
                 default:
-                  if (wide && c32isprint (wide_char))
+                  /* c32width can be expensive on macOS for example,
+                     so avoid if not needed.  */
+                  if (print_linelength)
                     {
-                      /* c32width can be expensive on OSX for example,
-                         so avoid if not needed.  */
-                      if (print_linelength)
+                      if (single_byte_ascii)
+                        linepos += !!isprint (wide_char);
+                      else
                         {
                           int width = c32width (wide_char);
                           if (width > 0)
                             linepos += width;
                         }
-                      if (c32isspace (wide_char) || iswnbspace (wide_char))
-                        goto mb_word_separator;
-                      in_word = true;
                     }
-                  else if (!wide && isprint (to_uchar (*p)))
-                    {
-                      linepos++;
-                      if (isspace (to_uchar (*p)))
-                        goto mb_word_separator;
-                      in_word = true;
-                    }
+                  if (single_byte_ascii ? isspace (wide_char)
+                      : c32isspace (wide_char) || iswnbspace (wide_char))
+                    goto mb_word_separator;
+
+                  /* Count words by counting word starts, i.e., each
+                     white space character (or the start of input)
+                     followed by non white space.
+
+                     POSIX says a word is "a non-zero-length string of
+                     characters delimited by white space".  This is certainly
+                     wrong in some sense, as the string can be delimited
+                     by start or end of input, and it is not clear
+                     what it means when the input contains encoding errors.
+                     Although GNU wc ignores encoding errors when determining
+                     word boundaries, this behavior is not documented or
+                     portable and should not be relied upon.  */
+                  words += !in_word;
+                  in_word = true;
                   break;
                 }
 
@@ -593,7 +601,6 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
         }
       if (linepos > linelength)
         linelength = linepos;
-      words += in_word;
     }
   else
     {
@@ -613,7 +620,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
           bytes += bytes_read;
           do
             {
-              switch (*p++)
+              unsigned char c = *p++;
+              switch (c)
                 {
                 case '\n':
                   lines++;
@@ -632,18 +640,14 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                   FALLTHROUGH;
                 case '\v':
                 word_separator:
-                  words += in_word;
                   in_word = false;
                   break;
                 default:
-                  if (isprint (to_uchar (p[-1])))
-                    {
-                      linepos++;
-                      if (isspace (to_uchar (p[-1]))
-                          || isnbspace (to_uchar (p[-1])))
-                        goto word_separator;
-                      in_word = true;
-                    }
+                  linepos += !!isprint (c);
+                  if (isspace (c) || isnbspace (c))
+                    goto word_separator;
+                  words += !in_word;
+                  in_word = true;
                   break;
                 }
             }
@@ -651,7 +655,6 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
         }
       if (linepos > linelength)
         linelength = linepos;
-      words += in_word;
     }
 
   if (count_chars < print_chars)
