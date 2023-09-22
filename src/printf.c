@@ -176,6 +176,7 @@ FUNC_NAME (char const *s)						 \
           wchar_t wc;							 \
           size_t slen = strlen (s);					 \
           ssize_t bytes;						 \
+          /* Use mbrtowc not mbrtoc32, as per POSIX.  */		 \
           bytes = mbrtowc (&wc, s, slen, &mbstate);			 \
           if (0 < bytes)						 \
             {								 \

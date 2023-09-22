@@ -23,8 +23,7 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include <wchar.h>
-#include <wctype.h>
+#include <uchar.h>
 
 #include "system.h"
 #include "assure.h"
@@ -218,7 +217,7 @@ iswnbspace (wint_t wc)
 static int
 isnbspace (int c)
 {
-  return iswnbspace (btowc (c));
+  return iswnbspace (btoc32 (c));
 }
 
 /* FILE is the name of the file (or null for standard input)
@@ -483,7 +482,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
           bytes_read += prev;
           do
             {
-              wchar_t wide_char;
+              char32_t wide_char;
               size_t n;
               bool wide = true;
 
@@ -501,7 +500,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 #if SUPPORT_OLD_MBRTOWC
                   backup_state = state;
 #endif
-                  n = mbrtowc (&wide_char, p, bytes_read, &state);
+                  n = mbrtoc32 (&wide_char, p, bytes_read, &state);
                   if (n == (size_t) -2)
                     {
 #if SUPPORT_OLD_MBRTOWC
@@ -553,17 +552,17 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                   in_word = false;
                   break;
                 default:
-                  if (wide && iswprint (wide_char))
+                  if (wide && c32isprint (wide_char))
                     {
-                      /* wcwidth can be expensive on OSX for example,
+                      /* c32width can be expensive on OSX for example,
                          so avoid if not needed.  */
                       if (print_linelength)
                         {
-                          int width = wcwidth (wide_char);
+                          int width = c32width (wide_char);
                           if (width > 0)
                             linepos += width;
                         }
-                      if (iswspace (wide_char) || iswnbspace (wide_char))
+                      if (c32isspace (wide_char) || iswnbspace (wide_char))
                         goto mb_word_separator;
                       in_word = true;
                     }

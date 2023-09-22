@@ -55,7 +55,7 @@
 #include <getopt.h>
 #include <signal.h>
 #include <selinux/selinux.h>
-#include <wchar.h>
+#include <uchar.h>
 
 #if HAVE_LANGINFO_CODESET
 # include <langinfo.h>
@@ -4612,11 +4612,11 @@ quote_name_buf (char **inbuf, size_t bufsize, char *name,
                     mbstate_t mbstate; mbszero (&mbstate);
                     do
                       {
-                        wchar_t wc;
+                        char32_t wc;
                         size_t bytes;
                         int w;
 
-                        bytes = mbrtowc (&wc, p, plimit - p, &mbstate);
+                        bytes = mbrtoc32 (&wc, p, plimit - p, &mbstate);
 
                         if (bytes == (size_t) -1)
                           {
@@ -4644,7 +4644,7 @@ quote_name_buf (char **inbuf, size_t bufsize, char *name,
                           /* A null wide character was encountered.  */
                           bytes = 1;
 
-                        w = wcwidth (wc);
+                        w = c32width (wc);
                         if (w >= 0)
                           {
                             /* A printable multibyte character.
