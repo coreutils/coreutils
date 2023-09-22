@@ -70,11 +70,11 @@ AC_DEFINE([GNULIB_EXCLUDE_SINGLE_THREAD], [1],
   [Define to 1 if apps call 'exclude' functions from a single thread.])
 AC_DEFINE([GNULIB_REGEX_SINGLE_THREAD], [1],
   [Define to 1 if apps call 'regex' functions from a single thread.])
-# This is unsafe, since 'sort' uses mbrtowc indirectly, possibly from
-# multiple threads.
-# AC_DEFINE([GNULIB_MBRTOWC_SINGLE_THREAD], [1],
-#   [Define to 1 if apps call mbrtowc, mbrtoc32, and 'regex' functions
-#    from a single thread.])
+# Although 'sort' is multithreaded and can use these functions,
+# it uses them only from the main thread.
+AC_DEFINE([GNULIB_MBRTOWC_SINGLE_THREAD], [1],
+  [Define to 1 if apps call mbrtowc, mbrtoc32, and 'regex' functions
+   from a single thread.])
 # This is safe, since all apps set locale early.
 AC_DEFINE([GNULIB_WCHAR_SINGLE_LOCALE], [1],
   [Define to 1 if apps don't set the locale after calling
