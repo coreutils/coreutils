@@ -31,7 +31,6 @@
 #include "argmatch.h"
 #include "argv-iter.h"
 #include "fadvise.h"
-#include "mbchar.h"
 #include "physmem.h"
 #include "readtokens0.h"
 #include "safe-read.h"
@@ -490,7 +489,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
               size_t n;
               bool wide = true;
 
-              if (!in_shift && is_basic (*p))
+              if (!in_shift && 0 <= *p && *p < 0x80)
                 {
                   /* Handle most ASCII characters quickly, without calling
                      mbrtowc().  */
