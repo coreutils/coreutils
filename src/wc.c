@@ -36,11 +36,6 @@
 #include "stat-size.h"
 #include "xbinary-io.h"
 
-#if !defined iswspace && !HAVE_ISWSPACE
-# define iswspace(wc) \
-    ((wc) == to_uchar (wc) && isspace (to_uchar (wc)))
-#endif
-
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "wc"
 

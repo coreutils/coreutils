@@ -1,4 +1,4 @@
-#serial 114   -*- autoconf -*-
+#serial 115   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -67,16 +67,11 @@ AC_DEFUN([coreutils_MACROS],
     fallocate
     fchown
     fchmod
-    ftruncate
-    iswspace
-    mkfifo
-    mbrlen
     setgroups
     sethostname
     siginterrupt
     sync
     syncfs
-    sysctl
     sysinfo
     tcgetpgrp
   ])
