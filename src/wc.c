@@ -519,6 +519,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                          character (that is, chars is not incremented).  */
                       p++;
                       bytes_read--;
+                      mbszero (&state);
+                      in_shift = false;
                       continue;
                     }
                   if (mbsinit (&state))
