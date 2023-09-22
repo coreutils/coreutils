@@ -52,6 +52,8 @@
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)
 
+#define SUPPORT_OLD_MBRTOWC 1
+
 #ifdef USE_AVX2_WC_LINECOUNT
 /* From wc_avx2.c */
 extern bool
@@ -345,14 +347,12 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 
   /* If in the current locale, chars are equivalent to bytes, we prefer
      counting bytes, because that's easier.  */
-#if MB_LEN_MAX > 1
   if (MB_CUR_MAX > 1)
     {
       count_bytes = print_bytes;
       count_chars = print_chars;
     }
   else
-#endif
     {
       count_bytes = print_bytes || print_chars;
       count_chars = false;
@@ -446,15 +446,13 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
          but not chars or words.  */
       ok = wc_lines_p (file, fd, &lines, &bytes);
     }
-#if MB_LEN_MAX > 1
-# define SUPPORT_OLD_MBRTOWC 1
   else if (MB_CUR_MAX > 1)
     {
       bool in_word = false;
       uintmax_t linepos = 0;
       mbstate_t state; mbszero (&state);
       bool in_shift = false;
-# if SUPPORT_OLD_MBRTOWC
+#if SUPPORT_OLD_MBRTOWC
       /* Back-up the state before each multibyte character conversion and
          move the last incomplete character of the buffer to the front
          of the buffer.  This is needed because we don't know whether
@@ -463,16 +461,16 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
          ANSI C, glibc-2.1 and Solaris 5.7 behavior.  We don't have an
          autoconf test for this, yet.  */
       size_t prev = 0; /* number of bytes carried over from previous round */
-# else
+#else
       const size_t prev = 0;
-# endif
+#endif
 
       while ((bytes_read = safe_read (fd, buf + prev, BUFFER_SIZE - prev)) > 0)
         {
           char const *p;
-# if SUPPORT_OLD_MBRTOWC
+#if SUPPORT_OLD_MBRTOWC
           mbstate_t backup_state;
-# endif
+#endif
           if (bytes_read == SAFE_READ_ERROR)
             {
               error (0, errno, "%s", quotef (file));
@@ -500,15 +498,15 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
               else
                 {
                   in_shift = true;
-# if SUPPORT_OLD_MBRTOWC
+#if SUPPORT_OLD_MBRTOWC
                   backup_state = state;
-# endif
+#endif
                   n = mbrtowc (&wide_char, p, bytes_read, &state);
                   if (n == (size_t) -2)
                     {
-# if SUPPORT_OLD_MBRTOWC
+#if SUPPORT_OLD_MBRTOWC
                       state = backup_state;
-# endif
+#endif
                       break;
                     }
                   if (n == (size_t) -1)
@@ -585,7 +583,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
             }
           while (bytes_read > 0);
 
-# if SUPPORT_OLD_MBRTOWC
+#if SUPPORT_OLD_MBRTOWC
           if (bytes_read > 0)
             {
               if (bytes_read == BUFFER_SIZE)
@@ -597,13 +595,12 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
               memmove (buf, p, bytes_read);
             }
           prev = bytes_read;
-# endif
+#endif
         }
       if (linepos > linelength)
         linelength = linepos;
       words += in_word;
     }
-#endif
   else
     {
       bool in_word = false;
