@@ -3848,7 +3848,7 @@ Print only the byte counts.
 @opindex -m
 @opindex --chars
 Print only the character counts, as per the current locale.
-Invalid characters are not counted.
+Encoding errors are not counted.
 
 @item -w
 @itemx --words
@@ -3856,6 +3856,8 @@ Invalid characters are not counted.
 @opindex --words
 Print only the word counts.  A word is a nonempty sequence of non white
 space delimited by white space characters or by start or end of input.
+The current locale determines which characters are white space.
+GNU @command{wc} treats encoding errors as non white space.
 
 @item -l
 @itemx --lines

@@ -512,6 +512,17 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                       bytes_read--;
                       mbszero (&state);
                       in_shift = false;
+
+                      /* Treat encoding errors as non white space.
+                         POSIX says a word is "a non-zero-length string of
+                         characters delimited by white space".  This is
+                         wrong in some sense, as the string can be delimited
+                         by start or end of input, and it is unclear what it
+                         means when the input contains encoding errors.
+                         Since encoding errors are not white space,
+                         treat them that way here.  */
+                      words += !in_word;
+                      in_word = true;
                       continue;
                     }
                   if (mbsinit (&state))
@@ -564,16 +575,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 
                   /* Count words by counting word starts, i.e., each
                      white space character (or the start of input)
-                     followed by non white space.
-
-                     POSIX says a word is "a non-zero-length string of
-                     characters delimited by white space".  This is certainly
-                     wrong in some sense, as the string can be delimited
-                     by start or end of input, and it is not clear
-                     what it means when the input contains encoding errors.
-                     Although GNU wc ignores encoding errors when determining
-                     word boundaries, this behavior is not documented or
-                     portable and should not be relied upon.  */
+                     followed by non white space.  */
                   words += !in_word;
                   in_word = true;
                   break;
