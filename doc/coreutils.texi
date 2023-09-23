@@ -3859,6 +3859,13 @@ space delimited by white space characters or by start or end of input.
 The current locale determines which characters are white space.
 GNU @command{wc} treats encoding errors as non white space.
 
+@vindex POSIXLY_CORRECT
+Unless the environment variable @env{POSIXLY_CORRECT} is set,
+GNU @command{wc} treats the following Unicode characters as white
+space even if the current locale does not: U+00A0 NO-BREAK SPACE,
+U+2007 FIGURE SPACE, U+202F NARROW NO-BREAK SPACE, and U+2060 WORD
+JOINER.
+
 @item -l
 @itemx --lines
 @opindex -l
