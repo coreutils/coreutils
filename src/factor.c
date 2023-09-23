@@ -247,6 +247,7 @@ struct mp_factors
   mpz_t             *p;
   unsigned long int *e;
   idx_t nfactors;
+  idx_t nalloc;
 };
 
 static void factor (uintmax_t, uintmax_t, struct factors *);
@@ -595,6 +596,7 @@ mp_factor_init (struct mp_factors *factors)
   factors->p = nullptr;
   factors->e = nullptr;
   factors->nfactors = 0;
+  factors->nalloc = 0;
 }
 
 static void
@@ -624,11 +626,14 @@ mp_factor_insert (struct mp_factors *factors, mpz_t prime)
 
   if (i < 0 || mpz_cmp (p[i], prime) != 0)
     {
-      p = xireallocarray (p, nfactors + 1, sizeof p[0]);
-      e = xireallocarray (e, nfactors + 1, sizeof e[0]);
+      if (factors->nfactors == factors->nalloc)
+        {
+          p = xpalloc (p, &factors->nalloc, 1, -1, sizeof *p);
+          e = xireallocarray (e, factors->nalloc, sizeof *e);
+        }
 
       mpz_init (p[nfactors]);
-      for (long j = nfactors - 1; j > i; j--)
+      for (ptrdiff_t j = nfactors - 1; j > i; j--)
         {
           mpz_set (p[j + 1], p[j]);
           e[j + 1] = e[j];

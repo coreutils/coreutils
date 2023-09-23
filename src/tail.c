@@ -206,6 +206,7 @@ static uintmax_t max_n_unchanged_stats_between_opens =
    files, or perhaps other processes the user cares about).  */
 static int nbpids = 0;
 static pid_t * pids = nullptr;
+static idx_t pids_alloc;
 
 /* True if we have ever read standard input.  */
 static bool have_read_stdin;
@@ -2208,13 +2209,11 @@ parse_options (int argc, char **argv,
           break;
 
         case PID_OPTION:
-          {
-            pid_t pid =
-              xdectoumax (optarg, 0, PID_T_MAX, "", _("invalid PID"), 0);
-            pids = xreallocarray (pids, nbpids + 1, sizeof (pid_t));
-            pids[nbpids] = pid;
-            nbpids++;
-          }
+          if (nbpids == pids_alloc)
+            pids = xpalloc (pids, &pids_alloc, 1,
+                            MIN (INT_MAX, PTRDIFF_MAX), sizeof *pids);
+          pids[nbpids++] = xdectoumax (optarg, 0, PID_T_MAX, "",
+                                       _("invalid PID"), 0);
           break;
 
         case PRESUME_INPUT_PIPE_OPTION:
