@@ -55,6 +55,9 @@ wc_lines_avx2 (char const *file, int fd, uintmax_t *lines_out,
                uintmax_t *bytes_out);
 #endif
 
+static bool wc_isprint[UCHAR_MAX + 1];
+static bool wc_isspace[UCHAR_MAX + 1];
+
 static bool debug;
 
 /* Cumulative number of lines, words, chars and bytes in all files so far.
@@ -207,12 +210,6 @@ iswnbspace (wint_t wc)
   return ! posixly_correct
          && (wc == 0x00A0 || wc == 0x2007
              || wc == 0x202F || wc == 0x2060);
-}
-
-static int
-isnbspace (int c)
-{
-  return iswnbspace (btoc32 (c));
 }
 
 /* FILE is the name of the file (or null for standard input)
@@ -479,18 +476,18 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
             {
               char32_t wide_char;
               size_t n;
-              bool single_byte_ascii = !in_shift && 0 <= *p && *p < 0x80;
+              bool single_byte;
 
-              if (single_byte_ascii)
+              if (!in_shift && 0 <= *p && *p < 0x80)
                 {
                   /* Handle most ASCII characters quickly, without calling
                      mbrtowc().  */
                   n = 1;
                   wide_char = *p;
+                  single_byte = true;
                 }
               else
                 {
-                  in_shift = true;
 #if SUPPORT_OLD_MBRTOWC
                   backup_state = state;
 #endif
@@ -500,6 +497,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 #if SUPPORT_OLD_MBRTOWC
                       state = backup_state;
 #endif
+                      in_shift = true;
                       break;
                     }
                   if (n == (size_t) -1)
@@ -525,13 +523,9 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                       in_word = true;
                       continue;
                     }
-                  if (mbsinit (&state))
-                    in_shift = false;
-                  if (n == 0)
-                    {
-                      wide_char = 0;
-                      n = 1;
-                    }
+                  n += !n;
+                  single_byte = n == !in_shift;
+                  in_shift = !mbsinit (&state);
                 }
 
               switch (wide_char)
@@ -558,18 +552,15 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                 default:
                   /* c32width can be expensive on macOS for example,
                      so avoid if not needed.  */
-                  if (print_linelength)
+                  if (single_byte)
+                    linepos += wc_isprint[wide_char];
+                  else if (print_linelength)
                     {
-                      if (single_byte_ascii)
-                        linepos += !!isprint (wide_char);
-                      else
-                        {
-                          int width = c32width (wide_char);
-                          if (width > 0)
-                            linepos += width;
-                        }
+                      int width = c32width (wide_char);
+                      if (width > 0)
+                        linepos += width;
                     }
-                  if (single_byte_ascii ? isspace (wide_char)
+                  if (single_byte ? wc_isspace[wide_char]
                       : c32isspace (wide_char) || iswnbspace (wide_char))
                     goto mb_word_separator;
 
@@ -645,8 +636,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                   in_word = false;
                   break;
                 default:
-                  linepos += !!isprint (c);
-                  if (isspace (c) || isnbspace (c))
+                  linepos += wc_isprint[c];
+                  if (wc_isspace[c])
                     goto word_separator;
                   words += !in_word;
                   in_word = true;
@@ -848,6 +839,13 @@ main (int argc, char **argv)
   if (! (print_lines || print_words || print_chars || print_bytes
          || print_linelength))
     print_lines = print_words = print_bytes = true;
+
+  if (print_linelength)
+    for (int i = 0; i <= UCHAR_MAX; i++)
+      wc_isprint[i] = !!isprint (i);
+  if (print_words)
+    for (int i = 0; i <= UCHAR_MAX; i++)
+      wc_isspace[i] = isspace (i) || iswnbspace (btoc32 (i));
 
   bool read_tokens = false;
   struct argv_iterator *ai;
