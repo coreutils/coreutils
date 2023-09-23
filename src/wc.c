@@ -46,8 +46,6 @@
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)
 
-#define SUPPORT_OLD_MBRTOWC 1
-
 #ifdef USE_AVX2_WC_LINECOUNT
 /* From wc_avx2.c */
 extern bool
@@ -443,25 +441,12 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
       uintmax_t linepos = 0;
       mbstate_t state; mbszero (&state);
       bool in_shift = false;
-#if SUPPORT_OLD_MBRTOWC
-      /* Back-up the state before each multibyte character conversion and
-         move the last incomplete character of the buffer to the front
-         of the buffer.  This is needed because we don't know whether
-         the 'mbrtowc' function updates the state when it returns -2, --
-         this is the ISO C 99 and glibc-2.2 behavior - or not - amended
-         ANSI C, glibc-2.1 and Solaris 5.7 behavior.  We don't have an
-         autoconf test for this, yet.  */
       size_t prev = 0; /* number of bytes carried over from previous round */
-#else
-      const size_t prev = 0;
-#endif
 
-      while ((bytes_read = safe_read (fd, buf + prev, BUFFER_SIZE - prev)) > 0)
+      while ((bytes_read = safe_read (fd, buf + prev, BUFFER_SIZE - prev)) > 0
+             || prev)
         {
           char const *p;
-#if SUPPORT_OLD_MBRTOWC
-          mbstate_t backup_state;
-#endif
           if (bytes_read == SAFE_READ_ERROR)
             {
               error (0, errno, "%s", quotef (file));
@@ -471,7 +456,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 
           bytes += bytes_read;
           p = buf;
-          bytes_read += prev;
+          size_t buf_bytes = prev + bytes_read;
           do
             {
               char32_t wide_char;
@@ -488,26 +473,21 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                 }
               else
                 {
-#if SUPPORT_OLD_MBRTOWC
-                  backup_state = state;
-#endif
-                  n = mbrtoc32 (&wide_char, p, bytes_read, &state);
-                  if (n == (size_t) -2)
+                  n = mbrtoc32 (&wide_char, p + prev, buf_bytes - prev, &state);
+                  prev = 0;
+                  if (n == (size_t) -2 && bytes_read)
                     {
-#if SUPPORT_OLD_MBRTOWC
-                      state = backup_state;
-#endif
                       in_shift = true;
                       break;
                     }
-                  if (n == (size_t) -1)
+                  if ((size_t) -3 <= n)
                     {
                       /* Remember that we read a byte, but don't complain
                          about the error.  Because of the decoding error,
                          this is a considered to be byte but not a
                          character (that is, chars is not incremented).  */
                       p++;
-                      bytes_read--;
+                      buf_bytes--;
                       mbszero (&state);
                       in_shift = false;
 
@@ -573,24 +553,22 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                 }
 
               p += n;
-              bytes_read -= n;
+              buf_bytes -= n;
               chars++;
             }
-          while (bytes_read > 0);
+          while (buf_bytes > 0);
 
-#if SUPPORT_OLD_MBRTOWC
-          if (bytes_read > 0)
+          if (buf_bytes > 0)
             {
-              if (bytes_read == BUFFER_SIZE)
+              if (buf_bytes == BUFFER_SIZE)
                 {
                   /* Encountered a very long redundant shift sequence.  */
                   p++;
-                  bytes_read--;
+                  buf_bytes--;
                 }
-              memmove (buf, p, bytes_read);
+              memmove (buf, p, buf_bytes);
             }
-          prev = bytes_read;
-#endif
+          prev = buf_bytes;
         }
       if (linepos > linelength)
         linelength = linepos;
