@@ -25,16 +25,18 @@
 #include <sys/types.h>
 #include <uchar.h>
 
+#include <assure.h>
+#include <argmatch.h>
+#include <argv-iter.h>
+#include <fadvise.h>
+#include <physmem.h>
+#include <readtokens0.h>
+#include <safe-read.h>
+#include <stat-size.h>
+#include <xbinary-io.h>
+
 #include "system.h"
-#include "assure.h"
-#include "argmatch.h"
-#include "argv-iter.h"
-#include "fadvise.h"
-#include "physmem.h"
-#include "readtokens0.h"
-#include "safe-read.h"
-#include "stat-size.h"
-#include "xbinary-io.h"
+#include "wc.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "wc"
@@ -45,13 +47,6 @@
 
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)
-
-#ifdef USE_AVX2_WC_LINECOUNT
-/* From wc_avx2.c */
-extern bool
-wc_lines_avx2 (char const *file, int fd, uintmax_t *lines_out,
-               uintmax_t *bytes_out);
-#endif
 
 static bool wc_isprint[UCHAR_MAX + 1];
 static bool wc_isspace[UCHAR_MAX + 1];
@@ -253,51 +248,44 @@ write_counts (uintmax_t lines,
   putchar ('\n');
 }
 
-static bool
-wc_lines (char const *file, int fd, uintmax_t *lines_out, uintmax_t *bytes_out)
+/* Read FD and return a summary.  */
+static struct wc_lines
+wc_lines (int fd)
 {
-  size_t bytes_read;
-  uintmax_t lines, bytes;
-  char buf[BUFFER_SIZE + 1];
+#ifdef USE_AVX2_WC_LINECOUNT
+  static signed char use_avx2;
+  if (!use_avx2)
+    use_avx2 = avx2_supported () ? 1 : -1;
+  if (0 < use_avx2)
+    return wc_lines_avx2 (fd);
+#endif
+
+  uintmax_t lines = 0, bytes = 0;
   bool long_lines = false;
 
-  if (!lines_out || !bytes_out)
+  while (true)
     {
-      return false;
-    }
-
-  lines = bytes = 0;
-
-  while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
-    {
-
-      if (bytes_read == SAFE_READ_ERROR)
-        {
-          error (0, errno, "%s", quotef (file));
-          return false;
-        }
+      char buf[BUFFER_SIZE + 1];
+      size_t bytes_read = safe_read (fd, buf, BUFFER_SIZE);
+      if (! (0 < bytes_read && bytes_read <= BUFFER_SIZE))
+        return (struct wc_lines) { bytes_read == 0 ? 0 : errno, lines, bytes };
 
       bytes += bytes_read;
-
-      char *p = buf;
       char *end = buf + bytes_read;
-      uintmax_t plines = lines;
+      idx_t buflines = 0;
 
       if (! long_lines)
         {
           /* Avoid function call overhead for shorter lines.  */
-          while (p != end)
-            lines += *p++ == '\n';
+          for (char *p = buf; p < end; p++)
+            buflines += *p == '\n';
         }
       else
         {
           /* rawmemchr is more efficient with longer lines.  */
           *end = '\n';
-          while ((p = rawmemchr (p, '\n')) < end)
-            {
-              ++p;
-              ++lines;
-            }
+          for (char *p = buf; (p = rawmemchr (p, '\n')) < end; p++)
+            buflines++;
         }
 
       /* If the average line length in the block is >= 15, then use
@@ -306,16 +294,9 @@ wc_lines (char const *file, int fd, uintmax_t *lines_out, uintmax_t *bytes_out)
           FIXME: This line length was determined in 2015, on both
           x86_64 and ppc64, but it's worth re-evaluating in future with
           newer compilers, CPUs, or memchr() implementations etc.  */
-      if (lines - plines <= bytes_read / 15)
-        long_lines = true;
-      else
-        long_lines = false;
+      long_lines = 15 * buflines <= bytes_read;
+      lines += buflines;
     }
-
-  *bytes_out = bytes;
-  *lines_out = lines;
-
-  return true;
 }
 
 /* Count words.  FILE_X is the name of the file (or null for standard
@@ -325,7 +306,7 @@ wc_lines (char const *file, int fd, uintmax_t *lines_out, uintmax_t *bytes_out)
 static bool
 wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 {
-  bool ok = true;
+  int err = 0;
   char buf[BUFFER_SIZE + 1];
   size_t bytes_read;
   uintmax_t lines, words, chars, bytes, linelength;
@@ -412,8 +393,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
             {
               if (bytes_read == SAFE_READ_ERROR)
                 {
-                  error (0, errno, "%s", quotef (file));
-                  ok = false;
+                  err = errno;
                   break;
                 }
               bytes += bytes_read;
@@ -422,18 +402,12 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
     }
   else if (!count_chars && !count_complicated)
     {
-#ifdef USE_AVX2_WC_LINECOUNT
-      static bool (*wc_lines_p) (char const *, int, uintmax_t *, uintmax_t *);
-      if (!wc_lines_p)
-        wc_lines_p = avx2_supported () ? wc_lines_avx2 : wc_lines;
-#else
-      bool (*wc_lines_p) (char const *, int, uintmax_t *, uintmax_t *)
-        = wc_lines;
-#endif
-
       /* Use a separate loop when counting only lines or lines and bytes --
          but not chars or words.  */
-      ok = wc_lines_p (file, fd, &lines, &bytes);
+      struct wc_lines w = wc_lines (fd);
+      err = w.err;
+      lines = w.lines;
+      bytes = w.bytes;
     }
   else if (MB_CUR_MAX > 1)
     {
@@ -449,8 +423,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
           char const *p;
           if (bytes_read == SAFE_READ_ERROR)
             {
-              error (0, errno, "%s", quotef (file));
-              ok = false;
+              err = errno;
               break;
             }
 
@@ -583,8 +556,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
           char const *p = buf;
           if (bytes_read == SAFE_READ_ERROR)
             {
-              error (0, errno, "%s", quotef (file));
-              ok = false;
+              err = errno;
               break;
             }
 
@@ -646,7 +618,9 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
   if (linelength > max_line_length)
     max_line_length = linelength;
 
-  return ok;
+  if (err)
+    error (0, err, "%s", quotef (file));
+  return !err;
 }
 
 static bool
