@@ -19,7 +19,6 @@
 #include "wc.h"
 
 #include "system.h"
-#include "safe-read.h"
 
 #include <x86intrin.h>
 
@@ -32,8 +31,8 @@
 struct wc_lines
 wc_lines_avx2 (int fd)
 {
-  uintmax_t lines = 0;
-  uintmax_t bytes = 0;
+  intmax_t lines = 0;
+  intmax_t bytes = 0;
 
   __m256i
     zeroes = _mm256_setzero_si256 (),
@@ -50,8 +49,8 @@ wc_lines_avx2 (int fd)
         accumulator2 = _mm256_setzero_si256 (),
         avx_buf[BUFSIZE / sizeof (__m256i)];
 
-      size_t bytes_read = safe_read (fd, avx_buf, sizeof avx_buf);
-      if (! (0 < bytes_read && bytes_read <= sizeof avx_buf))
+      ssize_t bytes_read = read (fd, avx_buf, sizeof avx_buf);
+      if (bytes_read <= 0)
         return (struct wc_lines) { bytes_read == 0 ? 0 : errno, lines, bytes };
 
       bytes += bytes_read;

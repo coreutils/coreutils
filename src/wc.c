@@ -31,7 +31,6 @@
 #include <fadvise.h>
 #include <physmem.h>
 #include <readtokens0.h>
-#include <safe-read.h>
 #include <stat-size.h>
 #include <xbinary-io.h>
 
@@ -59,11 +58,11 @@ static uintmax_t total_lines;
 static uintmax_t total_words;
 static uintmax_t total_chars;
 static uintmax_t total_bytes;
-static uintmax_t total_lines_overflow;
-static uintmax_t total_words_overflow;
-static uintmax_t total_chars_overflow;
-static uintmax_t total_bytes_overflow;
-static uintmax_t max_line_length;
+static bool total_lines_overflow;
+static bool total_words_overflow;
+static bool total_chars_overflow;
+static bool total_bytes_overflow;
+static intmax_t max_line_length;
 
 /* Which counts to print. */
 static bool print_lines, print_words, print_chars, print_bytes;
@@ -76,7 +75,7 @@ static int number_width;
 static bool have_read_stdin;
 
 /* Used to determine if file size can be determined without reading.  */
-static size_t page_size;
+static idx_t page_size;
 
 /* Enable to _not_ treat non breaking space as a word separator.  */
 static bool posixly_correct;
@@ -212,12 +211,13 @@ write_counts (uintmax_t lines,
               uintmax_t words,
               uintmax_t chars,
               uintmax_t bytes,
-              uintmax_t linelength,
+              intmax_t linelength,
               char const *file)
 {
   static char const format_sp_int[] = " %*s";
   char const *format_int = format_sp_int + 1;
-  char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+  char buf[MAX (INT_BUFSIZE_BOUND (intmax_t),
+                INT_BUFSIZE_BOUND (uintmax_t))];
 
   if (print_lines)
     {
@@ -240,9 +240,7 @@ write_counts (uintmax_t lines,
       format_int = format_sp_int;
     }
   if (print_linelength)
-    {
-      printf (format_int, number_width, umaxtostr (linelength, buf));
-    }
+    printf (format_int, number_width, imaxtostr (linelength, buf));
   if (file)
     printf (" %s", strchr (file, '\n') ? quotef (file) : file);
   putchar ('\n');
@@ -260,14 +258,14 @@ wc_lines (int fd)
     return wc_lines_avx2 (fd);
 #endif
 
-  uintmax_t lines = 0, bytes = 0;
+  intmax_t lines = 0, bytes = 0;
   bool long_lines = false;
 
   while (true)
     {
       char buf[BUFFER_SIZE + 1];
-      size_t bytes_read = safe_read (fd, buf, BUFFER_SIZE);
-      if (! (0 < bytes_read && bytes_read <= BUFFER_SIZE))
+      ssize_t bytes_read = read (fd, buf, BUFFER_SIZE);
+      if (bytes_read <= 0)
         return (struct wc_lines) { bytes_read == 0 ? 0 : errno, lines, bytes };
 
       bytes += bytes_read;
@@ -308,8 +306,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 {
   int err = 0;
   char buf[BUFFER_SIZE + 1];
-  size_t bytes_read;
-  uintmax_t lines, words, chars, bytes, linelength;
+  intmax_t lines, words, chars, bytes, linelength;
   bool count_bytes, count_chars, count_complicated;
   char const *file = file_x ? file_x : _("standard input");
 
@@ -389,15 +386,14 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
       if (! skip_read)
         {
           fdadvise (fd, 0, 0, FADVISE_SEQUENTIAL);
-          while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
-            {
-              if (bytes_read == SAFE_READ_ERROR)
-                {
-                  err = errno;
-                  break;
-                }
-              bytes += bytes_read;
-            }
+          for (ssize_t bytes_read;
+               (bytes_read = read (fd, buf, BUFFER_SIZE));
+               bytes += bytes_read)
+            if (bytes_read < 0)
+              {
+                err = errno;
+                break;
+              }
         }
     }
   else if (!count_chars && !count_complicated)
@@ -412,55 +408,64 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
   else if (MB_CUR_MAX > 1)
     {
       bool in_word = false;
-      uintmax_t linepos = 0;
+      intmax_t linepos = 0;
       mbstate_t state; mbszero (&state);
       bool in_shift = false;
-      size_t prev = 0; /* number of bytes carried over from previous round */
+      idx_t prev = 0; /* Number of bytes carried over from previous round.  */
 
-      while ((bytes_read = safe_read (fd, buf + prev, BUFFER_SIZE - prev)) > 0
-             || prev)
+      for (ssize_t bytes_read;
+           ((bytes_read = read (fd, buf + prev, BUFFER_SIZE - prev))
+            || prev);
+           )
         {
-          char const *p;
-          if (bytes_read == SAFE_READ_ERROR)
+          if (bytes_read < 0)
             {
               err = errno;
               break;
             }
 
           bytes += bytes_read;
-          p = buf;
-          size_t buf_bytes = prev + bytes_read;
+          char const *p = buf;
+          char const *plim = p + prev + bytes_read;
           do
             {
               char32_t wide_char;
-              size_t n;
+              idx_t charbytes;
               bool single_byte;
 
               if (!in_shift && 0 <= *p && *p < 0x80)
                 {
                   /* Handle most ASCII characters quickly, without calling
-                     mbrtowc().  */
-                  n = 1;
+                     mbrtoc32.  */
+                  charbytes = 1;
                   wide_char = *p;
                   single_byte = true;
                 }
               else
                 {
-                  n = mbrtoc32 (&wide_char, p + prev, buf_bytes - prev, &state);
+                  idx_t scanbytes = plim - (p + prev);
+                  size_t n = mbrtoc32 (&wide_char, p + prev, scanbytes, &state);
                   prev = 0;
-                  if (n == (size_t) -2 && bytes_read)
+
+                  if (scanbytes < n)
                     {
-                      in_shift = true;
-                      break;
-                    }
-                  if ((size_t) -3 <= n)
-                    {
+                      if (n == (size_t) -2 && plim - p < BUFFER_SIZE
+                          && bytes_read)
+                        {
+                          /* An incomplete character that is not ridiculously
+                             long and there may be more input.  Move the bytes
+                             to buffer start and prepare to read more data.  */
+                          prev = plim - p;
+                          memmove (buf, p, prev);
+                          in_shift = true;
+                          break;
+                        }
+
                       /* Remember that we read a byte, but don't complain
                          about the error.  Because of the decoding error,
                          this is a considered to be byte but not a
                          character (that is, chars is not incremented).  */
                       p++;
-                      buf_bytes--;
                       mbszero (&state);
                       in_shift = false;
 
@@ -476,8 +481,9 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                       in_word = true;
                       continue;
                     }
-                  n += !n;
-                  single_byte = n == !in_shift;
+
+                  charbytes = n + !n;
+                  single_byte = charbytes == !in_shift;
                   in_shift = !mbsinit (&state);
                 }
 
@@ -525,23 +531,10 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                   break;
                 }
 
-              p += n;
-              buf_bytes -= n;
+              p += charbytes;
               chars++;
             }
-          while (buf_bytes > 0);
-
-          if (buf_bytes > 0)
-            {
-              if (buf_bytes == BUFFER_SIZE)
-                {
-                  /* Encountered a very long redundant shift sequence.  */
-                  p++;
-                  buf_bytes--;
-                }
-              memmove (buf, p, buf_bytes);
-            }
-          prev = buf_bytes;
+          while (p < plim);
         }
       if (linepos > linelength)
         linelength = linepos;
@@ -549,18 +542,18 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
   else
     {
       bool in_word = false;
-      uintmax_t linepos = 0;
+      intmax_t linepos = 0;
 
-      while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
+      for (ssize_t bytes_read; (bytes_read = read (fd, buf, BUFFER_SIZE)); )
         {
-          char const *p = buf;
-          if (bytes_read == SAFE_READ_ERROR)
+          if (bytes_read < 0)
             {
               err = errno;
               break;
             }
 
           bytes += bytes_read;
+          char const *p = buf;
           do
             {
               unsigned char c = *p++;
@@ -606,14 +599,10 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
   if (total_mode != total_only)
     write_counts (lines, words, chars, bytes, linelength, file_x);
 
-  if (ckd_add (&total_lines, total_lines, lines))
-    total_lines_overflow = true;
-  if (ckd_add (&total_words, total_words, words))
-    total_words_overflow = true;
-  if (ckd_add (&total_chars, total_chars, chars))
-    total_chars_overflow = true;
-  if (ckd_add (&total_bytes, total_bytes, bytes))
-    total_bytes_overflow = true;
+  total_lines_overflow |= ckd_add (&total_lines, total_lines, lines);
+  total_words_overflow |= ckd_add (&total_words, total_words, words);
+  total_chars_overflow |= ckd_add (&total_chars, total_chars, chars);
+  total_bytes_overflow |= ckd_add (&total_bytes, total_bytes, bytes);
 
   if (linelength > max_line_length)
     max_line_length = linelength;
@@ -660,7 +649,7 @@ wc_file (char const *file, struct fstatus *fstatus)
    that happens when we don't know how long the list of file names will be.  */
 
 static struct fstatus *
-get_input_fstatus (size_t nfiles, char *const *file)
+get_input_fstatus (idx_t nfiles, char *const *file)
 {
   struct fstatus *fstatus = xnmalloc (nfiles ? nfiles : 1, sizeof *fstatus);
 
@@ -672,7 +661,7 @@ get_input_fstatus (size_t nfiles, char *const *file)
     fstatus[0].failed = 1;
   else
     {
-      for (size_t i = 0; i < nfiles; i++)
+      for (idx_t i = 0; i < nfiles; i++)
         fstatus[i].failed = (! file[i] || STREQ (file[i], "-")
                              ? fstat (STDIN_FILENO, &fstatus[i].st)
                              : stat (file[i], &fstatus[i].st));
@@ -687,7 +676,7 @@ get_input_fstatus (size_t nfiles, char *const *file)
 
 ATTRIBUTE_PURE
 static int
-compute_number_width (size_t nfiles, struct fstatus const *fstatus)
+compute_number_width (idx_t nfiles, struct fstatus const *fstatus)
 {
   int width = 1;
 
@@ -696,13 +685,17 @@ compute_number_width (size_t nfiles, struct fstatus const *fstatus)
       int minimum_width = 1;
       uintmax_t regular_total = 0;
 
-      for (size_t i = 0; i < nfiles; i++)
+      for (idx_t i = 0; i < nfiles; i++)
         if (! fstatus[i].failed)
           {
-            if (S_ISREG (fstatus[i].st.st_mode))
-              regular_total += fstatus[i].st.st_size;
-            else
+            if (!S_ISREG (fstatus[i].st.st_mode))
               minimum_width = 7;
+            else if (ckd_add (&regular_total, regular_total,
+                              fstatus[i].st.st_size))
+              {
+                regular_total = UINTMAX_MAX;
+                break;
+              }
           }
 
       for (; 10 <= regular_total; regular_total /= 10)
@@ -720,7 +713,7 @@ main (int argc, char **argv)
 {
   bool ok;
   int optc;
-  size_t nfiles;
+  idx_t nfiles;
   char **files;
   char *files_from = nullptr;
   struct fstatus *fstatus;
@@ -911,9 +904,8 @@ main (int argc, char **argv)
               /* Using the standard 'filename:line-number:' prefix here is
                  not totally appropriate, since NUL is the separator, not NL,
                  but it might be better than nothing.  */
-              unsigned long int file_number = argv_iter_n_args (ai);
-              error (0, 0, "%s:%lu: %s", quotef (files_from),
-                     file_number, _("invalid zero-length file name"));
+              error (0, 0, "%s:%zu: %s", quotef (files_from),
+                     argv_iter_n_args (ai), _("invalid zero-length file name"));
             }
           skip_file = true;
         }
