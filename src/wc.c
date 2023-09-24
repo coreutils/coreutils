@@ -25,7 +25,6 @@
 #include <sys/types.h>
 #include <uchar.h>
 
-#include <assure.h>
 #include <argmatch.h>
 #include <argv-iter.h>
 #include <fadvise.h>
@@ -497,37 +496,46 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                   if (linepos > linelength)
                     linelength = linepos;
                   linepos = 0;
-                  goto mb_word_separator;
+                  in_word = false;
+                  break;
+
                 case '\t':
                   linepos += 8 - (linepos % 8);
-                  goto mb_word_separator;
+                  in_word = false;
+                  break;
+
                 case ' ':
                   linepos++;
                   FALLTHROUGH;
                 case '\v':
-                mb_word_separator:
                   in_word = false;
                   break;
-                default:
-                  /* c32width can be expensive on macOS for example,
-                     so avoid if not needed.  */
+
+                default:;
+                  bool in_word2;
                   if (single_byte)
-                    linepos += wc_isprint[wide_char];
-                  else if (print_linelength)
                     {
-                      int width = c32width (wide_char);
-                      if (width > 0)
-                        linepos += width;
+                      linepos += wc_isprint[wide_char];
+                      in_word2 = !wc_isspace[wide_char];
                     }
-                  if (single_byte ? wc_isspace[wide_char]
-                      : c32isspace (wide_char) || iswnbspace (wide_char))
-                    goto mb_word_separator;
+                  else
+                    {
+                      /* c32width can be expensive on macOS for example,
+                         so avoid if not needed.  */
+                      if (print_linelength)
+                        {
+                          int width = c32width (wide_char);
+                          if (width > 0)
+                            linepos += width;
+                        }
+                      in_word2 = !iswnbspace (wide_char);
+                    }
 
                   /* Count words by counting word starts, i.e., each
                      white space character (or the start of input)
                      followed by non white space.  */
-                  words += !in_word;
-                  in_word = true;
+                  words += !in_word & in_word2;
+                  in_word = in_word2;
                   break;
                 }
 
@@ -567,23 +575,26 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                   if (linepos > linelength)
                     linelength = linepos;
                   linepos = 0;
-                  goto word_separator;
+                  in_word = false;
+                  break;
+
                 case '\t':
                   linepos += 8 - (linepos % 8);
-                  goto word_separator;
+                  in_word = false;
+                  break;
+
                 case ' ':
                   linepos++;
                   FALLTHROUGH;
                 case '\v':
-                word_separator:
                   in_word = false;
                   break;
+
                 default:
                   linepos += wc_isprint[c];
-                  if (wc_isspace[c])
-                    goto word_separator;
-                  words += !in_word;
-                  in_word = true;
+                  bool in_word2 = !wc_isspace[c];
+                  words += !in_word & in_word2;
+                  in_word = in_word2;
                   break;
                 }
             }
@@ -711,7 +722,6 @@ compute_number_width (idx_t nfiles, struct fstatus const *fstatus)
 int
 main (int argc, char **argv)
 {
-  bool ok;
   int optc;
   idx_t nfiles;
   char **files;
@@ -858,29 +868,12 @@ main (int argc, char **argv)
   else
     number_width = compute_number_width (nfiles, fstatus);
 
-  ok = true;
-  for (int i = 0; /* */; i++)
+  bool ok = true;
+  enum argv_iter_err ai_err;
+  char *file_name;
+  for (int i = 0; (file_name = argv_iter (ai, &ai_err)); i++)
     {
       bool skip_file = false;
-      enum argv_iter_err ai_err;
-      char *file_name = argv_iter (ai, &ai_err);
-      if (!file_name)
-        {
-          switch (ai_err)
-            {
-            case AI_ERR_EOF:
-              goto argv_iter_done;
-            case AI_ERR_READ:
-              error (0, errno, _("%s: read error"),
-                     quotef (files_from));
-              ok = false;
-              goto argv_iter_done;
-            case AI_ERR_MEM:
-              xalloc_die ();
-            default:
-              affirm (!"unexpected error code from argv_iter");
-            }
-        }
       if (files_from && STREQ (files_from, "-") && STREQ (file_name, "-"))
         {
           /* Give a better diagnostic in an unusual case:
@@ -918,7 +911,22 @@ main (int argc, char **argv)
       if (! nfiles)
         fstatus[0].failed = 1;
     }
- argv_iter_done:
+  switch (ai_err)
+    {
+    case AI_ERR_EOF:
+      break;
+
+    case AI_ERR_READ:
+      error (0, errno, _("%s: read error"), quotef (files_from));
+      ok = false;
+      break;
+
+    case AI_ERR_MEM:
+      xalloc_die ();
+
+    default:
+      unreachable ();
+    }
 
   /* No arguments on the command line is fine.  That means read from stdin.
      However, no arguments on the --files0-from input stream is an error
