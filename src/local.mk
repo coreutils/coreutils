@@ -60,7 +60,8 @@ noinst_HEADERS =		\
   src/statx.h			\
   src/system.h			\
   src/temp-stream.h		\
-  src/uname.h
+  src/uname.h			\
+  src/wc.h
 
 EXTRA_DIST +=		\
   src/dcgen		\
