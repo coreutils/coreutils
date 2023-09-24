@@ -28,7 +28,7 @@
 #define BUFSIZE (16320)
 
 /* Read FD and return a summary.  */
-struct wc_lines
+extern struct wc_lines
 wc_lines_avx2 (int fd)
 {
   intmax_t lines = 0;
