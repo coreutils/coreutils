@@ -165,6 +165,11 @@ Remove (unlink) the FILE(s).\n\
 By default, rm does not remove directories.  Use the --recursive (-r or -R)\n\
 option to remove each listed directory, too, along with all of its contents.\n\
 "), stdout);
+      fputs (_("\
+\n\
+Any attempt to remove a file whose last file name component is '.' or '..'\n\
+is rejected with a diagnostic.\n\
+"), stdout);
       printf (_("\
 \n\
 To remove a file whose name starts with a '-', for example '-foo',\n\
