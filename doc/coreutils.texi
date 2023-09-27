@@ -11601,6 +11601,7 @@ actually changes.
 Do not print error messages about files whose ownership cannot be
 changed.
 
+@macro chownFromOption{cmd}
 @item --from=@var{old-owner}
 @opindex --from
 @cindex symbolic links, changing owner
@@ -11613,17 +11614,17 @@ For example, to reflect a user ID numbering change for one user's files
 without an option like this, @code{root} might run
 
 @example
-find / -owner OLDUSER -print0 | xargs -0 chown -h NEWUSER
+find / -owner OLDUSER -print0 | xargs -0 \cmd\ -h NEWUSER
 @end example
 
 But that is dangerous because the interval between when the @command{find}
-tests the existing file's owner and when the @command{chown} is actually run
+tests the existing file's owner and when the @command{\cmd\} is actually run
 may be quite large.
-One way to narrow the gap would be to invoke chown for each file
+One way to narrow the gap would be to invoke \cmd\ for each file
 as it is found:
 
 @example
-find / -owner OLDUSER -exec chown -h NEWUSER @{@} \;
+find / -owner OLDUSER -exec \cmd\ -h NEWUSER @{@} \\;
 @end example
 
 But that is very slow if there are many affected files.
@@ -11631,8 +11632,10 @@ With this option, it is safer (the gap is narrower still)
 though still not perfect:
 
 @example
-chown -h -R --from=OLDUSER NEWUSER /
+\cmd\ -h -R --from=OLDUSER NEWUSER /
 @end example
+@end macro
+@chownFromOption{chown}
 
 @item --dereference
 @opindex --dereference
@@ -11765,6 +11768,8 @@ changes.
 @cindex error messages, omitting
 Do not print error messages about files whose group cannot be
 changed.
+
+@chownFromOption{chgrp}
 
 @item --dereference
 @opindex --dereference

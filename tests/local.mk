@@ -108,6 +108,7 @@ EXTRA_DIST +=			\
 
 all_root_tests =				\
   tests/chown/basic.sh				\
+  tests/chgrp/from.sh				\
   tests/cp/cp-a-selinux.sh			\
   tests/cp/preserve-gid.sh			\
   tests/cp/special-bits.sh			\

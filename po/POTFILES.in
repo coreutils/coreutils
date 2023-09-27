@@ -41,6 +41,7 @@ src/chcon.c
 src/chgrp.c
 src/chmod.c
 src/chown-core.c
+src/chown-core.h
 src/chown.c
 src/chroot.c
 src/cksum.c

@@ -45,6 +45,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  chgrp now accepts the --from=OWNER:GROUP option to restrict changes to files
+  with matching current OWNER and/or GROUP, as already supported by chown(1).
+
   tail now supports following multiple processes, with repeated --pid options.
 
 ** Improvements

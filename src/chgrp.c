@@ -28,6 +28,7 @@
 #include "quote.h"
 #include "root-dev-ino.h"
 #include "xstrtol.h"
+#include "userspec.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "chgrp"
@@ -49,6 +50,7 @@ static char *reference_file;
 enum
 {
   DEREFERENCE_OPTION = CHAR_MAX + 1,
+  FROM_OPTION,
   NO_PRESERVE_ROOT,
   PRESERVE_ROOT,
   REFERENCE_FILE_OPTION
@@ -59,6 +61,7 @@ static struct option const long_options[] =
   {"recursive", no_argument, nullptr, 'R'},
   {"changes", no_argument, nullptr, 'c'},
   {"dereference", no_argument, nullptr, DEREFERENCE_OPTION},
+  {"from", required_argument, nullptr, FROM_OPTION},
   {"no-dereference", no_argument, nullptr, 'h'},
   {"no-preserve-root", no_argument, nullptr, NO_PRESERVE_ROOT},
   {"preserve-root", no_argument, nullptr, PRESERVE_ROOT},
@@ -129,6 +132,7 @@ With --reference, change the group of each FILE to that of RFILE.\n\
                          (useful only on systems that can change the\n\
                          ownership of a symlink)\n\
 "), stdout);
+      emit_from_option_description (false);
       fputs (_("\
       --no-preserve-root  do not treat '/' specially (the default)\n\
       --preserve-root    fail to operate recursively on '/'\n\
@@ -184,6 +188,11 @@ main (int argc, char **argv)
   bool ok;
   int optc;
 
+    /* Change the group of a file only if it has this uid/gid.
+     * -1 means there's no restriction.  */
+  uid_t required_uid = -1;
+  gid_t required_gid = -1;
+
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -231,6 +240,17 @@ main (int argc, char **argv)
         case REFERENCE_FILE_OPTION:
           reference_file = optarg;
           break;
+
+        case FROM_OPTION:
+          {
+            bool warn;
+            char const *e = parse_user_spec_warn (optarg,
+                                                  &required_uid, &required_gid,
+                                                  nullptr, nullptr, &warn);
+            if (e)
+              error (warn ? 0 : EXIT_FAILURE, 0, "%s: %s", e, quote (optarg));
+            break;
+          }
 
         case 'R':
           chopt.recurse = true;
@@ -309,7 +329,7 @@ main (int argc, char **argv)
   bit_flags |= FTS_DEFER_STAT;
   ok = chown_files (argv + optind, bit_flags,
                     (uid_t) -1, gid,
-                    (uid_t) -1, (gid_t) -1, &chopt);
+                    required_uid, required_gid, &chopt);
 
   main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
