@@ -444,7 +444,8 @@ Ordering options:\n\
   -h, --human-numeric-sort    compare human readable numbers (e.g., 2K 1G)\n\
 "), stdout);
       fputs (_("\
-  -n, --numeric-sort          compare according to string numerical value\n\
+  -n, --numeric-sort          compare according to string numerical value;\n\
+                                see manual for which strings are supported\n\
   -R, --random-sort           shuffle, but group identical keys.  See shuf(1)\n\
       --random-source=FILE    get random bytes from FILE\n\
   -r, --reverse               reverse the result of comparisons\n\

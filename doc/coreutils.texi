@@ -4678,17 +4678,21 @@ can change this.
 @opindex --numeric-sort
 @opindex --sort
 @cindex numeric sort
+@vindex LC_CTYPE
 @vindex LC_NUMERIC
 Sort numerically.  The number begins each line and consists
 of optional blanks, an optional @samp{-} sign, and zero or more
 digits possibly separated by thousands separators, optionally followed
 by a decimal-point character and zero or more digits.  An empty
-number is treated as @samp{0}.  The @env{LC_NUMERIC}
-locale specifies the decimal-point character and thousands separator.
-By default a blank is a space or a tab, but the @env{LC_CTYPE} locale
-can change this.
+number is treated as @samp{0}.  Signs on zeros and leading zeros do
+not affect ordering.
 
 Comparison is exact; there is no rounding error.
+
+The @env{LC_CTYPE} locale specifies which characters are blanks and
+the @env{LC_NUMERIC} locale specifies the thousands separator and
+decimal-point character.  In the C locale, spaces and tabs are blanks,
+there is no thousands separator, and @samp{.} is the decimal point.
 
 Neither a leading @samp{+} nor exponential notation is recognized.
 To compare such strings numerically, use the
