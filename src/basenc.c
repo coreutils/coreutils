@@ -23,6 +23,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "assure.h"
 #include "c-ctype.h"
 #include "fadvise.h"
 #include "quote.h"
@@ -172,10 +173,37 @@ from any other non-alphabet bytes in the encoded stream.\n"),
   exit (status);
 }
 
+#if BASE_TYPE != 64
+static int
+base32_required_padding (int len)
+{
+  int partial = len % 8;
+  return partial ? 8 - partial : 0;
+}
+#endif
+
+#if BASE_TYPE != 32
+static int
+base64_required_padding (int len)
+{
+  int partial = len % 4;
+  return partial ? 4 - partial : 0;
+}
+#endif
+
+#if BASE_TYPE == 42
+static int
+no_required_padding (int len)
+{
+  return 0;
+}
+#endif
+
 #define ENC_BLOCKSIZE (1024 * 3 * 10)
 
 #if BASE_TYPE == 32
 # define BASE_LENGTH BASE32_LENGTH
+# define REQUIRED_PADDING base32_required_padding
 /* Note that increasing this may decrease performance if --ignore-garbage
    is used, because of the memmove operation below.  */
 # define DEC_BLOCKSIZE (1024 * 5)
@@ -191,6 +219,7 @@ static_assert (DEC_BLOCKSIZE % 40 == 0); /* Complete encoded blocks are used. */
 # define isbase isbase32
 #elif BASE_TYPE == 64
 # define BASE_LENGTH BASE64_LENGTH
+# define REQUIRED_PADDING base64_required_padding
 /* Note that increasing this may decrease performance if --ignore-garbage
    is used, because of the memmove operation below.  */
 # define DEC_BLOCKSIZE (1024 * 3)
@@ -208,6 +237,7 @@ static_assert (DEC_BLOCKSIZE % 12 == 0); /* Complete encoded blocks are used. */
 
 
 # define BASE_LENGTH base_length
+# define REQUIRED_PADDING required_padding
 
 /* Note that increasing this may decrease performance if --ignore-garbage
    is used, because of the memmove operation below.  */
@@ -216,6 +246,7 @@ static_assert (DEC_BLOCKSIZE % 40 == 0); /* complete encoded blocks for base32*/
 static_assert (DEC_BLOCKSIZE % 12 == 0); /* complete encoded blocks for base64*/
 
 static int (*base_length) (int i);
+static int (*required_padding) (int i);
 static bool (*isbase) (char ch);
 static void (*base_encode) (char const *restrict in, idx_t inlen,
                             char *restrict out, idx_t outlen);
@@ -485,7 +516,6 @@ base32hex_decode_ctx_wrapper (struct base_decode_context *ctx,
 
   return b;
 }
-
 
 static bool
 isbase16 (char ch)
@@ -1011,6 +1041,7 @@ do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
   idx_t sum;
   struct base_decode_context ctx;
 
+  char padbuf[8] = "========";
   inbuf = xmalloc (BASE_LENGTH (DEC_BLOCKSIZE));
   outbuf = xmalloc (DEC_BLOCKSIZE);
 
@@ -1053,10 +1084,25 @@ do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
          telling it to flush what is in CTX.  */
       for (int k = 0; k < 1 + !!feof (in); k++)
         {
-          if (k == 1 && ctx.i == 0)
-            break;
+          if (k == 1)
+            {
+              if (ctx.i == 0)
+                break;
+
+              /* auto pad input (at eof).  */
+              idx_t auto_padding = REQUIRED_PADDING (ctx.i);
+              if (auto_padding && (sum == 0 || inbuf[sum - 1] != '='))
+                {
+                  affirm (auto_padding <= sizeof (padbuf));
+                  IF_LINT (free (inbuf));
+                  sum = auto_padding;
+                  inbuf = padbuf;
+                }
+              else
+                sum = 0;  /* process ctx buffer only */
+            }
           idx_t n = DEC_BLOCKSIZE;
-          ok = base_decode_ctx (&ctx, inbuf, (k == 0 ? sum : 0), outbuf, &n);
+          ok = base_decode_ctx (&ctx, inbuf, sum, outbuf, &n);
 
           if (fwrite (outbuf, 1, n, out) < n)
             write_error ();
@@ -1145,6 +1191,7 @@ main (int argc, char **argv)
     {
     case BASE64_OPTION:
       base_length = base64_length_wrapper;
+      required_padding = base64_required_padding;
       isbase = isbase64;
       base_encode = base64_encode;
       base_decode_ctx_init = base64_decode_ctx_init_wrapper;
@@ -1153,6 +1200,7 @@ main (int argc, char **argv)
 
     case BASE64URL_OPTION:
       base_length = base64_length_wrapper;
+      required_padding = base64_required_padding;
       isbase = isbase64url;
       base_encode = base64url_encode;
       base_decode_ctx_init = base64url_decode_ctx_init_wrapper;
@@ -1161,6 +1209,7 @@ main (int argc, char **argv)
 
     case BASE32_OPTION:
       base_length = base32_length_wrapper;
+      required_padding = base32_required_padding;
       isbase = isbase32;
       base_encode = base32_encode;
       base_decode_ctx_init = base32_decode_ctx_init_wrapper;
@@ -1169,6 +1218,7 @@ main (int argc, char **argv)
 
     case BASE32HEX_OPTION:
       base_length = base32_length_wrapper;
+      required_padding = base32_required_padding;
       isbase = isbase32hex;
       base_encode = base32hex_encode;
       base_decode_ctx_init = base32hex_decode_ctx_init_wrapper;
@@ -1177,6 +1227,7 @@ main (int argc, char **argv)
 
     case BASE16_OPTION:
       base_length = base16_length;
+      required_padding = no_required_padding;
       isbase = isbase16;
       base_encode = base16_encode;
       base_decode_ctx_init = base16_decode_ctx_init;
@@ -1185,6 +1236,7 @@ main (int argc, char **argv)
 
     case BASE2MSBF_OPTION:
       base_length = base2_length;
+      required_padding = no_required_padding;
       isbase = isbase2;
       base_encode = base2msbf_encode;
       base_decode_ctx_init = base2_decode_ctx_init;
@@ -1193,6 +1245,7 @@ main (int argc, char **argv)
 
     case BASE2LSBF_OPTION:
       base_length = base2_length;
+      required_padding = no_required_padding;
       isbase = isbase2;
       base_encode = base2lsbf_encode;
       base_decode_ctx_init = base2_decode_ctx_init;
@@ -1201,6 +1254,7 @@ main (int argc, char **argv)
 
     case Z85_OPTION:
       base_length = z85_length;
+      required_padding = no_required_padding;
       isbase = isz85;
       base_encode = z85_encode;
       base_decode_ctx_init = z85_decode_ctx_init;

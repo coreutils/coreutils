@@ -124,10 +124,8 @@ sub gen_tests($)
         push @Tests, (
           ['baddecode', '--decode', {IN=>'a'}, {OUT=>""},
           {ERR_SUBST => 's/.*: invalid input//'}, {ERR => "\n"}, {EXIT => 1}],
-          ['baddecode2', '--decode', {IN=>'ab'}, {OUT=>"i"},
-          {ERR_SUBST => 's/.*: invalid input//'}, {ERR => "\n"}, {EXIT => 1}],
-          ['baddecode3', '--decode', {IN=>'Zzz'}, {OUT=>"g<"},
-          {ERR_SUBST => 's/.*: invalid input//'}, {ERR => "\n"}, {EXIT => 1}],
+          ['paddecode2', '--decode', {IN=>'ab'}, {OUT=>"i"}],
+          ['paddecode3', '--decode', {IN=>'Zzz'}, {OUT=>"g<"}],
           ['baddecode4', '--decode', {IN=>'Zz='}, {OUT=>"g"},
           {ERR_SUBST => 's/.*: invalid input//'}, {ERR => "\n"}, {EXIT => 1}],
           ['baddecode5', '--decode', {IN=>'Z==='}, {OUT=>""},
