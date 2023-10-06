@@ -288,9 +288,9 @@ all_tests =					\
   tests/cat/cat-proc.sh				\
   tests/cat/cat-buf.sh				\
   tests/cat/cat-self.sh				\
-  tests/misc/base64.pl				\
   tests/misc/basename.pl			\
-  tests/misc/basenc.pl				\
+  tests/basenc/base64.pl			\
+  tests/basenc/basenc.pl			\
   tests/misc/close-stdout.sh			\
   tests/chroot/chroot-fail.sh			\
   tests/cksum/cksum.sh				\
