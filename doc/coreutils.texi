@@ -2259,7 +2259,7 @@ base64 --decode [@var{option}]@dots{} [@var{file}]
 The base64 encoding expands data to roughly 133% of the original.
 The base32 encoding expands data to roughly 160% of the original.
 The format conforms to
-@uref{https://tools.ietf.org/search/rfc4648, RFC 4648}.
+@uref{https://datatracker.ietf.org/doc/rfc4648/, RFC 4648}.
 
 For more general encoding functionality see @ref{basenc invocation}.
 
@@ -2334,7 +2334,7 @@ Supported @var{encoding}s are:
 @opindex --base64
 Encode into (or decode from with @option{-d/--decode}) base64 form.
 The format conforms to
-@uref{https://tools.ietf.org/search/rfc4648#section-4, RFC 4648#4}.
+@uref{https://datatracker.ietf.org/doc/html/rfc4648#section-4, RFC 4648#4}.
 Equivalent to the @command{base64} command.
 
 @item --base64url
@@ -2342,14 +2342,14 @@ Equivalent to the @command{base64} command.
 Encode into (or decode from with @option{-d/--decode}) file-and-url-safe
 base64 form (using @samp{_} and @samp{-} instead of @samp{+} and @samp{/}).
 The format conforms to
-@uref{https://tools.ietf.org/search/rfc4648#section-5, RFC 4648#5}.
+@uref{https://datatracker.ietf.org/doc/html/rfc4648#section-5, RFC 4648#5}.
 
 @item --base32
 @opindex --base32
 Encode into (or decode from with @option{-d/--decode}) base32 form.
 The encoded data uses the @samp{ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=} characters.
 The format conforms to
-@uref{https://tools.ietf.org/search/rfc4648#section-6, RFC 4648#6}.
+@uref{https://datatracker.ietf.org/doc/html/rfc4648#section-6, RFC 4648#6}.
 Equivalent to the @command{base32} command.
 
 @item --base32hex
@@ -2357,14 +2357,14 @@ Equivalent to the @command{base32} command.
 Encode into (or decode from with @option{-d/--decode}) Extended Hex Alphabet
 base32 form. The encoded data uses the
 @samp{0123456789ABCDEFGHIJKLMNOPQRSTUV=} characters. The format conforms to
-@uref{https://tools.ietf.org/search/rfc4648#section-7, RFC 4648#7}.
+@uref{https://datatracker.ietf.org/doc/html/rfc4648#section-7, RFC 4648#7}.
 
 @item --base16
 @opindex --base16
 Encode into (or decode from with @option{-d/--decode}) base16 (hexadecimal)
 form. The encoded data uses the @samp{0123456789ABCDEF} characters. The format
 conforms to
-@uref{https://tools.ietf.org/search/rfc4648#section-8, RFC 4648#8}.
+@uref{https://datatracker.ietf.org/doc/html/rfc4648#section-8, RFC 4648#8}.
 
 @item --base2lsbf
 @opindex --base2lsbf
@@ -4107,7 +4107,7 @@ Supported more modern digest algorithms are:
 Print base64-encoded digests not hexadecimal.
 This option is ignored with @option{--check}.
 The format conforms to
-@uref{https://tools.ietf.org/search/rfc4648#section-4, RFC 4648#4}.
+@uref{https://datatracker.ietf.org/doc/html/rfc4648#section-4, RFC 4648#4}.
 
 Note that each base64-encoded digest has zero, one or two trailing padding
 (@samp{=}) bytes.  The length of that padding is the checksum-bit-length
@@ -15512,7 +15512,7 @@ May be negated.
 @opindex extproc
 Enable @samp{LINEMODE}, which is used to avoid echoing
 each character over high latency links.  See also
-@uref{https://tools.ietf.org/search/rfc1116, Internet RFC 1116}.
+@uref{https://datatracker.ietf.org/doc/rfc1116/, Internet RFC 1116}.
 Non-POSIX@.
 May be negated.
 
@@ -16819,9 +16819,9 @@ Mon, 09 Jul 2020 17:00:00 -0400
 @opindex --rfc-822
 @opindex --rfc-2822
 This format conforms to Internet RFCs
-@uref{https://tools.ietf.org/search/rfc5322, 5322},
-@uref{https://tools.ietf.org/search/rfc2822, 2822} and
-@uref{https://tools.ietf.org/search/rfc822, 822}, the
+@uref{https://datatracker.ietf.org/doc/rfc5322/, 5322},
+@uref{https://datatracker.ietf.org/doc/rfc2822/, 2822} and
+@uref{https://datatracker.ietf.org/doc/rfc822/, 822}, the
 current and previous standards for Internet email.
 For compatibility with older versions of @command{date},
 @option{--rfc-2822} and @option{--rfc-822} are aliases for
@@ -16830,7 +16830,7 @@ For compatibility with older versions of @command{date},
 @item --rfc-3339=@var{timespec}
 @opindex --rfc-3339=@var{timespec}
 Display the date using a format specified by
-@uref{https://tools.ietf.org/search/rfc3339, Internet
+@uref{https://datatracker.ietf.org/doc/rfc3339/, Internet
 RFC 3339}.  This is like @option{--iso-8601}, except that a space rather
 than a @samp{T} separates dates from times, and a period rather than
 a comma separates seconds from subseconds.
