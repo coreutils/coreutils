@@ -577,7 +577,7 @@ base16_decode_ctx (struct base_decode_context *ctx,
           continue;
         }
 
-      int nib = *in++;
+      int nib = c_toupper (*in++);
       if ('0' <= nib && nib <= '9')
         nib -= '0';
       else if ('A' <= nib && nib <= 'F')
