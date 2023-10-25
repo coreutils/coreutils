@@ -253,8 +253,8 @@ static void (*base_encode) (char const *restrict in, idx_t inlen,
 
 struct base16_decode_context
 {
-  char nibble;
-  bool have_nibble;
+  /* Either a 4-bit nibble, or negative if we have no nibble.  */
+  signed char nibble;
 };
 
 struct z85_decode_context
@@ -516,11 +516,105 @@ base32hex_decode_ctx_wrapper (struct base_decode_context *ctx,
 
   return b;
 }
+/* With this approach this file works independent of the charset used
+   (think EBCDIC).  However, it does assume that the characters in the
+   Base32 alphabet (A-Z2-7) are encoded in 0..255.  POSIX
+   1003.1-2001 require that char and unsigned char are 8-bit
+   quantities, though, taking care of that problem.  But this may be a
+   potential problem on non-POSIX C99 platforms.
+
+   IBM C V6 for AIX mishandles "#define B32(x) ...'x'...", so use "_"
+   as the formal parameter rather than "x".  */
+#define B16(_)                                  \
+  ((_) == '0' ? 0                               \
+   : (_) == '1' ? 1                             \
+   : (_) == '2' ? 2                             \
+   : (_) == '3' ? 3                             \
+   : (_) == '4' ? 4                             \
+   : (_) == '5' ? 5                             \
+   : (_) == '6' ? 6                             \
+   : (_) == '7' ? 7                             \
+   : (_) == '8' ? 8                             \
+   : (_) == '9' ? 9                             \
+   : (_) == 'A' || (_) == 'a' ? 10              \
+   : (_) == 'B' || (_) == 'b' ? 11              \
+   : (_) == 'C' || (_) == 'c' ? 12              \
+   : (_) == 'D' || (_) == 'd' ? 13              \
+   : (_) == 'E' || (_) == 'e' ? 14              \
+   : (_) == 'F' || (_) == 'f' ? 15              \
+   : -1)
+
+static signed char const base16_to_int[256] = {
+  B16 (0), B16 (1), B16 (2), B16 (3),
+  B16 (4), B16 (5), B16 (6), B16 (7),
+  B16 (8), B16 (9), B16 (10), B16 (11),
+  B16 (12), B16 (13), B16 (14), B16 (15),
+  B16 (16), B16 (17), B16 (18), B16 (19),
+  B16 (20), B16 (21), B16 (22), B16 (23),
+  B16 (24), B16 (25), B16 (26), B16 (27),
+  B16 (28), B16 (29), B16 (30), B16 (31),
+  B16 (32), B16 (33), B16 (34), B16 (35),
+  B16 (36), B16 (37), B16 (38), B16 (39),
+  B16 (40), B16 (41), B16 (42), B16 (43),
+  B16 (44), B16 (45), B16 (46), B16 (47),
+  B16 (48), B16 (49), B16 (50), B16 (51),
+  B16 (52), B16 (53), B16 (54), B16 (55),
+  B16 (56), B16 (57), B16 (58), B16 (59),
+  B16 (60), B16 (61), B16 (62), B16 (63),
+  B16 (32), B16 (65), B16 (66), B16 (67),
+  B16 (68), B16 (69), B16 (70), B16 (71),
+  B16 (72), B16 (73), B16 (74), B16 (75),
+  B16 (76), B16 (77), B16 (78), B16 (79),
+  B16 (80), B16 (81), B16 (82), B16 (83),
+  B16 (84), B16 (85), B16 (86), B16 (87),
+  B16 (88), B16 (89), B16 (90), B16 (91),
+  B16 (92), B16 (93), B16 (94), B16 (95),
+  B16 (96), B16 (97), B16 (98), B16 (99),
+  B16 (100), B16 (101), B16 (102), B16 (103),
+  B16 (104), B16 (105), B16 (106), B16 (107),
+  B16 (108), B16 (109), B16 (110), B16 (111),
+  B16 (112), B16 (113), B16 (114), B16 (115),
+  B16 (116), B16 (117), B16 (118), B16 (119),
+  B16 (120), B16 (121), B16 (122), B16 (123),
+  B16 (124), B16 (125), B16 (126), B16 (127),
+  B16 (128), B16 (129), B16 (130), B16 (131),
+  B16 (132), B16 (133), B16 (134), B16 (135),
+  B16 (136), B16 (137), B16 (138), B16 (139),
+  B16 (140), B16 (141), B16 (142), B16 (143),
+  B16 (144), B16 (145), B16 (146), B16 (147),
+  B16 (148), B16 (149), B16 (150), B16 (151),
+  B16 (152), B16 (153), B16 (154), B16 (155),
+  B16 (156), B16 (157), B16 (158), B16 (159),
+  B16 (160), B16 (161), B16 (162), B16 (163),
+  B16 (132), B16 (165), B16 (166), B16 (167),
+  B16 (168), B16 (169), B16 (170), B16 (171),
+  B16 (172), B16 (173), B16 (174), B16 (175),
+  B16 (176), B16 (177), B16 (178), B16 (179),
+  B16 (180), B16 (181), B16 (182), B16 (183),
+  B16 (184), B16 (185), B16 (186), B16 (187),
+  B16 (188), B16 (189), B16 (190), B16 (191),
+  B16 (192), B16 (193), B16 (194), B16 (195),
+  B16 (196), B16 (197), B16 (198), B16 (199),
+  B16 (200), B16 (201), B16 (202), B16 (203),
+  B16 (204), B16 (205), B16 (206), B16 (207),
+  B16 (208), B16 (209), B16 (210), B16 (211),
+  B16 (212), B16 (213), B16 (214), B16 (215),
+  B16 (216), B16 (217), B16 (218), B16 (219),
+  B16 (220), B16 (221), B16 (222), B16 (223),
+  B16 (224), B16 (225), B16 (226), B16 (227),
+  B16 (228), B16 (229), B16 (230), B16 (231),
+  B16 (232), B16 (233), B16 (234), B16 (235),
+  B16 (236), B16 (237), B16 (238), B16 (239),
+  B16 (240), B16 (241), B16 (242), B16 (243),
+  B16 (244), B16 (245), B16 (246), B16 (247),
+  B16 (248), B16 (249), B16 (250), B16 (251),
+  B16 (252), B16 (253), B16 (254), B16 (255)
+};
 
 static bool
 isubase16 (unsigned char ch)
 {
-  return isxdigit (ch);
+  return ch < sizeof base16_to_int && 0 <= base16_to_int[ch];
 }
 
 static int
@@ -550,7 +644,7 @@ static void
 base16_decode_ctx_init (struct base_decode_context *ctx)
 {
   init_inbuf (ctx);
-  ctx->ctx.base16.have_nibble = false;
+  ctx->ctx.base16.nibble = -1;
   ctx->i = 1;
 }
 
@@ -561,44 +655,42 @@ base16_decode_ctx (struct base_decode_context *ctx,
                    char *restrict out, idx_t *outlen)
 {
   bool ignore_lines = true;  /* for now, always ignore them */
-
-  *outlen = 0;
+  char *out0 = out;
+  signed char nibble = ctx->ctx.base16.nibble;
 
   /* inlen==0 is request to flush output.
      if there is a dangling high nibble - we are missing the low nibble,
      so return false - indicating an invalid input.  */
   if (inlen == 0)
-    return !ctx->ctx.base16.have_nibble;
+    {
+      *outlen = 0;
+      return nibble < 0;
+    }
 
   while (inlen--)
     {
-      if (ignore_lines && *in == '\n')
+      unsigned char c = *in++;
+      if (ignore_lines && c == '\n')
+        continue;
+
+      if (sizeof base16_to_int <= c || base16_to_int[c] < 0)
         {
-          ++in;
-          continue;
+          *outlen = out - out0;
+          return false; /* garbage - return false */
         }
 
-      int nib = c_toupper (*in++);
-      if ('0' <= nib && nib <= '9')
-        nib -= '0';
-      else if ('A' <= nib && nib <= 'F')
-        nib -= 'A' - 10;
+      if (nibble < 0)
+        nibble = base16_to_int[c];
       else
-        return false; /* garbage - return false */
-
-      if (ctx->ctx.base16.have_nibble)
         {
           /* have both nibbles, write octet */
-          *out++ = (ctx->ctx.base16.nibble << 4) + nib;
-          ++(*outlen);
+          *out++ = (nibble << 4) + base16_to_int[c];
+          nibble = -1;
         }
-      else
-        {
-          /* Store higher nibble until next one arrives */
-          ctx->ctx.base16.nibble = nib;
-        }
-      ctx->ctx.base16.have_nibble = !ctx->ctx.base16.have_nibble;
     }
+
+  ctx->ctx.base16.nibble = nibble;
+  *outlen = out - out0;
   return true;
 }
 
