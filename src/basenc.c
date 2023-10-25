@@ -216,7 +216,7 @@ static_assert (DEC_BLOCKSIZE % 40 == 0); /* Complete encoded blocks are used. */
 # define base_decode_context base32_decode_context
 # define base_decode_ctx_init base32_decode_ctx_init
 # define base_decode_ctx base32_decode_ctx
-# define isbase isbase32
+# define isubase isubase32
 #elif BASE_TYPE == 64
 # define BASE_LENGTH BASE64_LENGTH
 # define REQUIRED_PADDING base64_required_padding
@@ -232,7 +232,7 @@ static_assert (DEC_BLOCKSIZE % 12 == 0); /* Complete encoded blocks are used. */
 # define base_decode_context base64_decode_context
 # define base_decode_ctx_init base64_decode_ctx_init
 # define base_decode_ctx base64_decode_ctx
-# define isbase isbase64
+# define isubase isubase64
 #elif BASE_TYPE == 42
 
 
@@ -247,7 +247,7 @@ static_assert (DEC_BLOCKSIZE % 12 == 0); /* complete encoded blocks for base64*/
 
 static int (*base_length) (int i);
 static int (*required_padding) (int i);
-static bool (*isbase) (char ch);
+static bool (*isubase) (unsigned char ch);
 static void (*base_encode) (char const *restrict in, idx_t inlen,
                             char *restrict out, idx_t outlen);
 
@@ -350,10 +350,10 @@ base64url_encode (char const *restrict in, idx_t inlen,
 }
 
 static bool
-isbase64url (char ch)
+isubase64url (unsigned char ch)
 {
   return (ch == '-' || ch == '_'
-          || (ch != '+' && ch != '/' && isbase64 (ch)));
+          || (ch != '+' && ch != '/' && isubase64 (ch)));
 }
 
 static void
@@ -463,7 +463,7 @@ static const char base32_hex_to_norm[32 + 9] = {
 
 
 inline static bool
-isbase32hex (char ch)
+isubase32hex (unsigned char ch)
 {
   return ('0' <= ch && ch <= '9') || ('A' <= ch && ch <= 'V');
 }
@@ -502,8 +502,8 @@ base32hex_decode_ctx_wrapper (struct base_decode_context *ctx,
   char *p = ctx->inbuf;
   while (i--)
     {
-      if (isbase32hex (*in))
-        *p = base32_hex_to_norm[ (int)*in - 0x30];
+      if (isubase32hex (*in))
+        *p = base32_hex_to_norm[*in - 0x30];
       else
         *p = *in;
       ++p;
@@ -518,9 +518,9 @@ base32hex_decode_ctx_wrapper (struct base_decode_context *ctx,
 }
 
 static bool
-isbase16 (char ch)
+isubase16 (unsigned char ch)
 {
-  return isxdigit (to_uchar (ch));
+  return isxdigit (ch);
 }
 
 static int
@@ -614,7 +614,7 @@ z85_length (int len)
 }
 
 static bool
-isz85 (char ch)
+isuz85 (unsigned char ch)
 {
   return c_isalnum (ch) || strchr (".-:+=^!/*?&<>()[]{}@%$#", ch) != nullptr;
 }
@@ -796,7 +796,7 @@ z85_decode_ctx (struct base_decode_context *ctx,
 
 
 inline static bool
-isbase2 (char ch)
+isubase2 (unsigned char ch)
 {
   return ch == '0' || ch == '1';
 }
@@ -875,7 +875,7 @@ base2lsbf_decode_ctx (struct base_decode_context *ctx,
           continue;
         }
 
-      if (!isbase2 (*in))
+      if (!isubase2 (*in))
         return false;
 
       bool bit = (*in == '1');
@@ -919,7 +919,7 @@ base2msbf_decode_ctx (struct base_decode_context *ctx,
           continue;
         }
 
-      if (!isbase2 (*in))
+      if (!isubase2 (*in))
         return false;
 
       bool bit = (*in == '1');
@@ -1065,7 +1065,7 @@ do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
             {
               for (idx_t i = 0; n > 0 && i < n;)
                 {
-                  if (isbase (inbuf[sum + i]) || inbuf[sum + i] == '=')
+                  if (isubase (inbuf[sum + i]) || inbuf[sum + i] == '=')
                     i++;
                   else
                     memmove (inbuf + sum + i, inbuf + sum + i + 1, --n - i);
@@ -1193,7 +1193,7 @@ main (int argc, char **argv)
     case BASE64_OPTION:
       base_length = base64_length_wrapper;
       required_padding = base64_required_padding;
-      isbase = isbase64;
+      isubase = isubase64;
       base_encode = base64_encode;
       base_decode_ctx_init = base64_decode_ctx_init_wrapper;
       base_decode_ctx = base64_decode_ctx_wrapper;
@@ -1202,7 +1202,7 @@ main (int argc, char **argv)
     case BASE64URL_OPTION:
       base_length = base64_length_wrapper;
       required_padding = base64_required_padding;
-      isbase = isbase64url;
+      isubase = isubase64url;
       base_encode = base64url_encode;
       base_decode_ctx_init = base64url_decode_ctx_init_wrapper;
       base_decode_ctx = base64url_decode_ctx_wrapper;
@@ -1211,7 +1211,7 @@ main (int argc, char **argv)
     case BASE32_OPTION:
       base_length = base32_length_wrapper;
       required_padding = base32_required_padding;
-      isbase = isbase32;
+      isubase = isubase32;
       base_encode = base32_encode;
       base_decode_ctx_init = base32_decode_ctx_init_wrapper;
       base_decode_ctx = base32_decode_ctx_wrapper;
@@ -1220,7 +1220,7 @@ main (int argc, char **argv)
     case BASE32HEX_OPTION:
       base_length = base32_length_wrapper;
       required_padding = base32_required_padding;
-      isbase = isbase32hex;
+      isubase = isubase32hex;
       base_encode = base32hex_encode;
       base_decode_ctx_init = base32hex_decode_ctx_init_wrapper;
       base_decode_ctx = base32hex_decode_ctx_wrapper;
@@ -1229,7 +1229,7 @@ main (int argc, char **argv)
     case BASE16_OPTION:
       base_length = base16_length;
       required_padding = no_required_padding;
-      isbase = isbase16;
+      isubase = isubase16;
       base_encode = base16_encode;
       base_decode_ctx_init = base16_decode_ctx_init;
       base_decode_ctx = base16_decode_ctx;
@@ -1238,7 +1238,7 @@ main (int argc, char **argv)
     case BASE2MSBF_OPTION:
       base_length = base2_length;
       required_padding = no_required_padding;
-      isbase = isbase2;
+      isubase = isubase2;
       base_encode = base2msbf_encode;
       base_decode_ctx_init = base2_decode_ctx_init;
       base_decode_ctx = base2msbf_decode_ctx;
@@ -1247,7 +1247,7 @@ main (int argc, char **argv)
     case BASE2LSBF_OPTION:
       base_length = base2_length;
       required_padding = no_required_padding;
-      isbase = isbase2;
+      isubase = isubase2;
       base_encode = base2lsbf_encode;
       base_decode_ctx_init = base2_decode_ctx_init;
       base_decode_ctx = base2lsbf_decode_ctx;
@@ -1256,7 +1256,7 @@ main (int argc, char **argv)
     case Z85_OPTION:
       base_length = z85_length;
       required_padding = no_required_padding;
-      isbase = isz85;
+      isubase = isuz85;
       base_encode = z85_encode;
       base_decode_ctx_init = z85_decode_ctx_init;
       base_decode_ctx = z85_decode_ctx;
