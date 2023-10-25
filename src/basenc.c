@@ -520,7 +520,7 @@ base32hex_decode_ctx_wrapper (struct base_decode_context *ctx,
 static bool
 isbase16 (char ch)
 {
-  return ('0' <= ch && ch <= '9') || ('A' <= ch && ch <= 'F');
+  return isxdigit (to_uchar (ch));
 }
 
 static int
@@ -529,12 +529,13 @@ base16_length (int len)
   return len * 2;
 }
 
-static const char base16[16] = "0123456789ABCDEF";
 
 static void
 base16_encode (char const *restrict in, idx_t inlen,
                char *restrict out, idx_t outlen)
 {
+  static const char base16[16] = "0123456789ABCDEF";
+
   while (inlen--)
     {
       unsigned char c = *in;

@@ -160,6 +160,7 @@ my @Tests =
   {ERR=>"$prog: invalid input\n"}],
  ['b16_8', '--base16 -d',     {IN=>"AB\nCD"}, {OUT=>"\xAB\xCD"}],
  ['b16_9', '--base16 -d',     {IN=>lc ($base16_out)},  {OUT=>$base16_in}],
+ ['b16_10', '--base16 -d -i', {IN=>lc ($base16_out)},  {OUT=>$base16_in}],
 
 
 
