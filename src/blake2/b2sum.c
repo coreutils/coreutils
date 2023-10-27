@@ -19,12 +19,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-
-#include <ctype.h>
-#include <unistd.h>
-#include <getopt.h>
 
 #include "blake2.h"
 
@@ -132,6 +126,11 @@ cleanup_buffer:
 }
 
 #if 0
+
+#include <errno.h>
+#include <getopt.h>
+#include <string.h>
+#include <unistd.h>
 
 int blake2sp_stream( FILE *stream, void *resstream, size_t outbytes )
 {
