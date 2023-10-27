@@ -19,6 +19,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   base32 and base64 no longer require padding when decoding.
   Previously an error was given for non padded encoded data.
 
+  base32 and base64 have improved detection of corrupted encodings.
+  Previously encodings with non zero padding bits were accepted.
+
   basenc --base16 -d now supports lower case hexadecimal characters.
   Previously an error was given for lower case hex digits.
 
