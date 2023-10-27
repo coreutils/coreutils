@@ -23,6 +23,7 @@
 
 #include "system.h"
 #include "argmatch.h"
+#include "c-ctype.h"
 #include "quote.h"
 #include "xdectoint.h"
 #include "xstrtol.h"
@@ -660,7 +661,7 @@ valid_digits (unsigned char const *s, size_t len)
     {
       for (idx_t i = 0; i < digest_hex_bytes; i++)
         {
-          if (!isxdigit (*s))
+          if (!c_isxdigit (*s))
             return false;
           ++s;
         }
@@ -856,7 +857,7 @@ split_3 (char *s, size_t s_len,
 # endif
   unsigned char const *hp = *digest;
   digest_hex_bytes = 0;
-  while (isxdigit (*hp++))
+  while (c_isxdigit (*hp++))
     digest_hex_bytes++;
   if (digest_hex_bytes < 2 || digest_hex_bytes % 2
       || BLAKE2B_MAX_LEN * 2 < digest_hex_bytes)

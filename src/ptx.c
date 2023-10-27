@@ -24,6 +24,7 @@
 #include "system.h"
 #include <regex.h>
 #include "argmatch.h"
+#include "c-ctype.h"
 #include "fadvise.h"
 #include "quote.h"
 #include "read-file.h"
@@ -308,7 +309,7 @@ unescape_string (char *string)
             case 'x':		/* \xhhh escape, 3 chars maximum */
               value = 0;
               for (length = 0, string++;
-                   length < 3 && isxdigit (to_uchar (*string));
+                   length < 3 && c_isxdigit (to_uchar (*string));
                    length++, string++)
                 value = value * 16 + HEXTOBIN (*string);
               if (length == 0)

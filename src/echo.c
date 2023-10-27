@@ -19,6 +19,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "assure.h"
+#include "c-ctype.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "echo"
@@ -219,12 +220,12 @@ just_echo:
                     case 'x':
                       {
                         unsigned char ch = *s;
-                        if (! isxdigit (ch))
+                        if (! c_isxdigit (ch))
                           goto not_an_escape;
                         s++;
                         c = hextobin (ch);
                         ch = *s;
-                        if (isxdigit (ch))
+                        if (c_isxdigit (ch))
                           {
                             s++;
                             c = c * 16 + hextobin (ch);
