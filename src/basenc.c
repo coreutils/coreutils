@@ -525,7 +525,7 @@ base32hex_decode_ctx_wrapper (struct base_decode_context *ctx,
 
    IBM C V6 for AIX mishandles "#define B32(x) ...'x'...", so use "_"
    as the formal parameter rather than "x".  */
-#define B16(_)                                  \
+# define B16(_)                                 \
   ((_) == '0' ? 0                               \
    : (_) == '1' ? 1                             \
    : (_) == '2' ? 2                             \
