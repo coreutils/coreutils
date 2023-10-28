@@ -142,8 +142,6 @@ enum
 
 #include "timespec.h"
 
-#include <ctype.h>
-
 /* ISDIGIT differs from isdigit, as follows:
    - Its arg may be any int or unsigned int; it need not be an unsigned char
      or EOF.

@@ -18,6 +18,7 @@
 
 #include <config.h>
 
+#include <ctype.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>

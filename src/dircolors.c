@@ -17,6 +17,7 @@
 
 #include <config.h>
 
+#include <ctype.h>
 #include <sys/types.h>
 #include <fnmatch.h>
 #include <getopt.h>
