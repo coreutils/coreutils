@@ -18,7 +18,6 @@
 
 #include <config.h>
 
-#include <ctype.h>
 #include <getopt.h>
 #include <sys/types.h>
 
@@ -1122,9 +1121,9 @@ hex_equal (unsigned char const *hex_digest, unsigned char const *bin_buffer)
   size_t cnt;
   for (cnt = 0; cnt < digest_bin_bytes; ++cnt)
     {
-      if (tolower (hex_digest[2 * cnt])
+      if (c_tolower (hex_digest[2 * cnt])
           != bin2hex[bin_buffer[cnt] >> 4]
-          || (tolower (hex_digest[2 * cnt + 1])
+          || (c_tolower (hex_digest[2 * cnt + 1])
               != (bin2hex[bin_buffer[cnt] & 0xf])))
         break;
     }
