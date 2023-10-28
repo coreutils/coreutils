@@ -17,13 +17,13 @@
 
 #include <config.h>
 
-#include <ctype.h>
 #include <sys/types.h>
 #include <fnmatch.h>
 #include <getopt.h>
 
 #include "system.h"
 #include "dircolors.h"
+#include "c-ctype.h"
 #include "c-strcase.h"
 #include "obstack.h"
 #include "quote.h"
@@ -153,7 +153,7 @@ parse_line (char const *line, char **keyword, char **arg)
   *keyword = nullptr;
   *arg = nullptr;
 
-  for (p = line; isspace (to_uchar (*p)); ++p)
+  for (p = line; c_isspace (to_uchar (*p)); ++p)
     continue;
 
   /* Ignore blank lines and shell-style comments.  */
@@ -162,7 +162,7 @@ parse_line (char const *line, char **keyword, char **arg)
 
   keyword_start = p;
 
-  while (!isspace (to_uchar (*p)) && *p != '\0')
+  while (!c_isspace (to_uchar (*p)) && *p != '\0')
     {
       ++p;
     }
@@ -175,7 +175,7 @@ parse_line (char const *line, char **keyword, char **arg)
     {
       ++p;
     }
-  while (isspace (to_uchar (*p)));
+  while (c_isspace (to_uchar (*p)));
 
   if (*p == '\0' || *p == '#')
     return;
@@ -185,7 +185,7 @@ parse_line (char const *line, char **keyword, char **arg)
   while (*p != '\0' && *p != '#')
     ++p;
 
-  for (--p; isspace (to_uchar (*p)); --p)
+  for (--p; c_isspace (to_uchar (*p)); --p)
     continue;
   ++p;
 
