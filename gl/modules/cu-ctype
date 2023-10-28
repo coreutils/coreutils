@@ -1,0 +1,24 @@
+Description:
+ctype.h-like definitions for coreutils
+
+Files:
+lib/cu-ctype.c
+lib/cu-ctype.h
+
+Depends-on:
+ctype
+extern-inline
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += cu-ctype.c
+
+Include:
+"cu-ctype.h"
+
+License:
+GPL
+
+Maintainer:
+all

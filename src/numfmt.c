@@ -24,6 +24,7 @@
 
 #include "argmatch.h"
 #include "c-ctype.h"
+#include "cu-ctype.h"
 #include "mbswidth.h"
 #include "quote.h"
 #include "system.h"

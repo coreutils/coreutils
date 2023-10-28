@@ -23,6 +23,7 @@
 
 #include "system.h"
 #include "assure.h"
+#include "cu-ctype.h"
 #include "fadvise.h"
 #include "hard-locale.h"
 #include "linebuffer.h"

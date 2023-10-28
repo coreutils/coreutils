@@ -31,6 +31,7 @@
 #include "system.h"
 #include "argmatch.h"
 #include "assure.h"
+#include "cu-ctype.h"
 #include "fadvise.h"
 #include "filevercmp.h"
 #include "flexmember.h"

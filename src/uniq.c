@@ -23,6 +23,7 @@
 
 #include "system.h"
 #include "argmatch.h"
+#include "cu-ctype.h"
 #include "linebuffer.h"
 #include "fadvise.h"
 #include "posixver.h"
