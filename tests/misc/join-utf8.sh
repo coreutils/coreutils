@@ -29,7 +29,10 @@ multiplication_sign='×'
 en_dash='–'
 old_Persian_word_divider='𐏐'
 
+tflag=
+
 for s in \
+    ' ' \
     "$vertical_line" \
     "$multiplication_sign" \
     "$en_dash" \
@@ -37,10 +40,11 @@ for s in \
 do
   printf '0%sA\n1%sa\n2%sb\n4%sc\n' "$s" "$s" "$s" "$s" >a ||
     framework_failure_
-  printf '0%sB\n1%sd\n3%se\n4%sf\n' "$s" "$s" "$s" "$s" >b ||
+  printf '0%sB\n1%sd\n3%se\n4%s\0f\n' "$s" "$s" "$s" "$s" >b ||
     framework_failure_
-  join -t"$s" -a1 -a2 -eouch -o0,1.2,2.2 a b >out || fail=1
-  printf '0%sA%sB\n1%sa%sd\n2%sb%souch\n3%souch%se\n4%sc%sf\n' \
+  join $tflag$s -a1 -a2 -eouch -o0,1.2,2.2 a b >out || fail=1
+  tflag=-t
+  printf '0%sA%sB\n1%sa%sd\n2%sb%souch\n3%souch%se\n4%sc%s\0f\n' \
          "$s" "$s" "$s" "$s" "$s" "$s" "$s" "$s" "$s" "$s" >exp ||
     framework_failure_
   compare exp out || fail=1

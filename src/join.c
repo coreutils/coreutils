@@ -296,23 +296,17 @@ xfields (struct line *line)
     return;
 
   if (!tab.len)
-    {
-      while (ptr < lim)
-        {
-          ptr = skip_buf_matching (ptr, lim, newline_or_blank, true);
-          if (!*ptr)
-            break;
-          char *sep = skip_buf_matching (ptr, lim, newline_or_blank, false);
-          extract_field (line, ptr, sep - ptr);
-          ptr = sep;
-        }
-    }
+    while ((ptr = skip_buf_matching (ptr, lim, newline_or_blank, true)) < lim)
+      {
+        char *sep = skip_buf_matching (ptr, lim, newline_or_blank, false);
+        extract_field (line, ptr, sep - ptr);
+        ptr = sep;
+      }
   else
     {
       if (tab.ch != '\n')
         for (char *sep;
-             ((sep = skip_buf_matching (ptr, lim, eq_tab, false))
-              < lim);
+             (sep = skip_buf_matching (ptr, lim, eq_tab, false)) < lim;
              ptr = sep + mcel_scan (sep, lim).len)
           extract_field (line, ptr, sep - ptr);
 
