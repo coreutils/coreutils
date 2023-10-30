@@ -271,6 +271,7 @@ all_tests =					\
   tests/misc/mktemp.pl				\
   tests/misc/arch.sh				\
   tests/misc/join.pl				\
+  tests/misc/join-utf8.sh			\
   tests/pr/pr-tests.pl				\
   tests/pwd/pwd-option.sh			\
   tests/chcon/chcon-fail.sh			\

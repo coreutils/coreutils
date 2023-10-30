@@ -15,6 +15,7 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include <config.h>
+#include <ctype.h>
 #include <float.h>
 #include <getopt.h>
 #include <stdckdint.h>
@@ -24,9 +25,9 @@
 
 #include "argmatch.h"
 #include "c-ctype.h"
-#include "cu-ctype.h"
 #include "mbswidth.h"
 #include "quote.h"
+#include "skipchars.h"
 #include "system.h"
 #include "xstrtol.h"
 
@@ -1314,6 +1315,12 @@ process_suffixed_number (char *text, long double *result,
   return (e == SSE_OK || e == SSE_OK_PRECISION_LOSS);
 }
 
+static bool
+newline_or_blank (mcel_t g)
+{
+  return g.ch == '\n' || c32isblank (g.ch);
+}
+
 /* Return a pointer to the beginning of the next field in line.
    The line pointer is moved to the end of the next field. */
 static char*
@@ -1334,11 +1341,8 @@ next_field (char **line)
   else
     {
       /* keep any space prefix in the returned field */
-      while (*field_end && field_sep (*field_end))
-        ++field_end;
-
-      while (*field_end && ! field_sep (*field_end))
-        ++field_end;
+      field_end = skip_str_matching (field_end, newline_or_blank, true);
+      field_end = skip_str_matching (field_end, newline_or_blank, false);
     }
 
   *line = field_end;

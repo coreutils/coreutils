@@ -8,6 +8,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   to preserve ownership" when copying to GNU/Linux CIFS file systems.
   They do this by working around some Linux CIFS bugs.
 
+  join and uniq now support multi-byte characters better.
+  For example, 'join -tX' now works even if X is a multi-byte character,
+  and both programs now treat multi-byte characters like U+3000
+  IDEOGRAPHIC SPACE as blanks if the current locale treats them so.
+
   numfmt options like --suffix no longer have an arbitrary 127-byte limit.
   [bug introduced with numfmt in coreutils-8.21]
 

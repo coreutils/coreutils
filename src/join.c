@@ -23,12 +23,13 @@
 
 #include "system.h"
 #include "assure.h"
-#include "cu-ctype.h"
 #include "fadvise.h"
 #include "hard-locale.h"
 #include "linebuffer.h"
+#include "mcel.h"
 #include "memcasecmp.h"
 #include "quote.h"
+#include "skipchars.h"
 #include "stdio--.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
@@ -135,10 +136,14 @@ static struct outlist outlist_head;
 /* Last element in 'outlist', where a new element can be added.  */
 static struct outlist *outlist_end = &outlist_head;
 
-/* Tab character separating fields.  If negative, fields are separated
-   by any nonempty string of blanks, otherwise by exactly one
-   tab character whose value (when cast to unsigned char) equals TAB.  */
-static int tab = -1;
+/* Tab character (or encoding error) separating fields.  If TAB.len == 0,
+   fields are separated by any nonempty string of blanks, otherwise by
+   exactly one tab character (or encoding error) equal to TAB.  */
+static mcel_t tab;
+
+/* The output separator to use, and its length in bytes.  */
+static char const *output_separator = " ";
+static idx_t output_seplen = 1;
 
 /* If nonzero, check that the input is correctly ordered. */
 static enum
@@ -267,6 +272,18 @@ extract_field (struct line *line, char *field, idx_t len)
   ++(line->nfields);
 }
 
+static bool
+eq_tab (mcel_t g)
+{
+  return mcel_cmp (g, tab) == 0;
+}
+
+static bool
+newline_or_blank (mcel_t g)
+{
+  return g.ch == '\n' || c32isblank (g.ch);
+}
+
 /* Fill in the 'fields' structure in LINE.  */
 
 static void
@@ -278,34 +295,29 @@ xfields (struct line *line)
   if (ptr == lim)
     return;
 
-  if (0 <= tab && tab != '\n')
+  if (!tab.len)
     {
-      char *sep;
-      for (; (sep = memchr (ptr, tab, lim - ptr)) != nullptr; ptr = sep + 1)
-        extract_field (line, ptr, sep - ptr);
-    }
-  else if (tab < 0)
-    {
-      /* Skip leading blanks before the first field.  */
-      while (field_sep (*ptr))
-        if (++ptr == lim)
-          return;
-
-      do
+      while (ptr < lim)
         {
-          char *sep;
-          for (sep = ptr + 1; sep != lim && ! field_sep (*sep); sep++)
-            continue;
+          ptr = skip_buf_matching (ptr, lim, newline_or_blank, true);
+          if (!*ptr)
+            break;
+          char *sep = skip_buf_matching (ptr, lim, newline_or_blank, false);
           extract_field (line, ptr, sep - ptr);
-          if (sep == lim)
-            return;
-          for (ptr = sep + 1; ptr != lim && field_sep (*ptr); ptr++)
-            continue;
+          ptr = sep;
         }
-      while (ptr != lim);
     }
+  else
+    {
+      if (tab.ch != '\n')
+        for (char *sep;
+             ((sep = skip_buf_matching (ptr, lim, eq_tab, false))
+              < lim);
+             ptr = sep + mcel_scan (sep, lim).len)
+          extract_field (line, ptr, sep - ptr);
 
-  extract_field (line, ptr, lim - ptr);
+      extract_field (line, ptr, lim - ptr);
+    }
 }
 
 static void
@@ -568,16 +580,15 @@ prfields (struct line const *line, idx_t join_field, idx_t autocount)
 {
   idx_t i;
   idx_t nfields = autoformat ? autocount : line->nfields;
-  char output_separator = tab < 0 ? ' ' : tab;
 
   for (i = 0; i < join_field && i < nfields; ++i)
     {
-      putchar (output_separator);
+      fwrite (output_separator, 1, output_seplen, stdout);
       prfield (i, line);
     }
   for (i = join_field + 1; i < nfields; ++i)
     {
-      putchar (output_separator);
+      fwrite (output_separator, 1, output_seplen, stdout);
       prfield (i, line);
     }
 }
@@ -588,7 +599,6 @@ static void
 prjoin (struct line const *line1, struct line const *line2)
 {
   const struct outlist *outlist;
-  char output_separator = tab < 0 ? ' ' : tab;
   idx_t field;
   struct line const *line;
 
@@ -622,7 +632,7 @@ prjoin (struct line const *line1, struct line const *line2)
           o = o->next;
           if (o == nullptr)
             break;
-          putchar (output_separator);
+          fwrite (output_separator, 1, output_seplen, stdout);
         }
       putchar (eolchar);
     }
@@ -886,6 +896,12 @@ decode_field_spec (char const *s, int *file_index, idx_t *field_index)
     }
 }
 
+static bool
+comma_or_blank (mcel_t g)
+{
+  return g.ch == ',' || c32isblank (g.ch);
+}
+
 /* Add the comma or blank separated field spec(s) in STR to 'outlist'.  */
 
 static void
@@ -898,14 +914,17 @@ add_field_list (char *str)
       int file_index;
       idx_t field_index;
       char const *spec_item = p;
-
-      p = strpbrk (p, ", \t");
-      if (p)
-        *p++ = '\0';
+      p = skip_str_matching (spec_item, comma_or_blank, false);
+      if (*p)
+        {
+          mcel_t g = mcel_scanz (p);
+          *p = '\0';
+          p += g.len;
+        }
       decode_field_spec (spec_item, &file_index, &field_index);
       add_field (file_index, field_index);
     }
-  while (p);
+  while (*p);
 }
 
 /* Set the join field *VAR to VAL, but report an error if *VAR is set
@@ -1087,20 +1106,30 @@ main (int argc, char **argv)
 
         case 't':
           {
-            unsigned char newtab = optarg[0];
-            if (! newtab)
-              newtab = '\n'; /* '' => process the whole line.  */
-            else if (optarg[1])
+            mcel_t newtab;
+            if (!*optarg)
               {
-                if (STREQ (optarg, "\\0"))
-                  newtab = '\0';
-                else
+                /* '' => process the whole line.  */
+                newtab = mcel_ch ('\n', 1);
+                /* output_separator does not matter.  */
+              }
+            else if (STREQ (optarg, "\\0"))
+              {
+                newtab = mcel_ch ('\0', 1);
+                output_separator = "";
+              }
+            else
+              {
+                newtab = mcel_scanz (optarg);
+                if (optarg[newtab.len])
                   error (EXIT_FAILURE, 0, _("multi-character tab %s"),
                          quote (optarg));
+                output_separator = optarg;
               }
-            if (0 <= tab && tab != newtab)
+            if (tab.len && mcel_cmp (tab, newtab) != 0)
               error (EXIT_FAILURE, 0, _("incompatible tabs"));
             tab = newtab;
+            output_seplen = newtab.len;
           }
           break;
 

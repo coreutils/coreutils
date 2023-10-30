@@ -23,10 +23,11 @@
 
 #include "system.h"
 #include "argmatch.h"
-#include "cu-ctype.h"
 #include "linebuffer.h"
 #include "fadvise.h"
+#include "mcel.h"
 #include "posixver.h"
+#include "skipchars.h"
 #include "stdio--.h"
 #include "xstrtol.h"
 #include "memcasecmp.h"
@@ -248,6 +249,12 @@ size_opt (char const *opt, char const *msgid)
   return MIN (size, SIZE_MAX);
 }
 
+static bool
+newline_or_blank (mcel_t g)
+{
+  return g.ch == '\n' || c32isblank (g.ch);
+}
+
 /* Given a linebuffer LINE,
    return a pointer to the beginning of the line's field to be compared. */
 
@@ -256,21 +263,19 @@ static char *
 find_field (struct linebuffer const *line)
 {
   size_t count;
-  char const *lp = line->buffer;
-  size_t size = line->length - 1;
-  size_t i = 0;
+  char *lp = line->buffer;
+  char const *lim = lp + line->length - 1;
 
-  for (count = 0; count < skip_fields && i < size; count++)
+  for (count = 0; count < skip_fields && lp < lim; count++)
     {
-      while (i < size && field_sep (lp[i]))
-        i++;
-      while (i < size && !field_sep (lp[i]))
-        i++;
+      lp = skip_buf_matching (lp, lim, newline_or_blank, true);
+      lp = skip_buf_matching (lp, lim, newline_or_blank, false);
     }
 
-  i += MIN (skip_chars, size - i);
+  for (size_t s = skip_chars; lp < lim && s; s--)
+    lp += mcel_scan (lp, lim).len;
 
-  return line->buffer + i;
+  return lp;
 }
 
 /* Return false if two strings OLD and NEW match, true if not.

@@ -22,6 +22,7 @@
 
 #include <config.h>
 
+#include <ctype.h>
 #include <getopt.h>
 #include <pthread.h>
 #include <sys/resource.h>
@@ -31,7 +32,6 @@
 #include "system.h"
 #include "argmatch.h"
 #include "assure.h"
-#include "cu-ctype.h"
 #include "fadvise.h"
 #include "filevercmp.h"
 #include "flexmember.h"
@@ -1293,9 +1293,9 @@ inittables (void)
 
   for (i = 0; i < UCHAR_LIM; ++i)
     {
-      blanks[i] = field_sep (i);
+      blanks[i] = i == '\n' || isblank (i);
+      nondictionary[i] = ! blanks[i] && ! isalnum (i);
       nonprinting[i] = ! isprint (i);
-      nondictionary[i] = ! isalnum (i) && ! field_sep (i);
       fold_toupper[i] = toupper (i);
     }
 
