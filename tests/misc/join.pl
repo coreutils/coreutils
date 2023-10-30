@@ -25,7 +25,7 @@ my $limits = getlimits ();
 
 my $prog = 'join';
 
-my $try = "Try \`$prog --help' for more information.\n";
+my $try = "Try '$prog --help' for more information.\n";
 my $inval = "$prog: invalid byte, character or field list\n$try";
 
 my $mb_locale;

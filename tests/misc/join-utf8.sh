@@ -24,8 +24,6 @@ test "${LOCALE_FR_UTF8+set}" = set || skip_ "French UTF-8 locale not available"
 LC_ALL=$LOCALE_FR_UTF8
 export LC_ALL
 
-fail=0
-
 vertical_line='|'
 multiplication_sign='×'
 en_dash='–'
@@ -44,7 +42,7 @@ do
   join -t"$s" -a1 -a2 -eouch -o0,1.2,2.2 a b >out || fail=1
   printf '0%sA%sB\n1%sa%sd\n2%sb%souch\n3%souch%se\n4%sc%sf\n' \
          "$s" "$s" "$s" "$s" "$s" "$s" "$s" "$s" "$s" "$s" >exp ||
-    framework_failure
+    framework_failure_
   compare exp out || fail=1
 done
 
