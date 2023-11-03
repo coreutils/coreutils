@@ -635,6 +635,7 @@ all_tests =					\
   tests/ls/no-cap.sh				\
   tests/ls/selinux-segfault.sh			\
   tests/ls/quote-align.sh			\
+  tests/ls/size-align.sh			\
   tests/ls/readdir-mountpoint-inode.sh		\
   tests/ls/recursive.sh				\
   tests/ls/removed-directory.sh			\
