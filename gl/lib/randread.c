@@ -46,9 +46,9 @@
 #include "xalloc.h"
 
 #if _STRING_ARCH_unaligned || _STRING_INLINE_unaligned
-# define ALIGNED_POINTER(ptr, type) true
+# define POINTER_IS_ALIGNED(ptr, type) true
 #else
-# define ALIGNED_POINTER(ptr, type) ((size_t) (ptr) % alignof (type) == 0)
+# define POINTER_IS_ALIGNED(ptr, type) ((size_t) (ptr) % alignof (type) == 0)
 #endif
 
 /* The maximum buffer size used for reads of random data.  Using the
@@ -271,7 +271,7 @@ readisaac (struct isaac *isaac, void *p, size_t size)
 
       /* If P is aligned, write to *P directly to avoid the overhead
          of copying from the buffer.  */
-      if (ALIGNED_POINTER (p, isaac_word))
+      if (POINTER_IS_ALIGNED (p, isaac_word))
         {
           isaac_word *wp = p;
           while (ISAAC_BYTES <= size)
