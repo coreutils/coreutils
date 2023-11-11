@@ -82,15 +82,12 @@ static struct option const longopts[] =
 /* Count and return the number of ampersands in STR.  */
 
 ATTRIBUTE_PURE
-static size_t
+static idx_t
 count_ampersands (char const *str)
 {
-  size_t count = 0;
-  do
-    {
-      if (*str == '&')
-        count++;
-    } while (*str++);
+  idx_t count = 0;
+  for (; *str; str++)
+    count += *str == '&';
   return count;
 }
 
@@ -103,16 +100,16 @@ count_ampersands (char const *str)
 static char *
 create_fullname (char const *gecos_name, char const *user_name)
 {
-  size_t rsize = strlen (gecos_name) + 1;
+  idx_t rsize = strlen (gecos_name) + 1;
   char *result;
   char *r;
-  size_t ampersands = count_ampersands (gecos_name);
+  idx_t ampersands = count_ampersands (gecos_name);
 
   if (ampersands != 0)
     {
-      size_t ulen = strlen (user_name);
-      size_t product;
-      if (ckd_mul (&product, ulen, ampersands - 1)
+      idx_t ulen = strlen (user_name);
+      ptrdiff_t product;
+      if (ckd_mul (&product, ulen - 1, ampersands)
           || ckd_add (&rsize, rsize, product))
         xalloc_die ();
     }
