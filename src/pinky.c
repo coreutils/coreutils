@@ -314,7 +314,7 @@ print_long_entry (const char name[])
   printf (_("Login name: "));
   printf ("%-28s", name);
 
-  printf (_("In real life: "));
+  printf (_("Away from keyboard: "));
   if (pw == nullptr)
     {
       /* TRANSLATORS: Real name is unknown; no hard limit. */
