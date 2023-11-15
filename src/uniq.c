@@ -40,15 +40,13 @@
   proper_name ("Richard M. Stallman"), \
   proper_name ("David MacKenzie")
 
-#define SWAP_LINES(A, B)			\
-  do						\
-    {						\
-      struct linebuffer *_tmp;			\
-      _tmp = (A);				\
-      (A) = (B);				\
-      (B) = _tmp;				\
-    }						\
-  while (0)
+static void
+swap_lines (struct linebuffer **a, struct linebuffer **b)
+{
+  struct linebuffer *tmp = *a;
+  *a = *b;
+  *b = tmp;
+}
 
 /* Number of fields to skip on each line when doing comparisons. */
 static idx_t skip_fields = false;
@@ -370,7 +368,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
                   stdout) != thisline->length)
                 write_error ();
 
-              SWAP_LINES (prevline, thisline);
+              swap_lines (&prevline, &thisline);
               prevfield = thisfield;
               prevlen = thislen;
               first_group_printed = true;
@@ -433,7 +431,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
           if (!match || output_later_repeated)
             {
               writeline (prevline, match, match_count);
-              SWAP_LINES (prevline, thisline);
+              swap_lines (&prevline, &thisline);
               prevfield = thisfield;
               prevlen = thislen;
               if (!match)
