@@ -59,15 +59,9 @@ static idx_t skip_chars;
 /* Number of chars to compare. */
 static idx_t check_chars;
 
-enum countmode
-{
-  count_occurrences,		/* -c Print count before output lines. */
-  count_none			/* Default.  Do not print counts. */
-};
-
-/* Whether and how to precede the output lines with a count of the number of
+/* Whether to precede the output lines with a count of the number of
    times they occurred in the input. */
-static enum countmode countmode;
+static bool count_occurrences;
 
 /* Which lines to output: unique lines, the first of a group of
    repeated lines, and the second and subsequent of a group of
@@ -303,7 +297,7 @@ writeline (struct linebuffer const *line,
          : output_later_repeated))
     return;
 
-  if (countmode == count_occurrences)
+  if (count_occurrences)
     printf ("%7jd ", linecount + 1);
 
   if (fwrite (line->buffer, sizeof (char), line->length, stdout)
@@ -348,7 +342,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
 
      3. All other cases.
   */
-  if (output_unique && output_first_repeated && countmode == count_none)
+  if (output_unique && output_first_repeated && !count_occurrences)
     {
       char *prevfield = nullptr;
       idx_t prevlen;
@@ -492,7 +486,7 @@ main (int argc, char **argv)
   check_chars = IDX_MAX;
   output_unique = output_first_repeated = true;
   output_later_repeated = false;
-  countmode = count_none;
+  count_occurrences = false;
   delimit_groups = DM_NONE;
 
   while (true)
@@ -559,7 +553,7 @@ main (int argc, char **argv)
           break;
 
         case 'c':
-          countmode = count_occurrences;
+          count_occurrences = true;
           output_option_used = true;
           break;
 
@@ -637,14 +631,14 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (grouping != GM_NONE && countmode != count_none)
+  if (grouping != GM_NONE && count_occurrences)
     {
       error (0, 0,
            _("grouping and printing repeat counts is meaningless"));
       usage (EXIT_FAILURE);
     }
 
-  if (countmode == count_occurrences && output_later_repeated)
+  if (count_occurrences && output_later_repeated)
     {
       error (0, 0,
            _("printing all duplicated lines and repeat counts is meaningless"));
