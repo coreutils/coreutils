@@ -51,24 +51,24 @@
   while (0)
 
 /* Number of fields to skip on each line when doing comparisons. */
-static idx_t skip_fields;
+static idx_t skip_fields = false;
 
 /* Number of chars to skip after skipping any fields. */
-static idx_t skip_chars;
+static idx_t skip_chars = false;
 
 /* Number of chars to compare. */
-static idx_t check_chars;
+static idx_t check_chars = IDX_MAX;
 
 /* Whether to precede the output lines with a count of the number of
    times they occurred in the input. */
-static bool count_occurrences;
+static bool count_occurrences = false;
 
 /* Which lines to output: unique lines, the first of a group of
    repeated lines, and the second and subsequent of a group of
    repeated lines.  */
-static bool output_unique;
-static bool output_first_repeated;
-static bool output_later_repeated;
+static bool output_unique = true;
+static bool output_first_repeated = true;
+static bool output_later_repeated = false;
 
 /* If true, ignore case when comparing.  */
 static bool ignore_case;
@@ -96,7 +96,7 @@ static enum delimit_method const delimit_method_map[] =
 };
 
 /* Select whether/how to delimit groups of duplicate lines.  */
-static enum delimit_method delimit_groups;
+static enum delimit_method delimit_groups = DM_NONE;
 
 enum grouping_method
 {
@@ -480,14 +480,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  skip_chars = 0;
-  skip_fields = 0;
-  check_chars = IDX_MAX;
-  output_unique = output_first_repeated = true;
-  output_later_repeated = false;
-  count_occurrences = false;
-  delimit_groups = DM_NONE;
 
   while (true)
     {
