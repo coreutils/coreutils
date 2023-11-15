@@ -67,6 +67,7 @@
 # define makedev(maj, min)  mkdev (maj, min)
 #endif
 
+#include <stdckdint.h>
 #include <stddef.h>
 #include <string.h>
 #include <errno.h>
@@ -544,26 +545,13 @@ is_nul (void const *buf, size_t length)
    return memcmp (buf, p, length) == 0;
 }
 
-/* If 10*Accum + Digit_val is larger than the maximum value for Type,
-   then don't update Accum and return false to indicate it would
-   overflow.  Otherwise, set Accum to that new value and return true.
-   Verify at compile-time that Type is Accum's type, and that Type is
-   unsigned.  Accum must be an object, so that we can take its
-   address.  Accum and Digit_val may be evaluated multiple times.
+/* Set Accum = 10*Accum + Digit_val and return true, where Accum is an
+   integer object and Digit_val an integer expression.  However, if
+   the result overflows, set Accum to an unspecified value and return
+   false.  Accum and Digit_val may be evaluated multiple times.  */
 
-   The "Added check" below is not strictly required, but it causes GCC
-   to return a nonzero exit status instead of merely a warning
-   diagnostic, and that is more useful.  */
-
-#define DECIMAL_DIGIT_ACCUMULATE(Accum, Digit_val, Type)		\
-  (									\
-   (void) (&(Accum) == (Type *) nullptr),  /* The type matches.  */	\
-   verify_expr (! TYPE_SIGNED (Type), /* The type is unsigned.  */      \
-                (((Type) -1 / 10 < (Accum)                              \
-                  || (Type) ((Accum) * 10 + (Digit_val)) < (Accum))     \
-                 ? false                                                \
-                 : (((Accum) = (Accum) * 10 + (Digit_val)), true)))     \
-  )
+#define DECIMAL_DIGIT_ACCUMULATE(Accum, Digit_val)			\
+  (!ckd_mul (&(Accum), Accum, 10) && !ckd_add (&(Accum), Accum, Digit_val))
 
 static inline void
 emit_stdin_note (void)

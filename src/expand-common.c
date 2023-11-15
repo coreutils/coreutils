@@ -194,7 +194,7 @@ parse_tab_stops (char const *stops)
             }
 
           /* Detect overflow.  */
-          if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0', uintmax_t))
+          if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0'))
             {
               size_t len = strspn (num_start, "0123456789");
               char *bad_num = ximemdup0 (num_start, len);

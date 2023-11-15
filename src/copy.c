@@ -17,7 +17,6 @@
 /* Extracted from cp.c and librarified by Jim Meyering.  */
 
 #include <config.h>
-#include <stdckdint.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>

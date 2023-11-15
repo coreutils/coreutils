@@ -25,7 +25,6 @@
 
 #include <config.h>
 #include <getopt.h>
-#include <stdckdint.h>
 #include <stdio.h>
 
 #include <sys/types.h>

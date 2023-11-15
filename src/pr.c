@@ -311,7 +311,6 @@
 
 #include <ctype.h>
 #include <getopt.h>
-#include <stdckdint.h>
 #include <sys/types.h>
 #include "system.h"
 #include "fadvise.h"

@@ -300,7 +300,7 @@ main (int argc, char **argv)
               tabval = 0;
               have_tabval = true;
             }
-          if (!DECIMAL_DIGIT_ACCUMULATE (tabval, c - '0', uintmax_t))
+          if (!DECIMAL_DIGIT_ACCUMULATE (tabval, c - '0'))
             error (EXIT_FAILURE, 0, _("tab stop value is too large"));
           break;
         }

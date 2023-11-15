@@ -17,7 +17,6 @@
 /* Written by Paul Eggert.  */
 
 #include <config.h>
-#include <stdckdint.h>
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>

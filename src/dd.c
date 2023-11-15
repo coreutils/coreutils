@@ -21,7 +21,6 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <signal.h>
-#include <stdckdint.h>
 
 #include "system.h"
 #include "alignalloc.h"

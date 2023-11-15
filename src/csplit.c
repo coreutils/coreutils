@@ -23,7 +23,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>
-#include <stdckdint.h>
 
 #include "system.h"
 

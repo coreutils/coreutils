@@ -245,7 +245,7 @@ set_fields (char const *fieldstr, unsigned int options)
             lhs_specified = 1;
 
           /* Detect overflow.  */
-          if (!DECIMAL_DIGIT_ACCUMULATE (value, *fieldstr - '0', uintmax_t)
+          if (!DECIMAL_DIGIT_ACCUMULATE (value, *fieldstr - '0')
               || value == UINTMAX_MAX)
             {
               /* In case the user specified -c$(echo 2^64|bc),22,

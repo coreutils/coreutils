@@ -22,7 +22,6 @@
 #include <config.h>
 
 #include <ctype.h>
-#include <stdckdint.h>
 #include <stdio.h>
 #include <getopt.h>
 #include <signal.h>

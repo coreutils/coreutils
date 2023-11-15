@@ -18,7 +18,6 @@
 
 #include <config.h>
 
-#include <stdckdint.h>
 #include <stdio.h>
 #include <sys/types.h>
 
