@@ -51,13 +51,13 @@
   while (0)
 
 /* Number of fields to skip on each line when doing comparisons. */
-static size_t skip_fields;
+static idx_t skip_fields;
 
 /* Number of chars to skip after skipping any fields. */
-static size_t skip_chars;
+static idx_t skip_chars;
 
 /* Number of chars to compare. */
-static size_t check_chars;
+static idx_t check_chars;
 
 enum countmode
 {
@@ -228,25 +228,17 @@ strict_posix2 (void)
   return 200112 <= posix_ver && posix_ver < 200809;
 }
 
-/* Convert OPT to size_t, reporting an error using MSGID if OPT is
-   invalid.  Silently convert too-large values to SIZE_MAX.  */
+/* Convert OPT to idx_t, reporting an error using MSGID if OPT is
+   invalid.  Silently convert too-large values to IDX_MAX.  */
 
-static size_t
+static idx_t
 size_opt (char const *opt, char const *msgid)
 {
-  uintmax_t size;
-
-  switch (xstrtoumax (opt, nullptr, 10, &size, ""))
-    {
-    case LONGINT_OK:
-    case LONGINT_OVERFLOW:
-      break;
-
-    default:
-      error (EXIT_FAILURE, 0, "%s: %s", opt, _(msgid));
-    }
-
-  return MIN (size, SIZE_MAX);
+  intmax_t size;
+  if (LONGINT_OVERFLOW < xstrtoimax (opt, nullptr, 10, &size, "")
+      || size < 0)
+    error (EXIT_FAILURE, 0, "%s: %s", opt, _(msgid));
+  return MIN (size, IDX_MAX);
 }
 
 static bool
@@ -262,17 +254,16 @@ ATTRIBUTE_PURE
 static char *
 find_field (struct linebuffer const *line)
 {
-  size_t count;
   char *lp = line->buffer;
   char const *lim = lp + line->length - 1;
 
-  for (count = 0; count < skip_fields && lp < lim; count++)
+  for (idx_t count = 0; count < skip_fields && lp < lim; count++)
     {
       lp = skip_buf_matching (lp, lim, newline_or_blank, true);
       lp = skip_buf_matching (lp, lim, newline_or_blank, false);
     }
 
-  for (size_t s = skip_chars; lp < lim && s; s--)
+  for (idx_t s = skip_chars; lp < lim && s; s--)
     lp += mcel_scan (lp, lim).len;
 
   return lp;
@@ -284,7 +275,7 @@ find_field (struct linebuffer const *line)
    OLDLEN and NEWLEN are their lengths. */
 
 static bool
-different (char *old, char *new, size_t oldlen, size_t newlen)
+different (char *old, char *new, idx_t oldlen, idx_t newlen)
 {
   if (check_chars < oldlen)
     oldlen = check_chars;
@@ -305,7 +296,7 @@ different (char *old, char *new, size_t oldlen, size_t newlen)
 
 static void
 writeline (struct linebuffer const *line,
-           bool match, uintmax_t linecount)
+           bool match, intmax_t linecount)
 {
   if (! (linecount == 0 ? output_unique
          : !match ? output_first_repeated
@@ -313,7 +304,7 @@ writeline (struct linebuffer const *line,
     return;
 
   if (countmode == count_occurrences)
-    printf ("%7ju ", linecount + 1);
+    printf ("%7jd ", linecount + 1);
 
   if (fwrite (line->buffer, sizeof (char), line->length, stdout)
       != line->length)
@@ -360,23 +351,18 @@ check_file (char const *infile, char const *outfile, char delimiter)
   if (output_unique && output_first_repeated && countmode == count_none)
     {
       char *prevfield = nullptr;
-      size_t prevlen;
+      idx_t prevlen;
       bool first_group_printed = false;
 
-      while (!feof (stdin))
+      while (!feof (stdin)
+             && readlinebuffer_delim (thisline, stdin, delimiter) != 0)
         {
-          char *thisfield;
-          size_t thislen;
-          bool new_group;
-
-          if (readlinebuffer_delim (thisline, stdin, delimiter) == 0)
-            break;
-
-          thisfield = find_field (thisline);
-          thislen = thisline->length - 1 - (thisfield - thisline->buffer);
-
-          new_group = (!prevfield
-                       || different (thisfield, prevfield, thislen, prevlen));
+          char *thisfield = find_field (thisline);
+          idx_t thislen = (thisline->length - 1
+                           - (thisfield - thisline->buffer));
+          bool new_group = (!prevfield
+                            || different (thisfield, prevfield,
+                                          thislen, prevlen));
 
           if (new_group && grouping != GM_NONE
               && (grouping == GM_PREPEND || grouping == GM_BOTH
@@ -402,8 +388,8 @@ check_file (char const *infile, char const *outfile, char delimiter)
   else
     {
       char *prevfield;
-      size_t prevlen;
-      uintmax_t match_count = 0;
+      idx_t prevlen;
+      intmax_t match_count = 0;
       bool first_delimiter = true;
 
       if (readlinebuffer_delim (prevline, stdin, delimiter) == 0)
@@ -415,7 +401,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
         {
           bool match;
           char *thisfield;
-          size_t thislen;
+          idx_t thislen;
           if (readlinebuffer_delim (thisline, stdin, delimiter) == 0)
             {
               if (ferror (stdin))
@@ -427,7 +413,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
           match = !different (thisfield, prevfield, thislen, prevlen);
           match_count += match;
 
-          if (match_count == UINTMAX_MAX)
+          if (match_count == INTMAX_MAX)
             {
               if (count_occurrences)
                 error (EXIT_FAILURE, 0, _("too many repeated lines"));
@@ -487,7 +473,7 @@ main (int argc, char **argv)
   int optc = 0;
   bool posixly_correct = (getenv ("POSIXLY_CORRECT") != nullptr);
   enum Skip_field_option_type skip_field_option_type = SFO_NONE;
-  unsigned int nfiles = 0;
+  int nfiles = 0;
   char const *file[2];
   char delimiter = '\n';	/* change with --zero-terminated, -z */
   bool output_option_used = false;   /* if true, one of -u/-d/-D/-c was used */
@@ -503,7 +489,7 @@ main (int argc, char **argv)
 
   skip_chars = 0;
   skip_fields = 0;
-  check_chars = SIZE_MAX;
+  check_chars = IDX_MAX;
   output_unique = output_first_repeated = true;
   output_later_repeated = false;
   countmode = count_none;
@@ -535,12 +521,12 @@ main (int argc, char **argv)
         {
         case 1:
           {
-            uintmax_t size;
+            intmax_t size;
             if (optarg[0] == '+'
                 && ! strict_posix2 ()
-                && xstrtoumax (optarg, nullptr, 10, &size, "") == LONGINT_OK
-                && size <= SIZE_MAX)
-              skip_chars = size;
+                && (xstrtoimax (optarg, nullptr, 10, &size, "")
+                    <= LONGINT_OVERFLOW))
+              skip_chars = MIN (size, IDX_MAX);
             else if (nfiles == 2)
               {
                 error (0, 0, _("extra operand %s"), quote (optarg));
@@ -566,7 +552,7 @@ main (int argc, char **argv)
               skip_fields = 0;
 
             if (!DECIMAL_DIGIT_ACCUMULATE (skip_fields, optc - '0'))
-              skip_fields = SIZE_MAX;
+              skip_fields = IDX_MAX;
 
             skip_field_option_type = SFO_OBSOLETE;
           }
