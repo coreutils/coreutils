@@ -215,7 +215,7 @@ if ($mb_locale ne 'C')
   {
     # Duplicate each test vector, appending "-mb" to the test name and
     # inserting {ENV => "LC_ALL=$mb_locale"} in the copy, so that we
-    # provide coverage for the distro-added multi-byte code paths.
+    # provide coverage for multi-byte code paths.
     my @new;
     foreach my $t (@Tests)
       {

@@ -26,7 +26,6 @@ my $limits = getlimits ();
 my $prog = 'join';
 
 my $try = "Try '$prog --help' for more information.\n";
-my $inval = "$prog: invalid byte, character or field list\n$try";
 
 my $mb_locale;
 #Comment out next line to disable multibyte tests
@@ -342,31 +341,17 @@ foreach my $t (@tv)
     push @Tests, $new_ent;
   }
 
-# Add _POSIX2_VERSION=199209 to the environment of each test
-# that uses an old-style option like +1.
 if ($mb_locale ne 'C')
   {
     # Duplicate each test vector, appending "-mb" to the test name and
     # inserting {ENV => "LC_ALL=$mb_locale"} in the copy, so that we
-    # provide coverage for the distro-added multi-byte code paths.
+    # provide coverage for multi-byte code paths.
     my @new;
     foreach my $t (@Tests)
       {
         my @new_t = @$t;
         my $test_name = shift @new_t;
 
-        # Depending on whether join is multi-byte-patched,
-        # it emits different diagnostics:
-        #   non-MB: invalid byte or field list
-        #   MB:     invalid byte, character or field list
-        # Adjust the expected error output accordingly.
-        if (grep {ref $_ eq 'HASH' && exists $_->{ERR} && $_->{ERR} eq $inval}
-            (@new_t))
-          {
-            my $sub = {ERR_SUBST => 's/, character//'};
-            push @new_t, $sub;
-            push @$t, $sub;
-          }
         #Adjust the output some error messages including test_name for mb
         if (grep {ref $_ eq 'HASH' && exists $_->{ERR}}
              (@new_t))
