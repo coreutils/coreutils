@@ -240,24 +240,39 @@ newline_or_blank (mcel_t g)
 }
 
 /* Given a linebuffer LINE,
-   return a pointer to the beginning of the line's field to be compared. */
+   return a pointer to the beginning of the line's field to be compared.
+   Store into *PLEN the length in bytes of FIELD.  */
 
-ATTRIBUTE_PURE
 static char *
-find_field (struct linebuffer const *line)
+find_field (struct linebuffer const *line, idx_t *plen)
 {
   char *lp = line->buffer;
   char const *lim = lp + line->length - 1;
 
-  for (idx_t count = 0; count < skip_fields && lp < lim; count++)
+  for (idx_t i = skip_fields; 0 < i && lp < lim; i--)
     {
       lp = skip_buf_matching (lp, lim, newline_or_blank, true);
       lp = skip_buf_matching (lp, lim, newline_or_blank, false);
     }
 
-  for (idx_t s = skip_chars; lp < lim && s; s--)
+  for (idx_t i = skip_chars; 0 < i && lp < lim; i--)
     lp += mcel_scan (lp, lim).len;
 
+  /* Compute the length in bytes cheaply if possible; otherwise, scan.  */
+  idx_t len;
+  if (lim - lp <= check_chars)
+    len = lim - lp;
+  else if (MB_CUR_MAX <= 1)
+    len = check_chars;
+  else
+    {
+      char *ep = lp;
+      for (idx_t i = check_chars; 0 < i && lp < lim; i--)
+        ep += mcel_scan (lp, lim).len;
+      len = ep - lp;
+    }
+
+  *plen = len;
   return lp;
 }
 
@@ -269,11 +284,6 @@ find_field (struct linebuffer const *line)
 static bool
 different (char *old, char *new, idx_t oldlen, idx_t newlen)
 {
-  if (check_chars < oldlen)
-    oldlen = check_chars;
-  if (check_chars < newlen)
-    newlen = check_chars;
-
   if (ignore_case)
     return oldlen != newlen || memcasecmp (old, new, oldlen);
   else
@@ -349,9 +359,8 @@ check_file (char const *infile, char const *outfile, char delimiter)
       while (!feof (stdin)
              && readlinebuffer_delim (thisline, stdin, delimiter) != 0)
         {
-          char *thisfield = find_field (thisline);
-          idx_t thislen = (thisline->length - 1
-                           - (thisfield - thisline->buffer));
+          idx_t thislen;
+          char *thisfield = find_field (thisline, &thislen);
           bool new_group = (!prevfield
                             || different (thisfield, prevfield,
                                           thislen, prevlen));
@@ -379,30 +388,25 @@ check_file (char const *infile, char const *outfile, char delimiter)
     }
   else
     {
-      char *prevfield;
+      if (readlinebuffer_delim (prevline, stdin, delimiter) == 0)
+        goto closefiles;
+
       idx_t prevlen;
+      char *prevfield = find_field (prevline, &prevlen);
       intmax_t match_count = 0;
       bool first_delimiter = true;
 
-      if (readlinebuffer_delim (prevline, stdin, delimiter) == 0)
-        goto closefiles;
-      prevfield = find_field (prevline);
-      prevlen = prevline->length - 1 - (prevfield - prevline->buffer);
-
       while (!feof (stdin))
         {
-          bool match;
-          char *thisfield;
-          idx_t thislen;
           if (readlinebuffer_delim (thisline, stdin, delimiter) == 0)
             {
               if (ferror (stdin))
                 goto closefiles;
               break;
             }
-          thisfield = find_field (thisline);
-          thislen = thisline->length - 1 - (thisfield - thisline->buffer);
-          match = !different (thisfield, prevfield, thislen, prevlen);
+          idx_t thislen;
+          char *thisfield = find_field (thisline, &thislen);
+          bool match = !different (thisfield, prevfield, thislen, prevlen);
           match_count += match;
 
           if (match_count == INTMAX_MAX)

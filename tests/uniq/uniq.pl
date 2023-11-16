@@ -292,6 +292,15 @@ if ($mb_locale ne 'C')
         push @new, ["$test_name-mb", @new_t, {ENV => "LC_ALL=$mb_locale"}];
       }
     push @Tests, @new;
+
+    # Test that -w counts characters, not bytes.
+    my $trouble_with_w1 = "à\ná\n";
+    my @Locale_Tests =
+    (
+      ['w1-mb', '-w1',  {IN => $trouble_with_w1}, {OUT => $trouble_with_w1},
+        {ENV => "LC_ALL=$mb_locale"}]
+    );
+    push @Tests, @Locale_Tests;
    }
 
 # Remember that triple_test creates from each test with exactly one "IN"
