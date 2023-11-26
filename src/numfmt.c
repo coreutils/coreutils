@@ -228,7 +228,7 @@ default_scale_base (enum scale_type scale)
     }
 }
 
-static char const zero_and_valid_suffixes[] = "0KMGTPEZYRQ";
+static char const zero_and_valid_suffixes[] = "0KkMGTPEZYRQ";
 static char const *valid_suffixes = 1 + zero_and_valid_suffixes;
 
 static inline bool
@@ -242,6 +242,7 @@ suffix_power (const char suf)
 {
   switch (suf)
     {
+    case 'k':                  /* kilo.  */
     case 'K':                  /* kilo or kibi.  */
       return 1;
 
@@ -811,7 +812,8 @@ double_to_human (long double val, int precision,
   int prec = user_precision == -1 ? show_decimal_point : user_precision;
 
   return snprintf (buf, buf_size, fmt, prec, val,
-                   suffix_power_char (power),
+                   power == 1 && scale == scale_SI
+                   ? "k" : suffix_power_char (power),
                    &"i"[! (scale == scale_IEC_I && 0 < power)],
                    suffix ? suffix : "");
 }
@@ -945,23 +947,23 @@ UNIT options:\n"), stdout);
 "), stdout);
       fputs (_("\
   auto       accept optional single/two letter suffix:\n\
-               1K = 1000,\n\
+               1K = 1000, 1k = 1000,\n\
                1Ki = 1024,\n\
                1M = 1000000,\n\
                1Mi = 1048576,\n"), stdout);
       fputs (_("\
   si         accept optional single letter suffix:\n\
-               1K = 1000,\n\
+               1k = 1000, 1K = 1000,\n\
                1M = 1000000,\n\
                ...\n"), stdout);
       fputs (_("\
   iec        accept optional single letter suffix:\n\
-               1K = 1024,\n\
+               1K = 1024, 1k = 1024,\n\
                1M = 1048576,\n\
                ...\n"), stdout);
       fputs (_("\
   iec-i      accept optional two-letter suffix:\n\
-               1Ki = 1024,\n\
+               1Ki = 1024, 1ki = 1024,\n\
                1Mi = 1048576,\n\
                ...\n"), stdout);
 
@@ -995,7 +997,7 @@ errors are not diagnosed and the exit status is 0.\n\
       printf (_("\n\
 Examples:\n\
   $ %s --to=si 1000\n\
-            -> \"1.0K\"\n\
+            -> \"1.0k\"\n\
   $ %s --to=iec 2048\n\
            -> \"2.0K\"\n\
   $ %s --to=iec-i 4096\n\

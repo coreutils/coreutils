@@ -33,6 +33,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls --dired now implies long format output without hyperlinks enabled,
   and will take precedence over previously specified formats or hyperlink mode.
 
+  numfmt will accept lowercase 'k' to indicate Kilo or Kibi units on input,
+  and user lowercase 'k' when outputting such units in '--to=si' mode.
+
   wc no longer ignores encoding errors when counting words.
   Instead, it treats them as non white space.
 
