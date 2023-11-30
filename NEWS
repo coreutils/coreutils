@@ -16,6 +16,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   numfmt options like --suffix no longer have an arbitrary 127-byte limit.
   [bug introduced with numfmt in coreutils-8.21]
 
+  tail no longer mishandles input from files in /proc and /sys file systems,
+  on systems with a page size larger than the stdio BUFSIZ.
+  [This bug was present in "the beginning".]
+
   wc no longer fails to count unprintable characters as parts of words.
   [bug introduced in textutils-2.1]
 

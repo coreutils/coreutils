@@ -208,6 +208,9 @@ static int nbpids = 0;
 static pid_t * pids = nullptr;
 static idx_t pids_alloc;
 
+/* Used to determine the buffer size when scanning backwards in a file.  */
+static idx_t page_size;
+
 /* True if we have ever read standard input.  */
 static bool have_read_stdin;
 
@@ -515,22 +518,40 @@ xlseek (int fd, off_t offset, int whence, char const *filename)
    Return true if successful.  */
 
 static bool
-file_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
-            off_t start_pos, off_t end_pos, uintmax_t *read_pos)
+file_lines (char const *pretty_filename, int fd, struct stat const *sb,
+            uintmax_t n_lines, off_t start_pos, off_t end_pos,
+            uintmax_t *read_pos)
 {
-  char buffer[BUFSIZ];
+  char *buffer;
   size_t bytes_read;
+  blksize_t bufsize = BUFSIZ;
   off_t pos = end_pos;
+  bool ok = true;
 
   if (n_lines == 0)
     return true;
 
+  /* Be careful with files with sizes that are a multiple of the page size,
+     as on /proc or /sys file systems these files accept seeking to within
+     the file, but then return no data when read.  So use a buffer that's
+     at least PAGE_SIZE to avoid seeking within such files.
+
+     We could also indirectly use a large enough buffer through io_blksize()
+     however this would be less efficient in the common case, as it would
+     generally pick a larger buffer size, resulting in reading more data
+     from the end of the file.  */
+  affirm (S_ISREG (sb->st_mode));
+  if (sb->st_size % page_size == 0)
+    bufsize = MAX (BUFSIZ, page_size);
+
+  buffer = xmalloc (bufsize);
+
   /* Set 'bytes_read' to the size of the last, probably partial, buffer;
-     0 < 'bytes_read' <= 'BUFSIZ'.  */
-  bytes_read = (pos - start_pos) % BUFSIZ;
+     0 < 'bytes_read' <= 'bufsize'.  */
+  bytes_read = (pos - start_pos) % bufsize;
   if (bytes_read == 0)
-    bytes_read = BUFSIZ;
-  /* Make 'pos' a multiple of 'BUFSIZ' (0 if the file is short), so that all
+    bytes_read = bufsize;
+  /* Make 'pos' a multiple of 'bufsize' (0 if the file is short), so that all
      reads will be on block boundaries, which might increase efficiency.  */
   pos -= bytes_read;
   xlseek (fd, pos, SEEK_SET, pretty_filename);
@@ -538,7 +559,8 @@ file_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
   if (bytes_read == SAFE_READ_ERROR)
     {
       error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
-      return false;
+      ok = false;
+      goto free_buffer;
     }
   *read_pos = pos + bytes_read;
 
@@ -565,7 +587,7 @@ file_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
               xwrite_stdout (nl + 1, bytes_read - (n + 1));
               *read_pos += dump_remainder (false, pretty_filename, fd,
                                            end_pos - (pos + bytes_read));
-              return true;
+              goto free_buffer;
             }
         }
 
@@ -577,23 +599,26 @@ file_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
           xlseek (fd, start_pos, SEEK_SET, pretty_filename);
           *read_pos = start_pos + dump_remainder (false, pretty_filename, fd,
                                                   end_pos);
-          return true;
+          goto free_buffer;
         }
-      pos -= BUFSIZ;
+      pos -= bufsize;
       xlseek (fd, pos, SEEK_SET, pretty_filename);
 
-      bytes_read = safe_read (fd, buffer, BUFSIZ);
+      bytes_read = safe_read (fd, buffer, bufsize);
       if (bytes_read == SAFE_READ_ERROR)
         {
           error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
-          return false;
+          ok = false;
+          goto free_buffer;
         }
 
       *read_pos = pos + bytes_read;
     }
   while (bytes_read > 0);
 
-  return true;
+free_buffer:
+  free (buffer);
+  return ok;
 }
 
 /* Print the last N_LINES lines from the end of the standard input,
@@ -1915,7 +1940,7 @@ tail_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
         {
           *read_pos = end_pos;
           if (end_pos != 0
-              && ! file_lines (pretty_filename, fd, n_lines,
+              && ! file_lines (pretty_filename, fd, &stats, n_lines,
                                start_pos, end_pos, read_pos))
             return false;
         }
@@ -2336,6 +2361,8 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
+
+  page_size = getpagesize ();
 
   have_read_stdin = false;
 

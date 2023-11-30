@@ -257,6 +257,7 @@ all_tests =					\
   tests/seq/seq-precision.sh			\
   tests/head/head.pl				\
   tests/head/head-elide-tail.pl			\
+  tests/tail/tail-sysfs.sh			\
   tests/tail/tail-n0f.sh			\
   tests/ls/ls-misc.pl				\
   tests/date/date.pl				\
