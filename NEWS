@@ -55,7 +55,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   and will take precedence over previously specified formats or hyperlink mode.
 
   numfmt will accept lowercase 'k' to indicate Kilo or Kibi units on input,
-  and user lowercase 'k' when outputting such units in '--to=si' mode.
+  and uses lowercase 'k' when outputting such units in '--to=si' mode.
 
   wc no longer ignores encoding errors when counting words.
   Instead, it treats them as non white space.
@@ -66,7 +66,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   with matching current OWNER and/or GROUP, as already supported by chown(1).
 
   cp now accepts the --keep-directory-symlink option (like tar), to preserve
-  and follow exisiting symlinks to directories in the destination.
+  and follow existing symlinks to directories in the destination.
 
   cp and mv now accept the --update=none-fail option, which is similar
   to the --no-clobber option, except that existing files are diagnosed,
