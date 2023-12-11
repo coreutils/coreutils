@@ -87,6 +87,7 @@
 /lib/math.h
 /lib/netdb.h
 /lib/netinet/in.h
+/lib/obstack.h
 /lib/parse-datetime-gen.h
 /lib/parse-datetime.c
 /lib/poll.h
