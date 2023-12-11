@@ -8135,10 +8135,10 @@ sort according to the ctime.  @xref{File timestamps}.
 @cindex unsorted directory listing
 @cindex directory order, listing by
 Produce an unsorted directory listing.
-This is equivalent to the combination of @option{--all} (@option{-a}),
-@option{--sort=none} (@option{-U}), @option{-1},
-@option{--color=none}, and @option{--hyperlink=none},
-while also disabling any previous use of @option{--size} (@option{-s}).
+This is like @option{--sort=none} (@option{-U}),
+but also enable @option{--all} (@option{-a}),
+while also disabling any previous use of @option{-l}, @option{--color}
+@option{--size}, or @option{--hyperlink}.
 
 @item -r
 @itemx --reverse

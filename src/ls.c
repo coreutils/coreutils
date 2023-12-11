@@ -1950,15 +1950,13 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'f':
-          /* Same as -a -U -1 --color=none --hyperlink=none,
-             while disabling -s.  */
-          ignore_mode = IGNORE_MINIMAL;
-          sort_opt = sort_none;
+          ignore_mode = IGNORE_MINIMAL; /* enable -a */
+          sort_opt = sort_none;         /* enable -U */
           if (format_opt == long_format)
-            format_opt = -1;
-          print_with_color = false;
-          print_hyperlink = false;
-          print_block_size = false;
+            format_opt = -1;            /* disable -l */
+          print_with_color = false;     /* disable --color */
+          print_hyperlink = false;      /* disable --hyperlink */
+          print_block_size = false;     /* disable -s */
           break;
 
         case FILE_TYPE_INDICATOR_OPTION: /* --file-type */
@@ -5470,7 +5468,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
 "), stdout);
       fputs (_("\
-  -f                         list all entries in directory order\n\
+  -f                         do not sort, enable -aU, disable -ls --color\n\
   -F, --classify[=WHEN]      append indicator (one of */=>@|) to entries WHEN\n\
       --file-type            likewise, except do not append '*'\n\
 "), stdout);
