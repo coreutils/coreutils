@@ -2425,7 +2425,7 @@ static bool
 read_line (COLUMN *p)
 {
   int c;
-  int chars;
+  int chars IF_LINT (= 0);
   int last_input_position;
   int j, k;
   COLUMN *q;
