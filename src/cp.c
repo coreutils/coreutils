@@ -192,8 +192,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -L, --dereference            always follow symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
-  -n, --no-clobber             do not overwrite an existing file (overrides a\n\
-                                 -u or previous -i option). See also --update\n\
+  -n, --no-clobber             ensure no existing files overwritten, and fail\n\
+                                 silently instead. See also --update\n\
 "), stdout);
       fputs (_("\
   -P, --no-dereference         never follow symbolic links in SOURCE\n\

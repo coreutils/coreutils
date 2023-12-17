@@ -9057,6 +9057,8 @@ Do not overwrite an existing file; silently fail instead.
 This option overrides a previous
 @option{-i} option.  This option is mutually exclusive with @option{-b} or
 @option{--backup} option.
+See also the @option{--update=none} option which will
+skip existing files but not fail.
 
 @item -P
 @itemx --no-dereference
