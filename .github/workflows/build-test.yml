@@ -1,0 +1,19 @@
+name: build-test
+on:
+  push: 
+    branches:
+      - master
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install library
+        run: |
+          sudo apt update
+          sudo apt install --no-install-recommends autopoint build-essential gettext gperf texinfo patch rsync xz-utils
+      - run: ./bootstrap
+      - run: ./configure
+      - run: make
+      - run: make check
