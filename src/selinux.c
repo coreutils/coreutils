@@ -69,37 +69,37 @@ mode_to_security_class (mode_t m)
 */
 
 static int
-computecon (char const *path, mode_t mode, char **con)
+computecon_raw (char const *path, mode_t mode, char **con)
 {
-  char *scon = nullptr;
-  char *tcon = nullptr;
+  char *scon_raw = nullptr;
+  char *tcon_raw = nullptr;
   security_class_t tclass;
   int rc = -1;
 
   char *dir = dir_name (path);
   if (!dir)
     goto quit;
-  if (getcon (&scon) < 0)
+  if (getcon_raw (&scon_raw) < 0)
     goto quit;
-  if (getfilecon (dir, &tcon) < 0)
+  if (getfilecon_raw (dir, &tcon_raw) < 0)
     goto quit;
   tclass = mode_to_security_class (mode);
   if (!tclass)
     goto quit;
-  rc = security_compute_create (scon, tcon, tclass, con);
+  rc = security_compute_create_raw (scon_raw, tcon_raw, tclass, con);
 
  quit:;
   int err = errno;
   free (dir);
-  freecon (scon);
-  freecon (tcon);
+  freecon (scon_raw);
+  freecon (tcon_raw);
   errno = err;
   return rc;
 }
 
 /*
-  This function takes a handle, path and mode, it calls computecon to get the
-  label of the path object if the current process created it, then it calls
+  This function takes a handle, path and mode, it calls computecon_raw to get
+  the label of the path object if the current process created it, then it calls
   selabel_lookup to get the default type for the object.  It substitutes the
   default type into label.  It tells the SELinux Kernel to label all new file
   system objects created by the current process with this label.
@@ -111,8 +111,8 @@ defaultcon (struct selabel_handle *selabel_handle,
             char const *path, mode_t mode)
 {
   int rc = -1;
-  char *scon = nullptr;
-  char *tcon = nullptr;
+  char *scon_raw = nullptr;
+  char *tcon_raw = nullptr;
   context_t scontext = 0, tcontext = 0;
   char const *contype;
   char const *constr;
@@ -127,7 +127,7 @@ defaultcon (struct selabel_handle *selabel_handle,
       path = newpath;
     }
 
-  if (selabel_lookup (selabel_handle, &scon, path, mode) < 0)
+  if (selabel_lookup_raw (selabel_handle, &scon_raw, path, mode) < 0)
     {
       /* "No such file or directory" is a confusing error,
          when processing files, when in fact it was the
@@ -138,11 +138,11 @@ defaultcon (struct selabel_handle *selabel_handle,
         errno = ENODATA;
       goto quit;
     }
-  if (computecon (path, mode, &tcon) < 0)
+  if (computecon_raw (path, mode, &tcon_raw) < 0)
     goto quit;
-  if (!(scontext = context_new (scon)))
+  if (!(scontext = context_new (scon_raw)))
     goto quit;
-  if (!(tcontext = context_new (tcon)))
+  if (!(tcontext = context_new (tcon_raw)))
     goto quit;
 
   if (!(contype = context_type_get (scontext)))
@@ -152,14 +152,14 @@ defaultcon (struct selabel_handle *selabel_handle,
   if (!(constr = context_str (tcontext)))
     goto quit;
 
-  rc = setfscreatecon (constr);
+  rc = setfscreatecon_raw (constr);
 
  quit:;
   int err = errno;
   context_free (scontext);
   context_free (tcontext);
-  freecon (scon);
-  freecon (tcon);
+  freecon (scon_raw);
+  freecon (tcon_raw);
   free (newpath);
   errno = err;
   return rc;
@@ -179,8 +179,8 @@ restorecon_private (struct selabel_handle *selabel_handle, char const *path)
 {
   int rc = -1;
   struct stat sb;
-  char *scon = nullptr;
-  char *tcon = nullptr;
+  char *scon_raw = nullptr;
+  char *tcon_raw = nullptr;
   context_t scontext = 0, tcontext = 0;
   char const *contype;
   char const *constr;
@@ -188,16 +188,16 @@ restorecon_private (struct selabel_handle *selabel_handle, char const *path)
 
   if (!selabel_handle)
     {
-      if (getfscreatecon (&tcon) < 0)
+      if (getfscreatecon_raw (&tcon_raw) < 0)
         return rc;
-      if (!tcon)
+      if (!tcon_raw)
         {
           errno = ENODATA;
           return rc;
         }
-      rc = lsetfilecon (path, tcon);
+      rc = lsetfilecon_raw (path, tcon_raw);
       int err = errno;
-      freecon (tcon);
+      freecon (tcon_raw);
       errno = err;
       return rc;
     }
@@ -217,7 +217,7 @@ restorecon_private (struct selabel_handle *selabel_handle, char const *path)
         goto quit;
     }
 
-  if (selabel_lookup (selabel_handle, &scon, path, sb.st_mode) < 0)
+  if (selabel_lookup_raw (selabel_handle, &scon_raw, path, sb.st_mode) < 0)
     {
       /* "No such file or directory" is a confusing error,
          when processing files, when in fact it was the
@@ -228,21 +228,21 @@ restorecon_private (struct selabel_handle *selabel_handle, char const *path)
         errno = ENODATA;
       goto quit;
     }
-  if (!(scontext = context_new (scon)))
+  if (!(scontext = context_new (scon_raw)))
     goto quit;
 
   if (fd != -1)
     {
-      if (fgetfilecon (fd, &tcon) < 0)
+      if (fgetfilecon_raw (fd, &tcon_raw) < 0)
         goto quit;
     }
   else
     {
-      if (lgetfilecon (path, &tcon) < 0)
+      if (lgetfilecon_raw (path, &tcon_raw) < 0)
         goto quit;
     }
 
-  if (!(tcontext = context_new (tcon)))
+  if (!(tcontext = context_new (tcon_raw)))
     goto quit;
 
   if (!(contype = context_type_get (scontext)))
@@ -253,9 +253,9 @@ restorecon_private (struct selabel_handle *selabel_handle, char const *path)
     goto quit;
 
   if (fd != -1)
-    rc = fsetfilecon (fd, constr);
+    rc = fsetfilecon_raw (fd, constr);
   else
-    rc = lsetfilecon (path, constr);
+    rc = lsetfilecon_raw (path, constr);
 
  quit:;
   int err = errno;
@@ -263,8 +263,8 @@ restorecon_private (struct selabel_handle *selabel_handle, char const *path)
     close (fd);
   context_free (scontext);
   context_free (tcontext);
-  freecon (scon);
-  freecon (tcon);
+  freecon (scon_raw);
+  freecon (tcon_raw);
   errno = err;
   return rc;
 }

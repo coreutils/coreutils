@@ -39,7 +39,13 @@ int getfilecon (const char *path, char **con)
   return -1;
 }
 
+int getfilecon_raw (const char *path, char **con)
+{ return getfilecon (path, con); }
+
 int lgetfilecon (const char *path, char **con)
+{ return getfilecon (path, con); }
+
+int lgetfilecon_raw (const char *path, char **con)
 { return getfilecon (path, con); }
 EOF
 

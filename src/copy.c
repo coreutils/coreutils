@@ -1020,23 +1020,23 @@ set_process_security_ctx (char const *src_name, char const *dst_name,
       /* Set the default context for the process to match the source.  */
       bool all_errors = !x->data_copy_required || x->require_preserve_context;
       bool some_errors = !all_errors && !x->reduce_diagnostics;
-      char *con;
+      char *con_raw;
 
-      if (0 <= lgetfilecon (src_name, &con))
+      if (0 <= lgetfilecon_raw (src_name, &con_raw))
         {
-          if (setfscreatecon (con) < 0)
+          if (setfscreatecon_raw (con_raw) < 0)
             {
               if (all_errors || (some_errors && !errno_unsupported (errno)))
                 error (0, errno,
                        _("failed to set default file creation context to %s"),
-                       quote (con));
+                       quote (con_raw));
               if (x->require_preserve_context)
                 {
-                  freecon (con);
+                  freecon (con_raw);
                   return false;
                 }
             }
-          freecon (con);
+          freecon (con_raw);
         }
       else
         {

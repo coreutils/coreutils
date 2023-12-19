@@ -214,23 +214,23 @@ need_copy (char const *src_name, char const *dest_name,
   /* compare SELinux context if preserving */
   if (selinux_enabled && x->preserve_security_context)
     {
-      char *file_scontext = nullptr;
-      char *to_scontext = nullptr;
+      char *file_scontext_raw = nullptr;
+      char *to_scontext_raw = nullptr;
       bool scontext_match;
 
-      if (getfilecon (src_name, &file_scontext) == -1)
+      if (getfilecon_raw (src_name, &file_scontext_raw) == -1)
         return true;
 
-      if (getfilecon (dest_name, &to_scontext) == -1)
+      if (getfilecon_raw (dest_name, &to_scontext_raw) == -1)
         {
-          freecon (file_scontext);
+          freecon (file_scontext_raw);
           return true;
         }
 
-      scontext_match = STREQ (file_scontext, to_scontext);
+      scontext_match = STREQ (file_scontext_raw, to_scontext_raw);
 
-      freecon (file_scontext);
-      freecon (to_scontext);
+      freecon (file_scontext_raw);
+      freecon (to_scontext_raw);
       if (!scontext_match)
         return true;
     }
@@ -323,7 +323,7 @@ static void
 setdefaultfilecon (char const *file)
 {
   struct stat st;
-  char *scontext = nullptr;
+  char *scontext_raw = nullptr;
 
   if (selinux_enabled != 1)
     {
@@ -336,7 +336,7 @@ setdefaultfilecon (char const *file)
   struct selabel_handle *hnd = get_labeling_handle ();
   if (!hnd)
     return;
-  if (selabel_lookup (hnd, &scontext, file, st.st_mode) != 0)
+  if (selabel_lookup_raw (hnd, &scontext_raw, file, st.st_mode) != 0)
     {
       if (errno != ENOENT && ! ignorable_ctx_err (errno))
         error (0, errno, _("warning: %s: context lookup failed"),
@@ -344,12 +344,12 @@ setdefaultfilecon (char const *file)
       return;
     }
 
-  if (lsetfilecon (file, scontext) < 0 && errno != ENOTSUP)
+  if (lsetfilecon_raw (file, scontext_raw) < 0 && errno != ENOTSUP)
     error (0, errno,
            _("warning: %s: failed to change context to %s"),
-           quotef_n (0, file), quote_n (1, scontext));
+           quotef_n (0, file), quote_n (1, scontext_raw));
 
-  freecon (scontext);
+  freecon (scontext_raw);
 }
 
 /* Report that directory DIR was made, if OPTIONS requests this.  */
