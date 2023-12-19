@@ -1,6 +1,6 @@
 name: build-test
 on:
-  push: 
+  push
     branches:
       - master
 
