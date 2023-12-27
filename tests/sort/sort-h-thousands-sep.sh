@@ -21,25 +21,26 @@ print_ver_ sort
 
 TEST_LOCALE='sv_SE'
 
-test "$(LC_ALL="$TEST_LOCALE" locale thousands_sep)" = ' ' ||
+lg="$(LC_ALL="$TEST_LOCALE" locale thousands_sep)"
+test "$lg" ||
   skip_ 'The Swedish locale with blank thousands separator is unavailable.'
 
 tee exp1 exp3 > in << _EOF_
-1       1k      1 M     4 003   1M
-2k      2M      2 k     4 002   2
-3M      3       3 G     4 001   3k
+1       1k      1 M     4${lg}003   1M
+2k      2M      2 k     4${lg}002   2
+3M      3       3 G     4${lg}001   3k
 _EOF_
 
 cat > exp2 << _EOF_
-3M      3       3 G     4 001   3k
-1       1k      1 M     4 003   1M
-2k      2M      2 k     4 002   2
+3M      3       3 G     4${lg}001   3k
+1       1k      1 M     4${lg}003   1M
+2k      2M      2 k     4${lg}002   2
 _EOF_
 
 cat > exp5 << _EOF_
-3M      3       3 G     4 001   3k
-2k      2M      2 k     4 002   2
-1       1k      1 M     4 003   1M
+3M      3       3 G     4${lg}001   3k
+2k      2M      2 k     4${lg}002   2
+1       1k      1 M     4${lg}003   1M
 _EOF_
 
 for i in 1 2 3 5; do

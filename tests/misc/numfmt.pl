@@ -1011,6 +1011,15 @@ my @Limit_Tests =
 (system "$prog ---debug 1 2>&1|grep 'MAX_UNSCALED_DIGITS: 18' > /dev/null") == 0
   and push @Tests, @Limit_Tests;
 
+my $lg = ' ';
+if ($locale ne 'C')
+  {
+    open(LOC_GRP, "env LC_ALL=$locale printf \"%'d\" 1111|tr -d 1|")
+      or die "Can't fork command: $!";
+    $lg = <LOC_GRP>;
+    close(LOC_GRP) || die "Failed to read locale grouping from printf";
+  }
+
 my @Locale_Tests =
   (
      # Locale that supports grouping, but without '--grouping' parameter
@@ -1018,11 +1027,12 @@ my @Locale_Tests =
              {ENV=>"LC_ALL=$locale"}],
 
      # Locale with grouping
-     ['lcl-grp-2', '--from=si --grouping 7M',   {OUT=>"7 000 000"},
+     ['lcl-grp-2', '--from=si --grouping 7M',   {OUT=>"7${lg}000${lg}000"},
              {ENV=>"LC_ALL=$locale"}],
 
      # Locale with grouping and debug - no debug warning message
-     ['lcl-grp-3', '--from=si --debug --grouping 7M',   {OUT=>"7 000 000"},
+     ['lcl-grp-3', '--from=si --debug --grouping 7M',
+             {OUT=>"7${lg}000${lg}000"},
              {ENV=>"LC_ALL=$locale"}],
 
      # Input with locale'd decimal-point
@@ -1033,21 +1043,21 @@ my @Locale_Tests =
              {ENV=>"LC_ALL=$locale"}],
 
      # Format + Grouping
-     ['lcl-fmt-1', '--format "%\'f" 50000',{OUT=>"50 000"},
+     ['lcl-fmt-1', '--format "%\'f" 50000',{OUT=>"50${lg}000"},
              {ENV=>"LC_ALL=$locale"}],
-     ['lcl-fmt-2', '--format "--%\'10f--" 50000', {OUT=>"--    50 000--"},
+     ['lcl-fmt-2', '--format "--%\'10f--" 50000', {OUT=>"--    50${lg}000--"},
              {ENV=>"LC_ALL=$locale"}],
-     ['lcl-fmt-3', '--format "--%\'-10f--" 50000',{OUT=>"--50 000    --"},
+     ['lcl-fmt-3', '--format "--%\'-10f--" 50000',{OUT=>"--50${lg}000    --"},
              {ENV=>"LC_ALL=$locale"}],
      ['lcl-fmt-4', '--format "--%-10f--" --to=si 5000000',
              {OUT=>"--5,0M      --"},
              {ENV=>"LC_ALL=$locale"}],
      # handle zero/grouping in combination
-     ['lcl-fmt-5', '--format="%\'06f" 1234',{OUT=>"01 234"},
+     ['lcl-fmt-5', '--format="%\'06f" 1234',{OUT=>"01${lg}234"},
              {ENV=>"LC_ALL=$locale"}],
-     ['lcl-fmt-6', '--format="%0\'6f" 1234',{OUT=>"01 234"},
+     ['lcl-fmt-6', '--format="%0\'6f" 1234',{OUT=>"01${lg}234"},
              {ENV=>"LC_ALL=$locale"}],
-     ['lcl-fmt-7', '--format="%0\'\'6f" 1234',{OUT=>"01 234"},
+     ['lcl-fmt-7', '--format="%0\'\'6f" 1234',{OUT=>"01${lg}234"},
              {ENV=>"LC_ALL=$locale"}],
 
   );
@@ -1059,7 +1069,7 @@ if ($locale ne 'C')
       or die "Can't fork command: $!";
     my $loc_num = <LOC_NUM>;
     close(LOC_NUM) || die "Failed to read grouped number from printf";
-    if ($loc_num ne '1 234')
+    if ($loc_num ne "1${lg}234")
       {
         warn "skipping locale grouping tests as 1234 groups like $loc_num\n";
         $locale = 'C';
