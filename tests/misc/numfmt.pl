@@ -1039,7 +1039,7 @@ my @Locale_Tests =
      ['lcl-stdtod-1', '--from=si 12,2K', {OUT=>"12200"},
              {ENV=>"LC_ALL=$locale"}],
 
-     ['lcl-dbl-to-human-1', '--to=si 1100', {OUT=>"1,1K"},
+     ['lcl-dbl-to-human-1', '--to=si 1100', {OUT=>"1,1k"},
              {ENV=>"LC_ALL=$locale"}],
 
      # Format + Grouping
