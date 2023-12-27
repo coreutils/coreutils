@@ -1,4 +1,4 @@
-/* chown -- change user and group ownership of files
+/* chown, chgrp -- change user and group ownership of files
    Copyright (C) 1989-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "chown.h"
 #include "chown-core.h"
 #include "fts_.h"
 #include "quote.h"
@@ -29,7 +30,7 @@
 #include "userspec.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
-#define PROGRAM_NAME "chown"
+#define PROGRAM_NAME (chown_mode == CHOWN_CHOWN ? "chown" : "chgrp")
 
 #define AUTHORS \
   proper_name ("David MacKenzie"), \
@@ -76,13 +77,22 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... [OWNER][:[GROUP]] FILE...\n\
+Usage: %s [OPTION]... %s FILE...\n\
   or:  %s [OPTION]... --reference=RFILE FILE...\n\
 "),
-              program_name, program_name);
-      fputs (_("\
+              program_name,
+              chown_mode == CHOWN_CHOWN ? "[OWNER][:[GROUP]]" : "GROUP",
+              program_name);
+      if (chown_mode == CHOWN_CHOWN)
+        fputs (_("\
 Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
 With --reference, change the owner and group of each FILE to those of RFILE.\n\
+\n\
+"), stdout);
+      else
+        fputs (_("\
+Change the group of each FILE to GROUP.\n\
+With --reference, change the group of each FILE to that of RFILE.\n\
 \n\
 "), stdout);
       fputs (_("\
@@ -99,14 +109,14 @@ With --reference, change the owner and group of each FILE to those of RFILE.\n\
                          (useful only on systems that can change the\n\
                          ownership of a symlink)\n\
 "), stdout);
-      emit_from_option_description (true);
+      emit_from_option_description (chown_mode == CHOWN_CHOWN);
       fputs (_("\
       --no-preserve-root  do not treat '/' specially (the default)\n\
       --preserve-root    fail to operate recursively on '/'\n\
 "), stdout);
       fputs (_("\
-      --reference=RFILE  use RFILE's owner and group rather than specifying\n\
-                         OWNER:GROUP values.  RFILE is always dereferenced.\n\
+      --reference=RFILE  use RFILE's ownership rather than specifying values\n\
+                         RFILE is always dereferenced if a symbolic link.\n\
 "), stdout);
       fputs (_("\
   -R, --recursive        operate on files and directories recursively\n\
@@ -126,13 +136,16 @@ one takes effect.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
+      if (chown_mode == CHOWN_CHOWN)
+        fputs (_("\
 \n\
 Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
 to login group if implied by a ':' following a symbolic OWNER.\n\
 OWNER and GROUP may be numeric as well as symbolic.\n\
 "), stdout);
-      printf (_("\
+
+      if (chown_mode == CHOWN_CHOWN)
+        printf (_("\
 \n\
 Examples:\n\
   %s root /u        Change the owner of /u to \"root\".\n\
@@ -140,6 +153,14 @@ Examples:\n\
   %s -hR root /u    Change the owner of /u and subfiles to \"root\".\n\
 "),
               program_name, program_name, program_name);
+      else
+        printf (_("\
+\n\
+Examples:\n\
+  %s staff /u      Change the group of /u to \"staff\".\n\
+  %s -hR staff /u  Change the group of /u and subfiles to \"staff\".\n\
+"),
+              program_name, program_name);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
@@ -283,24 +304,38 @@ main (int argc, char **argv)
         error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
                quoteaf (reference_file));
 
-      uid = ref_stats.st_uid;
+      if (chown_mode == CHOWN_CHOWN)
+        {
+          uid = ref_stats.st_uid;
+          chopt.user_name = uid_to_name (ref_stats.st_uid);
+        }
       gid = ref_stats.st_gid;
-      chopt.user_name = uid_to_name (ref_stats.st_uid);
       chopt.group_name = gid_to_name (ref_stats.st_gid);
     }
   else
     {
+      char *ug = argv[optind];
+      if (chown_mode == CHOWN_CHGRP)
+        {
+          ug = xmalloc (1 + strlen (argv[optind]) + 1);
+          stpcpy (stpcpy (ug, ":"), argv[optind]);
+        }
+
       bool warn;
-      char const *e = parse_user_spec_warn (argv[optind], &uid, &gid,
+      char const *e = parse_user_spec_warn (ug, &uid, &gid,
                                             &chopt.user_name,
                                             &chopt.group_name, &warn);
+
+      if (ug != argv[optind])
+        free (ug);
+
       if (e)
         error (warn ? 0 : EXIT_FAILURE, 0, "%s: %s", e, quote (argv[optind]));
 
       /* If a group is specified but no user, set the user name to the
          empty string so that diagnostics say "ownership :GROUP"
          rather than "group GROUP".  */
-      if (!chopt.user_name && chopt.group_name)
+      if (chown_mode == CHOWN_CHOWN && !chopt.user_name && chopt.group_name)
         chopt.user_name = xstrdup ("");
 
       optind++;

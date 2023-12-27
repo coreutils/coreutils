@@ -71,6 +71,7 @@ override_single() {
 override_single dir ls
 override_single vdir ls
 override_single arch uname
+override_single chgrp chown
 
 for cmd in $ALL_PROGRAMS; do
   echo "# Command $cmd"

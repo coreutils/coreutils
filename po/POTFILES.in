@@ -38,7 +38,6 @@ src/basename.c
 src/basenc.c
 src/cat.c
 src/chcon.c
-src/chgrp.c
 src/chmod.c
 src/chown-core.c
 src/chown-core.h

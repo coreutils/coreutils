@@ -105,7 +105,7 @@ src_basenc_LDADD = $(LDADD)
 src_basename_LDADD = $(LDADD)
 src_cat_LDADD = $(LDADD)
 src_chcon_LDADD = $(LDADD)
-src_chgrp_LDADD = $(LDADD)
+# See chgrp_LDADD below
 src_chmod_LDADD = $(LDADD)
 src_chown_LDADD = $(LDADD)
 src_chroot_LDADD = $(LDADD)
@@ -219,6 +219,7 @@ src_yes_LDADD = $(LDADD)
 src___LDADD = $(src_test_LDADD)
 src_dir_LDADD = $(src_ls_LDADD)
 src_vdir_LDADD = $(src_ls_LDADD)
+src_chgrp_LDADD = $(src_chown_LDADD)
 
 src_cp_LDADD += $(copy_ldadd)
 src_ginstall_LDADD += $(copy_ldadd)
@@ -379,8 +380,8 @@ src_ls_SOURCES = src/ls.c src/ls-ls.c
 src_ln_SOURCES = src/ln.c \
   src/force-link.c src/force-link.h \
   src/relpath.c src/relpath.h
-src_chown_SOURCES = src/chown.c src/chown-core.c
-src_chgrp_SOURCES = src/chgrp.c src/chown-core.c
+src_chown_SOURCES = src/chown.c src/chown-core.c src/chown-chown.c
+src_chgrp_SOURCES = src/chown.c src/chown-core.c src/chown-chgrp.c
 src_kill_SOURCES = src/kill.c src/operand2sig.c
 src_realpath_SOURCES = src/realpath.c src/relpath.c src/relpath.h
 src_timeout_SOURCES = src/timeout.c src/operand2sig.c
