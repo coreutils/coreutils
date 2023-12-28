@@ -114,8 +114,8 @@ static inline int _GL_ATTRIBUTE_PURE
 numcompare (char const *a, char const *b,
             int decimal_point, int thousands_sep)
 {
-  unsigned char tmpa = *a;
-  unsigned char tmpb = *b;
+  char tmpa = *a;
+  char tmpb = *b;
   int tmp;
   size_t log_a;
   size_t log_b;

@@ -16,6 +16,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   numfmt options like --suffix no longer have an arbitrary 127-byte limit.
   [bug introduced with numfmt in coreutils-8.21]
 
+  sort again handles thousands grouping characters in single-byte locales
+  where the grouping character is greater than CHAR_MAX.  For e.g. signed
+  character platforms with a 0xA0 (aka &nbsp) grouping character.
+  [bug introduced in coreutils-9.1]
+
   tail no longer mishandles input from files in /proc and /sys file systems,
   on systems with a page size larger than the stdio BUFSIZ.
   [This bug was present in "the beginning".]
