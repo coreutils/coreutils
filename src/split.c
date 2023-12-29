@@ -91,7 +91,7 @@ static char const *numeric_suffix_start;
 static char const *additional_suffix;
 
 /* Name of input file.  May be "-".  */
-static char *infile;
+static char const *infile;
 
 /* stat buf for input file.  */
 static struct stat in_stat_buf;
@@ -1367,8 +1367,8 @@ main (int argc, char **argv)
 
   /* Parse command line options.  */
 
-  infile = bad_cast ("-");
-  outbase = bad_cast ("x");
+  infile = "-";
+  outbase = "x";
 
   while (true)
     {
