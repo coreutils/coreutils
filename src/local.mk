@@ -40,6 +40,7 @@ noinst_PROGRAMS =		\
   src/make-prime-list
 
 noinst_HEADERS =		\
+  src/chown.h			\
   src/chown-core.h		\
   src/copy.h			\
   src/cp-hash.h			\
