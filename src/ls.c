@@ -1911,7 +1911,7 @@ stdout_isatty (void)
 static int
 decode_switches (int argc, char **argv)
 {
-  char *time_style_option = nullptr;
+  char const *time_style_option = nullptr;
 
   /* These variables are false or -1 unless a switch says otherwise.  */
   bool kibibytes_specified = false;
@@ -2160,7 +2160,7 @@ decode_switches (int argc, char **argv)
 
         case FULL_TIME_OPTION:
           format_opt = long_format;
-          time_style_option = bad_cast ("full-iso");
+          time_style_option = "full-iso";
           break;
 
         case COLOR_OPTION:
@@ -2401,12 +2401,15 @@ decode_switches (int argc, char **argv)
 
   if (format == long_format)
     {
-      char *style = time_style_option;
+      char const *style = time_style_option;
       static char const posix_prefix[] = "posix-";
 
       if (! style)
-        if (! (style = getenv ("TIME_STYLE")))
-          style = bad_cast ("locale");
+        {
+          style = getenv ("TIME_STYLE");
+          if (! style)
+            style = "locale";
+        }
 
       while (STREQ_LEN (style, posix_prefix, sizeof posix_prefix - 1))
         {
@@ -2417,16 +2420,16 @@ decode_switches (int argc, char **argv)
 
       if (*style == '+')
         {
-          char *p0 = style + 1;
-          char *p1 = strchr (p0, '\n');
-          if (! p1)
-            p1 = p0;
-          else
+          char const *p0 = style + 1;
+          char *p0nl = strchr (p0, '\n');
+          char const *p1 = p0;
+          if (p0nl)
             {
-              if (strchr (p1 + 1, '\n'))
+              if (strchr (p0nl + 1, '\n'))
                 error (LS_FAILURE, 0, _("invalid time style format %s"),
                        quote (p0));
-              *p1++ = '\0';
+              *p0nl++ = '\0';
+              p1 = p0nl;
             }
           long_time_format[0] = p0;
           long_time_format[1] = p1;
