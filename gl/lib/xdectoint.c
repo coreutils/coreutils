@@ -24,9 +24,9 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-#include "error.h"
-#include "quote.h"
-#include "xstrtol.h"
+#include <error.h>
+#include <quote.h>
+#include <xstrtol.h>
 
 /* Parse numeric string N_STR of base BASE, and return the value.
    Exit on parse error or if MIN or MAX are exceeded.
