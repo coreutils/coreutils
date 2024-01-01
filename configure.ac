@@ -172,6 +172,13 @@ AC_ARG_ENABLE([gcc-warnings],
                           && gl_gcc_warnings=yes])]
 )
 
+# clang is unduly picky about some things, even by default.
+if test "$gl_cv_compiler_clang" = yes; then
+  gl_WARN_ADD([-Wno-format-extra-args])
+  gl_WARN_ADD([-Wno-implicit-const-int-float-conversion])
+  gl_WARN_ADD([-Wno-tautological-constant-out-of-range-compare])
+fi
+
 if test $gl_gcc_warnings != no; then
   gl_WARN_ADD([-Werror], [WERROR_CFLAGS])
   AC_SUBST([WERROR_CFLAGS])
@@ -231,21 +238,6 @@ if test $gl_gcc_warnings != no; then
   gl_WARN_ADD([-Wno-sign-compare])     # Too many warnings for now
   gl_WARN_ADD([-Wno-unused-parameter]) # Too many warnings for now
   gl_WARN_ADD([-Wno-format-nonliteral])
-
-  # clang is unduly picky about some things.
-  AC_CACHE_CHECK([whether the compiler is clang], [utils_cv_clang],
-    [AC_COMPILE_IFELSE(
-       [AC_LANG_PROGRAM([[
-            #ifndef __clang__
-              #error "not clang"
-            #endif
-          ]])],
-       [utils_cv_clang=yes],
-       [utils_cv_clang=no])])
-  if test $utils_cv_clang = yes; then
-    gl_WARN_ADD([-Wno-format-extra-args])
-    gl_WARN_ADD([-Wno-tautological-constant-out-of-range-compare])
-  fi
 
   gl_WARN_ADD([-fdiagnostics-show-option])
   gl_WARN_ADD([-funit-at-a-time])
