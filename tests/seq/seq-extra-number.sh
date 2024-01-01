@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test the "print_extra_number" logic seq.c:print_numbers()
 
-# Copyright (C) 2019-2023 Free Software Foundation, Inc.
+# Copyright (C) 2019-2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

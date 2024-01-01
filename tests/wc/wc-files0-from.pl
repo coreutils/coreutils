@@ -2,7 +2,7 @@
 # Exercise wc's --files0-from option.
 # FIXME: keep this file in sync with tests/du/files0-from.
 
-# Copyright (C) 2006-2023 Free Software Foundation, Inc.
+# Copyright (C) 2006-2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

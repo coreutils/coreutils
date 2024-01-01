@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure "mv --verbose --backup" works the same for dirs and non-dirs.
 
-# Copyright (C) 2006-2023 Free Software Foundation, Inc.
+# Copyright (C) 2006-2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

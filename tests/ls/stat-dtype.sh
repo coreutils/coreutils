@@ -3,7 +3,7 @@
 # Also check for the dtype-related (and fs-type dependent) bug
 # in coreutils-6.0 that made ls -CF columns misaligned.
 
-# Copyright (C) 2006-2023 Free Software Foundation, Inc.
+# Copyright (C) 2006-2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

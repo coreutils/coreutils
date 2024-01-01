@@ -2,7 +2,7 @@
 # show that the following no longer makes ls infloop
 # mkdir loop; cd loop; ln -s ../loop sub; ls -RL
 # Also ensure ls exits with status = 2 in that case.
-# Copyright (C) 2001-2023 Free Software Foundation, Inc.
+# Copyright (C) 2001-2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

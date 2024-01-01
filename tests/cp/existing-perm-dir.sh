@@ -1,7 +1,7 @@
 #!/bin/sh
 # Make sure cp -p doesn't "restore" permissions it shouldn't (Bug#9170).
 
-# Copyright 2011-2023 Free Software Foundation, Inc.
+# Copyright 2011-2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

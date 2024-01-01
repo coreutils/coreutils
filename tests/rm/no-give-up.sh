@@ -2,7 +2,7 @@
 # With rm from coreutils-5.2.1 and earlier, 'rm -r' would mistakenly
 # give up too early under some conditions.
 
-# Copyright (C) 2004-2023 Free Software Foundation, Inc.
+# Copyright (C) 2004-2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

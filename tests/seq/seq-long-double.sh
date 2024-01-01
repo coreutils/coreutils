@@ -3,7 +3,7 @@
 # Ensure that seq prints exactly two numbers for a 2-number integral
 # range at the limit of floating point precision.
 
-# Copyright (C) 2008-2023 Free Software Foundation, Inc.
+# Copyright (C) 2008-2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

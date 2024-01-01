@@ -2,7 +2,7 @@
 # ensure that 'cp -d' preserves hard-links between command line arguments
 # ensure that --preserve=links works with -RH and -RL
 
-# Copyright (C) 2001-2023 Free Software Foundation, Inc.
+# Copyright (C) 2001-2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

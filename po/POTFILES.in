@@ -1,5 +1,5 @@
 # List of files which contain translatable strings.
-# Copyright (C) 1996-2023 Free Software Foundation, Inc.
+# Copyright (C) 1996-2024 Free Software Foundation, Inc.
 
 # These are nominally temporary...
 lib/argmatch.c

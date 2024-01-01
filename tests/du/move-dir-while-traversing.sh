@@ -1,7 +1,7 @@
 #!/bin/sh
 # Trigger a failed assertion in coreutils-8.9 and earlier.
 
-# Copyright (C) 2011-2023 Free Software Foundation, Inc.
+# Copyright (C) 2011-2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -2,7 +2,7 @@
 # Prior to coreutils-6.5, an inaccessible destination dir (chmod a-x)
 # would cause du to exit prematurely on systems with native openat support.
 
-# Copyright (C) 2006-2023 Free Software Foundation, Inc.
+# Copyright (C) 2006-2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -2,7 +2,7 @@
 # Like fail-eperm, but the failure must be for a file encountered
 # while trying to remove the containing directory with the sticky bit set.
 
-# Copyright (C) 2003-2023 Free Software Foundation, Inc.
+# Copyright (C) 2003-2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

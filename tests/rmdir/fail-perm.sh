@@ -2,7 +2,7 @@
 # For unwritable directory 'd', 'rmdir -p d d/e/f' would emit
 # diagnostics but would not fail.  Fixed in 5.1.2.
 
-# Copyright (C) 2004-2023 Free Software Foundation, Inc.
+# Copyright (C) 2004-2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
