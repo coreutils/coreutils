@@ -294,6 +294,7 @@ Show the local time for 9AM next Friday on the west coast of the US\n\
 /* Yield the number of decimal digits needed to output a time with the
    nanosecond resolution RES, without losing information.  */
 
+ATTRIBUTE_CONST
 static int
 res_width (long int res)
 {

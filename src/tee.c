@@ -185,6 +185,7 @@ main (int argc, char **argv)
 /* Return the index of the first non-null descriptor after idx,
    or -1 if all are null.  */
 
+ATTRIBUTE_PURE
 static int
 get_next_out (FILE **descriptors, int nfiles, int idx)
 {
