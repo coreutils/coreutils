@@ -611,6 +611,7 @@ all_tests =					\
   tests/ln/slash-decorated-nonexistent-dest.sh	\
   tests/ln/target-1.sh				\
   tests/ls/a-option.sh				\
+  tests/ls/acl.sh				\
   tests/ls/abmon-align.sh			\
   tests/ls/birthtime.sh				\
   tests/ls/block-size.sh			\
