@@ -809,10 +809,7 @@ line_bytes_split (intmax_t n_bytes, char *buf, idx_t bufsize)
             {
               cwrite (n_out == 0, hold, n_hold);
               n_out += n_hold;
-              if (n_hold > bufsize)
-                hold = xirealloc (hold, bufsize);
               n_hold = 0;
-              hold_size = bufsize;
             }
 
           /* Output to eol if present.  */
