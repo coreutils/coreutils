@@ -22,7 +22,7 @@ prog=printf
 print_ver_ printf
 
 vm=$(get_min_ulimit_v_ env $prog %20f 0) \
-  || skip_ "this shell lacks ulimit support"
+  || skip_ 'shell lacks ulimit, or ASAN enabled'
 
 # Up to coreutils-6.9, "printf %.Nf 0" would encounter an ENOMEM internal
 # error from glibc's printf(3) function whenever N was large relative to

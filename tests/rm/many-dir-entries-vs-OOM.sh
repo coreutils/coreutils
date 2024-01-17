@@ -27,7 +27,7 @@ mkdir d2 \
 # Restrict memory.  Each of these coreutils-8.12 programs would fail
 # with a diagnostic like "rm: fts_read failed: Cannot allocate memory".
 vm=$(get_min_ulimit_v_ du -sh d2) \
-  || skip_ "this shell lacks ulimit support"
+  || skip_ 'shell lacks ulimit, or ASAN enabled'
 
 # With many files in a single directory...
 mkdir d || framework_failure_

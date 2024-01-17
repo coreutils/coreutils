@@ -21,7 +21,7 @@ print_ver_ cut
 getlimits_
 
 vm=$(get_min_ulimit_v_ returns_ 0 cut -b1 /dev/null) \
-  || skip_ "this shell lacks ulimit support"
+  || skip_ 'shell lacks ulimit, or ASAN enabled'
 
 # Ensure we can cut up to our sentinel value.
 # Don't use expr to subtract one,

@@ -23,7 +23,7 @@ expensive_
 # Determine basic amount of memory needed for 'cp -al'.
 touch f || framework_failure_
 vm=$(get_min_ulimit_v_ cp -al f f2) \
-  || skip_ "this shell lacks ulimit support"
+  || skip_ 'shell lacks ulimit, or ASAN enabled'
 rm f f2 || framework_failure_
 
 a=$(printf %031d 0)

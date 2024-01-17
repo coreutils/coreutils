@@ -20,9 +20,6 @@
 print_ver_ head
 getlimits_
 
-vm=$(get_min_ulimit_v_ head -c1 /dev/null) \
-  || skip_ "this shell lacks ulimit support"
-
 # exercise the fix of 2001-08-18, based on test case from Ian Bruce
 echo abc > in || framework_failure_
 (head -c1; head -c1) < in > out || fail=1
@@ -42,7 +39,9 @@ esac
 # Only allocate memory as needed.
 # Coreutils <= 8.21 would allocate memory up front
 # based on the value passed to -c
-(ulimit -v $(($vm+8000)) && head --bytes=-$SSIZE_MAX < /dev/null) || fail=1
+vm=$(get_min_ulimit_v_ head -c1 /dev/null) && {
+  (ulimit -v $(($vm+8000)) && head --bytes=-$SSIZE_MAX < /dev/null) || fail=1
+}
 
 # Make sure it works on funny files in /proc and /sys.
 
