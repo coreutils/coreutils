@@ -498,6 +498,7 @@ all_tests =					\
   tests/cp/existing-perm-dir.sh			\
   tests/cp/existing-perm-race.sh		\
   tests/cp/fail-perm.sh				\
+  tests/cp/keep-directory-symlink.sh		\
   tests/cp/sparse-extents.sh			\
   tests/cp/copy-FMR.sh				\
   tests/cp/sparse-perf.sh			\

@@ -68,7 +68,8 @@ enum
   REFLINK_OPTION,
   SPARSE_OPTION,
   STRIP_TRAILING_SLASHES_OPTION,
-  UNLINK_DEST_BEFORE_OPENING
+  UNLINK_DEST_BEFORE_OPENING,
+  KEEP_DIRECTORY_SYMLINK_OPTION
 };
 
 /* True if the kernel is SELinux enabled.  */
@@ -141,6 +142,8 @@ static struct option const long_opts[] =
   {"target-directory", required_argument, nullptr, 't'},
   {"update", optional_argument, nullptr, 'u'},
   {"verbose", no_argument, nullptr, 'v'},
+  {"keep-directory-symlink", no_argument, nullptr,
+    KEEP_DIRECTORY_SYMLINK_OPTION},
   {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -230,6 +233,9 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
 "), stdout);
       fputs (_("\
   -v, --verbose                explain what is being done\n\
+"), stdout);
+      fputs (_("\
+      --keep-directory-symlink  follow existing symlinks to directories\n\
 "), stdout);
       fputs (_("\
   -x, --one-file-system        stay on this file system\n\
@@ -859,6 +865,7 @@ cp_option_init (struct cp_options *x)
 
   x->update = false;
   x->verbose = false;
+  x->keep_directory_symlink = false;
 
   /* By default, refuse to open a dangling destination symlink, because
      in general one cannot do that safely, give the current semantics of
@@ -1159,6 +1166,10 @@ main (int argc, char **argv)
 
         case 'v':
           x.verbose = true;
+          break;
+
+        case KEEP_DIRECTORY_SYMLINK_OPTION:
+          x.keep_directory_symlink = true;
           break;
 
         case 'x':

@@ -57,6 +57,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   chgrp now accepts the --from=OWNER:GROUP option to restrict changes to files
   with matching current OWNER and/or GROUP, as already supported by chown(1).
 
+  cp now accepts the --keep-directory-symlink option (like tar), to preserve
+  and follow exisiting symlinks to directories in the destination.
+
   od now supports printing IEEE half precision floating point with -t fH,
   or brain 16 bit floating point with -t fB, where supported by the compiler.
 

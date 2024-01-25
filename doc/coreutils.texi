@@ -10289,6 +10289,14 @@ option is also specified.
 @opindex --verbose
 Print the name of each file before moving it.
 
+@item --keep-directory-symlink
+@opindex --keep-directory-symlink
+Follow existing symlinks to directories when copying. Note that this option
+should only be used when the contents of the destination directory are trusted
+as when this option is enabled, an attacker can place symlinks in the
+destination directory to make @command{cp} write to arbitrary directories in the
+system.
+
 @optStripTrailingSlashes
 
 @optBackupSuffix
