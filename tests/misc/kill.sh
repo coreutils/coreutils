@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ kill
+print_ver_ kill seq
 
 # params required
 returns_ 1 env kill || fail=1
@@ -59,5 +59,13 @@ test $(env kill -l $STD_TERM_STATUS $KSH_TERM_STATUS | uniq) = TERM || fail=1
 returns_ 1 env kill -l -1 || fail=1
 returns_ 1 env kill -l -1 0 || fail=1
 returns_ 1 env kill -l INVALID TERM || fail=1
+
+# Verify all signal numbers can be listed
+SIG_LAST_STR=$(env kill -l | tail -n1) || framework_failure_
+SIG_LAST_NUM=$(env kill -l -- "$SIG_LAST_STR") || framework_failure_
+SIG_SEQ=$(env seq -- 0 "$SIG_LAST_NUM") || framework_failure_
+test -n "$SIG_SEQ" || framework_failure_
+env kill -l -- $SIG_SEQ || fail=1
+env kill -t -- $SIG_SEQ || fail=1
 
 Exit $fail

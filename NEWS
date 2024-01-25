@@ -92,6 +92,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   This was previously 128KiB and increasing to 256KiB was seen to increase
   throughput by 10-20% when reading cached files on modern systems.
 
+  env,kill,timeout now support unnamed signals. kill(1) for example now
+  supports sending such signals, and env(1) will list them appropriately.
+
   SELinux operations in file copy operations are now more efficient,
   avoiding unneeded MCS/MLS label translation.
 

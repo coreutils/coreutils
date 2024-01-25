@@ -538,7 +538,6 @@ parse_split_string (char const *str, int *orig_optind,
 static void
 parse_signal_action_params (char const *arg, bool set_default)
 {
-  char signame[SIG2STR_MAX];
   char *opt_sig;
   char *optarg_writable;
 
@@ -548,8 +547,7 @@ parse_signal_action_params (char const *arg, bool set_default)
          Some signals cannot be set to ignore or default (e.g., SIGKILL,
          SIGSTOP on most OSes, and SIGCONT on AIX.) - so ignore errors.  */
       for (int i = 1 ; i <= SIGNUM_BOUND; i++)
-        if (sig2str (i, signame) == 0)
-          signals[i] = set_default ? DEFAULT_NOERR : IGNORE_NOERR;
+        signals[i] = set_default ? DEFAULT_NOERR : IGNORE_NOERR;
       return;
     }
 
@@ -558,7 +556,7 @@ parse_signal_action_params (char const *arg, bool set_default)
   opt_sig = strtok (optarg_writable, ",");
   while (opt_sig)
     {
-      int signum = operand2sig (opt_sig, signame);
+      int signum = operand2sig (opt_sig);
       /* operand2sig accepts signal 0 (EXIT) - but we reject it.  */
       if (signum == 0)
         error (0, 0, _("%s: invalid signal"), quote (opt_sig));
@@ -607,7 +605,8 @@ reset_signal_handlers (void)
       if (dev_debug)
         {
           char signame[SIG2STR_MAX];
-          sig2str (i, signame);
+          if (sig2str (i, signame) != 0)
+            snprintf (signame, sizeof signame, "SIG%d", i);
           devmsg ("Reset signal %s (%d) to %s%s\n",
                   signame, i,
                   set_to_default ? "DEFAULT" : "IGNORE",
@@ -620,7 +619,6 @@ reset_signal_handlers (void)
 static void
 parse_block_signal_params (char const *arg, bool block)
 {
-  char signame[SIG2STR_MAX];
   char *opt_sig;
   char *optarg_writable;
 
@@ -647,15 +645,22 @@ parse_block_signal_params (char const *arg, bool block)
   opt_sig = strtok (optarg_writable, ",");
   while (opt_sig)
     {
-      int signum = operand2sig (opt_sig, signame);
+      int signum = operand2sig (opt_sig);
       /* operand2sig accepts signal 0 (EXIT) - but we reject it.  */
       if (signum == 0)
         error (0, 0, _("%s: invalid signal"), quote (opt_sig));
       if (signum <= 0)
         usage (exit_failure);
 
-      sigaddset (block ? &block_signals : &unblock_signals, signum);
-      sigdelset (block ? &unblock_signals : &block_signals, signum);
+      if (sigaddset (block ? &block_signals : &unblock_signals, signum) == -1)
+        {
+          if (block)
+            error (EXIT_CANCELED, errno,
+                   _("failed to block signal %d"), signum);
+          /* else diagnosed in parse_signal_action_params().  */
+        }
+      else
+        sigdelset (block ? &unblock_signals : &block_signals, signum);
 
       opt_sig = strtok (nullptr, ",");
     }
@@ -695,7 +700,8 @@ set_signal_proc_mask (void)
       if (dev_debug && debug_act)
         {
           char signame[SIG2STR_MAX];
-          sig2str (i, signame);
+          if (sig2str (i, signame) != 0)
+            snprintf (signame, sizeof signame, "SIG%d", i);
           devmsg ("signal %s (%d) mask set to %s\n",
                   signame, i, debug_act);
         }
@@ -728,7 +734,8 @@ list_signal_handling (void)
       if (! *ignored && ! *blocked)
         continue;
 
-      sig2str (i, signame);
+      if (sig2str (i, signame) != 0)
+        snprintf (signame, sizeof signame, "SIG%d", i);
       fprintf (stderr, "%-10s (%2d): %s%s%s\n", signame, i,
                blocked, connect, ignored);
     }

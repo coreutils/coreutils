@@ -467,7 +467,6 @@ int
 main (int argc, char **argv)
 {
   double timeout;
-  char signame[SIG2STR_MAX];
   int c;
 
   initialize_main (&argc, &argv);
@@ -488,7 +487,7 @@ main (int argc, char **argv)
           break;
 
         case 's':
-          term_signal = operand2sig (optarg, signame);
+          term_signal = operand2sig (optarg);
           if (term_signal == -1)
             usage (EXIT_CANCELED);
           break;

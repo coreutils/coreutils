@@ -18,8 +18,8 @@
    FIXME: Move this to gnulib/str2sig.c */
 
 
-/* Convert OPERAND to a signal number with printable representation SIGNAME.
-   Return the signal number, or -1 if unsuccessful.  */
+/* Convert OPERAND to a signal number.  Return the signal number, or -1 if
+   unsuccessful.  */
 
 #include <config.h>
 #include <stdio.h>
@@ -32,7 +32,7 @@
 #include "operand2sig.h"
 
 extern int
-operand2sig (char const *operand, char *signame)
+operand2sig (char const *operand)
 {
   int signum;
 
@@ -82,7 +82,7 @@ operand2sig (char const *operand, char *signame)
       free (upcased);
     }
 
-  if (signum < 0 || sig2str (signum, signame) != 0)
+  if (0 > signum || signum > SIGNUM_BOUND)
     {
       error (0, 0, _("%s: invalid signal"), quote (operand));
       return -1;
