@@ -307,7 +307,11 @@ print_numbers (char const *fmt, struct layout layout,
             write_error ();
           if (out_of_range)
             break;
+
+          /* Mathematically equivalent to 'x += step;', and typically
+             less subject to rounding error.  */
           x = first + i * step;
+
           out_of_range = (step < 0 ? x < last : last < x);
 
           if (out_of_range)
