@@ -19,6 +19,7 @@
 #include <config.h>
 
 #include <ctype.h>
+#include <float.h>
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
@@ -49,6 +50,26 @@ typedef unsigned long long int unsigned_long_long_int;
 typedef unsigned long int unsigned_long_long_int;
 #endif
 
+#if HAVE__FLOAT16
+  /* Available since clang 6 (2018), and gcc 7 (2017).  */
+  typedef _Float16 float16;
+#else
+# define HAVE__FLOAT16 0
+  /* This is just a place-holder to avoid a few '#if' directives.
+     In this case, the type isn't actually used.  */
+  typedef float float16;
+#endif
+
+#if HAVE___BF16
+  /* Available since clang 11 (2020), and gcc 13 (2023). */
+  typedef __bf16 bfloat16;
+#else
+# define HAVE___BF16 0
+  /* This is just a place-holder to avoid a few '#if' directives.
+     In this case, the type isn't actually used.  */
+  typedef float bfloat16;
+#endif
+
 enum size_spec
   {
     NO_SIZE,
@@ -58,6 +79,7 @@ enum size_spec
     LONG,
     LONG_LONG,
     /* FIXME: add INTMAX support, too */
+    FLOAT_HALF,
     FLOAT_SINGLE,
     FLOAT_DOUBLE,
     FLOAT_LONG_DOUBLE,
@@ -71,6 +93,8 @@ enum output_format
     OCTAL,
     HEXADECIMAL,
     FLOATING_POINT,
+    HFLOATING_POINT,
+    BFLOATING_POINT,
     NAMED_CHARACTER,
     CHARACTER
   };
@@ -156,6 +180,11 @@ static const int width_bytes[] =
   sizeof (int),
   sizeof (long int),
   sizeof (unsigned_long_long_int),
+#if HAVE___BF16
+  sizeof (bfloat16),
+#else
+  sizeof (float16),
+#endif
   sizeof (float),
   sizeof (double),
   sizeof (long double)
@@ -400,8 +429,9 @@ TYPE is made up of one or more of these specifications:\n\
 \n\
 SIZE is a number.  For TYPE in [doux], SIZE may also be C for\n\
 sizeof(char), S for sizeof(short), I for sizeof(int) or L for\n\
-sizeof(long).  If TYPE is f, SIZE may also be F for sizeof(float), D\n\
-for sizeof(double) or L for sizeof(long double).\n\
+sizeof(long).  If TYPE is f, SIZE may also be B for Brain 16 bit,\n\
+H for Half precision float, F for sizeof(float), D for sizeof(double),\n\
+or L for sizeof(long double).\n\
 "), stdout);
       fputs (_("\
 \n\
@@ -477,6 +507,8 @@ PRINT_TYPE (print_int, unsigned int)
 PRINT_TYPE (print_long, unsigned long int)
 PRINT_TYPE (print_long_long, unsigned_long_long_int)
 
+PRINT_FLOATTYPE (print_bfloat, bfloat16, ftoastr, FLT_BUFSIZE_BOUND)
+PRINT_FLOATTYPE (print_halffloat, float16, ftoastr, FLT_BUFSIZE_BOUND)
 PRINT_FLOATTYPE (print_float, float, ftoastr, FLT_BUFSIZE_BOUND)
 PRINT_FLOATTYPE (print_double, double, dtoastr, DBL_BUFSIZE_BOUND)
 PRINT_FLOATTYPE (print_long_double, long double, ldtoastr, LDBL_BUFSIZE_BOUND)
@@ -773,6 +805,18 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
       ++s;
       switch (*s)
         {
+        case 'B':
+          ++s;
+          fmt = BFLOATING_POINT;
+          size = sizeof (bfloat16);
+          break;
+
+        case 'H':
+          ++s;
+          fmt = HFLOATING_POINT;
+          size = sizeof (float16);
+          break;
+
         case 'F':
           ++s;
           size = sizeof (float);
@@ -802,7 +846,10 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           else
             {
               if (size > MAX_FP_TYPE_SIZE
-                  || fp_type_size[size] == NO_SIZE)
+                  || fp_type_size[size] == NO_SIZE
+                  || (! HAVE__FLOAT16 && HAVE___BF16
+                      && size == sizeof (bfloat16))
+                  )
                 {
                   error (0, 0,
                          _("invalid type string %s;\n"
@@ -817,6 +864,15 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
         }
       size_spec = fp_type_size[size];
 
+      if ((! HAVE__FLOAT16 && fmt == HFLOATING_POINT)
+          || (! HAVE___BF16 && fmt == BFLOATING_POINT))
+      {
+        error (0, 0,
+               _("this system doesn't provide a %s floating point type"),
+               quote (s_orig));
+        return false;
+      }
+
       {
         struct lconv const *locale = localeconv ();
         size_t decimal_point_len =
@@ -824,6 +880,12 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
 
         switch (size_spec)
           {
+          case FLOAT_HALF:
+            print_function = fmt == BFLOATING_POINT
+                             ? print_bfloat : print_halffloat;
+            field_width = FLT_STRLEN_BOUND_L (decimal_point_len);
+            break;
+
           case FLOAT_SINGLE:
             print_function = print_float;
             field_width = FLT_STRLEN_BOUND_L (decimal_point_len);
@@ -1598,6 +1660,11 @@ main (int argc, char **argv)
   for (i = 0; i <= MAX_FP_TYPE_SIZE; i++)
     fp_type_size[i] = NO_SIZE;
 
+#if HAVE__FLOAT16
+  fp_type_size[sizeof (float16)] = FLOAT_HALF;
+#elif HAVE___BF16
+  fp_type_size[sizeof (bfloat16)] = FLOAT_HALF;
+#endif
   fp_type_size[sizeof (float)] = FLOAT_SINGLE;
   /* The array entry for 'double' is filled in after that for 'long double'
      so that if they are the same size, we avoid any overhead of

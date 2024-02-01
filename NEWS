@@ -57,6 +57,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   chgrp now accepts the --from=OWNER:GROUP option to restrict changes to files
   with matching current OWNER and/or GROUP, as already supported by chown(1).
 
+  od now supports printing IEEE half precision floating point with -t fH,
+  or brain 16 bit floating point with -t fB, where supported by the compiler.
+
   tail now supports following multiple processes, with repeated --pid options.
 
 ** Improvements

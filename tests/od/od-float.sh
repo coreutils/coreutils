@@ -69,4 +69,25 @@ set x $(printf 00000000ff000000 | tr 0f '\000\377' | od -t fL) || fail=1
 #*) fail=1;;
 #esac
 
+# Check Half precision IEEE 16 bit float
+if grep '^#define HAVE__FLOAT16 1' "$CONFIG_HEADER" >/dev/null; then
+  for fmt in '-tfH' '-tf2'; do
+    od_out=$(printf '\x3C\x00\x3C\x00' | od --endian=big -An $fmt | tr -d ' ')
+    test "$od_out" = '11' || fail=1
+  done
+else
+  echo "od: this system doesn't provide a 'fH' floating point type" > exp_err
+  returns_ 1 od -tfH /dev/null 2>err || fail=1
+  compare exp_err err || fail=1
+fi
+# Check Half precision Brain 16 bit float
+if grep '^#define HAVE___BF16 1' "$CONFIG_HEADER" >/dev/null; then
+  od_out=$(printf '\x3F\x80\x3F\x80' | od --endian=big -An -tfB | tr -d ' ')
+  test "$od_out" = '11' || fail=1
+else
+  echo "od: this system doesn't provide a 'fB' floating point type" > exp_err
+  returns_ 1 od -tfB /dev/null 2>err || fail=1
+  compare exp_err err || fail=1
+fi
+
 Exit $fail

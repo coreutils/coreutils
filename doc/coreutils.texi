@@ -2127,6 +2127,12 @@ long
 For floating point (@code{f}):
 
 @table @asis
+@item B
+@uref{https://en.wikipedia.org/wiki/Bfloat16_floating-point_format,
+brain 16 bit float}
+@item H
+@uref{https://en.wikipedia.org/wiki/Half-precision_floating-point_format,
+half precision float}
 @item F
 float
 @item D

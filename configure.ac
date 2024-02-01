@@ -522,6 +522,9 @@ CFLAGS=$ac_save_CFLAGS
 LDFLAGS=$ac_save_LDFLAGS
 ac_c_werror_flag=$cu_save_c_werror_flag
 
+# Test compiler support for half precision floating point types (for od)
+AC_CHECK_TYPES([_Float16, __bf16])
+
 ac_save_CFLAGS=$CFLAGS
 CFLAGS="-mavx -mpclmul $CFLAGS"
 AC_MSG_CHECKING([if pclmul intrinsic exists])
