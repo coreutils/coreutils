@@ -598,6 +598,8 @@ UPDATE controls which existing files in the destination are replaced.\n\
 and results in all existing files in the destination being replaced.\n\
 'none' is like the --no-clobber option, in that no files in the\n\
 destination are replaced, and skipped files do not induce a failure.\n\
+'none-fail' also ensures no files are replaced in the destination,\n\
+but any skipped files are diagnosed and induce a failure.\n\
 'older' is the default operation when --update is specified, and results\n\
 in files being replaced if they're older than the corresponding source file.\n\
 "), stdout);

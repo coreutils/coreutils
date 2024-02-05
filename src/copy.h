@@ -68,6 +68,9 @@ enum Update_type
 
   /* Leave existing files.  */
   UPDATE_NONE,
+
+  /* Leave existing files, but exit failure if existing files.  */
+  UPDATE_NONE_FAIL,
 };
 
 /* This type is used to help mv (via copy.c) distinguish these cases.  */

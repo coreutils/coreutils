@@ -123,7 +123,7 @@ static struct option const long_opts[] =
   {"force", no_argument, nullptr, 'f'},
   {"interactive", no_argument, nullptr, 'i'},
   {"link", no_argument, nullptr, 'l'},
-  {"no-clobber", no_argument, nullptr, 'n'},
+  {"no-clobber", no_argument, nullptr, 'n'},   /* Deprecated.  */
   {"no-dereference", no_argument, nullptr, 'P'},
   {"no-preserve", required_argument, nullptr, NO_PRESERVE_ATTRIBUTES_OPTION},
   {"no-target-directory", no_argument, nullptr, 'T'},
@@ -195,7 +195,7 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -L, --dereference            always follow symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
-  -n, --no-clobber             silently skip existing files.\n\
+  -n, --no-clobber             (deprecated) silently skip exisiting files.\n\
                                  See also --update\n\
 "), stdout);
       fputs (_("\
@@ -228,8 +228,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
 "), stdout);
       fputs (_("\
   --update[=UPDATE]            control which existing files are updated;\n\
-                                 UPDATE={all,none,older(default)}.  See below\n\
-  -u                           equivalent to --update[=older]\n\
+                                 UPDATE={all,none,none-fail,older(default)}.\n\
+  -u                           equivalent to --update[=older].  See below\n\
 "), stdout);
       fputs (_("\
   -v, --verbose                explain what is being done\n\
@@ -1077,6 +1077,7 @@ main (int argc, char **argv)
         case 'n':
           x.interactive = I_ALWAYS_SKIP;
           no_clobber = true;
+          x.update = false;
           break;
 
         case 'P':
@@ -1140,13 +1141,12 @@ main (int argc, char **argv)
           break;
 
         case 'u':
-          if (optarg == nullptr)
-            x.update = true;
-          else if (! no_clobber)  /* -n takes precedence.  */
+          if (! no_clobber) /* -n > -u */
             {
-              enum Update_type update_opt;
-              update_opt = XARGMATCH ("--update", optarg,
-                                      update_type_string, update_type);
+              enum Update_type update_opt = UPDATE_OLDER;
+              if (optarg)
+                update_opt = XARGMATCH ("--update", optarg,
+                                        update_type_string, update_type);
               if (update_opt == UPDATE_ALL)
                 {
                   /* Default cp operation.  */
@@ -1157,6 +1157,11 @@ main (int argc, char **argv)
                 {
                   x.update = false;
                   x.interactive = I_ALWAYS_SKIP;
+                }
+              else if (update_opt == UPDATE_NONE_FAIL)
+                {
+                  x.update = false;
+                  x.interactive = I_ALWAYS_NO;
                 }
               else if (update_opt == UPDATE_OLDER)
                 {
@@ -1227,13 +1232,12 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (x.interactive == I_ALWAYS_SKIP)
-    x.update = false;
-
-  if (make_backups && x.interactive == I_ALWAYS_SKIP)
+  if (make_backups
+      && (x.interactive == I_ALWAYS_SKIP
+          || x.interactive == I_ALWAYS_NO))
     {
       error (0, 0,
-             _("options --backup and --no-clobber are mutually exclusive"));
+             _("--backup is mutually exclusive with -n or --update=none-fail"));
       usage (EXIT_FAILURE);
     }
 

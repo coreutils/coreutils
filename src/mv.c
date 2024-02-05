@@ -54,11 +54,11 @@ enum
 
 static char const *const update_type_string[] =
 {
-  "all", "none", "older", nullptr
+  "all", "none", "none-fail", "older", nullptr
 };
 static enum Update_type const update_type[] =
 {
-  UPDATE_ALL, UPDATE_NONE, UPDATE_OLDER,
+  UPDATE_ALL, UPDATE_NONE, UPDATE_NONE_FAIL, UPDATE_OLDER,
 };
 ARGMATCH_VERIFY (update_type_string, update_type);
 
@@ -69,7 +69,7 @@ static struct option const long_options[] =
   {"debug", no_argument, nullptr, DEBUG_OPTION},
   {"force", no_argument, nullptr, 'f'},
   {"interactive", no_argument, nullptr, 'i'},
-  {"no-clobber", no_argument, nullptr, 'n'},
+  {"no-clobber", no_argument, nullptr, 'n'},   /* Deprecated.  */
   {"no-copy", no_argument, nullptr, NO_COPY_OPTION},
   {"no-target-directory", no_argument, nullptr, 'T'},
   {"strip-trailing-slashes", no_argument, nullptr,
@@ -290,8 +290,8 @@ If you specify more than one of -i, -f, -n, only the final one takes effect.\n\
 "), stdout);
       fputs (_("\
   --update[=UPDATE]            control which existing files are updated;\n\
-                                 UPDATE={all,none,older(default)}.  See below\n\
-  -u                           equivalent to --update[=older]\n\
+                                 UPDATE={all,none,none-fail,older(default)}.\n\
+  -u                           equivalent to --update[=older].  See below\n\
 "), stdout);
       fputs (_("\
   -v, --verbose                explain what is being done\n\
@@ -356,6 +356,7 @@ main (int argc, char **argv)
         case 'n':
           x.interactive = I_ALWAYS_SKIP;
           no_clobber = true;
+          x.update = false;
           break;
         case DEBUG_OPTION:
           x.debug = x.verbose = true;
@@ -375,13 +376,12 @@ main (int argc, char **argv)
           no_target_directory = true;
           break;
         case 'u':
-          if (optarg == nullptr)
-            x.update = true;
-          else if (! no_clobber)  /* -n takes precedence.  */
+          if (! no_clobber)
             {
-              enum Update_type update_opt;
-              update_opt = XARGMATCH ("--update", optarg,
-                                      update_type_string, update_type);
+              enum Update_type update_opt = UPDATE_OLDER;
+              if (optarg)
+                update_opt = XARGMATCH ("--update", optarg,
+                                        update_type_string, update_type);
               if (update_opt == UPDATE_ALL)
                 {
                   /* Default mv operation.  */
@@ -392,6 +392,11 @@ main (int argc, char **argv)
                 {
                   x.update = false;
                   x.interactive = I_ALWAYS_SKIP;
+                }
+              else if (update_opt == UPDATE_NONE_FAIL)
+                {
+                  x.update = false;
+                  x.interactive = I_ALWAYS_NO;
                 }
               else if (update_opt == UPDATE_OLDER)
                 {
@@ -508,13 +513,12 @@ main (int argc, char **argv)
     for (int i = 0; i < n_files; i++)
       strip_trailing_slashes (file[i]);
 
-  if (x.interactive == I_ALWAYS_SKIP)
-    x.update = false;
-
-  if (make_backups && x.interactive == I_ALWAYS_SKIP)
+  if (make_backups
+      && (x.interactive == I_ALWAYS_SKIP
+          || x.interactive == I_ALWAYS_NO))
     {
       error (0, 0,
-             _("options --backup and --no-clobber are mutually exclusive"));
+             _("--backup is mutually exclusive with -n or --update=none-fail"));
       usage (EXIT_FAILURE);
     }
 

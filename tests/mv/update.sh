@@ -53,15 +53,20 @@ for update_option in '--update' '--update=older' '--update=all' \
 done
 
 # These should not perform the rename / copy
-for update_option in '--update=none' \
- '--update=all --update=none'; do
+for update_option in '--update=none' '--update=none-fail' \
+ '--update=all --update=none' \
+ '--update=all --no-clobber' \
+ '--no-clobber --update=all'; do
+
+  echo "$update_option" | grep 'fail' >/dev/null && ret=1 || ret=0
+
   test_reset
-  mv $update_option new old || fail=1
+  returns_ $ret mv $update_option new old || fail=1
   case "$(cat new)" in new) ;; *) fail=1 ;; esac
   case "$(cat old)" in old) ;; *) fail=1 ;; esac
 
   test_reset
-  cp $update_option new old || fail=1
+  returns_ $ret cp $update_option new old || fail=1
   case "$(cat new)" in new) ;; *) fail=1 ;; esac
   case "$(cat old)" in old) ;; *) fail=1 ;; esac
 done

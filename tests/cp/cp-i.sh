@@ -66,5 +66,8 @@ compare out7 out_empty || fail=1
 
 # options --backup and --no-clobber are mutually exclusive
 returns_ 1 cp -bn c d 2>/dev/null || fail=1
+# options --backup and --update=none{,-fail} are mutually exclusive
+returns_ 1 cp -b --update=none c d 2>/dev/null || fail=1
+returns_ 1 cp -b --update=none-fail c d 2>/dev/null || fail=1
 
 Exit $fail
