@@ -523,7 +523,45 @@ LDFLAGS=$ac_save_LDFLAGS
 ac_c_werror_flag=$cu_save_c_werror_flag
 
 # Test compiler support for half precision floating point types (for od)
-AC_CHECK_TYPES([_Float16, __bf16])
+AC_MSG_CHECKING([IEEE 16 bit floating point])
+ AC_COMPILE_IFELSE(
+   [AC_LANG_SOURCE([[
+     int
+     main (void)
+     {
+        _Float16 hf;
+        float f = hf;  /* Ensure compiler can promote to float.  */
+     }
+  ]])
+  ],[
+    ieee_16_bit_supported=yes
+  ],[
+    ieee_16_bit_supported=no
+  ])
+AC_MSG_RESULT([$ieee_16_bit_supported])
+if test $ieee_16_bit_supported = yes; then
+  AC_DEFINE([FLOAT16_SUPPORTED], [1], [IEEE 16 bit float supported])
+fi
+
+AC_MSG_CHECKING([Brain 16 bit floating point])
+ AC_COMPILE_IFELSE(
+   [AC_LANG_SOURCE([[
+     int
+     main (void)
+     {
+        __bf16 hf;
+        float f = hf;  /* Ensure compiler can promote to float.  */
+     }
+  ]])
+  ],[
+    brain_16_bit_supported=yes
+  ],[
+    brain_16_bit_supported=no
+  ])
+AC_MSG_RESULT([$brain_16_bit_supported])
+if test $brain_16_bit_supported = yes; then
+  AC_DEFINE([BF16_SUPPORTED], [1], [Brain 16 bit float supported])
+fi
 
 ac_save_CFLAGS=$CFLAGS
 CFLAGS="-mavx -mpclmul $CFLAGS"

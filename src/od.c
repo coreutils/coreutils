@@ -50,21 +50,21 @@ typedef unsigned long long int unsigned_long_long_int;
 typedef unsigned long int unsigned_long_long_int;
 #endif
 
-#if HAVE__FLOAT16
+#if FLOAT16_SUPPORTED
   /* Available since clang 6 (2018), and gcc 7 (2017).  */
   typedef _Float16 float16;
 #else
-# define HAVE__FLOAT16 0
+# define FLOAT16_SUPPORTED 0
   /* This is just a place-holder to avoid a few '#if' directives.
      In this case, the type isn't actually used.  */
   typedef float float16;
 #endif
 
-#if HAVE___BF16
+#if BF16_SUPPORTED
   /* Available since clang 11 (2020), and gcc 13 (2023). */
   typedef __bf16 bfloat16;
 #else
-# define HAVE___BF16 0
+# define BF16_SUPPORTED 0
   /* This is just a place-holder to avoid a few '#if' directives.
      In this case, the type isn't actually used.  */
   typedef float bfloat16;
@@ -180,7 +180,7 @@ static const int width_bytes[] =
   sizeof (int),
   sizeof (long int),
   sizeof (unsigned_long_long_int),
-#if HAVE___BF16
+#if BF16_SUPPORTED
   sizeof (bfloat16),
 #else
   sizeof (float16),
@@ -847,7 +847,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
             {
               if (size > MAX_FP_TYPE_SIZE
                   || fp_type_size[size] == NO_SIZE
-                  || (! HAVE__FLOAT16 && HAVE___BF16
+                  || (! FLOAT16_SUPPORTED && BF16_SUPPORTED
                       && size == sizeof (bfloat16))
                   )
                 {
@@ -864,8 +864,8 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
         }
       size_spec = fp_type_size[size];
 
-      if ((! HAVE__FLOAT16 && fmt == HFLOATING_POINT)
-          || (! HAVE___BF16 && fmt == BFLOATING_POINT))
+      if ((! FLOAT16_SUPPORTED && fmt == HFLOATING_POINT)
+          || (! BF16_SUPPORTED && fmt == BFLOATING_POINT))
       {
         error (0, 0,
                _("this system doesn't provide a %s floating point type"),
@@ -1660,9 +1660,9 @@ main (int argc, char **argv)
   for (i = 0; i <= MAX_FP_TYPE_SIZE; i++)
     fp_type_size[i] = NO_SIZE;
 
-#if HAVE__FLOAT16
+#if FLOAT16_SUPPORTED
   fp_type_size[sizeof (float16)] = FLOAT_HALF;
-#elif HAVE___BF16
+#elif BF16_SUPPORTED
   fp_type_size[sizeof (bfloat16)] = FLOAT_HALF;
 #endif
   fp_type_size[sizeof (float)] = FLOAT_SINGLE;
