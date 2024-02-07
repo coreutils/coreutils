@@ -536,13 +536,13 @@ parse_split_string (char const *str, int *orig_optind,
 }
 
 static void
-parse_signal_action_params (char const *optarg, bool set_default)
+parse_signal_action_params (char const *arg, bool set_default)
 {
   char signame[SIG2STR_MAX];
   char *opt_sig;
   char *optarg_writable;
 
-  if (! optarg)
+  if (! arg)
     {
       /* Without an argument, reset all signals.
          Some signals cannot be set to ignore or default (e.g., SIGKILL,
@@ -553,7 +553,7 @@ parse_signal_action_params (char const *optarg, bool set_default)
       return;
     }
 
-  optarg_writable = xstrdup (optarg);
+  optarg_writable = xstrdup (arg);
 
   opt_sig = strtok (optarg_writable, ",");
   while (opt_sig)
@@ -618,13 +618,13 @@ reset_signal_handlers (void)
 
 
 static void
-parse_block_signal_params (char const *optarg, bool block)
+parse_block_signal_params (char const *arg, bool block)
 {
   char signame[SIG2STR_MAX];
   char *opt_sig;
   char *optarg_writable;
 
-  if (! optarg)
+  if (! arg)
     {
       /* Without an argument, reset all signals.  */
       sigfillset (block ? &block_signals : &unblock_signals);
@@ -639,10 +639,10 @@ parse_block_signal_params (char const *optarg, bool block)
 
   sig_mask_changed = true;
 
-  if (! optarg)
+  if (! arg)
     return;
 
-  optarg_writable = xstrdup (optarg);
+  optarg_writable = xstrdup (arg);
 
   opt_sig = strtok (optarg_writable, ",");
   while (opt_sig)
