@@ -10740,7 +10740,7 @@ exec 3<>"$i"
 rm -- "$i"
 echo "Hello, world" >&3
 shred - >&3
-exec 3>-
+exec 3>&-
 @end example
 
 However, the command @samp{shred - >file} does not shred the contents
