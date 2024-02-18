@@ -20,12 +20,6 @@
 /* Define TEST_STANDALONE to get the /bin/test version.  Otherwise, you get
    the shell builtin version. */
 
-/* Without this pragma, gcc 4.6.2 20111027 mistakenly suggests that
-   the advance function might be candidate for attribute 'pure'.  */
-#if (__GNUC__ == 4 && 6 <= __GNUC_MINOR__) || 4 < __GNUC__
-# pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
-#endif
-
 #include <config.h>
 #include <ctype.h>
 #include <stdio.h>
