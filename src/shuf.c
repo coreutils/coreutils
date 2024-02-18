@@ -20,10 +20,10 @@
 #include <config.h>
 
 #include <sys/types.h>
+#include <getopt.h>
 #include "system.h"
 
 #include "fadvise.h"
-#include "getopt.h"
 #include "linebuffer.h"
 #include "quote.h"
 #include "randint.h"

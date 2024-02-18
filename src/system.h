@@ -717,7 +717,7 @@ usable_st_size (struct stat const *sb)
 
 _Noreturn void usage (int status);
 
-#include "error.h"
+#include <error.h>
 
 /* Like error(0, 0, ...), but without an implicit newline.
    Also a noop unless the global DEV_DEBUG is set.  */

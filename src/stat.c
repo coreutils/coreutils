@@ -53,6 +53,7 @@
 # include <fs_info.h>
 #endif
 #include <selinux/selinux.h>
+#include <getopt.h>
 
 #include "system.h"
 
@@ -62,7 +63,6 @@
 #include "file-type.h"
 #include "filemode.h"
 #include "fs.h"
-#include "getopt.h"
 #include "mountlist.h"
 #include "quote.h"
 #include "stat-size.h"
