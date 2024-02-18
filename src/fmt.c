@@ -910,7 +910,7 @@ fmt_paragraph (void)
 }
 
 /* Work around <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109628>.  */
-#if 13 <= __GNUC__
+#if __GNUC__ == 13
 # pragma GCC diagnostic ignored "-Wanalyzer-use-of-uninitialized-value"
 #endif
 
