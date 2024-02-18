@@ -766,7 +766,7 @@ copy_attr (char const *src_path, int src_fd,
        ? check_selinux_attr : nullptr);
 
 # if 4 < __GNUC__ + (8 <= __GNUC_MINOR__)
-  /* Pacify gcc -Wsuggest-attribute=format through at least GCC 11.2.1.  */
+  /* Pacify gcc -Wsuggest-attribute=format through at least GCC 13.2.1.  */
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wsuggest-attribute=format"
 # endif
