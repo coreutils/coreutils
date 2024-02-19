@@ -13588,6 +13588,7 @@ be used as a dummy shell for the purpose of disabling accounts.
 @section @command{test}: Check file types and compare values
 
 @pindex test
+@pindex [
 @cindex check file types
 @cindex compare values
 @cindex expression evaluation
