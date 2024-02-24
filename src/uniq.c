@@ -205,7 +205,7 @@ characters.  Fields are skipped before chars.\n\
 "), stdout);
      fputs (_("\
 \n\
-Note: 'uniq' does not detect repeated lines unless they are adjacent.\n\
+'uniq' does not detect repeated lines unless they are adjacent.\n\
 You may want to sort the input first, or use 'sort -u' without 'uniq'.\n\
 "), stdout);
       emit_ancillary_info (PROGRAM_NAME);

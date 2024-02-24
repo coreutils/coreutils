@@ -345,7 +345,7 @@ enum
    Usually it is just PROGRAM_NAME.  */
 #define USAGE_BUILTIN_WARNING \
   _("\n" \
-"NOTE: your shell may have its own version of %s, which usually supersedes\n" \
+"Your shell may have its own version of %s, which usually supersedes\n" \
 "the version described here.  Please refer to your shell's documentation\n" \
 "for details about the options it supports.\n")
 

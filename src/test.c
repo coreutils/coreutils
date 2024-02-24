@@ -762,13 +762,12 @@ INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 "), stdout);
       fputs (_("\
 \n\
-NOTE: Binary -a and -o are inherently ambiguous.  Use 'test EXPR1 && test\n\
-EXPR2' or 'test EXPR1 || test EXPR2' instead.\n\
+Binary -a and -o are ambiguous.  Use 'test EXPR1 && test EXPR2'\n\
+or 'test EXPR1 || test EXPR2' instead.\n\
 "), stdout);
       fputs (_("\
 \n\
-NOTE: [ honors the --help and --version options, but test does not.\n\
-test treats each of those as it treats any other nonempty STRING.\n\
+'[' honors --help and --version, but 'test' treats them as STRINGs.\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, _("test and/or ["));
       emit_ancillary_info (PROGRAM_NAME);

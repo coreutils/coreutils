@@ -1789,7 +1789,7 @@ The MODE argument of --cached can be: always, never, or default.\n\
       fputs (_("\n\
 The valid format sequences for files (without --file-system):\n\
 \n\
-  %a   permission bits in octal (note '#' and '0' printf flags)\n\
+  %a   permission bits in octal (see '#' and '0' printf flags)\n\
   %A   permission bits and file type in human readable form\n\
   %b   number of blocks allocated (see %B)\n\
   %B   the size in bytes of each block reported by %b\n\

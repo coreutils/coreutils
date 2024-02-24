@@ -239,7 +239,8 @@ change the times of the file associated with standard output.\n\
 "), stdout);
       fputs (_("\
   -r, --reference=FILE   use this file's times instead of current time\n\
-  -t STAMP               use [[CC]YY]MMDDhhmm[.ss] instead of current time\n\
+  -t [[CC]YY]MMDDhhmm[.ss]  use specified time instead of current time,\n\
+                         with a date-time format that differs from -d's\n\
 "), stdout);
       fputs (_("\
       --time=WORD        specify which time to change:\n\
@@ -248,10 +249,6 @@ change the times of the file associated with standard output.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
-\n\
-Note that the -d and -t options accept different time-date formats.\n\
-"), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

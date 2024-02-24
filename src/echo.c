@@ -82,8 +82,8 @@ If -e is in effect, the following sequences are recognized:\n\
 "), stdout);
   printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
   fputs (_("\n\
-NOTE: printf(1) is a preferred alternative,\n\
-which does not have issues outputting option-like strings.\n\
+Consider using the 'printf' command instead,\n\
+as it avoids problems when outputting option-like strings.\n\
 "), stdout);
   emit_ancillary_info (PROGRAM_NAME);
   exit (status);

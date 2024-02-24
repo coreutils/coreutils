@@ -10,5 +10,4 @@ the first argument is used as the complete context.  Any additional
 arguments after \fICOMMAND\fR are interpreted as arguments to the
 command.
 .PP
-Note that only carefully-chosen contexts are likely to successfully
-run.
+Only carefully-chosen contexts are likely to run successfully.

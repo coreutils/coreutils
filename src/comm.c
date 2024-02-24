@@ -149,7 +149,7 @@ and column three contains lines common to both files.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-Note, comparisons honor the rules specified by 'LC_COLLATE'.\n\
+Comparisons honor the rules specified by 'LC_COLLATE'.\n\
 "), stdout);
       printf (_("\
 \n\

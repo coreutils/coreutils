@@ -429,7 +429,7 @@ interpreted in relation to its parent directory.\n\
       --backup[=CONTROL]      make a backup of each existing destination file\n\
   -b                          like --backup but does not accept an argument\n\
   -d, -F, --directory         allow the superuser to attempt to hard link\n\
-                                directories (note: will probably fail due to\n\
+                                directories (this will probably fail due to\n\
                                 system restrictions, even for the superuser)\n\
   -f, --force                 remove existing destination files\n\
 "), stdout);

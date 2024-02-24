@@ -546,7 +546,7 @@ The default mode is to print a line with: checksum, a space,\n\
 a character indicating input mode ('*' for binary, ' ' for text\n\
 or where binary is insignificant), and name for each FILE.\n\
 \n\
-Note: There is no difference between binary mode and text mode on GNU systems.\
+There is no difference between binary mode and text mode on GNU systems.\
 \n"), stdout);
 #endif
 #if HASH_ALGO_CKSUM
