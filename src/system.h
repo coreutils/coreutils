@@ -596,8 +596,8 @@ emit_update_parameters_note (void)
 UPDATE controls which existing files in the destination are replaced.\n\
 'all' is the default operation when an --update option is not specified,\n\
 and results in all existing files in the destination being replaced.\n\
-'none' is similar to the --no-clobber option, in that no files in the\n\
-destination are replaced, but also skipped files do not induce a failure.\n\
+'none' is like the --no-clobber option, in that no files in the\n\
+destination are replaced, and skipped files do not induce a failure.\n\
 'older' is the default operation when --update is specified, and results\n\
 in files being replaced if they're older than the corresponding source file.\n\
 "), stdout);

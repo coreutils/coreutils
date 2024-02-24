@@ -322,6 +322,7 @@ main (int argc, char **argv)
   int n_files;
   char **file;
   bool selinux_enabled = (0 < is_selinux_enabled ());
+  bool no_clobber = false;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -353,7 +354,8 @@ main (int argc, char **argv)
           x.interactive = I_ASK_USER;
           break;
         case 'n':
-          x.interactive = I_ALWAYS_NO;
+          x.interactive = I_ALWAYS_SKIP;
+          no_clobber = true;
           break;
         case DEBUG_OPTION:
           x.debug = x.verbose = true;
@@ -375,7 +377,7 @@ main (int argc, char **argv)
         case 'u':
           if (optarg == nullptr)
             x.update = true;
-          else if (x.interactive != I_ALWAYS_NO)  /* -n takes precedence.  */
+          else if (! no_clobber)  /* -n takes precedence.  */
             {
               enum Update_type update_opt;
               update_opt = XARGMATCH ("--update", optarg,
@@ -506,10 +508,10 @@ main (int argc, char **argv)
     for (int i = 0; i < n_files; i++)
       strip_trailing_slashes (file[i]);
 
-  if (x.interactive == I_ALWAYS_NO)
+  if (x.interactive == I_ALWAYS_SKIP)
     x.update = false;
 
-  if (make_backups && x.interactive == I_ALWAYS_NO)
+  if (make_backups && x.interactive == I_ALWAYS_SKIP)
     {
       error (0, 0,
              _("options --backup and --no-clobber are mutually exclusive"));

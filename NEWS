@@ -43,6 +43,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   basenc --base16 -d now supports lower case hexadecimal characters.
   Previously an error was given for lower case hex digits.
 
+  cp --no-clobber, and mv -n no longer exit with failure status if
+  existing files are encountered in the destination.  Instead they revert
+  to the behavior from before v9.2, silently skipping existing files.
+
   ls --dired now implies long format output without hyperlinks enabled,
   and will take precedence over previously specified formats or hyperlink mode.
 

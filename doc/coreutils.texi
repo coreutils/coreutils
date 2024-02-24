@@ -9057,12 +9057,10 @@ a regular file in the destination tree.
 @itemx --no-clobber
 @opindex -n
 @opindex --no-clobber
-Do not overwrite an existing file; silently fail instead.
-This option overrides a previous
-@option{-i} option.  This option is mutually exclusive with @option{-b} or
-@option{--backup} option.
-See also the @option{--update=none} option which will
-skip existing files but not fail.
+Do not overwrite an existing file; silently skip instead.
+This option overrides a previous @option{-i} option.
+This option is mutually exclusive with @option{-b} or @option{--backup} option.
+See also the @option{--update} option.
 
 @item -P
 @itemx --no-dereference
@@ -9333,8 +9331,8 @@ This is the default operation when an @option{--update} option is not specified,
 and results in all existing files in the destination being replaced.
 
 @item none
-This is similar to the @option{--no-clobber} option, in that no files in the
-destination are replaced, but also skipping a file does not induce a failure.
+This is like the deprecated @option{--no-clobber} option, where no files in the
+destination are replaced, and also skipping a file does not induce a failure.
 
 @item older
 This is the default operation when @option{--update} is specified, and results

@@ -195,8 +195,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -L, --dereference            always follow symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
-  -n, --no-clobber             ensure no existing files overwritten, and fail\n\
-                                 silently instead. See also --update\n\
+  -n, --no-clobber             silently skip existing files.\n\
+                                 See also --update\n\
 "), stdout);
       fputs (_("\
   -P, --no-dereference         never follow symbolic links in SOURCE\n\
@@ -984,6 +984,7 @@ main (int argc, char **argv)
   char *target_directory = nullptr;
   bool no_target_directory = false;
   char const *scontext = nullptr;
+  bool no_clobber = false;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -1074,7 +1075,8 @@ main (int argc, char **argv)
           break;
 
         case 'n':
-          x.interactive = I_ALWAYS_NO;
+          x.interactive = I_ALWAYS_SKIP;
+          no_clobber = true;
           break;
 
         case 'P':
@@ -1140,7 +1142,7 @@ main (int argc, char **argv)
         case 'u':
           if (optarg == nullptr)
             x.update = true;
-          else if (x.interactive != I_ALWAYS_NO)  /* -n takes precedence.  */
+          else if (! no_clobber)  /* -n takes precedence.  */
             {
               enum Update_type update_opt;
               update_opt = XARGMATCH ("--update", optarg,
@@ -1225,10 +1227,10 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (x.interactive == I_ALWAYS_NO)
+  if (x.interactive == I_ALWAYS_SKIP)
     x.update = false;
 
-  if (make_backups && x.interactive == I_ALWAYS_NO)
+  if (make_backups && x.interactive == I_ALWAYS_SKIP)
     {
       error (0, 0,
              _("options --backup and --no-clobber are mutually exclusive"));

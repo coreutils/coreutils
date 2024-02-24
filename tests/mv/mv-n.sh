@@ -23,7 +23,6 @@ print_ver_ mv
 # test miscellaneous combinations of -f -i -n parameters
 touch a b || framework_failure_
 echo "renamed 'a' -> 'b'" > out_move
-echo "mv: not replacing 'b'" > err_skip || framework_failure_
 > out_empty
 
 # ask for overwrite, answer no
@@ -38,23 +37,23 @@ compare out2 out_move || fail=1
 
 # -n wins (as the last option)
 touch a b || framework_failure_
-echo y | returns_ 1 mv -vin a b 2>/dev/null > out3 || fail=1
+echo y | mv -vin a b 2>/dev/null > out3 || fail=1
 compare out3 out_empty || fail=1
 
 # -n wins (non verbose)
 touch a b || framework_failure_
-echo y | returns_ 1 mv -in a b 2>err3 > out3 || fail=1
+echo y | mv -in a b 2>err3 > out3 || fail=1
 compare out3 out_empty || fail=1
-compare err3 err_skip || fail=1
+compare /dev/null err3 || fail=1
 
 # -n wins (as the last option)
 touch a b || framework_failure_
-echo y | returns_ 1 mv -vfn a b 2>/dev/null > out4 || fail=1
+echo y | mv -vfn a b 2>/dev/null > out4 || fail=1
 compare out4 out_empty || fail=1
 
 # -n wins (as the last option)
 touch a b || framework_failure_
-echo y | returns_ 1 mv -vifn a b 2>/dev/null > out5 || fail=1
+echo y | mv -vifn a b 2>/dev/null > out5 || fail=1
 compare out5 out_empty || fail=1
 
 # options --backup and --no-clobber are mutually exclusive
