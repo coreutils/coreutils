@@ -1178,7 +1178,7 @@ digest_check (char const *checkfile_name)
         error (EXIT_FAILURE, 0, _("%s: too many checksum lines"),
                quotef (checkfile_name));
 
-      line_length = getline (&line, &line_chars_allocated, checkfile_stream);
+      line_length = getdelim (&line, &line_chars_allocated, digest_delim, checkfile_stream);
       if (line_length <= 0)
         break;
 
@@ -1186,10 +1186,13 @@ digest_check (char const *checkfile_name)
       if (line[0] == '#')
         continue;
 
-      /* Remove any trailing newline.  */
-      line_length -= line[line_length - 1] == '\n';
-      /* Remove any trailing carriage return.  */
-      line_length -= line[line_length - (0 < line_length)] == '\r';
+      if (digest_delim != '\0')
+        {
+          /* Remove any trailing newline.  */
+          line_length -= line[line_length - 1] == '\n';
+          /* Remove any trailing carriage return.  */
+          line_length -= line[line_length - (0 < line_length)] == '\r';
+        }
 
       /* Ignore empty lines.  */
       if (line_length == 0)
@@ -1533,12 +1536,6 @@ main (int argc, char **argv)
      usage (EXIT_FAILURE);
    }
 
-  if (digest_delim != '\n' && do_check)
-    {
-      error (0, 0, _("the --zero option is not supported when "
-                     "verifying checksums"));
-      usage (EXIT_FAILURE);
-    }
 #if !HASH_ALGO_CKSUM
   if (prefix_tag && do_check)
     {
