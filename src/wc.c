@@ -528,7 +528,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                           if (width > 0)
                             linepos += width;
                         }
-                      in_word2 = !iswnbspace (wide_char);
+                      in_word2 = ! iswspace (wide_char)
+                                 && ! iswnbspace (wide_char);
                     }
 
                   /* Count words by counting word starts, i.e., each

@@ -38,10 +38,15 @@ fi
 
 export LC_ALL=en_US.UTF-8
 if test "$(locale charmap 2>/dev/null)" = UTF-8; then
+  #non breaking space class
   check_word_sep '\u00A0'
   check_word_sep '\u2007'
   check_word_sep '\u202F'
   check_word_sep '\u2060'
+
+  #sampling of "standard" space class
+  check_word_sep '\u0020'
+  check_word_sep '\u2003'
 fi
 
 export LC_ALL=ru_RU.KOI8-R
