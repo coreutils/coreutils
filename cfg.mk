@@ -927,6 +927,9 @@ _gl_TS_other_headers = $(srcdir)/src/*.h src/*.h
 # Normally, the rule would detect its declaration, but that uses a
 # different name, __clz_tab.
 _gl_TS_unmarked_extern_vars = factor_clz_tab
+# Avoid tight_scope rule stating these should be static
+# as there is no way to achieve that with the way these are defined.
+_gl_TS_unmarked_extern_vars += ptr_MD5_.*
 # Other tight_scope settings
 _gl_TS_dir = .
 _gl_TS_obj_files = src/*.$(OBJEXT)
