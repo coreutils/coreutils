@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ join
 
-test "${LOCALE_FR_UTF8+set}" = set || skip_ "French UTF-8 locale not available"
+test "$LOCALE_FR_UTF8" != none || skip_ "French UTF-8 locale not available"
 
 LC_ALL=$LOCALE_FR_UTF8
 export LC_ALL
