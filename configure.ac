@@ -351,6 +351,35 @@ if test $utils_cv_localtime_cache = yes; then
   AC_DEFINE([LOCALTIME_CACHE], [1], [FIXME])
 fi
 
+# Should 'sort' link libcrypto dynamically?
+AS_CASE([$LIB_CRYPTO],
+  [-lcrypto],
+    [# Check for dlopen and libcrypto dynamic linking in one program,
+     # as there's little point to checking them separately.
+     AC_CACHE_CHECK([for dlopen and whether libcrypto is linked dynamically],
+       [utils_cv_dlopen_libcrypto],
+       [utils_cv_dlopen_libcrypto=no
+        saved_LIBS=$LIBS
+        LIBS="$LIBS $LIB_CRYPTO"
+        AC_LINK_IFELSE(
+          [AC_LANG_PROGRAM(
+             [[#include <dlfcn.h>
+               #include <openssl/sha.h>
+             ]],
+             [[return !(dlopen ("libcrypto.so", RTLD_LAZY | RTLD_GLOBAL)
+                        && SHA512 (0, 0, 0));]])],
+          [# readelf works with cross-builds; ldd works on more platforms.
+           AS_CASE([`(readelf -d conftest$EXEEXT || ldd conftest$EXEEXT
+                     ) 2>/dev/null`],
+             [*libcrypto*],
+               [utils_cv_dlopen_libcrypto=yes])])
+        LIBS=$saved_LIBS])
+     AS_CASE([$utils_cv_dlopen_libcrypto],
+       [yes],
+         [AC_DEFINE([DLOPEN_LIBCRYPTO], [1],
+                    [Define to 1 if dlopen exists and libcrypto is
+                     linked dynamically.])])])
+
 # macOS >= 10.12
 AC_CHECK_FUNCS([fclonefileat])
 

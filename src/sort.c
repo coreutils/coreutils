@@ -39,7 +39,6 @@
 #include "hash.h"
 #include "heap.h"
 #include "ignore-value.h"
-#include "md5.h"
 #include "mbswidth.h"
 #include "nproc.h"
 #include "physmem.h"
@@ -2085,6 +2084,56 @@ getmonth (char const *month, char **ea)
   return 0;
 }
 
+/* When using the OpenSSL implementation, dynamically link only if -R.
+   This saves startup time in the usual (sans -R) case.  */
+
+#if DLOPEN_LIBCRYPTO && HAVE_OPENSSL_MD5
+/* In the typical case where md5.h does not #undef HAVE_OPENSSL_MD5,
+   trick md5.h into declaring and using pointers to functions not functions.
+   This causes the compiler's -lcrypto option to have no effect,
+   as sort.o no longer uses any crypto symbols statically.  */
+# define MD5_Init (*ptr_MD5_Init)
+# define MD5_Update (*ptr_MD5_Update)
+# define MD5_Final (*ptr_MD5_Final)
+#endif
+
+#include "md5.h"
+
+#if DLOPEN_LIBCRYPTO && HAVE_OPENSSL_MD5
+# include <dlfcn.h>
+
+/* Diagnose a dynamic linking failure.  */
+static void
+link_failure (void)
+{
+  error (SORT_FAILURE, 0, "%s", dlerror ());
+}
+
+/* Return a function pointer in HANDLE for SYMBOL.  */
+static void *
+symbol_address (void *handle, char const *symbol)
+{
+  void *address = dlsym (handle, symbol);
+  if (!address)
+    link_failure ();
+  return address;
+}
+#endif
+
+/* Dynamically link the crypto library, if it needs linking.  */
+static void
+link_libcrypto (void)
+{
+#if DLOPEN_LIBCRYPTO && HAVE_OPENSSL_MD5
+  void *handle = dlopen ("libcrypto.so", RTLD_LAZY | RTLD_GLOBAL);
+  if (!handle)
+    link_failure ();
+  ptr_MD5_Init = symbol_address (handle, "MD5_Init");
+  ptr_MD5_Update = symbol_address (handle, "MD5_Update");
+  ptr_MD5_Final = symbol_address (handle, "MD5_Final");
+#endif
+}
+
 /* A randomly chosen MD5 state, used for random comparison.  */
 static struct md5_ctx random_md5_state;
 
@@ -2100,6 +2149,7 @@ random_md5_state_init (char const *random_source)
   randread (r, buf, sizeof buf);
   if (randread_free (r) != 0)
     sort_die (_("close failed"), random_source);
+  link_libcrypto ();
   md5_init_ctx (&random_md5_state);
   md5_process_bytes (buf, sizeof buf, &random_md5_state);
 }
