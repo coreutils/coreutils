@@ -70,6 +70,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   SELinux operations in file copy operations are now more efficient,
   avoiding unneeded MCS/MLS label translation.
 
+  sort no longer dynamically links to libcrypto unless -R is used.
+  This decreases startup overhead in the typical case.
+
   wc is now much faster in single-byte locales and somewhat faster in
   multi-byte locales.
 
