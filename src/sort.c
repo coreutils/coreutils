@@ -2125,7 +2125,7 @@ static void
 link_libcrypto (void)
 {
 #if DLOPEN_LIBCRYPTO && HAVE_OPENSSL_MD5
-  void *handle = dlopen ("libcrypto.so", RTLD_LAZY | RTLD_GLOBAL);
+  void *handle = dlopen (LIBCRYPTO_SONAME, RTLD_LAZY | RTLD_GLOBAL);
   if (!handle)
     link_failure ();
   ptr_MD5_Init = symbol_address (handle, "MD5_Init");

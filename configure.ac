@@ -365,12 +365,16 @@ AS_CASE([$LIB_CRYPTO],
           [AC_LANG_PROGRAM(
              [[#include <dlfcn.h>
                #include <openssl/sha.h>
+               /* Use SHA512 rather than MD5 here to avoid deprecation warnings.
+                  So need to check HAVE_OPENSSL_MD5.. with DLOPEN_LIBCRYPTO. */
              ]],
              [[return !(dlopen ("libcrypto.so", RTLD_LAZY | RTLD_GLOBAL)
                         && SHA512 (0, 0, 0));]])],
           [# readelf works with cross-builds; ldd works on more platforms.
-           AS_CASE([`(readelf -d conftest$EXEEXT || ldd conftest$EXEEXT
-                     ) 2>/dev/null`],
+           LIBCRYPTO_SONAME="`(readelf -d conftest$EXEEXT || ldd conftest$EXEEXT
+                              ) 2>/dev/null |
+                              sed -n 's/.*\(libcrypto.so.[[.0-9]]*\).*/\1/p'`"
+           AS_CASE([$LIBCRYPTO_SONAME],
              [*libcrypto*],
                [utils_cv_dlopen_libcrypto=yes])])
         LIBS=$saved_LIBS])
@@ -378,7 +382,10 @@ AS_CASE([$LIB_CRYPTO],
        [yes],
          [AC_DEFINE([DLOPEN_LIBCRYPTO], [1],
                     [Define to 1 if dlopen exists and libcrypto is
-                     linked dynamically.])])])
+                     linked dynamically.])
+          AC_DEFINE_UNQUOTED([LIBCRYPTO_SONAME], ["$LIBCRYPTO_SONAME"],
+                             [versioned libcrypto])
+         ])])
 
 # macOS >= 10.12
 AC_CHECK_FUNCS([fclonefileat])
