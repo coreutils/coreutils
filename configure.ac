@@ -373,7 +373,7 @@ AS_CASE([$LIB_CRYPTO],
           [# readelf works with cross-builds; ldd works on more platforms.
            LIBCRYPTO_SONAME="`(readelf -d conftest$EXEEXT || ldd conftest$EXEEXT
                               ) 2>/dev/null |
-                              sed -n 's/.*\(libcrypto.so.[[.0-9]]*\).*/\1/p'`"
+                              sed -n 's/.*\(libcrypto\.so\.[[.0-9]]*\).*/\1/p'`"
            AS_CASE([$LIBCRYPTO_SONAME],
              [*libcrypto*],
                [utils_cv_dlopen_libcrypto=yes])])
