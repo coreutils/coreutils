@@ -304,7 +304,7 @@ src_printf_LDADD += $(LIBICONV)
 
 # for libcrypto hash routines
 src_md5sum_LDADD += $(LIB_CRYPTO)
-src_sort_LDADD += $(LIB_CRYPTO)
+src_sort_LDADD += $(LIB_DL) $(LIB_CRYPTO)
 src_sha1sum_LDADD += $(LIB_CRYPTO)
 src_sha224sum_LDADD += $(LIB_CRYPTO)
 src_sha256sum_LDADD += $(LIB_CRYPTO)
