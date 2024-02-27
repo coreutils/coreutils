@@ -156,7 +156,7 @@ main (int argc, char **argv)
   int status = EXIT_SUCCESS;
   size_t x_count;
   size_t suffix_len;
-  char *dest_name;
+  char *dest_name = nullptr;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -255,7 +255,13 @@ main (int argc, char **argv)
     }
   x_count = count_consecutive_X_s (template, suffix - template);
   if (x_count < 3)
-    error (EXIT_FAILURE, 0, _("too few X's in template %s"), quote (template));
+    {
+      /* when suffix was appended to template only diagnose the template.  */
+      if (template == dest_name)
+        template[suffix - template] = '\0';
+      error (EXIT_FAILURE, 0, _("too few X's in template %s"),
+             quote (template));
+    }
 
   if (use_dest_dir)
     {

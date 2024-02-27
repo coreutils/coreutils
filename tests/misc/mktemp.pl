@@ -165,7 +165,7 @@ my @Tests =
      ['suffix10f', 'aXXb', {EXIT => 1},
       {ERR=>"$prog: too few X's in template 'aXXb'\n"}],
      ['suffix10d', '-d --suffix=X aXX', {EXIT => 1},
-      {ERR=>"$prog: too few X's in template 'aXXX'\n"}],
+      {ERR=>"$prog: too few X's in template 'aXX'\n"}],
 
      ['suffix11f', '--suffix=.txt', {OUT=>"./tmp.ZZZZZZZZZZ.txt\n"},
       {ENV=>"TMPDIR=."},
