@@ -35,9 +35,8 @@ EOF
 compare exp out || fail=1
 
 unset LC_ALL
-f=$LOCALE_FR_UTF8
-: ${LOCALE_FR_UTF8=none}
 if test "$LOCALE_FR_UTF8" != "none"; then
+  f=$LOCALE_FR_UTF8
   (
    #printable multi-byte
    LC_ALL=$f $prog '%q\n' 'áḃç' > out

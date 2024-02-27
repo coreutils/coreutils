@@ -316,10 +316,8 @@ ___________________
 EOF
 
 unset LC_ALL
-f=$LOCALE_FR_UTF8
-
-: ${LOCALE_FR_UTF8=none}
 if test "$LOCALE_FR_UTF8" != "none"; then
+ f=$LOCALE_FR_UTF8
  LC_NUMERIC=$f LC_MESSAGES=C sort -g --debug /dev/null 2> debug.out
  if grep 'numbers use .*,.* as a decimal point' debug.out >/dev/null; then
   (

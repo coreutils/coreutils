@@ -22,9 +22,8 @@ print_ver_ printf
 prog='env printf'
 
 unset LC_ALL
-f=$LOCALE_FR_UTF8
-: ${LOCALE_FR_UTF8=none}
 if test "$LOCALE_FR_UTF8" != "none"; then
+  f=$LOCALE_FR_UTF8
   (
    #valid multi-byte
    LC_ALL=$f $prog '%04x\n' '"á' >>out 2>>err
