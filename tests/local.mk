@@ -272,8 +272,6 @@ all_tests =					\
   tests/od/od-float.sh				\
   tests/misc/mktemp.pl				\
   tests/misc/arch.sh				\
-  tests/misc/join.pl				\
-  tests/misc/join-utf8.sh			\
   tests/pr/pr-tests.pl				\
   tests/pwd/pwd-option.sh			\
   tests/chcon/chcon-fail.sh			\
@@ -334,6 +332,8 @@ all_tests =					\
   tests/cksum/md5sum-bsd.sh			\
   tests/cksum/md5sum-newline.pl			\
   tests/cksum/md5sum-parallel.sh		\
+  tests/join/join.pl				\
+  tests/join/join-utf8.sh			\
   tests/misc/mknod.sh				\
   tests/nice/nice.sh				\
   tests/nice/nice-fail.sh			\
