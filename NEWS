@@ -80,6 +80,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  cp,mv,install,cat,split now read and write a minimum of 256KiB at a time.
+  This was previously 128KiB and increasing to 256KiB was seen to increase
+  throughput by 10-20% when reading cached files on modern systems.
+
   SELinux operations in file copy operations are now more efficient,
   avoiding unneeded MCS/MLS label translation.
 
