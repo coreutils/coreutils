@@ -10302,6 +10302,16 @@ to cause @command{cp} write to arbitrary target directories.
 
 @optBackupSuffix
 
+@item -x
+@itemx --swap
+@opindex -x
+@opindex --swap
+@cindex swapping files
+Atomically exchange all data and metadata for two specified files.
+They can be of a different type,
+but must exist and reside on the same file system.
+If the atomic swap is not supported, exit with failure status.
+
 @optTargetDirectory
 
 @optNoTargetDirectory

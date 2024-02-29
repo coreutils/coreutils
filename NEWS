@@ -76,6 +76,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   od now supports printing IEEE half precision floating point with -t fH,
   or brain 16 bit floating point with -t fB, where supported by the compiler.
 
+  mv now accepts the --swap (-x) option, which atomically swaps two files on
+  one file system (where RENAME_EXCHANGE is supported).
+
   tail now supports following multiple processes, with repeated --pid options.
 
 ** Improvements

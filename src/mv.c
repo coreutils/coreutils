@@ -75,6 +75,7 @@ static struct option const long_options[] =
   {"strip-trailing-slashes", no_argument, nullptr,
    STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, nullptr, 'S'},
+  {"swap", no_argument, nullptr, 'x'},
   {"target-directory", required_argument, nullptr, 't'},
   {"update", optional_argument, nullptr, 'u'},
   {"verbose", no_argument, nullptr, 'v'},
@@ -285,6 +286,10 @@ If you specify more than one of -i, -f, -n, only the final one takes effect.\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
 "), stdout);
       fputs (_("\
+  -x, --swap                   atomically swap SOURCE and DEST, they may be\n\
+                                 different types, but on the same file system\n\
+"), stdout);
+      fputs (_("\
   -t, --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
   -T, --no-target-directory    treat DEST as a normal file\n\
 "), stdout);
@@ -323,6 +328,7 @@ main (int argc, char **argv)
   char **file;
   bool selinux_enabled = (0 < is_selinux_enabled ());
   bool no_clobber = false;
+  bool swap = false;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -337,7 +343,7 @@ main (int argc, char **argv)
   /* Try to disable the ability to unlink a directory.  */
   priv_set_remove_linkdir ();
 
-  while ((c = getopt_long (argc, argv, "bfint:uvS:TZ", long_options, nullptr))
+  while ((c = getopt_long (argc, argv, "bfint:uvS:TxZ", long_options, nullptr))
          != -1)
     {
       switch (c)
@@ -412,6 +418,9 @@ main (int argc, char **argv)
           make_backups = true;
           backup_suffix = optarg;
           break;
+        case 'x':
+          swap = true;
+          break;
         case 'Z':
           /* As a performance enhancement, don't even bother trying
              to "restorecon" when not on an selinux-enabled kernel.  */
@@ -433,6 +442,34 @@ main (int argc, char **argv)
 
   n_files = argc - optind;
   file = argv + optind;
+
+  if (swap)
+    {
+      if (target_directory || x.update)
+        {
+          error (0, 0, _("cannot combine --swap with "
+                         "--target-directory (-t) or --update (-u)"));
+          usage (EXIT_FAILURE);
+        }
+      if (n_files != 2)
+        {
+          error (0, 0, _("option --swap (-x) takes 2 file operands, "
+                         "but %d were given"), n_files);
+          usage (EXIT_FAILURE);
+        }
+      if (renameatu (AT_FDCWD, file[0], AT_FDCWD, file[1], RENAME_EXCHANGE))
+        {
+          if (errno == EINVAL || is_ENOTSUP (errno))
+            error (EXIT_FAILURE, 0,
+                   _("atomic swap of %s and %s is not supported"),
+                   quoteaf_n (0, file[0]), quoteaf_n (1, file[1]));
+          else
+            error (EXIT_FAILURE, errno, _("swap of %s and %s failed"),
+                   quoteaf_n (0, file[0]), quoteaf_n (1, file[1]));
+        }
+
+      main_exit (EXIT_SUCCESS);
+    }
 
   if (n_files <= !target_directory)
     {
