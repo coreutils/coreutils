@@ -1397,11 +1397,6 @@ main (int argc, char **argv)
         digest_length = xdectoumax (optarg, 0, UINTMAX_MAX, "",
                                 _("invalid length"), 0);
         digest_length_str = optarg;
-        if (digest_length % 8 != 0)
-          {
-            error (0, 0, _("invalid length: %s"), quote (digest_length_str));
-            error (EXIT_FAILURE, 0, _("length is not a multiple of 8"));
-          }
         break;
 #endif
 #if !HASH_ALGO_SUM
@@ -1476,6 +1471,11 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, 0,
            _("--length is only supported with --algorithm=blake2b"));
 # endif
+  if (digest_length % 8 != 0)
+    {
+      error (0, 0, _("invalid length: %s"), quote (digest_length_str));
+      error (EXIT_FAILURE, 0, _("length is not a multiple of 8"));
+    }
   if (digest_length > BLAKE2B_MAX_LEN * 8)
     {
       error (0, 0, _("invalid length: %s"), quote (digest_length_str));

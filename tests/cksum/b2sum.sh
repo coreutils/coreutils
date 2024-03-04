@@ -65,6 +65,10 @@ returns_ 1 $prog -c crash.check || fail=1
 printf '0A0BA0' > overflow.check || framework_failure_
 returns_ 1 $prog -c overflow.check || fail=1
 
+# This would fail before coreutil-9.4
+# Only validate the last specified, used length
+$prog -l 123 -l 128 /dev/null || fail=1
+
 done
 
 Exit $fail
