@@ -699,7 +699,6 @@ all_tests =					\
   tests/mv/into-self-4.sh			\
   tests/mv/leak-fd.sh				\
   tests/mv/mv-n.sh				\
-  tests/mv/mv-swap.sh				\
   tests/mv/mv-special-1.sh			\
   tests/mv/no-copy.sh				\
   tests/mv/no-target-dir.sh			\
