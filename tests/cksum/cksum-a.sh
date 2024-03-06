@@ -58,4 +58,13 @@ returns_ 1 cksum -a bsd --check </dev/null || fail=1
 # Ensure abbreviations not supported for algorithm selection
 returns_ 1 cksum -a sha22 </dev/null || fail=1
 
+# Ensure --tag -> --untagged transition resets binary indicator
+cksum --tag --untagged -a md5 /dev/null >out-1 || fail=1
+# --binary ignored in this edge case
+cksum --binary --tag --untagged -a md5 /dev/null >out-2 || fail=1
+# base case for comparison
+cksum --untagged -a md5 /dev/null >out || fail=1
+compare out out-1 || fail=1
+compare out out-2 || fail=1
+
 Exit $fail

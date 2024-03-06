@@ -28,6 +28,10 @@
 #include "xdectoint.h"
 #include "xstrtol.h"
 
+#ifndef HASH_ALGO_CKSUM
+# define HASH_ALGO_CKSUM 0
+#endif
+
 #if HASH_ALGO_SUM || HASH_ALGO_CKSUM
 # include "sum.h"
 #endif
@@ -1346,11 +1350,7 @@ main (int argc, char **argv)
   int opt;
   bool ok = true;
   int binary = -1;
-#if HASH_ALGO_CKSUM
-  bool prefix_tag = true;
-#else
-  bool prefix_tag = false;
-#endif
+  int prefix_tag = -1;
 
   /* Setting values of global variables.  */
   initialize_main (&argc, &argv);
@@ -1438,11 +1438,13 @@ main (int argc, char **argv)
         raw_digest = true;
         break;
       case UNTAG_OPTION:
-        prefix_tag = false;
+        if (prefix_tag == 1)
+          binary = -1;
+        prefix_tag = 0;
         break;
 # endif
       case TAG_OPTION:
-        prefix_tag = true;
+        prefix_tag = 1;
         binary = 1;
         break;
       case 'z':
@@ -1517,6 +1519,9 @@ main (int argc, char **argv)
      usage (EXIT_FAILURE);
    }
 #endif
+
+  if (prefix_tag == -1)
+    prefix_tag = HASH_ALGO_CKSUM;
 
   if (prefix_tag && !binary)
    {
