@@ -207,7 +207,7 @@ cleanup (int sig)
       timed_out = 1;
       sig = term_signal;
     }
-  if (monitored_pid)
+  if (0 < monitored_pid)
     {
       if (kill_after)
         {
@@ -244,8 +244,13 @@ cleanup (int sig)
             }
         }
     }
-  else /* we're the child or the child is not exec'd yet.  */
-    _exit (128 + sig);
+  else if (monitored_pid == -1)
+    { /* were in the parent, so let it continue to exit below.  */
+    }
+  else /* monitored_pid == 0  */
+    { /* we're the child or the child is not exec'd yet.  */
+      _exit (128 + sig);
+    }
 }
 
 void
