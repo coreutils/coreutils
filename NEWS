@@ -37,6 +37,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   processes after a failed process fork.
   [bug introduced with timeout in coreutils-7.0]
 
+  timeout avoids a narrow race condition, where it might fail to
+  kill monitored processes immediately after forking them.
+  [bug introduced with timeout in coreutils-7.0]
+
   wc no longer fails to count unprintable characters as parts of words.
   [bug introduced in textutils-2.1]
 
