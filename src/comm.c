@@ -36,10 +36,6 @@
   proper_name ("Richard M. Stallman"), \
   proper_name ("David MacKenzie")
 
-/* Undefine, to avoid warning about redefinition on some systems.  */
-#undef min
-#define min(x, y) ((x) < (y) ? (x) : (y))
-
 /* True if the LC_COLLATE locale is hard.  */
 static bool hard_LC_COLLATE;
 
@@ -319,7 +315,7 @@ compare_files (char **infiles)
                               thisline[1]->buffer, thisline[1]->length - 1);
           else
             {
-              size_t len = min (thisline[0]->length, thisline[1]->length) - 1;
+              size_t len = MIN (thisline[0]->length, thisline[1]->length) - 1;
               order = memcmp (thisline[0]->buffer, thisline[1]->buffer, len);
               if (order == 0)
                 order = ((thisline[0]->length > thisline[1]->length)
