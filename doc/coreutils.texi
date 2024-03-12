@@ -96,6 +96,7 @@
 * od: (coreutils)od invocation.                 Dump files in octal, etc.
 * paste: (coreutils)paste invocation.           Merge lines of files.
 * pathchk: (coreutils)pathchk invocation.       Check file name portability.
+* pinky: (coreutils)pinky invocation.           Print information about users.
 * pr: (coreutils)pr invocation.                 Paginate or columnate files.
 * printenv: (coreutils)printenv invocation.     Print environment variables.
 * printf: (coreutils)printf invocation.         Format and print data.
@@ -421,6 +422,7 @@ User information
 * groups invocation::            Print group names a user is in
 * users invocation::             Print login names of users currently logged in
 * who invocation::               Print who is currently logged in
+* pinky invocation::             Print information about users
 
 System context
 
@@ -15934,6 +15936,7 @@ logins, groups, and so forth.
 * groups invocation::           Print group names a user is in.
 * users invocation::            Print login names of users currently logged in.
 * who invocation::              Print who is currently logged in.
+* pinky invocation::            Print information about users.
 @end menu
 
 
@@ -16291,6 +16294,68 @@ After each login name print a character indicating the user's message status:
 The @command{who} command is installed only on platforms with the
 POSIX @code{<utmpx.h>} include file or equivalent, so portable scripts
 should not rely on its existence on non-POSIX platforms.
+
+@exitstatus
+
+
+@node pinky invocation
+@section @command{pinky}: Print information about users
+
+@command{pinky} is a lightweight implementation of the @command{finger} command.
+Synopsis:
+
+@example
+@command{pinky} [@var{option}] [@var{username}]@dots{}
+@end example
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -l
+@opindex -l
+Produce long format output.
+
+When producing long output at least one @var{username} must be given.
+If @var{username} cannot be found, the real name is printed as
+@samp{???} and the home directory and shell are omitted.
+
+@item -b
+@opindex -b
+Omit the user's home directory and shell when printing in long format.
+
+@item -h
+@opindex -h
+Omit the user's project file when printing in long format.
+
+@item -p
+@opindex -p
+Omit the user's plan file when printing in long format.
+
+@item -s
+@opindex -s
+Produce short format output. This is the default behavior when no
+options are given.
+
+@item -f
+@opindex -f
+Omit the column headings when printing in short format.
+
+@item -w
+@opindex -w
+Omit the user's full name when printing in short format.
+
+@item -i
+@opindex -i
+Omit the user's full name and remote host when printing in short
+format.
+
+@item -q
+@opindex -q
+Omit the user's full name, remote host, and idle time when printing in
+short format.
+
+@end table
 
 @exitstatus
 
