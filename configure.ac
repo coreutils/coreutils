@@ -569,13 +569,14 @@ ac_c_werror_flag=$cu_save_c_werror_flag
 
 # Test compiler support for half precision floating point types (for od)
 AC_MSG_CHECKING([IEEE 16 bit floating point])
- AC_COMPILE_IFELSE(
+ AC_RUN_IFELSE(
    [AC_LANG_SOURCE([[
      int
      main (void)
      {
-        _Float16 hf;
+        volatile _Float16 hf = 1;
         float f = hf;  /* Ensure compiler can promote to float.  */
+        return !(f == 1.0f);
      }
   ]])
   ],[
@@ -589,13 +590,14 @@ if test $ieee_16_bit_supported = yes; then
 fi
 
 AC_MSG_CHECKING([Brain 16 bit floating point])
- AC_COMPILE_IFELSE(
+ AC_RUN_IFELSE(
    [AC_LANG_SOURCE([[
      int
      main (void)
      {
-        __bf16 hf;
+        volatile __bf16 hf = 1;
         float f = hf;  /* Ensure compiler can promote to float.  */
+        return !(f == 1.0f);
      }
   ]])
   ],[
