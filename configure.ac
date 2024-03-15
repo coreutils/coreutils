@@ -585,6 +585,8 @@ AC_CACHE_VAL([utils_cv_ieee_16_bit_supported],[
     utils_cv_ieee_16_bit_supported=yes
   ],[
     utils_cv_ieee_16_bit_supported=no
+  ],[
+    utils_cv_ieee_16_bit_supported=no
   ])])
 AC_MSG_RESULT([$utils_cv_ieee_16_bit_supported])
 if test $utils_cv_ieee_16_bit_supported = yes; then
@@ -605,6 +607,8 @@ AC_CACHE_VAL([utils_cv_brain_16_bit_supported],[
   ]])
   ],[
     utils_cv_brain_16_bit_supported=yes
+  ],[
+    utils_cv_brain_16_bit_supported=no
   ],[
     utils_cv_brain_16_bit_supported=no
   ])])
