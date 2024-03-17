@@ -420,7 +420,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
           /* Ignore any error due to lack of support; POSIX requires
              this behavior for top-level symbolic links with -h, and
              implies that it's required for all symbolic links.  */
-          if (!ok && errno == EOPNOTSUPP)
+          if (!ok && is_ENOTSUP (errno))
             {
               ok = true;
               symlink_changed = false;
