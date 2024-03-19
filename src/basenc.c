@@ -630,12 +630,14 @@ base16_encode (char const *restrict in, idx_t inlen,
 {
   static const char base16[16] = "0123456789ABCDEF";
 
-  while (inlen--)
+  while (inlen && outlen)
     {
       unsigned char c = *in;
       *out++ = base16[c >> 4];
       *out++ = base16[c & 0x0F];
       ++in;
+      inlen--;
+      outlen -= 2;
     }
 }
 
@@ -904,7 +906,7 @@ inline static void
 base2msbf_encode (char const *restrict in, idx_t inlen,
                   char *restrict out, idx_t outlen)
 {
-  while (inlen--)
+  while (inlen && outlen)
     {
       unsigned char c = *in;
       for (int i = 0; i < 8; i++)
@@ -912,6 +914,7 @@ base2msbf_encode (char const *restrict in, idx_t inlen,
           *out++ = c & 0x80 ? '1' : '0';
           c <<= 1;
         }
+      inlen--;
       outlen -= 8;
       ++in;
     }
@@ -921,7 +924,7 @@ inline static void
 base2lsbf_encode (char const *restrict in, idx_t inlen,
                   char *restrict out, idx_t outlen)
 {
-  while (inlen--)
+  while (inlen && outlen)
     {
       unsigned char c = *in;
       for (int i = 0; i < 8; i++)
@@ -929,6 +932,7 @@ base2lsbf_encode (char const *restrict in, idx_t inlen,
           *out++ = c & 0x01 ? '1' : '0';
           c >>= 1;
         }
+      inlen--;
       outlen -= 8;
       ++in;
     }
