@@ -16203,11 +16203,13 @@ Print a line of column headings.
 List only the entries that correspond to processes via which the
 system is waiting for a user to login.  The user name is always @samp{LOGIN}.
 
+@macro lookupOption
 @item --lookup
 @opindex --lookup
-Attempt to canonicalize hostnames found in utmp through a DNS lookup.  This
-is not the default because it can cause significant delays on systems with
-automatic dial-up internet access.
+Attempt to canonicalize hostnames found in utmp through a DNS lookup.
+This is not the default because of potential delays.
+@end macro
+@lookupOption
 
 @item -m
 @opindex -m
@@ -16334,6 +16336,8 @@ format.
 @opindex -q
 Omit the user's full name, remote host, and idle time when printing in
 short format.
+
+@lookupOption
 
 @end table
 

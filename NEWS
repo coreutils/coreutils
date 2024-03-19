@@ -65,6 +65,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   numfmt will accept lowercase 'k' to indicate Kilo or Kibi units on input,
   and uses lowercase 'k' when outputting such units in '--to=si' mode.
 
+  pinky no longer tries to canonicalize the user's login location by default,
+  rather requiring the new --lookup option to enable this often slow feature.
+
   wc no longer ignores encoding errors when counting words.
   Instead, it treats them as non white space.
 

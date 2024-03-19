@@ -61,6 +61,9 @@ static bool include_home_and_shell = true;
 /* if true, use the "short" output format. */
 static bool do_short_format = true;
 
+/* If true, attempt to canonicalize hostnames via a DNS lookup. */
+static bool do_lookup;
+
 /* if true, display the ut_host field. */
 #if HAVE_STRUCT_XTMP_UT_HOST
 static bool include_where = true;
@@ -71,8 +74,15 @@ static bool include_where = true;
 static char const *time_format;
 static int time_format_width;
 
+/* for long options with no corresponding short option, use enum */
+enum
+{
+  LOOKUP_OPTION = CHAR_MAX + 1
+};
+
 static struct option const longopts[] =
 {
+  {"lookup", no_argument, nullptr, LOOKUP_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {nullptr, 0, nullptr, 0}
@@ -279,7 +289,7 @@ print_entry (struct gl_utmp const *utmp_ent)
       if (display)
         *display++ = '\0';
 
-      if (*ut_host)
+      if (*ut_host && do_lookup)
         /* See if we can canonicalize it.  */
         host = canon_host (ut_host);
       if ( ! host)
@@ -500,6 +510,9 @@ usage (int status)
   -q              omit the user's full name, remote host and idle time\n\
                   in short format\n\
 "), stdout);
+      fputs (_("\
+      --lookup    attempt to canonicalize hostnames via DNS\n\
+"), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       printf (_("\
@@ -572,6 +585,10 @@ main (int argc, char **argv)
 
         case 'b':
           include_home_and_shell = false;
+          break;
+
+        case LOOKUP_OPTION:
+          do_lookup = true;
           break;
 
         case_GETOPT_HELP_CHAR;
