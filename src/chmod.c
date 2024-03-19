@@ -301,18 +301,16 @@ process_file (FTS *fts, FTSENT *ent)
       return false;
     }
 
-  /* With -H (default) or -P, (without -h), avoid operating on symlinks.
-     With -L, S_ISLNK should be false, and with -RP, dereference is 0.  */
-  if (ch.status == CH_NOT_APPLIED
-      && ! (S_ISLNK (file_stats->st_mode) && dereference == -1))
+  if (ch.status == CH_NOT_APPLIED)
     {
       ch.old_mode = file_stats->st_mode;
       ch.new_mode = mode_adjust (ch.old_mode, S_ISDIR (ch.old_mode) != 0,
                                  umask_value, change, nullptr);
-      /* XXX: Racy if FILE is now replaced with a symlink, which is
-         a potential security issue with -[H]R.  */
+      bool follow_symlink = !!dereference;
+      if (dereference == -1) /* -H with/without -R, -P without -R.  */
+        follow_symlink = ent->fts_level == 0;
       if (fchmodat (fts->fts_cwd_fd, file, ch.new_mode,
-                    dereference ? 0 : AT_SYMLINK_NOFOLLOW) == 0)
+                    follow_symlink ? 0 : AT_SYMLINK_NOFOLLOW) == 0)
         ch.status = CH_SUCCEEDED;
       else
         {
@@ -589,6 +587,9 @@ main (int argc, char **argv)
           dereference = 0;
         }
     }
+
+  if (dereference == -1 && bit_flags == FTS_LOGICAL)
+    dereference = 1;
 
   if (reference_file)
     {

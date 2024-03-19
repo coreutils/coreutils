@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  chmod -R now avoids a race where an attacker may replace a traversed file
+  with a symlink, causing chmod to operate on an unintended file.
+  [This bug was present in "the beginning".]
+
   cp, mv, and install no longer issue spurious diagnostics like "failed
   to preserve ownership" when copying to GNU/Linux CIFS file systems.
   They do this by working around some Linux CIFS bugs.
