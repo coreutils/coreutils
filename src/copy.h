@@ -155,6 +155,10 @@ struct cp_options
      If that fails and NO_COPY, fail instead of copying.  */
   bool move_mode, no_copy;
 
+  /* Exchange instead of renaming.  Valid only if MOVE_MODE and if
+     BACKUP_TYPE == no_backups.  */
+  bool exchange;
+
   /* If true, install(1) is the caller.  */
   bool install_mode;
 

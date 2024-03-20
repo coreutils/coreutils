@@ -2223,9 +2223,11 @@ copy_internal (char const *src_name, char const *dst_name,
     {
       if (rename_errno < 0)
         rename_errno = (renameatu (AT_FDCWD, src_name, dst_dirfd, drelname,
-                                   RENAME_NOREPLACE)
+                                   (x->exchange
+                                    ? RENAME_EXCHANGE : RENAME_NOREPLACE))
                         ? errno : 0);
-      nonexistent_dst = *rename_succeeded = rename_errno == 0;
+      *rename_succeeded = rename_errno == 0;
+      nonexistent_dst = *rename_succeeded && !x->exchange;
     }
 
   if (rename_errno == 0
@@ -2246,7 +2248,7 @@ copy_internal (char const *src_name, char const *dst_name,
 
       src_mode = src_sb.st_mode;
 
-      if (S_ISDIR (src_mode) && !x->recursive)
+      if (S_ISDIR (src_mode) && !x->recursive && !x->exchange)
         {
           error (0, 0, ! x->install_mode /* cp */
                  ? _("-r not specified; omitting directory %s")
@@ -2289,7 +2291,7 @@ copy_internal (char const *src_name, char const *dst_name,
      treated the same as nonexistent files.  */
   bool new_dst = 0 < nonexistent_dst;
 
-  if (! new_dst)
+  if (! new_dst && ! x->exchange)
     {
       /* Normally, fill in DST_SB or set NEW_DST so that later code
          can use DST_SB if NEW_DST is false.  However, don't bother
@@ -2657,7 +2659,7 @@ skip:
      Also, with --recursive, record dev/ino of each command-line directory.
      We'll use that info to detect this problem: cp -R dir dir.  */
 
-  if (rename_errno == 0)
+  if (rename_errno == 0 || x->exchange)
     earlier_file = nullptr;
   else if (x->recursive && S_ISDIR (src_mode))
     {
@@ -2752,7 +2754,7 @@ skip:
 
   if (x->move_mode)
     {
-      if (rename_errno == EEXIST)
+      if (rename_errno == EEXIST && !x->exchange)
         rename_errno = (renameat (AT_FDCWD, src_name, dst_dirfd, drelname) == 0
                         ? 0 : errno);
 
@@ -2781,7 +2783,7 @@ skip:
                  _destination_ dev/ino, since the rename above can't have
                  changed those, and 'mv' always uses lstat.
                  We could limit it further by operating
-                 only on non-directories.  */
+                 only on non-directories when !x->exchange.  */
               record_file (x->dest_info, dst_relname, &src_sb);
             }
 
@@ -2828,7 +2830,7 @@ skip:
          where you'd replace '18' with the integer in parentheses that
          was output from the perl one-liner above.
          If necessary, of course, change '/tmp' to some other directory.  */
-      if (rename_errno != EXDEV || x->no_copy)
+      if (rename_errno != EXDEV || x->no_copy || x->exchange)
         {
           /* There are many ways this can happen due to a race condition.
              When something happens between the initial follow_fstatat and the
@@ -2841,25 +2843,29 @@ skip:
              destination file are made too restrictive, the rename will
              fail.  Etc.  */
           char const *quoted_dst_name = quoteaf_n (1, dst_name);
-          switch (rename_errno)
-            {
-            case EDQUOT: case EEXIST: case EISDIR: case EMLINK:
-            case ENOSPC: case ETXTBSY:
+          if (x->exchange)
+            error (0, rename_errno, _("cannot exchange %s and %s"),
+                   quoteaf_n (0, src_name), quoted_dst_name);
+          else
+            switch (rename_errno)
+              {
+              case EDQUOT: case EEXIST: case EISDIR: case EMLINK:
+              case ENOSPC: case ETXTBSY:
 #if ENOTEMPTY != EEXIST
-            case ENOTEMPTY:
+              case ENOTEMPTY:
 #endif
-              /* The destination must be the problem.  Don't mention
-                 the source as that is more likely to confuse the user
-                 than be helpful.  */
-              error (0, rename_errno, _("cannot overwrite %s"),
-                     quoted_dst_name);
-              break;
+                /* The destination must be the problem.  Don't mention
+                   the source as that is more likely to confuse the user
+                   than be helpful.  */
+                error (0, rename_errno, _("cannot overwrite %s"),
+                       quoted_dst_name);
+                break;
 
-            default:
-              error (0, rename_errno, _("cannot move %s to %s"),
-                     quoteaf_n (0, src_name), quoted_dst_name);
-              break;
-            }
+              default:
+                error (0, rename_errno, _("cannot move %s to %s"),
+                       quoteaf_n (0, src_name), quoted_dst_name);
+                break;
+              }
           forget_created (src_sb.st_ino, src_sb.st_dev);
           return false;
         }

@@ -48,6 +48,7 @@
 enum
 {
   DEBUG_OPTION = CHAR_MAX + 1,
+  EXCHANGE_OPTION,
   NO_COPY_OPTION,
   STRIP_TRAILING_SLASHES_OPTION
 };
@@ -67,6 +68,7 @@ static struct option const long_options[] =
   {"backup", optional_argument, nullptr, 'b'},
   {"context", no_argument, nullptr, 'Z'},
   {"debug", no_argument, nullptr, DEBUG_OPTION},
+  {"exchange", no_argument, nullptr, EXCHANGE_OPTION},
   {"force", no_argument, nullptr, 'f'},
   {"interactive", no_argument, nullptr, 'i'},
   {"no-clobber", no_argument, nullptr, 'n'},   /* Deprecated.  */
@@ -273,6 +275,9 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
       --debug                  explain how a file is copied.  Implies -v\n\
 "), stdout);
       fputs (_("\
+      --exchange               exchange source and destination\n\
+"), stdout);
+      fputs (_("\
   -f, --force                  do not prompt before overwriting\n\
   -i, --interactive            prompt before overwrite\n\
   -n, --no-clobber             do not overwrite an existing file\n\
@@ -360,6 +365,9 @@ main (int argc, char **argv)
           break;
         case DEBUG_OPTION:
           x.debug = x.verbose = true;
+          break;
+        case EXCHANGE_OPTION:
+          x.exchange = true;
           break;
         case NO_COPY_OPTION:
           x.no_copy = true;
@@ -469,7 +477,7 @@ main (int argc, char **argv)
   else
     {
       char const *lastfile = file[n_files - 1];
-      if (n_files == 2)
+      if (n_files == 2 && !x.exchange)
         x.rename_errno = (renameatu (AT_FDCWD, file[0], AT_FDCWD, lastfile,
                                      RENAME_NOREPLACE)
                           ? errno : 0);
@@ -514,11 +522,13 @@ main (int argc, char **argv)
       strip_trailing_slashes (file[i]);
 
   if (make_backups
-      && (x.interactive == I_ALWAYS_SKIP
+      && (x.exchange
+          || x.interactive == I_ALWAYS_SKIP
           || x.interactive == I_ALWAYS_NO))
     {
       error (0, 0,
-             _("--backup is mutually exclusive with -n or --update=none-fail"));
+             _("cannot combine --backup with "
+               "--exchange, -n, or --update=none-fail"));
       usage (EXIT_FAILURE);
     }
 

@@ -10273,6 +10273,26 @@ skip existing files but not fail.
 If a file cannot be renamed because the destination file system differs,
 fail with a diagnostic instead of copying and then removing the file.
 
+@item --exchange
+@opindex --exchange
+Exchange source and destination instead of renaming source to destination.
+Both files must exist; they need not be the same type.
+
+This option can be used to replace one directory with another.
+When used this way, it should be combined with
+@code{--no-target-directory} (@option{-T})
+to avoid confusion about the destination location.
+For example, you might use @samp{mv -T --exchange @var{d1} @var{d2}}
+to exchange two directories @var{d1} and @var{d2}.
+
+Exchanges are atomic if the source and destination are both in a
+single file system that supports atomic exchange.
+Non-atomic exchanges are not yet supported.
+
+If the source and destination might not be on the same file system,
+using @code{--no-copy} will prevent future versions of @command{mv}
+from implementing the exchange by copying.
+
 @item -u
 @itemx --update
 @opindex -u
