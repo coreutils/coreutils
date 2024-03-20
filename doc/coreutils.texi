@@ -10277,6 +10277,7 @@ fail with a diagnostic instead of copying and then removing the file.
 @opindex --exchange
 Exchange source and destination instead of renaming source to destination.
 Both files must exist; they need not be the same type.
+This exchanges all data and metadata.
 
 This option can be used to replace one directory with another.
 When used this way, it should be combined with
