@@ -2636,9 +2636,11 @@ This option might well cause some lines to be truncated.  The number of
 lines in the columns on each page are balanced.  The options @option{-e}
 and @option{-i} are on for multiple text-column output.  Together with
 @option{-J} option column alignment and line truncation is turned off.
+Since spaces are converted to TABs in multicolumn output, they can be converted
+back by further processing through @command{pr -t -e} or @command{expand}.
 Lines of full length are joined in a free field format and @option{-S}
 option may set field separators.  @option{-@var{column}} may not be used
-with @option{-m} option.
+with the @option{-m} option.
 
 @item -a
 @itemx --across
