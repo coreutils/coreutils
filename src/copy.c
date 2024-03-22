@@ -2451,72 +2451,36 @@ skip:
           if (return_now)
             return return_val;
 
-          if (!S_ISDIR (dst_sb.st_mode))
+          /* Copying a directory onto a non-directory, or vice versa,
+             is ok only with --backup.  */
+          if (!S_ISDIR (src_mode) != !S_ISDIR (dst_sb.st_mode)
+              && x->backup_type == no_backups)
             {
-              if (S_ISDIR (src_mode))
-                {
-                  if (x->move_mode && x->backup_type != no_backups)
-                    {
-                      /* Moving a directory onto an existing
-                         non-directory is ok only with --backup.  */
-                    }
-                  else
-                    {
-                      error (0, 0,
-                       _("cannot overwrite non-directory %s with directory %s"),
-                             quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
-                      return false;
-                    }
-                }
-
-              /* Don't let the user destroy their data, even if they try hard:
-                 This mv command must fail (likewise for cp):
-                   rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
-                 Otherwise, the contents of b/f would be lost.
-                 In the case of 'cp', b/f would be lost if the user simulated
-                 a move using cp and rm.
-                 Note that it works fine if you use --backup=numbered.  */
-              if (command_line_arg
-                  && x->backup_type != numbered_backups
-                  && seen_file (x->dest_info, dst_relname, &dst_sb))
-                {
-                  error (0, 0,
-                         _("will not overwrite just-created %s with %s"),
-                         quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
-                  return false;
-                }
+              error (0, 0,
+                     _(S_ISDIR (src_mode)
+                       ? ("cannot overwrite non-directory %s "
+                          "with directory %s")
+                       : ("cannot overwrite directory %s "
+                          "with non-directory %s")),
+                     quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
+              return false;
             }
 
-          if (!S_ISDIR (src_mode))
+          /* Don't let the user destroy their data, even if they try hard:
+             This mv command must fail (likewise for cp):
+             rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
+             Otherwise, the contents of b/f would be lost.
+             In the case of 'cp', b/f would be lost if the user simulated
+             a move using cp and rm.
+             Note that it works fine if you use --backup=numbered.  */
+          if (!S_ISDIR (dst_sb.st_mode) && command_line_arg
+              && x->backup_type != numbered_backups
+              && seen_file (x->dest_info, dst_relname, &dst_sb))
             {
-              if (S_ISDIR (dst_sb.st_mode))
-                {
-                  if (x->move_mode && x->backup_type != no_backups)
-                    {
-                      /* Moving a non-directory onto an existing
-                         directory is ok only with --backup.  */
-                    }
-                  else
-                    {
-                      error (0, 0,
-                         _("cannot overwrite directory %s with non-directory"),
-                             quoteaf (dst_name));
-                      return false;
-                    }
-                }
-            }
-
-          if (x->move_mode)
-            {
-              /* Don't allow user to move a directory onto a non-directory.  */
-              if (S_ISDIR (src_sb.st_mode) && !S_ISDIR (dst_sb.st_mode)
-                  && x->backup_type == no_backups)
-                {
-                  error (0, 0,
-                       _("cannot move directory onto non-directory: %s -> %s"),
-                         quotef_n (0, src_name), quotef_n (0, dst_name));
-                  return false;
-                }
+              error (0, 0,
+                     _("will not overwrite just-created %s with %s"),
+                     quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
+              return false;
             }
 
           char const *srcbase;
