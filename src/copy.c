@@ -2075,9 +2075,10 @@ abandon_move (const struct cp_options *x,
    If BACKUP_DST_NAME is non-null, then also indicate that it is
    the name of a backup file.  */
 static void
-emit_verbose (char const *src, char const *dst, char const *backup_dst_name)
+emit_verbose (char const *format, char const *src, char const *dst,
+              char const *backup_dst_name)
 {
-  printf ("%s -> %s", quoteaf_n (0, src), quoteaf_n (1, dst));
+  printf (format, quoteaf_n (0, src), quoteaf_n (1, dst));
   if (backup_dst_name)
     printf (_(" (backup: %s)"), quoteaf (backup_dst_name));
   putchar ('\n');
@@ -2219,15 +2220,13 @@ copy_internal (char const *src_name, char const *dst_name,
   *copy_into_self = false;
 
   int rename_errno = x->rename_errno;
-  if (x->move_mode)
+  if (x->move_mode && !x->exchange)
     {
       if (rename_errno < 0)
         rename_errno = (renameatu (AT_FDCWD, src_name, dst_dirfd, drelname,
-                                   (x->exchange
-                                    ? RENAME_EXCHANGE : RENAME_NOREPLACE))
+                                   RENAME_NOREPLACE)
                         ? errno : 0);
-      *rename_succeeded = rename_errno == 0;
-      nonexistent_dst = *rename_succeeded && !x->exchange;
+      nonexistent_dst = *rename_succeeded = rename_errno == 0;
     }
 
   if (rename_errno == 0
@@ -2248,7 +2247,7 @@ copy_internal (char const *src_name, char const *dst_name,
 
       src_mode = src_sb.st_mode;
 
-      if (S_ISDIR (src_mode) && !x->recursive && !x->exchange)
+      if (S_ISDIR (src_mode) && !x->recursive)
         {
           error (0, 0, ! x->install_mode /* cp */
                  ? _("-r not specified; omitting directory %s")
@@ -2291,7 +2290,7 @@ copy_internal (char const *src_name, char const *dst_name,
      treated the same as nonexistent files.  */
   bool new_dst = 0 < nonexistent_dst;
 
-  if (! new_dst && ! x->exchange)
+  if (! new_dst)
     {
       /* Normally, fill in DST_SB or set NEW_DST so that later code
          can use DST_SB if NEW_DST is false.  However, don't bother
@@ -2452,9 +2451,9 @@ skip:
             return return_val;
 
           /* Copying a directory onto a non-directory, or vice versa,
-             is ok only with --backup.  */
+             is ok only with --backup or --exchange.  */
           if (!S_ISDIR (src_mode) != !S_ISDIR (dst_sb.st_mode)
-              && x->backup_type == no_backups)
+              && x->backup_type == no_backups && !x->exchange)
             {
               error (0, 0,
                      _(S_ISDIR (src_mode)
@@ -2472,9 +2471,9 @@ skip:
              Otherwise, the contents of b/f would be lost.
              In the case of 'cp', b/f would be lost if the user simulated
              a move using cp and rm.
-             Note that it works fine if you use --backup=numbered.  */
+             Nothing is lost if you use --backup=numbered or --exchange.  */
           if (!S_ISDIR (dst_sb.st_mode) && command_line_arg
-              && x->backup_type != numbered_backups
+              && x->backup_type != numbered_backups && !x->exchange
               && seen_file (x->dest_info, dst_relname, &dst_sb))
             {
               error (0, 0,
@@ -2591,7 +2590,7 @@ skip:
      sure we'll create a directory.  Also don't announce yet when moving
      so we can distinguish renames versus copies.  */
   if (x->verbose && !x->move_mode && !S_ISDIR (src_mode))
-    emit_verbose (src_name, dst_name, dst_backup);
+    emit_verbose ("%s -> %s", src_name, dst_name, dst_backup);
 
   /* Associate the destination file name with the source device and inode
      so that if we encounter a matching dev/ino pair in the source tree
@@ -2718,17 +2717,19 @@ skip:
 
   if (x->move_mode)
     {
-      if (rename_errno == EEXIST && !x->exchange)
-        rename_errno = (renameat (AT_FDCWD, src_name, dst_dirfd, drelname) == 0
+      if (rename_errno == EEXIST)
+        rename_errno = ((renameatu (AT_FDCWD, src_name, dst_dirfd, drelname,
+                                    x->exchange ? RENAME_EXCHANGE : 0)
+                         == 0)
                         ? 0 : errno);
 
       if (rename_errno == 0)
         {
           if (x->verbose)
-            {
-              printf (_("renamed "));
-              emit_verbose (src_name, dst_name, dst_backup);
-            }
+            emit_verbose (_(x->exchange
+                            ? "exchanged %s <-> %s"
+                            : "renamed %s -> %s"),
+                          src_name, dst_name, dst_backup);
 
           if (x->set_security_context)
             {
@@ -2853,10 +2854,7 @@ skip:
         }
 
       if (x->verbose && !S_ISDIR (src_mode))
-        {
-          printf (_("copied "));
-          emit_verbose (src_name, dst_name, dst_backup);
-        }
+        emit_verbose (_("copied %s -> %s"), src_name, dst_name, dst_backup);
       new_dst = true;
     }
 
@@ -2956,7 +2954,7 @@ skip:
               if (x->move_mode)
                 printf (_("created directory %s\n"), quoteaf (dst_name));
               else
-                emit_verbose (src_name, dst_name, nullptr);
+                emit_verbose ("%s -> %s", src_name, dst_name, nullptr);
             }
         }
       else
