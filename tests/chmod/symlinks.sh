@@ -40,40 +40,42 @@ ln -s b a/dirlink || framework_failure_
 #  |-- dangle -> foo
 #  '-- dirlink -> b/
 
-reset_modes() { chmod 777 a/b a/c a/b/file a/c/file || fail=1; }
-count_755() { test "$(grep 'rwxr-xr-x' 'out' | wc -l)" = "$1"; }
+reset_modes() { chmod =777 a/b a/c a/b/file a/c/file || fail=1; }
+count_755() {
+  test "$(grep 'rwxr-xr-x' 'out' | wc -l)" = "$1" || { cat out; fail=1; }
+}
 
 reset_modes
 # -R (with default -H) does not deref traversed symlinks (only cli args)
 chmod 755 -R a/c || fail=1
 ls -l a/b > out || framework_failure_
-count_755 0 || fail=1
+count_755 0
 ls -lR a/c > out || framework_failure_
-count_755 1 || fail=1
+count_755 1
 
 reset_modes
 # set a/c a/c/file and a/b/file (through symlink) to 755
 chmod 755 -LR a/c || fail=1
 ls -ld a/c a/c/file a/b/file > out || framework_failure_
-count_755 3 || { cat out; fail=1; }
+count_755 3
 
 reset_modes
 # do not set /a/b/file through symlink (should try to chmod the link itself)
 chmod 755 -RP a/c/ || fail=1
 ls -l a/b > out || framework_failure_
-count_755 0 || fail=1
+count_755 0
 
 reset_modes
 # set /a/b/file through symlink
 chmod 755 --dereference a/c/link || fail=1
 ls -l a/b > out || framework_failure_
-count_755 1 || fail=1
+count_755 1
 
 reset_modes
 # do not set /a/b/file through symlink (should try to chmod the link itself)
 chmod 755 --no-dereference a/c/link 2>err || fail=1
 ls -l a/b > out || framework_failure_
-count_755 0 || fail=1
+count_755 0
 
 # Dangling links should not induce an error if not dereferencing
 for noderef in '-h' '-RP' '-P'; do
