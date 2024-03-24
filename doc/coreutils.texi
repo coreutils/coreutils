@@ -7968,6 +7968,10 @@ that it is a number rather than a textual name.
 Print question marks for other information that
 cannot be determined.
 
+For block special files and character special files, the size field is
+replaced by the corresponding device major and minor numbers as two decimal
+numbers separated by a comma and at least one space.
+
 Normally the size is printed as a byte count without punctuation, but
 this can be overridden (@pxref{Block size}).
 For example, @option{--human-readable} (@option{-h})
