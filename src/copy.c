@@ -2726,9 +2726,9 @@ skip:
       if (rename_errno == 0)
         {
           if (x->verbose)
-            emit_verbose (_(x->exchange
-                            ? "exchanged %s <-> %s"
-                            : "renamed %s -> %s"),
+            emit_verbose (x->exchange
+                          ? _("exchanged %s <-> %s")
+                          : _("renamed %s -> %s"),
                           src_name, dst_name, dst_backup);
 
           if (x->set_security_context)

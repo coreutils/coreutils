@@ -195,7 +195,7 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -L, --dereference            always follow symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
-  -n, --no-clobber             (deprecated) silently skip exisiting files.\n\
+  -n, --no-clobber             (deprecated) silently skip existing files.\n\
                                  See also --update\n\
 "), stdout);
       fputs (_("\

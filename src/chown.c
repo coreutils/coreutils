@@ -81,7 +81,7 @@ Usage: %s [OPTION]... %s FILE...\n\
   or:  %s [OPTION]... --reference=RFILE FILE...\n\
 "),
               program_name,
-              chown_mode == CHOWN_CHOWN ? "[OWNER][:[GROUP]]" : "GROUP",
+              chown_mode == CHOWN_CHOWN ? _("[OWNER][:[GROUP]]") : _("GROUP"),
               program_name);
       if (chown_mode == CHOWN_CHOWN)
         fputs (_("\
