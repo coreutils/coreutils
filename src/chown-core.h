@@ -89,16 +89,4 @@ chown_files (char **files, int bit_flags,
              struct Chown_option const *chopt)
   _GL_ATTRIBUTE_NONNULL ();
 
-static inline void
-emit_from_option_description (bool user)
-{
-  printf (_("\
-      --from=CURRENT_OWNER:CURRENT_GROUP\n\
-                         change the %sgroup of each file only if\n\
-                         its current owner and/or group match those specified\n\
-                         here.  Either may be omitted, in which case a match\n\
-                         is not required for the omitted attribute\n\
-"), user ? "owner and/or " : "");
-}
-
 #endif /* CHOWN_CORE_H */

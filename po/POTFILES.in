@@ -40,7 +40,6 @@ src/cat.c
 src/chcon.c
 src/chmod.c
 src/chown-core.c
-src/chown-core.h
 src/chown.c
 src/chroot.c
 src/cksum.c

@@ -109,7 +109,13 @@ With --reference, change the group of each FILE to that of RFILE.\n\
                          (useful only on systems that can change the\n\
                          ownership of a symlink)\n\
 "), stdout);
-      emit_from_option_description (chown_mode == CHOWN_CHOWN);
+      fputs (_("\
+      --from=CURRENT_OWNER:CURRENT_GROUP\n\
+                         change the ownership of each file only if\n\
+                         its current owner and/or group match those specified\n\
+                         here. Either may be omitted, in which case a match\n\
+                         is not required for the omitted attribute\n\
+"), stdout);
       fputs (_("\
       --no-preserve-root  do not treat '/' specially (the default)\n\
       --preserve-root    fail to operate recursively on '/'\n\
