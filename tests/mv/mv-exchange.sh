@@ -23,7 +23,10 @@ print_ver_ mv
 # Test exchanging files.
 touch a || framework_failure_
 mkdir b || framework_failure_
-if ! mv -T --exchange a b 2>exchange_err; then
+if ! mv -T --exchange a b 2>errt; then
+  # AIX gives "Unsupported attribute value" (errno 124)
+  # NetBSD and OpenBSD give "Not supported"
+  sed 's/Not /not /; s/[Uu]nsupported/not supported/' < errt > exchange_err
   grep 'not supported' exchange_err || { cat exchange_err; fail=1; }
 else
   test -d a || fail=1
