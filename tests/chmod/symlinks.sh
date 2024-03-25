@@ -48,10 +48,8 @@ count_755() {
 reset_modes
 # -R (with default -H) does not deref traversed symlinks (only cli args)
 chmod 755 -R a/c || fail=1
-ls -l a/b > out || framework_failure_
-count_755 0
-ls -lR a/c > out || framework_failure_
-count_755 1
+ls -ld a/c a/c/file a/b/file > out || framework_failure_
+count_755 2
 
 reset_modes
 # set a/c a/c/file and a/b/file (through symlink) to 755
