@@ -1018,6 +1018,11 @@ if ($locale ne 'C')
       or die "Can't fork command: $!";
     $lg = <LOC_GRP>;
     close(LOC_GRP) || die "Failed to read locale grouping from printf";
+    if (! defined $lg || $lg eq '')
+      {
+        warn "skipping locale grouping tests as no grouping character\n";
+        $locale = 'C';
+      }
   }
 
 my @Locale_Tests =
