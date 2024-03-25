@@ -3268,6 +3268,9 @@ skip:
     {
       int default_permissions = S_ISDIR (src_mode) || S_ISSOCK (src_mode)
                                 ? S_IRWXUGO : MODE_RW_UGO;
+      dst_mode = dst_sb.st_mode;
+      if (S_ISDIR (src_mode))  /* Keep set-group-ID for directories.  */
+        default_permissions |= (dst_mode & S_ISGID);
       if (set_acl (dst_name, -1, default_permissions & ~cached_umask ()) != 0)
         return false;
     }

@@ -12,6 +12,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   to preserve ownership" when copying to GNU/Linux CIFS file systems.
   They do this by working around some Linux CIFS bugs.
 
+  cp --no-preserve=mode will correctly maintain set-group-ID bits
+  for created directories.  Previously on systems that didn't support ACLs,
+  cp would have reset the set-group-ID bit on created directories.
+  [bug introduced in coreutils-8.20]
+
   join and uniq now support multi-byte characters better.
   For example, 'join -tX' now works even if X is a multi-byte character,
   and both programs now treat multi-byte characters like U+3000
