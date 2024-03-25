@@ -58,7 +58,7 @@ fi
 index=1
 set -- $dired_values
 while test "$#" -gt 0; do
-  extracted_filename=$(head -c "$2" out | tail -c +"$(($1 + 1))")
+  extracted_filename=$(head -c "$2" out | tail -c+"$(($1 + 1))")
   expected_file=$(echo $expected_files | cut -d' ' -f$index)
   if test "$extracted_filename" != "$expected_file"; then
     echo "Mismatch! Expected: $expected_file, Found: $extracted_filename"
