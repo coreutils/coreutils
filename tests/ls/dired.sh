@@ -40,7 +40,7 @@ done
 touch dir/1a dir/2á || framework_failure_
 mkdir -p dir/3dir || framework_failure_
 
-ls -l --dired dir | tee /tmp/pb.ls> out  || fail=1
+ls -l --dired dir > out || fail=1
 
 dired_values=$(grep "//DIRED//" out| cut -d' ' -f2-)
 expected_files="1a 2á 3dir"
