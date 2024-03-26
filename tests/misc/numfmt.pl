@@ -1070,13 +1070,15 @@ if ($locale ne 'C')
   {
     # Reset locale to 'C' if LOCALE_FR_UTF8 doesn't output as expected
     # as determined by the separate printf program.
-    open(LOC_NUM, "env LC_ALL=$locale printf \"%'d\" 1234|")
-      or die "Can't fork command: $!";
+    my $printf_cmd = "env LC_ALL=$locale printf \"%'06.f\" 1234;" .
+                     "env LC_ALL=$locale printf \"%'6.f\"  1234;";
+    open(LOC_NUM, "$printf_cmd|") or die "Can't fork command: $!";
     my $loc_num = <LOC_NUM>;
     close(LOC_NUM) || die "Failed to read grouped number from printf";
-    if ($loc_num ne "1${lg}234")
+    my $loc_match = "01${lg}234 1${lg}234";
+    if ($loc_num ne $loc_match)
       {
-        warn "skipping locale grouping tests as 1234 groups like $loc_num\n";
+        warn "skipping locale grouping tests as $loc_num != $loc_match\n";
         $locale = 'C';
       }
   }
