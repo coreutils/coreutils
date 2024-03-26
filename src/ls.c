@@ -3061,6 +3061,9 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
          and when readdir simply finds that there are no more entries.  */
       errno = 0;
       next = readdir (dirp);
+      /* Some readdir()s do not absorb ENOENT (dir deleted but open).  */
+      if (errno == ENOENT)
+        errno = 0;
       if (next)
         {
           if (! file_ignored (next->d_name))
