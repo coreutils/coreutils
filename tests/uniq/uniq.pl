@@ -243,8 +243,9 @@ if ( defined $locale && $locale ne 'none' )
   {
     # I've only ever triggered the problem in a non-C locale.
 
-    # See if isblank returns true for nbsp.
-    my $x = qx!env printf '\xa0'| LC_ALL=$locale tr '[:blank:]' x!;
+    # See if nbsp is considered a blank character
+    my $x = qx!env printf 'x\xa0y'| LC_ALL=$locale join -a2 -o2.1 /dev/null -!;
+    chomp $x;
     # If so, expect just one line of output in the schar test.
     # Otherwise, expect two.
     my $in = " y z\n\xa0 y z\n";
