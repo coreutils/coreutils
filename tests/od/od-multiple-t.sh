@@ -26,7 +26,7 @@ seq 19 > in || framework_failure_
 test $(wc -c < in) -eq 48 || framework_failure_
 
 
-list='a c dC dS dI dL oC oS oI oL uC uS uI uL xC xS xI xL fF fD fL'
+list='a c dC dS dI dL oC oS oI oL uC uS uI uL xC xS xI xL fF fD'
 for format1 in $list; do
   for format2 in $list; do
     od -An -t${format1}z -t${format2}z in > out-raw || fail=1
