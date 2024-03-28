@@ -48,7 +48,7 @@ export VERBOSE = yes
 # 4914152 9e
 export XZ_OPT = -8e
 
-old_NEWS_hash = d66ee7a9fdb974017a4a17cf358d047d
+old_NEWS_hash = e4007bb11862c8509c974bff2cccdeac
 
 # Add an exemption for sc_makefile_at_at_check.
 _makefile_at_at_check_exceptions = \
