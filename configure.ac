@@ -658,8 +658,9 @@ AC_LINK_IFELSE(
     int
     main (void)
     {
-      __m256i a, b;
-      a = _mm256_sad_epu8 (a, b);
+      __m256i matches = _mm256_setzero_si256 ();
+      int mask = _mm256_movemask_epi8 (matches);
+      int lines = __builtin_popcount (mask);
       return __builtin_cpu_supports ("avx2");
     }
   ]])
