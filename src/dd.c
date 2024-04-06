@@ -1809,7 +1809,7 @@ skip (int fdesc, char const *file, intmax_t records, idx_t blocksize,
            struct stat st;
            if (ifstat (STDIN_FILENO, &st) != 0)
              error (EXIT_FAILURE, errno, _("cannot fstat %s"), quoteaf (file));
-           if (usable_st_size (&st) && 0 <= input_offset
+           if (usable_st_size (&st) && 0 < st.st_size && 0 <= input_offset
                && st.st_size - input_offset < offset)
              {
                /* When skipping past EOF, return the number of _full_ blocks
