@@ -1539,7 +1539,7 @@ sort_buffer_size (FILE *const *fps, size_t nfps,
           != 0)
         sort_die (_("stat failed"), files[i]);
 
-      if (S_ISREG (st.st_mode))
+      if (usable_st_size (&st) && 0 < st.st_size)
         file_size = st.st_size;
       else
         {
