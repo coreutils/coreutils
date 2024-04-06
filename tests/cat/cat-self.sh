@@ -30,4 +30,24 @@ echo y >doc.end || framework_failure_
 cat doc doc.end >doc || fail=1
 compare doc doc.end || fail=1
 
+# This terminates even though it copies a file to itself.
+# Coreutils 9.5 and earlier rejected this.
+echo x >fx || framework_failure_
+echo y >fy || framework_failure_
+cat fx fy >fxy || fail=1
+for i in 1 2; do
+  cat fx >fxy$i || fail=1
+done
+for i in 3 4 5 6; do
+  cat fx >fx$i || fail=1
+done
+cat - fy <fxy1 1<>fxy1 || fail=1
+compare fxy fxy1 || fail=1
+cat fxy2 fy 1<>fxy2 || fail=1
+compare fxy fxy2 || fail=1
+returns_ 1 cat fx fx3 1<>fx3 || fail=1
+returns_ 1 cat - fx4 <fx 1<>fx4 || fail=1
+returns_ 1 cat fx5 >>fx5 || fail=1
+returns_ 1 cat <fx6 >>fx6 || fail=1
+
 Exit $fail

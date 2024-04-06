@@ -645,9 +645,10 @@ main (int argc, char **argv)
   /* Optimal size of i/o operations of output.  */
   idx_t outsize = io_blksize (&stat_buf);
 
-  /* Device and I-node number of the output.  */
+  /* Device, I-node number and lazily-acquired flags of the output.  */
   dev_t out_dev = stat_buf.st_dev;
   ino_t out_ino = stat_buf.st_ino;
+  int out_flags = -2;
 
   /* True if the output is a regular file.  */
   bool out_isreg = S_ISREG (stat_buf.st_mode) != 0;
@@ -701,17 +702,27 @@ main (int argc, char **argv)
 
       fdadvise (input_desc, 0, 0, FADVISE_SEQUENTIAL);
 
-      /* Don't copy a nonempty regular file to itself, as that would
-         merely exhaust the output device.  It's better to catch this
-         error earlier rather than later.  */
+      /* Don't copy a file to itself if that would merely exhaust the
+         output device.  It's better to catch this error earlier
+         rather than later.  */
 
-      if (out_isreg
-          && stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino
-          && lseek (input_desc, 0, SEEK_CUR) < stat_buf.st_size)
+      if (stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino)
         {
-          error (0, 0, _("%s: input file is output file"), quotef (infile));
-          ok = false;
-          goto contin;
+          if (out_flags < -1)
+            out_flags = fcntl (STDOUT_FILENO, F_GETFL);
+          bool exhausting = 0 <= out_flags && out_flags & O_APPEND;
+          if (!exhausting)
+            {
+              off_t in_pos = lseek (input_desc, 0, SEEK_CUR);
+              if (0 <= in_pos)
+                exhausting = in_pos < lseek (STDOUT_FILENO, 0, SEEK_CUR);
+            }
+          if (exhausting)
+            {
+              error (0, 0, _("%s: input file is output file"), quotef (infile));
+              ok = false;
+              goto contin;
+            }
         }
 
       /* Pointer to the input buffer.  */
