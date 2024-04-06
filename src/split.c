@@ -489,10 +489,8 @@ create (char const *name)
       if (psame_inode (&in_stat_buf, &out_stat_buf))
         error (EXIT_FAILURE, 0, _("%s would overwrite input; aborting"),
                quoteaf (name));
-      bool regularish
-        = S_ISREG (out_stat_buf.st_mode) || S_TYPEISSHM (&out_stat_buf);
-      if (! (regularish && out_stat_buf.st_size == 0)
-          && ftruncate (fd, 0) < 0 && regularish)
+      if (ftruncate (fd, 0) < 0
+          && (S_ISREG (out_stat_buf.st_mode) || S_TYPEISSHM (&out_stat_buf)))
         error (EXIT_FAILURE, errno, _("%s: error truncating"), quotef (name));
 
       return fd;
