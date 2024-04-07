@@ -12,6 +12,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   have exited with a "Function not implemented" error.
   [bug introduced in coreutils-8.28]
 
+** Improvements
+
+  sort operates more efficiently when used on pseudo files with
+  an apparent size of 0, like those in /proc.
+
 
 * Noteworthy changes in release 9.5 (2024-03-28) [stable]
 
