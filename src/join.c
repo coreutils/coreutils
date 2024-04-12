@@ -1045,7 +1045,7 @@ main (int argc, char **argv)
             if (xstrtol (optarg, nullptr, 10, &val, "") != LONGINT_OK
                 || (val != 1 && val != 2))
               error (EXIT_FAILURE, 0,
-                     _("invalid field number: %s"), quote (optarg));
+                     _("invalid file number: %s"), quote (optarg));
             if (val == 1)
               print_unpairables_1 = true;
             else
