@@ -1952,11 +1952,6 @@ decode_switches (int argc, char **argv)
         case 'f':
           ignore_mode = IGNORE_MINIMAL; /* enable -a */
           sort_opt = sort_none;         /* enable -U */
-          if (format_opt == long_format)
-            format_opt = -1;            /* disable -l */
-          print_with_color = false;     /* disable --color */
-          print_hyperlink = false;      /* disable --hyperlink */
-          print_block_size = false;     /* disable -s */
           break;
 
         case FILE_TYPE_INDICATOR_OPTION: /* --file-type */
@@ -5466,7 +5461,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
 "), stdout);
       fputs (_("\
-  -f                         do not sort, enable -aU, disable -ls --color\n\
+  -f                         same as -a -U\n\
   -F, --classify[=WHEN]      append indicator (one of */=>@|) to entries WHEN\n\
       --file-type            likewise, except do not append '*'\n\
 "), stdout);

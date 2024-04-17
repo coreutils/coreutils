@@ -12,6 +12,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   have exited with a "Function not implemented" error.
   [bug introduced in coreutils-8.28]
 
+** Changes in behavior
+
+  ls's -f option now simply acts like -aU, instead of also ignoring
+  some earlier options.  For example 'ls -fl' and 'ls -lf' are now
+  equivalent because -f no longer ignores an earlier -l.  The new
+  behavior is more orthogonal and is compatible with FreeBSD.
+
 ** Improvements
 
   sort operates more efficiently when used on pseudo files with

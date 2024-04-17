@@ -8150,11 +8150,9 @@ sort according to the ctime.  @xref{File timestamps}.
 @opindex -f
 @cindex unsorted directory listing
 @cindex directory order, listing by
-Produce an unsorted directory listing.
-This is like @option{--sort=none} (@option{-U}),
-but also enable @option{--all} (@option{-a}),
-while also disabling any previous use of @option{-l}, @option{--color}
-@option{--size}, or @option{--hyperlink}.
+Produce an unsorted listing of all directory entries.
+This is like @option{--all} (@option{-a}) combined
+with @option{--sort=none} (@option{-U}).
 
 @item -r
 @itemx --reverse
@@ -8224,9 +8222,11 @@ sort according to the birth time.
 @opindex --sort
 @opindex none@r{, sorting option for @command{ls}}
 Do not sort; list the files in whatever order they are
-stored in the directory.  (Do not do any of the other unrelated things
-that @option{-f} does.)  This can be useful when listing large
+stored in the directory.  This can be useful when listing large
 directories, where sorting can take some time.
+
+Unlike @option{-f}, this option does not imply @option{--all}
+(@option{-a}).
 
 @item -v
 @itemx --sort=version
