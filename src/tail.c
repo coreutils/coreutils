@@ -760,7 +760,8 @@ free_lbuffers:
   return ok;
 }
 
-/* Print the last N_BYTES characters from the end of pipe FD.
+/* Print the last N_BYTES characters from the end of FD.
+   Work even if the input is a pipe.
    This is a stripped down version of pipe_lines.
    Return true if successful.  */
 
@@ -1875,15 +1876,28 @@ tail_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
     {
       off_t end_pos = -1;
       off_t current_pos = -1;
+      bool copy_from_current_pos = false;
 
       if (! presume_input_pipe && n_bytes <= OFF_T_MAX)
         {
           if (usable_st_size (&stats))
-            end_pos = stats.st_size;
-          else if ((current_pos = lseek (fd, -n_bytes, SEEK_END)) != -1)
-            end_pos = current_pos + n_bytes;
+            {
+              /* Use st_size only if it's so large that this is
+                 probably not a /proc or similar file, where st_size
+                 is notional.  */
+              end_pos = stats.st_size;
+              off_t smallish_size = STP_BLKSIZE (&stats);
+              copy_from_current_pos = smallish_size < end_pos;
+            }
+          else
+            {
+              current_pos = lseek (fd, -n_bytes, SEEK_END);
+              copy_from_current_pos = current_pos != -1;
+              if (copy_from_current_pos)
+                end_pos = current_pos + n_bytes;
+            }
         }
-      if (end_pos <= (off_t) STP_BLKSIZE (&stats))
+      if (! copy_from_current_pos)
         return pipe_bytes (pretty_filename, fd, n_bytes, read_pos);
       if (current_pos == -1)
         current_pos = xlseek (fd, 0, SEEK_CUR, pretty_filename);

@@ -35,4 +35,14 @@ printf '123456' | tail -c3 > out || fail=1
 printf '456' > exp || framework_failure_
 compare exp out || fail=1
 
+# Any part of /dev/zero should be valid for tail -c.
+head -c 4096 /dev/zero >exp || fail=1
+tail -c 4096 /dev/zero >out || fail=1
+compare exp out || fail=1
+
+# Any part of /dev/urandom, if it exists, should be valid for tail -c.
+if test -r /dev/urandom; then
+  timeout --verbose 1 tail -c 4096 /dev/urandom >/dev/null || fail=1
+fi
+
 Exit $fail

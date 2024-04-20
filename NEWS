@@ -12,6 +12,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   have exited with a "Function not implemented" error.
   [bug introduced in coreutils-8.28]
 
+  'tail -c 4096 /dev/zero' no longer loops forever.
+  [This bug was present in "the beginning".]
+
 ** Changes in behavior
 
   ls's -f option now simply acts like -aU, instead of also ignoring
