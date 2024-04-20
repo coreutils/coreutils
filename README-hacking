@@ -45,16 +45,17 @@ time and file system space requirements:
 
         $ export GNULIB_SRCDIR=/path/to/gnulib
 
-The next step is to get and check other files needed to build,
-which are extracted from other source packages:
+The next steps are to get and check other files needed to build,
+and complete the build:
+
+        $ make -f cfg.mk
+
+For reference the above command runs the following steps,
+which can be done individually if required to give more control:
 
         $ ./bootstrap
-
-And there you are!  Just
-
         $ ./configure --quiet #[--disable-gcc-warnings] [*]
-        $ make
-        $ make check
+        $ make #[check]
 
 At this point, there should be no difference between your local copy,
 and the Git master copy:

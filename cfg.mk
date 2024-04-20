@@ -57,6 +57,11 @@ _makefile_at_at_check_exceptions = \
 # Our help-version script is in a slightly different location.
 _hv_file ?= $(srcdir)/tests/misc/help-version
 
+world:
+	GNULIB_TOOL_IMPL=py ./bootstrap && \
+	./configure --quiet && \
+	$(MAKE) $(AM_MAKEFLAGS) -j $$(nproc 2>/dev/null || echo 1)
+
 # Ensure that the list of O_ symbols used to compute O_FULLBLOCK is complete.
 dd = $(srcdir)/src/dd.c
 sc_dd_O_FLAGS:
