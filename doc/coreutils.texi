@@ -5151,11 +5151,21 @@ Use the common DSU, Decorate Sort Undecorate idiom to
 sort lines according to their length.
 
 @example
-awk '@{print length, $0@}' /etc/passwd | sort -n | cut -f2- -d' '
+getent passwd |@/
+awk '@{print length, $0@}' | sort -n | cut -f2- -d' '
 @end example
 
 In general this technique can be used to sort data that the @command{sort}
 command does not support, or is inefficient at, sorting directly.
+
+@item
+Use the same DSU idiom as above to sort lines by their last field,
+and in this specific example the presented lines are users' full names.
+
+@example
+getent passwd | grep -v nologin | cut -d: -f5 | grep ' ' |@/
+awk '@{print $NF, $0@}' | sort -k1,1 | cut -f2- -d' '
+@end example
 
 @item
 Shuffle a list of directories, but preserve the order of files within
