@@ -58,7 +58,7 @@ _makefile_at_at_check_exceptions = \
 _hv_file ?= $(srcdir)/tests/misc/help-version
 
 world:
-	GNULIB_TOOL_IMPL=py ./bootstrap && \
+	./bootstrap && \
 	./configure --quiet && \
 	$(MAKE) $(AM_MAKEFLAGS) -j $$(nproc 2>/dev/null || echo 1)
 
