@@ -905,7 +905,7 @@ exclude_file_name_regexp--sc_prohibit-gl-attributes = ^src/libstdbuf\.c$$
 exclude_file_name_regexp--sc_prohibit_uppercase_id_est = \.diff$$
 exclude_file_name_regexp--sc_ensure_dblspace_after_dot_before_id_est = \.diff$$
 exclude_file_name_regexp--sc_ensure_comma_after_id_est = \.diff|$(_ll)$$
-exclude_file_name_regexp--sc_long_lines = \.diff$$|$(_ll)|$(_cksum)
+exclude_file_name_regexp--sc_long_lines = \.diff$$|$(_ll)|$(_cksum)|bootstrap
 
 # `grep . -q` is not exactly equivalent to `grep . >/dev/null`
 # and this difference is significant in the NEWS description
