@@ -1,6 +1,7 @@
 #include <config.h>
 #include <stdint.h>
 
+extern uint_fast32_t const crctab[8][256];
 uint_fast32_t const crctab[8][256] = {
 {
   0x00000000,

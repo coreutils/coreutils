@@ -633,6 +633,7 @@ src/version.c: Makefile
 	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)${MKDIR_P} src
 	$(AM_V_at)printf '#include <config.h>\n' > $@t
+	$(AM_V_at)printf '#include "version.h"\n' >> $@t
 	$(AM_V_at)printf 'char const *Version = "$(PACKAGE_VERSION)";\n' >> $@t
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
