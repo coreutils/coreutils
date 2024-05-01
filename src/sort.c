@@ -2092,6 +2092,12 @@ getmonth (char const *month, char **ea)
    trick md5.h into declaring and using pointers to functions not functions.
    This causes the compiler's -lcrypto option to have no effect,
    as sort.o no longer uses any crypto symbols statically.  */
+
+# if 4 < __GNUC__ + (8 <= __GNUC_MINOR__)
+  /* Pacify gcc -Wmissing-variable-declarations through at least GCC 14.  */
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
+# endif
 # define MD5_Init (*ptr_MD5_Init)
 # define MD5_Update (*ptr_MD5_Update)
 # define MD5_Final (*ptr_MD5_Final)
@@ -2131,6 +2137,9 @@ link_libcrypto (void)
   ptr_MD5_Init = symbol_address (handle, "MD5_Init");
   ptr_MD5_Update = symbol_address (handle, "MD5_Update");
   ptr_MD5_Final = symbol_address (handle, "MD5_Final");
+# if 4 < __GNUC__ + (8 <= __GNUC_MINOR__)
+#  pragma GCC diagnostic pop
+# endif
 #endif
 }
 
