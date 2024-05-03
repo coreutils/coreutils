@@ -67,4 +67,11 @@ cksum --untagged -a md5 /dev/null >out || fail=1
 compare out out-1 || fail=1
 compare out out-2 || fail=1
 
+# check that the '*' is present
+cksum --tag --untagged --binary -a md5 /dev/null >out || fail=1
+grep " *" out >/dev/null || { fail=1; cat out; }
+# Verify that the order does not reset binary indicator
+cksum --binary --untagged -a md5 /dev/null >out-1 || fail=1
+compare out out-1 || fail=1
+
 Exit $fail
