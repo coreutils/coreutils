@@ -38,6 +38,17 @@ for interactive in '' -i; do
   done
 done
 
+# These should accept all options
+for update_option in '--update' '--update=older' '--update=all' \
+ '--update=none' '--update=none-fail'; do
+
+  touch file1 || framework_failure_
+  mv $update_option file1 file2 || fail=1
+  test -f file1 && fail=1
+  cp $update_option file2 file1 || fail=1
+  rm file1 file2 || framework_failure_
+done
+
 # These should perform the rename / copy
 for update_option in '--update' '--update=older' '--update=all' \
  '--update=none --update=all'; do

@@ -104,11 +104,11 @@ ARGMATCH_VERIFY (reflink_type_string, reflink_type);
 
 static char const *const update_type_string[] =
 {
-  "all", "none", "older", nullptr
+  "all", "none", "none-fail", "older", nullptr
 };
 static enum Update_type const update_type[] =
 {
-  UPDATE_ALL, UPDATE_NONE, UPDATE_OLDER,
+  UPDATE_ALL, UPDATE_NONE, UPDATE_NONE_FAIL, UPDATE_OLDER,
 };
 ARGMATCH_VERIFY (update_type_string, update_type);
 
