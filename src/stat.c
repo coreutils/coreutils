@@ -1199,28 +1199,28 @@ print_it (char const *format, int fd, char const *filename,
               break;
             }
           ++b;
-          if (isodigit (*b))
+          if (isoct (*b))
             {
-              int esc_value = octtobin (*b);
+              int esc_value = fromoct (*b);
               int esc_length = 1;	/* number of octal digits */
-              for (++b; esc_length < 3 && isodigit (*b);
+              for (++b; esc_length < 3 && isoct (*b);
                    ++esc_length, ++b)
                 {
-                  esc_value = esc_value * 8 + octtobin (*b);
+                  esc_value = esc_value * 8 + fromoct (*b);
                 }
               putchar (esc_value);
               --b;
             }
           else if (*b == 'x' && c_isxdigit (to_uchar (b[1])))
             {
-              int esc_value = hextobin (b[1]);	/* Value of \xhh escape. */
+              int esc_value = fromhex (b[1]);	/* Value of \xhh escape. */
               /* A hexadecimal \xhh escape sequence must have
                  1 or 2 hex. digits.  */
               ++b;
               if (c_isxdigit (to_uchar (b[1])))
                 {
                   ++b;
-                  esc_value = esc_value * 16 + hextobin (*b);
+                  esc_value = esc_value * 16 + fromhex (*b);
                 }
               putchar (esc_value);
             }

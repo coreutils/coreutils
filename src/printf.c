@@ -261,20 +261,20 @@ print_esc (char const *escstart, bool octal_0)
       for (esc_length = 0, ++p;
            esc_length < 2 && c_isxdigit (to_uchar (*p));
            ++esc_length, ++p)
-        esc_value = esc_value * 16 + hextobin (*p);
+        esc_value = esc_value * 16 + fromhex (*p);
       if (esc_length == 0)
         error (EXIT_FAILURE, 0, _("missing hexadecimal number in escape"));
       putchar (esc_value);
     }
-  else if (isodigit (*p))
+  else if (isoct (*p))
     {
       /* Parse \0ooo (if octal_0 && *p == '0') or \ooo (otherwise).
          Allow \ooo if octal_0 && *p != '0'; this is an undocumented
          extension to POSIX that is compatible with Bash 2.05b.  */
       for (esc_length = 0, p += octal_0 && *p == '0';
-           esc_length < 3 && isodigit (*p);
+           esc_length < 3 && isoct (*p);
            ++esc_length, ++p)
-        esc_value = esc_value * 8 + octtobin (*p);
+        esc_value = esc_value * 8 + fromoct (*p);
       putchar (esc_value);
     }
   else if (*p && strchr ("\"\\abcefnrtv", *p))
@@ -291,7 +291,7 @@ print_esc (char const *escstart, bool octal_0)
         {
           if (! c_isxdigit (to_uchar (*p)))
             error (EXIT_FAILURE, 0, _("missing hexadecimal number in escape"));
-          uni_value = uni_value * 16 + hextobin (*p);
+          uni_value = uni_value * 16 + fromhex (*p);
         }
 
       /* Error for invalid code points 0000D800 through 0000DFFF inclusive.
