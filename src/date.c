@@ -29,15 +29,15 @@
 #include "parse-datetime.h"
 #include "posixtm.h"
 #include "quote.h"
+#include "show-date.h"
 #include "stat-time.h"
-#include "fprintftime.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "date"
 
 #define AUTHORS proper_name ("David MacKenzie")
 
-static bool show_date (char const *, struct timespec, timezone_t);
+static bool show_date_helper (char const *, struct timespec, timezone_t);
 
 enum Time_spec
 {
@@ -381,7 +381,7 @@ batch_convert (char const *input_filename, char const *format,
         }
       else
         {
-          ok &= show_date (format, when, tz);
+          ok &= show_date_helper (format, when, tz);
         }
     }
 
@@ -643,38 +643,26 @@ main (int argc, char **argv)
             }
         }
 
-      ok &= show_date (format_res, when, tz);
+      ok &= show_date_helper (format_res, when, tz);
     }
 
   main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
-/* Display the date and/or time in WHEN according to the format specified
-   in FORMAT, followed by a newline.  Return true if successful.  */
-
 static bool
-show_date (char const *format, struct timespec when, timezone_t tz)
+show_date_helper (char const *format, struct timespec when, timezone_t tz)
 {
-  struct tm tm;
-
   if (parse_datetime_flags & PARSE_DATETIME_DEBUG)
     error (0, 0, _("output format: %s"), quote (format));
 
-  if (localtime_rz (tz, &when.tv_sec, &tm))
-    {
-      if (format == rfc_email_format)
-        setlocale (LC_TIME, "C");
-      fprintftime (stdout, format, &tm, tz, when.tv_nsec);
-      if (format == rfc_email_format)
-        setlocale (LC_TIME, "");
-      fputc ('\n', stdout);
-      return true;
-    }
-  else
-    {
-      char buf[INT_BUFSIZE_BOUND (intmax_t)];
-      error (0, 0, _("time %s is out of range"),
-             quote (timetostr (when.tv_sec, buf)));
-      return false;
-    }
+  if (format == rfc_email_format)
+    setlocale (LC_TIME, "C");
+
+  bool ok = show_date (format, when, tz);
+
+  if (format == rfc_email_format)
+    setlocale (LC_TIME, "");
+
+  putchar ('\n');
+  return ok;
 }

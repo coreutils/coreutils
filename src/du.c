@@ -32,10 +32,10 @@
 #include "assure.h"
 #include "di-set.h"
 #include "exclude.h"
-#include "fprintftime.h"
 #include "human.h"
 #include "mountlist.h"
 #include "quote.h"
+#include "show-date.h"
 #include "stat-size.h"
 #include "stat-time.h"
 #include "stdio--.h"
@@ -370,25 +370,6 @@ hash_ins (struct di_set *di_set, ino_t ino, dev_t dev)
   return inserted;
 }
 
-/* FIXME: this code is nearly identical to code in date.c  */
-/* Display the date and time in WHEN according to the format specified
-   in FORMAT.  */
-
-static void
-show_date (char const *format, struct timespec when, timezone_t tz)
-{
-  struct tm tm;
-  if (localtime_rz (tz, &when.tv_sec, &tm))
-    fprintftime (stdout, format, &tm, tz, when.tv_nsec);
-  else
-    {
-      char buf[INT_BUFSIZE_BOUND (intmax_t)];
-      char *when_str = timetostr (when.tv_sec, buf);
-      error (0, 0, _("time %s is out of range"), quote (when_str));
-      fputs (when_str, stdout);
-    }
-}
-
 /* Print N_BYTES.  Convert it to a readable value before printing.  */
 
 static void
@@ -414,7 +395,13 @@ print_size (const struct duinfo *pdui, char const *string)
   if (opt_time)
     {
       putchar ('\t');
-      show_date (time_format, pdui->tmax, localtz);
+      bool ok = show_date (time_format, pdui->tmax, localtz);
+      if (!ok)
+        {
+          /* If failed to format date, print raw seconds instead.  */
+          char buf[INT_BUFSIZE_BOUND (intmax_t)];
+          fputs (timetostr (pdui->tmax.tv_sec, buf), stdout);
+        }
     }
   printf ("\t%s%c", string, opt_nul_terminate_output ? '\0' : '\n');
   fflush (stdout);

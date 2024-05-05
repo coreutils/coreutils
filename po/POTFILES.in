@@ -110,6 +110,7 @@ src/rmdir.c
 src/runcon.c
 src/seq.c
 src/set-fields.c
+src/show-date.c
 src/shred.c
 src/shuf.c
 src/sleep.c
