@@ -54,6 +54,7 @@ noinst_HEADERS =		\
   src/iopoll.h			\
   src/longlong.h		\
   src/ls.h			\
+  src/octhexdigits.h		\
   src/operand2sig.h		\
   src/prog-fprintf.h		\
   src/remove.h			\

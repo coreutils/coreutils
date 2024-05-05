@@ -58,6 +58,7 @@
 #include "system.h"
 #include "c-ctype.h"
 #include "cl-strtod.h"
+#include "octhexdigits.h"
 #include "quote.h"
 #include "unicodeio.h"
 #include "xprintf.h"
@@ -66,11 +67,6 @@
 #define PROGRAM_NAME "printf"
 
 #define AUTHORS proper_name ("David MacKenzie")
-
-#define isodigit(c) ((c) >= '0' && (c) <= '7')
-#define hextobin(c) ((c) >= 'a' && (c) <= 'f' ? (c) - 'a' + 10 : \
-                     (c) >= 'A' && (c) <= 'F' ? (c) - 'A' + 10 : (c) - '0')
-#define octtobin(c) ((c) - '0')
 
 /* The value to return to the calling program.  */
 static int exit_status;

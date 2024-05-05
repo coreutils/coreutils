@@ -64,6 +64,7 @@
 #include "filemode.h"
 #include "fs.h"
 #include "mountlist.h"
+#include "octhexdigits.h"
 #include "quote.h"
 #include "stat-size.h"
 #include "stat-time.h"
@@ -166,12 +167,6 @@ statfs (char const *filename, struct fs_info *buf)
 # include <attr.h>
 # include <sys/nvpair.h>
 #endif
-
-/* FIXME: these are used by printf.c, too */
-#define isodigit(c) ('0' <= (c) && (c) <= '7')
-#define octtobin(c) ((c) - '0')
-#define hextobin(c) ((c) >= 'a' && (c) <= 'f' ? (c) - 'a' + 10 : \
-                     (c) >= 'A' && (c) <= 'F' ? (c) - 'A' + 10 : (c) - '0')
 
 static char const digits[] = "0123456789";
 
