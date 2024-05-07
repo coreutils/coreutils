@@ -59,7 +59,9 @@ Print the full filename of the current working directory.\n\
 "), stdout);
       fputs (_("\
   -L, --logical   use PWD from environment, even if it contains symlinks\n\
-  -P, --physical  avoid all symlinks\n\
+"), stdout);
+      fputs (_("\
+  -P, --physical  resolve all symlinks\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
