@@ -34,6 +34,7 @@
 #include <xbinary-io.h>
 
 #include "system.h"
+#include "ioblksize.h"
 #include "wc.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -42,9 +43,6 @@
 #define AUTHORS \
   proper_name ("Paul Rubin"), \
   proper_name ("David MacKenzie")
-
-/* Size of atomic reads. */
-#define BUFFER_SIZE (16 * 1024)
 
 static bool wc_isprint[UCHAR_MAX + 1];
 static bool wc_isspace[UCHAR_MAX + 1];
@@ -262,8 +260,8 @@ wc_lines (int fd)
 
   while (true)
     {
-      char buf[BUFFER_SIZE + 1];
-      ssize_t bytes_read = read (fd, buf, BUFFER_SIZE);
+      char buf[IO_BUFSIZE + 1];
+      ssize_t bytes_read = read (fd, buf, IO_BUFSIZE);
       if (bytes_read <= 0)
         return (struct wc_lines) { bytes_read == 0 ? 0 : errno, lines, bytes };
 
@@ -304,7 +302,7 @@ static bool
 wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 {
   int err = 0;
-  char buf[BUFFER_SIZE + 1];
+  char buf[IO_BUFSIZE + 1];
   intmax_t lines, words, chars, bytes, linelength;
   bool count_bytes, count_chars, count_complicated;
   char const *file = file_x ? file_x : _("standard input");
@@ -331,7 +329,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 
   /* When counting only bytes, save some line- and word-counting
      overhead.  If FD is a 'regular' Unix file, using lseek is enough
-     to get its 'size' in bytes.  Otherwise, read blocks of BUFFER_SIZE
+     to get its 'size' in bytes.  Otherwise, read blocks of IO_BUFSIZE
      bytes at a time until EOF.  Note that the 'size' (number of bytes)
      that wc reports is smaller than stats.st_size when the file is not
      positioned at its beginning.  That's why the lseek calls below are
@@ -386,7 +384,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
         {
           fdadvise (fd, 0, 0, FADVISE_SEQUENTIAL);
           for (ssize_t bytes_read;
-               (bytes_read = read (fd, buf, BUFFER_SIZE));
+               (bytes_read = read (fd, buf, IO_BUFSIZE));
                bytes += bytes_read)
             if (bytes_read < 0)
               {
@@ -413,7 +411,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
       idx_t prev = 0; /* Number of bytes carried over from previous round.  */
 
       for (ssize_t bytes_read;
-           ((bytes_read = read (fd, buf + prev, BUFFER_SIZE - prev))
+           ((bytes_read = read (fd, buf + prev, IO_BUFSIZE - prev))
             || prev);
            )
         {
@@ -448,7 +446,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 
                   if (scanbytes < n)
                     {
-                      if (n == (size_t) -2 && plim - p < BUFFER_SIZE
+                      if (n == (size_t) -2 && plim - p < IO_BUFSIZE
                           && bytes_read)
                         {
                           /* An incomplete character that is not ridiculously
@@ -553,7 +551,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
       bool in_word = false;
       intmax_t linepos = 0;
 
-      for (ssize_t bytes_read; (bytes_read = read (fd, buf, BUFFER_SIZE)); )
+      for (ssize_t bytes_read; (bytes_read = read (fd, buf, IO_BUFSIZE)); )
         {
           if (bytes_read < 0)
             {

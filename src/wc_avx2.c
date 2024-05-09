@@ -17,12 +17,10 @@
 #include <config.h>
 
 #include "wc.h"
-
 #include "system.h"
+#include "ioblksize.h"
 
 #include <x86intrin.h>
-
-#define BUFSIZE 16384
 
 /* Read FD and return a summary.  */
 extern struct wc_lines
@@ -35,7 +33,7 @@ wc_lines_avx2 (int fd)
 
   while (true)
     {
-       __m256i avx_buf[BUFSIZE / sizeof (__m256i)];
+       __m256i avx_buf[IO_BUFSIZE / sizeof (__m256i)];
       ssize_t bytes_read = read (fd, avx_buf, sizeof avx_buf);
       if (bytes_read <= 0)
         return (struct wc_lines) { bytes_read == 0 ? 0 : errno, lines, bytes };

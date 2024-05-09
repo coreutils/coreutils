@@ -31,6 +31,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   sort operates more efficiently when used on pseudo files with
   an apparent size of 0, like those in /proc.
 
+  wc now reads a minimum of 256KiB at a time.
+  This was previously 16KiB and increasing to 256KiB was seen to increase
+  wc -l performance by about 10% when reading cached files on modern systems.
+
 
 * Noteworthy changes in release 9.5 (2024-03-28) [stable]
 
