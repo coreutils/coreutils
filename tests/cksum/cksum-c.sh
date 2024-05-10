@@ -56,4 +56,33 @@ returns_ 1 cksum -a crc -c CHECKSUMS || fail=1
 cksum -a crc 'input' > CHECKSUMS.crc || fail=1
 returns_ 1 cksum -c CHECKSUMS.crc || fail=1
 
+# Check for the error mgmt
+echo 'invalid line' >> CHECKSUMS
+# Exit code is 0 in this case
+cksum --check CHECKSUMS >out 2>&1 || fail=1
+grep '1 line is improperly formatted' out || fail=1
+# But not with --strict
+cksum --strict --check CHECKSUMS >out 2>&1 && fail=1
+grep '1 line is improperly formatted' out || fail=1
+echo "invalid line" >> CHECKSUMS
+# plurial checks
+cksum --strict --check CHECKSUMS >out 2>&1 && fail=1
+grep '2 lines are improperly formatted' out || fail=1
+
+# Inject an incorrect checksum
+invalid_sum='aaaaaaaaaaaaaaaaaaaaaaaaaaaaafdb57c725157cb40b5aee8d937b8351477e'
+echo "SM3 (input) = $invalid_sum" >> CHECKSUMS
+cksum --check CHECKSUMS >out 2>&1 && fail=1
+# with --strict (won't change the result)
+grep '1 computed checksum did NOT match' out || fail=1
+grep 'input: FAILED' out || fail=1
+cksum --check --strict CHECKSUMS >out 2>&1 && fail=1
+
+# With a non existing file
+echo "SM3 (input2) = $invalid_sum" >> CHECKSUMS2
+cksum --check CHECKSUMS2 >out 2>&1 && fail=1
+grep 'input2: FAILED open or read' out || fail=1
+grep '1 listed file could not be read' out || fail=1
+# with --strict (won't change the result)
+cksum --check --strict CHECKSUMS2 >out 2>&1 && fail=1
 Exit $fail
