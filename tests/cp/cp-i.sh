@@ -70,4 +70,23 @@ returns_ 1 cp -bn c d 2>/dev/null || fail=1
 returns_ 1 cp -b --update=none c d 2>/dev/null || fail=1
 returns_ 1 cp -b --update=none-fail c d 2>/dev/null || fail=1
 
+# Verify -i combines with -u,
+echo old > old || framework_failure_
+touch -d yesterday old || framework_failure_
+echo new > new || framework_failure_
+# coreutils 9.3 had --update={all,older} ignore -i
+echo n | returns_ 1 cp -vi --update=older new old 2>/dev/null >out8 || fail=1
+compare /dev/null out8 || fail=1
+echo n | returns_ 1 cp -vi --update=all new old 2>/dev/null >out8 || fail=1
+compare /dev/null out8 || fail=1
+# coreutils 9.5 also had -u ignore -i
+echo n | returns_ 1 cp -vi -u new old 2>/dev/null >out8 || fail=1
+compare /dev/null out8 || fail=1
+# Don't prompt as not updating
+cp -v -i --update=none new old 2>/dev/null >out8 </dev/null || fail=1
+compare /dev/null out8 || fail=1
+# Likewise, but coreutils 9.3 - 9.5 incorrectly ignored the update option
+cp -v --update=none -i new old 2>/dev/null >out8 </dev/null || fail=1
+compare /dev/null out8 || fail=1
+
 Exit $fail

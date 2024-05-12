@@ -1063,7 +1063,9 @@ main (int argc, char **argv)
           break;
 
         case 'i':
-          x.interactive = I_ASK_USER;
+          /* -i overrides -n, but not --update={none,none-fail}.  */
+          if (no_clobber || x.interactive == I_UNSPECIFIED)
+            x.interactive = I_ASK_USER;
           break;
 
         case 'l':
@@ -1151,7 +1153,8 @@ main (int argc, char **argv)
                 {
                   /* Default cp operation.  */
                   x.update = false;
-                  x.interactive = I_UNSPECIFIED;
+                  if (x.interactive != I_ASK_USER)
+                    x.interactive = I_UNSPECIFIED;
                 }
               else if (update_opt == UPDATE_NONE)
                 {
@@ -1166,7 +1169,8 @@ main (int argc, char **argv)
               else if (update_opt == UPDATE_OLDER)
                 {
                   x.update = true;
-                  x.interactive = I_UNSPECIFIED;
+                  if (x.interactive != I_ASK_USER)
+                    x.interactive = I_UNSPECIFIED;
                 }
             }
           break;

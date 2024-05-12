@@ -38,6 +38,9 @@ for interactive in '' -i; do
   done
 done
 
+# This should prompt. coreutils 9.3-9.5 mistakenly did not
+echo n | returns_ 1 mv -vi -u new old >/dev/null 2>&1 || fail=1
+
 # These should accept all options
 for update_option in '--update' '--update=older' '--update=all' \
  '--update=none' '--update=none-fail'; do

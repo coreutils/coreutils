@@ -353,10 +353,18 @@ main (int argc, char **argv)
             version_control_string = optarg;
           break;
         case 'f':
-          x.interactive = I_ALWAYS_YES;
+          /* -f overrides -n, or -i, but not --update={none,none-fail}.  */
+          if (no_clobber
+              || x.interactive == I_ASK_USER
+              || x.interactive == I_UNSPECIFIED)
+            x.interactive = I_ALWAYS_YES;
           break;
         case 'i':
-          x.interactive = I_ASK_USER;
+          /* -i overrides -n, or -f, but not --update={none,none-fail}.  */
+          if (no_clobber
+              || x.interactive == I_ALWAYS_YES
+              || x.interactive == I_UNSPECIFIED)
+            x.interactive = I_ASK_USER;
           break;
         case 'n':
           x.interactive = I_ALWAYS_SKIP;
@@ -394,7 +402,9 @@ main (int argc, char **argv)
                 {
                   /* Default mv operation.  */
                   x.update = false;
-                  x.interactive = I_UNSPECIFIED;
+                  if (x.interactive != I_ASK_USER
+                      && x.interactive != I_ALWAYS_YES)
+                    x.interactive = I_UNSPECIFIED;
                 }
               else if (update_opt == UPDATE_NONE)
                 {
@@ -409,7 +419,9 @@ main (int argc, char **argv)
               else if (update_opt == UPDATE_OLDER)
                 {
                   x.update = true;
-                  x.interactive = I_UNSPECIFIED;
+                  if (x.interactive != I_ASK_USER
+                      && x.interactive != I_ALWAYS_YES)
+                    x.interactive = I_UNSPECIFIED;
                 }
             }
           break;

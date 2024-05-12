@@ -25,8 +25,8 @@ trap '' TTIN # Ignore SIGTTIN
 
 uname -s | grep 'BSD$' && skip_ 'known spurious failure on *BSD'
 
-touch f g h i || framework_failure_
-chmod 0 g i || framework_failure_
+touch f g h i j k || framework_failure_
+chmod 0 g i j k || framework_failure_
 
 
 ls /dev/stdin >/dev/null 2>&1 \
@@ -59,11 +59,20 @@ retry_delay_ check_overwrite_prompt .1 7 || { fail=1; cat out; }
 
 cleanup_
 
-mv -f h i > out 2>&1 || fail=1
+# Make sure there was no prompt with -f
+timeout 10 mv -f h i > out 2>&1 || fail=1
 test -f i || fail=1
 test -f h && fail=1
+case "$(cat out)" in
+  '') ;;
+  *) fail=1 ;;
+esac
 
-# Make sure there was no prompt.
+# Likewise make sure there was no prompt with -f -u
+# coreutils 9.3-9.5 mistakenly did prompt.
+timeout 10 mv -f --update=all j k > out 2>&1 || fail=1
+test -f k || fail=1
+test -f j && fail=1
 case "$(cat out)" in
   '') ;;
   *) fail=1 ;;
