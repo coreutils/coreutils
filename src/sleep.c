@@ -42,10 +42,9 @@ usage (int status)
       printf (_("\
 Usage: %s NUMBER[SUFFIX]...\n\
   or:  %s OPTION\n\
-Pause for NUMBER seconds.  SUFFIX may be 's' for seconds (the default),\n\
-'m' for minutes, 'h' for hours or 'd' for days.  NUMBER need not be an\n\
-integer.  Given two or more arguments, pause for the amount of time\n\
-specified by the sum of their values.\n\
+Pause for NUMBER seconds, where NUMBER is an integer or floating-point.\n\
+SUFFIX may be 's','m','h', or 'd', for seconds, minutes, hours, days.\n\
+With multiple arguments, pause for the sum of their values.\n\
 \n\
 "),
               program_name, program_name);
