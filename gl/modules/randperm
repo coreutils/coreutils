@@ -7,8 +7,8 @@ lib/randperm.h
 
 Depends-on:
 assert-h
-count-leading-zeros
 randint
+stdc_bit_width
 stdint
 xalloc
 hash

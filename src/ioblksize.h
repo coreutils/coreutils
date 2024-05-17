@@ -17,7 +17,7 @@
 /* Include this file _after_ system headers if possible.  */
 
 /* sys/stat.h and minmax.h will already have been included by system.h. */
-#include "count-leading-zeros.h"
+#include <stdbit.h>
 #include "stat-size.h"
 
 
@@ -94,7 +94,7 @@ io_blksize (struct stat const *st)
      power of two when the reported blocksize is not a power of two.  */
   if (S_ISREG (st->st_mode) && blocksize & (blocksize - 1))
     {
-      int leading_zeros = count_leading_zeros_ll (blocksize);
+      int leading_zeros = stdc_leading_zeros_ull (blocksize);
       if (IDX_MAX < ULLONG_MAX || leading_zeros)
         {
           unsigned long long power = 1ull << (ULLONG_WIDTH - leading_zeros);

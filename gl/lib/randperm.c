@@ -22,27 +22,13 @@
 #include "randperm.h"
 
 #include <limits.h>
+#include <stdbit.h>
 #include <stdint.h>
 #include <stdlib.h>
 
 #include "attribute.h"
-#include "count-leading-zeros.h"
 #include "hash.h"
 #include "xalloc.h"
-
-/* Return the floor of the log base 2 of N.  If N is zero, return -1.  */
-
-ATTRIBUTE_CONST static int
-floor_lg (size_t n)
-{
-  static_assert (SIZE_WIDTH <= ULLONG_WIDTH);
-  return (n == 0 ? -1
-          : SIZE_WIDTH <= UINT_WIDTH
-          ? UINT_WIDTH - 1 - count_leading_zeros (n)
-          : SIZE_WIDTH <= ULONG_WIDTH
-          ? ULONG_WIDTH - 1 - count_leading_zeros_l (n)
-          : ULLONG_WIDTH - 1 - count_leading_zeros_ll (n));
-}
 
 /* Return an upper bound on the number of random bytes needed to
    generate the first H elements of a random permutation of N
@@ -53,7 +39,7 @@ randperm_bound (size_t h, size_t n)
 {
   /* Upper bound on number of bits needed to generate the first number
      of the permutation.  */
-  uintmax_t lg_n = floor_lg (n) + 1;
+  uintmax_t lg_n = stdc_bit_width (n) + 1;
 
   /* Upper bound on number of bits needed to generated the first H elements.  */
   uintmax_t ar = lg_n * h;
