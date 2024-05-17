@@ -58,7 +58,10 @@ kb_alloc() { du -k "$1"|cut -f1; }
 # skip the remaining tests.  On at least Solaris 10 with NFS,
 # file.in is reported to occupy <= 1KiB for about 50 seconds
 # after its creation.
-if test $(kb_alloc file.in) -gt 3000; then
+# Also, ZFS allocation reports can be delayed or off (problem
+# observed on Ubuntu 23.10), so don’t trust this test on ZFS.
+if test $(kb_alloc file.in) -gt 3000 && test "$(stat -f -c %T file.in)" != zfs
+then
 
   # Ensure NUL blocks smaller than the *output* block size are not made sparse.
   # Here, with a 2MiB block size, dd's conv=sparse must *not* introduce a hole.
