@@ -259,6 +259,7 @@ if test $gl_gcc_warnings != no; then
   nw=$ew
   nw="$nw -Wduplicated-branches"    # Too many false alarms
   nw="$nw -Wformat-truncation=2"
+  nw="$nw -Wmissing-variable-declarations"
   nw="$nw -Wstrict-overflow"
   nw="$nw -Wuninitialized"
   nw="$nw -Wunused-macros"
@@ -283,6 +284,7 @@ if test $gl_gcc_warnings != no; then
   nw=
   nw="$nw -Wstrict-prototypes"
   # It's not worth being this picky about test programs.
+  nw="$nw -Wsuggest-attribute=cold"
   nw="$nw -Wsuggest-attribute=const"
   nw="$nw -Wsuggest-attribute=format"
   nw="$nw -Wsuggest-attribute=pure"
