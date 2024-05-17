@@ -2093,8 +2093,7 @@ getmonth (char const *month, char **ea)
    This causes the compiler's -lcrypto option to have no effect,
    as sort.o no longer uses any crypto symbols statically.  */
 
-# if 4 < __GNUC__ + (8 <= __GNUC_MINOR__)
-  /* Pacify gcc -Wmissing-variable-declarations through at least GCC 14.  */
+# if 14 <= __GNUC__
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
 # endif
@@ -2106,6 +2105,9 @@ getmonth (char const *month, char **ea)
 #include "md5.h"
 
 #if DLOPEN_LIBCRYPTO && HAVE_OPENSSL_MD5
+# if 14 <= __GNUC__
+#  pragma GCC diagnostic pop
+# endif
 # include <dlfcn.h>
 
 /* Diagnose a dynamic linking failure.  */
@@ -2137,9 +2139,6 @@ link_libcrypto (void)
   ptr_MD5_Init = symbol_address (handle, "MD5_Init");
   ptr_MD5_Update = symbol_address (handle, "MD5_Update");
   ptr_MD5_Final = symbol_address (handle, "MD5_Final");
-# if 4 < __GNUC__ + (8 <= __GNUC_MINOR__)
-#  pragma GCC diagnostic pop
-# endif
 #endif
 }
 
