@@ -25,7 +25,7 @@
   do something like the following:
 
       cc -I../lib -DCRCTAB -o crctab cksum.c
-      crctab > crctab.c
+      ./crctab > crctab.c
 
   This software is compatible with neither the System V nor the BSD
   'sum' program.  It is supposed to conform to POSIX, except perhaps
@@ -118,7 +118,9 @@ main (void)
 
   printf ("#include <config.h>\n");
   printf ("#include <stdint.h>\n");
-  printf ("\nextern uint_fast32_t const crctab[8][256];\n");
+  printf ("#include <stdio.h>\n");
+  printf ("#include \"cksum.h\"\n");
+  printf ("\n");
   printf ("uint_fast32_t const crctab[8][256] = {\n");
   for (int y = 0; y < 8; y++)
     {
