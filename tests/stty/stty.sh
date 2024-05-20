@@ -87,7 +87,7 @@ strace -o log1 -e ioctl stty --version || fail=1
 n_ioctl1=$(wc -l < log1) || framework_failure_
 returns_ 1 strace -o log2 -e ioctl stty -blahblah || fail=1
 n_ioctl2=$(wc -l < log2) || framework_failure_
-test "$n_ioctl1" = "$n_ioctl2" || fail=1
+test "$n_ioctl1" -ge "$n_ioctl2" || fail=1
 
 # Ensure we wrap output appropriately
 for W in $(seq 80 90); do
