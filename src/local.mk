@@ -482,13 +482,13 @@ if SINGLE_BINARY
 src_coreutils_CFLAGS = -DSINGLE_BINARY $(AM_CFLAGS)
 #src_coreutils_LDFLAGS = $(AM_LDFLAGS)
 src_coreutils_LDADD = $(single_binary_deps) $(LDADD) $(single_binary_libs)
-src_coreutils_DEPENDENCIES = $(LDADD) $(single_binary_deps)
+EXTRA_src_coreutils_DEPENDENCIES = $(single_binary_deps)
 
 include $(top_srcdir)/src/single-binary.mk
 
 # Creates symlinks or shebangs to the installed programs when building
 # coreutils single binary.
-EXTRA_src_coreutils_DEPENDENCIES = src/coreutils_$(single_binary_install_type)
+EXTRA_src_coreutils_DEPENDENCIES += src/coreutils_$(single_binary_install_type)
 endif SINGLE_BINARY
 
 CLEANFILES += src/coreutils_symlinks
