@@ -105,6 +105,7 @@
 /lib/stamp-h1
 /lib/stdarg.h
 /lib/stdbool.h
+/lib/stdbit.h
 /lib/stdckdint.h
 /lib/stddef.h
 /lib/stdint.h
