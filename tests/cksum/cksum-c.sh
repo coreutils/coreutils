@@ -56,6 +56,11 @@ returns_ 1 cksum -a crc -c CHECKSUMS || fail=1
 cksum -a crc 'input' > CHECKSUMS.crc || fail=1
 returns_ 1 cksum -c CHECKSUMS.crc || fail=1
 
+# Test --status
+cksum --status --check CHECKSUMS >out 2>&1 || fail=1
+# Should be empty
+compare /dev/null out || fail=1
+
 # Check for the error mgmt
 echo 'invalid line' >> CHECKSUMS
 # Exit code is 0 in this case
@@ -85,4 +90,57 @@ grep 'input2: FAILED open or read' out || fail=1
 grep '1 listed file could not be read' out || fail=1
 # with --strict (won't change the result)
 cksum --check --strict CHECKSUMS2 >out 2>&1 && fail=1
+
+# With errors
+cksum --status --check CHECKSUMS >out 2>&1 && fail=1
+compare /dev/null out || fail=1
+
+# Test --warn
+echo "BLAKE2b (missing-file) = $invalid_sum" >> CHECKSUMS
+cksum --warn --check CHECKSUMS > out 2>&1
+# check that the incorrect lines are correctly reported with --warn
+grep 'CHECKSUMS: 5: improperly formatted SM3 checksum line' out || fail=1
+grep 'CHECKSUMS: 8: improperly formatted BLAKE2b checksum line' out || fail=1
+
+# Test --ignore-missing
+
+echo "SM3 (nonexistent) = $invalid_sum" >> CHECKSUMS-missing
+# we have output on both stdout and stderr
+cksum --check CHECKSUMS-missing > stdout 2> stderr && fail=1
+grep 'nonexistent: FAILED open or read' stdout || fail=1
+grep 'nonexistent: No such file or directory' stderr || fail=1
+grep '1 listed file could not be read' stderr || fail=1
+
+cksum --ignore-missing --check CHECKSUMS-missing  > stdout 2> stderr && fail=1
+# We should not get these errors
+grep -v 'nonexistent: No such file or directory' stdout && fail=1
+grep -v 'nonexistent: FAILED open or read' stdout && fail=1
+grep 'CHECKSUMS-missing: no file was verified' stderr || fail=1
+
+# Combination of --status and --warn
+cksum --status --warn --check CHECKSUMS > out 2>&1 && fail=1
+
+grep 'CHECKSUMS: 8: improperly formatted BLAKE2b checksum line' out || fail=1
+grep 'WARNING: 3 lines are improperly formatted' out || fail=1
+grep 'WARNING: 1 computed checksum did NOT match' out || fail=1
+
+# The order matters. --status will hide the results
+cksum --warn --status --check CHECKSUMS > out 2>&1 && fail=1
+grep -v 'CHECKSUMS: 8: improperly formatted BLAKE2b checksum line' out && fail=1
+grep -v 'WARNING: 3 lines are improperly formatted' out && fail=1
+grep -v 'WARNING: 1 computed checksum did NOT match' out && fail=1
+
+# Combination of --status and --ignore-missing
+cksum --status --ignore-missing --check CHECKSUMS > out 2>&1 && fail=1
+# should be empty
+compare /dev/null out || fail=1
+
+# Combination of all three
+cksum --status --warn --ignore-missing --check \
+      CHECKSUMS-missing > out 2>&1 && fail=1
+# Not empty
+test -s out || fail=1
+grep 'CHECKSUMS-missing: no file was verified' out || fail=1
+grep -v 'nonexistent: No such file or directory' stdout && fail=1
+
 Exit $fail
