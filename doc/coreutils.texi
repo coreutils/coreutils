@@ -7640,7 +7640,8 @@ non-option argument is specified, @command{ls} operates on the current
 directory, acting as if it had been invoked with a single argument of @samp{.}.
 
 @vindex LC_ALL
-By default, the output is sorted alphabetically, according to the locale
+By default, @command{ls} lists each directory's contents alphabetically,
+according to the locale
 settings in effect.@footnote{If you use a non-POSIX
 locale (e.g., by setting @env{LC_ALL} to @samp{en_US}), then @command{ls} may
 produce output that is sorted differently than you're accustomed to.
@@ -7746,16 +7747,6 @@ or any of the following options is in effect:
 @option{--directory} (@option{-d}),
 @option{--dereference} (@option{-L}), or
 @option{--dereference-command-line} (@option{-H})).
-
-@item --group-directories-first
-@opindex --group-directories-first
-Group all the directories before the files and then sort the
-directories and the files separately using the selected sort key
-(see @option{--sort} option).
-That is, this option specifies a primary sort key,
-and the @option{--sort} option specifies a secondary key.
-However, any use of @option{--sort=none}
-(@option{-U}) disables this option altogether.
 
 @item --hide=PATTERN
 @opindex --hide=@var{pattern}
@@ -8137,9 +8128,12 @@ In long format, print the security context to the left of the size column.
 @subsection Sorting the output
 
 @cindex sorting @command{ls} output
-These options change the order in which @command{ls} sorts the information
-it outputs.  By default, sorting is done by character code
-(e.g., ASCII order).
+@vindex LC_COLLATE
+These options change the order in which @command{ls} outputs
+information for the files in a directory.
+(Command-line operands are always processed left to right.)
+By default, files are sorted alphabetically by name, using the
+character collating sequence specified by the @env{LC_COLLATE} locale.
 
 @table @samp
 
@@ -8160,9 +8154,19 @@ sort according to the ctime.  @xref{File timestamps}.
 @opindex -f
 @cindex unsorted directory listing
 @cindex directory order, listing by
-Produce an unsorted listing of all directory entries.
-This is like @option{--all} (@option{-a}) combined
-with @option{--sort=none} (@option{-U}).
+Do not sort, and list all files.
+This is like @option{--sort=none} (@option{-U}) combined
+with @option{--all} (@option{-a}).
+
+@item --group-directories-first
+@opindex --group-directories-first
+When listing a directory's files,
+group all subdirectories before non-directories
+and then sort the subdirectories and the non-directories separately.
+That is, this option specifies a primary sort key,
+and the other sorting options specify a secondary key.
+However, any use of @option{--sort=none}
+(@option{-U}) disables this option altogether.
 
 @item -r
 @itemx --reverse
@@ -8401,7 +8405,7 @@ Specifying @option{--hyperlink} and no @var{when} is equivalent to
 
 @item --indicator-style=@var{word}
 @opindex --indicator-style
-Append a character indicator with style @var{word} to entry names,
+Append a character indicator with style @var{word} to file names,
 as follows:
 
 @table @samp

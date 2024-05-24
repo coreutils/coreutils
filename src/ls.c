@@ -5478,10 +5478,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
       --group-directories-first\n\
-                             group directories before files;\n\
-                             can be augmented with a --sort option, but any\n\
-                             use of --sort=none (-U) disables grouping\n\
-\n\
+                             group directories before files\n\
 "), stdout);
       fputs (_("\
   -G, --no-group             in a long listing, don't print group names\n\
@@ -5605,7 +5602,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 \n\
 "), stdout);
       fputs (_("\
-  -U                         do not sort; list entries in directory order\n\
+  -U                         do not sort directory entries\n\
 "), stdout);
       fputs (_("\
   -v                         natural sort of (version) numbers within text\n\
