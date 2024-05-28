@@ -301,6 +301,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "autofs";
     case S_MAGIC_BALLOON_KVM: /* 0x13661366 local */
       return "balloon-kvm-fs";
+    case S_MAGIC_BCACHEFS: /* 0xCA451A4E local */
+      return "bcachefs";
     case S_MAGIC_BEFS: /* 0x42465331 local */
       return "befs";
     case S_MAGIC_BDEVFS: /* 0x62646576 local */
@@ -373,8 +375,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "fat";
     case S_MAGIC_FHGFS: /* 0x19830326 remote */
       return "fhgfs";
-    case S_MAGIC_FUSEBLK: /* 0x65735546 remote */
-      return "fuseblk";
+    case S_MAGIC_FUSE: /* 0x65735546 remote */
+      return "fuse";
     case S_MAGIC_FUSECTL: /* 0x65735543 remote */
       return "fusectl";
     case S_MAGIC_FUTEXFS: /* 0x0BAD1DEA local */
@@ -458,6 +460,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "overlayfs";
     case S_MAGIC_PANFS: /* 0xAAD7AAEA remote */
       return "panfs";
+    case S_MAGIC_PID_FS: /* 0x50494446 local */
+      return "pidfs";
     case S_MAGIC_PIPEFS: /* 0x50495045 remote */
       /* FIXME: change syntax or add an optional attribute like "inotify:no".
          pipefs and prlfs are labeled as "remote" so that tail always polls,

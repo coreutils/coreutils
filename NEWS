@@ -26,10 +26,17 @@ GNU coreutils NEWS                                    -*- outline -*-
   equivalent because -f no longer ignores an earlier -l.  The new
   behavior is more orthogonal and is compatible with FreeBSD.
 
+  stat -f -c%T now reports the "fuseblk" file system type as "fuse",
+  given that there is no longer a distinct "ctl" fuse variant file system.
+
 ** Improvements
 
   sort operates more efficiently when used on pseudo files with
   an apparent size of 0, like those in /proc.
+
+  stat and tail now know about the "bcachefs", and "pidfs" file system types.
+  stat -f -c%T now reports the file system type,
+  and tail -f uses inotify for these file systems.
 
   wc now reads a minimum of 256KiB at a time.
   This was previously 16KiB and increasing to 256KiB was seen to increase
