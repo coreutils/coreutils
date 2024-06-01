@@ -121,7 +121,7 @@ sc_tests_list_consistency:
 	  cd $(top_srcdir);						\
 	  $(SHELL) build-aux/vc-list-files tests			\
 	    | grep -Ev '^tests/(factor/(run|create-test)|init)\.sh$$'	\
-	    | grep -E "$$test_extensions_rx\$$";			\
+	    | grep -E "($$test_extensions_rx)$$";			\
 	} | sort | uniq -u | grep . && exit 1; :
 
 # Ensure that all version-controlled test scripts are executable.
