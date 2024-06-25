@@ -1732,9 +1732,10 @@ default_format (bool fs, bool terse, bool device)
             }
 
           temp = format;
-          /* TRANSLATORS: This string uses format specifiers from
-             'stat --help' without --file-system, and NOT from printf.  */
           format = xasprintf ("%s%s", format,
+                              /* TRANSLATORS: This string uses format specifiers
+                                 from 'stat --help' without --file-system, and
+                                 NOT from printf.  */
                               _("Access: %x\n"
                                 "Modify: %y\n"
                                 "Change: %z\n"
