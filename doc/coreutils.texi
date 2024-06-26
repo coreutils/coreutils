@@ -8714,6 +8714,9 @@ normally not require quoting.
 Quote strings as for C character string literals, including the
 surrounding double-quote characters; this is the same as the
 @option{--quote-name} (@option{-Q}) option.
+@item c-maybe
+Quote strings as for C character string literals, except omit the
+surrounding double-quote if no escaping is required.
 @item escape
 Quote strings as for C character string literals, except omit the
 surrounding double-quote
