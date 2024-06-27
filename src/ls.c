@@ -468,6 +468,7 @@ enum time_type
   };
 
 static enum time_type time_type;
+static bool explicit_time;
 
 /* The file characteristic to sort by.  Controlled by -t, -S, -U, -X, -v.
    The values of each item of this enum are important since they are
@@ -1943,6 +1944,7 @@ decode_switches (int argc, char **argv)
 
         case 'c':
           time_type = time_ctime;
+          explicit_time = true;
           break;
 
         case 'd':
@@ -2017,6 +2019,7 @@ decode_switches (int argc, char **argv)
 
         case 'u':
           time_type = time_atime;
+          explicit_time = true;
           break;
 
         case 'v':
@@ -2146,6 +2149,7 @@ decode_switches (int argc, char **argv)
 
         case TIME_OPTION:
           time_type = XARGMATCH ("--time", optarg, time_args, time_types);
+          explicit_time = true;
           break;
 
         case FORMAT_OPTION:
@@ -2372,18 +2376,12 @@ decode_switches (int argc, char **argv)
   if (eolbyte < dired)
     error (LS_FAILURE, 0, _("--dired and --zero are incompatible"));
 
-  /* If -c or -u is specified and not -l (or any other option that implies -l),
-     and no sort-type was specified, then sort by the ctime (-c) or atime (-u).
-     The behavior of ls when using either -c or -u but with neither -l nor -t
-     appears to be unspecified by POSIX.  So, with GNU ls, '-u' alone means
-     sort by atime (this is the one that's not specified by the POSIX spec),
-     -lu means show atime and sort by name, -lut means show atime and sort
-     by atime.  */
+  /* If a time type is explicitly specified (with -c, -u, or --time=)
+     and we're not showing a time (-l not specified), then sort by that time,
+     rather than by name.  Note this behavior is unspecified by POSIX.  */
 
   sort_type = (0 <= sort_opt ? sort_opt
-               : (format != long_format
-                  && (time_type == time_ctime || time_type == time_atime
-                      || time_type == time_btime))
+               : (format != long_format && explicit_time)
                ? sort_time : sort_name);
 
   if (format == long_format)
