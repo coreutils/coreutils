@@ -22,16 +22,10 @@
 
 #include <stdio.h>
 #include <sys/types.h>
+#include <endian.h>
 #include "system.h"
 #include "human.h"
 #include "sum.h"
-
-#include <byteswap.h>
-#ifdef WORDS_BIGENDIAN
-# define SWAP(n) (n)
-#else
-# define SWAP(n) bswap_16 (n)
-#endif
 
 /* Calculate the checksum and the size in bytes of stream STREAM.
    Return -1 on error, 0 on success.  */
@@ -198,7 +192,7 @@ output_bsd (char const *file, int binary_file, void const *digest,
     {
       /* Output in network byte order (big endian).  */
       uint16_t out_int = *(int *)digest;
-      out_int = SWAP (out_int);
+      out_int = htobe16 (out_int);
       fwrite (&out_int, 1, 16/8, stdout);
       return;
     }
@@ -223,7 +217,7 @@ output_sysv (char const *file, int binary_file, void const *digest,
     {
       /* Output in network byte order (big endian).  */
       uint16_t out_int = *(int *)digest;
-      out_int = SWAP (out_int);
+      out_int = htobe16 (out_int);
       fwrite (&out_int, 1, 16/8, stdout);
       return;
     }

@@ -37,14 +37,8 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <stdint.h>
+#include <endian.h>
 #include "system.h"
-
-#include <byteswap.h>
-#ifdef WORDS_BIGENDIAN
-# define SWAP(n) (n)
-#else
-# define SWAP(n) bswap_32 (n)
-#endif
 
 #ifdef CRCTAB
 
@@ -189,8 +183,8 @@ cksum_slice8 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
       while (bytes_read >= 8)
         {
           uint32_t first = *datap++, second = *datap++;
-          crc ^= SWAP (first);
-          second = SWAP (second);
+          crc ^= htobe32 (first);
+          second = htobe32 (second);
           crc = (crctab[7][(crc >> 24) & 0xFF]
                  ^ crctab[6][(crc >> 16) & 0xFF]
                  ^ crctab[5][(crc >> 8) & 0xFF]
@@ -258,7 +252,7 @@ output_crc (char const *file, int binary_file, void const *digest, bool raw,
   if (raw)
     {
       /* Output in network byte order (big endian).  */
-      uint32_t out_int = SWAP (*(uint32_t *)digest);
+      uint32_t out_int = htobe32 (*(uint32_t *)digest);
       fwrite (&out_int, 1, 32/8, stdout);
       return;
     }

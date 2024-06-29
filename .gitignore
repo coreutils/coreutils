@@ -62,6 +62,7 @@
 /lib/configmake.h
 /lib/ctype.h
 /lib/dirent.h
+/lib/endian.h
 /lib/errno.h
 /lib/error.h
 /lib/fcntl.h
