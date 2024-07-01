@@ -143,4 +143,15 @@ test -s out || fail=1
 grep 'CHECKSUMS-missing: no file was verified' out || fail=1
 grep -v 'nonexistent: No such file or directory' stdout && fail=1
 
+# Check with several files
+# When the files don't exist
+cksum --check non-existing-1 non-existing-2 > out 2>&1 && fail=1
+grep -v 'non-existing-1: No such file or directory' out || fail=1
+grep -v 'non-existing-2: No such file or directory' out || fail=1
+
+# When the files are empty
+touch empty-1 empty-2
+cksum --check empty-1 empty-2 > out 2>&1 && fail=1
+grep -v 'empty-1: no properly formatted checksum lines found' out || fail=1
+grep -v 'empty-2: no properly formatted checksum lines found' out || fail=1
 Exit $fail
