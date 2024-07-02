@@ -42,7 +42,7 @@
      except that octal escapes are of the form \0 or \0ooo.
 
    %q = print an argument string in a format that can be
-     reused as shell input.  Escaped characters used the proposed
+     reused as shell input.  Escaped characters used the
      POSIX $'' syntax supported by most shells.
 
    The 'format' argument is re-used as many times as necessary
@@ -126,7 +126,7 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
   %b      ARGUMENT as a string with '\\' escapes interpreted,\n\
           except that octal escapes are of the form \\0 or \\0NNN\n\
   %q      ARGUMENT is printed in a format that can be reused as shell input,\n\
-          escaping non-printable characters with the proposed POSIX $'' syntax.\
+          escaping non-printable characters with the POSIX $'' syntax.\
 \n\n\
 and all C format specifications ending with one of diouxXfeEgGcs, with\n\
 ARGUMENTs converted to proper type first.  Variable widths are handled.\n\

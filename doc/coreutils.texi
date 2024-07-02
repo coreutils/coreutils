@@ -8706,7 +8706,7 @@ like @command{csh}.
 Quote strings for the shell, even if they would normally not require quoting.
 @item shell-escape
 Like @samp{shell}, but also quoting non-printable characters using the POSIX
-proposed @samp{$''} syntax suitable for most shells.
+@samp{$''} syntax suitable for most shells.
 @item shell-escape-always
 Like @samp{shell-escape}, but quote strings even if they would
 normally not require quoting.
@@ -13446,7 +13446,7 @@ from the converted string.
 @kindex %q
 An additional directive @samp{%q}, prints its argument string
 in a format that can be reused as input by most shells.
-Non-printable characters are escaped with the POSIX proposed @samp{$''} syntax,
+Non-printable characters are escaped with the POSIX @samp{$''} syntax,
 and shell metacharacters are quoted appropriately.
 This is an equivalent format to @command{ls --quoting=shell-escape} output.
 
