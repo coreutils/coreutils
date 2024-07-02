@@ -113,8 +113,8 @@ grep '1 listed file could not be read' stderr || fail=1
 
 cksum --ignore-missing --check CHECKSUMS-missing  > stdout 2> stderr && fail=1
 # We should not get these errors
-grep -v 'nonexistent: No such file or directory' stdout && fail=1
-grep -v 'nonexistent: FAILED open or read' stdout && fail=1
+grep 'nonexistent: No such file or directory' stdout && fail=1
+grep 'nonexistent: FAILED open or read' stdout && fail=1
 grep 'CHECKSUMS-missing: no file was verified' stderr || fail=1
 
 # Combination of --status and --warn
@@ -126,9 +126,9 @@ grep 'WARNING: 1 computed checksum did NOT match' out || fail=1
 
 # The order matters. --status will hide the results
 cksum --warn --status --check CHECKSUMS > out 2>&1 && fail=1
-grep -v 'CHECKSUMS: 8: improperly formatted BLAKE2b checksum line' out && fail=1
-grep -v 'WARNING: 3 lines are improperly formatted' out && fail=1
-grep -v 'WARNING: 1 computed checksum did NOT match' out && fail=1
+grep 'CHECKSUMS: 8: improperly formatted BLAKE2b checksum line' out && fail=1
+grep 'WARNING: 3 lines are improperly formatted' out && fail=1
+grep 'WARNING: 1 computed checksum did NOT match' out && fail=1
 
 # Combination of --status and --ignore-missing
 cksum --status --ignore-missing --check CHECKSUMS > out 2>&1 && fail=1
@@ -141,17 +141,17 @@ cksum --status --warn --ignore-missing --check \
 # Not empty
 test -s out || fail=1
 grep 'CHECKSUMS-missing: no file was verified' out || fail=1
-grep -v 'nonexistent: No such file or directory' stdout && fail=1
+grep 'nonexistent: No such file or directory' stdout && fail=1
 
 # Check with several files
 # When the files don't exist
 cksum --check non-existing-1 non-existing-2 > out 2>&1 && fail=1
-grep -v 'non-existing-1: No such file or directory' out || fail=1
-grep -v 'non-existing-2: No such file or directory' out || fail=1
+grep 'non-existing-1: No such file or directory' out || fail=1
+grep 'non-existing-2: No such file or directory' out || fail=1
 
 # When the files are empty
-touch empty-1 empty-2
+touch empty-1 empty-2 || framework_failure_
 cksum --check empty-1 empty-2 > out 2>&1 && fail=1
-grep -v 'empty-1: no properly formatted checksum lines found' out || fail=1
-grep -v 'empty-2: no properly formatted checksum lines found' out || fail=1
+grep 'empty-1: no properly formatted checksum lines found' out || fail=1
+grep 'empty-2: no properly formatted checksum lines found' out || fail=1
 Exit $fail
