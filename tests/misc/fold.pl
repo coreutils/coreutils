@@ -22,6 +22,7 @@ use strict;
 
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+my $prog = 'fold';
 
 my @Tests =
   (
@@ -29,6 +30,12 @@ my @Tests =
    ['s2', '-w4 -s', {IN=>"abcdef d\n"}, {OUT=>"abcd\nef d\n"}],
    ['s3', '-w4 -s', {IN=>"a cd fgh\n"}, {OUT=>"a \ncd \nfgh\n"}],
    ['s4', '-w4 -s', {IN=>"abc ef\n"}, {OUT=>"abc \nef\n"}],
+
+   # The downstream I18N patch made fold(1) exit with success for non-existing
+   # files since v5.2.1-1158-g3d3030da6 (2004) changed int to bool for booleans.
+   # The I18N patch was fixed only in July 2024.  (rhbz#2296201).
+   ['enoent', 'enoent', {EXIT => 1},
+     {ERR=>"$prog: enoent: No such file or directory\n"}],
   );
 
 my $save_temps = $ENV{DEBUG};
