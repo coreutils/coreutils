@@ -3,7 +3,7 @@
 
 # Bootstrap this package from checked-out sources.
 
-scriptversion=2024-04-13.15; # UTC
+scriptversion=2024-07-04.10; # UTC
 
 # Copyright (C) 2003-2024 Free Software Foundation, Inc.
 #
@@ -37,7 +37,7 @@ medir=`dirname "$me"`
 
 # A library of shell functions for autopull.sh, autogen.sh, and bootstrap.
 
-scriptlibversion=2024-04-28.09; # UTC
+scriptlibversion=2024-06-29.23; # UTC
 
 # Copyright (C) 2003-2024 Free Software Foundation, Inc.
 #
@@ -528,7 +528,7 @@ prepare_GNULIB_SRCDIR ()
       if test -n "$GNULIB_REFDIR" && test -d "$GNULIB_REFDIR"/.git; then
         # Use GNULIB_REFDIR as a reference.
         echo "$0: getting gnulib files..."
-        git submodule update --init --reference "$GNULIB_REFDIR" "$gnulib_path" \
+        git submodule update --init --reference "$GNULIB_REFDIR" "$gnulib_path"\
           || exit $?
       else
         # GNULIB_REFDIR is not set or not usable. Ignore it.
@@ -546,12 +546,13 @@ prepare_GNULIB_SRCDIR ()
         # The subdirectory 'gnulib' does not yet exist. Clone into it.
         echo "$0: getting gnulib files..."
         trap cleanup_gnulib HUP INT PIPE TERM
+        gnulib_url=${GNULIB_URL:-$default_gnulib_url}
         shallow=
         if test -z "$GNULIB_REVISION"; then
           if git clone -h 2>&1 | grep -- --depth > /dev/null; then
             shallow='--depth 2'
           fi
-          git clone $shallow ${GNULIB_URL:-$default_gnulib_url} "$gnulib_path" \
+          git clone $shallow "$gnulib_url" "$gnulib_path" \
             || cleanup_gnulib
         else
           if git fetch -h 2>&1 | grep -- --depth > /dev/null; then
@@ -567,12 +568,13 @@ prepare_GNULIB_SRCDIR ()
           # is without fetching all commits. So fall back to fetching all
           # commits.
           git -C "$gnulib_path" init
-          git -C "$gnulib_path" remote add origin ${GNULIB_URL:-$default_gnulib_url}
+          git -C "$gnulib_path" remote add origin "$gnulib_url"
           git -C "$gnulib_path" fetch $shallow origin "$GNULIB_REVISION" \
             || git -C "$gnulib_path" fetch origin \
             || cleanup_gnulib
           git -C "$gnulib_path" reset --hard FETCH_HEAD
-          (cd "$gnulib_path" && git checkout "$GNULIB_REVISION") || cleanup_gnulib
+          (cd "$gnulib_path" && git checkout "$GNULIB_REVISION") \
+            || cleanup_gnulib
         fi
         trap - HUP INT PIPE TERM
       else
@@ -1350,7 +1352,7 @@ autogen()
 # ----------------------------------------------------------------------------
 
 # Local Variables:
-# eval: (add-hook 'before-save-hook 'time-stamp)
+# eval: (add-hook 'before-save-hook 'time-stamp nil t)
 # time-stamp-start: "scriptlibversion="
 # time-stamp-format: "%:y-%02m-%02d.%02H"
 # time-stamp-time-zone: "UTC0"
@@ -1560,7 +1562,7 @@ fi
 # ----------------------------------------------------------------------------
 
 # Local Variables:
-# eval: (add-hook 'before-save-hook 'time-stamp)
+# eval: (add-hook 'before-save-hook 'time-stamp nil t)
 # time-stamp-start: "scriptversion="
 # time-stamp-format: "%:y-%02m-%02d.%02H"
 # time-stamp-time-zone: "UTC0"
