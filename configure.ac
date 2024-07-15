@@ -198,7 +198,6 @@ if test $gl_gcc_warnings != no; then
   nw="$nw -Wtraditional"            # Warns on #elif which we use often
   nw="$nw -Wcast-qual"              # Too many warnings for now
   nw="$nw -Wconversion"             # Too many warnings for now
-  nw="$nw -Wsystem-headers"         # Don't let system headers trigger warnings
   nw="$nw -Wsign-conversion"        # Too many warnings for now
   nw="$nw -Wtraditional-conversion" # Too many warnings for now
   nw="$nw -Wunreachable-code"       # Too many warnings for now
