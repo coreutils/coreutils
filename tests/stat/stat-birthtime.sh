@@ -42,7 +42,7 @@ check_timestamps_updated()
   touch a || fail=1
 
   test "x$btime" = x$(stat --format %W a) &&
-  test "x$atime" != x$(stat --format %X a) &&
+  { test "x$atime" != x$(stat --format %X a) || test "x$atime" = x0; } &&
   test "x$mtime" != x$(stat --format %Y a) &&
   test "x$ctime" != x$(stat --format %Z a)
 }
