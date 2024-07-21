@@ -194,7 +194,8 @@ endif
 	  && $(MKDIR_P) $$t						\
 	  && (cd $$t && $(LN_S) '$(abs_top_builddir)/src/'$$prog$(EXEEXT) \
 				$$argv$(EXEEXT))			\
-	&& : $${SOURCE_DATE_EPOCH=`cat $(srcdir)/.timestamp 2>/dev/null || :`} \
+	&& : $${SOURCE_DATE_EPOCH=`date -r $(srcdir)/.tarball-version +%s \
+				   2>/dev/null || :`} \
 	&& : $${TZ=UTC0} && export TZ					\
 	&& export SOURCE_DATE_EPOCH && $(run_help2man)			\
 		     --source='$(PACKAGE_STRING)'			\
