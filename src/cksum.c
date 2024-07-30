@@ -257,8 +257,7 @@ output_crc (char const *file, int binary_file, void const *digest, bool raw,
       return;
     }
 
-  char length_buf[INT_BUFSIZE_BOUND (uintmax_t)];
-  printf ("%u %s", *(unsigned int *)digest, umaxtostr (length, length_buf));
+  printf ("%u %ju", *(unsigned int *)digest, length);
   if (args)
     printf (" %s", file);
   putchar (delim);

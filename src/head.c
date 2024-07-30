@@ -224,15 +224,14 @@ static off_t
 elseek (int fd, off_t offset, int whence, char const *filename)
 {
   off_t new_offset = lseek (fd, offset, whence);
-  char buf[INT_BUFSIZE_BOUND (offset)];
 
   if (new_offset < 0)
     error (0, errno,
            _(whence == SEEK_SET
-             ? N_("%s: cannot seek to offset %s")
-             : N_("%s: cannot seek to relative offset %s")),
+             ? N_("%s: cannot seek to offset %jd")
+             : N_("%s: cannot seek to relative offset %jd")),
            quotef (filename),
-           offtostr (offset, buf));
+           (intmax_t) offset);
 
   return new_offset;
 }

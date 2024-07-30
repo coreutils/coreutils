@@ -673,7 +673,7 @@ handle_line_error (const struct control *p, intmax_t repetition)
   fprintf (stderr, _("%s: %s: line number out of range"),
            program_name, quote (imaxtostr (p->lines_required, buf)));
   if (repetition)
-    fprintf (stderr, _(" on repetition %s\n"), imaxtostr (repetition, buf));
+    fprintf (stderr, _(" on repetition %jd\n"), repetition);
   else
     fprintf (stderr, "\n");
 
@@ -726,10 +726,7 @@ regexp_error (struct control *p, intmax_t repetition, bool ignore)
            program_name, quote (global_argv[p->argnum]));
 
   if (repetition)
-    {
-      char buf[INT_BUFSIZE_BOUND (intmax_t)];
-      fprintf (stderr, _(" on repetition %s\n"), imaxtostr (repetition, buf));
-    }
+    fprintf (stderr, _(" on repetition %jd\n"), repetition);
   else
     fprintf (stderr, "\n");
 
@@ -988,10 +985,7 @@ close_output_file (void)
       else
         {
           if (!suppress_count)
-            {
-              char buf[INT_BUFSIZE_BOUND (intmax_t)];
-              fprintf (stdout, "%s\n", imaxtostr (bytes_written, buf));
-            }
+            fprintf (stdout, "%jd\n", bytes_written);
         }
       output_stream = nullptr;
     }
@@ -1152,13 +1146,9 @@ parse_patterns (int argc, int start, char **argv)
             error (EXIT_FAILURE, 0,
                    _("%s: line number must be greater than zero"), argv[i]);
           if (val < last_val)
-            {
-              char buf[INT_BUFSIZE_BOUND (intmax_t)];
-              error (EXIT_FAILURE, 0,
-                     _("line number %s is smaller than preceding line number,"
-                       " %s"),
-                     quote (argv[i]), imaxtostr (last_val, buf));
-            }
+            error (EXIT_FAILURE, 0,
+                   _("line number %s is smaller than preceding line number,"
+                     " %jd"), quote (argv[i]), last_val);
 
           if (val == last_val)
             error (0, 0,

@@ -1368,13 +1368,11 @@ specify_nmerge (int oi, char c, char const *s)
 
   if (e == LONGINT_OVERFLOW)
     {
-      char max_nmerge_buf[INT_BUFSIZE_BOUND (max_nmerge)];
       error (0, 0, _("--%s argument %s too large"),
              long_options[oi].name, quote (s));
       error (SORT_FAILURE, 0,
-             _("maximum --%s argument with current rlimit is %s"),
-             long_options[oi].name,
-             uinttostr (max_nmerge, max_nmerge_buf));
+             _("maximum --%s argument with current rlimit is %u"),
+             long_options[oi].name, max_nmerge);
     }
   else
     xstrtol_fatal (e, oi, c, long_options, s);

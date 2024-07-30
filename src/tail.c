@@ -481,27 +481,24 @@ static off_t
 xlseek (int fd, off_t offset, int whence, char const *filename)
 {
   off_t new_offset = lseek (fd, offset, whence);
-  char buf[INT_BUFSIZE_BOUND (offset)];
-  char *s;
 
   if (0 <= new_offset)
     return new_offset;
 
-  s = offtostr (offset, buf);
   switch (whence)
     {
     case SEEK_SET:
-      error (EXIT_FAILURE, errno, _("%s: cannot seek to offset %s"),
-             quotef (filename), s);
+      error (EXIT_FAILURE, errno, _("%s: cannot seek to offset %jd"),
+             quotef (filename), (intmax_t) offset);
       break;
     case SEEK_CUR:
-      error (EXIT_FAILURE, errno, _("%s: cannot seek to relative offset %s"),
-             quotef (filename), s);
+      error (EXIT_FAILURE, errno, _("%s: cannot seek to relative offset %jd"),
+             quotef (filename), (intmax_t) offset);
       break;
     case SEEK_END:
       error (EXIT_FAILURE, errno,
-             _("%s: cannot seek to end-relative offset %s"),
-             quotef (filename), s);
+             _("%s: cannot seek to end-relative offset %jd"),
+             quotef (filename), (intmax_t) offset);
       break;
     default:
       unreachable ();

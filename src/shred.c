@@ -485,7 +485,6 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
               else
                 {
                   int errnum = errno;
-                  char buf[INT_BUFSIZE_BOUND (uintmax_t)];
 
                   /* Retry without direct I/O since this may not be supported
                      at all on some (file) systems, or with the current size.
@@ -498,8 +497,9 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
                       try_without_directio = true;
                       continue;
                     }
-                  error (0, errnum, _("%s: error writing at offset %s"),
-                         qname, umaxtostr (offset + soff, buf));
+                  uintmax_t error_offset = offset + soff;
+                  error (0, errnum, _("%s: error writing at offset %ju"),
+                         qname, error_offset);
 
                   /* 'shred' is often used on bad media, before throwing it
                      out.  Thus, it shouldn't give up on bad blocks.  This
