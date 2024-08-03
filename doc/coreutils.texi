@@ -8322,6 +8322,7 @@ Specifying @option{--color} and no @var{when} is equivalent to
 @option{--color=always}.
 If piping a colored listing through a pager like @command{less},
 use the pager's @option{-R} option to pass the color codes to the terminal.
+@xref{dircolors invocation} to configure the colors used.
 
 @vindex LS_COLORS
 @vindex SHELL @r{environment variable, and color}
