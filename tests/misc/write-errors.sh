@@ -60,6 +60,11 @@ join all_writers built_programs > built_writers || framework_failure_
 while read writer; do
   timeout 10 $SHELL -c "$writer > /dev/full"
   test $? = 124 && { fail=1; echo "$writer: failed to exit" >&2; }
+
+  rm -f pipe.err || framework_failure_
+  timeout 10 $SHELL -c "$writer 2>pipe.err | :"
+  { test $? = 0 && compare /dev/null pipe.err; } ||
+   { fail=1; cat pipe.err; echo "$writer: failed to write to closed pipe" >&2; }
 done < built_writers
 
 Exit $fail
