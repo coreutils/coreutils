@@ -58,11 +58,21 @@ sort -k 1b,1 > built_programs || framework_failure_
 join all_writers built_programs > built_writers || framework_failure_
 
 while read writer; do
-  timeout 10 $SHELL -c "$writer > /dev/full"
-  test $? = 124 && { fail=1; echo "$writer: failed to exit" >&2; }
+  # Enforce mem usage limits if possible
+  cmd=$(printf '%s\n' "$writer" | cut -d ' ' -f1) || framework_failure_
+  base_mem=$(get_min_ulimit_v_ $cmd --version) \
+    && ulimit="ulimit -v $(($base_mem+8000))" \
+    || ulimit='true'
 
+  # Check /dev/full handling
+  rm -f full.err || framework_failure_
+  timeout 10 $SHELL -c "($ulimit && $writer 2>full.err >/dev/full)"
+  { test $? = 124 || ! grep 'space' full.err >/dev/null; } &&
+   { fail=1; cat full.err; echo "$writer: failed to exit" >&2; }
+
+  # Check closed pipe handling
   rm -f pipe.err || framework_failure_
-  timeout 10 $SHELL -c "$writer 2>pipe.err | :"
+  timeout 10 $SHELL -c "($ulimit && $writer 2>pipe.err | :)"
   { test $? = 0 && compare /dev/null pipe.err; } ||
    { fail=1; cat pipe.err; echo "$writer: failed to write to closed pipe" >&2; }
 done < built_writers
