@@ -23,6 +23,7 @@
 
 #include <limits.h>
 #include <stdbit.h>
+#include <stdckdint.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -39,13 +40,15 @@ randperm_bound (size_t h, size_t n)
 {
   /* Upper bound on number of bits needed to generate the first number
      of the permutation.  */
-  uintmax_t lg_n = stdc_bit_width (n) + 1;
+  unsigned int lg_n = stdc_bit_width (n) + 1;
 
-  /* Upper bound on number of bits needed to generated the first H elements.  */
-  uintmax_t ar = lg_n * h;
+  /* Upper bound on number of bits needed to generate the first H elements.  */
+  uintmax_t ar;
+  if (ckd_mul (&ar, lg_n, h))
+    return SIZE_MAX;
 
   /* Convert the bit count to a byte count.  */
-  size_t bound = (ar + CHAR_BIT - 1) / CHAR_BIT;
+  size_t bound = ar / CHAR_BIT + (ar % CHAR_BIT != 0);
 
   return bound;
 }
