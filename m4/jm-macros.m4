@@ -1,4 +1,4 @@
-#serial 115   -*- autoconf -*-
+#serial 116   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -215,18 +215,25 @@ AC_DEFUN([gl_CHECK_ALL_TYPES],
   AC_REQUIRE([AC_STRUCT_ST_BLOCKS])
 
   AC_REQUIRE([AC_TYPE_GETGROUPS])
+
+  dnl FIXME is this section still needed?
+  dnl These types are universally available now.
   AC_REQUIRE([AC_TYPE_MBSTATE_T])
   AC_REQUIRE([AC_TYPE_MODE_T])
   AC_REQUIRE([AC_TYPE_OFF_T])
   AC_REQUIRE([AC_TYPE_PID_T])
   AC_REQUIRE([AC_TYPE_SIZE_T])
   AC_REQUIRE([AC_TYPE_UID_T])
-  AC_CHECK_TYPE([ino_t], [unsigned long int])
+  AC_CHECK_TYPE([ino_t], [],
+    [AC_DEFINE([ino_t], [unsigned long int],
+       [Type of file serial numbers, also known as inode numbers.])])
 
   dnl This relies on the fact that Autoconf's implementation of
   dnl AC_CHECK_TYPE checks includes unistd.h.
-  AC_CHECK_TYPE([major_t], [unsigned int])
-  AC_CHECK_TYPE([minor_t], [unsigned int])
+  AC_CHECK_TYPE([major_t], [],
+    [AC_DEFINE([major_t], [unsigned int], [Type of major device numbers.])])
+  AC_CHECK_TYPE([minor_t], [],
+    [AC_DEFINE([minor_t], [unsigned int], [Type of minor device numbers.])])
 
   AC_REQUIRE([AC_HEADER_MAJOR])
 ])
