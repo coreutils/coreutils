@@ -189,9 +189,19 @@ randread_new (char const *name, size_t bytes_bound)
         setvbuf (source, s->buf.c, _IOFBF, MIN (sizeof s->buf.c, bytes_bound));
       else
         {
+          /* Fill the ISAAC buffer.  Although it is tempting to read at
+             most BYTES_BOUND bytes, this is incorrect for two reasons.
+             First, BYTES_BOUND is just an estimate.
+             Second, even if the estimate is correct
+             ISAAC64 poorly randomizes when BYTES_BOUND is small
+             and just the first few bytes of s->buf.isaac.state.m
+             are random while the other bytes are all zero.  See:
+             Aumasson J-P. On the pseudo-random generator ISAAC.
+             Cryptology ePrint Archive. 2006;438.
+             <https://eprint.iacr.org/2006/438>.  */
           s->buf.isaac.buffered = 0;
           if (! get_nonce (s->buf.isaac.state.m,
-                           MIN (sizeof s->buf.isaac.state.m, bytes_bound)))
+                           sizeof s->buf.isaac.state.m))
             {
               int e = errno;
               randread_free_body (s);
