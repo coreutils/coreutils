@@ -509,10 +509,7 @@ main (int argc, char **argv)
       line = operand;
     }
   else if (input_range)
-    {
-      n_lines = hi_input - lo_input + 1;
-      line = nullptr;
-    }
+    line = nullptr;
   else
     {
       /* If an input file is specified, re-open it as stdin.  */
