@@ -29,8 +29,8 @@ BLOCK_SIZE=1M df -P . > t2 || fail=1
 # while for 1K, it would be
 # Filesystem         1024-blocks      Used Available Capacity Mounted on
 
-head -n1 t1 > exp || fail=1
-head -n1 t2 > out || fail=1
+head -n1 t1 | tr -s ' ' > exp || framework_failure_
+head -n1 t2 | tr -s ' ' > out || framework_failure_
 
 compare exp out || fail=1
 
