@@ -20,8 +20,8 @@
 print_ver_ df
 
 
-              df -P . > t1 || fail=1
-BLOCK_SIZE=1M df -P . > t2 || fail=1
+              df -P . | tr -s ' ' > t1 || fail=1
+BLOCK_SIZE=1M df -P . | tr -s ' ' > t2 || fail=1
 
 # Since file system utilization may be changing, compare only df's header line.
 # That records the block size.  E.g., for "1M", it would be:
