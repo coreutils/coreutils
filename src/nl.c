@@ -531,15 +531,17 @@ main (int argc, char **argv)
           reset_numbers = false;
           break;
         case 'l':
-          blank_join = xdectoimax (optarg, 1, INTMAX_MAX, "",
-                                   _("invalid line number of blank lines"), 0);
+          blank_join = xnumtoimax (optarg, 10, 1, INTMAX_MAX, "",
+                                   _("invalid line number of blank lines"),
+                                   0, XTOINT_MIN_RANGE);
           break;
         case 's':
           separator_str = optarg;
           break;
         case 'w':
-          lineno_width = xdectoimax (optarg, 1, INT_MAX, "",
-                                     _("invalid line number field width"), 0);
+          lineno_width = xnumtoimax (optarg, 10, 1, INT_MAX, "",
+                                     _("invalid line number field width"),
+                                     0, XTOINT_MIN_RANGE);
           break;
         case 'n':
           if (STREQ (optarg, "ln"))

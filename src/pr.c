@@ -425,8 +425,7 @@ static bool skip_to_page (uintmax_t page);
 static void print_header (void);
 static void pad_across_to (int position);
 static void add_line_number (COLUMN *p);
-static void getoptnum (char const *n_str, int min, int *num,
-                       char const *errfmt);
+static int getoptnum (char const *n_str, int min, char const *errfmt);
 static void getoptarg (char *arg, char switch_char, char *character,
                        int *number);
 static void print_files (int number_of_files, char **av);
@@ -838,7 +837,7 @@ first_last_page (int oi, char c, char const *pages)
 static void
 parse_column_count (char const *s)
 {
-  getoptnum (s, 1, &columns, _("invalid number of columns"));
+  columns = getoptnum (s, 1, _("invalid number of columns"));
   explicit_columns = true;
 }
 
@@ -975,8 +974,9 @@ main (int argc, char **argv)
           join_lines = true;
           break;
         case 'l':
-          getoptnum (optarg, 1, &lines_per_page,
-                     _("'-l PAGE_LENGTH' invalid number of lines"));
+          lines_per_page
+            = getoptnum (optarg, 1,
+                         _("'-l PAGE_LENGTH' invalid number of lines"));
           break;
         case 'm':
           parallel_files = true;
@@ -990,12 +990,13 @@ main (int argc, char **argv)
           break;
         case 'N':
           skip_count = false;
-          getoptnum (optarg, INT_MIN, &start_line_num,
-                     _("'-N NUMBER' invalid starting line number"));
+          start_line_num
+            = getoptnum (optarg, INT_MIN,
+                         _("'-N NUMBER' invalid starting line number"));
           break;
         case 'o':
-          getoptnum (optarg, 0, &chars_per_margin,
-                     _("'-o MARGIN' invalid line offset"));
+          chars_per_margin = getoptnum (optarg, 0,
+                                        _("'-o MARGIN' invalid line offset"));
           break;
         case 'r':
           ignore_failed_opens = true;
@@ -1030,9 +1031,9 @@ main (int argc, char **argv)
           old_options = true;
           old_w = true;
           {
-            int tmp_cpl;
-            getoptnum (optarg, 1, &tmp_cpl,
-                       _("'-w PAGE_WIDTH' invalid number of characters"));
+            int tmp_cpl
+              = getoptnum (optarg, 1,
+                           _("'-w PAGE_WIDTH' invalid number of characters"));
             if (! truncate_lines)
               chars_per_line = tmp_cpl;
           }
@@ -1040,8 +1041,9 @@ main (int argc, char **argv)
         case 'W':
           old_w = false;			/* dominates -w */
           truncate_lines = true;
-          getoptnum (optarg, 1, &chars_per_line,
-                     _("'-W PAGE_WIDTH' invalid number of characters"));
+          chars_per_line
+            = getoptnum (optarg, 1,
+                         _("'-W PAGE_WIDTH' invalid number of characters"));
           break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -1151,11 +1153,11 @@ main (int argc, char **argv)
 
 /* Parse numeric arguments, ensuring MIN <= number <= INT_MAX.  */
 
-static void
-getoptnum (char const *n_str, int min, int *num, char const *err)
+static int
+getoptnum (char const *n_str, int min, char const *err)
 {
-  intmax_t tnum = xdectoimax (n_str, min, INT_MAX, "", err, 0);
-  *num = tnum;
+  return xnumtoimax (n_str, 10, min, INT_MAX, "", err, 0,
+                     min <= 0 ? 0 : XTOINT_MIN_RANGE);
 }
 
 /* Parse options of the form -scNNN.

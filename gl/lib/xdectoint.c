@@ -21,7 +21,6 @@
 
 #include <errno.h>
 #include <inttypes.h>
-#include <stddef.h>
 #include <stdlib.h>
 
 #include <error.h>
@@ -29,50 +28,56 @@
 #include <xstrtol.h>
 
 /* Parse numeric string N_STR of base BASE, and return the value.
-   Exit on parse error or if MIN or MAX are exceeded.
+   The value is between MIN and MAX.
    Strings can have multiplicative SUFFIXES if specified.
-   ERR is printed along with N_STR on error.  */
+   On a parse error or out-of-range number, diagnose with N_STR and ERR, and
+   exit with status ERR_EXIT if nonzero, EXIT_FAILURE otherwise.
+   However, if FLAGS & XTOINT_MIN_QUIET, do not diagnose or exit
+   for too-low numbers; return MIN and set errno instead.
+   Similarly for XTOINT_MAX_QUIET and too-high numbers and MAX.
+   The errno value and diagnostic for out-of-range values depend on
+   whether FLAGS & XTOINT_MIN_RANGE and FLAGS & XTOINT_MAX_RANGE are set.  */
 
 __xdectoint_t
 __xnumtoint (char const *n_str, int base, __xdectoint_t min, __xdectoint_t max,
-             char const *suffixes, char const *err, int err_exit)
+             char const *suffixes, char const *err, int err_exit,
+             int flags)
 {
-  strtol_error s_err;
+  __xdectoint_t tnum, r;
+  strtol_error s_err = __xstrtol (n_str, nullptr, base, &tnum, suffixes);
 
-  __xdectoint_t tnum;
-  s_err = __xstrtol (n_str, nullptr, base, &tnum, suffixes);
+  /* Errno value to report if there is an overflow.  */
+  int overflow_errno;
 
-  if (s_err == LONGINT_OK)
+  if (tnum < min)
     {
-      if (tnum < min || max < tnum)
-        {
-          s_err = LONGINT_OVERFLOW;
-          /* Use have the INT range as a heuristic to distinguish
-             type overflow rather than other min/max limits.  */
-          if (tnum > INT_MAX / 2)
-            errno = EOVERFLOW;
-#if __xdectoint_signed
-          else if (tnum < INT_MIN / 2)
-            errno = EOVERFLOW;
-#endif
-          else
-            errno = ERANGE;
-        }
+      r = min;
+      overflow_errno = flags & XTOINT_MIN_RANGE ? ERANGE : EOVERFLOW;
+      if (s_err == LONGINT_OK)
+        s_err = LONGINT_OVERFLOW;
     }
-  else if (s_err == LONGINT_OVERFLOW)
-    errno = EOVERFLOW;
-  else if (s_err == LONGINT_INVALID_SUFFIX_CHAR_WITH_OVERFLOW)
-    errno = 0; /* Don't show ERANGE errors for invalid numbers.  */
-
-  if (s_err != LONGINT_OK)
+  else if (max < tnum)
     {
-      /* EINVAL error message is redundant in this context.  */
-      error (err_exit ? err_exit : EXIT_FAILURE, errno == EINVAL ? 0 : errno,
-             "%s: %s", err, quote (n_str));
-      unreachable ();
+      r = max;
+      overflow_errno = flags & XTOINT_MAX_RANGE ? ERANGE : EOVERFLOW;
+      if (s_err == LONGINT_OK)
+        s_err = LONGINT_OVERFLOW;
+    }
+  else
+    {
+      r = tnum;
+      overflow_errno = EOVERFLOW;
     }
 
-  return tnum;
+  int e = s_err == LONGINT_OVERFLOW ? overflow_errno : 0;
+
+  if (! (s_err == LONGINT_OK
+         || (s_err == LONGINT_OVERFLOW
+             && flags & (tnum < 0 ? XTOINT_MIN_QUIET : XTOINT_MAX_QUIET))))
+    error (err_exit ? err_exit : EXIT_FAILURE, e, "%s: %s", err, quote (n_str));
+
+  errno = e;
+  return r;
 }
 
 /* Parse decimal string N_STR, and return the value.
@@ -84,5 +89,5 @@ __xdectoint_t
 __xdectoint (char const *n_str, __xdectoint_t min, __xdectoint_t max,
              char const *suffixes, char const *err, int err_exit)
 {
-  return __xnumtoint (n_str, 10, min, max, suffixes, err, err_exit);
+  return __xnumtoint (n_str, 10, min, max, suffixes, err, err_exit, 0);
 }

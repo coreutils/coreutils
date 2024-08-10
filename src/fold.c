@@ -279,8 +279,9 @@ main (int argc, char **argv)
             }
           FALLTHROUGH;
         case 'w':		/* Line width. */
-          width = xdectoumax (optarg, 1, SIZE_MAX - TAB_WIDTH - 1, "",
-                              _("invalid number of columns"), 0);
+          width = xnumtoumax (optarg, 10, 1, SIZE_MAX - TAB_WIDTH - 1, "",
+                              _("invalid number of columns"), 0,
+                              XTOINT_MIN_RANGE | XTOINT_MAX_RANGE);
           break;
 
         case_GETOPT_HELP_CHAR;

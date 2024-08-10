@@ -1536,10 +1536,11 @@ main (int argc, char **argv)
           break;
 
         case IO_BLKSIZE_OPTION:
-          in_blk_size = xdectoumax (optarg, 1,
+          in_blk_size = xnumtoumax (optarg, 10, 1,
                                     MIN (SYS_BUFSIZE_MAX,
                                          MIN (IDX_MAX, SIZE_MAX) - 1),
-                                    multipliers, _("invalid IO block size"), 0);
+                                    multipliers, _("invalid IO block size"),
+                                    0, XTOINT_MIN_RANGE);
           break;
 
         case VERBOSE_OPTION:

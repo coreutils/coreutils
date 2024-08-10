@@ -442,7 +442,7 @@ static int screen_columns (void);
 static bool set_mode (struct mode_info const *info, bool reversed,
                       struct termios *mode);
 static bool eq_mode (struct termios *mode1, struct termios *mode2);
-static unsigned long int integer_arg (char const *s, unsigned long int max);
+static uintmax_t integer_arg (char const *s, uintmax_t max);
 static speed_t string_to_baud (char const *arg);
 static tcflag_t *mode_type_flag (enum mode_type type, struct termios *mode);
 static void display_all (struct termios *mode, char const *device_name);
@@ -1243,12 +1243,11 @@ apply_settings (bool checking, char const *device_name,
 #ifdef HAVE_C_LINE
           else if (STREQ (arg, "line"))
             {
-              unsigned long int value;
               check_argument (arg);
               ++k;
-              mode->c_line = value = integer_arg (settings[k], ULONG_MAX);
-              if (mode->c_line != value)
-                error (0, 0, _("invalid line discipline %s"),
+              uintmax_t value = integer_arg (settings[k], UINTMAX_MAX);
+              if (ckd_add (&mode->c_line, value, 0))
+                error (0, EOVERFLOW, _("invalid line discipline %s"),
                        quote (settings[k]));
               *require_set_attr = true;
             }
@@ -2359,8 +2358,9 @@ visible (cc_t ch)
    but allowing octal and hex numbers as in C.  Reject values
    larger than MAXVAL.  */
 
-static unsigned long int
-integer_arg (char const *s, unsigned long int maxval)
+static uintmax_t
+integer_arg (char const *s, uintmax_t maxval)
 {
-  return xnumtoumax (s, 0, 0, maxval, "bB", _("invalid integer argument"), 0);
+  return xnumtoumax (s, 0, 0, maxval, "bB", _("invalid integer argument"),
+                     0, 0);
 }

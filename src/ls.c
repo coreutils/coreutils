@@ -2109,7 +2109,7 @@ decode_switches (int argc, char **argv)
 
         case 'T':
           tabsize_opt = xnumtoumax (optarg, 0, 0, MIN (PTRDIFF_MAX, SIZE_MAX),
-                                    "", _("invalid tab size"), LS_FAILURE);
+                                    "", _("invalid tab size"), LS_FAILURE, 0);
           break;
 
         case 'U':

@@ -395,8 +395,8 @@ main (int argc, char **argv)
     {
       /* Limit max_width to MAXCHARS / 2; otherwise, the resulting
          output can be quite ugly.  */
-      max_width = xdectoumax (max_width_option, 0, MAXCHARS / 2, "",
-                              _("invalid width"), 0);
+      max_width = xnumtoumax (max_width_option, 10, 0, MAXCHARS / 2, "",
+                              _("invalid width"), 0, XTOINT_MAX_RANGE);
     }
 
   if (goal_width_option)
