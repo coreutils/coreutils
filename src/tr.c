@@ -1594,8 +1594,8 @@ squeeze_filter (char *buf, size_t size, size_t (*reader) (char *, size_t))
 static size_t
 plain_read (char *buf, size_t size)
 {
-  size_t nr = safe_read (STDIN_FILENO, buf, size);
-  if (nr == SAFE_READ_ERROR)
+  ptrdiff_t nr = safe_read (STDIN_FILENO, buf, size);
+  if (nr < 0)
     error (EXIT_FAILURE, errno, _("read error"));
   return nr;
 }

@@ -194,14 +194,13 @@ static enum Copy_fd_status
 copy_fd (int src_fd, uintmax_t n_bytes)
 {
   char buf[BUFSIZ];
-  const size_t buf_size = sizeof (buf);
 
   /* Copy the file contents.  */
   while (0 < n_bytes)
     {
-      size_t n_to_read = MIN (buf_size, n_bytes);
-      size_t n_read = safe_read (src_fd, buf, n_to_read);
-      if (n_read == SAFE_READ_ERROR)
+      idx_t n_to_read = MIN (n_bytes, sizeof buf);
+      ptrdiff_t n_read = safe_read (src_fd, buf, n_to_read);
+      if (n_read < 0)
         return COPY_FD_READ_ERROR;
 
       n_bytes -= n_read;
@@ -285,7 +284,7 @@ elide_tail_bytes_pipe (char const *filename, int fd, uintmax_t n_elide,
       idx_t in_elide = n_elide;
       bool first = true;
       bool eof = false;
-      size_t n_to_read = READ_BUFSIZE + in_elide;
+      idx_t n_to_read = READ_BUFSIZE + n_elide;
       bool i;
       char *b[2];
       b[0] = xnmalloc (2, n_to_read);
@@ -293,8 +292,8 @@ elide_tail_bytes_pipe (char const *filename, int fd, uintmax_t n_elide,
 
       for (i = false; ! eof ; i = !i)
         {
-          size_t n_read = full_read (fd, b[i], n_to_read);
-          size_t delta = 0;
+          idx_t n_read = full_read (fd, b[i], n_to_read);
+          idx_t delta = 0;
           if (n_read < n_to_read)
             {
               if (errno != 0)
@@ -496,7 +495,7 @@ elide_tail_lines_pipe (char const *filename, int fd, uintmax_t n_elide,
   LBUFFER *first, *last, *tmp;
   size_t total_lines = 0;	/* Total number of newlines in all buffers.  */
   bool ok = true;
-  size_t n_read;		/* Size in bytes of most recent read */
+  ptrdiff_t n_read;		/* Size in bytes of most recent read */
 
   first = last = xmalloc (sizeof (LBUFFER));
   first->nbytes = first->nlines = 0;
@@ -509,7 +508,7 @@ elide_tail_lines_pipe (char const *filename, int fd, uintmax_t n_elide,
   while (true)
     {
       n_read = safe_read (fd, tmp->buffer, BUFSIZ);
-      if (n_read == 0 || n_read == SAFE_READ_ERROR)
+      if (n_read <= 0)
         break;
 
       if (! n_elide)
@@ -568,7 +567,7 @@ elide_tail_lines_pipe (char const *filename, int fd, uintmax_t n_elide,
 
   free (tmp);
 
-  if (n_read == SAFE_READ_ERROR)
+  if (n_read < 0)
     {
       error (0, errno, _("error reading %s"), quoteaf (filename));
       ok = false;
@@ -636,7 +635,7 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
                            off_t start_pos, off_t size)
 {
   char buffer[BUFSIZ];
-  size_t bytes_read;
+  ptrdiff_t bytes_read;
   off_t pos = size;
 
   /* Set 'bytes_read' to the size of the last, probably partial, buffer;
@@ -650,7 +649,7 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
   if (elseek (fd, pos, SEEK_SET, pretty_filename) < 0)
     return false;
   bytes_read = safe_read (fd, buffer, bytes_read);
-  if (bytes_read == SAFE_READ_ERROR)
+  if (bytes_read < 0)
     {
       error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
       return false;
@@ -667,7 +666,7 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
     {
       /* Scan backward, counting the newlines in this bufferfull.  */
 
-      size_t n = bytes_read;
+      idx_t n = bytes_read;
       while (n)
         {
           if (all_lines)
@@ -719,7 +718,7 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
         return false;
 
       bytes_read = safe_read (fd, buffer, BUFSIZ);
-      if (bytes_read == SAFE_READ_ERROR)
+      if (bytes_read < 0)
         {
           error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
           return false;
@@ -765,11 +764,10 @@ head_bytes (char const *filename, int fd, uintmax_t bytes_to_write)
 
   while (bytes_to_write)
     {
-      size_t bytes_read;
       if (bytes_to_write < bytes_to_read)
         bytes_to_read = bytes_to_write;
-      bytes_read = safe_read (fd, buffer, bytes_to_read);
-      if (bytes_read == SAFE_READ_ERROR)
+      ptrdiff_t bytes_read = safe_read (fd, buffer, bytes_to_read);
+      if (bytes_read < 0)
         {
           error (0, errno, _("error reading %s"), quoteaf (filename));
           return false;
@@ -789,10 +787,10 @@ head_lines (char const *filename, int fd, uintmax_t lines_to_write)
 
   while (lines_to_write)
     {
-      size_t bytes_read = safe_read (fd, buffer, BUFSIZ);
-      size_t bytes_to_write = 0;
+      ptrdiff_t bytes_read = safe_read (fd, buffer, BUFSIZ);
+      idx_t bytes_to_write = 0;
 
-      if (bytes_read == SAFE_READ_ERROR)
+      if (bytes_read < 0)
         {
           error (0, errno, _("error reading %s"), quoteaf (filename));
           return false;

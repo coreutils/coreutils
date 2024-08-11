@@ -58,8 +58,7 @@ buf_init_from_stdin (Buf *x, char eol_byte)
 
   while (true)
     {
-      char *buf = (char *) malloc (BUFFER_SIZE);
-      size_t bytes_read;
+      char *buf = malloc (BUFFER_SIZE);
 
       if (buf == nullptr)
         {
@@ -69,8 +68,8 @@ buf_init_from_stdin (Buf *x, char eol_byte)
           ok = false;
           break;
         }
-      bytes_read = full_read (STDIN_FILENO, buf, BUFFER_SIZE);
-      if (bytes_read != buffer_size && errno != 0)
+      idx_t bytes_read = full_read (STDIN_FILENO, buf, BUFFER_SIZE);
+      if (bytes_read != BUFFER_SIZE && errno != 0)
         error (EXIT_FAILURE, errno, _("read error"));
 
       {

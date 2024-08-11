@@ -255,17 +255,15 @@ save_to_hold_area (char *start, idx_t num)
 static idx_t
 read_input (char *dest, idx_t max_n_bytes)
 {
-  idx_t bytes_read;
-
   if (max_n_bytes == 0)
     return 0;
 
-  bytes_read = safe_read (STDIN_FILENO, dest, max_n_bytes);
+  ptrdiff_t bytes_read = safe_read (STDIN_FILENO, dest, max_n_bytes);
 
   if (bytes_read == 0)
     have_read_eof = true;
 
-  if (bytes_read == SAFE_READ_ERROR)
+  if (bytes_read < 0)
     {
       error (0, errno, _("read error"));
       cleanup_fatal ();

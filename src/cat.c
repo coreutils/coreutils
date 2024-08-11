@@ -161,8 +161,8 @@ simple_cat (char *buf, idx_t bufsize)
     {
       /* Read a block of input.  */
 
-      size_t n_read = safe_read (input_desc, buf, bufsize);
-      if (n_read == SAFE_READ_ERROR)
+      ptrdiff_t n_read = safe_read (input_desc, buf, bufsize);
+      if (n_read < 0)
         {
           error (0, errno, "%s", quotef (infile));
           return false;
@@ -310,8 +310,8 @@ cat (char *inbuf, idx_t insize, char *outbuf, idx_t outsize,
 
               /* Read more input into INBUF.  */
 
-              size_t n_read = safe_read (input_desc, inbuf, insize);
-              if (n_read == SAFE_READ_ERROR)
+              ptrdiff_t n_read = safe_read (input_desc, inbuf, insize);
+              if (n_read < 0)
                 {
                   error (0, errno, "%s", quotef (infile));
                   write_pending (outbuf, &bpout);
