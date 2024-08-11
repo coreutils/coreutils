@@ -101,7 +101,8 @@ main (int argc, char **argv)
           break;
 
         case IGNORE_OPTION:
-          ignore = xdectoumax (optarg, 0, ULONG_MAX, "", _("invalid number"),0);
+          ignore = xnumtoumax (optarg, 10, 0, ULONG_MAX, "",
+                               _("invalid number"), 0, XTOINT_MAX_QUIET);
           break;
 
         default:
