@@ -68,14 +68,10 @@ my @tv = (
 ['err-4', '-2cX', '', '', 1,
  "$prog: option used in invalid context -- 2\n"],
 
-# Since the number is larger than 2^64, this should provoke
-# the diagnostic: 'tail: 99999999999999999999: invalid number of bytes'
-# on all systems... probably, for now, maybe.
-['err-5', '-c99999999999999999999', '', '', 1,
- "$prog: invalid number of bytes: '99999999999999999999'\n",
- $normalize_strerror],
 ['err-6', '-c --', '', '', 1,
  "$prog: invalid number of bytes: '-'\n", $normalize_strerror],
+
+['big-c', '-c99999999999999999999', '', '', 0],
 
 # Same as -n 10
 ['minus-1', '-', '', '', 0],

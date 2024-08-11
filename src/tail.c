@@ -1932,10 +1932,17 @@ tail_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
 
   if (from_start)
     {
-      int t = start_lines (pretty_filename, fd, n_lines, read_pos);
-      if (t)
-        return t < 0;
-      *read_pos += dump_remainder (false, pretty_filename, fd, COPY_TO_EOF);
+      /* If skipping all input use lseek if possible, for speed.  */
+      off_t pos;
+      if (n_lines == UINTMAX_MAX && 0 <= (pos = lseek (fd, SEEK_END, 0)))
+        *read_pos = pos;
+      else
+        {
+          int t = start_lines (pretty_filename, fd, n_lines, read_pos);
+          if (t)
+            return t < 0;
+          *read_pos += dump_remainder (false, pretty_filename, fd, COPY_TO_EOF);
+        }
     }
   else
     {
@@ -2213,10 +2220,11 @@ parse_options (int argc, char **argv,
           else if (*optarg == '-')
             ++optarg;
 
-          *n_units = xdectoumax (optarg, 0, UINTMAX_MAX, "bkKmMGTPEZYRQ0",
-                                 count_lines
-                                 ? _("invalid number of lines")
-                                 : _("invalid number of bytes"), 0);
+          *n_units = xnumtoumax (optarg, 10, 0, UINTMAX_MAX, "bkKmMGTPEZYRQ0",
+                                 (count_lines
+                                  ? _("invalid number of lines")
+                                  : _("invalid number of bytes"))
+                                 , 0, XTOINT_MAX_QUIET);
           break;
 
         case 'f':
@@ -2236,8 +2244,10 @@ parse_options (int argc, char **argv,
         case MAX_UNCHANGED_STATS_OPTION:
           /* --max-unchanged-stats=N */
           max_n_unchanged_stats_between_opens =
-            xdectoumax (optarg, 0, UINTMAX_MAX, "",
-              _("invalid maximum number of unchanged stats between opens"), 0);
+            xnumtoumax (optarg, 10, 0, UINTMAX_MAX, "",
+                        _("invalid maximum number of unchanged stats"
+                          " between opens"),
+                        0, XTOINT_MAX_QUIET);
           break;
 
         case DISABLE_INOTIFY_OPTION:
@@ -2351,8 +2361,7 @@ main (int argc, char **argv)
   enum header_mode header_mode = multiple_files;
   bool ok = true;
   /* If from_start, the number of items to skip before printing; otherwise,
-     the number of items at the end of the file to print.  Although the type
-     is signed, the value is never negative.  */
+     the number of items at the end of the file to print.  */
   uintmax_t n_units = DEFAULT_N_LINES;
   size_t n_files;
   char **file;
@@ -2388,11 +2397,7 @@ main (int argc, char **argv)
   /* To start printing with item N_UNITS from the start of the file, skip
      N_UNITS - 1 items.  'tail -n +0' is actually meaningless, but for Unix
      compatibility it's treated the same as 'tail -n +1'.  */
-  if (from_start)
-    {
-      if (n_units)
-        --n_units;
-    }
+  n_units -= from_start && 0 < n_units && n_units < UINTMAX_MAX;
 
   if (optind < argc)
     {
@@ -2436,7 +2441,7 @@ main (int argc, char **argv)
   }
 
   /* Don't read anything if we'll never output anything.  */
-  if (! n_units && ! forever && ! from_start)
+  if (! forever && n_units == (from_start ? UINTMAX_MAX : 0))
     return EXIT_SUCCESS;
 
   F = xnmalloc (n_files, sizeof *F);
