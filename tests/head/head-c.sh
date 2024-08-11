@@ -41,6 +41,8 @@ esac
 # based on the value passed to -c
 vm=$(get_min_ulimit_v_ head -c1 /dev/null) && {
   (ulimit -v $(($vm+8000)) && head --bytes=-$SSIZE_MAX < /dev/null) || fail=1
+  (ulimit -v $(($vm+8000)) &&
+    head --bytes=-${UINTMAX_OFLOW}000 < /dev/null) || fail=1
 }
 
 # Make sure it works on funny files in /proc and /sys.
