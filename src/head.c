@@ -504,7 +504,7 @@ elide_tail_lines_pipe (char const *filename, int fd, uintmax_t n_elide,
     size_t nlines;
     struct linebuffer *next;
   };
-  uintmax_t desired_pos = current_pos;
+  off_t desired_pos = current_pos;
   typedef struct linebuffer LBUFFER;
   LBUFFER *first, *last, *tmp;
   size_t total_lines = 0;	/* Total number of newlines in all buffers.  */
