@@ -16,9 +16,9 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef XDECTOINT_H_
-#define XDECTOINT_H_ 1
+# define XDECTOINT_H_ 1
 
-#include <inttypes.h>
+# include <inttypes.h>
 
 /* Flags for xnumtoimax and xnumtoumax.  They can be ORed togethar.  */
 enum
@@ -39,11 +39,11 @@ enum
     XTOINT_MAX_RANGE = 1 << 3
   };
 
-#define _DECLARE_XDECTOINT(name, type) \
+# define _DECLARE_XDECTOINT(name, type) \
   type name (char const *n_str, type min, type max, \
              char const *suffixes, char const *err, int err_exit) \
     _GL_ATTRIBUTE_NONNULL ((1, 5));
-#define _DECLARE_XNUMTOINT(name, type) \
+# define _DECLARE_XNUMTOINT(name, type) \
   type name (char const *n_str, int base, type min, type max, \
              char const *suffixes, char const *err, int err_exit, int flags) \
     _GL_ATTRIBUTE_NONNULL ((1, 6));

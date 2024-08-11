@@ -33,7 +33,6 @@
 
 #include "assure.h"
 #include "full-read.h"
-#include "quote.h"
 #include "safe-read.h"
 #include "stat-size.h"
 #include "xbinary-io.h"
