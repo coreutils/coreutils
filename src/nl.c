@@ -533,7 +533,7 @@ main (int argc, char **argv)
         case 'l':
           blank_join = xnumtoimax (optarg, 10, 1, INTMAX_MAX, "",
                                    _("invalid line number of blank lines"),
-                                   0, XTOINT_MIN_RANGE);
+                                   0, XTOINT_MIN_RANGE | XTOINT_MAX_QUIET);
           break;
         case 's':
           separator_str = optarg;
