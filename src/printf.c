@@ -14,42 +14,6 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-/* Usage: printf format [argument...]
-
-   A front end to the printf function that lets it be used from the shell.
-
-   Backslash escapes:
-
-   \" = double quote
-   \\ = backslash
-   \a = alert (bell)
-   \b = backspace
-   \c = produce no further output
-   \e = escape
-   \f = form feed
-   \n = new line
-   \r = carriage return
-   \t = horizontal tab
-   \v = vertical tab
-   \ooo = octal number (ooo is 1 to 3 digits)
-   \xhh = hexadecimal number (hhh is 1 to 2 digits)
-   \uhhhh = 16-bit Unicode character (hhhh is 4 digits)
-   \Uhhhhhhhh = 32-bit Unicode character (hhhhhhhh is 8 digits)
-
-   Additional directive:
-
-   %b = print an argument string, interpreting backslash escapes,
-     except that octal escapes are of the form \0 or \0ooo.
-
-   %q = print an argument string in a format that can be
-     reused as shell input.  Escaped characters used the
-     POSIX $'' syntax supported by most shells.
-
-   The 'format' argument is re-used as many times as necessary
-   to convert all of the given arguments.
-
-   David MacKenzie <djm@gnu.ai.mit.edu> */
-
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -124,9 +88,9 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
       fputs (_("\
   %%      a single %\n\
   %b      ARGUMENT as a string with '\\' escapes interpreted,\n\
-          except that octal escapes are of the form \\0 or \\0NNN\n\
+          except that octal escapes should have a leading 0 like \\0NNN\n\
   %q      ARGUMENT is printed in a format that can be reused as shell input,\n\
-          escaping non-printable characters with the POSIX $'' syntax.\
+          escaping non-printable characters with the POSIX $'' syntax\
 \n\n\
 and all C format specifications ending with one of diouxXfeEgGcs, with\n\
 ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
