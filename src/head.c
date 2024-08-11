@@ -487,7 +487,7 @@ elide_tail_bytes_file (char const *filename, int fd, uintmax_t n_elide,
 }
 
 /* For an input file with name FILENAME and descriptor FD,
-   output all but the last N_ELIDE_0 bytes.
+   output all but the last N_ELIDE bytes.
    If CURRENT_POS is nonnegative, the input file is positioned there
    and should be repositioned to just before the elided bytes.
    Buffer the specified number of lines as a linked list of LBUFFERs,
@@ -841,6 +841,10 @@ head (char const *filename, int fd, uintmax_t n_units, bool count_lines,
 
   if (elide_from_end)
     {
+      /* Optimize for "infinite" elisions.  */
+      if (n_units == UINTMAX_MAX)
+        return true;
+
       off_t current_pos = -1;
       struct stat st;
       if (fstat (fd, &st) != 0)
@@ -903,15 +907,18 @@ head_file (char const *filename, uintmax_t n_units, bool count_lines,
 /* Convert a string of decimal digits, N_STRING, with an optional suffix
    to an integral value.  Upon successful conversion,
    return that value.  If it cannot be converted, give a diagnostic and exit.
+   If it is too large, silently return UINTMAX_MAX.
    COUNT_LINES indicates whether N_STRING is a number of bytes or a number
    of lines.  It is used solely to give a more specific diagnostic.  */
 
 static uintmax_t
 string_to_integer (bool count_lines, char const *n_string)
 {
-  return xdectoumax (n_string, 0, UINTMAX_MAX, "bkKmMGTPEZYRQ0",
-                     count_lines ? _("invalid number of lines")
-                                 : _("invalid number of bytes"), 0);
+  return xnumtoumax (n_string, 10, 0, UINTMAX_MAX, "bkKmMGTPEZYRQ0",
+                     (count_lines
+                      ? _("invalid number of lines")
+                      : _("invalid number of bytes")),
+                     0, XTOINT_MAX_QUIET);
 }
 
 int
@@ -922,7 +929,8 @@ main (int argc, char **argv)
   int c;
   size_t i;
 
-  /* Number of items to print. */
+  /* Number of items to output, or to elide from the end.
+     UINTMAX_MAX stands for an essentially unlimited number.  */
   uintmax_t n_units = DEFAULT_NUMBER;
 
   /* If true, interpret the numeric argument as the number of lines.
@@ -1072,13 +1080,6 @@ main (int argc, char **argv)
   if (header_mode == always
       || (header_mode == multiple_files && optind < argc - 1))
     print_headers = true;
-
-  if ( ! count_lines && elide_from_end && OFF_T_MAX < n_units)
-    {
-      char umax_buf[INT_BUFSIZE_BOUND (n_units)];
-      error (EXIT_FAILURE, EOVERFLOW, "%s: %s", _("invalid number of bytes"),
-             quote (umaxtostr (n_units, umax_buf)));
-    }
 
   file_list = (optind < argc
                ? (char const *const *) &argv[optind]

@@ -34,6 +34,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  'head -c NUM' and 'head -n NUM' no longer fail merely because NUM
+  stands for 2**64 or more.
+
   sort operates more efficiently when used on pseudo files with
   an apparent size of 0, like those in /proc.
 
