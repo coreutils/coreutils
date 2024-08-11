@@ -911,11 +911,13 @@ ARGMATCH_VERIFY (format_args, format_types);
 
 static char const *const sort_args[] =
 {
-  "none", "time", "size", "extension", "version", "width", nullptr
+  "none", "size", "time", "version", "extension",
+  "name", "width", nullptr
 };
 static enum sort_type const sort_types[] =
 {
-  sort_none, sort_time, sort_size, sort_extension, sort_version, sort_width
+  sort_none, sort_size, sort_time, sort_version, sort_extension,
+  sort_name, sort_width
 };
 ARGMATCH_VERIFY (sort_args, sort_types);
 
@@ -5570,9 +5572,9 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -S                         sort by file size, largest first\n\
 "), stdout);
       fputs (_("\
-      --sort=WORD            sort by WORD instead of name: none (-U), size (-S)\
-,\n\
-                             time (-t), version (-v), extension (-X), width\n\
+      --sort=WORD            change default 'name' sort to WORD:\n\
+                               none (-U), size (-S), time (-t),\n\
+                               version (-v), extension (-X), name, width\n\
 \n\
 "), stdout);
       fputs (_("\

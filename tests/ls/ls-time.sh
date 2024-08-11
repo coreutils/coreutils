@@ -37,8 +37,10 @@ touch -m -d "$t2" B || framework_failure_  # Capital to distinguish name sort
 touch -m -d "$t1" c || framework_failure_
 
 # Check default name sorting works
-set $(ls a B c)
-test "$*" = 'B a c' || fail=1
+for def_sort in '' '--sort=name' '-U --sort=name' '--sort-name -t'; do
+  set $(ls $def_sort a B c)
+  test "$*" = 'B a c' || fail=1
+done
 
 touch -a -d "$u3" c || framework_failure_
 touch -a -d "$u2" B || framework_failure_

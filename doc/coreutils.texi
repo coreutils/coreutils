@@ -8251,6 +8251,13 @@ Sort by version name and number, lowest first.  It behaves like a default
 sort, except that each sequence of decimal digits is treated numerically
 as an index/version number.  @xref{Version sort ordering}.
 
+@item --sort=name
+@opindex --sort
+@opindex name@r{, sorting option for @command{ls}}
+Sort by file name.  This is the default operation of @command{ls},
+and can be explicitly specified to override any
+previously specified sorting option.
+
 @item --sort=width
 @opindex --sort
 @opindex width@r{, sorting option for @command{ls}}
