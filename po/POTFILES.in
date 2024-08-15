@@ -24,7 +24,6 @@ lib/siglist.h
 lib/strsignal.c
 lib/unicodeio.c
 lib/userspec.c
-lib/verror.c
 lib/version-etc.c
 lib/xalloc-die.c
 lib/xbinary-io.c
