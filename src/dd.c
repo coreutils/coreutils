@@ -31,7 +31,6 @@
 #include "ioblksize.h"
 #include "long-options.h"
 #include "quote.h"
-#include "verror.h"
 #include "xstrtol.h"
 #include "xtime.h"
 

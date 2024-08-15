@@ -71,7 +71,6 @@
 # include <attr/error_context.h>
 # include <attr/libattr.h>
 # include <stdarg.h>
-# include "verror.h"
 #endif
 
 #if HAVE_LINUX_FALLOC_H
