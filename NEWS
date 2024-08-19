@@ -24,6 +24,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  install -C now dereferences symlink sources when comparing,
+  rather than always treating as different and performing the copy.
+
   ls's -f option now simply acts like -aU, instead of also ignoring
   some earlier options.  For example 'ls -fl' and 'ls -lf' are now
   equivalent because -f no longer ignores an earlier -l.  The new

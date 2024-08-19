@@ -177,7 +177,7 @@ need_copy (char const *src_name, char const *dest_name,
     return true;
 
   /* compare files using stat */
-  if (lstat (src_name, &src_sb) != 0)
+  if (stat (src_name, &src_sb) != 0)
     return true;
 
   if (fstatat (dest_dirfd, dest_relname, &dest_sb, AT_SYMLINK_NOFOLLOW) != 0)

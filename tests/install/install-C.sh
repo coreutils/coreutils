@@ -78,9 +78,18 @@ compare out out_installed_second || fail=1
 ginstall -Cv -m$mode3 a b > out || fail=1
 compare out out_installed_second || fail=1
 
-# files are not regular files
+# non regular files
+ginstall -v -m$mode1 a b > out || fail=1  # reset to regular mode
+compare out out_installed_second || fail=1
+# symlink source is always dereferenced (and so regular here)
+ginstall -v -m$mode1 a d > out || fail=1  # create regular dest
+echo "'a' -> 'd'" > out_installed_first_ad || framework_failure_
+compare out out_installed_first_ad || fail=1
 ln -s a c || framework_failure_
-ln -s b d || framework_failure_
+ginstall -Cv -m$mode1 c d > out || fail=1
+compare out out_empty || fail=1
+# symlink dest never created by install so deemed non regular
+ln -nsf b d || framework_failure_
 ginstall -Cv -m$mode1 c d > out || fail=1
 echo "removed 'd'
 'c' -> 'd'" > out_installed_second_cd
