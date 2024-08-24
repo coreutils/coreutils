@@ -363,7 +363,7 @@ re_protect (char const *const_dst_name, char const *dst_src_name,
 
       if (x->preserve_mode)
         {
-          if (copy_acl (src_name, -1, dst_name, -1, p->st.st_mode) != 0)
+          if (xcopy_acl (src_name, -1, dst_name, -1, p->st.st_mode) != 0)
             return false;
         }
       else if (p->restore_mode)

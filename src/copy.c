@@ -1666,18 +1666,18 @@ set_dest_mode:
 #endif
   if (x->preserve_mode || x->move_mode)
     {
-      if (copy_acl (src_name, source_desc, dst_name, dest_desc, src_mode) != 0
+      if (xcopy_acl (src_name, source_desc, dst_name, dest_desc, src_mode) != 0
           && x->require_preserve)
         return_val = false;
     }
   else if (x->set_mode)
     {
-      if (set_acl (dst_name, dest_desc, x->mode) != 0)
+      if (xset_acl (dst_name, dest_desc, x->mode) != 0)
         return_val = false;
     }
   else if (x->explicit_no_preserve_mode && *new_dst)
     {
-      if (set_acl (dst_name, dest_desc, MODE_RW_UGO & ~cached_umask ()) != 0)
+      if (xset_acl (dst_name, dest_desc, MODE_RW_UGO & ~cached_umask ()) != 0)
         return_val = false;
     }
   else if (omitted_permissions | extra_permissions)
@@ -3254,13 +3254,13 @@ skip:
 
   if (x->preserve_mode || x->move_mode)
     {
-      if (copy_acl (src_name, -1, dst_name, -1, src_mode) != 0
+      if (xcopy_acl (src_name, -1, dst_name, -1, src_mode) != 0
           && x->require_preserve)
         return false;
     }
   else if (x->set_mode)
     {
-      if (set_acl (dst_name, -1, x->mode) != 0)
+      if (xset_acl (dst_name, -1, x->mode) != 0)
         return false;
     }
   else if (x->explicit_no_preserve_mode && new_dst)
@@ -3270,7 +3270,7 @@ skip:
       dst_mode = dst_sb.st_mode;
       if (S_ISDIR (src_mode))  /* Keep set-group-ID for directories.  */
         default_permissions |= (dst_mode & S_ISGID);
-      if (set_acl (dst_name, -1, default_permissions & ~cached_umask ()) != 0)
+      if (xset_acl (dst_name, -1, default_permissions & ~cached_umask ()) != 0)
         return false;
     }
   else
