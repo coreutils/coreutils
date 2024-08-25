@@ -34,9 +34,6 @@ unique_entries=1
 test -z "$CU_NONROOT_FS" || unique_entries=$(expr $unique_entries + 1)
 test -z "$CU_REMOTE_FS" || unique_entries=$(expr $unique_entries + 2)
 
-grep '^#define HAVE_MNTENT_H 1' $CONFIG_HEADER > /dev/null \
-      || skip_ "no mntent.h available to confirm the interface"
-
 grep '^#define HAVE_GETMNTENT 1' $CONFIG_HEADER > /dev/null \
       || skip_ "getmntent is not used on this system"
 

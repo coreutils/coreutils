@@ -24,9 +24,6 @@ require_gcc_shared_
 # Protect against inaccessible remote mounts etc.
 timeout 10 df || skip_ "df fails"
 
-grep '^#define HAVE_MNTENT_H 1' $CONFIG_HEADER > /dev/null \
-      || skip_ "no mntent.h available to confirm the interface"
-
 grep '^#define HAVE_GETMNTENT 1' $CONFIG_HEADER > /dev/null \
       || skip_ "getmntent is not used on this system"
 
