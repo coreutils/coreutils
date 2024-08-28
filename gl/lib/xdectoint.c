@@ -49,24 +49,27 @@ __xnumtoint (char const *n_str, int base, __xdectoint_t min, __xdectoint_t max,
   /* Errno value to report if there is an overflow.  */
   int overflow_errno;
 
-  if (tnum < min)
+  if (s_err != LONGINT_INVALID)
     {
-      r = min;
-      overflow_errno = flags & XTOINT_MIN_RANGE ? ERANGE : EOVERFLOW;
-      if (s_err == LONGINT_OK)
-        s_err = LONGINT_OVERFLOW;
-    }
-  else if (max < tnum)
-    {
-      r = max;
-      overflow_errno = flags & XTOINT_MAX_RANGE ? ERANGE : EOVERFLOW;
-      if (s_err == LONGINT_OK)
-        s_err = LONGINT_OVERFLOW;
-    }
-  else
-    {
-      r = tnum;
-      overflow_errno = EOVERFLOW;
+      if (tnum < min)
+        {
+          r = min;
+          overflow_errno = flags & XTOINT_MIN_RANGE ? ERANGE : EOVERFLOW;
+          if (s_err == LONGINT_OK)
+            s_err = LONGINT_OVERFLOW;
+        }
+      else if (max < tnum)
+        {
+          r = max;
+          overflow_errno = flags & XTOINT_MAX_RANGE ? ERANGE : EOVERFLOW;
+          if (s_err == LONGINT_OK)
+            s_err = LONGINT_OVERFLOW;
+        }
+      else
+        {
+          r = tnum;
+          overflow_errno = EOVERFLOW;
+        }
     }
 
   int e = s_err == LONGINT_OVERFLOW ? overflow_errno : 0;
