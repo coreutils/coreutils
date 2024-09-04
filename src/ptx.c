@@ -332,11 +332,7 @@ unescape_string (char *string)
               break;
 
             case 'a':		/* alert */
-#if __STDC__
               *cursor++ = '\a';
-#else
-              *cursor++ = 7;
-#endif
               string++;
               break;
 
@@ -371,11 +367,7 @@ unescape_string (char *string)
               break;
 
             case 'v':		/* vertical tab */
-#if __STDC__
               *cursor++ = '\v';
-#else
-              *cursor++ = 11;
-#endif
               string++;
               break;
 
