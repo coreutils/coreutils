@@ -353,6 +353,7 @@ all_tests =					\
   tests/printf/printf.sh			\
   tests/printf/printf-cov.pl			\
   tests/printf/printf-hex.sh			\
+  tests/printf/printf-indexed.sh		\
   tests/printf/printf-mb.sh			\
   tests/printf/printf-surprise.sh		\
   tests/printf/printf-quote.sh			\

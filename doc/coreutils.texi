@@ -13430,6 +13430,15 @@ depending on whether the context expects a string or a number.  For
 example, the command @samp{printf %sx%d} prints @samp{x0}.
 
 @item
+Indexed arguments referenced with @samp{%...$} formats, can be
+mixed with standard sequential argument references,
+in which case both index types are independent.
+For example, the command @samp{printf '%1$s%s' A} prints @samp{AA}.
+Also the highest referenced argument, either indexed or sequential,
+is considered to be the last one referenced, when determining
+unused arguments for reprocessing with the @var{format} argument.
+
+@item
 @kindex \c
 An additional escape, @samp{\c}, causes @command{printf} to produce no
 further output.  For example, the command @samp{printf 'A%sC\cD%sF' B

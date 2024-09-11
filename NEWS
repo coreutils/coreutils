@@ -40,6 +40,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls now supports the --sort=name option,
   to explicitly select the default operation of sorting by file name.
 
+  printf now supports indexed arguments, using the POSIX:2024 specified
+  %<i>$ format, where '<i>' is an integer referencing a particular argument,
+  thus allowing repetition or reordering of printf arguments.
+
 ** Improvements
 
   'head -c NUM', 'head -n NUM', 'nl -l NUM', 'nproc --ignore NUM',
