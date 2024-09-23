@@ -82,7 +82,7 @@ If -e is in effect, the following sequences are recognized:\n\
 "), stdout);
   printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
   fputs (_("\n\
-Consider using the 'printf' command instead,\n\
+Consider using the printf(1) command instead,\n\
 as it avoids problems when outputting option-like strings.\n\
 "), stdout);
   emit_ancillary_info (PROGRAM_NAME);
