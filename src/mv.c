@@ -295,7 +295,7 @@ If you specify more than one of -i, -f, -n, only the final one takes effect.\n\
 "), stdout);
       fputs (_("\
   --update[=UPDATE]            control which existing files are updated;\n\
-                                 UPDATE={all,none,none-fail,older(default)}.\n\
+                                 UPDATE={all,none,none-fail,older(default)}\n\
   -u                           equivalent to --update[=older].  See below\n\
 "), stdout);
       fputs (_("\

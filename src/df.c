@@ -1553,8 +1553,12 @@ or all file systems by default.\n\
 "), stdout);
       fputs (_("\
       --output[=FIELD_LIST]  use the output format defined by FIELD_LIST,\n\
-                               or print all fields if FIELD_LIST is omitted.\n\
+                               or print all fields if FIELD_LIST is omitted\n\
+"), stdout);
+      fputs (_("\
   -P, --portability     use the POSIX output format\n\
+"), stdout);
+      fputs (_("\
       --sync            invoke sync before getting usage info\n\
 "), stdout);
       fputs (_("\

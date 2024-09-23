@@ -446,7 +446,7 @@ Print or check %s (%d-bit) checksums.\n\
 #endif
 #if HASH_ALGO_CKSUM
         fputs (_("\
-  -a, --algorithm=TYPE  select the digest type to use.  See DIGEST below.\
+  -a, --algorithm=TYPE  select the digest type to use.  See DIGEST below\
 \n\
 "), stdout);
         fputs (_("\

@@ -64,7 +64,7 @@ Create the DIRECTORY(ies), if they do not already exist.\n\
       fputs (_("\
   -m, --mode=MODE   set file mode (as in chmod), not a=rwx - umask\n\
   -p, --parents     no error if existing, make parent directories as needed,\n\
-                    with their file modes unaffected by any -m option.\n\
+                    with their file modes unaffected by any -m option\n\
   -v, --verbose     print a message for each created directory\n\
 "), stdout);
       fputs (_("\
