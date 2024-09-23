@@ -7,11 +7,10 @@
 env \- run a program in a modified environment
 [DESCRIPTION]
 .\" Add any additional description here
-[OPTIONS]
-.SS "\-S/\-\-split\-string usage in scripts"
+[SCRIPT OPTION HANDLING]
 The
 .B \-S
-option allows specifying multiple parameters in a script.
+option allows specifying multiple arguments in a script.
 Running a script named
 .B 1.pl
 containing the following first line:
@@ -24,7 +23,7 @@ containing the following first line:
 .RE
 .PP
 Will execute
-.B "perl \-w \-T 1.pl".
+.B "perl \-w \-T 1.pl"
 .PP
 Without the
 .B '\-S'
@@ -37,20 +36,6 @@ parameter the script will likely fail with:
 .RE
 .PP
 See the full documentation for more details.
-.PP
-.SS "\-\-default-signal[=SIG]" usage
-This option allows setting a signal handler to its default
-action, which is not possible using the traditional shell
-trap command.  The following example ensures that seq
-will be terminated by SIGPIPE no matter how this signal
-is being handled in the process invoking the command.
-
-.PP
-.RS
-.nf
-sh \-c 'env \-\-default-signal=PIPE seq inf | head \-n1'
-.fi
-.RE
 .PP
 
 [NOTES]
