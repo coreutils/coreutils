@@ -630,7 +630,7 @@ emit_symlink_recurse_options (char const *default_opt)
 \n\
 The following options modify how a hierarchy is traversed when the -R\n\
 option is also specified.  If more than one is specified, only the final\n\
-one takes effect. '%s' is the default.\n\
+one takes effect. %s is the default.\n\
 \n\
   -H                     if a command line argument is a symbolic link\n\
                          to a directory, traverse it\n\
