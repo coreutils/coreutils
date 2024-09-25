@@ -103,6 +103,7 @@
 
 #include <config.h>
 #include <getopt.h>
+#include <stdbit.h>
 #include <stdio.h>
 #include <gmp.h>
 
@@ -172,32 +173,19 @@ typedef unsigned long int UDItype;
 # define LONGLONG_STANDALONE     /* Don't require GMP's longlong.h mdep files */
 # define ASSERT(x)               /* FIXME make longlong.h really standalone */
 # define __GMP_DECLSPEC          /* FIXME make longlong.h really standalone */
-# define __clz_tab factor_clz_tab /* Rename to avoid glibc collision */
 # ifndef __GMP_GNUC_PREREQ
 #  define __GMP_GNUC_PREREQ(a,b) 1
 # endif
 
-/* These stub macros are only used in longlong.h in certain system compiler
-   combinations, so ensure usage to avoid -Wunused-macros warnings.  */
-# if __GMP_GNUC_PREREQ (1,1) && defined __clz_tab
-ASSERT (1)
-__GMP_DECLSPEC
-# endif
+/* longlong.h uses these macros only in certain system compiler combinations.
+   Ensure usage to pacify -Wunused-macros.  */
+#if defined ASSERT || defined UHWtype || defined __GMP_DECLSPEC
+#endif
 
 # if _ARCH_PPC
 #  define HAVE_HOST_CPU_FAMILY_powerpc 1
 # endif
 # include "longlong.h"
-# ifdef COUNT_LEADING_ZEROS_NEED_CLZ_TAB
-const unsigned char factor_clz_tab[129] =
-{
-  1,2,3,3,4,4,4,4,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
-  7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
-  8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,
-  8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,
-  9
-};
-# endif
 
 #else /* not USE_LONGLONG_H */
 
@@ -206,12 +194,6 @@ const unsigned char factor_clz_tab[129] =
 # define __ll_lowpart(t)  ((uintmax_t) (t) & (__ll_B - 1))
 # define __ll_highpart(t) ((uintmax_t) (t) >> (W_TYPE_SIZE / 2))
 
-#endif
-
-#if !defined __clz_tab && !defined UHWtype
-/* Without this seemingly useless conditional, gcc -Wunused-macros
-   warns that each of the two tested macros is unused on Fedora 18.
-   FIXME: this is just an ugly band-aid.  Fix it properly.  */
 #endif
 
 /* 2*3*5*7*11...*101 is 128 bits, and has 26 prime factors */
@@ -347,33 +329,6 @@ static void factor (uintmax_t, uintmax_t, struct factors *);
   } while (0)
 #endif
 
-#ifndef count_leading_zeros
-# define count_leading_zeros(count, x) do {                             \
-    uintmax_t __clz_x = (x);                                            \
-    int __clz_c;                                                        \
-    for (__clz_c = 0;                                                   \
-         (__clz_x & ((uintmax_t) 0xff << (W_TYPE_SIZE - 8))) == 0;      \
-         __clz_c += 8)                                                  \
-      __clz_x <<= 8;                                                    \
-    for (; (intmax_t)__clz_x >= 0; __clz_c++)                           \
-      __clz_x <<= 1;                                                    \
-    (count) = __clz_c;                                                  \
-  } while (0)
-#endif
-
-#ifndef count_trailing_zeros
-# define count_trailing_zeros(count, x) do {                            \
-    uintmax_t __ctz_x = (x);                                            \
-    int __ctz_c = 0;                                                    \
-    while ((__ctz_x & 1) == 0)                                          \
-      {                                                                 \
-        __ctz_x >>= 1;                                                  \
-        __ctz_c++;                                                      \
-      }                                                                 \
-    (count) = __ctz_c;                                                  \
-  } while (0)
-#endif
-
 /* Requires that a < n and b <= n */
 #define submod(r,a,b,n)                                                 \
   do {                                                                  \
@@ -411,8 +366,6 @@ static void factor (uintmax_t, uintmax_t, struct factors *);
 static uintmax_t
 mod2 (uintmax_t *r1, uintmax_t a1, uintmax_t a0, uintmax_t d1, uintmax_t d0)
 {
-  int cntd, cnta;
-
   affirm (d1 != 0);
 
   if (a1 == 0)
@@ -421,8 +374,8 @@ mod2 (uintmax_t *r1, uintmax_t a1, uintmax_t a0, uintmax_t d1, uintmax_t d0)
       return a0;
     }
 
-  count_leading_zeros (cntd, d1);
-  count_leading_zeros (cnta, a1);
+  int cntd = stdc_leading_zeros (d1);
+  int cnta = stdc_leading_zeros (a1);
   int cnt = cntd - cnta;
   if (0 < cnt)
     {
@@ -767,14 +720,15 @@ factor_using_division (uintmax_t *t1p, uintmax_t t1, uintmax_t t0,
 
       if (t0 == 0)
         {
-          count_trailing_zeros (cnt, t1);
+          assume (t1);
+          cnt = stdc_trailing_zeros (t1);
           t0 = t1 >> cnt;
           t1 = 0;
           cnt += W_TYPE_SIZE;
         }
       else
         {
-          count_trailing_zeros (cnt, t0);
+          cnt = stdc_trailing_zeros (t0);
           rsh2 (t1, t0, t1, t0, cnt);
         }
 
@@ -1299,7 +1253,8 @@ prime2_p (uintmax_t n1, uintmax_t n0)
   nm1[0] = n0 - 1;
   if (nm1[0] == 0)
     {
-      count_trailing_zeros (k, nm1[1]);
+      assume (nm1[1]);
+      k = stdc_trailing_zeros (nm1[1]);
 
       q[0] = nm1[1] >> k;
       q[1] = 0;
@@ -1307,7 +1262,7 @@ prime2_p (uintmax_t n1, uintmax_t n0)
     }
   else
     {
-      count_trailing_zeros (k, nm1[0]);
+      k = stdc_trailing_zeros (nm1[0]);
       rsh2 (q[1], q[0], nm1[1], nm1[0], k);
     }
 
@@ -1771,15 +1726,13 @@ ATTRIBUTE_CONST
 static uintmax_t
 isqrt (uintmax_t n)
 {
-  uintmax_t x;
-  int c;
   if (n == 0)
     return 0;
 
-  count_leading_zeros (c, n);
+  int c = stdc_leading_zeros (n);
 
   /* Make x > sqrt(n).  This will be invariant through the loop.  */
-  x = (uintmax_t) 1 << ((W_TYPE_SIZE + 1 - c) >> 1);
+  uintmax_t x = (uintmax_t) 1 << ((W_TYPE_SIZE + 1 - c) >> 1);
 
   for (;;)
     {
@@ -1795,20 +1748,16 @@ ATTRIBUTE_CONST
 static uintmax_t
 isqrt2 (uintmax_t nh, uintmax_t nl)
 {
-  int shift;
-  uintmax_t x;
-
   /* Ensures the remainder fits in an uintmax_t.  */
   affirm (nh < ((uintmax_t) 1 << (W_TYPE_SIZE - 2)));
 
   if (nh == 0)
     return isqrt (nl);
 
-  count_leading_zeros (shift, nh);
-  shift &= ~1;
+  int shift = stdc_leading_zeros (nh) & ~1;
 
   /* Make x > sqrt (n).  */
-  x = isqrt ((nh << shift) + (nl >> (W_TYPE_SIZE - shift))) + 1;
+  uintmax_t x = isqrt ((nh << shift) + (nl >> (W_TYPE_SIZE - shift))) + 1;
   x <<= (W_TYPE_SIZE - shift) >> 1;
 
   /* Do we need more than one iteration?  */
@@ -1891,9 +1840,8 @@ static short const invtab[0x81] =
   do {                                                                  \
     if ((u) / 0x40 < (d))                                               \
       {                                                                 \
-        int _cnt;                                                       \
         uintmax_t _dinv, _mask, _q, _r;                                 \
-        count_leading_zeros (_cnt, (d));                                \
+        int _cnt = stdc_leading_zeros (d);				\
         _r = (u);                                                       \
         if (UNLIKELY (_cnt > (W_TYPE_SIZE - 8)))                        \
           {                                                             \
