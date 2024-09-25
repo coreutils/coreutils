@@ -317,12 +317,14 @@ static void factor (uintmax_t, uintmax_t, struct factors *);
   } while (0)
 #endif
 
+/* Set (rh,rl) = (ah,al) >> cnt, where 0 < cnt < W_TYPE_SIZE.  */
 #define rsh2(rh, rl, ah, al, cnt)                                       \
   do {                                                                  \
     (rl) = ((ah) << (W_TYPE_SIZE - (cnt))) | ((al) >> (cnt));           \
     (rh) = (ah) >> (cnt);                                               \
   } while (0)
 
+/* Set (rh,rl) = (ah,al) << cnt, where 0 < cnt < W_TYPE_SIZE.  */
 #define lsh2(rh, rl, ah, al, cnt)                                       \
   do {                                                                  \
     (rh) = ((ah) << cnt) | ((al) >> (W_TYPE_SIZE - (cnt)));             \
@@ -422,12 +424,15 @@ mod2 (uintmax_t *r1, uintmax_t a1, uintmax_t a0, uintmax_t d1, uintmax_t d0)
   count_leading_zeros (cntd, d1);
   count_leading_zeros (cnta, a1);
   int cnt = cntd - cnta;
-  lsh2 (d1, d0, d1, d0, cnt);
-  for (int i = 0; i < cnt; i++)
+  if (0 < cnt)
     {
-      if (ge2 (a1, a0, d1, d0))
-        sub_ddmmss (a1, a0, a1, a0, d1, d0);
-      rsh2 (d1, d0, d1, d0, 1);
+      lsh2 (d1, d0, d1, d0, cnt);
+      for (int i = 0; i < cnt; i++)
+        {
+          if (ge2 (a1, a0, d1, d0))
+            sub_ddmmss (a1, a0, a1, a0, d1, d0);
+          rsh2 (d1, d0, d1, d0, 1);
+        }
     }
 
   *r1 = a1;

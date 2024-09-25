@@ -759,7 +759,7 @@ factor_tests = \
   $(tf)/t20.sh $(tf)/t21.sh $(tf)/t22.sh $(tf)/t23.sh $(tf)/t24.sh \
   $(tf)/t25.sh $(tf)/t26.sh $(tf)/t27.sh $(tf)/t28.sh $(tf)/t29.sh \
   $(tf)/t30.sh $(tf)/t31.sh $(tf)/t32.sh $(tf)/t33.sh $(tf)/t34.sh \
-  $(tf)/t35.sh $(tf)/t36.sh
+  $(tf)/t35.sh $(tf)/t36.sh $(tf)/t37.sh
 
 $(factor_tests): $(tf)/run.sh $(tf)/create-test.sh
 	$(AM_V_GEN)$(MKDIR_P) $(tf)
