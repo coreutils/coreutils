@@ -441,9 +441,12 @@ gcd2_odd (uintmax_t *r1, uintmax_t a1, uintmax_t a0, uintmax_t b1, uintmax_t b0)
       *r1 = b1;
       return b0;
     }
-
-  while ((a0 & 1) == 0)
-    rsh2 (a1, a0, a1, a0, 1);
+  if (!a0)
+    a0 = a1, a1 = 0;
+  assume (a0);
+  int ctz = stdc_trailing_zeros (a0);
+  if (ctz)
+    rsh2 (a1, a0, a1, a0, ctz);
 
   for (;;)
     {
@@ -456,16 +459,22 @@ gcd2_odd (uintmax_t *r1, uintmax_t a1, uintmax_t a0, uintmax_t b1, uintmax_t b0)
       if (gt2 (a1, a0, b1, b0))
         {
           sub_ddmmss (a1, a0, a1, a0, b1, b0);
-          do
-            rsh2 (a1, a0, a1, a0, 1);
-          while ((a0 & 1) == 0);
+          if (!a0)
+            a0 = a1, a1 = 0;
+          assume (a0);
+          ctz = stdc_trailing_zeros (a0);
+          if (ctz)
+            rsh2 (a1, a0, a1, a0, ctz);
         }
       else if (gt2 (b1, b0, a1, a0))
         {
           sub_ddmmss (b1, b0, b1, b0, a1, a0);
-          do
-            rsh2 (b1, b0, b1, b0, 1);
-          while ((b0 & 1) == 0);
+          if (!b0)
+            b0 = b1, b1 = 0;
+          assume (b0);
+          ctz = stdc_trailing_zeros (b0);
+          if (ctz)
+            rsh2 (b1, b0, b1, b0, ctz);
         }
       else
         break;
