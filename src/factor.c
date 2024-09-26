@@ -1166,7 +1166,6 @@ mp_millerrabin (mpz_srcptr n, mpz_srcptr nm1, mpz_ptr x, mpz_ptr y,
 static bool ATTRIBUTE_PURE
 prime_p (uintmax_t n)
 {
-  mp_bitcnt_t k;
   bool is_prime;
   uintmax_t a_prim, one, ni;
   struct factors factors;
@@ -1179,9 +1178,8 @@ prime_p (uintmax_t n)
     return true;
 
   /* Precomputation for Miller-Rabin.  */
-  uintmax_t q = n - 1;
-  for (k = 0; (q & 1) == 0; k++)
-    q >>= 1;
+  int k = stdc_trailing_zeros (n - 1);
+  uintmax_t q = (n - 1) >> k;
 
   uintmax_t a = 2;
   binv (ni, n);                 /* ni <- 1/n mod B */
