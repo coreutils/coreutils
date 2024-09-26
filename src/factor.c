@@ -225,6 +225,12 @@ typedef struct { uintmax_t uu[2]; } uuint;
 static uintmax_t lo (uuint u) { return u.uu[0]; }
 static uintmax_t hi (uuint u) { return u.uu[1]; }
 static void hiset (uuint *u, uintmax_t hi) { u->uu[1] = hi; }
+static void
+uuset (uintmax_t *phi, uintmax_t *plo, uuint uu)
+{
+  *phi = hi (uu);
+  *plo = lo (uu);
+}
 static uuint
 make_uuint (uintmax_t hi, uintmax_t lo)
 {
@@ -376,35 +382,31 @@ static void factor (uintmax_t, uintmax_t, struct factors *);
    : ((x) & ((uintmax_t) 1 << (W_TYPE_SIZE - 1))                        \
       ? UINTMAX_MAX : (uintmax_t) 0))
 
-/* Compute r = a mod d, where r = <*t1,retval>, a = <a1,a0>, d = <d1,d0>.
+/* Return r = a mod d, where a = <a1,a0>, d = <d1,d0>.
    Requires that d1 != 0.  */
-static uintmax_t
-mod2 (uintmax_t *r1, uintmax_t a1, uintmax_t a0, uintmax_t d1, uintmax_t d0)
+ATTRIBUTE_PURE static uuint
+mod2 (uintmax_t a1, uintmax_t a0, uintmax_t d1, uintmax_t d0)
 {
   affirm (d1 != 0);
 
-  if (a1 == 0)
+  if (a1)
     {
-      *r1 = 0;
-      return a0;
-    }
-
-  int cntd = stdc_leading_zeros (d1);
-  int cnta = stdc_leading_zeros (a1);
-  int cnt = cntd - cnta;
-  if (0 < cnt)
-    {
-      lsh2 (d1, d0, d1, d0, cnt);
-      for (int i = 0; i < cnt; i++)
+      int cntd = stdc_leading_zeros (d1);
+      int cnta = stdc_leading_zeros (a1);
+      int cnt = cntd - cnta;
+      if (0 < cnt)
         {
-          if (ge2 (a1, a0, d1, d0))
-            sub_ddmmss (a1, a0, a1, a0, d1, d0);
-          rsh2 (d1, d0, d1, d0, 1);
+          lsh2 (d1, d0, d1, d0, cnt);
+          for (int i = 0; i < cnt; i++)
+            {
+              if (ge2 (a1, a0, d1, d0))
+                sub_ddmmss (a1, a0, a1, a0, d1, d0);
+              rsh2 (d1, d0, d1, d0, 1);
+            }
         }
     }
 
-  *r1 = a1;
-  return a0;
+  return make_uuint (a1, a0);
 }
 
 ATTRIBUTE_CONST
@@ -1642,9 +1644,9 @@ factor_using_pollard_rho2 (uintmax_t n1, uintmax_t n0, unsigned long int a,
           break;
         }
 
-      x0 = mod2 (&x1, x1, x0, n1, n0);
-      z0 = mod2 (&z1, z1, z0, n1, n0);
-      y0 = mod2 (&y1, y1, y0, n1, n0);
+      uuset (&x1, &x0, mod2 (x1, x0, n1, n0));
+      uuset (&z1, &z0, mod2 (z1, z0, n1, n0));
+      uuset (&y1, &y0, mod2 (y1, y0, n1, n0));
     }
 }
 
