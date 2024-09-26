@@ -728,8 +728,8 @@ factor_insert_refind (struct factors *factors, uintmax_t p, int i, int off)
    order, and the non-multiples of p onto the range lim < q < B.
  */
 
-static uintmax_t
-factor_using_division (uintmax_t *t1p, uintmax_t t1, uintmax_t t0,
+static uuint
+factor_using_division (uintmax_t t1, uintmax_t t0,
                        struct factors *factors)
 {
   if (t0 % 2 == 0)
@@ -775,8 +775,6 @@ factor_using_division (uintmax_t *t1p, uintmax_t t1, uintmax_t t0,
         }
       p += primes_diff[i + 1];
     }
-  if (t1p)
-    *t1p = t1;
 
 #define DIVBLOCK(I)                                                     \
   do {                                                                  \
@@ -808,7 +806,7 @@ factor_using_division (uintmax_t *t1p, uintmax_t t1, uintmax_t t0,
         break;
     }
 
-  return t0;
+  return make_uuint (t1, t0);
 }
 
 static void
@@ -2195,7 +2193,7 @@ factor (uintmax_t t1, uintmax_t t0, struct factors *factors)
   if (t1 == 0 && t0 < 2)
     return;
 
-  t0 = factor_using_division (&t1, t1, t0, factors);
+  uuset (&t1, &t0, factor_using_division (t1, t0, factors));
 
   if (t1 == 0 && t0 < 2)
     return;
