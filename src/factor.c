@@ -448,16 +448,13 @@ gcd_odd (uintmax_t a, uintmax_t b)
     }
 }
 
-static uintmax_t
-gcd2_odd (uintmax_t *r1, uintmax_t a1, uintmax_t a0, uintmax_t b1, uintmax_t b0)
+ATTRIBUTE_PURE static uuint
+gcd2_odd (uintmax_t a1, uintmax_t a0, uintmax_t b1, uintmax_t b0)
 {
   affirm (b0 & 1);
 
   if ((a0 | a1) == 0)
-    {
-      *r1 = b1;
-      return b0;
-    }
+    return make_uuint (b1, b0);
   if (!a0)
     a0 = a1, a1 = 0;
   assume (a0);
@@ -468,10 +465,7 @@ gcd2_odd (uintmax_t *r1, uintmax_t a1, uintmax_t a0, uintmax_t b1, uintmax_t b0)
   for (;;)
     {
       if ((b1 | a1) == 0)
-        {
-          *r1 = 0;
-          return gcd_odd (b0, a0);
-        }
+        return make_uuint (0, gcd_odd (b0, a0));
 
       if (gt2 (a1, a0, b1, b0))
         {
@@ -497,8 +491,7 @@ gcd2_odd (uintmax_t *r1, uintmax_t a1, uintmax_t a0, uintmax_t b1, uintmax_t b0)
         break;
     }
 
-  *r1 = a1;
-  return a0;
+  return make_uuint (a1, a0);
 }
 
 static void
@@ -1558,7 +1551,7 @@ factor_using_pollard_rho2 (uintmax_t n1, uintmax_t n0, unsigned long int a,
 
               if (k % 32 == 1)
                 {
-                  g0 = gcd2_odd (&g1, P1, P0, n1, n0);
+                  uuset (&g1, &g0, gcd2_odd (P1, P0, n1, n0));
                   if (g1 != 0 || g0 != 1)
                     goto factor_found;
                   y1 = x1; y0 = x0;
@@ -1586,7 +1579,7 @@ factor_using_pollard_rho2 (uintmax_t n1, uintmax_t n0, unsigned long int a,
           addmod2 (y1, y0, y1, y0, 0, (uintmax_t) a, n1, n0);
 
           submod2 (t1, t0, z1, z0, y1, y0, n1, n0);
-          g0 = gcd2_odd (&g1, t1, t0, n1, n0);
+          uuset (&g1, &g0, gcd2_odd (t1, t0, n1, n0));
         }
       while (g1 == 0 && g0 == 1);
 
