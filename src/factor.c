@@ -413,8 +413,8 @@ gcd_odd (uintmax_t a, uintmax_t b)
       uintmax_t t;
       uintmax_t bgta;
 
-      while ((a & 1) == 0)
-        a >>= 1;
+      assume (a);
+      a >>= stdc_trailing_zeros (a);
       a >>= 1;
 
       t = a - b;
