@@ -216,9 +216,24 @@ static struct option const long_options[] =
 /* If true, use p^e output format.  */
 static bool print_exponents;
 
+/* This represents an unsigned integer twice as wide as uintmax_t.  */
+typedef struct { uintmax_t uu[2]; } uuint;
+
+/* Accessors and constructors for the type.  Pprograms should not
+   access the type's internals directly, in case some future version
+   replaces the type with unsigned __int128 or whatever.  */
+static uintmax_t lo (uuint u) { return u.uu[0]; }
+static uintmax_t hi (uuint u) { return u.uu[1]; }
+static void hiset (uuint *u, uintmax_t hi) { u->uu[1] = hi; }
+static uuint
+make_uuint (uintmax_t hi, uintmax_t lo)
+{
+  return (uuint) {{lo, hi}};
+}
+
 struct factors
 {
-  uintmax_t     plarge[2]; /* Can have a single large factor */
+  uuint plarge; /* Can have a single large factor */
   uintmax_t     p[MAX_NFACTS];
   unsigned char e[MAX_NFACTS];
   unsigned char nfactors;
@@ -525,9 +540,8 @@ factor_insert_large (struct factors *factors,
 {
   if (p1 > 0)
     {
-      affirm (factors->plarge[1] == 0);
-      factors->plarge[0] = p0;
-      factors->plarge[1] = p1;
+      affirm (hi (factors->plarge) == 0);
+      factors->plarge = make_uuint (p1, p0);
     }
   else
     factor_insert (factors, p0);
@@ -1301,10 +1315,10 @@ prime2_p (uintmax_t n1, uintmax_t n0)
       if (flag_prove_primality)
         {
           is_prime = true;
-          if (factors.plarge[1])
+          if (hi (factors.plarge))
             {
               uintmax_t pi;
-              binv (pi, factors.plarge[0]);
+              binv (pi, lo (factors.plarge));
               e[0] = pi * nm1[0];
               e[1] = 0;
               y[0] = powm2 (&y[1], a_prim, e, na, ni, one);
@@ -2181,7 +2195,7 @@ static void
 factor (uintmax_t t1, uintmax_t t0, struct factors *factors)
 {
   factors->nfactors = 0;
-  factors->plarge[1] = 0;
+  hiset (&factors->plarge, 0);
 
   if (t1 == 0 && t0 < 2)
     return;
@@ -2426,10 +2440,10 @@ print_factors_single (uintmax_t t1, uintmax_t t0)
           }
       }
 
-  if (factors.plarge[1])
+  if (hi (factors.plarge))
     {
       lbuf_putc (' ');
-      print_uintmaxes (factors.plarge[1], factors.plarge[0]);
+      print_uintmaxes (hi (factors.plarge), lo (factors.plarge));
     }
 
   lbuf_putc ('\n');
