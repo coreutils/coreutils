@@ -2360,7 +2360,7 @@ lbuf_putnl (void)
   /* Provide immediate output for interactive use.  */
   static int line_buffered = -1;
   if (line_buffered < 0)
-    line_buffered = isatty (STDIN_FILENO) || isatty (STDOUT_FILENO);
+    line_buffered = isatty (STDOUT_FILENO);
 
   if (line_buffered)
     lbuf_flush ();
