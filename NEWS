@@ -24,6 +24,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  'factor' now buffers output more efficiently in some cases.
+
   install -C now dereferences symlink sources when comparing,
   rather than always treating as different and performing the copy.
 

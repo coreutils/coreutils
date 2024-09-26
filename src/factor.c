@@ -2299,97 +2299,108 @@ strto2uintmax (uintmax_t *hip, uintmax_t *lop, char const *s)
   return err;
 }
 
-/* Structure and routines for buffering and outputting full lines,
-   to support parallel operation efficiently.  */
-static struct lbuf_
-{
-  char *buf;
-  char *end;
-} lbuf;
-
-/* 512 is chosen to give good performance,
+/* FACTOR_PIPE_BUF is chosen to give good performance,
    and also is the max guaranteed size that
    consumers can read atomically through pipes.
    Also it's big enough to cater for max line length
    even with 128 bit uintmax_t.  */
-#define FACTOR_PIPE_BUF 512
+#ifndef _POSIX_PIPE_BUF
+# define _POSIX_PIPE_BUF 512
+#endif
+#ifdef PIPE_BUF
+enum { FACTOR_PIPE_BUF = PIPE_BUF };
+#else
+enum { FACTOR_PIPE_BUF = _POSIX_PIPE_BUF };
+#endif
 
-static void
-lbuf_alloc (void)
-{
-  if (lbuf.buf)
-    return;
+/* Structure and routines for buffering and outputting full lines, to
+   support parallel operation efficiently.
 
-  /* Double to ensure enough space for
-     previous numbers + next number.  */
-  lbuf.buf = xmalloc (FACTOR_PIPE_BUF * 2);
-  lbuf.end = lbuf.buf;
-}
+   The buffer is twice FACTOR_PIPE_BUF so that its second half can
+   hold the remainder of data that is somewhat too large.  Also, the
+   very end of the second half is used to hold temporary data when
+   stringifying integers, which is most conveniently done
+   right-to-left.
+
+   Although the buffer's second half doesn't need to be quite so large
+   - its necessary size is bounded above by roughly the maximum output
+   line for a uuint plus the string length of a uuint - it'd be a bit
+   of a pain to figure out exactly how small it can be without causing
+   trouble.  */
+static char lbuf_buf[2 * FACTOR_PIPE_BUF];
+static idx_t lbuffered;
 
 /* Write complete LBUF to standard output.  */
 static void
 lbuf_flush (void)
 {
-  size_t size = lbuf.end - lbuf.buf;
-  if (full_write (STDOUT_FILENO, lbuf.buf, size) != size)
+  idx_t size = lbuffered;
+
+  /* Update lbuffered now, to avoid infinite recursion on write error.  */
+  lbuffered = 0;
+
+  if (full_write (STDOUT_FILENO, lbuf_buf, size) != size)
     write_error ();
-  lbuf.end = lbuf.buf;
 }
 
-/* Add a character C to LBUF and if it's a newline
-   and enough bytes are already buffered,
-   then write atomically to standard output.  */
+/* Add a character C to lbuf_buf.  */
 static void
 lbuf_putc (char c)
 {
-  *lbuf.end++ = c;
+  lbuf_buf[lbuffered++] = c;
+}
 
-  if (c == '\n')
+/* Add a newline to lbuf_buf.  Then, if enough bytes are already
+   buffered, write the buffer atomically to standard output.  */
+static void
+lbuf_putnl (void)
+{
+  lbuf_putc ('\n');
+
+  /* Provide immediate output for interactive use.  */
+  static int line_buffered = -1;
+  if (line_buffered < 0)
+    line_buffered = isatty (STDIN_FILENO) || isatty (STDOUT_FILENO);
+
+  if (line_buffered)
+    lbuf_flush ();
+  else if (FACTOR_PIPE_BUF <= lbuffered)
     {
-      size_t buffered = lbuf.end - lbuf.buf;
+      /* Write output in <= PIPE_BUF chunks
+         so consumers can read atomically.  */
 
-      /* Provide immediate output for interactive use.  */
-      static int line_buffered = -1;
-      if (line_buffered == -1)
-        line_buffered = isatty (STDIN_FILENO) || isatty (STDOUT_FILENO);
-      if (line_buffered)
-        lbuf_flush ();
-      else if (buffered >= FACTOR_PIPE_BUF)
-        {
-          /* Write output in <= PIPE_BUF chunks
-             so consumers can read atomically.  */
-          char const *tend = lbuf.end;
+      /* Since a umaxint_t's factors must fit in FACTOR_PIPE_BUF
+         we're guaranteed to find a newline here.  */
+      char *trailing_newline = memrchr (lbuf_buf, '\n', FACTOR_PIPE_BUF);
+      char *suffix = trailing_newline + 1;
+      idx_t prefix_size = suffix - lbuf_buf;
+      idx_t suffix_size = lbuffered - prefix_size;
 
-          /* Since a umaxint_t's factors must fit in 512
-             we're guaranteed to find a newline here.  */
-          char *tlend = lbuf.buf + FACTOR_PIPE_BUF;
-          while (*--tlend != '\n');
-          tlend++;
+      lbuffered = prefix_size;
+      lbuf_flush ();
 
-          lbuf.end = tlend;
-          lbuf_flush ();
-
-          /* Buffer the remainder.  */
-          memcpy (lbuf.buf, tlend, tend - tlend);
-          lbuf.end = lbuf.buf + (tend - tlend);
-        }
+      /* Buffer the remainder.  */
+      lbuffered = suffix_size;
+      memcpy (lbuf_buf, suffix, suffix_size);
     }
 }
 
 /* Buffer an int to the internal LBUF.  */
 static void
-lbuf_putint (uintmax_t i, size_t min_width)
+lbuf_putint (uintmax_t i, int min_width)
 {
-  char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+  char *lbuf_bufend = lbuf_buf + sizeof lbuf_buf;
+  char *buf = lbuf_bufend - INT_BUFSIZE_BOUND (uintmax_t);
   char const *umaxstr = umaxtostr (i, buf);
-  size_t width = sizeof (buf) - (umaxstr - buf) - 1;
-  size_t z = width;
+  int width = lbuf_bufend - 1 - umaxstr;
+  assume (0 < width);
 
-  for (; z < min_width; z++)
-    *lbuf.end++ = '0';
+  char *p = lbuf_buf + lbuffered;
+  for (int zeros = min_width - width; 0 < zeros; zeros--)
+    *p++ = '0';
 
-  memcpy (lbuf.end, umaxstr, width);
-  lbuf.end += width;
+  p = mempcpy (p, umaxstr, width);
+  lbuffered = p - lbuf_buf;
 }
 
 static void
@@ -2441,7 +2452,7 @@ print_factors_single (uintmax_t t1, uintmax_t t0)
       print_uintmaxes (hi (factors.plarge), lo (factors.plarge));
     }
 
-  lbuf_putc ('\n');
+  lbuf_putnl ();
 }
 
 /* Emit the factors of the indicated number.  If we have the option of using
@@ -2576,7 +2587,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  lbuf_alloc ();
   atexit (close_stdout);
   atexit (lbuf_flush);
 
