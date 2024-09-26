@@ -1053,9 +1053,8 @@ powm (uintmax_t b, uintmax_t e, uintmax_t n, uintmax_t ni, uintmax_t one)
   return y;
 }
 
-static uintmax_t
-powm2 (uintmax_t *r1m,
-       const uintmax_t *bp, const uintmax_t *ep, const uintmax_t *np,
+ATTRIBUTE_PURE static uuint
+powm2 (const uintmax_t *bp, const uintmax_t *ep, const uintmax_t *np,
        uintmax_t ni, const uintmax_t *one)
 {
   uintmax_t r1, r0, b1, b0, n1, n0;
@@ -1074,24 +1073,27 @@ powm2 (uintmax_t *r1m,
     {
       if (e & 1)
         {
-          r0 = mulredc2 (r1m, r1, r0, b1, b0, n1, n0, ni);
-          r1 = *r1m;
+          uintmax_t r1m1;
+          r0 = mulredc2 (&r1m1, r1, r0, b1, b0, n1, n0, ni);
+          r1 = r1m1;
         }
-      b0 = mulredc2 (r1m, b1, b0, b1, b0, n1, n0, ni);
-      b1 = *r1m;
+      uintmax_t r1m;
+      b0 = mulredc2 (&r1m, b1, b0, b1, b0, n1, n0, ni);
+      b1 = r1m;
     }
   for (e = ep[1]; e > 0; e >>= 1)
     {
       if (e & 1)
         {
-          r0 = mulredc2 (r1m, r1, r0, b1, b0, n1, n0, ni);
-          r1 = *r1m;
+          uintmax_t r1m1;
+          r0 = mulredc2 (&r1m1, r1, r0, b1, b0, n1, n0, ni);
+          r1 = r1m1;
         }
-      b0 = mulredc2 (r1m, b1, b0, b1, b0, n1, n0, ni);
-      b1 = *r1m;
+      uintmax_t r1m;
+      b0 = mulredc2 (&r1m, b1, b0, b1, b0, n1, n0, ni);
+      b1 = r1m;
     }
-  *r1m = r1;
-  return r0;
+  return make_uuint (r1, r0);
 }
 
 ATTRIBUTE_CONST
@@ -1124,8 +1126,7 @@ millerrabin2 (const uintmax_t *np, uintmax_t ni, const uintmax_t *bp,
 {
   uintmax_t y1, y0, nm1_1, nm1_0, r1m;
 
-  y0 = powm2 (&r1m, bp, qp, np, ni, one);
-  y1 = r1m;
+  uuset (&y1, &y0, powm2 (bp, qp, np, ni, one));
 
   if (y0 == one[0] && y1 == one[1])
     return true;
@@ -1303,7 +1304,8 @@ prime2_p (uintmax_t n1, uintmax_t n0)
   for (idx_t r = 0; r < PRIMES_PTAB_ENTRIES; r++)
     {
       bool is_prime;
-      uintmax_t e[2], y[2];
+      uintmax_t e[2];
+      uuint y;
 
       if (flag_prove_primality)
         {
@@ -1314,8 +1316,8 @@ prime2_p (uintmax_t n1, uintmax_t n0)
               binv (pi, lo (factors.plarge));
               e[0] = pi * nm1[0];
               e[1] = 0;
-              y[0] = powm2 (&y[1], a_prim, e, na, ni, one);
-              is_prime = (y[0] != one[0] || y[1] != one[1]);
+              y = powm2 (a_prim, e, na, ni, one);
+              is_prime = (lo (y) != one[0] || hi (y) != one[1]);
             }
           for (int i = 0; i < factors.nfactors && is_prime; i++)
             {
@@ -1326,8 +1328,8 @@ prime2_p (uintmax_t n1, uintmax_t n0)
                 rsh2 (e[1], e[0], nm1[1], nm1[0], 1);
               else
                 divexact_21 (e[1], e[0], nm1[1], nm1[0], factors.p[i]);
-              y[0] = powm2 (&y[1], a_prim, e, na, ni, one);
-              is_prime = (y[0] != one[0] || y[1] != one[1]);
+              y = powm2 (a_prim, e, na, ni, one);
+              is_prime = (lo (y) != one[0] || hi (y) != one[1]);
             }
         }
       else
