@@ -2389,41 +2389,55 @@ lbuf_putnl (void)
     lbuf_half_flush ();
 }
 
-/* Buffer an int to the internal LBUF.  */
+/* Append the string representation of I to lbuf_buf, followed by
+   everything from BUFEND to lbuf_buf's end.  Use the area just before
+   BUFEND temporarily.  */
 static void
-lbuf_putint (uintmax_t i, int min_width)
+lbuf_putint_append (uintmax_t i, char *bufend)
 {
-  char *lbuf_bufend = lbuf_buf + sizeof lbuf_buf;
-  char *buf = lbuf_bufend - INT_BUFSIZE_BOUND (uintmax_t);
-  char const *umaxstr = umaxtostr (i, buf);
-  int width = lbuf_bufend - 1 - umaxstr;
-  assume (0 < width);
+  char *istr = bufend;
+  do
+    {
+      *--istr = '0' + i % 10;
+      i /= 10;
+    }
+  while (i);
 
   char *p = lbuf_buf + lbuffered;
-  for (int zeros = min_width - width; 0 < zeros; zeros--)
-    *p++ = '0';
+  do
+    *p++ = *istr++;
+  while (istr < lbuf_buf + sizeof lbuf_buf);
 
-  p = mempcpy (p, umaxstr, width);
   lbuffered = p - lbuf_buf;
 }
 
+/* Append the string representation of I to lbuf_buf.  */
+static void
+lbuf_putint (uintmax_t i)
+{
+  return lbuf_putint_append (i, lbuf_buf + sizeof lbuf_buf);
+}
+
+/* Append the string representation of T to lbuf_buf.  */
 static void
 print_uuint (uuint t)
 {
   uintmax_t t1 = hi (t), t0 = lo (t);
+  char *bufend = lbuf_buf + sizeof lbuf_buf;
 
-  if (t1 == 0)
-    lbuf_putint (t0, 0);
-  else
+  while (t1)
     {
-      /* Use very plain code here since it seems hard to write fast code
-         without assuming a specific word size.  */
-      uintmax_t q = t1 / BIG_POWER_OF_10;
       uintmax_t r = t1 % BIG_POWER_OF_10;
+      t1 /= BIG_POWER_OF_10;
       udiv_qrnnd (t0, r, r, t0, BIG_POWER_OF_10);
-      print_uuint (make_uuint (q, t0));
-      lbuf_putint (r, LOG_BIG_POWER_OF_10);
+      for (int i = 0; i < LOG_BIG_POWER_OF_10; i++)
+        {
+          *--bufend = '0' + r % 10;
+          r /= 10;
+        }
     }
+
+  lbuf_putint_append (t0, bufend);
 }
 
 /* Buffer an mpz to the internal LBUF, possibly writing if it is long.  */
@@ -2472,7 +2486,7 @@ print_factors_single (uintmax_t t1, uintmax_t t0)
         if (print_exponents && factors.e[j] > 1)
           {
             lbuf_putc ('^');
-            lbuf_putint (factors.e[j], 0);
+            lbuf_putint (factors.e[j]);
             break;
           }
       }
@@ -2546,7 +2560,7 @@ print_factors (char const *input)
         if (print_exponents && factors.e[j] > 1)
           {
             lbuf_putc ('^');
-            lbuf_putint (factors.e[j], 0);
+            lbuf_putint (factors.e[j]);
             break;
           }
       }
