@@ -136,18 +136,11 @@
 # endif
 #endif
 
+#define W_TYPE_SIZE UINTMAX_WIDTH
+
 #if USE_LONGLONG_H
 
 /* Make definitions for longlong.h to make it do what it can do for us */
-
-/* bitcount for uintmax_t */
-# if UINTMAX_MAX == UINT32_MAX
-#  define W_TYPE_SIZE 32
-# elif UINTMAX_MAX == UINT64_MAX
-#  define W_TYPE_SIZE 64
-# elif UINTMAX_MAX == UINT128_MAX
-#  define W_TYPE_SIZE 128
-# endif
 
 # define UWtype  uintmax_t
 # define UHWtype unsigned long int
@@ -189,7 +182,6 @@ typedef unsigned long int UDItype;
 
 #else /* not USE_LONGLONG_H */
 
-# define W_TYPE_SIZE (8 * sizeof (uintmax_t))
 # define __ll_B ((uintmax_t) 1 << (W_TYPE_SIZE / 2))
 # define __ll_lowpart(t)  ((uintmax_t) (t) & (__ll_B - 1))
 # define __ll_highpart(t) ((uintmax_t) (t) >> (W_TYPE_SIZE / 2))
@@ -638,12 +630,6 @@ mp_factor_insert_ui (struct mp_factors *factors, unsigned long int prime)
 }
 
 
-/* Number of bits in an uintmax_t.  */
-enum { W = sizeof (uintmax_t) * CHAR_BIT };
-
-/* Verify that uintmax_t does not have holes in its representation.  */
-static_assert (UINTMAX_MAX >> (W - 1) == 1);
-
 #define P(a,b,c,d) a,
 static const unsigned char primes_diff[] = {
 #include "primes.h"
@@ -675,7 +661,7 @@ static const struct primes_dtab primes_dtab[] = {
 
 /* Verify that uintmax_t is not wider than
    the integers used to generate primes.h.  */
-static_assert (W <= WIDE_UINT_BITS);
+static_assert (UINTMAX_WIDTH <= WIDE_UINT_BITS);
 
 /* debugging for developers.  Enables devmsg().
    This flag is used only in the GMP code.  */
