@@ -229,6 +229,23 @@ make_uuint (uintmax_t hi, uintmax_t lo)
   return (uuint) {{lo, hi}};
 }
 
+/* BIG_POWER_OF_10 is a positive power of 10 that does not exceed UINTMAX_MAX.
+   The larger it is, the more efficient the code will likely be.
+   LOG_BIG_POWER_OF_10 = log (BIG_POWER_OF_10).  */
+#if UINTMAX_WIDTH < 64
+# error "platform does not support 64-bit integers"
+#elif UINTMAX_WIDTH < 128 || !defined UINTMAX_C
+/* Mainstream platforms as of 2024, with at-least-64-bit uintmax_t.  */
+static uintmax_t const BIG_POWER_OF_10 = 10000000000000000000llu;
+enum { LOG_BIG_POWER_OF_10 = 19 };
+#else
+/* For so-far-only-theoretical platforms with at-least-128-bit uintmax_t.
+   This is for performance; the 64-bit mainstream code will still work.  */
+static uintmax_t const BIG_POWER_OF_10 =
+  UINTMAX_C (100000000000000000000000000000000000000);
+enum { LOG_BIG_POWER_OF_10 = 38 };
+#endif
+
 struct factors
 {
   uuint plarge; /* Can have a single large factor */
@@ -2401,11 +2418,11 @@ print_uuint (uuint t)
     {
       /* Use very plain code here since it seems hard to write fast code
          without assuming a specific word size.  */
-      uintmax_t q = t1 / 1000000000;
-      uintmax_t r = t1 % 1000000000;
-      udiv_qrnnd (t0, r, r, t0, 1000000000);
+      uintmax_t q = t1 / BIG_POWER_OF_10;
+      uintmax_t r = t1 % BIG_POWER_OF_10;
+      udiv_qrnnd (t0, r, r, t0, BIG_POWER_OF_10);
       print_uuint (make_uuint (q, t0));
-      lbuf_putint (r, 9);
+      lbuf_putint (r, LOG_BIG_POWER_OF_10);
     }
 }
 
