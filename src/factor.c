@@ -2391,9 +2391,9 @@ lbuf_putint (uintmax_t i, int min_width)
 }
 
 static void
-print_uintmaxes (uintmax_t t1, uintmax_t t0)
+print_uuint (uuint t)
 {
-  uintmax_t q, r;
+  uintmax_t t1 = hi (t), t0 = lo (t);
 
   if (t1 == 0)
     lbuf_putint (t0, 0);
@@ -2401,10 +2401,10 @@ print_uintmaxes (uintmax_t t1, uintmax_t t0)
     {
       /* Use very plain code here since it seems hard to write fast code
          without assuming a specific word size.  */
-      q = t1 / 1000000000;
-      r = t1 % 1000000000;
+      uintmax_t q = t1 / 1000000000;
+      uintmax_t r = t1 % 1000000000;
       udiv_qrnnd (t0, r, r, t0, 1000000000);
-      print_uintmaxes (q, t0);
+      print_uuint (make_uuint (q, t0));
       lbuf_putint (r, 9);
     }
 }
@@ -2442,7 +2442,7 @@ print_factors_single (uintmax_t t1, uintmax_t t0)
 {
   struct factors factors;
 
-  print_uintmaxes (t1, t0);
+  print_uuint (make_uuint (t1, t0));
   lbuf_putc (':');
 
   factor (t1, t0, &factors);
@@ -2451,7 +2451,7 @@ print_factors_single (uintmax_t t1, uintmax_t t0)
     for (int k = 0; k < factors.e[j]; k++)
       {
         lbuf_putc (' ');
-        print_uintmaxes (0, factors.p[j]);
+        print_uuint (make_uuint (0, factors.p[j]));
         if (print_exponents && factors.e[j] > 1)
           {
             lbuf_putc ('^');
@@ -2463,7 +2463,7 @@ print_factors_single (uintmax_t t1, uintmax_t t0)
   if (hi (factors.plarge))
     {
       lbuf_putc (' ');
-      print_uintmaxes (hi (factors.plarge), lo (factors.plarge));
+      print_uuint (factors.plarge);
     }
 
   lbuf_putnl ();
