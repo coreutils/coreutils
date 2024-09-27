@@ -2343,6 +2343,25 @@ lbuf_flush (void)
     write_error ();
 }
 
+/* Write LBUF to standard output.
+   LBUF should contain at least FACTOR_PIPE_BUF bytes.
+   If possible, write a prefix of LBUF that is newline terminated
+   and contains <= FACTOR_PIPE_BUF bytes, so consumers can read atomically.
+   But if the first FACTOR_PIPE_BUF bytes contain no newlines,
+   give up on atomicity and just write the first FACTOR_PIPE_BUF bytes.  */
+static void
+lbuf_half_flush (void)
+{
+  char *nl = memrchr (lbuf_buf, '\n', FACTOR_PIPE_BUF);
+  char *suffix = nl ? nl + 1 : lbuf_buf + FACTOR_PIPE_BUF;
+  idx_t prefix_size = suffix - lbuf_buf;
+  idx_t suffix_size = lbuffered - prefix_size;
+  lbuffered = prefix_size;
+  lbuf_flush ();
+  lbuffered = suffix_size;
+  memmove (lbuf_buf, suffix, suffix_size);
+}
+
 /* Add a character C to lbuf_buf.  */
 static void
 lbuf_putc (char c)
@@ -2365,24 +2384,7 @@ lbuf_putnl (void)
   if (line_buffered)
     lbuf_flush ();
   else if (FACTOR_PIPE_BUF <= lbuffered)
-    {
-      /* Write output in <= PIPE_BUF chunks
-         so consumers can read atomically.  */
-
-      /* Since a umaxint_t's factors must fit in FACTOR_PIPE_BUF
-         we're guaranteed to find a newline here.  */
-      char *trailing_newline = memrchr (lbuf_buf, '\n', FACTOR_PIPE_BUF);
-      char *suffix = trailing_newline + 1;
-      idx_t prefix_size = suffix - lbuf_buf;
-      idx_t suffix_size = lbuffered - prefix_size;
-
-      lbuffered = prefix_size;
-      lbuf_flush ();
-
-      /* Buffer the remainder.  */
-      lbuffered = suffix_size;
-      memcpy (lbuf_buf, suffix, suffix_size);
-    }
+    lbuf_half_flush ();
 }
 
 /* Buffer an int to the internal LBUF.  */
@@ -2419,6 +2421,33 @@ print_uintmaxes (uintmax_t t1, uintmax_t t0)
       udiv_qrnnd (t0, r, r, t0, 1000000000);
       print_uintmaxes (q, t0);
       lbuf_putint (r, 9);
+    }
+}
+
+/* Buffer an mpz to the internal LBUF, possibly writing if it is long.  */
+static void
+lbuf_putmpz (mpz_t const i)
+{
+  idx_t sizeinbase = mpz_sizeinbase (i, 10);
+  char *lbuf_bufend = lbuf_buf + sizeof lbuf_buf;
+  char *p = lbuf_buf + lbuffered;
+  if (sizeinbase < lbuf_bufend - p)
+    {
+      mpz_get_str (p, 10, i);
+      p += sizeinbase;
+      lbuffered = p - !p[-1] - lbuf_buf;
+      while (FACTOR_PIPE_BUF <= lbuffered)
+        lbuf_half_flush ();
+    }
+  else
+    {
+      lbuf_flush ();
+      char *istr = ximalloc (sizeinbase + 1);
+      mpz_get_str (istr, 10, i);
+      idx_t istrlen = sizeinbase - !istr[sizeinbase - 1];
+      if (full_write (STDOUT_FILENO, istr, istrlen) != istrlen)
+        write_error ();
+      free (istr);
     }
 }
 
@@ -2503,26 +2532,26 @@ print_factors (char const *input)
 
   mpz_init_set_str (t, str, 10);
 
-  mpz_out_str (stdout, 10, t);
-  putchar (':');
+  lbuf_putmpz (t);
+  lbuf_putc (':');
   mp_factor (t, &factors);
 
   for (idx_t j = 0; j < factors.nfactors; j++)
     for (unsigned long int k = 0; k < factors.e[j]; k++)
       {
-        putchar (' ');
-        mpz_out_str (stdout, 10, factors.p[j]);
+        lbuf_putc (' ');
+        lbuf_putmpz (factors.p[j]);
         if (print_exponents && factors.e[j] > 1)
           {
-            printf ("^%lu", factors.e[j]);
+            lbuf_putc ('^');
+            lbuf_putint (factors.e[j], 0);
             break;
           }
       }
 
   mp_factor_clear (&factors);
   mpz_clear (t);
-  putchar ('\n');
-  fflush (stdout);
+  lbuf_putnl ();
   return true;
 }
 
@@ -2588,7 +2617,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-  atexit (lbuf_flush);
 
   int c;
   while ((c = getopt_long (argc, argv, "h", long_options, nullptr)) != -1)
@@ -2611,6 +2639,8 @@ main (int argc, char **argv)
           usage (EXIT_FAILURE);
         }
     }
+
+  atexit (lbuf_flush);
 
 #if STAT_SQUFOF
   memset (q_freq, 0, sizeof (q_freq));
