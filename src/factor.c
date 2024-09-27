@@ -637,8 +637,7 @@ static const unsigned char primes_diff[] = {
 };
 #undef P
 
-#define PRIMES_PTAB_ENTRIES \
-  (sizeof (primes_diff) / sizeof (primes_diff[0]) - 8 + 1)
+#define PRIMES_PTAB_ENTRIES (ARRAY_CARDINALITY (primes_diff) - 8 + 1)
 
 #define P(a,b,c,d) b,
 static const unsigned char primes_diff8[] = {
