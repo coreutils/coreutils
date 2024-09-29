@@ -36,6 +36,12 @@ my @Tests =
    # The I18N patch was fixed only in July 2024.  (rhbz#2296201).
    ['enoent', 'enoent', {EXIT => 1},
      {ERR=>"$prog: enoent: No such file or directory\n"}],
+
+   # The downstream I18N patch made 'fold -b' mishandled '\n' in UTF locales.
+   # The I18N patch was fixed only in Sep 2024.  (RHEL-60295)
+   ['bw1', '-b -w 4', {IN=>"abcdef\nghijkl"}, {OUT=>"abcd\nef\nghij\nkl"}],
+   ['bw2', '-b -w 6', {IN=>"1234567890\nabcdefghij\n1234567890"},
+     {OUT=>"123456\n7890\nabcdef\nghij\n123456\n7890"}],
   );
 
 my $save_temps = $ENV{DEBUG};
