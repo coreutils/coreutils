@@ -55,7 +55,6 @@
 #include <pwd.h>
 #include <getopt.h>
 #include <signal.h>
-#include <selinux/selinux.h>
 #include <uchar.h>
 
 #if HAVE_LANGINFO_CODESET
@@ -101,7 +100,6 @@
 #include "mpsort.h"
 #include "obstack.h"
 #include "quote.h"
-#include "smack.h"
 #include "stat-size.h"
 #include "stat-time.h"
 #include "strftime.h"
@@ -120,6 +118,10 @@
    For more details, see <https://bugzilla.redhat.com/483548>.  */
 #ifdef HAVE_CAP
 # include <sys/capability.h>
+#endif
+
+#if HAVE_LINUX_XATTR_H
+# include <linux/xattr.h>
 #endif
 
 #define PROGRAM_NAME (ls_mode == LS_LS ? "ls" \
@@ -3238,12 +3240,7 @@ free_ent (struct fileinfo *f)
   free (f->linkname);
   free (f->absolute_name);
   if (f->scontext != UNKNOWN_SECURITY_CONTEXT)
-    {
-      if (is_smack_enabled ())
-        free (f->scontext);
-      else
-        freecon (f->scontext);
-    }
+    aclinfo_scontext_free (f->scontext);
 }
 
 /* Empty the table of files.  */
@@ -3272,48 +3269,19 @@ clear_files (void)
 }
 
 /* Return true if ERR implies lack-of-support failure by a
-   getxattr-calling function like getfilecon or file_has_acl.  */
+   getxattr-calling function like file_has_acl.  */
 static bool
 errno_unsupported (int err)
 {
   return (err == EINVAL || err == ENOSYS || is_ENOTSUP (err));
 }
 
-/* Cache *getfilecon failure, when it's trivial to do so.
-   Like getfilecon/lgetfilecon, but when F's st_dev says it's doesn't
-   support getting the security context, fail with ENOTSUP immediately.  */
-static int
-getfilecon_cache (char const *file, struct fileinfo *f, bool deref)
-{
-  /* st_dev of the most recently processed device for which we've
-     found that [l]getfilecon fails indicating lack of support.  */
-  static dev_t unsupported_device;
-
-  if (f->stat.st_dev == unsupported_device)
-    {
-      errno = ENOTSUP;
-      return -1;
-    }
-  int r = 0;
-#ifdef HAVE_SMACK
-  if (is_smack_enabled ())
-    r = smack_new_label_from_path (file, "security.SMACK64", deref,
-                                   &f->scontext);
-  else
-#endif
-    r = (deref
-         ? getfilecon (file, &f->scontext)
-         : lgetfilecon (file, &f->scontext));
-  if (r < 0 && errno_unsupported (errno))
-    unsupported_device = f->stat.st_dev;
-  return r;
-}
-
-/* Cache file_has_acl failure, when it's trivial to do.
-   Like file_has_acl, but when F's st_dev says it's on a file
+/* Cache file_has_aclinfo failure, when it's trivial to do.
+   Like file_has_aclinfo, but when F's st_dev says it's on a file
    system lacking ACL support, return 0 with ENOTSUP immediately.  */
 static int
-file_has_acl_cache (char const *file, struct fileinfo *f)
+file_has_aclinfo_cache (char const *file, struct fileinfo *f,
+                        struct aclinfo *ai, int flags)
 {
   /* st_dev of the most recently processed device for which we've
      found that file_has_acl fails indicating lack of support.  */
@@ -3325,11 +3293,8 @@ file_has_acl_cache (char const *file, struct fileinfo *f)
       return 0;
     }
 
-  /* Zero errno so that we can distinguish between two 0-returning cases:
-     "has-ACL-support, but only a default ACL" and "no ACL support". */
-  errno = 0;
-  int n = file_has_acl (file, &f->stat);
-  if (n <= 0 && errno_unsupported (errno))
+  int n = file_has_aclinfo (file, &f->stat, ai, flags);
+  if (n <= 0 && errno_unsupported (ai->u.err))
     unsupported_device = f->stat.st_dev;
   return n;
 }
@@ -3519,44 +3484,13 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
       f->stat_ok = true;
 
-      /* Note has_capability() adds around 30% runtime to 'ls --color'  */
-      if ((type == normal || S_ISREG (f->stat.st_mode))
-          && print_with_color && is_colored (C_CAP))
-        f->has_capability = has_capability_cache (full_name, f);
-
       if (format == long_format || print_scontext)
         {
-          bool have_scontext = false;
-          bool have_acl = false;
-          int attr_len = getfilecon_cache (full_name, f, do_deref);
-          err = (attr_len < 0);
-
-          if (err == 0)
-            {
-              if (is_smack_enabled ())
-                have_scontext = ! STREQ ("_", f->scontext);
-              else
-                have_scontext = ! STREQ ("unlabeled", f->scontext);
-            }
-          else
-            {
-              f->scontext = UNKNOWN_SECURITY_CONTEXT;
-
-              /* When requesting security context information, don't make
-                 ls fail just because the file (even a command line argument)
-                 isn't on the right type of file system.  I.e., a getfilecon
-                 failure isn't in the same class as a stat failure.  */
-              if (is_ENOTSUP (errno) || errno == ENODATA)
-                err = 0;
-            }
-
-          if (err == 0 && format == long_format)
-            {
-              int n = file_has_acl_cache (full_name, f);
-              err = (n < 0);
-              have_acl = (0 < n);
-            }
-
+          struct aclinfo ai;
+          int n = file_has_aclinfo_cache (full_name, f, &ai,
+                                          do_deref ? ACL_SYMLINK_FOLLOW : 0);
+          bool have_acl = 0 < n;
+          bool have_scontext = !ai.scontext_err;
           f->acl_type = (!have_scontext && !have_acl
                          ? ACL_T_NONE
                          : (have_scontext && !have_acl
@@ -3564,8 +3498,31 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
                             : ACL_T_YES));
           any_has_acl |= f->acl_type != ACL_T_NONE;
 
-          if (err)
-            error (0, errno, "%s", quotef (full_name));
+          if (format == long_format && n < 0)
+            error (0, ai.u.err, "%s", quotef (full_name));
+          else
+            {
+              /* When requesting security context information, don't make
+                 ls fail just because the file (even a command line argument)
+                 isn't on the right type of file system.  I.e., a getfilecon
+                 failure isn't in the same class as a stat failure.  */
+              if (print_scontext
+                  && (! (is_ENOTSUP (ai.scontext_err)
+                         || ai.scontext_err == ENODATA)))
+                error (0, ai.scontext_err, "%s", quotef (full_name));
+            }
+
+          /* has_capability adds around 30% runtime to 'ls --color',
+             so call it only if really needed.  */
+          if (0 < ai.size
+              && (type == normal || S_ISREG (f->stat.st_mode))
+              && print_with_color && is_colored (C_CAP)
+              && aclinfo_has_xattr (&ai, XATTR_NAME_CAPS))
+            f->has_capability = has_capability_cache (full_name, f);
+
+          f->scontext = ai.scontext;
+          ai.scontext = nullptr;
+          aclinfo_free (&ai);
         }
 
       if (S_ISLNK (f->stat.st_mode)
