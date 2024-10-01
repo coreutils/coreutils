@@ -602,11 +602,15 @@ enum indicator_no
     C_CLR_TO_EOL
   };
 
-static char const *const indicator_name[]=
+static char const indicator_name[][2]=
   {
-    "lc", "rc", "ec", "rs", "no", "fi", "di", "ln", "pi", "so",
-    "bd", "cd", "mi", "or", "ex", "do", "su", "sg", "st",
-    "ow", "tw", "ca", "mh", "cl", nullptr
+    {'l','c'}, {'r','c'}, {'e','c'}, {'r','s'}, {'n','o'},
+    {'f','i'}, {'d','i'}, {'l','n'},
+    {'p','i'}, {'s','o'},
+    {'b','d'}, {'c','d'}, {'m','i'}, {'o','r'}, {'e','x'},
+    {'d','o'}, {'s','u'}, {'s','g'},
+    {'s','t'}, {'o','w'}, {'t','w'}, {'c','a'}, {'m','h'},
+    {'c','l'}
   };
 
 struct color_ext_type
@@ -1675,7 +1679,7 @@ main (int argc, char **argv)
   initialize_exit_failure (LS_FAILURE);
   atexit (close_stdout);
 
-  static_assert (ARRAY_CARDINALITY (color_indicator) + 1
+  static_assert (ARRAY_CARDINALITY (color_indicator)
                  == ARRAY_CARDINALITY (indicator_name));
 
   exit_status = EXIT_SUCCESS;
@@ -2731,8 +2735,7 @@ parse_ls_color (void)
 {
   char const *p;		/* Pointer to character being parsed */
   char *buf;			/* color_buf buffer pointer */
-  int ind_no;			/* Indicator number */
-  char label[3];		/* Indicator label */
+  char label0, label1;		/* Indicator label */
   struct color_ext_type *ext;	/* Extension we are working on */
 
   if ((p = getenv ("LS_COLORS")) == nullptr || *p == '\0')
@@ -2748,7 +2751,6 @@ parse_ls_color (void)
     }
 
   ext = nullptr;
-  strcpy (label, "??");
 
   /* This is an overly conservative estimate, but any possible
      LS_COLORS string will *not* generate a color_buf longer than
@@ -2791,7 +2793,7 @@ parse_ls_color (void)
               goto done;
 
             default:	/* Assume it is file type label */
-              label[0] = *(p++);
+              label0 = *p++;
               state = PS_2;
               break;
             }
@@ -2800,7 +2802,7 @@ parse_ls_color (void)
         case PS_2:		/* Second label character */
           if (*p)
             {
-              label[1] = *(p++);
+              label1 = *p++;
               state = PS_3;
             }
           else
@@ -2811,19 +2813,21 @@ parse_ls_color (void)
           state = PS_FAIL;	/* Assume failure...  */
           if (*(p++) == '=')/* It *should* be...  */
             {
-              for (ind_no = 0; indicator_name[ind_no] != nullptr; ++ind_no)
+              for (int i = 0; i < ARRAY_CARDINALITY (indicator_name); i++)
                 {
-                  if (STREQ (label, indicator_name[ind_no]))
+                  if ((label0 == indicator_name[i][0])
+                      && (label1 == indicator_name[i][1]))
                     {
-                      color_indicator[ind_no].string = buf;
+                      color_indicator[i].string = buf;
                       state = (get_funky_string (&buf, &p, false,
-                                                 &color_indicator[ind_no].len)
+                                                 &color_indicator[i].len)
                                ? PS_START : PS_FAIL);
                       break;
                     }
                 }
               if (state == PS_FAIL)
-                error (0, 0, _("unrecognized prefix: %s"), quote (label));
+                error (0, 0, _("unrecognized prefix: %s"),
+                       quote ((char []) {label0, label1, '\0'}));
             }
           break;
 
