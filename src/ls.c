@@ -1464,11 +1464,14 @@ free_pending_ent (struct pending *p)
 static bool
 is_colored (enum indicator_no type)
 {
+  /* Return true unless the string is "", "0" or "00"; try to be efficient.  */
   size_t len = color_indicator[type].len;
+  if (len == 0)
+    return false;
+  if (2 < len)
+    return true;
   char const *s = color_indicator[type].string;
-  return ! (len == 0
-            || (len == 1 && STRNCMP_LIT (s, "0") == 0)
-            || (len == 2 && STRNCMP_LIT (s, "00") == 0));
+  return (s[0] != '0') | (s[len - 1] != '0');
 }
 
 static void
