@@ -3384,7 +3384,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
          assertion that the inode number is not yet known.  */
       || (print_inode && inode == NOT_AN_INODE_NUMBER)
       || (format_needs_type
-          && (type == unknown || command_line_arg
+          && (type == unknown
               /* --indicator-style=classify (aka -F)
                  requires that we stat each regular file
                  to see if it's executable.  */
