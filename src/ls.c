@@ -236,7 +236,8 @@ struct fileinfo
     size_t width;
   };
 
-#define LEN_STR_PAIR(s) sizeof (s) - 1, s
+#define BIN_STR(...) \
+  sizeof ((char []) {__VA_ARGS__}), (char const []) {__VA_ARGS__}
 
 /* Null is a valid character in a color indicator (think about Epson
    printers, for example) so we have to use a length/buffer string
@@ -618,30 +619,30 @@ struct color_ext_type
 
 static struct bin_str color_indicator[] =
   {
-    { LEN_STR_PAIR ("\033[") },		/* lc: Left of color sequence */
-    { LEN_STR_PAIR ("m") },		/* rc: Right of color sequence */
+    { BIN_STR ('\033','[') },		/* lc: Left of color sequence */
+    { BIN_STR ('m') },			/* rc: Right of color sequence */
     { 0, nullptr },			/* ec: End color (replaces lc+rs+rc) */
-    { LEN_STR_PAIR ("0") },		/* rs: Reset to ordinary colors */
+    { BIN_STR ('0') },			/* rs: Reset to ordinary colors */
     { 0, nullptr },			/* no: Normal */
     { 0, nullptr },			/* fi: File: default */
-    { LEN_STR_PAIR ("01;34") },		/* di: Directory: bright blue */
-    { LEN_STR_PAIR ("01;36") },		/* ln: Symlink: bright cyan */
-    { LEN_STR_PAIR ("33") },		/* pi: Pipe: yellow/brown */
-    { LEN_STR_PAIR ("01;35") },		/* so: Socket: bright magenta */
-    { LEN_STR_PAIR ("01;33") },		/* bd: Block device: bright yellow */
-    { LEN_STR_PAIR ("01;33") },		/* cd: Char device: bright yellow */
+    { BIN_STR ('0','1',';','3','4') },	/* di: Directory: bright blue */
+    { BIN_STR ('0','1',';','3','6') },	/* ln: Symlink: bright cyan */
+    { BIN_STR ('3','3') },		/* pi: Pipe: yellow/brown */
+    { BIN_STR ('0','1',';','3','5') },	/* so: Socket: bright magenta */
+    { BIN_STR ('0','1',';','3','3') },	/* bd: Block device: bright yellow */
+    { BIN_STR ('0','1',';','3','3') },	/* cd: Char device: bright yellow */
     { 0, nullptr },			/* mi: Missing file: undefined */
     { 0, nullptr },			/* or: Orphaned symlink: undefined */
-    { LEN_STR_PAIR ("01;32") },		/* ex: Executable: bright green */
-    { LEN_STR_PAIR ("01;35") },		/* do: Door: bright magenta */
-    { LEN_STR_PAIR ("37;41") },		/* su: setuid: white on red */
-    { LEN_STR_PAIR ("30;43") },		/* sg: setgid: black on yellow */
-    { LEN_STR_PAIR ("37;44") },		/* st: sticky: black on blue */
-    { LEN_STR_PAIR ("34;42") },		/* ow: other-writable: blue on green */
-    { LEN_STR_PAIR ("30;42") },		/* tw: ow w/ sticky: black on green */
+    { BIN_STR ('0','1',';','3','2') },	/* ex: Executable: bright green */
+    { BIN_STR ('0','1',';','3','5') },	/* do: Door: bright magenta */
+    { BIN_STR ('3','7',';','4','1') },	/* su: setuid: white on red */
+    { BIN_STR ('3','0',';','4','3') },	/* sg: setgid: black on yellow */
+    { BIN_STR ('3','7',';','4','4') },	/* st: sticky: black on blue */
+    { BIN_STR ('3','4',';','4','2') },	/* ow: other-writable: blue on green */
+    { BIN_STR ('3','0',';','4','2') },	/* tw: ow w/ sticky: black on green */
     { 0, nullptr },			/* ca: disabled by default */
     { 0, nullptr },			/* mh: disabled by default */
-    { LEN_STR_PAIR ("\033[K") },	/* cl: clear to end of line */
+    { BIN_STR ('\033','[','K') },	/* cl: clear to end of line */
   };
 
 /* A list mapping file extensions to corresponding display sequence.  */
