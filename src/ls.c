@@ -3484,6 +3484,13 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
       f->stat_ok = true;
 
+      /* has_capability adds around 30% runtime to 'ls --color',
+          so call it only if really needed.  Note capability coloring
+          is disabled in the default color config.  */
+      if ((type == normal || S_ISREG (f->stat.st_mode))
+          && print_with_color && is_colored (C_CAP))
+        f->has_capability = has_capability_cache (full_name, f);
+
       if (format == long_format || print_scontext)
         {
           struct aclinfo ai;
@@ -3511,14 +3518,6 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
                          || ai.scontext_err == ENODATA)))
                 error (0, ai.scontext_err, "%s", quotef (full_name));
             }
-
-          /* has_capability adds around 30% runtime to 'ls --color',
-             so call it only if really needed.  */
-          if (0 < ai.size
-              && (type == normal || S_ISREG (f->stat.st_mode))
-              && print_with_color && is_colored (C_CAP)
-              && aclinfo_has_xattr (&ai, XATTR_NAME_CAPS))
-            f->has_capability = has_capability_cache (full_name, f);
 
           f->scontext = ai.scontext;
           ai.scontext = nullptr;
