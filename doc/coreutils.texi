@@ -8441,6 +8441,7 @@ overriding any contrary specification in environment variables
 (@pxref{Block size}).  If @option{--block-size},
 @option{--human-readable} (@option{-h}), or @option{--si} options are used,
 they take precedence even if @option{--kibibytes} (@option{-k}) is placed after
+the other options.
 
 The @option{--kibibytes} (@option{-k}) option affects the
 per-directory block count written in long format,
