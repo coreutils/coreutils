@@ -172,20 +172,13 @@ enum filetype
     whiteout,
     arg_directory
   };
+enum { filetype_cardinality = arg_directory + 1 };
 
 /* Display letters and indicators for each filetype.
    Keep these in sync with enum filetype.  */
-static char const filetype_letter[] = "?pcdb-lswd";
-
-/* Ensure that filetype and filetype_letter have the same
-   number of elements.  */
-static_assert (sizeof filetype_letter - 1 == arg_directory + 1);
-
-#define FILETYPE_INDICATORS				\
-  {							\
-    C_ORPHAN, C_FIFO, C_CHR, C_DIR, C_BLK, C_FILE,	\
-    C_LINK, C_SOCK, C_FILE, C_DIR			\
-  }
+static char const filetype_letter[] =
+  {'?', 'p', 'c', 'd', 'b', '-', 'l', 's', 'w', 'd'};
+static_assert (ARRAY_CARDINALITY (filetype_letter) == filetype_cardinality);
 
 enum acl_type
   {
@@ -4956,7 +4949,13 @@ get_color_indicator (const struct fileinfo *f, bool symlink_target)
     type = C_MISSING;
   else if (!f->stat_ok)
     {
-      static enum indicator_no filetype_indicator[] = FILETYPE_INDICATORS;
+      static enum indicator_no const filetype_indicator[] =
+        {
+          C_ORPHAN, C_FIFO, C_CHR, C_DIR, C_BLK, C_FILE,
+          C_LINK, C_SOCK, C_FILE, C_DIR
+        };
+      static_assert (ARRAY_CARDINALITY (filetype_indicator)
+                     == filetype_cardinality);
       type = filetype_indicator[f->filetype];
     }
   else
