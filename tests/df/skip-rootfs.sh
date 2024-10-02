@@ -22,10 +22,13 @@ print_ver_ df
 # Protect against inaccessible remote mounts etc.
 timeout 10 df || skip_ "df fails"
 
+# Exclude "fuse.portal" as this currently returns EPERM from statfs()
+DF_a() { df -a -x fuse.portal "$@"; }
+
 # Verify that rootfs is in mtab (and shown when the -a option is specified).
 # Note this is the case when /proc/self/mountinfo is parsed
 # rather than /proc/mounts.  I.e., when libmount is being used.
-df -a >out || fail=1
+DF_a >out || fail=1
 grep '^rootfs' out || skip_ 'no rootfs in mtab'
 
 # Ensure that rootfs is suppressed when no options is specified.
@@ -40,12 +43,12 @@ grep '^rootfs' out && { fail=1; cat out; }
 
 # Ensure that the rootfs is shown when explicitly both specifying "-t rootfs"
 # and the -a option.
-df -t rootfs -a >out || fail=1
+DF_a -t rootfs >out || fail=1
 grep '^rootfs' out || { fail=1; cat out; }
 
 # Ensure that the rootfs is omitted in all_fs mode when it is explicitly
 # black-listed.
-df -a -x rootfs >out || fail=1
+DF_a -x rootfs >out || fail=1
 grep '^rootfs' out && { fail=1; cat out; }
 
 test "$fail" = 1 && dump_mount_list_
