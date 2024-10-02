@@ -1770,13 +1770,13 @@ main (int argc, char **argv)
   if (n_files <= 0)
     {
       if (immediate_dirs)
-        gobble_file (".", directory, NOT_AN_INODE_NUMBER, true, "");
+        gobble_file (".", directory, NOT_AN_INODE_NUMBER, true, nullptr);
       else
         queue_directory (".", nullptr, true);
     }
   else
     do
-      gobble_file (argv[i++], unknown, NOT_AN_INODE_NUMBER, true, "");
+      gobble_file (argv[i++], unknown, NOT_AN_INODE_NUMBER, true, nullptr);
     while (i < argc);
 
   if (cwd_n_used)
@@ -3405,16 +3405,17 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
     {
       /* Absolute name of this file.  */
-      char *full_name;
+      char const *full_name;
       bool do_deref;
       int err;
 
-      if (name[0] == '/' || dirname[0] == 0)
-        full_name = (char *) name;
+      if (name[0] == '/' || !dirname)
+        full_name = name;
       else
         {
-          full_name = alloca (strlen (name) + strlen (dirname) + 2);
-          attach (full_name, dirname, name);
+          char *p = alloca (strlen (name) + strlen (dirname) + 2);
+          attach (p, dirname, name);
+          full_name = p;
         }
 
       if (print_hyperlink)
