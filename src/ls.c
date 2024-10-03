@@ -3518,7 +3518,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
              ls fail just because the file (even a command line argument)
              isn't on the right type of file system.  I.e., a getfilecon
              failure isn't in the same class as a stat failure.  */
-          if (print_scontext
+          if (print_scontext && ai.scontext_err
               && (! (is_ENOTSUP (ai.scontext_err)
                      || ai.scontext_err == ENODATA)))
             error (0, ai.scontext_err, "%s", quotef (full_name));
