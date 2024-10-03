@@ -19,12 +19,16 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
 require_strace_ capget
+require_root_
+
+touch file || framework_failure_
+
+setcap 'cap_net_bind_service=ep' file ||
+  skip_ "setcap doesn't work"
 
 LS_COLORS=ca=1; export LS_COLORS
 strace -e capget ls --color=always > /dev/null 2> out || fail=1
 $EGREP 'capget\(' out || skip_ "your ls doesn't call capget"
-
-rm -f out
 
 LS_COLORS=ca=:; export LS_COLORS
 strace -e capget ls --color=always > /dev/null 2> out || fail=1
