@@ -133,7 +133,8 @@ check-ls-dircolors:
 	  |sed -n 's/^"\(..\)"/\1/p'|sort -u);			\
 	ls=$$(sed -n '/static.*indicator_name\[/,/};'/\p	\
 	    $(srcdir)/src/ls.c					\
-	  |sed -n '/^  *"/p'|tr , '\n'|sed 's/^  *//'		\
+	  |sed -n '/^  *{/ { s/{.\([a-z]\).,.\([a-z]\).}/"\1\2"/g; p; }' \
+	  |tr , '\n'|sed 's/^  *//'		\
 	  |sed -n 's/^"\(..\)"/\1/p'|sort -u);			\
 	test "$$dc" = "$$ls"
 
