@@ -375,7 +375,8 @@ main (int argc, char **argv)
       else if (gid_unset (gid))
         {
           error (EXIT_CANCELED, errno,
-                 _("no group specified for unknown uid: %d"), (int) uid);
+                 _("no group specified for unknown uid: %ju"),
+                 (uintmax_t) uid);
         }
     }
 
