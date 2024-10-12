@@ -227,7 +227,7 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -T, --no-target-directory    treat DEST as a normal file\n\
 "), stdout);
       fputs (_("\
-  --update[=UPDATE]            control which existing files are updated;\n\
+      --update[=UPDATE]        control which existing files are updated;\n\
                                  UPDATE={all,none,none-fail,older(default)}\n\
   -u                           equivalent to --update[=older].  See below\n\
 "), stdout);
