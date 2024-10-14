@@ -819,6 +819,21 @@ sc_gitignore_missing:
 #	    sort | uniq -d | grep . && { echo '$(ME): Remove above'	\
 #	      'entries from .gitignore' >&2; exit 1; } || :
 
+# Ensure gl/ files are distributed
+sc_gldist_missing:
+	@cd $(srcdir);							\
+	grep '^gl/' gl/local.mk > $@.a;					\
+	find gl '(' -name Makefile.am ')' -prune -o -type f		\
+		'!' '(' -name '*.orig' -or -name '*~' -or		\
+		        -name 'ChangeLog.*' ')' -printf '%p\n' |	\
+	LC_ALL=C sort | tr '\012' @ | sed 's/@$$/%/;s/@/ \\@/g' |	\
+	tr @% '\012\012' > $@.e;					\
+	diff -u $@.a $@.e; diff=$$?;					\
+	rm -f $@.a $@.e;						\
+	test "$$diff" = 0						\
+	  || { echo '$(ME): Inconsistent EXTRA_DIST in gl/local.mk'>&2;	\
+	       exit 1; }
+
 sc_prohibit-form-feed:
 	@prohibit=$$'\f' \
 	in_vc_files='\.[chly]$$' \

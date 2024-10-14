@@ -1,7 +1,7 @@
 # Make coreutils programs.                             -*-Makefile-*-
 # This is included by the top-level Makefile.am.
 
-## Copyright (C) 2006-2024 Free Software Foundation, Inc.
+## Copyright (C) 2024 Free Software Foundation, Inc.
 
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -16,8 +16,6 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Generate this list with
-# find gl '(' -name Makefile.am ')' -prune -o -type f '!' '(' -name '*.orig' -or -name '*~' -or -name 'ChangeLog.*' ')' -printf '%p\n' | sort | tr '\012' @ | sed 's/@$/%/;s/@/ \\@/g' | tr @% '\012\012'
 EXTRA_DIST += \
 gl/lib/buffer-lcm.c \
 gl/lib/buffer-lcm.h \
@@ -30,10 +28,10 @@ gl/lib/fd-reopen.c \
 gl/lib/fd-reopen.h \
 gl/lib/heap.c \
 gl/lib/heap.h \
-gl/lib/randint.c \
-gl/lib/randint.h \
 gl/lib/rand-isaac.c \
 gl/lib/rand-isaac.h \
+gl/lib/randint.c \
+gl/lib/randint.h \
 gl/lib/randperm.c \
 gl/lib/randperm.h \
 gl/lib/randread.c \
@@ -44,9 +42,9 @@ gl/lib/skipchars.c \
 gl/lib/skipchars.h \
 gl/lib/smack.h \
 gl/lib/strintcmp.c \
+gl/lib/strnumcmp-in.h \
 gl/lib/strnumcmp.c \
 gl/lib/strnumcmp.h \
-gl/lib/strnumcmp-in.h \
 gl/lib/targetdir.c \
 gl/lib/targetdir.h \
 gl/lib/xdectoimax.c \
