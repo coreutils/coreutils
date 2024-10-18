@@ -47,6 +47,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   where inotify is not used, when all followed files become inaccessible.
   [This bug was present in "the beginning".]
 
+  `tail --follow --pid=PID` will now exit when the PID dies,
+  even in the presence of blocking inputs like unopened fifos.
+  [This bug was present in "the beginning".]
+
   'tail -c 4096 /dev/zero' no longer loops forever.
   [This bug was present in "the beginning".]
 

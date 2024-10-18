@@ -698,7 +698,7 @@ pipe_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
 
   free (tmp);
 
-  if (n_read < 0)
+  if (n_read < 0 && errno != EAGAIN)
     {
       error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
       ok = false;
@@ -826,7 +826,7 @@ pipe_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
 
   free (tmp);
 
-  if (n_read < 0)
+  if (n_read < 0 && errno != EAGAIN)
     {
       error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
       ok = false;
@@ -2003,10 +2003,13 @@ tail (char const *filename, int fd, uintmax_t n_units,
    Return true if successful.  */
 
 static bool
-tail_file (struct File_spec *f, uintmax_t n_units)
+tail_file (struct File_spec *f, uintmax_t n_files, uintmax_t n_units)
 {
   int fd;
   bool ok;
+
+  /* Avoid blocking if we may need to process asynchronously.  */
+  bool nonblocking = forever && (nbpids || n_files > 1);
 
   bool is_stdin = (STREQ (f->name, "-"));
 
@@ -2017,7 +2020,8 @@ tail_file (struct File_spec *f, uintmax_t n_units)
       xset_binary_mode (STDIN_FILENO, O_BINARY);
     }
   else
-    fd = open (f->name, O_RDONLY | O_BINARY);
+    fd = open (f->name, O_RDONLY | O_BINARY
+               | nonblocking ? O_NONBLOCK : 0);
 
   f->tailable = !(reopen_inaccessible_files && fd == -1);
 
@@ -2456,7 +2460,7 @@ main (int argc, char **argv)
   xset_binary_mode (STDOUT_FILENO, O_BINARY);
 
   for (i = 0; i < n_files; i++)
-    ok &= tail_file (&F[i], n_units);
+    ok &= tail_file (&F[i], n_files, n_units);
 
   if (forever && ignore_fifo_and_pipe (F, n_files))
     {

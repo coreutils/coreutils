@@ -268,6 +268,7 @@ all_tests =					\
   tests/misc/xstrtol.pl				\
   tests/tail/overlay-headers.sh			\
   tests/tail/pid.sh				\
+  tests/tail/pid-pipe.sh			\
   tests/od/od.pl				\
   tests/od/od-endian.sh				\
   tests/od/od-float.sh				\
