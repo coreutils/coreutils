@@ -61,6 +61,10 @@ cksum --status --check CHECKSUMS >out 2>&1 || fail=1
 # Should be empty
 compare /dev/null out || fail=1
 
+# Add a comment. No errors
+echo '# Very important comment' >> CHECKSUMS
+cksum --status --check CHECKSUMS >out 2>&1 || fail=1
+
 # Check for the error mgmt
 echo 'invalid line' >> CHECKSUMS
 # Exit code is 0 in this case
@@ -99,8 +103,8 @@ compare /dev/null out || fail=1
 echo "BLAKE2b (missing-file) = $invalid_sum" >> CHECKSUMS
 cksum --warn --check CHECKSUMS > out 2>&1
 # check that the incorrect lines are correctly reported with --warn
-grep 'CHECKSUMS: 5: improperly formatted SM3 checksum line' out || fail=1
-grep 'CHECKSUMS: 8: improperly formatted BLAKE2b checksum line' out || fail=1
+grep 'CHECKSUMS: 6: improperly formatted SM3 checksum line' out || fail=1
+grep 'CHECKSUMS: 9: improperly formatted BLAKE2b checksum line' out || fail=1
 
 # Test --ignore-missing
 
@@ -120,7 +124,7 @@ grep 'CHECKSUMS-missing: no file was verified' stderr || fail=1
 # Combination of --status and --warn
 cksum --status --warn --check CHECKSUMS > out 2>&1 && fail=1
 
-grep 'CHECKSUMS: 8: improperly formatted BLAKE2b checksum line' out || fail=1
+grep 'CHECKSUMS: 9: improperly formatted BLAKE2b checksum line' out || fail=1
 grep 'WARNING: 3 lines are improperly formatted' out || fail=1
 grep 'WARNING: 1 computed checksum did NOT match' out || fail=1
 
