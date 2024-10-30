@@ -37,7 +37,9 @@ returns_ 124 timeout .1 sleep 10 || fail=1
 
 # exit status propagation even on timeout
 # exit status should be 128+TERM
-returns_ 124 timeout --preserve-status .1 sleep 10 && fail=1
+for opt in '-p' '--preserve-status'; do
+  returns_ 124 timeout $opt .1 sleep 10 && fail=1
+done
 
 # kill delay. Note once the initial timeout triggers,
 # the exit status will be 124 even if the command
@@ -45,7 +47,9 @@ returns_ 124 timeout --preserve-status .1 sleep 10 && fail=1
 # exit status should be 128+KILL
 returns_ 124 timeout -s0 -k1 .1 sleep 10 && fail=1
 # Ensure a consistent exit status with --foreground
-returns_ 124 timeout --foreground -s0 -k1 .1 sleep 10 && fail=1
+for opt in '-f' '--foreground'; do
+  returns_ 124 timeout $opt -s0 -k1 .1 sleep 10 && fail=1
+done
 
 # Ensure 'timeout' is immune to parent's SIGCHLD handler
 # Use a subshell and an exec to work around a bug in FreeBSD 5.0 /bin/sh.

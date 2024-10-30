@@ -85,20 +85,13 @@ static bool preserve_status; /* whether to use a timeout status or not.  */
 static bool verbose;         /* whether to diagnose timeouts or not.  */
 static char const *command;
 
-/* for long options with no corresponding short option, use enum */
-enum
-{
-      FOREGROUND_OPTION = CHAR_MAX + 1,
-      PRESERVE_STATUS_OPTION
-};
-
 static struct option const long_options[] =
 {
+  {"foreground", no_argument, nullptr, 'f'},
   {"kill-after", required_argument, nullptr, 'k'},
+  {"preserve-status", no_argument, nullptr, 'p'},
   {"signal", required_argument, nullptr, 's'},
   {"verbose", no_argument, nullptr, 'v'},
-  {"foreground", no_argument, nullptr, FOREGROUND_OPTION},
-  {"preserve-status", no_argument, nullptr, PRESERVE_STATUS_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {nullptr, 0, nullptr, 0}
@@ -271,22 +264,30 @@ Start COMMAND, and kill it if still running after DURATION.\n\
       emit_mandatory_arg_note ();
 
       fputs (_("\
-      --preserve-status\n\
-                 exit with the same status as COMMAND, even when the\n\
-                   command times out\n\
-      --foreground\n\
+  -f, --foreground\n\
                  when not running timeout directly from a shell prompt,\n\
                    allow COMMAND to read from the TTY and get TTY signals;\n\
                    in this mode, children of COMMAND will not be timed out\n\
+"), stdout);
+      fputs (_("\
   -k, --kill-after=DURATION\n\
                  also send a KILL signal if COMMAND is still running\n\
                    this long after the initial signal was sent\n\
+"), stdout);
+      fputs (_("\
+  -p. --preserve-status\n\
+                 exit with the same status as COMMAND,\n\
+                   even when the command times out\n\
+"), stdout);
+      fputs (_("\
   -s, --signal=SIGNAL\n\
                  specify the signal to be sent on timeout;\n\
                    SIGNAL may be a name like 'HUP' or a number;\n\
-                   see 'kill -l' for a list of signals\n"), stdout);
+                   see 'kill -l' for a list of signals\n\
+"), stdout);
       fputs (_("\
-  -v, --verbose  diagnose to stderr any signal sent upon timeout\n"), stdout);
+  -v, --verbose  diagnose to stderr any signal sent upon timeout\n\
+"), stdout);
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -478,12 +479,21 @@ main (int argc, char **argv)
   initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "+k:s:v", long_options, nullptr)) != -1)
+  while ((c = getopt_long (argc, argv, "+fk:ps:v", long_options, nullptr))
+         != -1)
     {
       switch (c)
         {
+        case 'f':
+          foreground = true;
+          break;
+
         case 'k':
           kill_after = parse_duration (optarg);
+          break;
+
+        case 'p':
+          preserve_status = true;
           break;
 
         case 's':
@@ -494,14 +504,6 @@ main (int argc, char **argv)
 
         case 'v':
           verbose = true;
-          break;
-
-        case FOREGROUND_OPTION:
-          foreground = true;
-          break;
-
-        case PRESERVE_STATUS_OPTION:
-          preserve_status = true;
           break;
 
         case_GETOPT_HELP_CHAR;

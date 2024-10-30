@@ -18810,13 +18810,9 @@ The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
 
 @table @samp
-@item --preserve-status
-@opindex --preserve-status
-Return the exit status of the managed @var{command} on timeout, rather than
-a specific exit status indicating a timeout.  This is useful if the
-managed @var{command} supports running for an indeterminate amount of time.
-
-@item --foreground
+@item -f
+@itemx --foreground
+@opindex -f
 @opindex --foreground
 Don't create a separate background program group, so that
 the managed @var{command} can use the foreground TTY normally.
@@ -18855,6 +18851,14 @@ This option may be useful if the selected signal did not kill the @var{command},
 either because the signal was blocked or ignored, or if the @var{command} takes
 too long (e.g. for cleanup work) to terminate itself within a certain amount
 of time.
+
+@item -p
+@itemx --preserve-status
+@opindex -p
+@opindex --preserve-status
+Return the exit status of the managed @var{command} on timeout, rather than
+a specific exit status indicating a timeout.  This is useful if the
+managed @var{command} supports running for an indeterminate amount of time.
 
 @item -s @var{signal}
 @itemx --signal=@var{signal}
