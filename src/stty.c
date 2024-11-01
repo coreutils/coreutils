@@ -632,7 +632,7 @@ Special settings:\n\
 "), stdout);
 #ifdef TIOCGWINSZ
       fputs (_("\
- * cols N        tell the kernel that the terminal has N columns\n\
+   cols N        tell the kernel that the terminal has N columns\n\
  * columns N     same as cols N\n\
 "), stdout);
 #endif
@@ -653,8 +653,8 @@ Special settings:\n\
 "), stdout);
 #ifdef TIOCGWINSZ
       fputs (_("\
- * rows N        tell the kernel that the terminal has N rows\n\
- * size          print the number of rows and columns according to the kernel\n\
+   rows N        tell the kernel that the terminal has N rows\n\
+   size          print the number of rows and columns according to the kernel\n\
 "), stdout);
 #endif
       fputs (_("\

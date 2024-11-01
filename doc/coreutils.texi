@@ -15855,13 +15855,14 @@ Set the output speed to @var{n}.
 @item rows @var{n}
 @opindex rows
 Tell the tty kernel driver that the terminal has @var{n} rows.
-Non-POSIX.
 
 @item cols @var{n}
-@itemx columns @var{n}
 @opindex cols
+Tell the kernel that the terminal has @var{n} columns.
+
+@item columns @var{n}
 @opindex columns
-Tell the kernel that the terminal has @var{n} columns.  Non-POSIX.
+Same as @samp{cols}.  Non-POSIX.
 
 @item drain
 @opindex drain
@@ -15886,7 +15887,6 @@ Print the number of rows and columns that the kernel thinks the
 terminal has.  (Systems that don't support rows and columns in the kernel
 typically use the environment variables @env{LINES} and @env{COLUMNS}
 instead; however, GNU @command{stty} does not know anything about them.)
-Non-POSIX.
 
 @item line @var{n}
 @opindex line
