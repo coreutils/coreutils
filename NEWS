@@ -46,6 +46,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   %<i>$ format, where '<i>' is an integer referencing a particular argument,
   thus allowing repetition or reordering of printf arguments.
 
+  timeout now supports the POSIX:2024 specified -f, and -p short options,
+  corresponding to --foreground, and --preserve-status respectively.
+
 ** Improvements
 
   'head -c NUM', 'head -n NUM', 'nl -l NUM', 'nproc --ignore NUM',
