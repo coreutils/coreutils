@@ -135,6 +135,7 @@ main (void)
 #else /* !CRCTAB */
 
 # include "cksum.h"
+# include "crc.h"
 
 /* Number of bytes to read at once.  */
 # define BUFLEN (1 << 16)
@@ -240,6 +241,43 @@ crc_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
   memcpy (resstream, &crc_out, sizeof crc_out);
 
   return 0;
+}
+
+/* Calculate the crc32b checksum and length in bytes of stream STREAM.
+   Return -1 on error, 0 on success.  */
+
+int
+crc32b_sum_stream (FILE *stream, void *resstream, uintmax_t *reslen)
+{
+  uint32_t buf[BUFLEN / sizeof (uint32_t)];
+  uint32_t crc = 0;
+  uintmax_t len = 0;
+  size_t bytes_read;
+
+  if (!stream || !resstream || !reslen)
+    return -1;
+
+  while ((bytes_read = fread (buf, 1, BUFLEN, stream)) > 0)
+    {
+      if (len + bytes_read < len)
+        {
+          errno = EOVERFLOW;
+          return -1;
+        }
+      len += bytes_read;
+
+      crc = crc32_update (crc, (char const *)buf, bytes_read);
+
+      if (feof (stream))
+        break;
+    }
+
+  unsigned int crc_out = crc;
+  memcpy (resstream, &crc_out, sizeof crc_out);
+
+  *reslen = len;
+
+  return ferror (stream) ? -1 : 0;
 }
 
 /* Print the checksum and size to stdout.

@@ -4051,7 +4051,8 @@ and the file name unless no arguments were given.
 The 32-bit CRC used is based on the polynomial used
 for CRC error checking in the ISO/IEC 8802-3:1996 standard (Ethernet).
 Similar output formats are used for the other legacy checksums
-selectable with @option{--algorithm=sysv} or @option{--algorithm=bsd},
+selectable with @option{--algorithm=crc32b}, and
+@option{--algorithm=sysv} or @option{--algorithm=bsd}
 detailed at @ref{sum invocation}.
 
 @item Tagged output format
@@ -4100,6 +4101,7 @@ Supported legacy checksums (which are not supported by @option{--check}):
 @samp{sysv}      equivalent to @command{sum -s}
 @samp{bsd}       equivalent to @command{sum -r}
 @samp{crc}       equivalent to @command{cksum} (the default)
+@samp{crc32b}    only available through @command{cksum}
 @end example
 
 Supported more modern digest algorithms are:
@@ -4151,7 +4153,7 @@ as the length is automatically determined when checking.
 Print only the unencoded raw binary digest for a single input.
 Do not output the file name or anything else.
 Use network byte order (big endian) where applicable:
-for @samp{bsd}, @samp{crc}, and @samp{sysv}.
+for @samp{bsd}, @samp{crc}, @samp{crc32b}, and @samp{sysv}.
 This option works only with a single input.
 Unlike other output formats, @command{cksum} provides no way to
 @option{--check} a @option{--raw} checksum.
@@ -4225,7 +4227,7 @@ a checksum inconsistent with the associated file, or if no valid
 line is found, @command{cksum} exits with nonzero status.  Otherwise,
 it exits successfully.
 The @command{cksum} command does not support @option{--check}
-with the older @samp{sysv}, @samp{bsd}, or @samp{crc} algorithms.
+with the older @samp{sysv}, @samp{bsd}, @samp{crc} or @samp{crc32b} algorithms.
 
 @item --ignore-missing
 @opindex --ignore-missing

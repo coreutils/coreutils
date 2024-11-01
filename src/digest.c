@@ -290,6 +290,7 @@ enum Algorithm
   bsd,
   sysv,
   crc,
+  crc32b,
   md5,
   sha1,
   sha224,
@@ -302,24 +303,24 @@ enum Algorithm
 
 static char const *const algorithm_args[] =
 {
-  "bsd", "sysv", "crc", "md5", "sha1", "sha224",
+  "bsd", "sysv", "crc", "crc32b", "md5", "sha1", "sha224",
   "sha256", "sha384", "sha512", "blake2b", "sm3", nullptr
 };
 static enum Algorithm const algorithm_types[] =
 {
-  bsd, sysv, crc, md5, sha1, sha224,
+  bsd, sysv, crc, crc32b, md5, sha1, sha224,
   sha256, sha384, sha512, blake2b, sm3,
 };
 ARGMATCH_VERIFY (algorithm_args, algorithm_types);
 
 static char const *const algorithm_tags[] =
 {
-  "BSD", "SYSV", "CRC", "MD5", "SHA1", "SHA224",
+  "BSD", "SYSV", "CRC", "CRC32B", "MD5", "SHA1", "SHA224",
   "SHA256", "SHA384", "SHA512", "BLAKE2b", "SM3", nullptr
 };
 static int const algorithm_bits[] =
 {
-  16, 16, 32, 128, 160, 224,
+  16, 16, 32, 32, 128, 160, 224,
   256, 384, 512, 512, 256, 0
 };
 
@@ -333,6 +334,7 @@ static sumfn cksumfns[]=
   bsd_sum_stream,
   sysv_sum_stream,
   crc_sum_stream,
+  crc32b_sum_stream,
   md5_sum_stream,
   sha1_sum_stream,
   sha224_sum_stream,
@@ -346,6 +348,7 @@ static digest_output_fn cksum_output_fns[]=
 {
   output_bsd,
   output_sysv,
+  output_crc,
   output_crc,
   output_file,
   output_file,
@@ -530,6 +533,7 @@ DIGEST determines the digest algorithm and default output format:\n\
   sysv      (equivalent to sum -s)\n\
   bsd       (equivalent to sum -r)\n\
   crc       (equivalent to cksum)\n\
+  crc32b    (only available through cksum)\n\
   md5       (equivalent to md5sum)\n\
   sha1      (equivalent to sha1sum)\n\
   sha224    (equivalent to sha224sum)\n\
@@ -790,7 +794,7 @@ split_3 (char *s, size_t s_len,
       ptrdiff_t algo_tag = algorithm_from_tag (s + i);
       if (algo_tag >= 0)
         {
-          if (algo_tag <= crc)
+          if (algo_tag <= crc32b)
             return false;  /* We don't support checking these older formats.  */
           cksum_algorithm = algo_tag;
         }
@@ -1506,9 +1510,11 @@ main (int argc, char **argv)
     case bsd:
     case sysv:
     case crc:
+    case crc32b:
         if (do_check && algorithm_specified)
           error (EXIT_FAILURE, 0,
-                 _("--check is not supported with --algorithm={bsd,sysv,crc}"));
+                 _("--check is not supported with "
+                   "--algorithm={bsd,sysv,crc,crc32b}"));
         break;
     default:
         break;

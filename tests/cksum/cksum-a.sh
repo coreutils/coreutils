@@ -44,6 +44,7 @@ while read algo prog mode; do
       bsd) ;;
       sysv) ;;
       crc) ;;
+      crc32b) ;;
       *) cksum --check --algorithm=$algo out-c || fail=1 ;;
     esac
 

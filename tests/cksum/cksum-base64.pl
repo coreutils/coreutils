@@ -29,6 +29,7 @@ my @pairs =
    ['sysv', "0 0 f"],
    ['bsd', "00000     0 f"],
    ['crc', "4294967295 0 f"],
+   ['crc32b', "0 0 f"],
    ['md5', "1B2M2Y8AsgTpgAmY7PhCfg=="],
    ['sha1', "2jmj7l5rSw0yVb/vlWAYkK/YBwk="],
    ['sha224', "0UoCjCo6K8lHYQK7KII0xBWisB+CjqYqxbPkLw=="],
@@ -43,7 +44,7 @@ my @pairs =
 # Use the hard-coded "f" as file name.
 sub fmt ($$) {
   my ($h, $v) = @_;
-  $h !~ m{^(sysv|bsd|crc)$} and $v = uc($h). " (f) = $v";
+  $h !~ m{^(sysv|bsd|crc|crc32b)$} and $v = uc($h). " (f) = $v";
   # BLAKE2b is inconsistent:
   $v =~ s{BLAKE2B}{BLAKE2b};
   return "$v"
@@ -59,7 +60,7 @@ my @Tests =
    (map {my ($h,$v)= @$_; my $o=fmt $h,$v;
          ["chk-".$h, "--check --strict", {IN=>$o},
           {AUX=>{f=>''}}, {OUT=>"f: OK\n"}]}
-      grep { $_->[0] !~ m{^(sysv|bsd|crc)$} } @pairs),
+      grep { $_->[0] !~ m{^(sysv|bsd|crc|crc32b)$} } @pairs),
 
    # For digests ending in "=", ensure --check fails if any "=" is removed.
    (map {my ($h,$v)= @$_; my $o=fmt $h,$v;

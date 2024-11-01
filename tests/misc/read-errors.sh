@@ -27,6 +27,7 @@ cat .
 cksum -a blake2b .
 cksum -a bsd .
 cksum -a crc .
+cksum -a crc32b .
 cksum -a md5 .
 cksum -a sha1 .
 cksum -a sha224 .
