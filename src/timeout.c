@@ -275,7 +275,7 @@ Start COMMAND, and kill it if still running after DURATION.\n\
                    this long after the initial signal was sent\n\
 "), stdout);
       fputs (_("\
-  -p. --preserve-status\n\
+  -p, --preserve-status\n\
                  exit with the same status as COMMAND,\n\
                    even when the command times out\n\
 "), stdout);
