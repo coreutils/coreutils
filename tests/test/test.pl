@@ -185,6 +185,14 @@ my @Tests =
   ['paren-3', "'(' ')' ')'"],
   ['paren-4', "'(' ! ')'"],
   ['paren-5', "'(' -a ')'"],
+
+  ['less-collate-1', "'a' '<' 'b'"],
+  ['less-collate-2', "'a' '<' 'a'", {EXIT=>1}],
+  ['less-collate-3', "'b' '<' 'a'", {EXIT=>1}],
+
+  ['greater-collate-1', "'b' '>' 'a'"],
+  ['greater-collate-2', "'a' '>' 'a'", {EXIT=>1}],
+  ['greater-collate-3', "'a' '>' 'b'", {EXIT=>1}],
 );
 
 @Tests = add_inverse_op_tests \@Tests;

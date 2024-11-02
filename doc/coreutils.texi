@@ -13733,7 +13733,7 @@ Exit status:
 * File type tests::             @code{-[bcdfhLpSt]}
 * Access permission tests::     @code{-[gkruwxOG]}
 * File characteristic tests::   @code{-e -s -nt -ot -ef}
-* String tests::                @code{-z -n = == !=}
+* String tests::                @code{-z -n = == != > <}
 * Numeric tests::               @code{-eq -ne -lt -le -gt -ge}
 * Connectives for test::        @code{! -a -o}
 @end menu
@@ -13941,6 +13941,16 @@ shells and systems.
 @opindex !=
 @cindex not-equal string check
 True if the strings are not equal.
+
+@item @var{string1} > @var{string2}
+@opindex >
+@cindex greater-than string check
+True if @var{string1} is greater than @var{string2} in the current locale.
+
+@item @var{string1} < @var{string2}
+@opindex <
+@cindex less-than string check
+True if @var{string1} is less than @var{string2} in the current locale.
 
 @end table
 

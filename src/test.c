@@ -173,7 +173,7 @@ static bool
 binop (char const *s)
 {
   return ((STREQ (s,   "=")) || (STREQ (s,  "!=")) || (STREQ (s, "==")) ||
-          (STREQ (s,   "-nt")) ||
+          (STREQ (s,   "-nt")) || (STREQ (s, ">")) || (STREQ (s, "<")) ||
           (STREQ (s, "-ot")) || (STREQ (s, "-ef")) || (STREQ (s, "-eq")) ||
           (STREQ (s, "-ne")) || (STREQ (s, "-lt")) || (STREQ (s, "-le")) ||
           (STREQ (s, "-gt")) || (STREQ (s, "-ge")));
@@ -189,7 +189,7 @@ binop (char const *s)
  *	'-t' int
  *	'-'('z'|'n') string
  *	string
- *	string ('!='|'=') string
+ *	string ('!='|'='|>|<) string
  *	<int> '-'(eq|ne|le|lt|ge|gt) <int>
  *	file '-'(nt|ot|ef) file
  *	'(' <expr> ')'
@@ -367,6 +367,20 @@ binary_operator (bool l_is_l)
   if (STREQ (argv[op], "!="))
     {
       bool value = !STREQ (argv[pos], argv[pos + 2]);
+      pos += 3;
+      return value;
+    }
+
+  if (STREQ (argv[op], ">"))
+    {
+      bool value = strcoll (argv[pos], argv[pos + 2]) > 0;
+      pos += 3;
+      return value;
+    }
+
+  if (STREQ (argv[op], "<"))
+    {
+      bool value = strcoll (argv[pos], argv[pos + 2]) < 0;
       pos += 3;
       return value;
     }
@@ -615,7 +629,8 @@ three_arguments (void)
       value = one_argument ();
       advance (false);
     }
-  else if (STREQ (argv[pos + 1], "-a") || STREQ (argv[pos + 1], "-o"))
+  else if (STREQ (argv[pos + 1], "-a") || STREQ (argv[pos + 1], "-o")
+           || STREQ (argv[pos + 1], ">") || STREQ (argv[pos + 1], "<"))
     value = expr ();
   else
     test_syntax_error (_("%s: binary operator expected"),
@@ -708,6 +723,8 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
   -z STRING            the length of STRING is zero\n\
   STRING1 = STRING2    the strings are equal\n\
   STRING1 != STRING2   the strings are not equal\n\
+  STRING1 > STRING2    STRING1 is greater than STRING2 in the current locale\n\
+  STRING1 < STRING2    STRING1 is less than STRING2 in the current locale\n\
 "), stdout);
       fputs (_("\
 \n\
