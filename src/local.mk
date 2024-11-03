@@ -521,8 +521,8 @@ clean-local:
 	done
 
 
-BUILT_SOURCES += src/dircolors.h
-src/dircolors.h: src/dcgen src/dircolors.hin
+BUILT_SOURCES += $(top_srcdir)/src/dircolors.h
+$(top_srcdir)/src/dircolors.h: src/dcgen src/dircolors.hin
 	$(AM_V_GEN)rm -f $@ $@-t
 	$(AM_V_at)${MKDIR_P} src
 	$(AM_V_at)$(PERL) -w -- $(srcdir)/src/dcgen \
@@ -614,8 +614,8 @@ src/fs-kernel-magic: Makefile src/fs-latest-magic.h
 	  | $(ASSORT) -u						\
 	  > $@-t && mv $@-t $@
 
-BUILT_SOURCES += src/fs-is-local.h
-src/fs-is-local.h: src/stat.c src/extract-magic
+BUILT_SOURCES += $(top_srcdir)/src/fs-is-local.h
+$(top_srcdir)/src/fs-is-local.h: src/stat.c src/extract-magic
 	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)${MKDIR_P} src
 	$(AM_V_at)$(PERL) $(srcdir)/src/extract-magic \
@@ -623,8 +623,8 @@ src/fs-is-local.h: src/stat.c src/extract-magic
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
 
-BUILT_SOURCES += src/fs.h
-src/fs.h: src/stat.c src/extract-magic
+BUILT_SOURCES += $(top_srcdir)/src/fs.h
+$(top_srcdir)/src/fs.h: src/stat.c src/extract-magic
 	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)${MKDIR_P} src
 	$(AM_V_at)$(PERL) $(srcdir)/src/extract-magic \
