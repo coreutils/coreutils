@@ -216,7 +216,7 @@ static int address_base;
 static int address_pad_len;
 
 /* Minimum length when detecting --strings.  */
-static size_t string_min;
+static idx_t string_min;
 
 /* True when in --strings mode.  */
 static bool flag_dump_strings;
@@ -1512,14 +1512,14 @@ dump (void)
 static bool
 dump_strings (void)
 {
-  size_t bufsize = MAX (100, string_min);
+  idx_t bufsize = MAX (100, string_min);
   char *buf = xmalloc (bufsize);
   uintmax_t address = n_bytes_to_skip;
   bool ok = true;
 
   while (true)
     {
-      size_t i;
+      idx_t i;
       int c;
 
       /* See if the next 'string_min' chars are all printing chars.  */
@@ -1549,9 +1549,7 @@ dump_strings (void)
       while (!limit_bytes_to_format || address < end_offset)
         {
           if (i == bufsize)
-            {
-              buf = X2REALLOC (buf, &bufsize);
-            }
+            buf = xpalloc (buf, &bufsize, 1, -1, sizeof *buf);
           ok &= read_char (&c);
           address++;
           if (c < 0)
@@ -1751,9 +1749,10 @@ main (int argc, char **argv)
               if (s_err != LONGINT_OK)
                 xstrtol_fatal (s_err, oi, c, long_options, optarg);
 
-              /* The minimum string length may be no larger than SIZE_MAX,
-                 since we may allocate a buffer of this size.  */
-              if (SIZE_MAX < tmp)
+              /* The minimum string length may be no larger than
+                 MIN (IDX_MAX, SIZE_MAX), since we may allocate a
+                 buffer of this size.  */
+              if (MIN (IDX_MAX, SIZE_MAX) < tmp)
                 error (EXIT_FAILURE, 0, _("%s is too large"), quote (optarg));
 
               string_min = tmp;
