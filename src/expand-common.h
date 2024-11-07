@@ -20,7 +20,7 @@
 extern bool convert_entire_line;
 
 /* The maximum distance between tab stops.  */
-extern size_t max_column_width;
+extern idx_t max_column_width;
 
 /* The desired exit status.  */
 extern int exit_status;
@@ -36,7 +36,7 @@ parse_tab_stops (char const *stops) _GL_ATTRIBUTE_NONNULL ();
 
 /* TODO: Document */
 extern uintmax_t
-get_next_tab_column (const uintmax_t column, size_t *tab_index,
+get_next_tab_column (const uintmax_t column, idx_t *tab_index,
                      bool *last_tab)
   _GL_ATTRIBUTE_NONNULL ((3));
 

@@ -39,7 +39,7 @@ static uintmax_t extend_size = 0;
 static uintmax_t increment_size = 0;
 
 /* The maximum distance between tab stops.  */
-size_t max_column_width;
+idx_t max_column_width;
 
 /* Array of the explicit column numbers of the tab stops;
    after 'tab_list' is exhausted, each additional tab is replaced
@@ -47,11 +47,11 @@ size_t max_column_width;
 static uintmax_t *tab_list = nullptr;
 
 /* The number of allocated entries in 'tab_list'.  */
-static size_t n_tabs_allocated = 0;
+static idx_t n_tabs_allocated = 0;
 
 /* The index of the first invalid element of 'tab_list',
    where the next element can be added.  */
-static size_t first_free_tab = 0;
+static idx_t first_free_tab = 0;
 
 /* Null-terminated array of input filenames.  */
 static char **file_list = nullptr;
@@ -78,14 +78,13 @@ add_tab_stop (uintmax_t tabval)
   uintmax_t column_width = prev_column <= tabval ? tabval - prev_column : 0;
 
   if (first_free_tab == n_tabs_allocated)
-    tab_list = X2NREALLOC (tab_list, &n_tabs_allocated);
+    tab_list = xpalloc (tab_list, &n_tabs_allocated, 1, -1, sizeof *tab_list);
   tab_list[first_free_tab++] = tabval;
 
   if (max_column_width < column_width)
     {
-      if (SIZE_MAX < column_width)
+      if (ckd_add (&max_column_width, column_width, 0))
         error (EXIT_FAILURE, 0, _("tabs are too far apart"));
-      max_column_width = column_width;
     }
 }
 
@@ -196,7 +195,7 @@ parse_tab_stops (char const *stops)
           /* Detect overflow.  */
           if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0'))
             {
-              size_t len = strspn (num_start, "0123456789");
+              idx_t len = strspn (num_start, "0123456789");
               char *bad_num = ximemdup0 (num_start, len);
               error (0, 0, _("tab stop is too large %s"), quote (bad_num));
               free (bad_num);
@@ -231,11 +230,11 @@ parse_tab_stops (char const *stops)
    contains only nonzero, ascending values.  */
 
 static void
-validate_tab_stops (uintmax_t const *tabs, size_t entries)
+validate_tab_stops (uintmax_t const *tabs, idx_t entries)
 {
   uintmax_t prev_tab = 0;
 
-  for (size_t i = 0; i < entries; i++)
+  for (idx_t i = 0; i < entries; i++)
     {
       if (tabs[i] == 0)
         error (EXIT_FAILURE, 0, _("tab size cannot be 0"));
@@ -273,7 +272,7 @@ finalize_tab_stops (void)
 
 
 extern uintmax_t
-get_next_tab_column (const uintmax_t column, size_t *tab_index,
+get_next_tab_column (const uintmax_t column, idx_t *tab_index,
                      bool *last_tab)
 {
   *last_tab = false;

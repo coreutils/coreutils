@@ -116,7 +116,7 @@ expand (void)
       uintmax_t column = 0;
 
       /* Index in TAB_LIST of next tab stop to examine.  */
-      size_t tab_index = 0;
+      idx_t tab_index = 0;
 
 
       /* Convert a line of text.  */

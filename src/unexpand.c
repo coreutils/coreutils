@@ -117,7 +117,7 @@ unexpand (void)
   /* The worst case is a non-blank character, then one blank, then a
      tab stop, then MAX_COLUMN_WIDTH - 1 blanks, then a non-blank; so
      allocate MAX_COLUMN_WIDTH bytes to store the blanks.  */
-  pending_blank = xmalloc (max_column_width);
+  pending_blank = ximalloc (max_column_width);
 
   while (true)
     {
@@ -138,7 +138,7 @@ unexpand (void)
       uintmax_t next_tab_column = 0;
 
       /* Index in TAB_LIST of next tab stop to examine.  */
-      size_t tab_index = 0;
+      idx_t tab_index = 0;
 
       /* If true, the first pending blank came just before a tab stop.  */
       bool one_blank_before_tab_stop = false;
@@ -149,7 +149,7 @@ unexpand (void)
       bool prev_blank = true;
 
       /* Number of pending columns of blanks.  */
-      size_t pending = 0;
+      idx_t pending = 0;
 
 
       /* Convert a line of text.  */
