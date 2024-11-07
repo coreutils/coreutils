@@ -30,13 +30,13 @@
 bool convert_entire_line = false;
 
 /* If nonzero, the size of all tab stops.  If zero, use 'tab_list' instead.  */
-static uintmax_t tab_size = 0;
+static colno tab_size = 0;
 
 /* If nonzero, the size of all tab stops after the last specified.  */
-static uintmax_t extend_size = 0;
+static colno extend_size = 0;
 
 /* If nonzero, an increment for additional tab stops after the last specified.*/
-static uintmax_t increment_size = 0;
+static colno increment_size = 0;
 
 /* The maximum distance between tab stops.  */
 idx_t max_column_width;
@@ -44,7 +44,7 @@ idx_t max_column_width;
 /* Array of the explicit column numbers of the tab stops;
    after 'tab_list' is exhausted, each additional tab is replaced
    by a space.  The first column is column 0.  */
-static uintmax_t *tab_list = nullptr;
+static colno *tab_list = nullptr;
 
 /* The number of allocated entries in 'tab_list'.  */
 static idx_t n_tabs_allocated = 0;
@@ -72,10 +72,10 @@ int exit_status = EXIT_SUCCESS;
 
 /* Add tab stop TABVAL to the end of 'tab_list'.  */
 extern void
-add_tab_stop (uintmax_t tabval)
+add_tab_stop (colno tabval)
 {
-  uintmax_t prev_column = first_free_tab ? tab_list[first_free_tab - 1] : 0;
-  uintmax_t column_width = prev_column <= tabval ? tabval - prev_column : 0;
+  colno prev_column = first_free_tab ? tab_list[first_free_tab - 1] : 0;
+  colno column_width = prev_column <= tabval ? tabval - prev_column : 0;
 
   if (first_free_tab == n_tabs_allocated)
     tab_list = xpalloc (tab_list, &n_tabs_allocated, 1, -1, sizeof *tab_list);
@@ -89,7 +89,7 @@ add_tab_stop (uintmax_t tabval)
 }
 
 static bool
-set_extend_size (uintmax_t tabval)
+set_extend_size (colno tabval)
 {
   bool ok = true;
 
@@ -106,7 +106,7 @@ set_extend_size (uintmax_t tabval)
 }
 
 static bool
-set_increment_size (uintmax_t tabval)
+set_increment_size (colno tabval)
 {
   bool ok = true;
 
@@ -128,7 +128,7 @@ extern void
 parse_tab_stops (char const *stops)
 {
   bool have_tabval = false;
-  uintmax_t tabval = 0;
+  colno tabval = 0;
   bool extend_tabval = false;
   bool increment_tabval = false;
   char const *num_start = nullptr;
@@ -230,9 +230,9 @@ parse_tab_stops (char const *stops)
    contains only nonzero, ascending values.  */
 
 static void
-validate_tab_stops (uintmax_t const *tabs, idx_t entries)
+validate_tab_stops (colno const *tabs, idx_t entries)
 {
-  uintmax_t prev_tab = 0;
+  colno prev_tab = 0;
 
   for (idx_t i = 0; i < entries; i++)
     {
@@ -271,8 +271,8 @@ finalize_tab_stops (void)
 }
 
 
-extern uintmax_t
-get_next_tab_column (const uintmax_t column, idx_t *tab_index,
+extern colno
+get_next_tab_column (const colno column, idx_t *tab_index,
                      bool *last_tab)
 {
   *last_tab = false;
@@ -285,7 +285,7 @@ get_next_tab_column (const uintmax_t column, idx_t *tab_index,
      the current input column. */
   for ( ; *tab_index < first_free_tab ; (*tab_index)++ )
     {
-        uintmax_t tab = tab_list[*tab_index];
+        colno tab = tab_list[*tab_index];
         if (column < tab)
             return tab;
     }
@@ -297,7 +297,7 @@ get_next_tab_column (const uintmax_t column, idx_t *tab_index,
   /* incremental last tab - add increment_size to the previous tab stop */
   if (increment_size)
     {
-      uintmax_t end_tab = tab_list[first_free_tab - 1];
+      colno end_tab = tab_list[first_free_tab - 1];
 
       return column + (increment_size - ((column - end_tab) % increment_size));
     }

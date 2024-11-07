@@ -15,6 +15,9 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
+/* Column numbers are nonnegative, with the leftmost column being zero.  */
+typedef uintmax_t colno;
+
 /* If true, convert blanks even after nonblank characters have been
    read on the line.  */
 extern bool convert_entire_line;
@@ -27,7 +30,7 @@ extern int exit_status;
 
 /* Add tab stop TABVAL to the end of 'tab_list'.  */
 extern void
-add_tab_stop (uintmax_t tabval);
+add_tab_stop (colno tabval);
 
 /* Add the comma or blank separated list of tab stops STOPS
    to the list of tab stops.  */
@@ -35,8 +38,8 @@ extern void
 parse_tab_stops (char const *stops) _GL_ATTRIBUTE_NONNULL ();
 
 /* TODO: Document */
-extern uintmax_t
-get_next_tab_column (const uintmax_t column, idx_t *tab_index,
+extern colno
+get_next_tab_column (const colno column, idx_t *tab_index,
                      bool *last_tab)
   _GL_ATTRIBUTE_NONNULL ((3));
 

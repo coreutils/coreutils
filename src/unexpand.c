@@ -132,10 +132,10 @@ unexpand (void)
          is true:  */
 
       /* Column of next input character.  */
-      uintmax_t column = 0;
+      colno column = 0;
 
       /* Column the next input tab stop is on.  */
-      uintmax_t next_tab_column = 0;
+      colno next_tab_column = 0;
 
       /* Index in TAB_LIST of next tab stop to examine.  */
       idx_t tab_index = 0;
@@ -255,7 +255,7 @@ int
 main (int argc, char **argv)
 {
   bool have_tabval = false;
-  uintmax_t tabval IF_LINT ( = 0);
+  colno tabval IF_LINT ( = 0);
   int c;
 
   /* If true, cancel the effect of any -a (explicit or implicit in -t),
