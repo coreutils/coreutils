@@ -113,7 +113,7 @@ expand (void)
          is true:  */
 
       /* Column of next input character.  */
-      uintmax_t column = 0;
+      colno column = 0;
 
       /* Index in TAB_LIST of next tab stop to examine.  */
       idx_t tab_index = 0;
@@ -131,17 +131,9 @@ expand (void)
               if (c == '\t')
                 {
                   /* Column the next input tab stop is on.  */
-                  uintmax_t next_tab_column;
                   bool last_tab;
-
-                  next_tab_column = get_next_tab_column (column, &tab_index,
-                                                         &last_tab);
-
-                  if (last_tab)
-                    next_tab_column = column + 1;
-
-                  if (next_tab_column < column)
-                    error (EXIT_FAILURE, 0, _("input line is too long"));
+                  colno next_tab_column
+                    = get_next_tab_column (column, &tab_index, &last_tab);
 
                   while (++column < next_tab_column)
                     if (putchar (' ') < 0)
@@ -158,8 +150,7 @@ expand (void)
                 }
               else
                 {
-                  column++;
-                  if (!column)
+                  if (ckd_add (&column, column, 1))
                     error (EXIT_FAILURE, 0, _("input line is too long"));
                 }
 

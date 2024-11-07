@@ -271,42 +271,52 @@ finalize_tab_stops (void)
 }
 
 
+/* Return number of first tab stop after COLUMN.  TAB_INDEX specifies
+   amny multiple tab-sizes.  Set *LAST_TAB depending on whether we are
+   returning COLUMN + 1 merely because we're past the last tab.
+   If the number would overflow, diagnose this and exit.  */
 extern colno
-get_next_tab_column (const colno column, idx_t *tab_index,
-                     bool *last_tab)
+get_next_tab_column (colno column, idx_t *tab_index, bool *last_tab)
 {
   *last_tab = false;
+  colno tab_distance;
 
   /* single tab-size - return multiples of it */
   if (tab_size)
-    return column + (tab_size - column % tab_size);
-
-  /* multiple tab-sizes - iterate them until the tab position is beyond
-     the current input column. */
-  for ( ; *tab_index < first_free_tab ; (*tab_index)++ )
+    tab_distance = tab_size - column % tab_size;
+  else
     {
-        colno tab = tab_list[*tab_index];
-        if (column < tab)
+      /* multiple tab-sizes - iterate them until the tab position is beyond
+         the current input column. */
+      for ( ; *tab_index < first_free_tab ; (*tab_index)++ )
+        {
+          colno tab = tab_list[*tab_index];
+          if (column < tab)
             return tab;
+        }
+
+      /* relative last tab - return multiples of it */
+      if (extend_size)
+        tab_distance = extend_size - column % extend_size;
+      else if (increment_size)
+        {
+          /* incremental last tab - add increment_size to the previous
+             tab stop */
+          colno end_tab = tab_list[first_free_tab - 1];
+          tab_distance = increment_size - ((column - end_tab) % increment_size);
+        }
+      else
+        {
+          *last_tab = true;
+          tab_distance = 1;
+        }
     }
 
-  /* relative last tab - return multiples of it */
-  if (extend_size)
-    return column + (extend_size - column % extend_size);
-
-  /* incremental last tab - add increment_size to the previous tab stop */
-  if (increment_size)
-    {
-      colno end_tab = tab_list[first_free_tab - 1];
-
-      return column + (increment_size - ((column - end_tab) % increment_size));
-    }
-
-  *last_tab = true;
-  return 0;
+  colno tab_stop;
+  if (ckd_add (&tab_stop, column, tab_distance))
+    error (EXIT_FAILURE, 0, _("input line is too long"));
+  return tab_stop;
 }
-
-
 
 
 /* Sets new file-list */

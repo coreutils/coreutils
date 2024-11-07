@@ -175,9 +175,6 @@ unexpand (void)
 
                   if (convert)
                     {
-                      if (next_tab_column < column)
-                        error (EXIT_FAILURE, 0, _("input line is too long"));
-
                       if (c == '\t')
                         {
                           column = next_tab_column;
