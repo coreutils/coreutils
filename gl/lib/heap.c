@@ -25,23 +25,23 @@
 #include "xalloc.h"
 
 static int heap_default_compare (void const *, void const *);
-static size_t heapify_down (void **, size_t, size_t,
-                            int (*) (void const *, void const *));
-static void heapify_up (void **, size_t,
+static void heapify_down (void **, idx_t, idx_t,
+                          int (*) (void const *, void const *));
+static void heapify_up (void **, idx_t,
                         int (*) (void const *, void const *));
 
 struct heap
 {
   void **array;     /* array[0] is not used */
-  size_t capacity;  /* Array size */
-  size_t count;     /* Used as index to last element. Also is num of items. */
+  idx_t capacity;   /* Array size */
+  idx_t count;      /* Used as index to last element. Also is num of items. */
   int (*compare) (void const *, void const *);
 };
 
 /* Allocate memory for the heap. */
 
 struct heap *
-heap_alloc (int (*compare) (void const *, void const *), size_t n_reserve)
+heap_alloc (int (*compare) (void const *, void const *), idx_t n_reserve)
 {
   struct heap *heap = xmalloc (sizeof *heap);
 
@@ -79,8 +79,8 @@ int
 heap_insert (struct heap *heap, void *item)
 {
   if (heap->capacity - 1 <= heap->count)
-    heap->array = x2nrealloc (heap->array, &heap->capacity,
-                              sizeof *(heap->array));
+    heap->array = xpalloc (heap->array, &heap->capacity, 1, -1,
+                           sizeof heap->array[0]);
 
   heap->array[++heap->count] = item;
   heapify_up (heap->array, heap->count, heap->compare);
@@ -107,16 +107,16 @@ heap_remove_top (struct heap *heap)
 
 /* Move element down into appropriate position in heap. */
 
-static size_t
-heapify_down (void **array, size_t count, size_t initial,
+static void
+heapify_down (void **array, idx_t count, idx_t initial,
               int (*compare) (void const *, void const *))
 {
   void *element = array[initial];
 
-  size_t parent = initial;
-  while (parent <= count / 2)
+  idx_t parent = initial;
+  while (parent <= count >> 1)
     {
-      size_t child = 2 * parent;
+      idx_t child = 2 * parent;
 
       if (child < count && compare (array[child], array[child + 1]) < 0)
         child++;
@@ -129,22 +129,21 @@ heapify_down (void **array, size_t count, size_t initial,
     }
 
   array[parent] = element;
-  return parent;
 }
 
 /* Move element up into appropriate position in heap. */
 
 static void
-heapify_up (void **array, size_t count,
+heapify_up (void **array, idx_t count,
             int (*compare) (void const *, void const *))
 {
-  size_t k = count;
+  idx_t k = count;
   void *new_element = array[k];
 
-  while (k != 1 && compare (array[k / 2], new_element) <= 0)
+  while (k != 1 && compare (array[k >> 1], new_element) <= 0)
     {
-      array[k] = array[k / 2];
-      k /= 2;
+      array[k] = array[k >> 1];
+      k >>= 1;
     }
 
   array[k] = new_element;

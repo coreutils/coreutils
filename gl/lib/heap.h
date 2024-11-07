@@ -18,13 +18,15 @@
 /* Full implementation: GDSL (http://gna.org/projects/gdsl/) by Nicolas
    Darnis <ndarnis@free.fr>. Adapted by Gene Auyeung. */
 
+#include "idx.h"
+
 #include <stddef.h>
 
 struct heap;
 
 void heap_free (struct heap *) _GL_ATTRIBUTE_NONNULL ();
 
-struct heap *heap_alloc (int (*) (void const *, void const *), size_t)
+struct heap *heap_alloc (int (*) (void const *, void const *), idx_t)
   _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_DEALLOC (heap_free, 1)
   _GL_ATTRIBUTE_RETURNS_NONNULL;
 

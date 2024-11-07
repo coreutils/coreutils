@@ -6,6 +6,7 @@ lib/heap.c
 lib/heap.h
 
 Depends-on:
+idx
 stdlib-safer
 xalloc
 
