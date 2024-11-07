@@ -3284,19 +3284,33 @@ static int
 file_has_aclinfo_cache (char const *file, struct fileinfo *f,
                         struct aclinfo *ai, int flags)
 {
-  /* st_dev of the most recently processed device for which we've
-     found that file_has_acl fails indicating lack of support.  */
+  /* st_dev and associated info for the most recently processed device
+     for which file_has_acl failed indicating lack of support.  */
+  static int unsupported_return;
+  static char *unsupported_scontext;
+  static int unsupported_scontext_err;
   static dev_t unsupported_device;
 
   if (f->stat.st_dev == unsupported_device)
     {
+      ai->buf = ai->u.__gl_acl_ch;
+      ai->size = 0;
+      ai->scontext = unsupported_scontext;
+      ai->scontext_err = unsupported_scontext_err;
       errno = ENOTSUP;
-      return 0;
+      return unsupported_return;
     }
 
+  errno = 0;
   int n = file_has_aclinfo (file, ai, flags);
-  if (n <= 0 && !acl_errno_valid (ai->u.err))
-    unsupported_device = f->stat.st_dev;
+  int err = errno;
+  if (n <= 0 && !acl_errno_valid (err))
+    {
+      unsupported_return = n;
+      unsupported_scontext = ai->scontext;
+      unsupported_scontext_err = ai->scontext_err;
+      unsupported_device = f->stat.st_dev;
+    }
   return n;
 }
 
