@@ -27,7 +27,7 @@ struct field_range_pair
 extern struct field_range_pair *frp;
 
 /* Number of finite ranges specified by the user. */
-extern size_t n_frp;
+extern idx_t n_frp;
 
 /* field list parsing options */
 enum
