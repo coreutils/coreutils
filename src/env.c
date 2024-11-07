@@ -38,7 +38,7 @@
 
 /* Array of envvars to unset.  */
 static char const **usvars;
-static size_t usvars_alloc;
+static idx_t usvars_alloc;
 static idx_t usvars_used;
 
 /* Annotate the output with extra info to aid the user.  */
@@ -171,7 +171,7 @@ static void
 append_unset_var (char const *var)
 {
   if (usvars_used == usvars_alloc)
-    usvars = x2nrealloc (usvars, &usvars_alloc, sizeof *usvars);
+    usvars = xpalloc (usvars, &usvars_alloc, 1, -1, sizeof *usvars);
   usvars[usvars_used++] = var;
 }
 
