@@ -3277,14 +3277,6 @@ clear_files (void)
   file_size_width = 0;
 }
 
-/* Return true if ERR implies lack-of-support failure by a
-   getxattr-calling function like file_has_acl.  */
-static bool
-errno_unsupported (int err)
-{
-  return (err == EINVAL || err == ENOSYS || is_ENOTSUP (err));
-}
-
 /* Cache file_has_aclinfo failure, when it's trivial to do.
    Like file_has_aclinfo, but when F's st_dev says it's on a file
    system lacking ACL support, return 0 with ENOTSUP immediately.  */
@@ -3303,7 +3295,7 @@ file_has_aclinfo_cache (char const *file, struct fileinfo *f,
     }
 
   int n = file_has_aclinfo (file, ai, flags);
-  if (n <= 0 && errno_unsupported (ai->u.err))
+  if (n <= 0 && !acl_errno_valid (ai->u.err))
     unsupported_device = f->stat.st_dev;
   return n;
 }
@@ -3325,7 +3317,7 @@ has_capability_cache (char const *file, struct fileinfo *f)
     }
 
   bool b = has_capability (file);
-  if ( !b && errno_unsupported (errno))
+  if ( !b && !acl_errno_valid (errno))
     unsupported_device = f->stat.st_dev;
   return b;
 }
