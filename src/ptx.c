@@ -76,8 +76,8 @@ static bool gnu_extensions = true;	/* trigger all GNU extensions */
 static bool auto_reference = false;	/* refs are 'file_name:line_number:' */
 static bool input_reference = false;	/* refs at beginning of input lines */
 static bool right_reference = false;	/* output refs after right context  */
-static ptrdiff_t line_width = 72;	/* output line width in characters */
-static ptrdiff_t gap_size = 3;	/* number of spaces between output fields */
+static idx_t line_width = 72;		/* output line width in characters */
+static idx_t gap_size = 3;	/* number of spaces between output fields */
 static char const *truncation_string = "/";
                                 /* string used to mark line truncations */
 static char const *macro_name = "xx";	/* macro name for roff or TeX output */
@@ -117,15 +117,15 @@ BLOCK;
 typedef struct
   {
     char *start;		/* pointer to beginning of region */
-    ptrdiff_t size;		/* length of the region */
+    idx_t size;			/* length of the region */
   }
 WORD;
 
 typedef struct
   {
     WORD *start;		/* array of WORDs */
-    size_t alloc;		/* allocated length */
-    ptrdiff_t length;		/* number of used entries */
+    idx_t alloc;		/* allocated length */
+    idx_t length;		/* number of used entries */
   }
 WORD_TABLE;
 
@@ -148,10 +148,10 @@ static struct re_registers word_regs;
 static char word_fastmap[CHAR_SET_SIZE];
 
 /* Maximum length of any word read.  */
-static ptrdiff_t maximum_word_length;
+static idx_t maximum_word_length;
 
 /* Maximum width of any reference used.  */
-static ptrdiff_t reference_max_width;
+static idx_t reference_max_width;
 
 /* Ignore and Only word tables.  */
 
@@ -238,8 +238,8 @@ OCCURS;
    being, there is no such multiple language support.  */
 
 static OCCURS *occurs_table[1];	/* all words retained from the read text */
-static size_t occurs_alloc[1];	/* allocated size of occurs_table */
-static ptrdiff_t number_of_occurs[1]; /* number of used slots in occurs_table */
+static idx_t occurs_alloc[1];	/* allocated size of occurs_table */
+static idx_t number_of_occurs[1]; /* number of used slots in occurs_table */
 
 
 /* Communication among output routines.  */
@@ -248,16 +248,18 @@ static ptrdiff_t number_of_occurs[1]; /* number of used slots in occurs_table */
 static char edited_flag[CHAR_SET_SIZE];
 
 /* Half of line width, reference excluded.  */
-static ptrdiff_t half_line_width;
+static idx_t half_line_width;
 
-/* Maximum width of before field.  */
+/* Maximum width of before field.
+   FIXME: Is this nonnegative?  That is, should this be idx_t?  */
 static ptrdiff_t before_max_width;
 
-/* Maximum width of keyword-and-after field.  */
+/* Maximum width of keyword-and-after field.
+   FIXME: Is this nonnegative?  That is, should this be idx_t?  */
 static ptrdiff_t keyafter_max_width;
 
 /* Length of string that flags truncation.  */
-static ptrdiff_t truncation_string_length;
+static idx_t truncation_string_length;
 
 /* When context is limited by lines, wraparound may happen on final output:
    the 'head' pointer gives access to some supplementary left context which
@@ -531,38 +533,32 @@ swallow_file_in_memory (char const *file_name, BLOCK *block)
 static int
 compare_words (const void *void_first, const void *void_second)
 {
-#define first ((const WORD *) void_first)
-#define second ((const WORD *) void_second)
-  ptrdiff_t length;		/* minimum of two lengths */
-  ptrdiff_t counter;		/* cursor in words */
-  int value;			/* value of comparison */
-
-  length = first->size < second->size ? first->size : second->size;
+  WORD const *first = void_first;
+  WORD const *second = void_second;
+  idx_t length = MIN (first->size, second->size);
 
   if (ignore_case)
     {
-      for (counter = 0; counter < length; counter++)
+      for (idx_t counter = 0; counter < length; counter++)
         {
-          value = (folded_chars [to_uchar (first->start[counter])]
-                   - folded_chars [to_uchar (second->start[counter])]);
+          int value = (folded_chars[to_uchar (first->start[counter])]
+                       - folded_chars[to_uchar (second->start[counter])]);
           if (value != 0)
             return value;
         }
     }
   else
     {
-      for (counter = 0; counter < length; counter++)
+      for (idx_t counter = 0; counter < length; counter++)
         {
-          value = (to_uchar (first->start[counter])
-                   - to_uchar (second->start[counter]));
+          int value = (to_uchar (first->start[counter])
+                       - to_uchar (second->start[counter]));
           if (value != 0)
             return value;
         }
     }
 
   return (first->size > second->size) - (first->size < second->size);
-#undef first
-#undef second
 }
 
 /*-----------------------------------------------------------------------.
@@ -592,21 +588,16 @@ ATTRIBUTE_PURE
 static bool
 search_table (WORD *word, WORD_TABLE *table)
 {
-  ptrdiff_t lowest;		/* current lowest possible index */
-  ptrdiff_t highest;		/* current highest possible index */
-  ptrdiff_t middle;		/* current middle index */
-  int value;			/* value from last comparison */
-
-  lowest = 0;
-  highest = table->length - 1;
-  while (lowest <= highest)
+  idx_t lo = 0;
+  idx_t hi = table->length;
+  while (lo < hi)
     {
-      middle = (lowest + highest) / 2;
-      value = compare_words (word, table->start + middle);
+      idx_t middle = (lo >> 1) + (hi >> 1) + (lo & hi & 1);
+      int value = compare_words (word, table->start + middle);
       if (value < 0)
-        highest = middle - 1;
+        hi = middle;
       else if (value > 0)
-        lowest = middle + 1;
+        lo = middle + 1;
       else
         return true;
     }
@@ -707,8 +698,8 @@ digest_word_file (char const *file_name, WORD_TABLE *table)
       if (cursor > word_start)
         {
           if (table->length == table->alloc)
-            table->start = x2nrealloc (table->start, &table->alloc,
-                                       sizeof *table->start);
+            table->start = xpalloc (table->start, &table->alloc, 1, -1,
+                                    sizeof *table->start);
           table->start[table->length].start = word_start;
           table->start[table->length].size = cursor - word_start;
           table->length++;
@@ -738,7 +729,7 @@ find_occurs_in_text (int file_index)
   char *scan;			/* for scanning the source text also */
   char *line_start;		/* start of the current input line */
   char *line_scan;		/* newlines scanned until this point */
-  ptrdiff_t reference_length;	/* length of reference in input mode */
+  idx_t reference_length;	/* length of reference in input mode */
   WORD possible_key;		/* possible key, to ease searches */
   OCCURS *occurs_cursor;	/* current OCCURS under construction */
 
@@ -940,9 +931,8 @@ find_occurs_in_text (int file_index)
              where it will be constructed.  */
 
           if (number_of_occurs[0] == occurs_alloc[0])
-            occurs_table[0] = x2nrealloc (occurs_table[0],
-                                          &occurs_alloc[0],
-                                          sizeof *occurs_table[0]);
+            occurs_table[0] = xpalloc (occurs_table[0], &occurs_alloc[0],
+                                       1, -1, sizeof *occurs_table[0]);
           occurs_cursor = occurs_table[0] + number_of_occurs[0];
 
           /* Define the reference field, if any.  */
@@ -1086,12 +1076,6 @@ print_field (BLOCK field)
 static void
 fix_output_parameters (void)
 {
-  size_t file_index;		/* index in text input file arrays */
-  intmax_t line_ordinal;	/* line ordinal value for reference */
-  ptrdiff_t reference_width;	/* width for the whole reference */
-  int character;		/* character ordinal */
-  char const *cursor;		/* cursor in some constant strings */
-
   /* In auto reference mode, the maximum width of this field is
      precomputed and subtracted from the overall line width.  Add one for
      the column which separate the file name from the line number.  */
@@ -1099,13 +1083,13 @@ fix_output_parameters (void)
   if (auto_reference)
     {
       reference_max_width = 0;
-      for (file_index = 0; file_index < number_input_files; file_index++)
+      for (int file_index = 0; file_index < number_input_files; file_index++)
         {
-          line_ordinal = file_line_count[file_index] + 1;
+          intmax_t line_ordinal = file_line_count[file_index] + 1;
           if (file_index > 0)
             line_ordinal -= file_line_count[file_index - 1];
           char ordinal_string[INT_BUFSIZE_BOUND (intmax_t)];
-          reference_width = sprintf (ordinal_string, "%jd", line_ordinal);
+          idx_t reference_width = sprintf (ordinal_string, "%jd", line_ordinal);
           if (input_file_name[file_index])
             reference_width += strlen (input_file_name[file_index]);
           if (reference_width > reference_max_width)
@@ -1119,9 +1103,7 @@ fix_output_parameters (void)
      space for it right away, including one gap size.  */
 
   if ((auto_reference || input_reference) && !right_reference)
-    line_width -= reference_max_width + gap_size;
-  if (line_width < 0)
-    line_width = 0;
+    line_width = MAX (0, line_width - (reference_max_width + gap_size));
 
   /* The output lines, minimally, will contain from left to right a left
      context, a gap, and a keyword followed by the right context with no
@@ -1135,7 +1117,7 @@ fix_output_parameters (void)
      on a case by case basis.  It is worth noting that it cannot happen that
      both the tail and head fields are used at once.  */
 
-  half_line_width = line_width / 2;
+  half_line_width = line_width >> 1;
   before_max_width = half_line_width - gap_size;
   keyafter_max_width = half_line_width;
 
@@ -1194,7 +1176,7 @@ fix_output_parameters (void)
      by flagging any white space character.  Some systems do not consider
      form feed as a space character, but we do.  */
 
-  for (character = 0; character < CHAR_SET_SIZE; character++)
+  for (int character = 0; character < CHAR_SET_SIZE; character++)
     edited_flag[character] = !! isspace (character);
   edited_flag['\f'] = 1;
 
@@ -1220,7 +1202,7 @@ fix_output_parameters (void)
 
       /* Various characters need special processing.  */
 
-      for (cursor = "$%&#_{}\\"; *cursor; cursor++)
+      for (char const *cursor = "$%&#_{}\\"; *cursor; cursor++)
         edited_flag[to_uchar (*cursor)] = 1;
 
       break;
@@ -1633,7 +1615,6 @@ output_one_dumb_line (void)
 static void
 generate_all_output (void)
 {
-  ptrdiff_t occurs_index;	/* index of keyword entry being processed */
   OCCURS *occurs_cursor;	/* current keyword entry being processed */
 
   /* The following assignments are useful to provide default values in case
@@ -1652,7 +1633,8 @@ generate_all_output (void)
 
   occurs_cursor = occurs_table[0];
 
-  for (occurs_index = 0; occurs_index < number_of_occurs[0]; occurs_index++)
+  for (idx_t occurs_index = 0; occurs_index < number_of_occurs[0];
+       occurs_index++)
     {
       /* Compute the exact size of every field and whenever truncation flags
          are present or not.  */
@@ -1828,7 +1810,7 @@ main (int argc, char **argv)
           {
             intmax_t tmp;
             if (! (xstrtoimax (optarg, nullptr, 0, &tmp, "") == LONGINT_OK
-                   && 0 < tmp && tmp <= PTRDIFF_MAX))
+                   && 0 < tmp && tmp <= IDX_MAX))
               error (EXIT_FAILURE, 0, _("invalid gap width: %s"),
                      quote (optarg));
             gap_size = tmp;
@@ -1855,7 +1837,7 @@ main (int argc, char **argv)
           {
             intmax_t tmp;
             if (! (xstrtoimax (optarg, nullptr, 0, &tmp, "") == LONGINT_OK
-                   && 0 < tmp && tmp <= PTRDIFF_MAX))
+                   && 0 < tmp && tmp <= IDX_MAX))
               error (EXIT_FAILURE, 0, _("invalid line width: %s"),
                      quote (optarg));
             line_width = tmp;
