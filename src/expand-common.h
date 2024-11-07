@@ -15,8 +15,9 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-/* Column numbers are nonnegative, with the leftmost column being zero.  */
-typedef uintmax_t colno;
+/* Column numbers are nonnegative, with the leftmost column being zero.
+   Use a signed type, as that allows for better checking.  */
+typedef intmax_t colno;
 
 /* If true, convert blanks even after nonblank characters have been
    read on the line.  */
