@@ -190,7 +190,7 @@ struct buffer
                                    - an array of lines, in reverse order.  */
   size_t used;			/* Number of bytes used for input data.  */
   size_t nlines;		/* Number of lines in the line array.  */
-  size_t alloc;			/* Number of bytes allocated. */
+  idx_t alloc;			/* Number of bytes allocated. */
   size_t left;			/* Number of bytes left from previous reads. */
   size_t line_bytes;		/* Number of bytes to reserve for each line. */
   bool eof;			/* An EOF has been read.  */
@@ -325,10 +325,10 @@ static size_t sort_size;
 static char const **temp_dirs;
 
 /* Number of temporary directory names used.  */
-static size_t temp_dir_count;
+static idx_t temp_dir_count;
 
 /* Number of allocated slots in temp_dirs.  */
-static size_t temp_dir_alloc;
+static idx_t temp_dir_alloc;
 
 /* Flag to reverse the order of all comparisons. */
 static bool reverse;
@@ -846,7 +846,7 @@ static struct tempnode *
 create_temp_file (int *pfd, bool survive_fd_exhaustion)
 {
   static char const slashbase[] = "/sortXXXXXX";
-  static size_t temp_dir_index;
+  static idx_t temp_dir_index;
   int fd;
   int saved_errno;
   char const *temp_dir = temp_dirs[temp_dir_index];
@@ -1235,7 +1235,7 @@ static void
 add_temp_dir (char const *dir)
 {
   if (temp_dir_count == temp_dir_alloc)
-    temp_dirs = X2NREALLOC (temp_dirs, &temp_dir_alloc);
+    temp_dirs = xpalloc (temp_dirs, &temp_dir_alloc, 1, -1, sizeof *temp_dirs);
 
   temp_dirs[temp_dir_count++] = dir;
 }
@@ -1865,8 +1865,8 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
         /* The current input line is too long to fit in the buffer.
            Increase the buffer size and try again, keeping it properly
            aligned.  */
-        size_t line_alloc = buf->alloc / sizeof (struct line);
-        buf->buf = x2nrealloc (buf->buf, &line_alloc, sizeof (struct line));
+        idx_t line_alloc = buf->alloc / sizeof (struct line);
+        buf->buf = xpalloc (buf->buf, &line_alloc, 1, -1, sizeof (struct line));
         buf->alloc = line_alloc * sizeof (struct line);
       }
     }
