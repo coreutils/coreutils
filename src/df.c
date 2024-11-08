@@ -219,8 +219,8 @@ static char const *all_args_string =
 /* Storage for the definition of output columns.  */
 static struct field_data_t **columns;
 
-/* The current number of output columns.  */
-static size_t ncolumns;
+/* The current and allocated number of output columns.  */
+static idx_t ncolumns, ncolumns_alloc;
 
 /* Field values.  */
 struct field_values_t
@@ -238,8 +238,9 @@ struct field_values_t
 /* Storage for pointers for each string (cell of table).  */
 static char ***table;
 
-/* The current number of processed rows (including header).  */
-static size_t nrows;
+/* The current number of processed rows (including header),
+   and the number of slots allocated for rows.  */
+static idx_t nrows, nrows_alloc;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -366,9 +367,9 @@ replace_problematic_chars (char *cell)
 static void
 alloc_table_row (void)
 {
-  nrows++;
-  table = xnrealloc (table, nrows, sizeof (char **));
-  table[nrows - 1] = xnmalloc (ncolumns, sizeof (char *));
+  if (nrows == nrows_alloc)
+    table = xpalloc (table, &nrows_alloc, 1, -1, sizeof *table);
+  table[nrows++] = xinmalloc (ncolumns, sizeof *table[0]);
 }
 
 /* Output each cell in the table, accounting for the
@@ -377,12 +378,9 @@ alloc_table_row (void)
 static void
 print_table (void)
 {
-  size_t row;
-
-  for (row = 0; row < nrows; row++)
+  for (idx_t row = 0; row < nrows; row++)
     {
-      size_t col;
-      for (col = 0; col < ncolumns; col++)
+      for (idx_t col = 0; col < ncolumns; col++)
         {
           char *cell = table[row][col];
 
@@ -413,11 +411,11 @@ print_table (void)
 static void
 alloc_field (int f, char const *c)
 {
-  ncolumns++;
-  columns = xnrealloc (columns, ncolumns, sizeof (struct field_data_t *));
-  columns[ncolumns - 1] = &field_data[f];
+  if (ncolumns == ncolumns_alloc)
+    columns = xpalloc (columns, &ncolumns_alloc, 1, -1, sizeof *columns);
+  columns[ncolumns++] = &field_data[f];
   if (c != nullptr)
-    columns[ncolumns - 1]->caption = c;
+    field_data[f].caption = c;
 
   affirm (!field_data[f].used);
 
@@ -568,11 +566,9 @@ get_field_list (void)
 static void
 get_header (void)
 {
-  size_t col;
-
   alloc_table_row ();
 
-  for (col = 0; col < ncolumns; col++)
+  for (idx_t col = 0; col < ncolumns; col++)
     {
       char *cell;
       char const *header = _(columns[col]->caption);
@@ -1121,8 +1117,7 @@ get_dev (char const *device, char const *mount_point, char const *file,
   if (print_grand_total && ! force_fsu)
     add_to_grand_total (&block_values, &inode_values);
 
-  size_t col;
-  for (col = 0; col < ncolumns; col++)
+  for (idx_t col = 0; col < ncolumns; col++)
     {
       char buf[LONGEST_HUMAN_READABLE + 2];
       char *cell;
