@@ -457,37 +457,27 @@ trim_leading_zeros (char const *s)
 static void
 seq_fast (char const *a, char const *b, uintmax_t step)
 {
-  bool inf = STREQ (b, "inf");
-
   /* Skip past any redundant leading '0's.  Without this, our naive cmp
      function would declare 000 to be larger than 99.  */
   a = trim_leading_zeros (a);
   b = trim_leading_zeros (b);
 
   idx_t p_len = strlen (a);
-  idx_t q_len = inf ? 0 : strlen (b);
+  idx_t b_len = strlen (b);
+  bool inf = b_len == 3 && memcmp (b, "inf", 4) == 0;
 
   /* Allow for at least 31 digits without realloc.
      1 more than p_len is needed for the inf case.  */
   enum { INITIAL_ALLOC_DIGITS = 31 };
-  idx_t inc_size = MAX (MAX (p_len + 1, q_len), INITIAL_ALLOC_DIGITS);
+  idx_t inc_size = MAX (MAX (p_len + 1, b_len), INITIAL_ALLOC_DIGITS);
   /* Ensure we only increase by at most 1 digit at buffer boundaries.  */
   static_assert (SEQ_FAST_STEP_LIMIT_DIGITS < INITIAL_ALLOC_DIGITS - 1);
 
   /* Copy input strings (incl NUL) to end of new buffers.  */
   char *p0 = xmalloc (inc_size + 1);
   char *p = memcpy (p0 + inc_size - p_len, a, p_len + 1);
-  char *q;
-  char *q0;
-  if (! inf)
-    {
-      q0 = xmalloc (inc_size + 1);
-      q = memcpy (q0 + inc_size - q_len, b, q_len + 1);
-    }
-  else
-    q = q0 = nullptr;
 
-  bool ok = inf || cmp (p, p_len, q, q_len) <= 0;
+  bool ok = inf || cmp (p, p_len, b, b_len) <= 0;
   if (ok)
     {
       /* Reduce number of fwrite calls which is seen to
@@ -510,7 +500,7 @@ seq_fast (char const *a, char const *b, uintmax_t step)
             p -= incr_grows (p, endp);
           p_len = endp - p;
 
-          if (! inf && 0 < cmp (p, p_len, q, q_len))
+          if (! inf && 0 < cmp (p, p_len, b, b_len))
             break;
 
           *bufp++ = *separator;
@@ -553,7 +543,6 @@ seq_fast (char const *a, char const *b, uintmax_t step)
     exit (EXIT_SUCCESS);
 
   free (p0);
-  free (q0);
 }
 
 /* Return true if S consists of at least one digit and no non-digits.  */
