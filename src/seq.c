@@ -403,24 +403,27 @@ get_default_format (operand first, operand step, operand last)
   return "%Lg";
 }
 
-/* The NUL-terminated string S0 of length S_LEN represents a valid
-   non-negative decimal integer.  Adjust the string and length so
-   that the pair describe the next-larger value.  */
-static void
-incr (char **s0, size_t *s_len)
+/* The nonempty char array P represents a valid non-negative decimal integer.
+   ENDP points just after the last char in P.
+   Adjust the array to describe the next-larger integer and return
+   whether this grows the array by one on the left.  */
+static bool
+incr_grows (char *p, char *endp)
 {
-  char *s = *s0;
-  char *endp = s + *s_len - 1;
-
   do
     {
-      if ((*endp)++ < '9')
-        return;
-      *endp-- = '0';
+      endp--;
+      if (*endp < '9')
+        {
+          (*endp)++;
+          return false;
+        }
+      *endp = '0';
     }
-  while (endp >= s);
-  *--(*s0) = '1';
-  ++*s_len;
+  while (p < endp);
+
+  p[-1] = '1';
+  return true;
 }
 
 /* Compare A and B (each a NUL-terminated digit string), with lengths
@@ -505,8 +508,10 @@ seq_fast (char const *a, char const *b, uintmax_t step)
       /* Append separator then number.  */
       while (true)
         {
+          char *endp = p + p_len;
           for (uintmax_t n_incr = step; n_incr; n_incr--)
-            incr (&p, &p_len);
+            p -= incr_grows (p, endp);
+          p_len = endp - p;
 
           if (! inf && 0 < cmp (p, p_len, q, q_len))
             break;
