@@ -289,7 +289,7 @@ static void extract_dirs_from_files (char const *dirname,
 static void get_link_name (char const *filename, struct fileinfo *f,
                            bool command_line_arg);
 static void indent (size_t from, size_t to);
-static size_t calculate_columns (bool by_columns);
+static idx_t calculate_columns (bool by_columns);
 static void print_current_files (void);
 static void print_dir (char const *name, char const *realname,
                        bool command_line_arg);
@@ -344,10 +344,10 @@ static Hash_table *active_dir_set;
 static struct fileinfo *cwd_file;
 
 /* Length of block that 'cwd_file' points to, measured in files.  */
-static size_t cwd_n_alloc;
+static idx_t cwd_n_alloc;
 
 /* Index of first unused slot in 'cwd_file'.  */
-static size_t cwd_n_used;
+static idx_t cwd_n_used;
 
 /* Whether files needs may need padding due to quoting.  */
 static bool cwd_some_quoted;
@@ -1779,7 +1779,7 @@ main (int argc, char **argv)
     }
 
   cwd_n_alloc = 100;
-  cwd_file = xnmalloc (cwd_n_alloc, sizeof *cwd_file);
+  cwd_file = xmalloc (cwd_n_alloc * sizeof *cwd_file);
   cwd_n_used = 0;
 
   clear_files ();
@@ -3256,7 +3256,7 @@ free_ent (struct fileinfo *f)
 static void
 clear_files (void)
 {
-  for (size_t i = 0; i < cwd_n_used; i++)
+  for (idx_t i = 0; i < cwd_n_used; i++)
     {
       struct fileinfo *f = sorted_file[i];
       free_ent (f);
@@ -3360,10 +3360,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
   affirm (! command_line_arg || inode == NOT_AN_INODE_NUMBER);
 
   if (cwd_n_used == cwd_n_alloc)
-    {
-      cwd_file = xnrealloc (cwd_file, cwd_n_alloc, 2 * sizeof *cwd_file);
-      cwd_n_alloc *= 2;
-    }
+    cwd_file = xpalloc (cwd_file, &cwd_n_alloc, 1, -1, sizeof *cwd_file);
 
   f = &cwd_file[cwd_n_used];
   memset (f, '\0', sizeof *f);
@@ -3702,8 +3699,7 @@ basename_is_dot_or_dotdot (char const *name)
 static void
 extract_dirs_from_files (char const *dirname, bool command_line_arg)
 {
-  size_t i;
-  size_t j;
+  idx_t i, j;
   bool ignore_dot_and_dot_dot = (dirname != nullptr);
 
   if (dirname && LOOP_DETECT)
@@ -3716,8 +3712,9 @@ extract_dirs_from_files (char const *dirname, bool command_line_arg)
 
   /* Queue the directories last one first, because queueing reverses the
      order.  */
-  for (i = cwd_n_used; i-- != 0; )
+  for (i = cwd_n_used; 0 < i; )
     {
+      i--;
       struct fileinfo *f = sorted_file[i];
 
       if (is_directory (f)
@@ -4020,7 +4017,7 @@ static_assert (ARRAY_CARDINALITY (sort_functions)
 static void
 initialize_ordering_vector (void)
 {
-  for (size_t i = 0; i < cwd_n_used; i++)
+  for (idx_t i = 0; i < cwd_n_used; i++)
     sorted_file[i] = &cwd_file[i];
 }
 
@@ -4033,8 +4030,7 @@ update_current_files_info (void)
   if (sort_type == sort_width
       || (line_length && (format == many_per_line || format == horizontal)))
     {
-      size_t i;
-      for (i = 0; i < cwd_n_used; i++)
+      for (idx_t i = 0; i < cwd_n_used; i++)
         {
           struct fileinfo *f = sorted_file[i];
           f->width = fileinfo_name_width (f);
@@ -4049,10 +4045,10 @@ sort_files (void)
 {
   bool use_strcmp;
 
-  if (sorted_file_alloc < cwd_n_used + cwd_n_used / 2)
+  if (sorted_file_alloc < cwd_n_used + (cwd_n_used >> 1))
     {
       free (sorted_file);
-      sorted_file = xnmalloc (cwd_n_used, 3 * sizeof *sorted_file);
+      sorted_file = xinmalloc (cwd_n_used, 3 * sizeof *sorted_file);
       sorted_file_alloc = 3 * cwd_n_used;
     }
 
@@ -4089,12 +4085,10 @@ sort_files (void)
 static void
 print_current_files (void)
 {
-  size_t i;
-
   switch (format)
     {
     case one_per_line:
-      for (i = 0; i < cwd_n_used; i++)
+      for (idx_t i = 0; i < cwd_n_used; i++)
         {
           print_file_name_and_frills (sorted_file[i], 0);
           putchar (eolbyte);
@@ -4120,7 +4114,7 @@ print_current_files (void)
       break;
 
     case long_format:
-      for (i = 0; i < cwd_n_used; i++)
+      for (idx_t i = 0; i < cwd_n_used; i++)
         {
           set_normal_color ();
           print_long_format (sorted_file[i]);
@@ -5107,18 +5101,17 @@ length_of_file_name_and_frills (const struct fileinfo *f)
 static void
 print_many_per_line (void)
 {
-  size_t row;			/* Current row.  */
-  size_t cols = calculate_columns (true);
+  idx_t cols = calculate_columns (true);
   struct column_info const *line_fmt = &column_info[cols - 1];
 
   /* Calculate the number of rows that will be in each column except possibly
      for a short column on the right.  */
-  size_t rows = cwd_n_used / cols + (cwd_n_used % cols != 0);
+  idx_t rows = cwd_n_used / cols + (cwd_n_used % cols != 0);
 
-  for (row = 0; row < rows; row++)
+  for (idx_t row = 0; row < rows; row++)
     {
       size_t col = 0;
-      size_t filesno = row;
+      idx_t filesno = row;
       size_t pos = 0;
 
       /* Print the next row.  */
@@ -5129,9 +5122,9 @@ print_many_per_line (void)
           size_t max_name_length = line_fmt->col_arr[col++];
           print_file_name_and_frills (f, pos);
 
-          filesno += rows;
-          if (filesno >= cwd_n_used)
+          if (cwd_n_used - rows <= filesno)
             break;
+          filesno += rows;
 
           indent (pos + name_length, pos + max_name_length);
           pos += max_name_length;
@@ -5143,9 +5136,8 @@ print_many_per_line (void)
 static void
 print_horizontal (void)
 {
-  size_t filesno;
   size_t pos = 0;
-  size_t cols = calculate_columns (false);
+  idx_t cols = calculate_columns (false);
   struct column_info const *line_fmt = &column_info[cols - 1];
   struct fileinfo const *f = sorted_file[0];
   size_t name_length = length_of_file_name_and_frills (f);
@@ -5155,9 +5147,9 @@ print_horizontal (void)
   print_file_name_and_frills (f, 0);
 
   /* Now the rest.  */
-  for (filesno = 1; filesno < cwd_n_used; ++filesno)
+  for (idx_t filesno = 1; filesno < cwd_n_used; filesno++)
     {
-      size_t col = filesno % cols;
+      idx_t col = filesno % cols;
 
       if (col == 0)
         {
@@ -5184,10 +5176,9 @@ print_horizontal (void)
 static void
 print_with_separator (char sep)
 {
-  size_t filesno;
   size_t pos = 0;
 
-  for (filesno = 0; filesno < cwd_n_used; filesno++)
+  for (idx_t filesno = 0; filesno < cwd_n_used; filesno++)
     {
       struct fileinfo const *f = sorted_file[filesno];
       size_t len = line_length ? length_of_file_name_and_frills (f) : 0;
@@ -5268,65 +5259,41 @@ attach (char *dest, char const *dirname, char const *name)
    narrowest possible columns.  */
 
 static void
-init_column_info (size_t max_cols)
+init_column_info (idx_t max_cols)
 {
-  size_t i;
-
   /* Currently allocated columns in column_info.  */
-  static size_t column_info_alloc;
+  static idx_t column_info_alloc;
 
   if (column_info_alloc < max_cols)
     {
-      size_t new_column_info_alloc;
-      size_t *p;
-
-      if (!max_idx || max_cols < max_idx / 2)
-        {
-          /* The number of columns is far less than the display width
-             allows.  Grow the allocation, but only so that it's
-             double the current requirements.  If the display is
-             extremely wide, this avoids allocating a lot of memory
-             that is never needed.  */
-          column_info = xnrealloc (column_info, max_cols,
-                                   2 * sizeof *column_info);
-          new_column_info_alloc = 2 * max_cols;
-        }
-      else
-        {
-          column_info = xnrealloc (column_info, max_idx, sizeof *column_info);
-          new_column_info_alloc = max_idx;
-        }
+      idx_t old_column_info_alloc = column_info_alloc;
+      column_info = xpalloc (column_info, &column_info_alloc,
+                             max_cols - column_info_alloc, -1,
+                             sizeof *column_info);
 
       /* Allocate the new size_t objects by computing the triangle
          formula n * (n + 1) / 2, except that we don't need to
          allocate the part of the triangle that we've already
          allocated.  Check for address arithmetic overflow.  */
-      {
-        size_t column_info_growth = new_column_info_alloc - column_info_alloc;
-        size_t s = column_info_alloc + 1 + new_column_info_alloc;
-        size_t t = s * column_info_growth;
-        if (s < new_column_info_alloc || t / column_info_growth != s)
-          xalloc_die ();
-        p = xnmalloc (t / 2, sizeof *p);
-      }
+      idx_t column_info_growth = column_info_alloc - old_column_info_alloc, s;
+      if (ckd_add (&s, old_column_info_alloc + 1, column_info_alloc)
+          || ckd_mul (&s, s, column_info_growth))
+        xalloc_die ();
+      size_t *p = xinmalloc (s >> 1, sizeof *p);
 
       /* Grow the triangle by parceling out the cells just allocated.  */
-      for (i = column_info_alloc; i < new_column_info_alloc; i++)
+      for (idx_t i = old_column_info_alloc; i < column_info_alloc; i++)
         {
           column_info[i].col_arr = p;
           p += i + 1;
         }
-
-      column_info_alloc = new_column_info_alloc;
     }
 
-  for (i = 0; i < max_cols; ++i)
+  for (idx_t i = 0; i < max_cols; ++i)
     {
-      size_t j;
-
       column_info[i].valid_len = true;
       column_info[i].line_len = (i + 1) * MIN_COLUMN_WIDTH;
-      for (j = 0; j <= i; ++j)
+      for (idx_t j = 0; j <= i; ++j)
         column_info[i].col_arr[j] = MIN_COLUMN_WIDTH;
     }
 }
@@ -5334,32 +5301,29 @@ init_column_info (size_t max_cols)
 /* Calculate the number of columns needed to represent the current set
    of files in the current display width.  */
 
-static size_t
+static idx_t
 calculate_columns (bool by_columns)
 {
-  size_t filesno;		/* Index into cwd_file.  */
-  size_t cols;			/* Number of files across.  */
-
   /* Normally the maximum number of columns is determined by the
      screen width.  But if few files are available this might limit it
      as well.  */
-  size_t max_cols = 0 < max_idx && max_idx < cwd_n_used ? max_idx : cwd_n_used;
+  idx_t max_cols = 0 < max_idx && max_idx < cwd_n_used ? max_idx : cwd_n_used;
 
   init_column_info (max_cols);
 
   /* Compute the maximum number of possible columns.  */
-  for (filesno = 0; filesno < cwd_n_used; ++filesno)
+  for (idx_t filesno = 0; filesno < cwd_n_used; ++filesno)
     {
       struct fileinfo const *f = sorted_file[filesno];
       size_t name_length = length_of_file_name_and_frills (f);
 
-      for (size_t i = 0; i < max_cols; ++i)
+      for (idx_t i = 0; i < max_cols; ++i)
         {
           if (column_info[i].valid_len)
             {
-              size_t idx = (by_columns
-                            ? filesno / ((cwd_n_used + i) / (i + 1))
-                            : filesno % (i + 1));
+              idx_t idx = (by_columns
+                           ? filesno / ((cwd_n_used + i) / (i + 1))
+                           : filesno % (i + 1));
               size_t real_length = name_length + (idx == i ? 0 : 2);
 
               if (column_info[i].col_arr[idx] < real_length)
@@ -5375,6 +5339,7 @@ calculate_columns (bool by_columns)
     }
 
   /* Find maximum allowed columns.  */
+  idx_t cols;
   for (cols = max_cols; 1 < cols; --cols)
     {
       if (column_info[cols - 1].valid_len)
