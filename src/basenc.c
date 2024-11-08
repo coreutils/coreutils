@@ -325,10 +325,8 @@ static void
 prepare_inbuf (struct base_decode_context *ctx, idx_t inlen)
 {
   if (ctx->bufsize < inlen)
-    {
-      ctx->bufsize = inlen * 2;
-      ctx->inbuf = xnrealloc (ctx->inbuf, ctx->bufsize, sizeof (char));
-    }
+    ctx->inbuf = xpalloc (ctx->inbuf, &ctx->bufsize,
+                          inlen - ctx->bufsize, -1, sizeof *ctx->inbuf);
 }
 
 
