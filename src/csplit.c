@@ -1275,7 +1275,7 @@ max_out (char *format)
            _("missing %% conversion specification in suffix"));
 
   int maxlen = snprintf (nullptr, 0, format, INT_MAX);
-  if (maxlen < 0)
+  if (! (0 <= maxlen && maxlen <= IDX_MAX))
     xalloc_die ();
   return maxlen;
 }
