@@ -236,14 +236,6 @@ uid_t getuid (void);
 #include "idx.h"
 #include "xalloc.h"
 #include "verify.h"
-
-/* Using x2realloc (when appropriate) usually makes your code more
-   readable than using x2nrealloc, but it also makes it so your
-   code will malfunction if sizeof *(P) ever becomes 2 or greater.
-   So use this macro instead of using x2realloc directly.  */
-#define X2REALLOC(P, PN) verify_expr (sizeof *(P) == 1, \
-                                      x2realloc (P, PN))
-
 #include "unlocked-io.h"
 #include "same-inode.h"
 

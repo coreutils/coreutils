@@ -460,7 +460,7 @@ static unsigned int buff_current;
 
 /* The number of characters in buff.
    Used for allocation of buff and to detect overflow of buff. */
-static size_t buff_allocated;
+static idx_t buff_allocated;
 
 /* Array of indices into buff.
    Each entry is an index of the first character of a line.
@@ -864,8 +864,8 @@ main (int argc, char **argv)
 
   /* Accumulate the digits of old-style options like -99.  */
   char *column_count_string = nullptr;
-  size_t n_digits = 0;
-  size_t n_alloc = 0;
+  idx_t n_digits = 0;
+  idx_t n_alloc = 0;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -891,8 +891,8 @@ main (int argc, char **argv)
         {
           /* Accumulate column-count digits specified via old-style options. */
           if (n_digits + 1 >= n_alloc)
-            column_count_string
-              = X2REALLOC (column_count_string, &n_alloc);
+            column_count_string = xpalloc (column_count_string, &n_alloc, 2, -1,
+                                           sizeof *column_count_string);
           column_count_string[n_digits++] = c;
           column_count_string[n_digits] = '\0';
           continue;
@@ -1910,11 +1910,13 @@ print_page (void)
 static void
 init_store_cols (void)
 {
+  /* Tune this.  */
   int total_lines, total_lines_1, chars_per_column_1, chars_if_truncate;
   if (ckd_mul (&total_lines, lines_per_body, columns)
       || ckd_add (&total_lines_1, total_lines, 1)
       || ckd_add (&chars_per_column_1, chars_per_column, 1)
-      || ckd_mul (&chars_if_truncate, total_lines, chars_per_column_1))
+      || ckd_mul (&chars_if_truncate, total_lines, chars_per_column_1)
+      || ckd_mul (&buff_allocated, chars_if_truncate, use_col_separator + 1))
     integer_overflow ();
 
   free (line_vector);
@@ -1925,9 +1927,7 @@ init_store_cols (void)
   end_vector = xnmalloc (total_lines, sizeof *end_vector);
 
   free (buff);
-  buff = xnmalloc (chars_if_truncate, use_col_separator + 1);
-  buff_allocated = chars_if_truncate;  /* Tune this. */
-  buff_allocated *= use_col_separator + 1;
+  buff = ximalloc (buff_allocated);
 }
 
 /* Store all but the rightmost column.
@@ -2021,7 +2021,7 @@ store_char (char c)
   if (buff_current >= buff_allocated)
     {
       /* May be too generous. */
-      buff = X2REALLOC (buff, &buff_allocated);
+      buff = xpalloc (buff, &buff_allocated, 1, -1, sizeof *buff);
     }
   buff[buff_current++] = c;
 }
