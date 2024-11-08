@@ -229,8 +229,8 @@ extract_varname (char const *str)
 
   if (i >= vnlen)
     {
-      vnlen = i + 1;
-      varname = xrealloc (varname, vnlen);
+      free (varname);
+      varname = xpalloc (nullptr, &vnlen, i + 1 - vnlen, -1, sizeof *varname);
     }
 
   memcpy (varname, str + 2, i);
