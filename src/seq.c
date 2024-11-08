@@ -426,16 +426,13 @@ incr_grows (char *p, char *endp)
   return true;
 }
 
-/* Compare A and B (each a NUL-terminated digit string), with lengths
-   given by A_LEN and B_LEN.  Return +1 if A < B, -1 if B < A, else 0.  */
+/* Compare A and B with lengths A_LEN and B_LEN.  A and B are integers
+   represented by nonempty arrays of digits without redundant leading '0'.
+   Return negative if A < B, 0 if A = B, positive if A > B.  */
 static int
-cmp (char const *a, size_t a_len, char const *b, size_t b_len)
+cmp (char const *a, idx_t a_len, char const *b, idx_t b_len)
 {
-  if (a_len < b_len)
-    return -1;
-  if (b_len < a_len)
-    return 1;
-  return (memcmp (a, b, a_len));
+  return a_len == b_len ? memcmp (a, b, a_len) : _GL_CMP (a_len, b_len);
 }
 
 /* Trim leading 0's from S, but if S is all 0's, leave one.
@@ -462,18 +459,18 @@ seq_fast (char const *a, char const *b, uintmax_t step)
 {
   bool inf = STREQ (b, "inf");
 
-  /* Skip past any leading 0's.  Without this, our naive cmp
+  /* Skip past any redundant leading '0's.  Without this, our naive cmp
      function would declare 000 to be larger than 99.  */
   a = trim_leading_zeros (a);
   b = trim_leading_zeros (b);
 
-  size_t p_len = strlen (a);
-  size_t q_len = inf ? 0 : strlen (b);
+  idx_t p_len = strlen (a);
+  idx_t q_len = inf ? 0 : strlen (b);
 
   /* Allow for at least 31 digits without realloc.
      1 more than p_len is needed for the inf case.  */
-#define INITIAL_ALLOC_DIGITS 31
-  size_t inc_size = MAX (MAX (p_len + 1, q_len), INITIAL_ALLOC_DIGITS);
+  enum { INITIAL_ALLOC_DIGITS = 31 };
+  idx_t inc_size = MAX (MAX (p_len + 1, q_len), INITIAL_ALLOC_DIGITS);
   /* Ensure we only increase by at most 1 digit at buffer boundaries.  */
   static_assert (SEQ_FAST_STEP_LIMIT_DIGITS < INITIAL_ALLOC_DIGITS - 1);
 
