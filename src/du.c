@@ -69,7 +69,7 @@ static struct di_set *di_mnt;
 
 /* Keep track of the preceding "level" (depth in hierarchy)
    from one call of process_file to the next.  */
-static size_t prev_level;
+static idx_t prev_level;
 
 /* Define a class for collecting directory information. */
 struct duinfo
@@ -476,8 +476,7 @@ process_file (FTS *fts, FTSENT *ent)
   bool ok = true;
   struct duinfo dui;
   struct duinfo dui_to_print;
-  size_t level;
-  static size_t n_alloc;
+  static idx_t n_alloc;
   /* First element of the structure contains:
      The sum of the sizes of all entries in the single directory
      at the corresponding level.  Although this does include the sizes
@@ -579,7 +578,7 @@ process_file (FTS *fts, FTSENT *ent)
                : time_type == time_atime ? get_stat_atime (sb)
                : get_stat_ctime (sb)));
 
-  level = ent->fts_level;
+  idx_t level = ent->fts_level;
   dui_to_print = dui;
 
   if (n_alloc == 0)
@@ -601,12 +600,10 @@ process_file (FTS *fts, FTSENT *ent)
              e.g., from 1 to 10.  */
 
           if (n_alloc <= level)
-            {
-              dulvl = xnrealloc (dulvl, level, 2 * sizeof *dulvl);
-              n_alloc = level * 2;
-            }
+            dulvl = xpalloc (dulvl, &n_alloc, level - n_alloc + 1, -1,
+                             sizeof *dulvl);
 
-          for (size_t i = prev_level + 1; i <= level; i++)
+          for (idx_t i = prev_level + 1; i <= level; i++)
             {
               duinfo_init (&dulvl[i].ent);
               duinfo_init (&dulvl[i].subdir);
