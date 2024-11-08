@@ -36,6 +36,7 @@
 #include "find-mount-point.h"
 #include "hash.h"
 #include "xstrtol-error.h"
+#include "xvasprintf.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "df"
@@ -573,7 +574,7 @@ get_header (void)
 
   for (col = 0; col < ncolumns; col++)
     {
-      char *cell = nullptr;
+      char *cell;
       char const *header = _(columns[col]->caption);
 
       if (columns[col]->field == SIZE_FIELD
@@ -616,8 +617,7 @@ get_header (void)
           header = _("blocks");
 
           /* TRANSLATORS: this is the "1K-blocks" header in "df" output.  */
-          if (asprintf (&cell, _("%s-%s"), num, header) == -1)
-            cell = nullptr;
+          cell = xasprintf (_("%s-%s"), num, header);
         }
       else if (header_mode == POSIX_MODE && columns[col]->field == SIZE_FIELD)
         {
@@ -625,14 +625,10 @@ get_header (void)
           char *num = umaxtostr (output_block_size, buf);
 
           /* TRANSLATORS: this is the "1024-blocks" header in "df -P".  */
-          if (asprintf (&cell, _("%s-%s"), num, header) == -1)
-            cell = nullptr;
+          cell = xasprintf (_("%s-%s"), num, header);
         }
       else
-        cell = strdup (header);
-
-      if (!cell)
-        xalloc_die ();
+        cell = xstrdup (header);
 
       replace_problematic_chars (cell);
 
@@ -1214,17 +1210,7 @@ get_dev (char const *device, char const *mount_point, char const *file,
                   }
               }
 
-            if (0 <= pct)
-              {
-                if (asprintf (&cell, "%.0f%%", pct) == -1)
-                  cell = nullptr;
-              }
-            else
-              cell = strdup ("-");
-
-            if (!cell)
-              xalloc_die ();
-
+            cell = pct < 0 ? xstrdup ("-") : xasprintf ("%.0f%%", pct);
             break;
           }
 
