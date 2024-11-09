@@ -473,9 +473,10 @@ seq_fast (char const *a, char const *b, uintmax_t step)
   /* Ensure we only increase by at most 1 digit at buffer boundaries.  */
   static_assert (SEQ_FAST_STEP_LIMIT_DIGITS < INITIAL_ALLOC_DIGITS - 1);
 
-  /* Copy input strings (incl NUL) to end of new buffers.  */
-  char *p0 = xmalloc (inc_size + 1);
-  char *p = memcpy (p0 + inc_size - p_len, a, p_len + 1);
+  /* Copy A (sans NUL) to end of new buffer.  */
+  char *p0 = xmalloc (inc_size);
+  char *endp = p0 + inc_size;
+  char *p = memcpy (endp - p_len, a, p_len);
 
   bool ok = inf || cmp (p, p_len, b, b_len) <= 0;
   if (ok)
@@ -483,53 +484,41 @@ seq_fast (char const *a, char const *b, uintmax_t step)
       /* Reduce number of fwrite calls which is seen to
          give a speed-up of more than 2x over the unbuffered code
          when printing the first 10^9 integers.  */
-      size_t buf_size = MAX (BUFSIZ, (inc_size + 1) * 2);
-      char *buf = xmalloc (buf_size);
-      char const *buf_end = buf + buf_size;
-
+      char buf[BUFSIZ];
+      char *buf_end = buf + sizeof buf;
       char *bufp = buf;
 
-      /* Write first number to buffer.  */
-      bufp = mempcpy (bufp, p, p_len);
-
-      /* Append separator then number.  */
       while (true)
         {
-          char *endp = p + p_len;
+          /* Append number.  */
+          char *pp = p;
+          while (buf_end - bufp <= endp - pp)
+            {
+              memcpy (bufp, pp, buf_end - bufp);
+              pp += buf_end - bufp;
+              if (fwrite (buf, sizeof buf, 1, stdout) != 1)
+                write_error ();
+              bufp = buf;
+            }
+          bufp = mempcpy (bufp, pp, endp - pp);
+
+          /* Compute next number, and exit loop if it grows sufficiently.  */
           for (uintmax_t n_incr = step; n_incr; n_incr--)
             p -= incr_grows (p, endp);
-          p_len = endp - p;
-
-          if (! inf && 0 < cmp (p, p_len, b, b_len))
+          if (! inf && 0 < cmp (p, endp - p, b, b_len))
             break;
 
           *bufp++ = *separator;
 
-          /* Double up the buffers when needed for the inf case.  */
-          if (p_len == inc_size)
+          /* Grow buffer if needed for the inf case.  */
+          if (p == p0)
             {
-              inc_size *= 2;
-              p0 = xrealloc (p0, inc_size + 1);
-              p = memmove (p0 + p_len, p0, p_len + 1);
-
-              if (buf_size < (inc_size + 1) * 2)
-                {
-                  size_t buf_offset = bufp - buf;
-                  buf_size = (inc_size + 1) * 2;
-                  buf = xrealloc (buf, buf_size);
-                  buf_end = buf + buf_size;
-                  bufp = buf + buf_offset;
-                }
-            }
-
-          bufp = mempcpy (bufp, p, p_len);
-          /* If no place for another separator + number then
-             output buffer so far, and reset to start of buffer.  */
-          if (buf_end - (p_len + 1) < bufp)
-            {
-              if (fwrite (buf, bufp - buf, 1, stdout) != 1)
-                write_error ();
-              bufp = buf;
+              idx_t saved_p_len = endp - p;
+              char *new_p0 = xpalloc (nullptr, &inc_size, 1, -1, 1);
+              endp = new_p0 + inc_size;
+              p = memcpy (endp - saved_p_len, p0, saved_p_len);
+              free (p0);
+              p0 = new_p0;
             }
         }
 
