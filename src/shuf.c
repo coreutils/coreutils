@@ -593,5 +593,7 @@ main (int argc, char **argv)
   if (i != 0)
     write_error ();
 
+  IF_LINT (randint_all_free (randint_source));  /* For older valgrind.  */
+
   main_exit (EXIT_SUCCESS);
 }
