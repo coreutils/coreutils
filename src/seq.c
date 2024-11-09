@@ -453,8 +453,7 @@ trim_leading_zeros (char const *s)
 }
 
 /* Print all whole numbers from A to B, inclusive -- to stdout, each
-   followed by a newline.  If B < A, return and print nothing.
-   Otherwise, do all the work and exit.  */
+   followed by a newline.  Then exit.  */
 static void
 seq_fast (char const *a, char const *b, uintmax_t step)
 {
@@ -521,18 +520,17 @@ seq_fast (char const *a, char const *b, uintmax_t step)
         p -= incr_grows (p, endp);
     }
 
-  /* If there was output, write the remaining buffered output with a
-     terminator instead of a separator; then exit.  */
+  /* Write the remaining buffered output with a terminator instead of
+     a separator.  */
   idx_t remaining = bufp - buf;
   if (remaining)
     {
       bufp[-1] = *terminator;
       if (full_write (STDOUT_FILENO, buf, remaining) != remaining)
         write_error ();
-      exit (EXIT_SUCCESS);
     }
 
-  free (p0);
+  exit (EXIT_SUCCESS);
 }
 
 /* Return true if S consists of at least one digit and no non-digits.  */
@@ -652,8 +650,6 @@ main (int argc, char **argv)
       char const *s1 = n_args == 1 ? "1" : argv[optind];
       char const *s2 = argv[optind + (n_args - 1)];
       seq_fast (s1, s2, step.value);
-
-      /* Upon any failure, let the more general code deal with it.  */
     }
 
   last = scan_arg (argv[optind++]);
