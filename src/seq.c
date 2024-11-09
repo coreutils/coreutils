@@ -479,58 +479,58 @@ seq_fast (char const *a, char const *b, uintmax_t step)
   char *endp = p0 + inc_size;
   char *p = memcpy (endp - p_len, a, p_len);
 
-  bool ok = inf || cmp (p, p_len, b, b_len) <= 0;
-  if (ok)
+  /* Reduce number of write calls which is seen to
+     give a speed-up of more than 2x over naive stdio code
+     when printing the first 10^9 integers.  */
+  char buf[BUFSIZ];
+  char *buf_end = buf + sizeof buf;
+  char *bufp = buf;
+
+  while (inf || cmp (p, endp - p, b, b_len) <= 0)
     {
-      /* Reduce number of write calls which is seen to
-         give a speed-up of more than 2x over naive stdio code
-         when printing the first 10^9 integers.  */
-      char buf[BUFSIZ];
-      char *buf_end = buf + sizeof buf;
-      char *bufp = buf;
-
-      while (true)
+      /* Append number, flushing output buffer while the number's
+         digits do not fit with room for a separator or terminator.  */
+      char *pp = p;
+      while (buf_end - bufp <= endp - pp)
         {
-          /* Append number.  */
-          char *pp = p;
-          while (buf_end - bufp <= endp - pp)
-            {
-              memcpy (bufp, pp, buf_end - bufp);
-              pp += buf_end - bufp;
-              if (full_write (STDOUT_FILENO, buf, sizeof buf) != sizeof buf)
-                write_error ();
-              bufp = buf;
-            }
-          bufp = mempcpy (bufp, pp, endp - pp);
-
-          /* Compute next number, and exit loop if it grows sufficiently.  */
-          for (uintmax_t n_incr = step; n_incr; n_incr--)
-            p -= incr_grows (p, endp);
-          if (! inf && 0 < cmp (p, endp - p, b, b_len))
-            break;
-
-          *bufp++ = *separator;
-
-          /* Grow buffer if needed for the inf case.  */
-          if (p == p0)
-            {
-              idx_t saved_p_len = endp - p;
-              char *new_p0 = xpalloc (nullptr, &inc_size, 1, -1, 1);
-              endp = new_p0 + inc_size;
-              p = memcpy (endp - saved_p_len, p0, saved_p_len);
-              free (p0);
-              p0 = new_p0;
-            }
+          memcpy (bufp, pp, buf_end - bufp);
+          pp += buf_end - bufp;
+          if (full_write (STDOUT_FILENO, buf, sizeof buf) != sizeof buf)
+            write_error ();
+          bufp = buf;
         }
 
-      /* Write any remaining buffered output, and the terminator.  */
-      *bufp++ = *terminator;
-      if (full_write (STDOUT_FILENO, buf, bufp - buf) != bufp - buf)
-        write_error ();
+      /* The rest of the number, followed by a separator or terminator,
+         will fit.  Tentatively append a separator.  */
+      bufp = mempcpy (bufp, pp, endp - pp);
+      *bufp++ = *separator;
+
+      /* Grow number buffer if needed for the inf case.  */
+      if (p == p0)
+        {
+          char *new_p0 = xpalloc (nullptr, &inc_size, 1, -1, 1);
+          idx_t saved_p_len = endp - p;
+          endp = new_p0 + inc_size;
+          p = memcpy (endp - saved_p_len, p0, saved_p_len);
+          free (p0);
+          p0 = new_p0;
+        }
+
+      /* Compute next number.  */
+      for (uintmax_t n_incr = step; n_incr; n_incr--)
+        p -= incr_grows (p, endp);
     }
 
-  if (ok)
-    exit (EXIT_SUCCESS);
+  /* If there was output, write the remaining buffered output with a
+     terminator instead of a separator; then exit.  */
+  idx_t remaining = bufp - buf;
+  if (remaining)
+    {
+      bufp[-1] = *terminator;
+      if (full_write (STDOUT_FILENO, buf, remaining) != remaining)
+        write_error ();
+      exit (EXIT_SUCCESS);
+    }
 
   free (p0);
 }
