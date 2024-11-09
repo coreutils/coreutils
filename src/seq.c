@@ -24,6 +24,7 @@
 
 #include "system.h"
 #include "cl-strtod.h"
+#include "full-write.h"
 #include "quote.h"
 #include "xstrtod.h"
 
@@ -481,8 +482,8 @@ seq_fast (char const *a, char const *b, uintmax_t step)
   bool ok = inf || cmp (p, p_len, b, b_len) <= 0;
   if (ok)
     {
-      /* Reduce number of fwrite calls which is seen to
-         give a speed-up of more than 2x over the unbuffered code
+      /* Reduce number of write calls which is seen to
+         give a speed-up of more than 2x over naive stdio code
          when printing the first 10^9 integers.  */
       char buf[BUFSIZ];
       char *buf_end = buf + sizeof buf;
@@ -496,7 +497,7 @@ seq_fast (char const *a, char const *b, uintmax_t step)
             {
               memcpy (bufp, pp, buf_end - bufp);
               pp += buf_end - bufp;
-              if (fwrite (buf, sizeof buf, 1, stdout) != 1)
+              if (full_write (STDOUT_FILENO, buf, sizeof buf) != sizeof buf)
                 write_error ();
               bufp = buf;
             }
@@ -524,7 +525,7 @@ seq_fast (char const *a, char const *b, uintmax_t step)
 
       /* Write any remaining buffered output, and the terminator.  */
       *bufp++ = *terminator;
-      if (fwrite (buf, bufp - buf, 1, stdout) != 1)
+      if (full_write (STDOUT_FILENO, buf, bufp - buf) != bufp - buf)
         write_error ();
     }
 
