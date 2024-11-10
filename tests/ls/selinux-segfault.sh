@@ -30,4 +30,19 @@ mkdir sedir || framework_failure_
 ln -sf missing sedir/broken || framework_failure_
 returns_ 1 ls -L -R -Z -m sedir > out || fail=1
 
+nl='
+'
+if sestatus=$(LC_ALL=C sestatus); then
+  sestatus_line_1=${sestatus%%$nl*}
+  case $sestatus_line_1 in
+    'SELinux status:'*' enabled')
+      ls_output=$(LC_ALL=C ls -lnZ sedir/broken) || fail=1
+      set x $ls_output
+      case $6 in
+        *:*:*:*) ;;
+        *) fail=1;
+      esac
+  esac
+fi
+
 Exit $fail
