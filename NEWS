@@ -16,6 +16,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   have exited with a "Function not implemented" error.
   [bug introduced in coreutils-8.28]
 
+  nproc gives more consistent results on systems with more than 1024 CPUs.
+  Previously it would have ignored the affinity mask on such systems.
+  [bug introduced with nproc in coreutils-8.1]
+
   'shuf' generates more-random output when the output is small.
   [bug introduced in coreutils-8.6]
 
