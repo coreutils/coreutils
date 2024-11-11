@@ -1,7 +1,7 @@
 #!/bin/sh
-# Ensure we don't segfault in selinux handling
+# Test selinux output
 
-# Copyright (C) 2008-2024 Free Software Foundation, Inc.
+# Copyright (C) 2024 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,16 +18,23 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
+require_selinux_
 
-# ls -l /proc/sys would segfault when built against libselinux1 2.0.15-2+b1
-f=/proc/sys
-test -r $f || f=.
-ls -l $f > out || fail=1
+touch f || framework_failure_
+case $(stat --printf='%C' f) in
+  *:*:*:*) ;;
+  *) skip_ 'unable to match default security context';;
+esac
 
-# ls <= 8.32 would segfault when printing
-# the security context of broken symlink targets
-mkdir sedir || framework_failure_
-ln -sf missing sedir/broken || framework_failure_
-returns_ 1 ls -L -R -Z -m sedir > out || fail=1
+# ensure that ls -l output includes the "."
+test "$(ls -l f|cut -c11)" = . || fail=1
+
+# ensure that ls -lZ output includes context
+ls_output=$(LC_ALL=C ls -lnZ f) || fail=1
+set x $ls_output
+case $6 in
+  *:*:*:*) ;;
+  *) fail=1 ;;
+esac
 
 Exit $fail

@@ -647,6 +647,7 @@ all_tests =					\
   tests/ls/removed-directory.sh			\
   tests/ls/root-rel-symlink-color.sh		\
   tests/ls/rt-1.sh				\
+  tests/ls/selinux.sh				\
   tests/ls/slink-acl.sh				\
   tests/ls/stat-dtype.sh			\
   tests/ls/stat-failed.sh			\
