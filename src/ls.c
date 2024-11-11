@@ -3501,9 +3501,10 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
   if ((format == long_format) | print_scontext | check_capability)
     {
       struct aclinfo ai;
-      int n = file_has_aclinfo_cache (full_name, f, &ai,
-                                      ((do_deref ? ACL_SYMLINK_FOLLOW : 0)
-                                       | filetype_d_type[type]));
+      int aclinfo_flags = ((do_deref ? ACL_SYMLINK_FOLLOW : 0)
+                           | (print_scontext ? ACL_GET_SCONTEXT : 0)
+                           | filetype_d_type[type]);
+      int n = file_has_aclinfo_cache (full_name, f, &ai, aclinfo_flags);
       bool have_acl = 0 < n;
       bool have_scontext = !ai.scontext_err;
       f->acl_type = (!have_scontext && !have_acl
