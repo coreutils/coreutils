@@ -1,5 +1,5 @@
 #!/bin/sh
-# Test selinux output
+# Test ls SELinux file context output
 
 # Copyright (C) 2024 Free Software Foundation, Inc.
 
@@ -20,21 +20,26 @@
 print_ver_ ls
 require_selinux_
 
-touch f || framework_failure_
-case $(stat --printf='%C' f) in
+touch file || framework_failure_
+ln -s file link || framework_failure_
+
+case $(stat --printf='%C' file) in
   *:*:*:*) ;;
   *) skip_ 'unable to match default security context';;
 esac
 
-# ensure that ls -l output includes the "."
-test "$(ls -l f|cut -c11)" = . || fail=1
+for f in file link; do
 
-# ensure that ls -lZ output includes context
-ls_output=$(LC_ALL=C ls -lnZ f) || fail=1
-set x $ls_output
-case $6 in
-  *:*:*:*) ;;
-  *) fail=1 ;;
-esac
+  # ensure that ls -l output includes the "."
+  test "$(ls -l $f | cut -c11)" = . || fail=1
+
+  # ensure that ls -lZ output includes context
+  ls_output=$(LC_ALL=C ls -lnZ "$f") || fail=1
+  set x $ls_output
+  case $6 in
+    *:*:*:*) ;;
+    *) fail=1 ;;
+  esac
+done
 
 Exit $fail
