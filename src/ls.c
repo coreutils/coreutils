@@ -3496,12 +3496,12 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
   if (type == directory && command_line_arg && !immediate_dirs)
     f->filetype = type = arg_directory;
 
+  bool get_scontext = (format == long_format) | print_scontext;
   bool check_capability = format_needs_capability & (type == normal);
 
-  if ((format == long_format) | print_scontext | check_capability)
+  if (get_scontext | check_capability)
     {
       struct aclinfo ai;
-      bool get_scontext = (format == long_format) | print_scontext;
       int aclinfo_flags = ((do_deref ? ACL_SYMLINK_FOLLOW : 0)
                            | (get_scontext ? ACL_GET_SCONTEXT : 0)
                            | filetype_d_type[type]);
