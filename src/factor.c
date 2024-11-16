@@ -172,7 +172,8 @@ typedef unsigned long int UDItype;
 
 /* longlong.h uses these macros only in certain system compiler combinations.
    Ensure usage to pacify -Wunused-macros.  */
-# if defined ASSERT || defined UHWtype || defined __GMP_DECLSPEC
+# if (defined ASSERT || defined UHWtype \
+      || defined __GMP_DECLSPEC || defined __GMP_GNUC_PREREQ)
 # endif
 
 # if _ARCH_PPC
