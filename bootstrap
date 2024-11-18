@@ -593,7 +593,7 @@ prepare_GNULIB_SRCDIR ()
             # commit hash to minimize the amount of data downloaded and changes
             # needed to be processed, which can drastically reduce download and
             # processing time for checkout. If the fetch by commit fails, a
-            # shallow fetch can not be performed because we do not know what the
+            # shallow fetch cannot be performed because we do not know what the
             # depth of the commit is without fetching all commits. So fall back
             # to fetching all commits.
             git -C "$gnulib_path" init
