@@ -440,6 +440,52 @@ print_direc (char const *start, char conversion,
   free (p);
 }
 
+/* Set curr_arg from indexed %i$ or otherwise next in sequence.
+   POS can be 0,1,2,3 corresponding to
+   [%][width][.precision][conversion] respectively.  */
+
+struct arg_cursor
+{
+  char const *f;	/* Pointer into 'format'.  */
+  int curr_arg;		/* Current offset.  */
+  int curr_s_arg;	/* Current sequential offset.  */
+  int end_arg;		/* End arg processed.  */
+  int direc_arg;	/* Arg for main directive.  */
+};
+static struct arg_cursor
+get_curr_arg (int pos, struct arg_cursor ac)
+{
+  intmax_t arg = 0;
+  size_t argl;
+  /* Check with strspn() first to avoid spaces etc.
+     This also avoids any locale ambiguities,
+     and simplifies strtoimax errno checking.   */
+  if (pos < 3 && (argl = strspn (ac.f, "0123456789")) && ac.f[argl] == '$')
+    arg = MIN (strtoimax (ac.f, nullptr, 10), INT_MAX);
+  if (1 <= arg && arg <= INT_MAX)
+    {
+      /* Process indexed %i$ format.  */
+      arg--;
+      ac.f += argl + 1;
+      if (pos == 0)
+        ac.direc_arg = arg;
+    }
+  else
+    {
+      /* Process sequential arg.  */
+      arg = (pos == 0 ? (ac.direc_arg = -1)
+             : pos < 3 || ac.direc_arg < 0 ? ++ac.curr_s_arg
+             : ac.direc_arg);
+    }
+
+  if (0 <= arg)
+    {
+      ac.curr_arg = arg;
+      ac.end_arg = MAX (ac.end_arg, arg);
+    }
+  return ac;
+}
+
 /* Print the text in FORMAT, using ARGV (with ARGC elements) for
    arguments to any '%' directives.
    Return the number of elements of ARGV used.  */
@@ -447,52 +493,8 @@ print_direc (char const *start, char conversion,
 static int
 print_formatted (char const *format, int argc, char **argv)
 {
-
-/* Set curr_arg from indexed %i$ or otherwise next in sequence.
-   POS can be 0,1,2,3 corresponding to
-   [%][width][.precision][conversion] respectively.  */
-
-#define GET_CURR_ARG(POS)				\
-do {							\
-  intmax_t arg = 0;					\
-  size_t argl;						\
-  /* Check with strspn() first to avoid spaces etc.	\
-     This also avoids any locale ambiguities,		\
-     and simplifies strtoimax errno checking.   */	\
-  if (POS != 3 && (argl = strspn (f, "0123456789"))	\
-      && f[argl] == '$')				\
-    arg = MIN (strtoimax (f, nullptr, 10), INT_MAX);	\
-  if (1 <= arg && arg <= INT_MAX)			\
-    /* Process indexed %i$ format.  */			\
-    {							\
-      SET_CURR_ARG (arg - 1);				\
-      f += argl + 1;					\
-      if (POS == 0)					\
-        direc_arg = arg - 1;				\
-    }							\
-  else							\
-    /* Sequential arg processing.  */			\
-    {							\
-      if (POS == 0)					\
-        direc_arg = -1;					\
-      else if (POS < 3 || direc_arg == -1)		\
-        SET_CURR_ARG (++curr_s_arg);			\
-      else						\
-        SET_CURR_ARG (direc_arg);			\
-    }							\
-} while (0)						\
-
-#define SET_CURR_ARG(ARG)				\
-do {							\
-  curr_arg = ARG;					\
-  end_arg = MAX (curr_arg, end_arg);			\
-} while (0)						\
-
-  int curr_arg = -1;		/* Current offset.  */
-  int curr_s_arg = -1;		/* Current sequential offset.  */
-  int end_arg = -1;		/* End arg processed.  */
-  int direc_arg = -1;		/* Arg for main directive.  */
-  char const *f;		/* Pointer into 'format'.  */
+  struct arg_cursor ac;
+  ac.curr_arg = ac.curr_s_arg = ac.end_arg = ac.direc_arg = -1;
   char const *direc_start;	/* Start of % directive.  */
   char *direc;			/* Generated % directive.  */
   char *pdirec;			/* Pointer to current end of directive.  */
@@ -504,40 +506,40 @@ do {							\
 
   direc = xmalloc (strlen (format) + 1);
 
-  for (f = format; *f; ++f)
+  for (ac.f = format; *ac.f; ac.f++)
     {
-      switch (*f)
+      switch (*ac.f)
         {
         case '%':
-          direc_start = f;
+          direc_start = ac.f;
           pdirec = direc;
-          *pdirec++ = *f++;
+          *pdirec++ = *ac.f++;
           have_field_width = have_precision = false;
-          if (*f == '%')
+          if (*ac.f == '%')
             {
               putchar ('%');
               break;
             }
 
-          GET_CURR_ARG (0);
+          ac = get_curr_arg (0, ac);
 
-          if (*f == 'b')
+          if (*ac.f == 'b')
             {
               /* FIXME: Field width and precision are not supported
                  for %b, even though POSIX requires it.  */
-              GET_CURR_ARG (3);
-              if (curr_arg < argc)
-                print_esc_string (argv[curr_arg]);
+              ac = get_curr_arg (3, ac);
+              if (ac.curr_arg < argc)
+                print_esc_string (argv[ac.curr_arg]);
               break;
             }
 
-          if (*f == 'q')
+          if (*ac.f == 'q')
             {
-              GET_CURR_ARG (3);
-              if (curr_arg < argc)
+              ac = get_curr_arg (3, ac);
+              if (ac.curr_arg < argc)
                 {
                   fputs (quotearg_style (shell_escape_quoting_style,
-                                         argv[curr_arg]), stdout);
+                                         argv[ac.curr_arg]), stdout);
                 }
               break;
             }
@@ -547,9 +549,9 @@ do {							\
             ok['f'] = ok['F'] = ok['g'] = ok['G'] = ok['i'] = ok['o'] =
             ok['s'] = ok['u'] = ok['x'] = ok['X'] = 1;
 
-          for (;; f++)
+          for (;; ac.f++)
             {
-              switch (*f)
+              switch (*ac.f)
                 {
 #if (__GLIBC__ == 2 && 2 <= __GLIBC_MINOR__) || 3 <= __GLIBC__
                 case 'I':
@@ -569,45 +571,45 @@ do {							\
                 default:
                   goto no_more_flag_characters;
                 }
-              *pdirec++ = *f;
+              *pdirec++ = *ac.f;
             }
         no_more_flag_characters:
 
-          if (*f == '*')
+          if (*ac.f == '*')
             {
-              *pdirec++ = *f++;
+              *pdirec++ = *ac.f++;
 
-              GET_CURR_ARG (1);
+              ac = get_curr_arg (1, ac);
 
-              if (curr_arg < argc)
+              if (ac.curr_arg < argc)
                 {
-                  intmax_t width = vstrtoimax (argv[curr_arg]);
+                  intmax_t width = vstrtoimax (argv[ac.curr_arg]);
                   if (INT_MIN <= width && width <= INT_MAX)
                     field_width = width;
                   else
                     error (EXIT_FAILURE, 0, _("invalid field width: %s"),
-                           quote (argv[curr_arg]));
+                           quote (argv[ac.curr_arg]));
                 }
               else
                 field_width = 0;
               have_field_width = true;
             }
           else
-            while (ISDIGIT (*f))
-              *pdirec++ = *f++;
-          if (*f == '.')
+            while (ISDIGIT (*ac.f))
+              *pdirec++ = *ac.f++;
+          if (*ac.f == '.')
             {
-              *pdirec++ = *f++;
+              *pdirec++ = *ac.f++;
               ok['c'] = 0;
-              if (*f == '*')
+              if (*ac.f == '*')
                 {
-                  *pdirec++ = *f++;
+                  *pdirec++ = *ac.f++;
 
-                  GET_CURR_ARG (2);
+                  ac = get_curr_arg (2, ac);
 
-                  if (curr_arg < argc)
+                  if (ac.curr_arg < argc)
                     {
-                      intmax_t prec = vstrtoimax (argv[curr_arg]);
+                      intmax_t prec = vstrtoimax (argv[ac.curr_arg]);
                       if (prec < 0)
                         {
                           /* A negative precision is taken as if the
@@ -617,7 +619,7 @@ do {							\
                         }
                       else if (INT_MAX < prec)
                         error (EXIT_FAILURE, 0, _("invalid precision: %s"),
-                               quote (argv[curr_arg]));
+                               quote (argv[ac.curr_arg]));
                       else
                         precision = prec;
                     }
@@ -626,45 +628,45 @@ do {							\
                   have_precision = true;
                 }
               else
-                while (ISDIGIT (*f))
-                  *pdirec++ = *f++;
+                while (ISDIGIT (*ac.f))
+                  *pdirec++ = *ac.f++;
             }
 
           *pdirec++ = '\0';
 
-          while (*f == 'l' || *f == 'L' || *f == 'h'
-                 || *f == 'j' || *f == 't' || *f == 'z')
-            ++f;
+          while (*ac.f == 'l' || *ac.f == 'L' || *ac.f == 'h'
+                 || *ac.f == 'j' || *ac.f == 't' || *ac.f == 'z')
+            ++ac.f;
 
           {
-            unsigned char conversion = *f;
-            int speclen = MIN (f + 1 - direc_start, INT_MAX);
+            unsigned char conversion = *ac.f;
+            int speclen = MIN (ac.f + 1 - direc_start, INT_MAX);
             if (! ok[conversion])
               error (EXIT_FAILURE, 0,
                      _("%.*s: invalid conversion specification"),
                      speclen, direc_start);
           }
 
-          GET_CURR_ARG (3);
+          ac = get_curr_arg (3, ac);
 
-          print_direc (direc, *f,
+          print_direc (direc, *ac.f,
                        have_field_width, field_width,
                        have_precision, precision,
-                       (argc <= curr_arg ? "" : argv[curr_arg]));
+                       argc <= ac.curr_arg ? "" : argv[ac.curr_arg]);
 
           break;
 
         case '\\':
-          f += print_esc (f, false);
+          ac.f += print_esc (ac.f, false);
           break;
 
         default:
-          putchar (*f);
+          putchar (*ac.f);
         }
     }
 
   free (direc);
-  return MIN (argc, end_arg + 1);
+  return MIN (argc, ac.end_arg + 1);
 }
 
 int
