@@ -452,21 +452,31 @@ struct arg_cursor
   int end_arg;		/* End arg processed.  */
   int direc_arg;	/* Arg for main directive.  */
 };
-static struct arg_cursor
+ATTRIBUTE_PURE static struct arg_cursor
 get_curr_arg (int pos, struct arg_cursor ac)
 {
-  intmax_t arg = 0;
-  size_t argl;
-  /* Check with strspn() first to avoid spaces etc.
-     This also avoids any locale ambiguities,
-     and simplifies strtoimax errno checking.   */
-  if (pos < 3 && (argl = strspn (ac.f, "0123456789")) && ac.f[argl] == '$')
-    arg = MIN (strtoimax (ac.f, nullptr, 10), INT_MAX);
-  if (1 <= arg && arg <= INT_MAX)
+  /* Convert sequences like "123$" by hand to avoid problems with strtol,
+     which might treat "$" as part of the number in some locales.  */
+  int arg = 0;
+  char const *f = ac.f;
+  if (pos < 3 && c_isdigit (*f))
+    {
+      bool v = false;
+      int a = *f++ - '0';
+      for (; c_isdigit (*f); f++)
+        {
+          v |= ckd_mul (&a, a, 10);
+          v |= ckd_add (&a, a, *f - '0');
+        }
+      if (*f == '$')
+        arg = v ? INT_MAX : a;
+    }
+
+  if (0 < arg)
     {
       /* Process indexed %i$ format.  */
       arg--;
-      ac.f += argl + 1;
+      ac.f = f + 1;
       if (pos == 0)
         ac.direc_arg = arg;
     }
