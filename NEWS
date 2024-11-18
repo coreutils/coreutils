@@ -1021,7 +1021,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   env now supports '--list-signal-handling' to indicate non-default
   signal handling before executing a program.
 
-** New commands
+** New programs
 
   basenc is added to complement existing base64,base32 commands,
   and encodes and decodes printable text using various common encodings:
@@ -1541,7 +1541,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   tail -F now works with initially non existent files on a remote file system.
   [bug introduced in coreutils-7.5]
 
-** New commands
+** New programs
 
   base32 is added to complement the existing base64 command,
   and encodes and decodes printable text as per RFC 4648.
