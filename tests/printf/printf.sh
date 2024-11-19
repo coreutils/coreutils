@@ -73,6 +73,11 @@ returns_ 1 $prog '%.*dx\n' $INT_OFLOW 0 >>out 2> /dev/null || fail=1
 
 $prog '11 %*c\n' 2 x >>out || fail=1
 
+returns_ 1 $prog '12 %*s\n' '' 'empty width' >>out 2>/dev/null || fail=1
+returns_ 1 $prog '13 %*s\n' ' ' 'space width' >>out 2>/dev/null || fail=1
+returns_ 1 $prog '14 %.*sx\n' '' 'empty precision' >>out 2>/dev/null || fail=1
+returns_ 1 $prog '15 %.*sx\n' ' ' 'space precision' >>out 2>/dev/null || fail=1
+
 returns_ 1 $prog '%#d\n' 0 >>out 2> /dev/null || fail=1
 
 returns_ 1 $prog '%0s\n' 0 >>out 2> /dev/null || fail=1
@@ -93,6 +98,10 @@ cat <<\EOF > exp
 9 0 x
 10 0x
 11  x
+12 empty width
+13 space width
+14 x
+15 x
 EOF
 
 compare exp out || fail=1

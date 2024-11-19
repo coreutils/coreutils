@@ -104,17 +104,19 @@ ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
 static void
 verify_numeric (char const *s, char const *end)
 {
-  if (errno)
+  if (s == end)
+    {
+      error (0, 0, _("%s: expected a numeric value"), quote (s));
+      exit_status = EXIT_FAILURE;
+    }
+  else if (errno)
     {
       error (0, errno, "%s", quote (s));
       exit_status = EXIT_FAILURE;
     }
   else if (*end)
     {
-      if (s == end)
-        error (0, 0, _("%s: expected a numeric value"), quote (s));
-      else
-        error (0, 0, _("%s: value not completely converted"), quote (s));
+      error (0, 0, _("%s: value not completely converted"), quote (s));
       exit_status = EXIT_FAILURE;
     }
 }
@@ -344,7 +346,7 @@ print_direc (char const *start, char conversion,
     case 'd':
     case 'i':
       {
-        intmax_t arg = vstrtoimax (argument);
+        intmax_t arg = argument ? vstrtoimax (argument) : 0;
         if (!have_field_width)
           {
             if (!have_precision)
@@ -367,7 +369,7 @@ print_direc (char const *start, char conversion,
     case 'x':
     case 'X':
       {
-        uintmax_t arg = vstrtoumax (argument);
+        uintmax_t arg = argument ? vstrtoumax (argument) : 0;
         if (!have_field_width)
           {
             if (!have_precision)
@@ -394,7 +396,7 @@ print_direc (char const *start, char conversion,
     case 'g':
     case 'G':
       {
-        long double arg = vstrtold (argument);
+        long double arg = argument ? vstrtold (argument) : 0;
         if (!have_field_width)
           {
             if (!have_precision)
@@ -413,13 +415,18 @@ print_direc (char const *start, char conversion,
       break;
 
     case 'c':
-      if (!have_field_width)
-        xprintf (p, *argument);
-      else
-        xprintf (p, field_width, *argument);
+      {
+        char c = argument ? *argument : '\0';
+        if (!have_field_width)
+          xprintf (p, c);
+        else
+          xprintf (p, field_width, c);
+      }
       break;
 
     case 's':
+      if (!argument)
+        argument = "";
       if (!have_field_width)
         {
           if (!have_precision)
@@ -662,7 +669,7 @@ print_formatted (char const *format, int argc, char **argv)
           print_direc (direc, *ac.f,
                        have_field_width, field_width,
                        have_precision, precision,
-                       argc <= ac.curr_arg ? "" : argv[ac.curr_arg]);
+                       ac.curr_arg < argc ? argv[ac.curr_arg] : nullptr);
 
           break;
 
