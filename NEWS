@@ -20,6 +20,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously it would have ignored the affinity mask on such systems.
   [bug introduced with nproc in coreutils-8.1]
 
+  printf now diagnoses attempts to treat empty strings as numbers,
+  as per POSIX. For example, "printf '%d' ''" now issues a diagnostic
+  and fails instead of silently succeeding.
+  [This bug was present in "the beginning".]
+
   'shuf' generates more-random output when the output is small.
   [bug introduced in coreutils-8.6]
 
