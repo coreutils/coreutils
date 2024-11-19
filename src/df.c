@@ -307,7 +307,7 @@ replace_control_chars (char *cell)
   char *p = cell;
   while (*p)
     {
-      if (c_iscntrl (to_uchar (*p)))
+      if (c_iscntrl (*p))
         *p = '?';
       p++;
     }

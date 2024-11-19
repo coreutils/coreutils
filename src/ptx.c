@@ -312,7 +312,7 @@ unescape_string (char *string)
             case 'x':		/* \xhhh escape, 3 chars maximum */
               value = 0;
               for (length = 0, string++;
-                   length < 3 && c_isxdigit (to_uchar (*string));
+                   length < 3 && c_isxdigit (*string);
                    length++, string++)
                 value = value * 16 + HEXTOBIN (*string);
               if (length == 0)

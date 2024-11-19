@@ -1215,13 +1215,13 @@ print_it (char const *format, int fd, char const *filename,
               putchar (esc_value);
               --b;
             }
-          else if (*b == 'x' && c_isxdigit (to_uchar (b[1])))
+          else if (*b == 'x' && c_isxdigit (b[1]))
             {
               int esc_value = fromhex (b[1]);	/* Value of \xhh escape. */
               /* A hexadecimal \xhh escape sequence must have
                  1 or 2 hex. digits.  */
               ++b;
-              if (c_isxdigit (to_uchar (b[1])))
+              if (c_isxdigit (b[1]))
                 {
                   ++b;
                   esc_value = esc_value * 16 + fromhex (*b);

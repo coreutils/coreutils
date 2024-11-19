@@ -225,7 +225,7 @@ print_esc (char const *escstart, bool octal_0)
     {
       /* A hexadecimal \xhh escape sequence must have 1 or 2 hex. digits.  */
       for (esc_length = 0, ++p;
-           esc_length < 2 && c_isxdigit (to_uchar (*p));
+           esc_length < 2 && c_isxdigit (*p);
            ++esc_length, ++p)
         esc_value = esc_value * 16 + fromhex (*p);
       if (esc_length == 0)
@@ -255,7 +255,7 @@ print_esc (char const *escstart, bool octal_0)
            esc_length > 0;
            --esc_length, ++p)
         {
-          if (! c_isxdigit (to_uchar (*p)))
+          if (! c_isxdigit (*p))
             error (EXIT_FAILURE, 0, _("missing hexadecimal number in escape"));
           uni_value = uni_value * 16 + fromhex (*p);
         }
