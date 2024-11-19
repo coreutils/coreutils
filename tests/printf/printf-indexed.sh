@@ -18,7 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ printf
-i
+
 getlimits_
 
 prog='env printf'
