@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ dd
 require_sparse_support_ # for 'truncate --size=$OFF_T_MAX'
-eval $(getlimits) # for OFF_T limits
+getlimits_ # for OFF_T limits
 export LC_ALL=C
 
 printf "1234" > file || framework_failure_
