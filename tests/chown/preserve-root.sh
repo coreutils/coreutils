@@ -20,6 +20,11 @@
 print_ver_ chown
 skip_if_root_
 
+id_g=$(id -g) && test -n "$id_g" || framework_failure_
+case $(id -gn) in
+  nogroup) id_g= ;; # In macOS, users can be in nogroup but cannot chgrp to it.
+esac
+
 mkdir d && ln -s / d/slink-to-root
 
 
@@ -39,14 +44,15 @@ chmod -R --preserve-root u+r / >> out 2>&1 && fail=1
 # Contrary to the above commands, these two should succeed.
 echo '==== test -RHh' >> out || framework_failure_
 chown -RHh --preserve-root $(id -u) d >> out 2>&1 || fail=1
-chgrp -RHh --preserve-root $(id -g) d >> out 2>&1 || fail=1
+test -z "$id_g" || chgrp -RHh --preserve-root "$id_g" d >> out 2>&1 || fail=1
 
 # These must fail.
 echo '==== test -RLh' >> out || framework_failure_
 chown -RLh --preserve-root $(id -u) d >> out 2>&1 && fail=1
-chgrp -RLh --preserve-root $(id -g) d >> out 2>&1 && fail=1
+test -n "$id_g" && chgrp -RLh --preserve-root "$id_g" d >> out 2>&1 && fail=1
 
-cat <<\EOF > exp || framework_failure_
+(
+ cat <<\EOF &&
 chown: it is dangerous to operate recursively on '/'
 chown: use --no-preserve-root to override this failsafe
 chgrp: it is dangerous to operate recursively on '/'
@@ -57,9 +63,12 @@ chmod: use --no-preserve-root to override this failsafe
 ==== test -RLh
 chown: it is dangerous to operate recursively on 'd/slink-to-root' (same as '/')
 chown: use --no-preserve-root to override this failsafe
+EOF
+ { test -z "$id_g" || cat <<\EOF; }
 chgrp: it is dangerous to operate recursively on 'd/slink-to-root' (same as '/')
 chgrp: use --no-preserve-root to override this failsafe
 EOF
+) > exp || framework_failure_
 
 compare exp out || fail=1
 
