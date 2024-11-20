@@ -245,9 +245,6 @@ struct fileinfo
     size_t width;
   };
 
-#define BIN_STR(...) \
-  sizeof ((char []) {__VA_ARGS__}), (char const []) {__VA_ARGS__}
-
 /* Null is a valid character in a color indicator (think about Epson
    printers, for example) so we have to use a length/buffer string
    type.  */
@@ -632,30 +629,43 @@ struct color_ext_type
 
 static struct bin_str color_indicator[] =
   {
-    { BIN_STR ('\033','[') },		/* lc: Left of color sequence */
-    { BIN_STR ('m') },			/* rc: Right of color sequence */
+    { 2, (char const []) {'\033','['} },/* lc: Left of color sequence */
+    { 1, (char const []) {'m'} },	/* rc: Right of color sequence */
     { 0, nullptr },			/* ec: End color (replaces lc+rs+rc) */
-    { BIN_STR ('0') },			/* rs: Reset to ordinary colors */
+    { 1, (char const []) {'0'} },	/* rs: Reset to ordinary colors */
     { 0, nullptr },			/* no: Normal */
     { 0, nullptr },			/* fi: File: default */
-    { BIN_STR ('0','1',';','3','4') },	/* di: Directory: bright blue */
-    { BIN_STR ('0','1',';','3','6') },	/* ln: Symlink: bright cyan */
-    { BIN_STR ('3','3') },		/* pi: Pipe: yellow/brown */
-    { BIN_STR ('0','1',';','3','5') },	/* so: Socket: bright magenta */
-    { BIN_STR ('0','1',';','3','3') },	/* bd: Block device: bright yellow */
-    { BIN_STR ('0','1',';','3','3') },	/* cd: Char device: bright yellow */
+    { 5, ((char const [])
+          {'0','1',';','3','4'}) },	/* di: Directory: bright blue */
+    { 5, ((char const [])
+          {'0','1',';','3','6'}) },	/* ln: Symlink: bright cyan */
+    { 2, (char const []) {'3','3'} },		/* pi: Pipe: yellow/brown */
+    { 5, ((char const [])
+          {'0','1',';','3','5'}) },	/* so: Socket: bright magenta */
+    { 5, ((char const [])
+          {'0','1',';','3','3'}) },	/* bd: Block device: bright yellow */
+    { 5, ((char const [])
+          {'0','1',';','3','3'}) },	/* cd: Char device: bright yellow */
     { 0, nullptr },			/* mi: Missing file: undefined */
     { 0, nullptr },			/* or: Orphaned symlink: undefined */
-    { BIN_STR ('0','1',';','3','2') },	/* ex: Executable: bright green */
-    { BIN_STR ('0','1',';','3','5') },	/* do: Door: bright magenta */
-    { BIN_STR ('3','7',';','4','1') },	/* su: setuid: white on red */
-    { BIN_STR ('3','0',';','4','3') },	/* sg: setgid: black on yellow */
-    { BIN_STR ('3','7',';','4','4') },	/* st: sticky: black on blue */
-    { BIN_STR ('3','4',';','4','2') },	/* ow: other-writable: blue on green */
-    { BIN_STR ('3','0',';','4','2') },	/* tw: ow w/ sticky: black on green */
+    { 5, ((char const [])
+          {'0','1',';','3','2'}) },	/* ex: Executable: bright green */
+    { 5, ((char const [])
+          {'0','1',';','3','5'}) },	/* do: Door: bright magenta */
+    { 5, ((char const [])
+          {'3','7',';','4','1'}) },	/* su: setuid: white on red */
+    { 5, ((char const [])
+          {'3','0',';','4','3'}) },	/* sg: setgid: black on yellow */
+    { 5, ((char const [])
+          {'3','7',';','4','4'}) },	/* st: sticky: black on blue */
+    { 5, ((char const [])
+          {'3','4',';','4','2'}) },	/* ow: other-writable: blue on green */
+    { 5, ((char const [])
+          {'3','0',';','4','2'}) },	/* tw: ow w/ sticky: black on green */
     { 0, nullptr },			/* ca: disabled by default */
     { 0, nullptr },			/* mh: disabled by default */
-    { BIN_STR ('\033','[','K') },	/* cl: clear to end of line */
+    { 3, ((char const [])
+          {'\033','[','K'}) },		/* cl: clear to end of line */
   };
 
 /* A list mapping file extensions to corresponding display sequence.  */
