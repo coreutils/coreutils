@@ -2416,7 +2416,7 @@ lbuf_putint_append (uintmax_t i, char *bufend)
 static void
 lbuf_putint (uintmax_t i)
 {
-  return lbuf_putint_append (i, lbuf_buf + sizeof lbuf_buf);
+  lbuf_putint_append (i, lbuf_buf + sizeof lbuf_buf);
 }
 
 /* Append the string representation of T to lbuf_buf.  */
