@@ -60,6 +60,7 @@
 /lib/config.h
 /lib/config.hin
 /lib/configmake.h
+/lib/crc-sliceby8.h
 /lib/ctype.h
 /lib/dirent.h
 /lib/endian.h
