@@ -343,7 +343,7 @@ replace_invalid_chars (char *cell)
       else
         {
           *dst++ = '?';
-          memset (&mbstate, 0, sizeof mbstate);
+          mbszero (&mbstate);
         }
     }
 
