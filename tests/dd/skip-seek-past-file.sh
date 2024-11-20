@@ -74,14 +74,14 @@ grep "invalid number:" err >/dev/null || fail=1
 # skipping > max file size should fail immediately
 if ! truncate --size=$OFF_T_MAX in 2>/dev/null; then
   # truncate is to ensure file system doesn't actually support OFF_T_MAX files
-  dd bs=1 skip=$OFF_T_MAX count=0 status=noxfer < file 2> err \
+  dd bs=1 skip=$OFF_T_MAX count=0 status=none < file 2> err \
     && lseek_ok=yes \
     || lseek_ok=no
 
   if test $lseek_ok = yes; then
     # On Solaris 10 at least, lseek(>max file size) succeeds,
-    # so just check for the skip warning.
-    compare skip_err err || fail=1
+    # so just check that there are no diagnostics.
+    compare /dev/null err || fail=1
   else
     # On Linux kernels at least, lseek(>max file size) fails.
     # error message should be "... cannot skip: strerror(EINVAL)"
