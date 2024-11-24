@@ -37,7 +37,7 @@ done
 
 # Check with varying positions (due to usernames etc.)
 # Also use multibyte characters to show --dired counts bytes not characters
-touch dir/1a dir/2á || framework_failure_
+touch dir/1a dir/2æ || framework_failure_
 mkdir -p dir/3dir || framework_failure_
 touch dir/aaa || framework_failure_
 ln -s target dir/0aaa_link || framework_failure_
@@ -45,7 +45,7 @@ ln -s target dir/0aaa_link || framework_failure_
 ls -l --dired dir > out || fail=1
 
 dired_values=$(grep "//DIRED//" out| cut -d' ' -f2-)
-expected_files="0aaa_link 1a 2á 3dir aaa"
+expected_files="0aaa_link 1a 2æ 3dir aaa"
 
 dired_count=$(printf '%s\n' $dired_values | wc -l)
 expected_count=$(printf '%s\n' $expected_files | wc -l)
