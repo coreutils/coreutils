@@ -140,22 +140,66 @@ main (void)
 /* Number of bytes to read at once.  */
 # define BUFLEN (1 << 16)
 
-# if USE_PCLMUL_CRC32
 static bool
 pclmul_supported (void)
 {
-  bool pclmul_enabled = (0 < __builtin_cpu_supports ("pclmul")
-                         && 0 < __builtin_cpu_supports ("avx"));
+  bool pclmul_enabled = false;
+# if USE_PCLMUL_CRC32
+  pclmul_enabled = (0 < __builtin_cpu_supports ("pclmul")
+                    && 0 < __builtin_cpu_supports ("avx"));
 
   if (cksum_debug)
     error (0, 0, "%s",
            (pclmul_enabled
             ? _("using pclmul hardware support")
             : _("pclmul support not detected")));
+# endif
 
   return pclmul_enabled;
 }
-# endif /* USE_PCLMUL_CRC32 */
+
+static bool
+avx2_supported (void)
+{
+  /* AVX512 processors will not set vpclmulqdq unless they support
+     the avx512 version, but it implies that the avx2 version
+     is supported  */
+  bool avx2_enabled = false;
+# if USE_AVX2_CRC32
+  avx2_enabled = (0 < __builtin_cpu_supports ("vpclmulqdq")
+                  && 0 < __builtin_cpu_supports ("avx2"));
+
+  if (cksum_debug)
+    error (0, 0, "%s",
+           (avx2_enabled
+            ? _("using avx2 hardware support")
+            : _("avx2 support not detected")));
+# endif
+
+  return avx2_enabled;
+}
+
+static bool
+avx512_supported (void)
+{
+  /* vpclmulqdq for multiplication
+     mavx512f for most of the avx512 functions we're using
+     mavx512bw for byte swapping  */
+  bool avx512_enabled = false;
+# if USE_AVX512_CRC32
+  avx512_enabled = (0 < __builtin_cpu_supports ("vpclmulqdq")
+                    && 0 < __builtin_cpu_supports ("avx512bw")
+                    && 0 < __builtin_cpu_supports ("avx512f"));
+
+  if (cksum_debug)
+    error (0, 0, "%s",
+           (avx512_enabled
+            ? _("using avx512 hardware support")
+            : _("avx512 support not detected")));
+# endif
+
+  return avx512_enabled;
+}
 
 static bool
 cksum_slice8 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
@@ -220,13 +264,18 @@ crc_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
   uintmax_t total_bytes = 0;
   uint_fast32_t crc = 0;
 
-# if USE_PCLMUL_CRC32
   static bool (*cksum_fp) (FILE *, uint_fast32_t *, uintmax_t *);
   if (! cksum_fp)
-    cksum_fp = pclmul_supported () ? cksum_pclmul : cksum_slice8;
-# else
-  bool (*cksum_fp) (FILE *, uint_fast32_t *, uintmax_t *) = cksum_slice8;
-# endif
+    {
+      if (avx512_supported ())
+        cksum_fp = cksum_avx512;
+      else if (avx2_supported ())
+        cksum_fp = cksum_avx2;
+      else if (pclmul_supported ())
+        cksum_fp = cksum_pclmul;
+      else
+        cksum_fp = cksum_slice8;
+    }
 
   if (! cksum_fp (stream, &crc, &total_bytes))
     return -1;

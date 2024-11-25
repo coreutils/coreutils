@@ -17,6 +17,12 @@ output_crc (char const *file, int binary_file, void const *digest, bool raw,
 extern bool
 cksum_pclmul (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out);
 
+extern bool
+cksum_avx2 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out);
+
+extern bool
+cksum_avx512 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out);
+
 extern uint_fast32_t const crctab[8][256];
 
 #endif

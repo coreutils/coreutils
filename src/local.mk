@@ -439,6 +439,21 @@ src_b2sum_SOURCES = src/digest.c \
 src_cksum_SOURCES = $(src_b2sum_SOURCES) src/sum.c src/sum.h \
 		    src/cksum.c src/cksum.h src/crctab.c
 src_cksum_CPPFLAGS = -DHASH_ALGO_CKSUM=1 -DHAVE_CONFIG_H $(AM_CPPFLAGS)
+
+if USE_AVX512_CRC32
+noinst_LIBRARIES += src/libcksum_avx512.a
+src_libcksum_avx512_a_SOURCES = src/cksum_avx512.c src/cksum.h
+cksum_avx512_ldadd = src/libcksum_avx512.a
+src_cksum_LDADD += $(cksum_avx512_ldadd)
+src_libcksum_avx512_a_CFLAGS = -mavx512bw -mavx512f -mvpclmulqdq $(AM_CFLAGS)
+endif
+if USE_AVX2_CRC32
+noinst_LIBRARIES += src/libcksum_avx2.a
+src_libcksum_avx2_a_SOURCES = src/cksum_avx2.c src/cksum.h
+cksum_avx2_ldadd = src/libcksum_avx2.a
+src_cksum_LDADD += $(cksum_avx2_ldadd)
+src_libcksum_avx2_a_CFLAGS = -mpclmul -mavx -mavx2 -mvpclmulqdq $(AM_CFLAGS)
+endif
 if USE_PCLMUL_CRC32
 noinst_LIBRARIES += src/libcksum_pclmul.a
 src_libcksum_pclmul_a_SOURCES = src/cksum_pclmul.c src/cksum.h
