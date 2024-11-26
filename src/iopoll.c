@@ -21,10 +21,11 @@
 /* poll(2) is needed on AIX (where 'select' gives a readable
    event immediately) and Solaris (where 'select' never gave
    a readable event).  Also use poll(2) on systems we know work
-   and/or are already using poll (linux).  */
-
-#if defined _AIX || defined __sun || defined __APPLE__ || \
-    defined __linux__ || defined __ANDROID__
+   and/or are already using poll (linux).  On macOS we know poll()
+   doesn't work on 10.5, while it does work on >= 11 at least. */
+#if defined _AIX || defined __sun \
+    || defined __linux__ || defined __ANDROID__ \
+    || __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 110000
 # define IOPOLL_USES_POLL 1
   /* Check we've not enabled gnulib's poll module
      as that will emulate poll() in a way not
