@@ -15,6 +15,9 @@ output_crc (char const *file, int binary_file, void const *digest, bool raw,
   _GL_ATTRIBUTE_NONNULL ((3));
 
 extern bool
+cksum_vmull (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out);
+
+extern bool
 cksum_pclmul (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out);
 
 extern bool

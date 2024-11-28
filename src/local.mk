@@ -461,6 +461,13 @@ cksum_pclmul_ldadd = src/libcksum_pclmul.a
 src_cksum_LDADD += $(cksum_pclmul_ldadd)
 src_libcksum_pclmul_a_CFLAGS = -mavx -mpclmul $(AM_CFLAGS)
 endif
+if USE_VMULL_CRC32
+noinst_LIBRARIES += src/libcksum_vmull.a
+src_libcksum_vmull_a_SOURCES = src/cksum_vmull.c src/cksum.h
+cksum_vmull_ldadd = src/libcksum_vmull.a
+src_cksum_LDADD += $(cksum_vmull_ldadd)
+src_libcksum_vmull_a_CFLAGS = -march=armv8-a+crypto $(AM_CFLAGS)
+endif
 
 src_base64_SOURCES = src/basenc.c
 src_base64_CPPFLAGS = -DBASE_TYPE=64 $(AM_CPPFLAGS)

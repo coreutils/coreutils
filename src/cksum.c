@@ -40,6 +40,11 @@
 #include <endian.h>
 #include "system.h"
 
+#ifdef USE_VMULL_CRC32
+# include <sys/auxv.h>
+# include <asm/hwcap.h>
+#endif
+
 #ifdef CRCTAB
 
 # define BIT(x)	((uint_fast32_t) 1 << (x))
@@ -202,6 +207,25 @@ avx512_supported (void)
 }
 
 static bool
+vmull_supported (void)
+{
+  /* vmull for multiplication  */
+  bool vmull_enabled = false;
+# if USE_VMULL_CRC32
+
+  vmull_enabled = (getauxval (AT_HWCAP) & HWCAP_PMULL) > 0;
+
+  if (cksum_debug)
+    error (0, 0, "%s",
+           (vmull_enabled
+            ? _("using vmull hardware support")
+            : _("vmull support not detected")));
+# endif
+
+  return vmull_enabled;
+}
+
+static bool
 cksum_slice8 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
 {
   uint32_t buf[BUFLEN / sizeof (uint32_t)];
@@ -273,6 +297,8 @@ crc_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
         cksum_fp = cksum_avx2;
       else if (pclmul_supported ())
         cksum_fp = cksum_pclmul;
+      else if (vmull_supported ())
+        cksum_fp = cksum_vmull;
       else
         cksum_fp = cksum_slice8;
     }

@@ -619,6 +619,40 @@ if test $utils_cv_brain_16_bit_supported = yes; then
 fi
 
 ac_save_CFLAGS=$CFLAGS
+CFLAGS="-march=armv8-a+crypto $CFLAGS"
+AC_MSG_CHECKING([if vmull intrinsic exists])
+AC_CACHE_VAL([utils_cv_vmull_intrinsic_exists],[
+AC_LINK_IFELSE(
+  [AC_LANG_SOURCE([[
+    #include <stdio.h>
+    #include <sys/auxv.h>
+    #include <asm/hwcap.h>
+    #include <arm_neon.h>
+
+    int
+    main (void)
+    {
+      uint64x2_t a;
+      poly64_t shift64 = vget_lane_p64(vcreate_p64(0xB8BC6765), 0);
+      a = vreinterpretq_u64_p128(vmull_p64(shift64, vreinterpretq_p128_u64(a)));
+      return (getauxval(AT_HWCAP) & HWCAP_PMULL) > 0;
+    }
+  ]])
+  ],[
+    utils_cv_vmull_intrinsic_exists=yes
+  ],[
+    utils_cv_vmull_intrinsic_exists=no
+  ])])
+AC_MSG_RESULT([$utils_cv_vmull_intrinsic_exists])
+if test $utils_cv_vmull_intrinsic_exists = yes; then
+  AC_DEFINE([USE_VMULL_CRC32], [1],
+            [CRC32 calculation by vmull hardware instruction enabled])
+fi
+AM_CONDITIONAL([USE_VMULL_CRC32],
+               [test $utils_cv_vmull_intrinsic_exists = yes])
+CFLAGS=$ac_save_CFLAGS
+
+ac_save_CFLAGS=$CFLAGS
 CFLAGS="-mavx -mpclmul $CFLAGS"
 AC_MSG_CHECKING([if pclmul intrinsic exists])
 AC_CACHE_VAL([utils_cv_pclmul_intrinsic_exists],[
