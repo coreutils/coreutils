@@ -1812,10 +1812,11 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
       if (ev->mask & (IN_ATTRIB | IN_DELETE | IN_DELETE_SELF | IN_MOVE_SELF))
         {
           /* Note for IN_MOVE_SELF (the file we're watching has
-             been clobbered via a rename) we leave the watch
+             been clobbered via a rename) without --retry we leave the watch
              in place since it may still be part of the set
              of watched names.  */
-          if (ev->mask & IN_DELETE_SELF)
+          if (ev->mask & IN_DELETE_SELF
+              || (!reopen_inaccessible_files && (ev->mask & IN_MOVE_SELF)))
             {
               inotify_rm_watch (wd, fspec->wd);
               hash_remove (wd_to_name, fspec);
