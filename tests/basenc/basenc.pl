@@ -34,7 +34,7 @@ my $base64_out = "VA/c8A+vSg==";
 my $base64url_out = $base64_out;
 $base64url_out =~ y|+/|-_|;
 my $base64url_out_nl = $base64url_out;
-$base64url_out_nl =~ s/(..)/\1\n/g; # add newline every two characters
+$base64url_out_nl =~ s/(..)/$1\n/g; # add newline every two characters
 
 
 # Bug 49741:
@@ -57,7 +57,7 @@ $x = $base32_out2;
 $x =~ y|ABCDEFGHIJKLMNOPQRSTUVWXYZ234567|0123456789ABCDEFGHIJKLMNOPQRSTUV|;
 my $base32hex_out2 = $x;
 my $base32hex_out2_nl = $x;
-$base32hex_out2_nl =~ s/(...)/\1\n/g; # Add newline every 3 characters
+$base32hex_out2_nl =~ s/(...)/$1\n/g; # Add newline every 3 characters
 
 my $base16_in = "\xfd\xd8\x07\xd1\xa5";
 my $base16_out = "FDD807D1A5";
@@ -67,10 +67,10 @@ my $z85_out = 'HelloWorld';
 
 my $base2lsbf_ab = "1000011001000110";
 my $base2lsbf_ab_nl = $base2lsbf_ab;
-$base2lsbf_ab_nl =~ s/(...)/\1\n/g; # Add newline every 3 characters
+$base2lsbf_ab_nl =~ s/(...)/$1\n/g; # Add newline every 3 characters
 my $base2msbf_ab = "0110000101100010";
 my $base2msbf_ab_nl = $base2msbf_ab;
-$base2msbf_ab_nl =~ s/(...)/\1\n/g; # Add newline every 3 characters
+$base2msbf_ab_nl =~ s/(...)/$1\n/g; # Add newline every 3 characters
 
 my $try_help = "Try '$prog --help' for more information.\n";
 
