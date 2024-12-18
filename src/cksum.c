@@ -149,7 +149,7 @@ static bool
 pclmul_supported (void)
 {
   bool pclmul_enabled = false;
-# if USE_PCLMUL_CRC32
+# if USE_PCLMUL_CRC32 || GL_CRC_X86_64_PCLMUL
   pclmul_enabled = (0 < __builtin_cpu_supports ("pclmul")
                     && 0 < __builtin_cpu_supports ("avx"));
 
@@ -331,6 +331,11 @@ crc32b_sum_stream (FILE *stream, void *resstream, uintmax_t *reslen)
 
   if (!stream || !resstream || !reslen)
     return -1;
+
+# if GL_CRC_X86_64_PCLMUL
+  if (cksum_debug)
+    (void) pclmul_supported ();
+# endif
 
   while ((bytes_read = fread (buf, 1, BUFLEN, stream)) > 0)
     {

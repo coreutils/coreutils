@@ -54,6 +54,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   cksum -a now supports the "crc32b" option, which calculates the CRC
   of the input as defined by ITU V.42, as used by gzip for example.
+  For performance pclmul instructions are used where supported.
 
   ls now supports the --sort=name option,
   to explicitly select the default operation of sorting by file name.
