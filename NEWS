@@ -32,6 +32,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   file names that are moved elsewhere within the same file system.
   [bug introduced in coreutils-8.24]
 
+  `tail --follow` without --retry, will consistently exit with failure status
+  where inotify is not used, when all followed files become inaccessible.
+  [This bug was present in "the beginning".]
+
   'tail -c 4096 /dev/zero' no longer loops forever.
   [This bug was present in "the beginning".]
 

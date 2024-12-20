@@ -61,7 +61,6 @@ cat <<\EOF >exp || framework_failure_
 tail: cannot fstat 'standard input'
 tail: error reading 'standard input'
 tail: no files remaining
-tail: -
 EOF
 sed 's/\(tail:.*\):.*/\1/' errt > err || framework_failure_
 compare exp err || fail=1

@@ -1305,7 +1305,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
 
       if (! any_live_files (f, n_files))
         {
-          error (0, 0, _("no files remaining"));
+          error (EXIT_FAILURE, 0, _("no files remaining"));
           break;
         }
 
