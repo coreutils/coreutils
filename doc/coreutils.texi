@@ -1083,8 +1083,16 @@ apparent file sizes, whereas the @option{--block-size} option does.
 A @var{signal} may be a signal name like @samp{HUP}, or a signal
 number like @samp{1}, or an exit status of a process terminated by the
 signal.  A signal name can be given in canonical form or prefixed by
-@samp{SIG}@.  The case of the letters is ignored.  The following signal names
-and numbers are supported on all POSIX compliant systems:
+@samp{SIG}@.  The case of the letters is ignored.
+
+@noindent
+The signal @samp{0} pseudo signal is synonymous with the name @samp{EXIT}
+with the GNU @command{kill} command, and @command{bash} at least,
+as @code{trap foo 0} and @code{trap foo EXIT} are equivalent.
+
+@noindent
+The following signal names and numbers are supported
+on all POSIX compliant systems:
 
 @table @samp
 @item HUP

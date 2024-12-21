@@ -68,4 +68,7 @@ test -n "$SIG_SEQ" || framework_failure_
 env kill -l -- $SIG_SEQ || fail=1
 env kill -t -- $SIG_SEQ || fail=1
 
+# Verify first signal number listed is 0
+test $(env kill -l $(env kill -l | head -n1)) = 0 || fail=1
+
 Exit $fail

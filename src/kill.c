@@ -120,7 +120,7 @@ list_signals (bool table, char *const *argv)
         num_width++;
 
       /* Compute the maximum width of a signal name.  */
-      for (signum = 1; signum <= SIGNUM_BOUND; signum++)
+      for (signum = 0; signum <= SIGNUM_BOUND; signum++)
         if (sig2str (signum, signame) == 0)
           {
             idx_t len = strlen (signame);
@@ -142,7 +142,7 @@ list_signals (bool table, char *const *argv)
               }
           }
       else
-        for (signum = 1; signum <= SIGNUM_BOUND; signum++)
+        for (signum = 0; signum <= SIGNUM_BOUND; signum++)
           if (sig2str (signum, signame) == 0)
             print_table_row (num_width, signum, name_width, signame);
     }
@@ -165,7 +165,7 @@ list_signals (bool table, char *const *argv)
               printf ("%d\n", signum);
           }
       else
-        for (signum = 1; signum <= SIGNUM_BOUND; signum++)
+        for (signum = 0; signum <= SIGNUM_BOUND; signum++)
           if (sig2str (signum, signame) == 0)
             puts (signame);
     }
