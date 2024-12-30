@@ -9,6 +9,7 @@ lib/randread.h
 
 Depends-on:
 alignasof
+bool
 error
 exitfail
 inline
@@ -16,8 +17,7 @@ fopen-safer
 getrandom
 quote
 minmax
-stdbool
-stdint
+stdint-h
 unlocked-io
 xalloc
 

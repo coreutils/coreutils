@@ -6,7 +6,7 @@ lib/buffer-lcm.c
 lib/buffer-lcm.h
 
 Depends-on:
-stddef
+stddef-h
 
 configure.ac:
 

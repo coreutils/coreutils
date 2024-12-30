@@ -7,8 +7,8 @@ lib/targetdir.h
 
 Depends-on:
 attribute
+bool
 fcntl-h
-stdbool
 
 configure.ac:
 

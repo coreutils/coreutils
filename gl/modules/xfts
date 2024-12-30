@@ -6,7 +6,7 @@ lib/xfts.c
 lib/xfts.h
 
 Depends-on:
-stddef
+stddef-h
 
 configure.ac:
 
