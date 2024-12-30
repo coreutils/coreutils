@@ -1366,7 +1366,7 @@ abmon_init (char abmon[12][ABFORMAT_SIZE])
       int fill = max_mon_width - mon_width[i];
       if (ABFORMAT_SIZE - mon_len[i] <= fill)
         return false;
-      bool align_left = !isdigit (to_uchar (abmon[i][0]));
+      bool align_left = !c_isdigit (abmon[i][0]);
       int fill_offset;
       if (align_left)
         fill_offset = mon_len[i];

@@ -334,7 +334,7 @@ main (int argc, char **argv)
   prefix = "";
   prefix_length = prefix_lead_space = prefix_full_length = 0;
 
-  if (argc > 1 && argv[1][0] == '-' && ISDIGIT (argv[1][1]))
+  if (argc > 1 && argv[1][0] == '-' && c_isdigit (argv[1][1]))
     {
       /* Old option syntax; a dash followed by one or more digits.  */
       max_width_option = argv[1] + 1;
@@ -351,7 +351,7 @@ main (int argc, char **argv)
     switch (optchar)
       {
       default:
-        if (ISDIGIT (optchar))
+        if (c_isdigit (optchar))
           error (0, 0, _("invalid option -- %c; -WIDTH is recognized\
  only when it is the first\noption; use -w N instead"),
                  optchar);

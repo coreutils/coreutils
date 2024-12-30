@@ -313,6 +313,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "c-ctype.h"
 #include "fadvise.h"
 #include "hard-locale.h"
 #include "mbswidth.h"
@@ -887,7 +888,7 @@ main (int argc, char **argv)
       if (c == -1)
         break;
 
-      if (ISDIGIT (c))
+      if (c_isdigit (c))
         {
           /* Accumulate column-count digits specified via old-style options. */
           if (n_digits + 1 >= n_alloc)
@@ -1175,7 +1176,7 @@ getoptarg (char *arg, char switch_char, char *character, int *number)
       usage (EXIT_FAILURE);
     }
 
-  if (!ISDIGIT (*arg))
+  if (!c_isdigit (*arg))
     *character = *arg++;
   if (*arg)
     {

@@ -33,6 +33,7 @@
 #include "system.h"
 #include "argmatch.h"
 #include "assure.h"
+#include "c-ctype.h"
 #include "cl-strtod.h"
 #include "fcntl--.h"
 #include "iopoll.h"
@@ -2157,7 +2158,7 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
     }
 
   n_string = p;
-  while (ISDIGIT (*p))
+  while (c_isdigit (*p))
     p++;
   n_string_end = p;
 

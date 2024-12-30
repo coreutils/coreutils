@@ -8,6 +8,7 @@ lib/strnumcmp.h
 lib/strnumcmp-in.h
 
 Depends-on:
+c-ctype
 inline
 stddef
 

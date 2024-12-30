@@ -22,20 +22,11 @@
 
 # include "strnumcmp.h"
 
+# include "c-ctype.h"
 # include <stddef.h>
 
 # define NEGATION_SIGN   '-'
 # define NUMERIC_ZERO    '0'
-
-/* ISDIGIT differs from isdigit, as follows:
-   - Its arg may be any int or unsigned int; it need not be an unsigned char
-     or EOF.
-   - It's typically faster.
-   POSIX says that only '0' through '9' are digits.  Prefer ISDIGIT to
-   isdigit unless it's important to use the locale's definition
-   of 'digit' even when the host does not conform to POSIX.  */
-# define ISDIGIT(c) ((unsigned int) (c) - '0' <= 9)
-
 
 /* Compare strings A and B containing decimal fractions < 1.
    DECIMAL_POINT is the decimal point.  Each string
@@ -76,13 +67,13 @@ fraccompare (char const *a, char const *b, char decimal_point)
   if (*a == decimal_point && *b == decimal_point)
     {
       while (*++a == *++b)
-        if (! ISDIGIT (*a))
+        if (! c_isdigit (*a))
           return 0;
-      if (ISDIGIT (*a) && ISDIGIT (*b))
+      if (c_isdigit (*a) && c_isdigit (*b))
         return *a - *b;
-      if (ISDIGIT (*a))
+      if (c_isdigit (*a))
         goto a_trailing_nonzero;
-      if (ISDIGIT (*b))
+      if (c_isdigit (*b))
         goto b_trailing_nonzero;
       return 0;
     }
@@ -91,14 +82,14 @@ fraccompare (char const *a, char const *b, char decimal_point)
     a_trailing_nonzero:
       while (*a == NUMERIC_ZERO)
         a++;
-      return ISDIGIT (*a);
+      return c_isdigit (*a);
     }
   else if (*b++ == decimal_point)
     {
     b_trailing_nonzero:
       while (*b == NUMERIC_ZERO)
         b++;
-      return - ISDIGIT (*b);
+      return - c_isdigit (*b);
     }
   return 0;
 }
@@ -131,7 +122,7 @@ numcompare (char const *a, char const *b,
             do
               tmpa = *++a;
             while (tmpa == NUMERIC_ZERO);
-          if (ISDIGIT (tmpa))
+          if (c_isdigit (tmpa))
             return -1;
           while (tmpb == NUMERIC_ZERO || tmpb == thousands_sep)
             tmpb = *++b;
@@ -139,13 +130,13 @@ numcompare (char const *a, char const *b,
             do
               tmpb = *++b;
             while (tmpb == NUMERIC_ZERO);
-          return - ISDIGIT (tmpb);
+          return - c_isdigit (tmpb);
         }
       do
         tmpb = *++b;
       while (tmpb == NUMERIC_ZERO || tmpb == thousands_sep);
 
-      while (tmpa == tmpb && ISDIGIT (tmpa))
+      while (tmpa == tmpb && c_isdigit (tmpa))
         {
           do
             tmpa = *++a;
@@ -155,18 +146,18 @@ numcompare (char const *a, char const *b,
           while (tmpb == thousands_sep);
         }
 
-      if ((tmpa == decimal_point && !ISDIGIT (tmpb))
-          || (tmpb == decimal_point && !ISDIGIT (tmpa)))
+      if ((tmpa == decimal_point && !c_isdigit (tmpb))
+          || (tmpb == decimal_point && !c_isdigit (tmpa)))
         return fraccompare (b, a, decimal_point);
 
       tmp = tmpb - tmpa;
 
-      for (log_a = 0; ISDIGIT (tmpa); ++log_a)
+      for (log_a = 0; c_isdigit (tmpa); ++log_a)
         do
           tmpa = *++a;
         while (tmpa == thousands_sep);
 
-      for (log_b = 0; ISDIGIT (tmpb); ++log_b)
+      for (log_b = 0; c_isdigit (tmpb); ++log_b)
         do
           tmpb = *++b;
         while (tmpb == thousands_sep);
@@ -188,7 +179,7 @@ numcompare (char const *a, char const *b,
         do
           tmpb = *++b;
         while (tmpb == NUMERIC_ZERO);
-      if (ISDIGIT (tmpb))
+      if (c_isdigit (tmpb))
         return 1;
       while (tmpa == NUMERIC_ZERO || tmpa == thousands_sep)
         tmpa = *++a;
@@ -196,7 +187,7 @@ numcompare (char const *a, char const *b,
         do
           tmpa = *++a;
         while (tmpa == NUMERIC_ZERO);
-      return ISDIGIT (tmpa);
+      return c_isdigit (tmpa);
     }
   else
     {
@@ -205,7 +196,7 @@ numcompare (char const *a, char const *b,
       while (tmpb == NUMERIC_ZERO || tmpb == thousands_sep)
         tmpb = *++b;
 
-      while (tmpa == tmpb && ISDIGIT (tmpa))
+      while (tmpa == tmpb && c_isdigit (tmpa))
         {
           do
             tmpa = *++a;
@@ -215,18 +206,18 @@ numcompare (char const *a, char const *b,
           while (tmpb == thousands_sep);
         }
 
-      if ((tmpa == decimal_point && !ISDIGIT (tmpb))
-          || (tmpb == decimal_point && !ISDIGIT (tmpa)))
+      if ((tmpa == decimal_point && !c_isdigit (tmpb))
+          || (tmpb == decimal_point && !c_isdigit (tmpa)))
         return fraccompare (a, b, decimal_point);
 
       tmp = tmpa - tmpb;
 
-      for (log_a = 0; ISDIGIT (tmpa); ++log_a)
+      for (log_a = 0; c_isdigit (tmpa); ++log_a)
         do
           tmpa = *++a;
         while (tmpa == thousands_sep);
 
-      for (log_b = 0; ISDIGIT (tmpb); ++log_b)
+      for (log_b = 0; c_isdigit (tmpb); ++log_b)
         do
           tmpb = *++b;
         while (tmpb == thousands_sep);

@@ -738,7 +738,7 @@ out_epoch_sec (char *pformat, size_t prefix_len,
       sec_prefix_len = dot - pformat;
       pformat[prefix_len] = '\0';
 
-      if (ISDIGIT (dot[1]))
+      if (c_isdigit (dot[1]))
         {
           long int lprec = strtol (dot + 1, nullptr, 10);
           precision = (lprec <= INT_MAX ? lprec : INT_MAX);
@@ -748,7 +748,7 @@ out_epoch_sec (char *pformat, size_t prefix_len,
           precision = 9;
         }
 
-      if (precision && ISDIGIT (dot[-1]))
+      if (precision && c_isdigit (dot[-1]))
         {
           /* If a nontrivial width is given, subtract the width of the
              decimal point and PRECISION digits that will be output
@@ -758,7 +758,7 @@ out_epoch_sec (char *pformat, size_t prefix_len,
 
           do
             --p;
-          while (ISDIGIT (p[-1]));
+          while (c_isdigit (p[-1]));
 
           long int lwidth = strtol (p, nullptr, 10);
           width = (lwidth <= INT_MAX ? lwidth : INT_MAX);

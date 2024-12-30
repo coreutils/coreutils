@@ -612,7 +612,7 @@ print_formatted (char const *format, int argc, char **argv)
               have_field_width = true;
             }
           else
-            while (ISDIGIT (*ac.f))
+            while (c_isdigit (*ac.f))
               *pdirec++ = *ac.f++;
           if (*ac.f == '.')
             {
@@ -645,7 +645,7 @@ print_formatted (char const *format, int argc, char **argv)
                   have_precision = true;
                 }
               else
-                while (ISDIGIT (*ac.f))
+                while (c_isdigit (*ac.f))
                   *pdirec++ = *ac.f++;
             }
 

@@ -35,6 +35,7 @@
 
 #include <gmp.h>
 #include <regex.h>
+#include "c-ctype.h"
 #include "long-options.h"
 #include "mcel.h"
 #include "strnumcmp.h"
@@ -439,7 +440,7 @@ looks_like_integer (char const *cp)
   cp += (*cp == '-');
 
   do
-    if (! ISDIGIT (*cp))
+    if (! c_isdigit (*cp))
       return false;
   while (*++cp);
 

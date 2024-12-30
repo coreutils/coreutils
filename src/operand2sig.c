@@ -27,6 +27,7 @@
 #include <sys/wait.h>
 
 #include "system.h"
+#include "c-ctype.h"
 #include "quote.h"
 #include "sig2str.h"
 #include "operand2sig.h"
@@ -36,7 +37,7 @@ operand2sig (char const *operand)
 {
   int signum;
 
-  if (ISDIGIT (*operand))
+  if (c_isdigit (*operand))
     {
       /* Note we don't put a limit on the maximum value passed,
          because we're checking shell $? values here, and ksh for

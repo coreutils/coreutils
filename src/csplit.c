@@ -28,6 +28,7 @@
 
 #include <regex.h>
 
+#include "c-ctype.h"
 #include "fd-reopen.h"
 #include "quote.h"
 #include "safe-read.h"
@@ -1262,10 +1263,10 @@ max_out (char *format)
         percent = true;
         int flags;
         f += get_format_flags (f, &flags);
-        while (ISDIGIT (*f))
+        while (c_isdigit (*f))
           f++;
         if (*f == '.')
-          while (ISDIGIT (*++f))
+          while (c_isdigit (*++f))
             continue;
         check_format_conv_type (f, flags);
       }

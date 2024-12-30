@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "assure.h"
+#include "c-ctype.h"
 #include "fadvise.h"
 #include "quote.h"
 #include "safe-read.h"
@@ -383,7 +384,7 @@ is_char_class_member (enum Char_class char_class, unsigned char c)
       result = iscntrl (c);
       break;
     case CC_DIGIT:
-      result = isdigit (c);
+      result = c_isdigit (c);
       break;
     case CC_GRAPH:
       result = isgraph (c);
@@ -404,7 +405,7 @@ is_char_class_member (enum Char_class char_class, unsigned char c)
       result = isupper (c);
       break;
     case CC_XDIGIT:
-      result = isxdigit (c);
+      result = c_isxdigit (c);
       break;
     default:
       unreachable ();
@@ -830,7 +831,7 @@ star_digits_closebracket (const struct E_string *es, size_t idx)
     return false;
 
   for (size_t i = idx + 1; i < es->len; i++)
-    if (!ISDIGIT (es->s[i]) || es->escaped[i])
+    if (!c_isdigit (es->s[i]) || es->escaped[i])
       return es_match (es, i, ']');
   return false;
 }

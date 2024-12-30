@@ -109,6 +109,7 @@
 
 #include "system.h"
 #include "assure.h"
+#include "c-ctype.h"
 #include "full-write.h"
 #include "quote.h"
 #include "readtokens.h"
@@ -2257,7 +2258,7 @@ strto2uintmax (uintmax_t *hip, uintmax_t *lop, char const *s)
       if (c == 0)
         break;
 
-      if (UNLIKELY (!ISDIGIT (c)))
+      if (UNLIKELY (!c_isdigit (c)))
         {
           err = LONGINT_INVALID;
           break;

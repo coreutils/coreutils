@@ -23,6 +23,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "c-ctype.h"
 #include "cl-strtod.h"
 #include "full-write.h"
 #include "quote.h"
@@ -190,7 +191,7 @@ scan_arg (char const *arg)
           ret.width += (fraction_len == 0                      /* #.  -> #   */
                         ? -1
                         : (decimal_point == arg                /* .#  -> 0.# */
-                           || ! ISDIGIT (decimal_point[-1]))); /* -.# -> 0.# */
+                           || ! c_isdigit (decimal_point[-1]))); /* -.# -> 0.# */
         }
       char const *e = strchr (arg, 'e');
       if (! e)
@@ -539,7 +540,7 @@ static bool
 all_digits_p (char const *s)
 {
   size_t n = strlen (s);
-  return ISDIGIT (s[0]) && n == strspn (s, "0123456789");
+  return c_isdigit (s[0]) && n == strspn (s, "0123456789");
 }
 
 int
@@ -571,7 +572,7 @@ main (int argc, char **argv)
   while (optind < argc)
     {
       if (argv[optind][0] == '-'
-          && ((optc = argv[optind][1]) == '.' || ISDIGIT (optc)))
+          && ((optc = argv[optind][1]) == '.' || c_isdigit (optc)))
         {
           /* means negative number */
           break;

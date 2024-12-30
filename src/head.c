@@ -32,6 +32,7 @@
 #include "system.h"
 
 #include "assure.h"
+#include "c-ctype.h"
 #include "full-read.h"
 #include "safe-read.h"
 #include "stat-size.h"
@@ -944,7 +945,7 @@ main (int argc, char **argv)
 
   line_end = '\n';
 
-  if (1 < argc && argv[1][0] == '-' && ISDIGIT (argv[1][1]))
+  if (1 < argc && argv[1][0] == '-' && c_isdigit (argv[1][1]))
     {
       char *a = argv[1];
       char *n_string = ++a;
@@ -954,7 +955,7 @@ main (int argc, char **argv)
       /* Old option syntax; a dash, one or more digits, and one or
          more option letters.  Move past the number. */
       do ++a;
-      while (ISDIGIT (*a));
+      while (c_isdigit (*a));
 
       /* Pointer to the byte after the last digit.  */
       end_n_string = a;
@@ -1055,7 +1056,7 @@ main (int argc, char **argv)
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
         default:
-          if (ISDIGIT (c))
+          if (c_isdigit (c))
             error (0, 0, _("invalid trailing option -- %c"), c);
           usage (EXIT_FAILURE);
         }

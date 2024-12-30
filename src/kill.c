@@ -23,6 +23,7 @@
 #include <signal.h>
 
 #include "system.h"
+#include "c-ctype.h"
 #include "sig2str.h"
 #include "operand2sig.h"
 #include "quote.h"
@@ -154,7 +155,7 @@ list_signals (bool table, char *const *argv)
             signum = operand2sig (*argv);
             if (signum < 0)
               status = EXIT_FAILURE;
-            else if (ISDIGIT (**argv))
+            else if (c_isdigit (**argv))
               {
                 if (sig2str (signum, signame) == 0)
                   puts (signame);

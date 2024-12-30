@@ -143,15 +143,6 @@ enum
 
 #include "timespec.h"
 
-/* ISDIGIT differs from isdigit, as follows:
-   - Its arg may be any int or unsigned int; it need not be an unsigned char
-     or EOF.
-   - It's typically faster.
-   POSIX says that only '0' through '9' are digits.  Prefer ISDIGIT to
-   isdigit unless it's important to use the locale's definition
-   of 'digit' even when the host does not conform to POSIX.  */
-#define ISDIGIT(c) ((unsigned int) (c) - '0' <= 9)
-
 /* Convert a possibly-signed character to an unsigned character.  This is
    a bit safer than casting to unsigned char, since it catches some type
    errors that the cast doesn't.  */

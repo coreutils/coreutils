@@ -20,6 +20,7 @@
 
 #include "system.h"
 #include <ctype.h>
+#include "c-ctype.h"
 #include "quote.h"
 #include "set-fields.h"
 
@@ -230,7 +231,7 @@ set_fields (char const *fieldstr, unsigned int options)
           lhs_specified = false;
           rhs_specified = false;
         }
-      else if (ISDIGIT (*fieldstr))
+      else if (c_isdigit (*fieldstr))
         {
           /* Record beginning of digit string, in case we have to
              complain about it.  */

@@ -32,6 +32,7 @@
 #include "system.h"
 #include "argmatch.h"
 #include "assure.h"
+#include "c-ctype.h"
 #include "fadvise.h"
 #include "filevercmp.h"
 #include "flexmember.h"
@@ -1389,7 +1390,7 @@ specify_sort_size (int oi, char c, char const *s)
   enum strtol_error e = xstrtoumax (s, &suffix, 10, &n, "EgGkKmMPQRtTYZ");
 
   /* The default unit is KiB.  */
-  if (e == LONGINT_OK && ISDIGIT (suffix[-1]))
+  if (e == LONGINT_OK && c_isdigit (suffix[-1]))
     {
       if (n <= UINTMAX_MAX / 1024)
         n *= 1024;
@@ -1398,7 +1399,7 @@ specify_sort_size (int oi, char c, char const *s)
     }
 
   /* A 'b' suffix means bytes; a '%' suffix means percent of memory.  */
-  if (e == LONGINT_INVALID_SUFFIX_CHAR && ISDIGIT (suffix[-1]) && ! suffix[1])
+  if (e == LONGINT_INVALID_SUFFIX_CHAR && c_isdigit (suffix[-1]) && ! suffix[1])
     switch (suffix[0])
       {
       case 'b':
@@ -1921,7 +1922,7 @@ traverse_raw_number (char const **number)
      to be lacking in units.
      FIXME: add support for multibyte thousands_sep and decimal_point.  */
 
-  while (ISDIGIT (ch = *p++))
+  while (c_isdigit (ch = *p++))
     {
       if (max_digit < ch)
         max_digit = ch;
@@ -1942,7 +1943,7 @@ traverse_raw_number (char const **number)
     }
 
   if (ch == decimal_point)
-    while (ISDIGIT (ch = *p++))
+    while (c_isdigit (ch = *p++))
       if (max_digit < ch)
         max_digit = ch;
 
@@ -4476,7 +4477,7 @@ main (int argc, char **argv)
           if (optarg[0] == '+')
             {
               bool minus_pos_usage = (optind != argc && argv[optind][0] == '-'
-                                      && ISDIGIT (argv[optind][1]));
+                                      && c_isdigit (argv[optind][1]));
               traditional_usage |= minus_pos_usage && !posixly_correct;
               if (traditional_usage)
                 {
@@ -4701,7 +4702,7 @@ main (int argc, char **argv)
           if (optarg == argv[optind - 1])
             {
               char const *p;
-              for (p = optarg; ISDIGIT (*p); p++)
+              for (p = optarg; c_isdigit (*p); p++)
                 continue;
               optind -= (*p != '\0');
             }

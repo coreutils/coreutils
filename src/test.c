@@ -40,6 +40,7 @@
 
 #include "system.h"
 #include "assure.h"
+#include "c-ctype.h"
 #include "quote.h"
 #include "stat-time.h"
 #include "strnumcmp.h"
@@ -143,9 +144,9 @@ find_int (char const *string)
       p += (*p == '-');
     }
 
-  if (ISDIGIT (*p++))
+  if (c_isdigit (*p++))
     {
-      while (ISDIGIT (*p))
+      while (c_isdigit (*p))
         p++;
       while (isspace (to_uchar (*p)))
         p++;

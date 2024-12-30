@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include "system.h"
+#include "c-ctype.h"
 #include "fadvise.h"
 #include "quote.h"
 
@@ -183,7 +184,7 @@ parse_tab_stops (char const *stops)
           increment_tabval = true;
           extend_tabval = false;
         }
-      else if (ISDIGIT (*stops))
+      else if (c_isdigit (*stops))
         {
           if (!have_tabval)
             {

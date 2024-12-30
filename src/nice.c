@@ -29,6 +29,7 @@
 # include <sys/resource.h>
 #endif
 
+#include "c-ctype.h"
 #include "quote.h"
 #include "xstrtol.h"
 
@@ -118,7 +119,7 @@ main (int argc, char **argv)
     {
       char const *s = argv[i];
 
-      if (s[0] == '-' && ISDIGIT (s[1 + (s[1] == '-' || s[1] == '+')]))
+      if (s[0] == '-' && c_isdigit (s[1 + (s[1] == '-' || s[1] == '+')]))
         {
           adjustment_given = s + 1;
           ++i;

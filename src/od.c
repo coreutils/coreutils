@@ -26,6 +26,7 @@
 #include "system.h"
 #include "argmatch.h"
 #include "assure.h"
+#include "c-ctype.h"
 #include "ftoastr.h"
 #include "quote.h"
 #include "stat-size.h"
@@ -632,7 +633,7 @@ simple_strtoi (char const *s, char const **p, int *val)
 {
   int sum;
 
-  for (sum = 0; ISDIGIT (*s); s++)
+  for (sum = 0; c_isdigit (*s); s++)
     if (ckd_mul (&sum, sum, 10) || ckd_add (&sum, sum, *s - '0'))
       return false;
   *p = s;
@@ -1888,7 +1889,7 @@ main (int argc, char **argv)
 
         case 2:
           if ((traditional || argv[optind + 1][0] == '+'
-               || ISDIGIT (argv[optind + 1][0]))
+               || c_isdigit (argv[optind + 1][0]))
               && parse_old_offset (argv[optind + 1], &o2))
             {
               if (traditional && parse_old_offset (argv[optind], &o1))
