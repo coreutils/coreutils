@@ -20,6 +20,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously it would have ignored the affinity mask on such systems.
   [bug introduced with nproc in coreutils-8.1]
 
+  numfmt --from=iec-i now works with numbers without a suffix.
+  Previously such numbers were rejected with an error.
+  [bug introduced with numfmt in coreutils-8.21]
+
   printf now diagnoses attempts to treat empty strings as numbers,
   as per POSIX. For example, "printf '%d' ''" now issues a diagnostic
   and fails instead of silently succeeding.

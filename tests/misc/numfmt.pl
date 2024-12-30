@@ -41,6 +41,7 @@ my @Tests =
      ['4', '--from=auto 1K',   {OUT => "1000"}],
      ['5', '--from=auto 1Ki',  {OUT => "1024"}],
      ['5.1', '--from=iec-i 1Ki',  {OUT => "1024"}],
+     ['5.2', '--from=iec-i 1',  {OUT => "1"}],
 
      ['6', {IN_PIPE => "1234\n"},            {OUT => "1234"}],
      ['7', '--from=si', {IN_PIPE => "2K\n"}, {OUT => "2000"}],

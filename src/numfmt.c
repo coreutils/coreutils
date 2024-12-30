@@ -667,16 +667,15 @@ simple_strtod_human (char const *input_str,
           devmsg ("  Auto-scaling, found 'i', switching to base %d\n",
                   scale_base);
         }
+      else if (allowed_scaling == scale_IEC_I)
+        {
+          if (**endptr == 'i')
+            (*endptr)++;
+          else
+            return SSE_MISSING_I_SUFFIX;
+        }
 
       *precision = 0;  /* Reset, to select precision based on scale.  */
-    }
-
-  if (allowed_scaling == scale_IEC_I)
-    {
-      if (**endptr == 'i')
-        (*endptr)++;
-      else
-        return SSE_MISSING_I_SUFFIX;
     }
 
   long double multiplier = powerld (scale_base, power);
