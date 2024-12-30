@@ -188,10 +188,10 @@ scan_arg (char const *arg)
           fraction_len = strcspn (decimal_point + 1, "eE");
           if (fraction_len <= INT_MAX)
             ret.precision = fraction_len;
-          ret.width += (fraction_len == 0                      /* #.  -> #   */
+          ret.width += (fraction_len == 0                       /* #.  -> #   */
                         ? -1
-                        : (decimal_point == arg                /* .#  -> 0.# */
-                           || ! c_isdigit (decimal_point[-1]))); /* -.# -> 0.# */
+                        : (decimal_point == arg                 /* .#  -> 0.# */
+                           || !c_isdigit (decimal_point[-1]))); /* -.# -> 0.# */
         }
       char const *e = strchr (arg, 'e');
       if (! e)
