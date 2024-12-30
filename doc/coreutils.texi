@@ -16656,7 +16656,9 @@ It is normally at least two characters, but it may be more.
 @item %d
 day of month (e.g., @samp{01})
 @item %D
-date; same as @samp{%m/%d/%y}
+date; same as @samp{%m/%d/%y}.
+Although commonly used in the US, this format is confusing elsewhere,
+and it is ambiguous for dates in different centuries.
 @item %e
 day of month, space padded; same as @samp{%_d}
 @item %F
@@ -16672,6 +16674,7 @@ year corresponding to the ISO week number, but without the century
 as @samp{%y}, except that if the ISO week number (see
 @samp{%V}) belongs
 to the previous or next year, that year is used instead.
+This format is ambiguous for dates in different centuries.
 @item %G
 year corresponding to the ISO week number.  This has the
 same format and value as @samp{%Y}, except that if the ISO
@@ -16710,9 +16713,11 @@ week number of year, with Monday as first day of week
 (@samp{00}@dots{}@samp{53}).
 Days in a new year preceding the first Monday are in week zero.
 @item %x
-locale's date representation (e.g., @samp{12/31/99})
+locale's date representation (e.g., @samp{12/31/99}).
+This format can be ambiguous for dates in different centuries.
 @item %y
-last two digits of year (@samp{00}@dots{}@samp{99})
+last two digits of year (@samp{00}@dots{}@samp{99}).
+This format is ambiguous for dates in different centuries.
 @item %Y
 year.  This is normally at least four characters, but it may be more.
 Year @samp{0000} precedes year @samp{0001}, and year @samp{-001}

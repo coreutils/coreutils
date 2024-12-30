@@ -200,13 +200,13 @@ FORMAT controls the output.  Interpreted sequences are:\n\
       fputs (_("\
   %C   century; like %Y, except omit last two digits (e.g., 20)\n\
   %d   day of month (e.g., 01)\n\
-  %D   date; same as %m/%d/%y\n\
+  %D   date (ambiguous); same as %m/%d/%y\n\
   %e   day of month, space padded; same as %_d\n\
 "), stdout);
       fputs (_("\
   %F   full date; like %+4Y-%m-%d\n\
-  %g   last two digits of year of ISO week number (see %G)\n\
-  %G   year of ISO week number (see %V); normally useful only with %V\n\
+  %g   last two digits of year of ISO week number (ambiguous; 00-99); see %G\n\
+  %G   year of ISO week number; normally useful only with %V\n\
 "), stdout);
       fputs (_("\
   %h   same as %b\n\
@@ -243,9 +243,9 @@ FORMAT controls the output.  Interpreted sequences are:\n\
   %W   week number of year, with Monday as first day of week (00..53)\n\
 "), stdout);
       fputs (_("\
-  %x   locale's date representation (e.g., 12/31/99)\n\
+  %x   locale's date (can be ambiguous; e.g., 12/31/99)\n\
   %X   locale's time representation (e.g., 23:13:48)\n\
-  %y   last two digits of year (00..99)\n\
+  %y   last two digits of year (ambiguous; 00..99)\n\
   %Y   year\n\
 "), stdout);
       fputs (_("\
