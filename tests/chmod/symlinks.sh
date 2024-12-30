@@ -77,7 +77,7 @@ count_755 0
 
 # Dangling links should not induce an error if not dereferencing
 for noderef in '-h' '-RP' '-P'; do
-  chmod 755 --no-dereference a/dangle 2>err || fail=1
+  chmod 755 --no-dereference $noderef a/dangle 2>err || fail=1
 done
 # Dangling links should induce an error if dereferencing
 for deref in '' '--deref' '-R'; do
