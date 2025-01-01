@@ -4,7 +4,7 @@
 # But for fileutils-4.1.9, it would do the former and
 # for fileutils-4.1.10 the latter.
 
-# Copyright (C) 2002-2024 Free Software Foundation, Inc.
+# Copyright (C) 2002-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

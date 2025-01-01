@@ -2,7 +2,7 @@
 # Ensure that mv prints the right diagnostic for a dir->dir move
 # where the destination directory is not empty.
 
-# Copyright (C) 2006-2024 Free Software Foundation, Inc.
+# Copyright (C) 2006-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

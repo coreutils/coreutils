@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure that mkdir -p foo/bar works when foo is a symbolic link to a directory
 
-# Copyright (C) 2005-2024 Free Software Foundation, Inc.
+# Copyright (C) 2005-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

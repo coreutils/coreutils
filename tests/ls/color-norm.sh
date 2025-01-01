@@ -3,7 +3,7 @@
 # I.e., that it uses NORMAL to style non file name output and
 # file names with no associated color (unless FILE is also set).
 
-# Copyright (C) 2010-2024 Free Software Foundation, Inc.
+# Copyright (C) 2010-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -2,7 +2,7 @@
 # Exercise the Darwin/MacOS bug worked around on 2006-09-29,
 # whereby rm would fail to remove all entries in a directory.
 
-# Copyright (C) 2006-2024 Free Software Foundation, Inc.
+# Copyright (C) 2006-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

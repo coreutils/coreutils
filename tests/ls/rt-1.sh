@@ -1,7 +1,7 @@
 #!/bin/sh
 # Make sure name is used as secondary key when sorting on mtime or ctime.
 
-# Copyright (C) 1998-2024 Free Software Foundation, Inc.
+# Copyright (C) 1998-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

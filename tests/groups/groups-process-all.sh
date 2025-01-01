@@ -2,7 +2,7 @@
 # Ensure groups processes all arguments before exiting.
 # With coreutils-2.27 and prior, it would exit upon first failure.
 
-# Copyright (C) 2017-2024 Free Software Foundation, Inc.
+# Copyright (C) 2017-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

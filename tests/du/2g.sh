@@ -3,7 +3,7 @@
 # Before coreutils-5.93, on systems with a signed, 32-bit stat.st_blocks
 # one of du's computations would overflow.
 
-# Copyright (C) 2005-2024 Free Software Foundation, Inc.
+# Copyright (C) 2005-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

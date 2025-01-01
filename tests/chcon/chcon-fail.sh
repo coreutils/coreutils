@@ -2,7 +2,7 @@
 # Ensure that chcon fails when it should.
 # These tests don't use any actual SE Linux syscalls.
 
-# Copyright (C) 2007-2024 Free Software Foundation, Inc.
+# Copyright (C) 2007-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

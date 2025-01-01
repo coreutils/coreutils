@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure that mv works with a few symlink-onto-hard-link cases.
 
-# Copyright (C) 2012-2024 Free Software Foundation, Inc.
+# Copyright (C) 2012-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -3,7 +3,7 @@
 # Due to a race condition in the test, the 'assert' script would get
 # the UMR on Solaris only some of the time, and not at all on Linux/GNU.
 
-# Copyright (C) 2000-2024 Free Software Foundation, Inc.
+# Copyright (C) 2000-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

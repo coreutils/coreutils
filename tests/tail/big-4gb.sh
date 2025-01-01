@@ -2,7 +2,7 @@
 # Demonstrate a bug in 'tail -cN' when operating on files of size 4G and larger
 # Fixed in coreutils-4.5.2.
 
-# Copyright (C) 2002-2024 Free Software Foundation, Inc.
+# Copyright (C) 2002-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

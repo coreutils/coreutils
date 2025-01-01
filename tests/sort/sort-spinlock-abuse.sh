@@ -2,7 +2,7 @@
 # trigger a bug that would make parallel sort use 100% of one or more
 # CPU while blocked on output.
 
-# Copyright (C) 2010-2024 Free Software Foundation, Inc.
+# Copyright (C) 2010-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
