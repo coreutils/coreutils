@@ -10282,7 +10282,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -f
 @opindex --force
 @cindex prompts, omitting
-Do not prompt the user before removing a destination file.
+Do not prompt the user before replacing a destination file.
 @macro mvOptsIfn
 If you specify more than one of the @option{-i}, @option{-f}, @option{-n}
 options, only the final one takes effect.
