@@ -863,7 +863,7 @@ cp_option_init (struct cp_options *x)
   /* Not used.  */
   x->stdin_tty = false;
 
-  x->update = false;
+  x->update = UPDATE_ALL;
   x->verbose = false;
   x->keep_directory_symlink = false;
 
@@ -984,7 +984,6 @@ main (int argc, char **argv)
   char *target_directory = nullptr;
   bool no_target_directory = false;
   char const *scontext = nullptr;
-  bool no_clobber = false;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -1063,9 +1062,7 @@ main (int argc, char **argv)
           break;
 
         case 'i':
-          /* -i overrides -n, but not --update={none,none-fail}.  */
-          if (no_clobber || x.interactive == I_UNSPECIFIED)
-            x.interactive = I_ASK_USER;
+          x.interactive = I_ASK_USER;
           break;
 
         case 'l':
@@ -1078,8 +1075,6 @@ main (int argc, char **argv)
 
         case 'n':
           x.interactive = I_ALWAYS_SKIP;
-          no_clobber = true;
-          x.update = false;
           break;
 
         case 'P':
@@ -1143,36 +1138,10 @@ main (int argc, char **argv)
           break;
 
         case 'u':
-          if (! no_clobber) /* -n > -u */
-            {
-              enum Update_type update_opt = UPDATE_OLDER;
-              if (optarg)
-                update_opt = XARGMATCH ("--update", optarg,
-                                        update_type_string, update_type);
-              if (update_opt == UPDATE_ALL)
-                {
-                  /* Default cp operation.  */
-                  x.update = false;
-                  if (x.interactive != I_ASK_USER)
-                    x.interactive = I_UNSPECIFIED;
-                }
-              else if (update_opt == UPDATE_NONE)
-                {
-                  x.update = false;
-                  x.interactive = I_ALWAYS_SKIP;
-                }
-              else if (update_opt == UPDATE_NONE_FAIL)
-                {
-                  x.update = false;
-                  x.interactive = I_ALWAYS_NO;
-                }
-              else if (update_opt == UPDATE_OLDER)
-                {
-                  x.update = true;
-                  if (x.interactive != I_ASK_USER)
-                    x.interactive = I_UNSPECIFIED;
-                }
-            }
+          x.update = UPDATE_OLDER;
+          if (optarg)
+            x.update = XARGMATCH ("--update", optarg,
+                                  update_type_string, update_type);
           break;
 
         case 'v':
@@ -1236,9 +1205,12 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  if (x.interactive == I_ALWAYS_SKIP)
+    x.update = UPDATE_NONE;
+
   if (make_backups
-      && (x.interactive == I_ALWAYS_SKIP
-          || x.interactive == I_ALWAYS_NO))
+      && (x.update == UPDATE_NONE
+          || x.update == UPDATE_NONE_FAIL))
     {
       error (0, 0,
              _("--backup is mutually exclusive with -n or --update=none-fail"));

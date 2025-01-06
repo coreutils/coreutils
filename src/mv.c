@@ -154,7 +154,7 @@ cp_option_init (struct cp_options *x)
   x->stdin_tty = isatty (STDIN_FILENO);
 
   x->open_dangling_dest_symlink = false;
-  x->update = false;
+  x->update = UPDATE_ALL;
   x->verbose = false;
   x->dest_info = nullptr;
   x->src_info = nullptr;
@@ -327,7 +327,6 @@ main (int argc, char **argv)
   int n_files;
   char **file;
   bool selinux_enabled = (0 < is_selinux_enabled ());
-  bool no_clobber = false;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -353,23 +352,13 @@ main (int argc, char **argv)
             version_control_string = optarg;
           break;
         case 'f':
-          /* -f overrides -n, or -i, but not --update={none,none-fail}.  */
-          if (no_clobber
-              || x.interactive == I_ASK_USER
-              || x.interactive == I_UNSPECIFIED)
-            x.interactive = I_ALWAYS_YES;
+          x.interactive = I_ALWAYS_YES;
           break;
         case 'i':
-          /* -i overrides -n, or -f, but not --update={none,none-fail}.  */
-          if (no_clobber
-              || x.interactive == I_ALWAYS_YES
-              || x.interactive == I_UNSPECIFIED)
-            x.interactive = I_ASK_USER;
+          x.interactive = I_ASK_USER;
           break;
         case 'n':
           x.interactive = I_ALWAYS_SKIP;
-          no_clobber = true;
-          x.update = false;
           break;
         case DEBUG_OPTION:
           x.debug = x.verbose = true;
@@ -392,38 +381,10 @@ main (int argc, char **argv)
           no_target_directory = true;
           break;
         case 'u':
-          if (! no_clobber)
-            {
-              enum Update_type update_opt = UPDATE_OLDER;
-              if (optarg)
-                update_opt = XARGMATCH ("--update", optarg,
-                                        update_type_string, update_type);
-              if (update_opt == UPDATE_ALL)
-                {
-                  /* Default mv operation.  */
-                  x.update = false;
-                  if (x.interactive != I_ASK_USER
-                      && x.interactive != I_ALWAYS_YES)
-                    x.interactive = I_UNSPECIFIED;
-                }
-              else if (update_opt == UPDATE_NONE)
-                {
-                  x.update = false;
-                  x.interactive = I_ALWAYS_SKIP;
-                }
-              else if (update_opt == UPDATE_NONE_FAIL)
-                {
-                  x.update = false;
-                  x.interactive = I_ALWAYS_NO;
-                }
-              else if (update_opt == UPDATE_OLDER)
-                {
-                  x.update = true;
-                  if (x.interactive != I_ASK_USER
-                      && x.interactive != I_ALWAYS_YES)
-                    x.interactive = I_UNSPECIFIED;
-                }
-            }
+          x.update = UPDATE_OLDER;
+          if (optarg)
+            x.update = XARGMATCH ("--update", optarg,
+                                  update_type_string, update_type);
           break;
         case 'v':
           x.verbose = true;
@@ -533,10 +494,13 @@ main (int argc, char **argv)
     for (int i = 0; i < n_files; i++)
       strip_trailing_slashes (file[i]);
 
+  if (x.interactive == I_ALWAYS_SKIP)
+    x.update = UPDATE_NONE;
+
   if (make_backups
       && (x.exchange
-          || x.interactive == I_ALWAYS_SKIP
-          || x.interactive == I_ALWAYS_NO))
+          || x.update == UPDATE_NONE
+          || x.update == UPDATE_NONE_FAIL))
     {
       error (0, 0,
              _("cannot combine --backup with "

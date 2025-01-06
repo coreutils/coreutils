@@ -63,7 +63,7 @@ enum Update_type
   /* Always update..  */
   UPDATE_ALL,
 
-  /* Update if dest older.  */
+  /* Update if (nondirectory) dest has older mtime.  */
   UPDATE_OLDER,
 
   /* Leave existing files.  */
@@ -76,11 +76,10 @@ enum Update_type
 /* This type is used to help mv (via copy.c) distinguish these cases.  */
 enum Interactive
 {
-  I_ALWAYS_YES = 1,
-  I_ALWAYS_NO,       /* Skip and fail.   */
-  I_ALWAYS_SKIP,     /* Skip and ignore. */
-  I_ASK_USER,
-  I_UNSPECIFIED
+  I_UNSPECIFIED,
+  I_ALWAYS_YES,      /* -f.  */
+  I_ALWAYS_SKIP,     /* -n (Skip and ignore).  */
+  I_ASK_USER,        /* -i.  */
 };
 
 /* How to handle symbolic links.  */
@@ -256,9 +255,8 @@ struct cp_options
      Create destination directories as usual. */
   bool symbolic_link;
 
-  /* If true, do not copy a nondirectory that has an existing destination
-     with the same or newer modification time. */
-  bool update;
+  /* Control if destination files are replaced.  */
+  enum Update_type update;
 
   /* If true, display the names of the files before copying them. */
   bool verbose;

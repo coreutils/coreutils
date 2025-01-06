@@ -2060,8 +2060,8 @@ abandon_move (const struct cp_options *x,
               struct stat const *dst_sb)
 {
   affirm (x->move_mode);
-  return (x->interactive == I_ALWAYS_NO
-          || x->interactive == I_ALWAYS_SKIP
+  return (x->update == UPDATE_NONE
+          || x->update == UPDATE_NONE_FAIL
           || ((x->interactive == I_ASK_USER
                || (x->interactive == I_UNSPECIFIED
                    && x->stdin_tty
@@ -2231,7 +2231,7 @@ copy_internal (char const *src_name, char const *dst_name,
   if (rename_errno == 0
       ? !x->last_file
       : rename_errno != EEXIST
-        || (x->interactive != I_ALWAYS_NO && x->interactive != I_ALWAYS_SKIP))
+        || (x->update != UPDATE_NONE && x->update != UPDATE_NONE_FAIL))
     {
       char const *name = rename_errno == 0 ? dst_name : src_name;
       int dirfd = rename_errno == 0 ? dst_dirfd : AT_FDCWD;
@@ -2293,14 +2293,12 @@ copy_internal (char const *src_name, char const *dst_name,
     {
       /* Normally, fill in DST_SB or set NEW_DST so that later code
          can use DST_SB if NEW_DST is false.  However, don't bother
-         doing this when rename_errno == EEXIST and X->interactive is
-         I_ALWAYS_NO or I_ALWAYS_SKIP, something that can happen only
-         with mv in which case x->update must be false which means
-         that even if !NEW_DST the move will be abandoned without
-         looking at DST_SB.  */
+         doing this when rename_errno == EEXIST and not updating,
+         which means that even if !NEW_DST the move will be abandoned
+         without looking at DST_SB.  */
       if (! (rename_errno == EEXIST
-             && (x->interactive == I_ALWAYS_NO
-                 || x->interactive == I_ALWAYS_SKIP)))
+             && (x->update == UPDATE_NONE
+                 || x->update == UPDATE_NONE_FAIL)))
         {
           /* Regular files can be created by writing through symbolic
              links, but other files cannot.  So use stat on the
@@ -2345,7 +2343,7 @@ copy_internal (char const *src_name, char const *dst_name,
           bool return_val = true;
           bool skipped = false;
 
-          if ((x->interactive != I_ALWAYS_NO && x->interactive != I_ALWAYS_SKIP)
+          if ((x->update != UPDATE_NONE && x->update != UPDATE_NONE_FAIL)
               && ! same_file_ok (src_name, &src_sb, dst_dirfd, drelname,
                                  &dst_sb, x, &return_now))
             {
@@ -2354,7 +2352,7 @@ copy_internal (char const *src_name, char const *dst_name,
               return false;
             }
 
-          if (x->update && !S_ISDIR (src_mode))
+          if (x->update == UPDATE_OLDER && !S_ISDIR (src_mode))
             {
               /* When preserving timestamps (but not moving within a file
                  system), don't worry if the destination timestamp is
@@ -2418,27 +2416,27 @@ copy_internal (char const *src_name, char const *dst_name,
                     *rename_succeeded = true;
 
                   skipped = true;
-                  return_val = x->interactive == I_ALWAYS_SKIP;
+                  return_val = x->update == UPDATE_NONE;
                 }
             }
           else
             {
               if (! S_ISDIR (src_mode)
-                  && (x->interactive == I_ALWAYS_NO
-                      || x->interactive == I_ALWAYS_SKIP
+                  && (x->update == UPDATE_NONE
+                      || x->update == UPDATE_NONE_FAIL
                       || (x->interactive == I_ASK_USER
                           && ! overwrite_ok (x, dst_name, dst_dirfd,
                                              dst_relname, &dst_sb))))
                 {
                   skipped = true;
-                  return_val = x->interactive == I_ALWAYS_SKIP;
+                  return_val = x->update == UPDATE_NONE;
                 }
             }
 
 skip:
           if (skipped)
             {
-              if (x->interactive == I_ALWAYS_NO)
+              if (x->update == UPDATE_NONE_FAIL)
                 error (0, 0, _("not replacing %s"), quoteaf (dst_name));
               else if (x->debug)
                 printf (_("skipped %s\n"), quoteaf (dst_name));
@@ -3110,7 +3108,8 @@ skip:
 
       int symlink_err = force_symlinkat (src_link_val, dst_dirfd, dst_relname,
                                          x->unlink_dest_after_failed_open, -1);
-      if (0 < symlink_err && x->update && !new_dst && S_ISLNK (dst_sb.st_mode)
+      if (0 < symlink_err && x->update == UPDATE_OLDER
+          && !new_dst && S_ISLNK (dst_sb.st_mode)
           && dst_sb.st_size == strlen (src_link_val))
         {
           /* See if the destination is already the desired symlink.

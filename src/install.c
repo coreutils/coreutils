@@ -290,7 +290,7 @@ cp_option_init (struct cp_options *x)
   x->stdin_tty = false;
 
   x->open_dangling_dest_symlink = false;
-  x->update = false;
+  x->update = UPDATE_ALL;
   x->require_preserve_context = false;  /* Not used by install currently.  */
   x->preserve_security_context = false; /* Whether to copy context from src.  */
   x->set_security_context = nullptr; /* Whether to set sys default context.  */

@@ -88,5 +88,8 @@ compare /dev/null out8 || fail=1
 # Likewise, but coreutils 9.3 - 9.5 incorrectly ignored the update option
 cp -v --update=none -i new old 2>/dev/null >out8 </dev/null || fail=1
 compare /dev/null out8 || fail=1
+# Likewise, but coreutils 9.3 - 9.5 incorrectly ignored the update option
+cp -v -n --update=none -i new old 2>/dev/null >out8 </dev/null || fail=1
+compare /dev/null out8 || fail=1
 
 Exit $fail
