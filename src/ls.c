@@ -199,6 +199,7 @@ static char const d_type_filetype[UCHAR_MAX + 1] =
 enum acl_type
   {
     ACL_T_NONE,
+    ACL_T_UNKNOWN,
     ACL_T_LSM_CONTEXT_ONLY,
     ACL_T_YES
   };
@@ -3518,14 +3519,20 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
       int n = file_has_aclinfo_cache (full_name, f, &ai, aclinfo_flags);
       bool have_acl = 0 < n;
       bool have_scontext = !ai.scontext_err;
+
+      /* Let the user know via '?' if errno is EACCES, which can
+         happen with Linux kernel 6.12 on an NFS file system.
+         That's better than a longwinded diagnostic.  */
+      bool cannot_access_acl = n < 0 && errno == EACCES;
+
       f->acl_type = (!have_scontext && !have_acl
-                     ? ACL_T_NONE
+                     ? (cannot_access_acl ? ACL_T_UNKNOWN : ACL_T_NONE)
                      : (have_scontext && !have_acl
                         ? ACL_T_LSM_CONTEXT_ONLY
                         : ACL_T_YES));
       any_has_acl |= f->acl_type != ACL_T_NONE;
 
-      if (format == long_format && n < 0)
+      if (format == long_format && n < 0 && !cannot_access_acl)
         error (0, ai.u.err, "%s", quotef (full_name));
       else
         {
@@ -4302,6 +4309,8 @@ print_long_format (const struct fileinfo *f)
     modebuf[10] = '.';
   else if (f->acl_type == ACL_T_YES)
     modebuf[10] = '+';
+  else if (f->acl_type == ACL_T_UNKNOWN)
+    modebuf[10] = '?';
 
   switch (time_type)
     {

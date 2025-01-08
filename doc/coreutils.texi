@@ -8084,6 +8084,10 @@ with a security context, but no other alternate access method.
 A file with any other combination of alternate access methods
 is marked with a @samp{+} character.
 
+@command{ls} uses a @samp{?} character to indicate it is unable to determine
+whether alternate access methods apply to the file, which may happen for
+example with some NFS setups with files without read permission.
+
 @item -n
 @itemx --numeric-uid-gid
 @opindex -n
