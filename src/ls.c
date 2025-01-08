@@ -3295,7 +3295,7 @@ file_has_aclinfo_cache (char const *file, struct fileinfo *f,
                         struct aclinfo *ai, int flags)
 {
   /* st_dev and associated info for the most recently processed device
-     for which file_has_acl failed indicating lack of support.  */
+     for which file_has_aclinfo failed indicating lack of support.  */
   static int unsupported_return;
   static char *unsupported_scontext;
   static int unsupported_scontext_err;
