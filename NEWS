@@ -11,6 +11,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   cp,mv --update no longer overrides --interactive or --force.
   [bug introduced in coreutils-9.3]
 
+  csplit no longer creates empty files given empty input.
+  [This bug was present in "the beginning".]
+
   ls and printf fix shell quoted output in the edge case of escaped
   first and last characters, and single quotes in the string.
   [bug introduced in coreutils-8.26]

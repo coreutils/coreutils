@@ -494,13 +494,14 @@ load_buffer (void)
     }
 }
 
-/* Return the line number of the first line that has not yet been retrieved. */
+/* Return the line number of the first line that has not yet been retrieved.
+   Return 0 if no lines available.  */
 
 static intmax_t
 get_first_line_in_buffer (void)
 {
   if (head == nullptr && !load_buffer ())
-    error (EXIT_FAILURE, errno, _("input disappeared"));
+    return 0;
 
   return head->first_available;
 }
@@ -627,7 +628,7 @@ write_to_file (intmax_t last_line, bool ignore, int argnum)
 
   first_line = get_first_line_in_buffer ();
 
-  if (first_line > last_line)
+  if (! first_line || first_line > last_line)
     {
       error (0, 0, _("%s: line number out of range"),
              quote (global_argv[argnum]));
@@ -698,7 +699,9 @@ process_line_count (const struct control *p, intmax_t repetition)
   if (no_more_lines () && suppress_matched)
     handle_line_error (p, repetition);
 
-  linenum = get_first_line_in_buffer ();
+  if (!(linenum = get_first_line_in_buffer ()))
+    handle_line_error (p, repetition);
+
   while (linenum++ < last_line_to_save)
     {
       struct cstring *line = remove_line ();

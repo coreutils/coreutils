@@ -100,4 +100,14 @@ printf 'x%8199s\nx\n%8199s\nx\n' x x > in
 csplit in '/x\{1\}/' '{*}' > /dev/null || fail=1
 cat xx?? | compare - in || fail=1
 
+# Ensure file not created for empty input
+# which was the case with coreutils <= 9.5
+rm -f xx??
+csplit /dev/null 1 >/dev/null 2>err && fail=1
+test -f xx00 && fail=1
+cat <<\EOF > experr
+csplit: '1': line number out of range
+EOF
+compare experr err || fail=1
+
 Exit $fail
