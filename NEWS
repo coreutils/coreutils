@@ -18,10 +18,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   first and last characters, and single quotes in the string.
   [bug introduced in coreutils-8.26]
 
-  ls -l may now mark files with a '?' character after the mode bits
-  if it is unable to read alternate access method details, which may
-  happen on NFS with files without read permission.
-  Previously ls would have output "Permission denied" errors.
+  ls -l no longer outputs "Permission denied" errors on NFS
+  which may happen with files without read permission, and which resulted
+  in inaccurate indication of ACLs (missing '+' flag after mode).
   [bug introduced in coreutils-9.4]
 
   mv works again with macFUSE file systems.  Previously it would
