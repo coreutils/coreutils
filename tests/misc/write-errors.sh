@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ timeout
+print_ver_ timeout env
 
 if ! test -w /dev/full || ! test -c /dev/full; then
   skip_ '/dev/full is required'
@@ -66,13 +66,15 @@ while read writer; do
 
   # Check /dev/full handling
   rm -f full.err || framework_failure_
-  timeout 10 $SHELL -c "($ulimit && $writer 2>full.err >/dev/full)"
+  timeout 10 env --default-signal=PIPE $SHELL -c \
+    "($ulimit && $writer 2>full.err >/dev/full)"
   { test $? = 124 || ! grep 'space' full.err >/dev/null; } &&
    { fail=1; cat full.err; echo "$writer: failed to exit" >&2; }
 
   # Check closed pipe handling
   rm -f pipe.err || framework_failure_
-  timeout 10 $SHELL -c "($ulimit && $writer 2>pipe.err | :)"
+  timeout 10 env --default-signal=PIPE $SHELL -c \
+    "($ulimit && $writer 2>pipe.err | :)"
   { test $? = 0 && compare /dev/null pipe.err; } ||
    { fail=1; cat pipe.err; echo "$writer: failed to write to closed pipe" >&2; }
 done < built_writers
