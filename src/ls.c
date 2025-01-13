@@ -3089,9 +3089,6 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
          and when readdir simply finds that there are no more entries.  */
       errno = 0;
       next = readdir (dirp);
-      /* Some readdir()s do not absorb ENOENT (dir deleted but open).  */
-      if (errno == ENOENT)
-        errno = 0;
       if (next)
         {
           if (! file_ignored (next->d_name))
@@ -3122,14 +3119,21 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
                 }
             }
         }
-      else if (errno != 0)
+      else
         {
+          int err = errno;
+          if (err == 0)
+            break;
+          /* Some readdir()s do not absorb ENOENT (dir deleted but open).
+             This bug was fixed in glibc 2.3 (2002).  */
+#if ! (2 < __GLIBC__ + (3 <= __GLIBC_MINOR__))
+          if (err == ENOENT)
+            break;
+#endif
           file_failure (command_line_arg, _("reading directory %s"), name);
-          if (errno != EOVERFLOW)
+          if (err != EOVERFLOW)
             break;
         }
-      else
-        break;
 
       /* When processing a very large directory, and since we've inhibited
          interrupts, this loop would take so long that ls would be annoyingly
