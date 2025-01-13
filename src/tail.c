@@ -2020,8 +2020,7 @@ tail_file (struct File_spec *f, uintmax_t n_files, uintmax_t n_units)
       xset_binary_mode (STDIN_FILENO, O_BINARY);
     }
   else
-    fd = open (f->name, O_RDONLY | O_BINARY
-               | nonblocking ? O_NONBLOCK : 0);
+    fd = open (f->name, O_RDONLY | O_BINARY | (nonblocking ? O_NONBLOCK : 0));
 
   f->tailable = !(reopen_inaccessible_files && fd == -1);
 
