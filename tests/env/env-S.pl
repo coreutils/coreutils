@@ -39,6 +39,9 @@ my $cf = 'SYSTEMROOT';
 exists $ENV{$cf} and $env .= " -u$cf";
 my $cf = 'WINDIR';
 exists $ENV{$cf} and $env .= " -u$cf";
+# Likewise for these GNU/Hurd env vars
+my $cf = 'LD_ORIGIN_PATH';
+exists $ENV{$cf} and $env .= " -u$cf";
 
 my @Tests =
     (
