@@ -145,84 +145,85 @@ main (void)
 /* Number of bytes to read at once.  */
 # define BUFLEN (1 << 16)
 
-static bool
+typedef bool (*cksum_fp_t) (FILE *, uint_fast32_t *, uintmax_t *);
+
+static cksum_fp_t
 pclmul_supported (void)
 {
-  bool pclmul_enabled = false;
 # if USE_PCLMUL_CRC32 || GL_CRC_X86_64_PCLMUL
-  pclmul_enabled = (0 < __builtin_cpu_supports ("pclmul")
-                    && 0 < __builtin_cpu_supports ("avx"));
-
+  bool pclmul_enabled = (0 < __builtin_cpu_supports ("pclmul")
+			 && 0 < __builtin_cpu_supports ("avx"));
   if (cksum_debug)
     error (0, 0, "%s",
            (pclmul_enabled
             ? _("using pclmul hardware support")
             : _("pclmul support not detected")));
+  if (pclmul_enabled)
+    return cksum_pclmul;
 # endif
 
-  return pclmul_enabled;
+  return nullptr;
 }
 
-static bool
+static cksum_fp_t
 avx2_supported (void)
 {
   /* AVX512 processors will not set vpclmulqdq unless they support
      the avx512 version, but it implies that the avx2 version
      is supported  */
-  bool avx2_enabled = false;
 # if USE_AVX2_CRC32
-  avx2_enabled = (0 < __builtin_cpu_supports ("vpclmulqdq")
-                  && 0 < __builtin_cpu_supports ("avx2"));
-
+  bool avx2_enabled = (0 < __builtin_cpu_supports ("vpclmulqdq")
+		       && 0 < __builtin_cpu_supports ("avx2"));
   if (cksum_debug)
     error (0, 0, "%s",
            (avx2_enabled
             ? _("using avx2 hardware support")
             : _("avx2 support not detected")));
+  if (avx2_enabled)
+    return cksum_avx2;
 # endif
 
-  return avx2_enabled;
+  return nullptr;
 }
 
-static bool
+static cksum_fp_t
 avx512_supported (void)
 {
   /* vpclmulqdq for multiplication
      mavx512f for most of the avx512 functions we're using
      mavx512bw for byte swapping  */
-  bool avx512_enabled = false;
 # if USE_AVX512_CRC32
-  avx512_enabled = (0 < __builtin_cpu_supports ("vpclmulqdq")
-                    && 0 < __builtin_cpu_supports ("avx512bw")
-                    && 0 < __builtin_cpu_supports ("avx512f"));
-
+  bool avx512_enabled = (0 < __builtin_cpu_supports ("vpclmulqdq")
+			 && 0 < __builtin_cpu_supports ("avx512bw")
+			 && 0 < __builtin_cpu_supports ("avx512f"));
   if (cksum_debug)
     error (0, 0, "%s",
            (avx512_enabled
             ? _("using avx512 hardware support")
             : _("avx512 support not detected")));
+  if (avx512_enabled)
+    return cksum_avx512;
 # endif
 
-  return avx512_enabled;
+  return nullptr;
 }
 
-static bool
+static cksum_fp_t
 vmull_supported (void)
 {
   /* vmull for multiplication  */
-  bool vmull_enabled = false;
 # if USE_VMULL_CRC32
-
-  vmull_enabled = (getauxval (AT_HWCAP) & HWCAP_PMULL) > 0;
-
+  bool vmull_enabled = (getauxval (AT_HWCAP) & HWCAP_PMULL) > 0;
   if (cksum_debug)
     error (0, 0, "%s",
            (vmull_enabled
             ? _("using vmull hardware support")
             : _("vmull support not detected")));
+  if (vmull_enabled)
+    return cksum_vmull;
 # endif
 
-  return vmull_enabled;
+  return nullptr;
 }
 
 static bool
@@ -288,20 +289,17 @@ crc_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
   uintmax_t total_bytes = 0;
   uint_fast32_t crc = 0;
 
-  static bool (*cksum_fp) (FILE *, uint_fast32_t *, uintmax_t *);
+  static cksum_fp_t cksum_fp;
   if (! cksum_fp)
-    {
-      if (avx512_supported ())
-        cksum_fp = cksum_avx512;
-      else if (avx2_supported ())
-        cksum_fp = cksum_avx2;
-      else if (pclmul_supported ())
-        cksum_fp = cksum_pclmul;
-      else if (vmull_supported ())
-        cksum_fp = cksum_vmull;
-      else
-        cksum_fp = cksum_slice8;
-    }
+    cksum_fp = avx512_supported ();
+  if (! cksum_fp)
+    cksum_fp = avx2_supported ();
+  if (! cksum_fp)
+    cksum_fp = pclmul_supported ();
+  if (! cksum_fp)
+    cksum_fp = vmull_supported ();
+  if (! cksum_fp)
+    cksum_fp = cksum_slice8;
 
   if (! cksum_fp (stream, &crc, &total_bytes))
     return -1;
