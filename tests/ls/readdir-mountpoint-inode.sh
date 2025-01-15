@@ -21,7 +21,7 @@ print_ver_ ls
 
 # We use --local here so as to not activate
 # potentially very many remote mounts.
-df --local --out=target | sed -n '/^\/./p' > mount_points
+df --local --out=target | sed -n '/^\/./p' | head -n 64 > mount_points
 test -s mount_points ||
   skip_ "this test requires a non-root mount point"
 
