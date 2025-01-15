@@ -61,7 +61,8 @@ cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 head -c 10 fifo > out & pid=$!
 
 # Trigger large mem allocation failure
-( trap '' PIPE && ulimit -v $vm && env $prog %20000000f 0 2>err-msg > fifo )
+( trap '' PIPE && ulimit -v $(($vm+4000)) &&
+  env $prog %20000000f 0 2>err-msg > fifo )
 exit=$?
 
 # Map this longer, and rarer, diagnostic to the common one.
