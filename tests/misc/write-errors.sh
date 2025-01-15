@@ -62,7 +62,7 @@ while read writer; do
   cmd=$(printf '%s\n' "$writer" | cut -d ' ' -f1) || framework_failure_
   base_mem=$(get_min_ulimit_v_ $cmd --version) \
     && ulimit="ulimit -v $(($base_mem+8000))" \
-    || ulimit='true'
+    || skip_ 'unable to determine ulimit -v'
 
   # Check /dev/full handling
   rm -f full.err || framework_failure_
