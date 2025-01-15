@@ -150,7 +150,7 @@ EOF
 
 # Then compile/link it:
 gcc_shared_ k.c k.so \
-  || framework_failure_ 'failed to build shared library'
+  || skip_ 'failed to build mntent shared library'
 
 # Test if LD_PRELOAD works:
 LD_PRELOAD=$LD_PRELOAD:./k.so df

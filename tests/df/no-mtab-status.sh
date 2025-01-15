@@ -93,7 +93,7 @@ EOF
 
 # Then compile/link it:
 gcc_shared_ k.c k.so \
-  || framework_failure_ 'failed to build shared library'
+  || skip_ 'failed to build mntent shared library'
 
 cleanup_() { unset LD_PRELOAD; }
 
