@@ -152,7 +152,7 @@ pclmul_supported (void)
 {
 # if USE_PCLMUL_CRC32 || GL_CRC_X86_64_PCLMUL
   bool pclmul_enabled = (0 < __builtin_cpu_supports ("pclmul")
-			 && 0 < __builtin_cpu_supports ("avx"));
+                         && 0 < __builtin_cpu_supports ("avx"));
   if (cksum_debug)
     error (0, 0, "%s",
            (pclmul_enabled
@@ -173,7 +173,7 @@ avx2_supported (void)
      is supported  */
 # if USE_AVX2_CRC32
   bool avx2_enabled = (0 < __builtin_cpu_supports ("vpclmulqdq")
-		       && 0 < __builtin_cpu_supports ("avx2"));
+                       && 0 < __builtin_cpu_supports ("avx2"));
   if (cksum_debug)
     error (0, 0, "%s",
            (avx2_enabled
@@ -194,8 +194,8 @@ avx512_supported (void)
      mavx512bw for byte swapping  */
 # if USE_AVX512_CRC32
   bool avx512_enabled = (0 < __builtin_cpu_supports ("vpclmulqdq")
-			 && 0 < __builtin_cpu_supports ("avx512bw")
-			 && 0 < __builtin_cpu_supports ("avx512f"));
+                         && 0 < __builtin_cpu_supports ("avx512bw")
+                         && 0 < __builtin_cpu_supports ("avx512f"));
   if (cksum_debug)
     error (0, 0, "%s",
            (avx512_enabled
