@@ -2373,7 +2373,11 @@ debug_key (struct line const *line, struct keyfield const *key)
       if (key->sword != SIZE_MAX)
         beg = begfield (line, key);
       if (key->eword != SIZE_MAX)
-        lim = limfield (line, key);
+        {
+          lim = limfield (line, key);
+          /* Treat field ends before field starts as empty fields.  */
+          lim = MAX (beg, lim);
+        }
 
       if ((key->skipsblanks && key->sword == SIZE_MAX)
           || key->month || key_numeric (key))
