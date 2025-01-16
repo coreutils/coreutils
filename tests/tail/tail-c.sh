@@ -48,7 +48,15 @@ if test -r /dev/urandom; then
       0) ;;
       # Solaris 11 allows negative seek but then gives EINVAL on read
       1) grep 'Invalid argument' err || fail=1;;
-      *) fail=1;;
+      *)
+        case $host_triplet in
+          *linux-gnu*)
+            case "$(uname -r)" in
+              [12].*) ;;  # Older Linux versions timeout
+              *) fail=1 ;;
+            esac ;;
+          *) fail=1 ;;
+        esac ;;
   esac
 fi
 
