@@ -122,6 +122,9 @@
 
 #if HAVE_LINUX_XATTR_H
 # include <linux/xattr.h>
+# ifndef XATTR_NAME_CAPS
+#  define XATTR_NAME_CAPS "security.capability"
+# endif
 #endif
 
 #define PROGRAM_NAME (ls_mode == LS_LS ? "ls" \
