@@ -60,7 +60,7 @@ struct dirent *readdir (DIR *dirp)
   if (! (d = real_readdir (dirp)))
     {
       fprintf (stderr, "Failed to get dirent\n");
-      errno = ENOENT;
+      errno = EIO;
       return NULL;
     }
 
@@ -83,7 +83,7 @@ struct dirent *readdir (DIR *dirp)
     };
 
   /* Fail.  */
-  errno = ENOENT;
+  errno = EIO;
   return NULL;
 }
 EOF
