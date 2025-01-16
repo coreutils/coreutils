@@ -727,6 +727,10 @@ AC_LINK_IFELSE(
     main (void)
     {
       __m512i a, b;
+      a = _mm512_set_epi8 (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
       a = _mm512_clmulepi64_epi128 (a, b, 0x00);
       a = _mm512_shuffle_epi8 (a, b);
       return __builtin_cpu_supports ("avx512bw") &&
