@@ -23,6 +23,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   in inaccurate indication of ACLs (missing '+' flag after mode).
   [bug introduced in coreutils-9.4]
 
+  ls -l no longer outputs "Not supported" errors on virtiofs.
+  [bug introduced in coreutils-9.4]
+
   mv works again with macFUSE file systems.  Previously it would
   have exited with a "Function not implemented" error.
   [bug introduced in coreutils-8.28]
