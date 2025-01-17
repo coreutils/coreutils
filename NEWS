@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  `ls -Z dir` would crash.
+  [bug introduced in coreutils-9.6]
+
 
 * Noteworthy changes in release 9.6 (2025-01-17) [stable]
 

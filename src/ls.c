@@ -1768,7 +1768,7 @@ main (int argc, char **argv)
 
   format_needs_stat = ((sort_type == sort_time) | (sort_type == sort_size)
                        | (format == long_format)
-                       | print_block_size | print_hyperlink);
+                       | print_block_size | print_hyperlink | print_scontext);
   format_needs_type = ((! format_needs_stat)
                        & (recursive | print_with_color | print_scontext
                           | directories_first
@@ -3309,7 +3309,7 @@ file_has_aclinfo_cache (char const *file, struct fileinfo *f,
   static int unsupported_scontext_err;
   static dev_t unsupported_device;
 
-  if (f->stat.st_dev == unsupported_device)
+  if (f->stat_ok && f->stat.st_dev == unsupported_device)
     {
       ai->buf = ai->u.__gl_acl_ch;
       ai->size = 0;
@@ -3322,7 +3322,7 @@ file_has_aclinfo_cache (char const *file, struct fileinfo *f,
   errno = 0;
   int n = file_has_aclinfo (file, ai, flags);
   int err = errno;
-  if (n <= 0 && !acl_errno_valid (err))
+  if (f->stat_ok && n <= 0 && !acl_errno_valid (err))
     {
       unsupported_return = n;
       unsupported_scontext = ai->scontext;
@@ -3342,14 +3342,14 @@ has_capability_cache (char const *file, struct fileinfo *f)
      found that has_capability fails indicating lack of support.  */
   static dev_t unsupported_device;
 
-  if (f->stat.st_dev == unsupported_device)
+  if (f->stat_ok && f->stat.st_dev == unsupported_device)
     {
       errno = ENOTSUP;
       return 0;
     }
 
   bool b = has_capability (file);
-  if ( !b && !acl_errno_valid (errno))
+  if (f->stat_ok && !b && !acl_errno_valid (errno))
     unsupported_device = f->stat.st_dev;
   return b;
 }

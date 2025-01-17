@@ -30,4 +30,7 @@ mkdir sedir || framework_failure_
 ln -sf missing sedir/broken || framework_failure_
 returns_ 1 ls -L -R -Z -m sedir > out || fail=1
 
+# ls 9.6 would segfault with the following
+ls -Z . > out || fail=1
+
 Exit $fail
