@@ -1560,7 +1560,7 @@ case-insensitive @code{inf}, @code{infinity}, and @code{NaN}, although
 whether such values are useful depends on the command in question.
 Modern C implementations also accept hexadecimal floating point
 numbers such as @code{-0x.ep-3}, which stands for @minus{}14/16 times
-@math{2^-3}, which equals @minus{}0.109375.  @xref{Parsing of
+@math{2^{-3}}, which equals @minus{}0.109375.  @xref{Parsing of
 Floats,,, libc, The GNU C Library Reference Manual}.
 
 @vindex LC_NUMERIC
