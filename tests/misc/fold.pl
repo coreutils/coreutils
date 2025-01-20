@@ -47,6 +47,5 @@ my @Tests =
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 
-my $prog = 'fold';
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;

@@ -102,7 +102,7 @@ Test:
 foreach $t (@Tests)
   {
     (my $arg1 = $t->[1]) =~ s| *\+?||;     # strip '+'
-    (my $arg1 = $arg1) =~ s| *-[^ ]+ *||;  # strip option
+    ($arg1 = $arg1) =~ s| *-[^ ]+ *||;     # strip option
 
     # Don't fiddle with expected OUT string if there's a nonzero exit status.
     foreach my $e (@$t)

@@ -35,12 +35,12 @@ $env = $1;
 my $cf = '__CF_USER_TEXT_ENCODING';
 exists $ENV{$cf} and $env .= " -u$cf";
 # Likewise for these Cygwin env vars
-my $cf = 'SYSTEMROOT';
+$cf = 'SYSTEMROOT';
 exists $ENV{$cf} and $env .= " -u$cf";
-my $cf = 'WINDIR';
+$cf = 'WINDIR';
 exists $ENV{$cf} and $env .= " -u$cf";
 # Likewise for these GNU/Hurd env vars
-my $cf = 'LD_ORIGIN_PATH';
+$cf = 'LD_ORIGIN_PATH';
 exists $ENV{$cf} and $env .= " -u$cf";
 
 my @Tests =
