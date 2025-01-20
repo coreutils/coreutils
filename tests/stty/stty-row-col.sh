@@ -53,7 +53,7 @@ tests='
 11 rows_036 30_80
 NA LAST NA
 '
-set $tests
+set -- $tests
 
 saved_size=$(stty size) && test -n "$saved_size" \
   || skip_ "can't get window size"

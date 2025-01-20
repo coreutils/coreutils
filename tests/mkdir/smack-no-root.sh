@@ -28,7 +28,7 @@ msg="failed to set default file creation context to '$c':"
 
 for cmd in 'mkdir dir' 'mknod b p' 'mkfifo f'; do
   $cmd --context="$c" 2> out && fail=1
-  set $cmd
+  set -- $cmd
   echo "$1: $msg" > exp || framework_failure_
 
   sed -e 's/ Operation not permitted$//' out > k || framework_failure_

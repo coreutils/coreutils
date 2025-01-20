@@ -47,7 +47,7 @@ for p in empty -p; do
 
   old_IFS=$IFS
   IFS=':'
-  set $colon_tests
+  set -- $colon_tests
   IFS=$old_IFS
 
   while :; do

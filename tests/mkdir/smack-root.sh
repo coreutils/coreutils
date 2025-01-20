@@ -28,7 +28,7 @@ c=arbitrary-smack-label
 
 for cmd in 'mkdir dir' 'mknod b p' 'mkfifo f'; do
   $cmd --context="$c" || { fail=1; continue; }
-  set $cmd
+  set -- $cmd
   ls -dZ $2 > out || fail=1
   test "$(cut -f1 -d' ' out)" = "$c" || { cat out; fail=1; }
 done

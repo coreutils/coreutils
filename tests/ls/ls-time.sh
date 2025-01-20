@@ -38,7 +38,7 @@ touch -m -d "$t1" c || framework_failure_
 
 # Check default name sorting works
 for def_sort in '' '--sort=name' '-U --sort=name' '-t --sort=name'; do
-  set $(ls $def_sort a B c)
+  set -- $(ls $def_sort a B c)
   test "$*" = 'B a c' || fail=1
 done
 
@@ -53,9 +53,9 @@ touch -a -d "$u1" a || framework_failure_
 
 
 # A has ctime more recent than C.
-set $(ls -t -c a c)
+set -- $(ls -t -c a c)
 test "$*" = 'a c' || fail=1
-set $(ls -c a c)  # Not specified by POSIX
+set -- $(ls -c a c)  # Not specified by POSIX
 test "$*" = 'a c' || fail=1
 
 # Sleep so long in an attempt to avoid spurious failures
@@ -101,20 +101,20 @@ EOF
   ;;
 esac
 
-set $(ls -ut a B c)
+set -- $(ls -ut a B c)
 test "$*" = 'c B a' || fail=1
-set $(ls -u a B c)  # not specified by POSIX
+set -- $(ls -u a B c)  # not specified by POSIX
 test "$*" = 'c B a' || fail=1
 test $fail = 1 && ls -l --full-time --time=access a B c
 
-set $(ls -t a B c)
+set -- $(ls -t a B c)
 test "$*" = 'a B c' || fail=1
-set $(ls --time=mtime a B c)
+set -- $(ls --time=mtime a B c)
 test "$*" = 'a B c' || fail=1
 test $fail = 1 && ls -l --full-time a B c
 
 # Now, C should have ctime more recent than A.
-set $(ls -ct a c)
+set -- $(ls -ct a c)
 if test "$*" = 'c a'; then
   : ok
 else

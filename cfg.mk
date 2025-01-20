@@ -498,6 +498,12 @@ sc_prohibit_NULL:
 	halt='use nullptr instead'					\
 	  $(_sc_search_regexp)
 
+sc_prohibit_bare_set:
+	@prohibit='^ *set [`$$]'					\
+	in_vc_files='\.sh$$'						\
+	halt='use set -- $$args instead of set $$args'			\
+	  $(_sc_search_regexp)
+
 # Don't use "indent-tabs-mode: nil" anymore.  No longer needed.
 sc_prohibit_emacs__indent_tabs_mode__setting:
 	@prohibit='^( *[*#] *)?indent-tabs-mode:'			\

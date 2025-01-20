@@ -42,7 +42,7 @@ tests='
 19 --1:-12 12
 NA LAST NA
 '
-set $tests
+set -- $tests
 
 # Require that this test be run at 'nice' level 0.
 niceness=$(nice)
