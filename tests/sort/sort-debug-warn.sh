@@ -26,39 +26,39 @@ sort: key 1 has zero width and will be ignored
 2
 sort: text ordering performed using simple byte comparison
 sort: key 1 has zero width and will be ignored
-sort: note numbers use '.' as a decimal point in this locale
+sort: numbers use '.' as a decimal point in this locale
 3
 sort: text ordering performed using simple byte comparison
 sort: key 1 is numeric and spans multiple fields
-sort: note numbers use '.' as a decimal point in this locale
+sort: numbers use '.' as a decimal point in this locale
 4
 sort: text ordering performed using simple byte comparison
-sort: note numbers use '.' as a decimal point in this locale
+sort: numbers use '.' as a decimal point in this locale
 sort: options '-bghMRrV' are ignored
 5
 sort: text ordering performed using simple byte comparison
-sort: note numbers use '.' as a decimal point in this locale
+sort: numbers use '.' as a decimal point in this locale
 sort: options '-bghMRV' are ignored
 sort: option '-r' only applies to last-resort comparison
 6
 sort: text ordering performed using simple byte comparison
-sort: note numbers use '.' as a decimal point in this locale
+sort: numbers use '.' as a decimal point in this locale
 sort: option '-r' only applies to last-resort comparison
 7
 sort: text ordering performed using simple byte comparison
 sort: leading blanks are significant in key 2; consider also specifying 'b'
-sort: note numbers use '.' as a decimal point in this locale
+sort: numbers use '.' as a decimal point in this locale
 sort: options '-bg' are ignored
 8
 sort: text ordering performed using simple byte comparison
-sort: note numbers use '.' as a decimal point in this locale
+sort: numbers use '.' as a decimal point in this locale
 9
 sort: text ordering performed using simple byte comparison
-sort: note numbers use '.' as a decimal point in this locale
+sort: numbers use '.' as a decimal point in this locale
 sort: option '-b' is ignored
 10
 sort: text ordering performed using simple byte comparison
-sort: note numbers use '.' as a decimal point in this locale
+sort: numbers use '.' as a decimal point in this locale
 11
 sort: text ordering performed using simple byte comparison
 sort: leading blanks are significant in key 1; consider also specifying 'b'
@@ -136,7 +136,7 @@ sort: text ordering performed using simple byte comparison
 sort: key 1 is numeric and spans multiple fields
 sort: obsolescent key '+2 -1' used; consider '-k 3,1' instead
 sort: key 2 has zero width and will be ignored
-sort: note numbers use '.' as a decimal point in this locale
+sort: numbers use '.' as a decimal point in this locale
 sort: option '-b' is ignored
 sort: option '-r' only applies to last-resort comparison
 EOF
@@ -168,7 +168,7 @@ cat <<\EOF > exp
 sort: text ordering performed using simple byte comparison
 sort: key 1 is numeric and spans multiple fields
 sort: field separator '-' is treated as a minus sign in numbers
-sort: note numbers use '.' as a decimal point in this locale
+sort: numbers use '.' as a decimal point in this locale
 EOF
 sort -nk1 -t- --debug /dev/null 2>out || fail=1
 compare exp out || fail=1
@@ -177,7 +177,7 @@ cat <<\EOF > exp
 sort: text ordering performed using simple byte comparison
 sort: key 1 is numeric and spans multiple fields
 sort: field separator '+' is treated as a plus sign in numbers
-sort: note numbers use '.' as a decimal point in this locale
+sort: numbers use '.' as a decimal point in this locale
 EOF
 sort -gk1 -t+ --debug /dev/null 2>out || fail=1
 compare exp out || fail=1

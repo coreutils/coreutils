@@ -2632,8 +2632,7 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
   if ((basic_numeric_field || general_numeric_field) && ! number_locale_warned)
     {
       error (0, 0,
-             _("%snumbers use %s as a decimal point in this locale"),
-             tab == decimal_point ? "" : _("note "),
+             _("numbers use %s as a decimal point in this locale"),
              quote (((char []) {decimal_point, 0})));
 
     }
