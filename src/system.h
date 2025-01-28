@@ -653,6 +653,13 @@ emit_ancillary_info (char const *program)
 
   printf (_("\n%s online help: <%s>\n"), PACKAGE_NAME, PACKAGE_URL);
 
+#ifdef PACKAGE_PACKAGER
+# ifdef PACKAGE_PACKAGER_BUG_REPORTS
+  printf (_("Report %s bugs to: <%s>\n"), PACKAGE_PACKAGER,
+          PACKAGE_PACKAGER_BUG_REPORTS);
+# endif
+#endif
+
   /* Don't output this redundant message for English locales.
      Note we still output for 'C' so that it gets included in the man page.  */
   char const *lc_messages = setlocale (LC_MESSAGES, nullptr);
