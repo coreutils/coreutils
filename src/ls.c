@@ -5425,8 +5425,8 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
       --file-type            likewise, except do not append '*'\n\
 "), stdout);
       fputs (_("\
-      --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
-                             single-column -1, verbose -l, vertical -C\n\
+      --format=WORD          across,horizontal (-x), commas (-m), long (-l),\n\
+                             single-column (-1), verbose (-l), vertical (-C)\n\
 \n\
 "), stdout);
       fputs (_("\
