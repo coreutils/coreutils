@@ -407,7 +407,7 @@ is_char_class_member (enum Char_class char_class, unsigned char c)
     case CC_XDIGIT:
       result = c_isxdigit (c);
       break;
-    default:
+    case CC_NO_CLASS: default:
       unreachable ();
     }
 
@@ -1053,15 +1053,13 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
     case RE_CHAR_CLASS:
       if (class)
         {
-          switch (p->u.char_class)
+          switch (+p->u.char_class)
             {
             case CC_LOWER:
               *class = UL_LOWER;
               break;
             case CC_UPPER:
               *class = UL_UPPER;
-              break;
-            default:
               break;
             }
         }
@@ -1265,7 +1263,7 @@ get_spec_stats (struct Spec_list *s)
           for (int i = 0; i < N_CHARS; i++)
             if (is_char_class_member (p->u.char_class, i))
               ++len;
-          switch (p->u.char_class)
+          switch (+p->u.char_class)
             {
             case CC_UPPER:
             case CC_LOWER:

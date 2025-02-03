@@ -205,8 +205,6 @@ if test $gl_gcc_warnings != no; then
   nw="$nw -Wredundant-decls"        # openat.h declares e.g., mkdirat
   nw="$nw -Wformat-nonliteral"      # who.c and pinky.c strftime uses
   nw="$nw -Wnested-externs"         # use of XARGMATCH/verify_function__
-  nw="$nw -Wswitch-enum"            # Too many warnings for now
-  nw="$nw -Wswitch-default"         # Too many warnings for now
   nw="$nw -Wstack-protector"        # not worth working around
   nw="$nw -Wformat-overflow=2"      # False alarms due to GCC bug 110333
   nw="$nw -Wformat-truncation=2"    # False alarm in ls.c, probably related
@@ -230,6 +228,7 @@ if test $gl_gcc_warnings != no; then
   # Code like that still infloops with gcc-4.6.0 and -O2.  Scary indeed.
 
   gl_MANYWARN_ALL_GCC([ws])
+  AS_VAR_APPEND([ws], [' -Wswitch-enum'])
   gl_MANYWARN_COMPLEMENT([ws], [$ws], [$nw])
   for w in $ws; do
     gl_WARN_ADD([$w])

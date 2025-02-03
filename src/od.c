@@ -770,7 +770,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           unreachable ();
         }
 
-      switch (size_spec)
+      switch (+size_spec)
         {
         case CHAR:
           print_function = (fmt == SIGNED_DECIMAL
@@ -879,7 +879,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
         size_t decimal_point_len =
           (locale->decimal_point[0] ? strlen (locale->decimal_point) : 1);
 
-        switch (size_spec)
+        switch (+size_spec)
           {
           case FLOAT_HALF:
             print_function = fmt == BFLOATING_POINT

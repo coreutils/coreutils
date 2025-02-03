@@ -170,7 +170,7 @@ describe_change (char const *file, struct change_status const *ch)
       printf (_("%s could not be accessed\n"), quoted_file);
       return;
 
-    default:
+    case CH_FAILED: case CH_NO_CHANGE_REQUESTED: case CH_SUCCEEDED:
       break;
   }
 
@@ -196,7 +196,7 @@ describe_change (char const *file, struct change_status const *ch)
       fmt = _("mode of %s retained as %04lo (%s)\n");
       printf (fmt, quoted_file, m, &perms[1]);
       return;
-    default:
+    case CH_NO_STAT: case CH_NOT_APPLIED: default:
       affirm (false);
     }
   printf (fmt, quoted_file, old_m, &old_perms[1], m, &perms[1]);

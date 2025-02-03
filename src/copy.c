@@ -160,7 +160,11 @@ copy_debug_string (enum copy_debug_val debug_val)
     case COPY_DEBUG_YES: return "yes";
     case COPY_DEBUG_AVOIDED: return "avoided";
     case COPY_DEBUG_UNSUPPORTED: return "unsupported";
-    default: return "unknown";
+    case COPY_DEBUG_UNKNOWN: return "unknown";
+
+    case COPY_DEBUG_EXTERNAL:
+    case COPY_DEBUG_EXTERNAL_INTERNAL:
+    default: unreachable ();
     }
 }
 
@@ -173,7 +177,11 @@ copy_debug_sparse_string (enum copy_debug_val debug_val)
     case COPY_DEBUG_YES: return "zeros";
     case COPY_DEBUG_EXTERNAL: return "SEEK_HOLE";
     case COPY_DEBUG_EXTERNAL_INTERNAL: return "SEEK_HOLE + zeros";
-    default: return "unknown";
+    case COPY_DEBUG_UNKNOWN: return "unknown";
+
+    case COPY_DEBUG_AVOIDED:
+    case COPY_DEBUG_UNSUPPORTED:
+    default: unreachable ();
     }
 }
 

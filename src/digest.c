@@ -1505,7 +1505,7 @@ main (int argc, char **argv)
 #endif
 
 #if HASH_ALGO_CKSUM
-  switch (cksum_algorithm)
+  switch (+cksum_algorithm)
     {
     case bsd:
     case sysv:
@@ -1515,8 +1515,6 @@ main (int argc, char **argv)
           error (EXIT_FAILURE, 0,
                  _("--check is not supported with "
                    "--algorithm={bsd,sysv,crc,crc32b}"));
-        break;
-    default:
         break;
     }
 

@@ -197,6 +197,7 @@ describe_change (char const *file, enum Change_status changed,
              : group ? _("group of %s retained as %s\n")
              : _("ownership of %s retained\n"));
       break;
+    case CH_NOT_APPLIED:
     default:
       affirm (false);
     }

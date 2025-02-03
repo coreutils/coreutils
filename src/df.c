@@ -487,6 +487,7 @@ decode_output_arg (char const *arg)
           alloc_field (field, N_("Avail"));
           break;
 
+        case INVALID_FIELD:
         default:
           affirm (!"invalid field");
         }
@@ -1226,6 +1227,7 @@ get_dev (char const *device, char const *mount_point, char const *file,
           cell = xstrdup (mount_point);
           break;
 
+        case INVALID_FIELD:
         default:
           affirm (!"unhandled field");
         }

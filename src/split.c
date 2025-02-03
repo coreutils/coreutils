@@ -1683,7 +1683,7 @@ main (int argc, char **argv)
       }
       break;
 
-    default:
+    case type_undef: default:
       affirm (false);
     }
 

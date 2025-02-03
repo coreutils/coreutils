@@ -923,7 +923,7 @@ main (int argc, char **argv)
     case AI_ERR_MEM:
       xalloc_die ();
 
-    default:
+    case AI_ERR_OK: default:
       unreachable ();
     }
 

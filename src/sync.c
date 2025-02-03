@@ -139,13 +139,12 @@ sync_arg (enum sync_mode mode, char const *file)
           sync_status = fsync (fd);
           break;
 
-#if HAVE_SYNCFS
         case MODE_FILE_SYSTEM:
+#if HAVE_SYNCFS
           sync_status = syncfs (fd);
           break;
 #endif
-
-        default:
+        case MODE_SYNC: default:
           unreachable ();
         }
 

@@ -2539,6 +2539,9 @@ print_factors (char const *input)
       /* Try GMP.  */
       break;
 
+    case LONGINT_INVALID:
+    case LONGINT_INVALID_SUFFIX_CHAR:
+    case LONGINT_INVALID_SUFFIX_CHAR_WITH_OVERFLOW:
     default:
       error (0, 0, _("%s is not a valid positive integer"), quote (input));
       return false;

@@ -158,7 +158,7 @@ diagnose_copy_fd_failure (enum Copy_fd_status err, char const *filename)
     case COPY_FD_UNEXPECTED_EOF:
       error (0, errno, _("%s: file has shrunk too much"), quotef (filename));
       break;
-    default:
+    case COPY_FD_OK: default:
       affirm (false);
     }
 }

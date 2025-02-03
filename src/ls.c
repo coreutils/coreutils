@@ -1160,7 +1160,7 @@ time_type_to_statx (void)
       return STATX_ATIME;
     case time_btime:
       return STATX_BTIME;
-    default:
+    case time_numtypes: default:
       unreachable ();
     }
     return 0;
@@ -1200,7 +1200,7 @@ calc_req_mask (void)
     case sort_size:
       mask |= STATX_SIZE;
       break;
-    default:
+    case sort_numtypes: default:
       unreachable ();
     }
 
@@ -1927,8 +1927,13 @@ decode_line_length (char const *spec)
     case LONGINT_OVERFLOW:
       return 0;
 
-    default:
+    case LONGINT_INVALID:
+    case LONGINT_INVALID_SUFFIX_CHAR:
+    case LONGINT_INVALID_SUFFIX_CHAR_WITH_OVERFLOW:
       return -1;
+
+    default:
+      unreachable ();
     }
 }
 
@@ -2710,7 +2715,7 @@ get_funky_string (char **dest, char const **src, bool equals_end,
             state = ST_ERROR;
           break;
 
-        default:
+        case ST_END: case ST_ERROR: default:
           unreachable ();
         }
     }
@@ -2871,7 +2876,7 @@ parse_ls_color (void)
         case PS_FAIL:
           goto done;
 
-        default:
+        case PS_DONE: default:
           affirm (false);
         }
     }
@@ -3484,10 +3489,13 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
             }
           FALLTHROUGH;
 
-        default: /* DEREF_NEVER */
+        case DEREF_NEVER:
           err = do_lstat (full_name, &f->stat);
           do_deref = false;
           break;
+
+        case DEREF_UNDEFINED: default:
+          unreachable ();
         }
 
       if (err != 0)
@@ -4335,7 +4343,7 @@ print_long_format (const struct fileinfo *f)
       if (when_timespec.tv_sec == -1 && when_timespec.tv_nsec == -1)
         btime_ok = false;
       break;
-    default:
+    case time_numtypes: default:
       unreachable ();
     }
 

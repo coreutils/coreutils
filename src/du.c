@@ -1060,7 +1060,7 @@ main (int argc, char **argv)
               goto argv_iter_done;
             case AI_ERR_MEM:
               xalloc_die ();
-            default:
+            case AI_ERR_OK: default:
               affirm (!"unexpected error code from argv_iter");
             }
         }
