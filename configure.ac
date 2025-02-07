@@ -366,8 +366,8 @@ AS_CASE([$LIB_CRYPTO],
     [# Check for dlopen and libcrypto dynamic linking in one program,
      # as there's little point to checking them separately.
      AC_CACHE_CHECK([for dlopen and whether libcrypto is linked dynamically],
-       [utils_cv_dlopen_libcrypto],
-       [utils_cv_dlopen_libcrypto=no
+       [utils_cv_libcrypto_soname],
+       [utils_cv_libcrypto_soname=no
         saved_LIBS=$LIBS
         LIBS="$LIBS $LIB_DL $LIB_CRYPTO"
         AC_LINK_IFELSE(
@@ -385,14 +385,14 @@ AS_CASE([$LIB_CRYPTO],
                               sed -n 's/.*\(libcrypto\.so\.[[.0-9]]*\).*/\1/p'`"
            AS_CASE([$LIBCRYPTO_SONAME],
              [*libcrypto*],
-               [utils_cv_dlopen_libcrypto=yes])])
+               [utils_cv_libcrypto_soname=$LIBCRYPTO_SONAME])])
         LIBS=$saved_LIBS])
-     AS_CASE([$utils_cv_dlopen_libcrypto],
-       [yes],
+     AS_CASE([$utils_cv_libcrypto_soname],
+       [*libcrypto*],
          [AC_DEFINE([DLOPEN_LIBCRYPTO], [1],
                     [Define to 1 if dlopen exists and libcrypto is
                      linked dynamically.])
-          AC_DEFINE_UNQUOTED([LIBCRYPTO_SONAME], ["$LIBCRYPTO_SONAME"],
+          AC_DEFINE_UNQUOTED([LIBCRYPTO_SONAME], ["$utils_cv_libcrypto_soname"],
                              [versioned libcrypto])
          ])])
 
