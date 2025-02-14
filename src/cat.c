@@ -717,20 +717,20 @@ main (int argc, char **argv)
           && have_out_dev
           && stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino)
         {
-          if (out_flags < -1)
-            out_flags = fcntl (STDOUT_FILENO, F_GETFL);
-          bool exhausting = 0 <= out_flags && out_flags & O_APPEND;
-          if (!exhausting)
+          off_t in_pos = lseek (input_desc, 0, SEEK_CUR);
+          if (0 <= in_pos)
             {
-              off_t in_pos = lseek (input_desc, 0, SEEK_CUR);
-              if (0 <= in_pos)
-                exhausting = in_pos < lseek (STDOUT_FILENO, 0, SEEK_CUR);
-            }
-          if (exhausting)
-            {
-              error (0, 0, _("%s: input file is output file"), quotef (infile));
-              ok = false;
-              goto contin;
+              if (out_flags < -1)
+                out_flags = fcntl (STDOUT_FILENO, F_GETFL);
+              int whence = (0 <= out_flags && out_flags & O_APPEND
+                            ? SEEK_END : SEEK_CUR);
+              if (in_pos < lseek (STDOUT_FILENO, 0, whence))
+                {
+                  error (0, 0, _("%s: input file is output file"),
+                         quotef (infile));
+                  ok = false;
+                  goto contin;
+                }
             }
         }
 
