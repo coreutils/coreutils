@@ -712,7 +712,8 @@ main (int argc, char **argv)
          output device.  It's better to catch this error earlier
          rather than later.  */
 
-      if (! (S_TYPEISSHM (&stat_buf) || S_TYPEISTMO (&stat_buf))
+      if (! (S_ISFIFO (stat_buf.st_mode) || S_ISSOCK (stat_buf.st_mode)
+             || S_TYPEISSHM (&stat_buf) || S_TYPEISTMO (&stat_buf))
           && have_out_dev
           && stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino)
         {
