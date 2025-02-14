@@ -646,9 +646,15 @@ main (int argc, char **argv)
   idx_t outsize = io_blksize (&stat_buf);
 
   /* Device, I-node number and lazily-acquired flags of the output.  */
-  dev_t out_dev = stat_buf.st_dev;
-  ino_t out_ino = stat_buf.st_ino;
+  dev_t out_dev;
+  ino_t out_ino;
   int out_flags = -2;
+  bool have_out_dev = ! (S_TYPEISSHM (&stat_buf) || S_TYPEISTMO (&stat_buf));
+  if (have_out_dev)
+    {
+      out_dev = stat_buf.st_dev;
+      out_ino = stat_buf.st_ino;
+   }
 
   /* True if the output is a regular file.  */
   bool out_isreg = S_ISREG (stat_buf.st_mode) != 0;
@@ -706,7 +712,9 @@ main (int argc, char **argv)
          output device.  It's better to catch this error earlier
          rather than later.  */
 
-      if (stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino)
+      if (! (S_TYPEISSHM (&stat_buf) || S_TYPEISTMO (&stat_buf))
+          && have_out_dev
+          && stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino)
         {
           if (out_flags < -1)
             out_flags = fcntl (STDOUT_FILENO, F_GETFL);
