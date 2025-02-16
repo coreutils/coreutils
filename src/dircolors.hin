@@ -160,6 +160,7 @@ EXEC 01;32
 .avif 01;35
 .jpg 01;35
 .jpeg 01;35
+.jxl 01;35
 .mjpg 01;35
 .mjpeg 01;35
 .gif 01;35
