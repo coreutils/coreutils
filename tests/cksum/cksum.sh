@@ -20,7 +20,7 @@
 print_ver_ cksum printf
 
 
-returns_ 1 cksum missing || fail=1
+returns_ 1 cksum missing 2> /dev/null || fail=1
 
 # Pass in expected crc and crc32b for file "in"
 # Sets fail=1 upon failure
