@@ -92,7 +92,9 @@ cksum_vmull (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
           data = bswap_neon (data);
           /* XOR in initial CRC value (for us 0 so no effect), or CRC value
              calculated for previous BUFLEN buffer from fread */
-          xor_crc = vcombine_u64 (vcreate_u64 (0), vcreate_u64 (crc << 32));
+
+          uint64_t wcrc = crc;
+          xor_crc = vcombine_u64 (vcreate_u64 (0), vcreate_u64 (wcrc << 32));
           crc = 0;
           data = veorq_u64 (data, xor_crc);
           data3 = vld1q_u64 ((uint64_t *) (datap + 1));
@@ -193,7 +195,8 @@ cksum_vmull (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
         {
           data = vld1q_u64 ((uint64_t *) (datap));
           data = bswap_neon (data);
-          xor_crc = vcombine_u64 (vcreate_u64 (0), vcreate_u64 (crc << 32));
+          uint64_t wcrc = crc;
+          xor_crc = vcombine_u64 (vcreate_u64 (0), vcreate_u64 (wcrc << 32));
           crc = 0;
           data = veorq_u64 (data, xor_crc);
           while (bytes_read >= 32)
