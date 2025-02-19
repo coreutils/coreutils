@@ -34,20 +34,11 @@
 
 #include <config.h>
 
-#include <stdio.h>
-#include <sys/types.h>
-#include <stdint.h>
-#include <endian.h>
-#include "system.h"
-
-#ifdef USE_VMULL_CRC32
-# include <sys/auxv.h>
-# include <asm/hwcap.h>
-#endif
-
 #ifdef CRCTAB
 
-# define BIT(x)	((uint_fast32_t) 1 << (x))
+# include <stdio.h>
+
+# define BIT(x)	(1u << (x))
 # define SBIT	BIT (31)
 
 /* The generating polynomial is
@@ -61,7 +52,7 @@
                  | BIT (11) | BIT (10) | BIT (8) | BIT (7) | BIT (5) \
                  | BIT (4) | BIT (2) | BIT (1) | BIT (0))
 
-static uint_fast32_t r[8];
+static unsigned int r[8];
 
 static void
 fill_r (void)
@@ -71,10 +62,10 @@ fill_r (void)
     r[i] = (r[i - 1] << 1) ^ ((r[i - 1] & SBIT) ? GEN : 0);
 }
 
-static uint_fast32_t
+static unsigned int
 crc_remainder (int m)
 {
-  uint_fast32_t rem = 0;
+  unsigned int rem = 0;
 
   for (int i = 0; i < 8; i++)
     if (BIT (i) & m)
@@ -86,15 +77,12 @@ crc_remainder (int m)
 int
 main (void)
 {
-  int i;
-  static uint_fast32_t crctab[8][256];
+  static unsigned int crctab[8][256];
 
   fill_r ();
 
-  for (i = 0; i < 256; i++)
-    {
-      crctab[0][i] = crc_remainder (i);
-    }
+  for (int i = 0; i < 256; i++)
+    crctab[0][i] = crc_remainder (i);
 
   /* CRC(0x11 0x22 0x33 0x44)
      is equal to
@@ -103,28 +91,26 @@ main (void)
      We precompute the CRC values for the offset values into
      separate CRC tables. We can then use them to speed up
      CRC calculation by processing multiple bytes at the time. */
-  for (i = 0; i < 256; i++)
+  for (int i = 0; i < 256; i++)
     {
-      uint32_t crc = 0;
+      unsigned int crc = 0;
 
-      crc = (crc << 8) ^ crctab[0][((crc >> 24) ^ (i & 0xFF)) & 0xFF];
-      for (idx_t offset = 1; offset < 8; offset++)
+      crc = (crc << 8) ^ crctab[0][((crc >> 24) ^ i) & 0xFF];
+      for (int offset = 1; offset < 8; offset++)
         {
-          crc = (crc << 8) ^ crctab[0][((crc >> 24) ^ 0x00) & 0xFF];
-          crctab[offset][i] = crc;
+          crc = (crc << 8) ^ crctab[0][((crc >> 24) ^ 0) & 0xFF];
+          crctab[offset][i] = crc & 0xFFFFFFFF;
         }
     }
 
   printf ("#include <config.h>\n");
-  printf ("#include <stdint.h>\n");
-  printf ("#include <stdio.h>\n");
   printf ("#include \"cksum.h\"\n");
   printf ("\n");
   printf ("uint_fast32_t const crctab[8][256] = {\n");
   for (int y = 0; y < 8; y++)
     {
       printf ("{\n  0x%08x", crctab[y][0]);
-      for (i = 0; i < 51; i++)
+      for (int i = 0; i < 51; i++)
         {
           printf (",\n  0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x",
                   crctab[y][i * 5 + 1], crctab[y][i * 5 + 2],
@@ -134,12 +120,20 @@ main (void)
         printf ("\n},\n");
     }
   printf ("};\n");
-  return EXIT_SUCCESS;
 }
 
 #else /* !CRCTAB */
 
 # include "cksum.h"
+# include <sys/types.h>
+# include <endian.h>
+# include "system.h"
+
+# ifdef USE_VMULL_CRC32
+#  include <sys/auxv.h>
+#  include <asm/hwcap.h>
+# endif
+
 # include "crc.h"
 
 /* Number of bytes to read at once.  */

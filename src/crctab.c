@@ -1,6 +1,4 @@
 #include <config.h>
-#include <stdint.h>
-#include <stdio.h>
 #include "cksum.h"
 
 uint_fast32_t const crctab[8][256] = {
