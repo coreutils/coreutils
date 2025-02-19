@@ -498,9 +498,8 @@ Other options:\n\
   -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s;\n\
                               multiple options specify multiple directories\n\
       --parallel=N          change the number of sorts run concurrently to N\n\
-  -u, --unique              with -c, check for strict ordering;\n\
-                              without -c, output only the first of an equal run\
-\n\
+  -u, --unique              output only the first of lines with equal keys;\n\
+                              with -c, check for strict ordering\n\
 "), DEFAULT_TMPDIR);
       fputs (_("\
   -z, --zero-terminated     line delimiter is NUL, not newline\n\
