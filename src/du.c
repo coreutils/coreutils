@@ -43,8 +43,6 @@
 #include "xstrtol.h"
 #include "xstrtol-error.h"
 
-extern bool fts_debug;
-
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "du"
 
@@ -53,12 +51,6 @@ extern bool fts_debug;
   proper_name ("David MacKenzie"), \
   proper_name ("Paul Eggert"), \
   proper_name ("Jim Meyering")
-
-#if DU_DEBUG
-# define FTS_CROSS_CHECK(Fts) fts_cross_check (Fts)
-#else
-# define FTS_CROSS_CHECK(Fts)
-#endif
 
 /* A set of dev/ino pairs to help identify files and directories
    whose sizes have already been counted.  */
@@ -206,7 +198,9 @@ enum
   EXCLUDE_OPTION,
   FILES0_FROM_OPTION,
   HUMAN_SI_OPTION,
+#if GNULIB_FTS_DEBUG
   FTS_DEBUG,
+#endif
   TIME_OPTION,
   TIME_STYLE_OPTION,
   INODES_OPTION
@@ -219,7 +213,9 @@ static struct option const long_options[] =
   {"block-size", required_argument, nullptr, 'B'},
   {"bytes", no_argument, nullptr, 'b'},
   {"count-links", no_argument, nullptr, 'l'},
-  /* {"-debug", no_argument, nullptr, FTS_DEBUG}, */
+#if GNULIB_FTS_DEBUG
+  {"-debug", no_argument, nullptr, FTS_DEBUG},
+#endif
   {"dereference", no_argument, nullptr, 'L'},
   {"dereference-args", no_argument, nullptr, 'D'},
   {"exclude", required_argument, nullptr, EXCLUDE_OPTION},
@@ -686,7 +682,11 @@ du_files (char **files, int bit_flags)
               prev_level = 0;
               break;
             }
-          FTS_CROSS_CHECK (fts);
+
+#if GNULIB_FTS_DEBUG
+          if (fts_debug)
+            fts_cross_check (fts);
+#endif
 
           ok &= process_file (fts, ent);
         }
@@ -745,7 +745,7 @@ main (int argc, char **argv)
 
       switch (c)
         {
-#if DU_DEBUG
+#if GNULIB_FTS_DEBUG
         case FTS_DEBUG:
           fts_debug = true;
           break;
