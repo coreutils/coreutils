@@ -16,19 +16,14 @@
 
 #include <config.h>
 
-#include <stdio.h>
+#include "cksum.h"
+
 #include <sys/types.h>
-#include <stdint.h>
 #include <x86intrin.h>
 #include "system.h"
 
 /* Number of bytes to read at once.  */
 #define BUFLEN (1 << 16)
-
-extern uint_fast32_t const crctab[8][256];
-
-extern bool
-cksum_avx512 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out);
 
 bool
 cksum_avx512 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)

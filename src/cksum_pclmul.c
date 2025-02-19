@@ -16,19 +16,15 @@
 
 #include <config.h>
 
+#include "cksum.h"
+
 #include <stdio.h>
 #include <sys/types.h>
-#include <stdint.h>
 #include <x86intrin.h>
 #include "system.h"
 
 /* Number of bytes to read at once.  */
 #define BUFLEN (1 << 16)
-
-extern uint_fast32_t const crctab[8][256];
-
-extern bool
-cksum_pclmul (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out);
 
 /* Calculate CRC32 using PCLMULQDQ CPU instruction found in x86/x64 CPUs */
 
