@@ -72,7 +72,7 @@ int exit_status = EXIT_SUCCESS;
 
 
 /* Add tab stop TABVAL to the end of 'tab_list'.  */
-extern void
+void
 add_tab_stop (colno tabval)
 {
   colno prev_column = first_free_tab ? tab_list[first_free_tab - 1] : 0;
@@ -125,7 +125,7 @@ set_increment_size (colno tabval)
 
 /* Add the comma or blank separated list of tab stops STOPS
    to the list of tab stops.  */
-extern void
+void
 parse_tab_stops (char const *stops)
 {
   bool have_tabval = false;
@@ -256,7 +256,7 @@ validate_tab_stops (colno const *tabs, idx_t entries)
    tab-stops = N (if value N specified as the only value).
    tab-stops = distinct values given on command line (if multiple values given).
 */
-extern void
+void
 finalize_tab_stops (void)
 {
   validate_tab_stops (tab_list, first_free_tab);
@@ -276,7 +276,7 @@ finalize_tab_stops (void)
    amny multiple tab-sizes.  Set *LAST_TAB depending on whether we are
    returning COLUMN + 1 merely because we're past the last tab.
    If the number would overflow, diagnose this and exit.  */
-extern colno
+colno
 get_next_tab_column (colno column, idx_t *tab_index, bool *last_tab)
 {
   *last_tab = false;
@@ -321,7 +321,7 @@ get_next_tab_column (colno column, idx_t *tab_index, bool *last_tab)
 
 
 /* Sets new file-list */
-extern void
+void
 set_file_list (char **list)
 {
   have_read_stdin = false;
@@ -337,7 +337,7 @@ set_file_list (char **list)
    Open a filename of '-' as the standard input.
    Return nullptr if there are no more input files.  */
 
-extern FILE *
+FILE *
 next_file (FILE *fp)
 {
   static char *prev_file;
@@ -381,7 +381,7 @@ next_file (FILE *fp)
 }
 
 /* */
-extern void
+void
 cleanup_file_list_stdin (void)
 {
     if (have_read_stdin && fclose (stdin) != 0)
@@ -389,7 +389,7 @@ cleanup_file_list_stdin (void)
 }
 
 
-extern void
+void
 emit_tab_list_info (void)
 {
   /* suppress syntax check for emit_mandatory_arg_note() */

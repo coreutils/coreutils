@@ -32,7 +32,7 @@
 #include "sig2str.h"
 #include "operand2sig.h"
 
-extern int
+int
 operand2sig (char const *operand)
 {
   int signum;

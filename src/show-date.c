@@ -16,7 +16,7 @@
    If unsuccessful and ON_ERROR_PRINT_UNFORMATTED, also prints WHEN.TV_SEC
    to STDOUT.  */
 
-extern bool
+bool
 show_date (char const *format, struct timespec when, timezone_t tz)
 {
   struct tm tm;

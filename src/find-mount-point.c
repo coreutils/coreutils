@@ -26,7 +26,7 @@
    malloced storage.  FILE_STAT should be the result of stating FILE.
    Give a diagnostic and return nullptr if unable to determine the mount point.
    Exit if unable to restore current working directory.  */
-extern char *
+char *
 find_mount_point (char const *file, struct stat const *file_stat)
 {
   struct saved_cwd cwd;
