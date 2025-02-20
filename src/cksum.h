@@ -15,10 +15,10 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef __CKSUM_H__
-#define __CKSUM_H__
+# define __CKSUM_H__
 
-#include <stdint.h>
-#include <stdio.h>
+# include <stdint.h>
+# include <stdio.h>
 
 extern bool cksum_debug;
 
