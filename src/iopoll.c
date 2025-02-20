@@ -135,7 +135,7 @@ iopoll_internal (int fdin, int fdout, bool block, bool broken_output)
   return IOPOLL_ERROR;
 }
 
-int
+extern int
 iopoll (int fdin, int fdout, bool block)
 {
   return iopoll_internal (fdin, fdout, block, true);
@@ -147,7 +147,7 @@ iopoll (int fdin, int fdout, bool block)
    An fd is not relevant for iopoll() if it is always ready for reading,
    which is the case for a regular file or block device.  */
 
-bool
+extern bool
 iopoll_input_ok (int fdin)
 {
   struct stat st;
@@ -160,7 +160,7 @@ iopoll_input_ok (int fdin)
 /* Return true if fdout is suitable for iopoll().
    Namely, fdout refers to a pipe.  */
 
-bool
+extern bool
 iopoll_output_ok (int fdout)
 {
   return isapipe (fdout) > 0;
@@ -203,7 +203,7 @@ fail:
 
 /* wrapper for fclose() that also waits for F if non blocking.  */
 
-bool
+extern bool
 fclose_wait (FILE *f)
 {
   for (;;)
@@ -221,7 +221,7 @@ fclose_wait (FILE *f)
 
 /* wrapper for fwrite() that also waits for F if non blocking.  */
 
-bool
+extern bool
 fwrite_wait (char const *buf, ssize_t size, FILE *f)
 {
   for (;;)

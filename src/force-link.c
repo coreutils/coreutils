@@ -91,7 +91,7 @@ try_link (char *dest, void *arg)
    -1 if successful and DSTNAME already existed,
    0 if successful and DSTNAME did not already exist, and
    a positive errno value on failure.  */
-int
+extern int
 force_linkat (int srcdir, char const *srcname,
               int dstdir, char const *dstname, int flags, bool force,
               int linkat_errno)
@@ -148,7 +148,7 @@ try_symlink (char *dest, void *arg)
    -1 if successful and DSTNAME already existed,
    0 if successful and DSTNAME did not already exist, and
    a positive errno value on failure.  */
-int
+extern int
 force_symlinkat (char const *srcname, int dstdir, char const *dstname,
                  bool force, int symlinkat_errno)
 {

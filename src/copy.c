@@ -2017,7 +2017,7 @@ overwrite_ok (struct cp_options const *x, char const *dst_name,
 
 /* Initialize the hash table implementing a set of F_triple entries
    corresponding to destination files.  */
-void
+extern void
 dest_info_init (struct cp_options *x)
 {
   x->dest_info
@@ -2032,7 +2032,7 @@ dest_info_init (struct cp_options *x)
 
 /* Initialize the hash table implementing a set of F_triple entries
    corresponding to source files listed on the command line.  */
-void
+extern void
 src_info_init (struct cp_options *x)
 {
 
@@ -3374,7 +3374,7 @@ valid_options (const struct cp_options *co)
    the source was simply renamed to the destination.
    Return true if successful.  */
 
-bool
+extern bool
 copy (char const *src_name, char const *dst_name,
       int dst_dirfd, char const *dst_relname,
       int nonexistent_dst, const struct cp_options *options,
@@ -3402,7 +3402,7 @@ copy (char const *src_name, char const *dst_name,
 
 /* Set *X to the default options for a value of type struct cp_options.  */
 
-void
+extern void
 cp_options_default (struct cp_options *x)
 {
   memset (x, 0, sizeof *x);
@@ -3428,7 +3428,7 @@ cp_options_default (struct cp_options *x)
    the error number that chown failed with and X is the copying
    option set.  */
 
-bool
+extern bool
 chown_failure_ok (struct cp_options const *x)
 {
   /* If non-root uses -p, it's ok if we can't preserve ownership.
@@ -3462,7 +3462,7 @@ owner_failure_ok (struct cp_options const *x)
    some operating systems (e.g., GNU/Linux's "POSIX" ACLs) use that
    ACL's mask rather than the process umask.  Currently, the callers
    of cached_umask incorrectly assume that this situation cannot occur.  */
-mode_t
+extern mode_t
 cached_umask (void)
 {
   static mode_t mask = (mode_t) -1;

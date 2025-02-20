@@ -31,7 +31,7 @@
 
 
 /* Print all of the distinct groups the user is in. */
-bool
+extern bool
 print_group_list (char const *username,
                   uid_t ruid, gid_t rgid, gid_t egid,
                   bool use_names, char delim)
@@ -87,7 +87,7 @@ print_group_list (char const *username,
 }
 
 /* Print the name or value of group ID GID. */
-bool
+extern bool
 print_group (gid_t gid, bool use_name)
 {
   struct group *grp = nullptr;
