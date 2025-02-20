@@ -60,12 +60,6 @@
 # define UT_TYPE_INIT_PROCESS(U) false
 #endif
 
-#ifdef LOGIN_PROCESS
-# define UT_TYPE_LOGIN_PROCESS(U) ((U)->ut_type == LOGIN_PROCESS)
-#else
-# define UT_TYPE_LOGIN_PROCESS(U) false
-#endif
-
 #ifdef DEAD_PROCESS
 # define UT_TYPE_DEAD_PROCESS(U) ((U)->ut_type == DEAD_PROCESS)
 #else
