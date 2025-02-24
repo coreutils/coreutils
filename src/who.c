@@ -577,7 +577,7 @@ scan_entries (idx_t n, struct gl_utmp const *utmp_buf)
   while (n--)
     {
       if (!my_line_only
-          || STREQ (ttyname_b, utmp_buf->ut_line))
+          || str_endswith (utmp_buf->ut_line, ttyname_b))
         {
           if (need_users && IS_USER_PROCESS (utmp_buf))
             print_user (utmp_buf, boottime);
