@@ -1027,7 +1027,8 @@ cache_round (int fd, off_t len)
 
 /* Discard the cache from the current offset of either
    STDIN_FILENO or STDOUT_FILENO.
-   Return true on success.  */
+   Return true on success.
+   Return false on failure, with errno set.  */
 
 static bool
 invalidate_cache (int fd, off_t len)
@@ -1087,12 +1088,13 @@ invalidate_cache (int fd, off_t len)
      if (clen == 0)
        offset -= offset % page_size;
      adv_ret = posix_fadvise (fd, offset, clen, POSIX_FADV_DONTNEED);
+     errno = adv_ret;
 #else
      errno = ENOTSUP;
 #endif
    }
 
-  return adv_ret != -1 ? true : false;
+  return adv_ret == 0;
 }
 
 /* Read from FD into the buffer BUF of size SIZE, processing any
