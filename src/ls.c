@@ -3327,7 +3327,8 @@ file_has_aclinfo_cache (char const *file, struct fileinfo *f,
   errno = 0;
   int n = file_has_aclinfo (file, ai, flags);
   int err = errno;
-  if (f->stat_ok && n <= 0 && !acl_errno_valid (err))
+  if (f->stat_ok && n <= 0 && !acl_errno_valid (err)
+      && (!(flags & ACL_GET_SCONTEXT) || !acl_errno_valid (ai->scontext_err)))
     {
       unsupported_return = n;
       unsupported_scontext = ai->scontext;
