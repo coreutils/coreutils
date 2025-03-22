@@ -198,7 +198,7 @@ main (int argc, char **argv)
 
   if (default_format && (use_real || use_name))
     error (EXIT_FAILURE, 0,
-           _("cannot print only names or real IDs in default format"));
+           _("printing only names or real IDs requires -u, -g, or -G"));
 
   if (default_format && opt_zero)
     error (EXIT_FAILURE, 0,
