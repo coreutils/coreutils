@@ -102,8 +102,8 @@ or (when USER omitted) for the current process.\n\
   -Z, --context  print only the security context of the process\n\
   -g, --group    print only the effective group ID\n\
   -G, --groups   print all group IDs\n\
-  -n, --name     print a name instead of a number, for -ugG\n\
-  -r, --real     print the real ID instead of the effective ID, with -ugG\n\
+  -n, --name     print a name instead of a number, for -u,-g,-G\n\
+  -r, --real     print the real ID instead of the effective ID, with -u,-g,-G\n\
   -u, --user     print only the effective user ID\n\
   -z, --zero     delimit entries with NUL characters, not whitespace;\n\
                    not permitted in default format\n\
