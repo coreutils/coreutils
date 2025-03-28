@@ -3549,7 +3549,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
       any_has_acl |= f->acl_type != ACL_T_NONE;
 
       if (format == long_format && n < 0 && !cannot_access_acl)
-        error (0, ai.u.err, "%s", quotef (full_name));
+        error (0, errno, "%s", quotef (full_name));
       else
         {
           /* When requesting security context information, don't make

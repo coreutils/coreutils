@@ -19,6 +19,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   on systems like Android with SELinux but without xattr support.
   [bug introduced in coreutils-9.6]
 
+  `ls -l` could output spurious "Not supported" errors in certain cases,
+  like with dangling symlinks on cygwin.
+  [bug introduced in coreutils-9.6]
+
   'who -m' now outputs entries for remote logins.  Previously login
   entries prefixed with the service (like "sshd") were not matched.
   [bug introduced in coreutils-9.4]
