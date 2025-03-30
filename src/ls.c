@@ -3538,8 +3538,14 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
       /* Let the user know via '?' if errno is EACCES, which can
          happen with Linux kernel 6.12 on an NFS file system.
-         That's better than a longwinded diagnostic.  */
-      bool cannot_access_acl = n < 0 && errno == EACCES;
+         That's better than a longwinded diagnostic.
+
+         Similarly, ignore ENOENT which may happen on some versions
+         of cygwin when processing dangling symlinks for example.
+         Also if a file is removed while we're reading ACL info,
+         ACL_T_UNKNOWN is sufficient indication for that edge case.  */
+      bool cannot_access_acl = n < 0
+           && (errno == EACCES || errno == ENOENT);
 
       f->acl_type = (!have_scontext && !have_acl
                      ? (cannot_access_acl ? ACL_T_UNKNOWN : ACL_T_NONE)
