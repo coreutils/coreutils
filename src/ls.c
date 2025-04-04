@@ -3538,7 +3538,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
       /* Let the user know via '?' if errno is EACCES, which can
          happen with Linux kernel 6.12 on an NFS file system.
-         That's better than a longwinded diagnostic.
+         That's better than a long-winded diagnostic.
 
          Similarly, ignore ENOENT which may happen on some versions
          of cygwin when processing dangling symlinks for example.

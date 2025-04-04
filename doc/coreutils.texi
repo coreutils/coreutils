@@ -14803,7 +14803,7 @@ and print its name.  If given, @var{template} must include at least
 three consecutive @samp{X}s in the last component.  If omitted, the template
 @samp{tmp.XXXXXXXXXX} is used, and option @option{--tmpdir} is
 implied.  The final run of @samp{X}s in the @var{template} will be replaced
-by alpha-numeric characters; thus, on a case-sensitive file system,
+by alphanumeric characters; thus, on a case-sensitive file system,
 and with a @var{template} including a run of @var{n} instances of @samp{X},
 there are @samp{62**@var{n}} potential file names.
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-# test splitting into newline delineated chunks from infinite imput
+# test splitting into newline delineated chunks from infinite input
 
 # Copyright (C) 2023-2025 Free Software Foundation, Inc.
 

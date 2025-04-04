@@ -273,7 +273,7 @@ finalize_tab_stops (void)
 
 
 /* Return number of first tab stop after COLUMN.  TAB_INDEX specifies
-   amny multiple tab-sizes.  Set *LAST_TAB depending on whether we are
+   many multiple tab-sizes.  Set *LAST_TAB depending on whether we are
    returning COLUMN + 1 merely because we're past the last tab.
    If the number would overflow, diagnose this and exit.  */
 extern colno
