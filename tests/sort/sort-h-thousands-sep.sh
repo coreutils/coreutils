@@ -25,6 +25,9 @@ lg="$(LC_ALL="$TEST_LOCALE" locale thousands_sep)"
 test "$lg" ||
   skip_ 'The Swedish locale with blank thousands separator is unavailable.'
 
+test $(printf '%s' "$lg" | wc -c) = 1 ||
+  skip_ 'Multi-byte thousands separators are not supported'
+
 tee exp1 exp3 > in << _EOF_
 1       1k      1 M     4${lg}003   1M
 2k      2M      2 k     4${lg}002   2
