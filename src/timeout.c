@@ -371,6 +371,10 @@ parse_duration (char const *str)
       usage (EXIT_CANCELED);
     }
 
+  /* Clamp underflow to 1ns, as 0 disables the timeout.  */
+  if (duration == 0 && errno == ERANGE)
+    duration = 1e-9;
+
   return duration;
 }
 

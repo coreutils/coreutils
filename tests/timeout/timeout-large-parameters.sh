@@ -43,4 +43,7 @@ timeout 2.34e+5d sleep 0 || fail=1
 timeout $LDBL_MAX sleep 0 || fail=1
 returns_ 125 timeout -- -$LDBL_MAX sleep 0 || fail=1
 
+# Ensure underflow times out immediately
+returns_ 124 timeout 1e-5000 sleep 10 || fail=1
+
 Exit $fail

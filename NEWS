@@ -23,6 +23,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   like with dangling symlinks on cygwin.
   [bug introduced in coreutils-9.6]
 
+  timeout would fail to timeout commands with infinitesimal timeouts.
+  For example `timeout 1e-5000 sleep inf` would never timeout.
+  [bug introduced with timeout in coreutils-7.0]
+
   'who -m' now outputs entries for remote logins.  Previously login
   entries prefixed with the service (like "sshd") were not matched.
   [bug introduced in coreutils-9.4]
