@@ -45,9 +45,8 @@
    Written by Pádraig Brady.  */
 
 #include <config.h>
-#include <fenv.h>
+#include <ctype.h>
 #include <getopt.h>
-#include <math.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <signal.h>
@@ -354,32 +353,25 @@ apply_time_suffix (double *x, char suffix_char)
   return true;
 }
 
+ATTRIBUTE_PURE static bool
+is_negative (char const *num)
+{
+  while (*num && isspace (to_uchar (*num)))
+    num++;
+  return *num == '-';
+}
+
 static double
 parse_duration (char const *str)
 {
-  /* If possible tell strtod to round up, so that we always wait at
-     least as long as STR specifies.  Although Standard C requires
-     FENV_ACCESS ON, don't bother if using GCC as it warns.  */
-#ifdef FE_UPWARD
-# if !defined __GNUC__ && 199901 <= __STDC_VERSION__
-#  pragma STDC FENV_ACCESS ON
-# endif
-  int round = fegetround ();
-  fesetround (FE_UPWARD);
-#endif
-
   char *ep;
   double duration = cl_strtod (str, &ep);
-
-#ifdef FE_UPWARD
-  fesetround (round);
-#endif
 
   if (ep == str
       /* Nonnegative interval.  */
       || ! (0 <= duration)
       /* The interval did not underflow to -0.  */
-      || (signbit (duration) && errno == ERANGE)
+      || (errno == ERANGE && is_negative (str))
       /* No extra chars after the number and an optional s,m,h,d char.  */
       || (*ep && *(ep + 1))
       /* Check any suffix char and update timeout based on the suffix.  */
@@ -391,16 +383,10 @@ parse_duration (char const *str)
 
   /* Do not let the duration underflow to 0, as 0 disables the timeout.
      Use 2**-30 instead of 0; settimeout will round it up to 1 ns,
-     whereas 1e-9 might double-round to 2 ns.
+     whereas 1e-9 might double-round to 2 ns.  */
 
-     If FE_UPWARD is defined, this code is not needed on glibc as its
-     strtod rounds upward correctly.  Although this code might not be
-     needed on non-glibc platforms too, it's too much trouble to
-     worry about that.  */
-#if !defined FE_UPWARD || !defined __GLIBC__
   if (duration == 0 && errno == ERANGE)
     duration = 9.313225746154785e-10;
-#endif
 
   return duration;
 }
