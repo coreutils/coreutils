@@ -23,8 +23,10 @@ getlimits_
 
 # internal errors are 125, distinct from execution failure
 
-# invalid timeout
+# invalid timeouts
 returns_ 125 timeout invalid sleep 0 || fail=1
+returns_ 125 timeout ' -0.1' sleep 0 || fail=1
+returns_ 125 timeout ' -1e-10000' sleep 0 || fail=1
 
 # invalid kill delay
 returns_ 125 timeout --kill-after=invalid 1 sleep 0 || fail=1
@@ -37,6 +39,9 @@ timeout 10.34 sleep 0 || fail=1
 
 # nanoseconds potentially supported
 timeout 9.999999999 sleep 0 || fail=1
+
+# round underflow up to 1 ns
+returns_ 124 timeout 1e-10000 sleep 1 || fail
 
 # invalid signal spec
 returns_ 125 timeout --signal=invalid 1 sleep 0 || fail=1

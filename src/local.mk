@@ -257,6 +257,9 @@ src_stat_LDADD += $(LIB_SELINUX)
 # for nvlist_lookup_uint64_array
 src_stat_LDADD += $(LIB_NVPAIR)
 
+# for fegetround, fesetround
+src_timeout_LDADD += $(FENV_ROUNDING_LIBM)
+
 # for gettime, settime, tempname, utimecmp, utimens
 copy_ldadd += $(CLOCK_TIME_LIB)
 src_date_LDADD += $(CLOCK_TIME_LIB)
