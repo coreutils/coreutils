@@ -32,6 +32,7 @@ returns_ 1 timeout 10 sleep || fail=1
 # subsecond actual sleep
 timeout 10 sleep 0.001 || fail=1
 timeout 10 sleep 0x.002p1 || fail=1
+timeout 10 sleep 0x0.01d || fail=1  # d is part of hex, not a day suffix
 
 # Using small timeouts for larger sleeps is racy,
 # but false positives should be avoided on most systems

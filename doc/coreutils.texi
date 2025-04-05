@@ -18913,6 +18913,11 @@ C locale (@pxref{Floating point}) followed by an optional unit:
 @samp{h} for hours
 @samp{d} for days
 @end display
+@macro hexDuration
+Note it's best to avoid combining suffixes with hexadecimal arguments,
+as any @samp{d} will @emph{not} be interpreted as a suffix.
+@end macro
+@hexDuration
 A duration of 0 disables the associated timeout.
 The actual timeout duration is dependent on system conditions,
 which should be especially considered when specifying sub-second timeouts.
@@ -19088,6 +19093,8 @@ Although portable POSIX scripts must give @command{sleep} a single
 non-negative integer argument without a suffix, GNU @command{sleep}
 also accepts two or more arguments, unit suffixes, and floating-point
 numbers in either the current or the C locale.  @xref{Floating point}.
+
+@hexDuration
 
 For instance, the following could be used to @command{sleep} for
 1 second, 234 milli-, 567 micro- and 890 nanoseconds:
