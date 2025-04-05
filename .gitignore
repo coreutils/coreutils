@@ -67,6 +67,7 @@
 /lib/errno.h
 /lib/error.h
 /lib/fcntl.h
+/lib/fenv.h
 /lib/float.h
 /lib/fnmatch.h
 /lib/getopt-cdefs.h

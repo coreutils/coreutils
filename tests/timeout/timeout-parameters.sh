@@ -41,7 +41,7 @@ timeout 10.34 sleep 0 || fail=1
 timeout 9.999999999 sleep 0 || fail=1
 
 # round underflow up to 1 ns
-returns_ 124 timeout 1e-10000 sleep 1 || fail
+returns_ 124 timeout 1e-10000 sleep 10 || fail=1
 
 # invalid signal spec
 returns_ 125 timeout --signal=invalid 1 sleep 0 || fail=1
