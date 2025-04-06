@@ -711,7 +711,7 @@ isuz85 (unsigned char ch)
   return c_isalnum (ch) || strchr (".-:+=^!/*?&<>()[]{}@%$#", ch) != nullptr;
 }
 
-static char const z85_encoding[85] =
+static char const z85_encoding[85] _GL_ATTRIBUTE_NONSTRING =
   "0123456789"
   "abcdefghijklmnopqrstuvwxyz"
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -1136,7 +1136,7 @@ do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
   idx_t sum;
   struct base_decode_context ctx;
 
-  char padbuf[8] = "========";
+  char padbuf[8] _GL_ATTRIBUTE_NONSTRING = "========";
   inbuf = xmalloc (BASE_LENGTH (DEC_BLOCKSIZE));
   outbuf = xmalloc (DEC_BLOCKSIZE);
 
