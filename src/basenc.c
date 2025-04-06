@@ -626,7 +626,7 @@ static void
 base16_encode (char const *restrict in, idx_t inlen,
                char *restrict out, idx_t outlen)
 {
-  static const char base16[16] = "0123456789ABCDEF";
+  static const char base16[16] _GL_ATTRIBUTE_NONSTRING = "0123456789ABCDEF";
 
   while (inlen && outlen)
     {
