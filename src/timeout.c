@@ -45,7 +45,6 @@
    Written by Pádraig Brady.  */
 
 #include <config.h>
-#include <ctype.h>
 #include <getopt.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -57,6 +56,7 @@
 
 #include "system.h"
 #include "cl-strtod.h"
+#include "dtimespec-bound.h"
 #include "sig2str.h"
 #include "operand2sig.h"
 #include "quote.h"
@@ -348,47 +348,32 @@ apply_time_suffix (double *x, char suffix_char)
       return false;
     }
 
-  *x *= multiplier;
+  *x = dtimespec_bound (*x * multiplier, 0);
 
   return true;
-}
-
-ATTRIBUTE_PURE static bool
-is_negative (char const *num)
-{
-  while (*num && isspace (to_uchar (*num)))
-    num++;
-  return *num == '-';
 }
 
 static double
 parse_duration (char const *str)
 {
   char *ep;
+  errno = 0;
   double duration = cl_strtod (str, &ep);
+  double s = dtimespec_bound (duration, errno);
 
   if (ep == str
       /* Nonnegative interval.  */
-      || ! (0 <= duration)
-      /* The interval did not underflow to -0.  */
-      || (errno == ERANGE && is_negative (str))
+      || ! (0 <= s)
       /* No extra chars after the number and an optional s,m,h,d char.  */
       || (*ep && *(ep + 1))
       /* Check any suffix char and update timeout based on the suffix.  */
-      || !apply_time_suffix (&duration, *ep))
+      || !apply_time_suffix (&s, *ep))
     {
       error (0, 0, _("invalid time interval %s"), quote (str));
       usage (EXIT_CANCELED);
     }
 
-  /* Do not let the duration underflow to 0, as 0 disables the timeout.
-     Use 2**-30 instead of 0; settimeout will round it up to 1 ns,
-     whereas 1e-9 might double-round to 2 ns.  */
-
-  if (duration == 0 && errno == ERANGE)
-    duration = 9.313225746154785e-10;
-
-  return duration;
+  return s;
 }
 
 static void

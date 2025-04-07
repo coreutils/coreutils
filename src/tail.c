@@ -35,6 +35,7 @@
 #include "assure.h"
 #include "c-ctype.h"
 #include "cl-strtod.h"
+#include "dtimespec-bound.h"
 #include "fcntl--.h"
 #include "iopoll.h"
 #include "isapipe.h"
@@ -47,7 +48,6 @@
 #include "xdectoint.h"
 #include "xnanosleep.h"
 #include "xstrtol.h"
-#include "xstrtod.h"
 
 #if HAVE_INOTIFY
 # include "hash.h"
@@ -2276,11 +2276,13 @@ parse_options (int argc, char **argv,
 
         case 's':
           {
-            double s;
-            if (! (xstrtod (optarg, nullptr, &s, cl_strtod) && 0 <= s))
+            char *ep;
+            errno = 0;
+            double s = cl_strtod (optarg, &ep);
+            if (optarg == ep || *ep || ! (0 <= s))
               error (EXIT_FAILURE, 0,
                      _("invalid number of seconds: %s"), quote (optarg));
-            *sleep_interval = s;
+            *sleep_interval = dtimespec_bound (s, errno);
           }
           break;
 

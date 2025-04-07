@@ -20,10 +20,10 @@
 
 #include "system.h"
 #include "cl-strtod.h"
+#include "dtimespec-bound.h"
 #include "long-options.h"
 #include "quote.h"
 #include "xnanosleep.h"
-#include "xstrtod.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "sleep"
@@ -85,7 +85,7 @@ apply_suffix (double *x, char suffix_char)
       return false;
     }
 
-  *x *= multiplier;
+  *x = dtimespec_bound (*x * multiplier, 0);
 
   return true;
 }
@@ -116,9 +116,11 @@ main (int argc, char **argv)
 
   for (int i = optind; i < argc; i++)
     {
-      double s;
-      char const *p;
-      if (! (xstrtod (argv[i], &p, &s, cl_strtod) || errno == ERANGE)
+      char *p;
+      errno = 0;
+      double duration = cl_strtod (argv[i], &p);
+      double s = dtimespec_bound (duration, errno);
+      if (argv[i] == p
           /* Nonnegative interval.  */
           || ! (0 <= s)
           /* No extra chars after the number and an optional s,m,h,d char.  */
@@ -130,7 +132,7 @@ main (int argc, char **argv)
           ok = false;
         }
 
-      seconds += s;
+      seconds = dtimespec_bound (seconds + s, 0);
     }
 
   if (!ok)
