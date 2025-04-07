@@ -22,6 +22,8 @@ gl/lib/buffer-lcm.h \
 gl/lib/cl-strtod.c \
 gl/lib/cl-strtod.h \
 gl/lib/cl-strtold.c \
+gl/lib/dtimespec-bound.c \
+gl/lib/dtimespec-bound.h \
 gl/lib/fadvise.c \
 gl/lib/fadvise.h \
 gl/lib/fd-reopen.c \
@@ -57,6 +59,7 @@ gl/local.mk \
 gl/modules/buffer-lcm \
 gl/modules/cl-strtod \
 gl/modules/cl-strtold \
+gl/modules/dtimespec-bound \
 gl/modules/fadvise \
 gl/modules/fadvise-tests \
 gl/modules/fd-reopen \

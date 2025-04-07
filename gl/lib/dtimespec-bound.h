@@ -18,21 +18,21 @@
 /* written by Paul Eggert */
 
 #ifndef DTIMESPEC_BOUND_H
-#define DTIMESPEC_BOUND_H 1
+# define DTIMESPEC_BOUND_H 1
 
 /* This file uses _GL_INLINE_HEADER_BEGIN, _GL_INLINE.  */
-#if !_GL_CONFIG_H_INCLUDED
- #error "Please include config.h first."
-#endif
+# if !_GL_CONFIG_H_INCLUDED
+#  error "Please include config.h first."
+# endif
 
-#include <errno.h>
-#include <float.h>
-#include <math.h>
+# include <errno.h>
+# include <float.h>
+# include <math.h>
 
 _GL_INLINE_HEADER_BEGIN
-#ifndef DTIMESPEC_BOUND_INLINE
-# define DTIMESPEC_BOUND_INLINE _GL_INLINE
-#endif
+# ifndef DTIMESPEC_BOUND_INLINE
+#  define DTIMESPEC_BOUND_INLINE _GL_INLINE
+# endif
 
 /* If C is positive and finite, return the least floating point value
    greater than C.  However, if 0 < C < (2 * DBL_TRUE_MIN) / (DBL_EPSILON**2),
@@ -63,7 +63,7 @@ dtimespec_bound (double c, int err)
   /* This is the first part of Algorithm 2 of:
      Rump SM, Zimmermann P, Boldo S, Melquiond G.
      Computing predecessor and successor in rounding to nearest.
-     BIT Numer Math. 2009;49(419-431).
+     BIT Numerical Mathematics. 2009;49(419-431).
      <https://doi.org/10.1007/s10543-009-0218-z>
      The rest of Algorithm 2 is not needed because numbers less than
      the predecessor of 1e-9 merely need to stay less than 1e-9.  */
