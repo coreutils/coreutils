@@ -18914,8 +18914,8 @@ C locale (@pxref{Floating point}) followed by an optional unit:
 @samp{d} for days
 @end display
 @macro hexDuration
-Note it's best to avoid combining suffixes with hexadecimal arguments,
-as any @samp{d} will @emph{not} be interpreted as a suffix.
+A hexadecimal number can precede a @samp{d} suffix only if the number
+has a @samp{p} style exponent, e.g., @samp{0x1p0d} means one day.
 @end macro
 @hexDuration
 A duration of 0 disables the associated timeout.
