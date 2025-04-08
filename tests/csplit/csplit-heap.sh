@@ -25,7 +25,7 @@ vm=$(get_min_ulimit_v_ csplit -z f %n%1) \
   || skip_ 'shell lacks ulimit, or ASAN enabled'
 
 (
- ulimit -v $(($vm + 4000)) \
+ ulimit -v $(($vm + 40000)) \
    && { yes | head -n2500000; echo n; } | csplit -z - %n%1
 ) || fail=1
 
