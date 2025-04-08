@@ -3348,9 +3348,10 @@ has_capability_cache (char const *file, struct fileinfo *f)
 {
   /* st_dev of the most recently processed device for which we've
      found that has_capability fails indicating lack of support.  */
+  static bool unsupported_cached /* = false */;
   static dev_t unsupported_device;
 
-  if (f->stat_ok && f->stat.st_dev == unsupported_device)
+  if (f->stat_ok && unsupported_cached && f->stat.st_dev == unsupported_device)
     {
       errno = ENOTSUP;
       return 0;
@@ -3358,7 +3359,10 @@ has_capability_cache (char const *file, struct fileinfo *f)
 
   bool b = has_capability (file);
   if (f->stat_ok && !b && !acl_errno_valid (errno))
-    unsupported_device = f->stat.st_dev;
+    {
+      unsupported_cached = true;
+      unsupported_device = f->stat.st_dev;
+    }
   return b;
 }
 
