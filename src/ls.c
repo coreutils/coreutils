@@ -3307,15 +3307,16 @@ static int
 file_has_aclinfo_cache (char const *file, struct fileinfo *f,
                         struct aclinfo *ai, int flags)
 {
-  /* st_dev and associated info for the most recently processed device
+  /* If UNSUPPORTED_SCONTEXT, these variables hold the
+     st_dev and associated info for the most recently processed device
      for which file_has_aclinfo failed indicating lack of support.  */
-  static bool unsupported_cached /* = false */;
   static int unsupported_return;
   static char *unsupported_scontext;
   static int unsupported_scontext_err;
   static dev_t unsupported_device;
 
-  if (f->stat_ok && unsupported_cached && f->stat.st_dev == unsupported_device)
+  if (f->stat_ok && unsupported_scontext
+      && f->stat.st_dev == unsupported_device)
     {
       ai->buf = ai->u.__gl_acl_ch;
       ai->size = 0;
@@ -3331,7 +3332,6 @@ file_has_aclinfo_cache (char const *file, struct fileinfo *f,
   if (f->stat_ok && n <= 0 && !acl_errno_valid (err)
       && (!(flags & ACL_GET_SCONTEXT) || !acl_errno_valid (ai->scontext_err)))
     {
-      unsupported_cached = true;
       unsupported_return = n;
       unsupported_scontext = ai->scontext;
       unsupported_scontext_err = ai->scontext_err;
@@ -3346,9 +3346,10 @@ file_has_aclinfo_cache (char const *file, struct fileinfo *f,
 static bool
 has_capability_cache (char const *file, struct fileinfo *f)
 {
-  /* st_dev of the most recently processed device for which we've
+  /* If UNSUPPORTED_CACHED, UNSUPPORTED_DEVICE is the cached
+     st_dev of the most recently processed device for which we've
      found that has_capability fails indicating lack of support.  */
-  static bool unsupported_cached /* = false */;
+  static bool unsupported_cached;
   static dev_t unsupported_device;
 
   if (f->stat_ok && unsupported_cached && f->stat.st_dev == unsupported_device)
