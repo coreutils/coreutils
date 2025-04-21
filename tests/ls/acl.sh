@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
 
-require_acl_
+require_setfacl_
 
 # Skip this test if ls was built without ACL support:
 grep '^#define USE_ACL 1' $CONFIG_HEADER > /dev/null ||
