@@ -185,6 +185,9 @@ my @Tests =
      ['relative-3', "-I -d '2006-04-23 21 days ago'", {OUT=>"2006-04-02"},
          {ENV=>'TZ=PST8PDT,M4.1.0,M10.5.0'}],
 
+     # Relative days, negative not confused with option
+     ['relative-4', "--utc -d '-1 day' +%Z", {OUT=>"UTC"}],
+
      # This would infloop (or appear to) prior to coreutils-4.5.5,
      # due to a bug in strftime.c.
      ['wide-fmt', "-d '1999-06-01'", '+%3004Y', {OUT=>'0' x 3000 . "1999"}],
