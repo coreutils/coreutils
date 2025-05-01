@@ -28,7 +28,7 @@
 #include "file-set.h"
 #include "force-link.h"
 #include "hash.h"
-#include "hash-triple.h"
+#include "hashcode-file.h"
 #include "priv-set.h"
 #include "relpath.h"
 #include "same.h"

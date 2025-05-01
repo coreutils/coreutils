@@ -46,7 +46,7 @@
 #include "force-link.h"
 #include "full-write.h"
 #include "hash.h"
-#include "hash-triple.h"
+#include "hashcode-file.h"
 #include "ignore-value.h"
 #include "ioblksize.h"
 #include "quote.h"
