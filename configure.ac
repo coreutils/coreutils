@@ -190,30 +190,10 @@ if test $gl_gcc_warnings != no; then
 
   # This, $nw, is the list of warnings we disable.
   nw=$ew
-  nw="$nw -Wdeclaration-after-statement" # too useful to forbid
-  nw="$nw -Waggregate-return"       # anachronistic
-  nw="$nw -Wlong-long"              # C90 is anachronistic (lib/gethrxtime.h)
-  nw="$nw -Wc++-compat"             # We don't care about C++ compilers
-  nw="$nw -Wundef"                  # Warns on '#if GNULIB_FOO' etc in gnulib
-  nw="$nw -Wtraditional"            # Warns on #elif which we use often
-  nw="$nw -Wcast-qual"              # Too many warnings for now
-  nw="$nw -Wconversion"             # Too many warnings for now
-  nw="$nw -Wsign-conversion"        # Too many warnings for now
-  nw="$nw -Wtraditional-conversion" # Too many warnings for now
-  nw="$nw -Wunreachable-code"       # Too many warnings for now
-  nw="$nw -Wpadded"                 # Our structs are not padded
-  nw="$nw -Wredundant-decls"        # openat.h declares e.g., mkdirat
-  nw="$nw -Wformat-nonliteral"      # who.c and pinky.c strftime uses
-  nw="$nw -Wnested-externs"         # use of XARGMATCH/verify_function__
-  nw="$nw -Wstack-protector"        # not worth working around
+  nw="$nw -Wstack-protector"        # not worth working around for pre GCC 15
   nw="$nw -Wformat-overflow=2"      # False alarms due to GCC bug 110333
   nw="$nw -Wformat-truncation=2"    # False alarm in ls.c, probably related
-  # things I might fix soon:
-  nw="$nw -Wfloat-equal"            # sort.c, seq.c
-  nw="$nw -Wmissing-format-attribute" # copy.c
-  nw="$nw -Wunsafe-loop-optimizations" # a few src/*.c
   nw="$nw -Winline"                 # system.h's readdir_ignoring_dot_and_dotdot
-  nw="$nw -Wvector-operation-performance" # warns about randperm.c
 
   # Suppress noreturn warnings with single binaries; otherwise
   # GCC complains about the renamed 'main' not being declared noreturn
@@ -229,16 +209,13 @@ if test $gl_gcc_warnings != no; then
 
   gl_MANYWARN_ALL_GCC([ws])
   AS_VAR_APPEND([ws], [' -Wswitch-enum'])
+  AS_VAR_APPEND([ws], [' -Wtrailing-whitespace'])
   gl_MANYWARN_COMPLEMENT([ws], [$ws], [$nw])
   for w in $ws; do
     gl_WARN_ADD([$w])
   done
   gl_WARN_ADD([-Wno-sign-compare])     # Too many warnings for now
-  gl_WARN_ADD([-Wno-unused-parameter]) # Too many warnings for now
   gl_WARN_ADD([-Wno-format-nonliteral])
-
-  gl_WARN_ADD([-fdiagnostics-show-option])
-  gl_WARN_ADD([-funit-at-a-time])
 
   AC_SUBST([WARN_CFLAGS])
 
@@ -257,34 +234,15 @@ if test $gl_gcc_warnings != no; then
   nw=$ew
   nw="$nw -Wduplicated-branches"    # Too many false alarms
   nw="$nw -Wformat-truncation=2"
-  nw="$nw -Wmissing-variable-declarations"
-  nw="$nw -Wstrict-overflow"
-  nw="$nw -Wuninitialized"
   nw="$nw -Wunused-macros"
-  nw="$nw -Wmissing-prototypes"
-  nw="$nw -Wold-style-definition"
-  # FIXME: it may be easy to remove this, since it affects only one file:
-  # the snprintf call at ftoastr.c:132.
-  nw="$nw -Wdouble-promotion"
-
-  # FIXME: remove this line when gcc improves
-  # FP in careadlinkat.c w/gcc 10.0.1 20200205
-  gl_WARN_ADD([-Wno-return-local-addr])
-
-  # FIXME: remove this line when gcc improves
-  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88443
-  gl_WARN_ADD([-Wno-stringop-overflow])
 
   gl_MANYWARN_COMPLEMENT([GNULIB_WARN_CFLAGS], [$WARN_CFLAGS], [$nw])
   AC_SUBST([GNULIB_WARN_CFLAGS])
 
   # For gnulib-tests, the set is slightly smaller still.
   nw=
-  nw="$nw -Wstrict-prototypes"
   # It's not worth being this picky about test programs.
-  nw="$nw -Wsuggest-attribute=cold"
-  nw="$nw -Wsuggest-attribute=const"
-  nw="$nw -Wsuggest-attribute=format"
+  nw="$nw -Wmissing-variable-declarations"
   nw="$nw -Wsuggest-attribute=pure"
   gl_MANYWARN_COMPLEMENT([GNULIB_TEST_WARN_CFLAGS],
                          [$GNULIB_WARN_CFLAGS], [$nw])
