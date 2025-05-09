@@ -193,7 +193,7 @@ base64_required_padding (int len)
 
 #if BASE_TYPE == 42
 static int
-no_required_padding (int len)
+no_required_padding (MAYBE_UNUSED int len)
 {
   return 0;
 }

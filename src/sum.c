@@ -184,8 +184,8 @@ cleanup_buffer:
    If ARGS is true, also print the FILE name.  */
 
 void
-output_bsd (char const *file, int binary_file, void const *digest,
-            bool raw, bool tagged, unsigned char delim, bool args,
+output_bsd (char const *file, MAYBE_UNUSED int binary_file, void const *digest,
+            bool raw, MAYBE_UNUSED bool tagged, unsigned char delim, bool args,
             uintmax_t length)
 {
   if (raw)
@@ -209,9 +209,9 @@ output_bsd (char const *file, int binary_file, void const *digest,
    If ARGS is true, also print the FILE name.  */
 
 void
-output_sysv (char const *file, int binary_file, void const *digest,
-             bool raw, bool tagged, unsigned char delim, bool args,
-             uintmax_t length)
+output_sysv (char const *file, MAYBE_UNUSED int binary_file,
+             void const *digest, bool raw, MAYBE_UNUSED bool tagged,
+             unsigned char delim, bool args, uintmax_t length)
 {
   if (raw)
     {

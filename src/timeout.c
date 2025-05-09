@@ -187,7 +187,7 @@ send_sig (pid_t where, int sig)
 /* Signal handler which is required for sigsuspend() to be interrupted
    whenever SIGCHLD is received.  */
 static void
-chld (int sig)
+chld (MAYBE_UNUSED int sig)
 {
 }
 

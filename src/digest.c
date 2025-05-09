@@ -245,32 +245,36 @@ static digest_output_fn sum_output_fns[]=
 
 #if HASH_ALGO_CKSUM
 static int
-md5_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+md5_sum_stream (FILE *stream, void *resstream, MAYBE_UNUSED uintmax_t *length)
 {
   return md5_stream (stream, resstream);
 }
 static int
-sha1_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+sha1_sum_stream (FILE *stream, void *resstream, MAYBE_UNUSED uintmax_t *length)
 {
   return sha1_stream (stream, resstream);
 }
 static int
-sha224_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+sha224_sum_stream (FILE *stream, void *resstream,
+                   MAYBE_UNUSED uintmax_t *length)
 {
   return sha224_stream (stream, resstream);
 }
 static int
-sha256_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+sha256_sum_stream (FILE *stream, void *resstream,
+                   MAYBE_UNUSED uintmax_t *length)
 {
   return sha256_stream (stream, resstream);
 }
 static int
-sha384_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+sha384_sum_stream (FILE *stream, void *resstream,
+                   MAYBE_UNUSED uintmax_t *length)
 {
   return sha384_stream (stream, resstream);
 }
 static int
-sha512_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+sha512_sum_stream (FILE *stream, void *resstream,
+                   MAYBE_UNUSED uintmax_t *length)
 {
   return sha512_stream (stream, resstream);
 }
@@ -280,7 +284,7 @@ blake2b_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
   return blake2b_stream (stream, resstream, *length);
 }
 static int
-sm3_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+sm3_sum_stream (FILE *stream, void *resstream, MAYBE_UNUSED uintmax_t *length)
 {
   return sm3_stream (stream, resstream);
 }
@@ -1037,8 +1041,8 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
 #if !HASH_ALGO_SUM
 static void
 output_file (char const *file, int binary_file, void const *digest,
-             bool raw, bool tagged, unsigned char delim, MAYBE_UNUSED bool args,
-             MAYBE_UNUSED uintmax_t length)
+             MAYBE_UNUSED bool raw, bool tagged, unsigned char delim,
+             MAYBE_UNUSED bool args, MAYBE_UNUSED uintmax_t length)
 {
 # if HASH_ALGO_CKSUM
   if (raw)

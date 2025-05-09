@@ -21,13 +21,13 @@
 # include <sys/smack.h>
 #else
 static inline ssize_t
-smack_new_label_from_self (char **label)
+smack_new_label_from_self (MAYBE_UNUSED char **label)
 {
   return -1;
 }
 
 static inline int
-smack_set_label_for_self (char const *label)
+smack_set_label_for_self (MAYBE_UNUSED char const *label)
 {
   return -1;
 }

@@ -857,7 +857,7 @@ out_file_context (char *pformat, size_t prefix_len, char const *filename)
 NODISCARD
 static bool
 print_statfs (char *pformat, size_t prefix_len, MAYBE_UNUSED char mod, char m,
-              int fd, char const *filename,
+              MAYBE_UNUSED int fd, char const *filename,
               void const *data)
 {
   STRUCT_STATVFS const *statfsbuf = data;
@@ -1501,7 +1501,7 @@ unsigned_file_size (off_t size)
 /* Print stat info.  Return zero upon success, nonzero upon failure.  */
 static bool
 print_stat (char *pformat, size_t prefix_len, char mod, char m,
-            int fd, char const *filename, void const *data)
+            MAYBE_UNUSED int fd, char const *filename, void const *data)
 {
   struct print_args *parg = (struct print_args *) data;
   struct stat *statbuf = parg->st;
