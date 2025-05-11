@@ -43,7 +43,7 @@ As an optional step, if you already have a copy of the Gnulib Git
 repository, then you can use it as a reference to reduce download
 time and file system space requirements:
 
-        $ export GNULIB_SRCDIR=/path/to/gnulib
+        $ export GNULIB_REFDIR=/path/to/gnulib
 
 The next steps are to get and check other files needed to build,
 and complete the build:
