@@ -975,8 +975,6 @@ mulredc2 (uintmax_t *r1p,
   uintmax_t r1, r0, q, p1, t1, t0, s1, s0;
   MAYBE_UNUSED uintmax_t p0;
   mi = -mi;
-  affirm ((a1 >> (W_TYPE_SIZE - 1)) == 0);
-  affirm ((b1 >> (W_TYPE_SIZE - 1)) == 0);
   affirm ((m1 >> (W_TYPE_SIZE - 1)) == 0);
 
   /* First compute a0 * <b1, b0> B^{-1}
