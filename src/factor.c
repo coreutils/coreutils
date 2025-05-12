@@ -291,8 +291,7 @@ static void factor (uintmax_t, uintmax_t, struct factors *);
     __x3 = (uintmax_t) __uh * __vh;                                     \
                                                                         \
     __x1 += __ll_highpart (__x0);/* This can't give carry.  */		\
-    __x1 += __x2;		/* But this indeed can.  */		\
-    if (__x1 < __x2)		/* Did we get it?  */			\
+    if (ckd_add (&__x1, __x1, __x2))	/* Did this give a carry?  */	\
       __x3 += __ll_B;		/* Yes, add it in the proper pos.  */	\
                                                                         \
     (w1) = __x3 + __ll_highpart (__x1);                                 \
@@ -332,8 +331,7 @@ static void factor (uintmax_t, uintmax_t, struct factors *);
 # define add_ssaaaa(sh, sl, ah, al, bh, bl)                             \
   do {                                                                  \
     uintmax_t _add_x;                                                   \
-    _add_x = (al) + (bl);                                               \
-    (sh) = (ah) + (bh) + (_add_x < (al));                               \
+    (sh) = (ah) + (bh) + ckd_add (&_add_x, al, bl);			\
     (sl) = _add_x;                                                      \
   } while (0)
 #endif
@@ -360,19 +358,14 @@ static void factor (uintmax_t, uintmax_t, struct factors *);
 
 #ifndef sub_ddmmss
 # define sub_ddmmss(rh, rl, ah, al, bh, bl)                             \
-  do {                                                                  \
-    uintmax_t _cy;                                                      \
-    _cy = (al) < (bl);                                                  \
-    (rl) = (al) - (bl);                                                 \
-    (rh) = (ah) - (bh) - _cy;                                           \
-  } while (0)
+   ((rh) = (ah) - (bh) - ckd_sub (&(rl), al, bl))
 #endif
 
 /* Requires that a < n and b <= n */
 #define submod(r,a,b,n)                                                 \
   do {                                                                  \
-    uintmax_t _t = - (uintmax_t) (a < b);                               \
-    (r) = ((n) & _t) + (a) - (b);                                       \
+    uintmax_t _s, _t = -ckd_sub (&_s, a, b);				\
+    (r) = ((n) & _t) + _s;						\
   } while (0)
 
 #define addmod(r,a,b,n)                                                 \
@@ -964,8 +957,7 @@ mulredc (uintmax_t a, uintmax_t b, uintmax_t m, uintmax_t mi)
   umul_ppmm (rh, rl, a, b);
   q = rl * mi;
   umul_ppmm (th, tl, q, m);
-  xh = rh - th;
-  if (rh < th)
+  if (ckd_sub (&xh, rh, th))
     xh += m;
 
   return xh;
@@ -2280,22 +2272,18 @@ strto2uintmax (uintmax_t *hip, uintmax_t *lop, char const *s)
 
       c -= '0';
 
-      if (UNLIKELY (hi > ~(uintmax_t)0 / 10))
+      if (UNLIKELY (ckd_mul (&hi, hi, 10)))
         {
           err = LONGINT_OVERFLOW;
           break;
         }
-      hi = 10 * hi;
 
       lo_carry = (lo >> (W_TYPE_SIZE - 3)) + (lo >> (W_TYPE_SIZE - 1));
       lo_carry += 10 * lo < 2 * lo;
 
       lo = 10 * lo;
-      lo += c;
-
-      lo_carry += lo < c;
-      hi += lo_carry;
-      if (UNLIKELY (hi < lo_carry))
+      lo_carry += ckd_add (&lo, lo, c);
+      if (UNLIKELY (ckd_add (&hi, hi, lo_carry)))
         {
           err = LONGINT_OVERFLOW;
           break;
