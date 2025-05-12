@@ -69,6 +69,7 @@
 /lib/fcntl.h
 /lib/float.h
 /lib/fnmatch.h
+/lib/fts_.h
 /lib/getopt-cdefs.h
 /lib/getopt.h
 /lib/glthread
