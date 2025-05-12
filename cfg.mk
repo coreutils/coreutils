@@ -22,7 +22,7 @@ manual_title = Core GNU utilities
 url_dir_list = https://ftp.gnu.org/gnu/$(PACKAGE)
 
 # Exclude bundled external projects from syntax checks
-VC_LIST_ALWAYS_EXCLUDE_REGEX = src/blake2/.*$$
+VC_LIST_ALWAYS_EXCLUDE_REGEX = src/(blake2/.*|longlong.h)$$
 
 # Tests not to run as part of "make distcheck".
 local-checks-to-skip = \
