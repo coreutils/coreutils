@@ -41,13 +41,13 @@ defaultcon (struct selabel_handle *selabel_handle,
 # else
 
 static inline bool
-restorecon (struct selabel_handle *selabel_handle,
-            char const *path, bool recurse)
+restorecon (MAYBE_UNUSED struct selabel_handle *selabel_handle,
+            MAYBE_UNUSED char const *path, MAYBE_UNUSED bool recurse)
 { errno = ENOTSUP; return false; }
 
 static inline int
-defaultcon (struct selabel_handle *selabel_handle,
-            char const *path, mode_t mode)
+defaultcon (MAYBE_UNUSED struct selabel_handle *selabel_handle,
+            MAYBE_UNUSED char const *path, MAYBE_UNUSED mode_t mode)
 { errno = ENOTSUP; return -1; }
 
 # endif
