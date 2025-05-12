@@ -1,19 +1,33 @@
 /* longlong.h -- definitions for mixed size 32/64 bit arithmetic.
 
-Copyright 1991-2025 Free Software Foundation, Inc.
+Copyright 1991-1994, 1996, 1997, 1999-2005, 2007-2009, 2011-2020 Free Software
+Foundation, Inc.
 
-This file is free software; you can redistribute it and/or modify it under the
-terms of the GNU Lesser General Public License as published by the Free
-Software Foundation; either version 3 of the License, or (at your option) any
-later version.
+This file is part of the GNU MP Library.
 
-This file is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
-details.
+The GNU MP Library is free software; you can redistribute it and/or modify
+it under the terms of either:
 
-You should have received a copy of the GNU Lesser General Public License
-along with this file.  If not, see https://www.gnu.org/licenses/.  */
+  * the GNU Lesser General Public License as published by the Free
+    Software Foundation; either version 3 of the License, or (at your
+    option) any later version.
+
+or
+
+  * the GNU General Public License as published by the Free Software
+    Foundation; either version 2 of the License, or (at your option) any
+    later version.
+
+or both in parallel, as here.
+
+The GNU MP Library is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received copies of the GNU General Public License and the
+GNU Lesser General Public License along with the GNU MP Library.  If not,
+see https://www.gnu.org/licenses/.  */
 
 /* You have to define the following before including this file:
 
@@ -1148,7 +1162,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
   do {									\
     UDItype __u = (u), __v = (v);					\
     (w0) = __u * __v;							\
-    (w1) = (unsigned __int128__) __u * __v >> 64;			\
+    (w1) = __extension__ (unsigned __int128) __u * __v >> 64;		\
   } while (0)
 #endif
 
