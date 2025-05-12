@@ -165,10 +165,17 @@ typedef unsigned long int UDItype;
 #  endif
 # endif
 # define LONGLONG_STANDALONE     /* Don't require GMP's longlong.h mdep files */
-# define ASSERT(x)               /* FIXME make longlong.h really standalone */
-# define __GMP_DECLSPEC          /* FIXME make longlong.h really standalone */
+
+/* FIXME make longlong.h really standalone, so that ASSERT, __GMP_DECLSPEC
+   and __GMP_GNUC_PREREQ need not be defined here.  */
+# define ASSERT(x)
+# define __GMP_DECLSPEC
 # ifndef __GMP_GNUC_PREREQ
-#  define __GMP_GNUC_PREREQ(a,b) 1
+#  if defined __GNUC__ && defined __GNUC_MINOR__
+#   define __GMP_GNUC_PREREQ(a, b) ((a) < __GNUC__ + ((b) <= __GNUC_MINOR__))
+#  else
+#   define __GMP_GNUC_PREREQ(a, b) 0
+#  endif
 # endif
 
 /* longlong.h uses these macros only in certain system compiler combinations.
