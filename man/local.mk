@@ -54,7 +54,7 @@ mandeps =
 # Depend on this to get version number changes.
 mandeps += .version
 
-# This is required so that changes to e.g., emit_bug_reporting_address
+# This is required so that changes to e.g., emit_ancillary_info
 # provoke regeneration of all the manpages.
 mandeps += $(top_srcdir)/src/system.h
 

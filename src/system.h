@@ -333,9 +333,7 @@ enum
 #include "closein.h"
 #include "closeout.h"
 
-#define emit_bug_reporting_address unused__emit_bug_reporting_address
 #include "version-etc.h"
-#undef emit_bug_reporting_address
 
 #include "propername.h"
 /* Define away proper_name, since it's not worth the cost of adding ~17KB to
@@ -651,14 +649,7 @@ emit_ancillary_info (char const *program)
   if (map_prog->node)
     node = map_prog->node;
 
-  printf (_("\n%s online help: <%s>\n"), PACKAGE_NAME, PACKAGE_URL);
-
-#ifdef PACKAGE_PACKAGER
-# ifdef PACKAGE_PACKAGER_BUG_REPORTS
-  printf (_("Report %s bugs to: <%s>\n"), PACKAGE_PACKAGER,
-          PACKAGE_PACKAGER_BUG_REPORTS);
-# endif
-#endif
+  emit_bug_reporting_address ();
 
   /* Don't output this redundant message for English locales.
      Note we still output for 'C' so that it gets included in the man page.  */
