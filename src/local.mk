@@ -36,8 +36,7 @@ pkglibexec_PROGRAMS = @pkglibexec_PROGRAMS@
 
 # Needed by the testsuite.
 noinst_PROGRAMS =		\
-  src/getlimits			\
-  src/make-prime-list
+  src/getlimits
 
 noinst_HEADERS =		\
   src/chown.h			\
@@ -149,11 +148,6 @@ src_link_LDADD = $(LDADD)
 src_ln_LDADD = $(LDADD)
 src_logname_LDADD = $(LDADD)
 src_ls_LDADD = $(LDADD)
-
-# This must *not* depend on anything in lib/, since it is used to generate
-# src/primes.h.  If it depended on libcoreutils.a, that would pull all lib/*.c
-# into BUILT_SOURCES.
-src_make_prime_list_LDADD =
 
 src_md5sum_LDADD = $(LDADD)
 src_mkdir_LDADD = $(LDADD)
@@ -556,15 +550,24 @@ $(top_srcdir)/src/dircolors.h: src/dcgen src/dircolors.hin
 # and it needs to be built on a widest-known-int architecture, so it's
 # built only if absent.  It is not cleaned because we don't want to
 # insist that maintainers must build on hosts that support the widest
-# known ints (currently 128-bit).
+# known ints (currently 128-bit).  It is built in a temporary directory
+# to avoid Gnulib and allow cross-compilers.  The BUILD_* definitions
+# come from Gnulib's gl_BUILD_CC which is invoked for the crc module.
 BUILT_SOURCES += $(top_srcdir)/src/primes.h
-$(top_srcdir)/src/primes.h:
-	$(AM_V_at)${MKDIR_P} src
-	$(MAKE) src/make-prime-list$(EXEEXT)
-	$(AM_V_GEN)rm -f $@ $@-t
-	$(AM_V_at)src/make-prime-list$(EXEEXT) 5000 > $@-t
-	$(AM_V_at)chmod a-w $@-t
-	$(AM_V_at)mv $@-t $@
+$(top_srcdir)/src/primes.h: $(top_srcdir)/src/make-prime-list.c
+	$(AM_V_GEN)if test -n '$(BUILD_CC)'; then \
+	  $(MKDIR_P) $(top_srcdir)/src/primes-tmp \
+	  && (cd $(top_srcdir)/src/primes-tmp \
+	      && $(BUILD_CC) $(BUILD_CPPFLAGS) $(BUILD_CFLAGS) \
+		$(BUILD_LDFLAGS) -o make-prime-list$(EXEEXT) \
+		$(abs_top_srcdir)/src/make-prime-list.c) \
+	  && rm -f $@ $@-t \
+	  && $(top_srcdir)/src/primes-tmp/make-prime-list$(EXEEXT) \
+	    5000 > $@-t \
+	  && chmod a-w $@-t \
+	  && mv $@-t $@ \
+	  && rm -rf $(top_srcdir)/src/primes-tmp; \
+	fi
 
 # false exits nonzero even with --help or --version.
 # test doesn't support --help or --version.

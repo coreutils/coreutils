@@ -17,9 +17,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with
 this program.  If not, see https://www.gnu.org/licenses/.  */
 
-#include <config.h>
-
-#include <attribute.h>
 #include <inttypes.h>
 
 #include <limits.h>
@@ -29,11 +26,20 @@ this program.  If not, see https://www.gnu.org/licenses/.  */
 #include <stdlib.h>
 #include <errno.h>
 
-/* Deactivate "rpl_"-prefixed definitions of these symbols.  */
-#undef fclose
-#undef free
-#undef malloc
-#undef strerror
+/* This program is compiled in a separate directory to avoid linking to Gnulib
+   which may be cross-compiled.  Therefore, we also do not have config.h and
+   attribute.h.  Just define what we need.  */
+#if 2 < __GNUC__ + (95 <= __GNUC_MINOR__)
+# define ATTRIBUTE_CONST __attribute__ ((__const__))
+#else
+# define ATTRIBUTE_CONST
+#endif
+#if 3 < __GNUC__
+# define ATTRIBUTE_MALLOC __attribute__ ((__malloc__))
+#else
+# define ATTRIBUTE_MALLOC
+#endif
+
 
 /* An unsigned type that is no narrower than 32 bits and no narrower
    than unsigned int.  It's best to make it as wide as possible.

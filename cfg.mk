@@ -869,7 +869,7 @@ exclude_file_name_regexp--sc_system_h_headers = \
   ^src/((system|copy|chown-core|find-mount-point)\.h|make-prime-list\.c)$$
 
 _src := (false|lbracket|chown-(chgrp|chown)
-_src := $(_src)|ls-(dir|ls|vdir)|tac-pipe|uname-(arch|uname))
+_src := $(_src)|ls-(dir|ls|vdir)|make-prime-list|tac-pipe|uname-(arch|uname))
 _gl_src = (xdecto.max|cl-strtold)
 exclude_file_name_regexp--sc_require_config_h_first = \
   (^lib/buffer-lcm\.c|gl/lib/$(_gl_src)\.c|src/$(_src)\.c)$$
@@ -921,8 +921,10 @@ exclude_file_name_regexp--sc_prohibit_operator_at_end_of_line = \
 exclude_file_name_regexp--sc_error_message_uppercase = ^src/factor\.c$$
 exclude_file_name_regexp--sc_prohibit_atoi_atof = ^src/make-prime-list\.c$$
 
-# Exception here as we don't want __attribute elided on non GCC
-exclude_file_name_regexp--sc_prohibit-gl-attributes = ^src/libstdbuf\.c$$
+# Exception here as we don't want __attribute elided on non GCC for stdbuf
+# and we don't want to depend on gnulib for make-prime-list
+exclude_file_name_regexp--sc_prohibit-gl-attributes = \
+  ^src/(make-prime-list|libstdbuf)\.c$$
 
 exclude_file_name_regexp--sc_prohibit_uppercase_id_est = \.diff$$
 exclude_file_name_regexp--sc_ensure_dblspace_after_dot_before_id_est = \.diff$$

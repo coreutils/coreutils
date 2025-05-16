@@ -201,7 +201,6 @@
 /src/fs-kernel-magic
 /src/fs-latest-magic.h
 /src/fs-magic
-/src/make-prime-list
 /src/primes.h
 /src/single-binary.mk
 /src/version.c
