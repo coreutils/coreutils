@@ -68,6 +68,7 @@ noinst_HEADERS =		\
 EXTRA_DIST +=		\
   src/dcgen		\
   src/dircolors.hin	\
+  src/make-prime-list.c	\
   src/primes.h		\
   src/tac-pipe.c	\
   src/extract-magic
