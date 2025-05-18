@@ -196,6 +196,7 @@
 /src/coreutils.h
 /src/coreutils_shebangs
 /src/coreutils_symlinks
+/src/crctab.c
 /src/cu-progs.mk
 /src/fs-def
 /src/fs-kernel-magic

@@ -70,6 +70,7 @@ EXTRA_DIST +=		\
   src/dircolors.hin	\
   src/make-prime-list.c	\
   src/primes.h		\
+  src/crctab.c		\
   src/tac-pipe.c	\
   src/extract-magic
 
@@ -568,6 +569,22 @@ $(top_srcdir)/src/primes.h: $(top_srcdir)/src/make-prime-list.c
 	  && chmod a-w $@-t \
 	  && mv $@-t $@ \
 	  && rm -rf $(top_srcdir)/src/primes-tmp; \
+	fi
+
+# We build crctab in a similar manner to primes.h.
+BUILT_SOURCES += $(top_srcdir)/src/crctab.c
+$(top_srcdir)/src/crctab.c: $(top_srcdir)/src/cksum.c
+	$(AM_V_GEN)if test -n '$(BUILD_CC)'; then \
+	  $(MKDIR_P) $(top_srcdir)/src/crctab-tmp \
+	  && (cd $(top_srcdir)/src/crctab-tmp \
+	      && $(BUILD_CC) $(BUILD_CPPFLAGS) $(BUILD_CFLAGS) \
+		$(BUILD_LDFLAGS) -DCRCTAB -o crctab$(EXEEXT) \
+		$(abs_top_srcdir)/src/cksum.c) \
+	  && rm -f $@ $@-t \
+	  && $(top_srcdir)/src/crctab-tmp/crctab$(EXEEXT) > $@-t \
+	  && chmod a-w $@-t \
+	  && mv $@-t $@ \
+	  && rm -rf $(top_srcdir)/src/crctab-tmp; \
 	fi
 
 # false exits nonzero even with --help or --version.
