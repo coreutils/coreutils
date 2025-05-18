@@ -126,13 +126,24 @@
 /* Token delimiters when reading from a file.  */
 #define DELIM "\n\t "
 
+/* __int128 is experimental; to use it, compile with -DUSE_INT128.  */
+#ifndef USE_INT128
+# define USE_INT128 false
+#endif
+
 /* Typedefs and macros related to an unsigned type that is no narrower
    than 32 bits and no narrower than unsigned int.  For efficiency,
    use the widest hardware-supported type.  */
+#if USE_INT128
+typedef unsigned __int128 wide_uint;
+typedef __int128 wide_int;
+# define W_TYPE_SIZE 128
+#else
 typedef uintmax_t wide_uint;
 typedef intmax_t wide_int;
-#define WIDE_UINT_MAX UINTMAX_MAX
 #define W_TYPE_SIZE UINTMAX_WIDTH
+#endif
+#define WIDE_UINT_MAX ((wide_uint) -1)
 
 #ifndef USE_LONGLONG_H
 /* With the way we use longlong.h, it's only safe to use
@@ -252,7 +263,8 @@ make_uuint (wide_uint hi, wide_uint lo)
 static wide_uint const BIG_POWER_OF_10 = 10000000000000000000llu;
 enum { LOG_BIG_POWER_OF_10 = 19 };
 #else
-/* A so-far-only-theoretical platform with at-least-128-bit uintmax_t.
+/* If built with -DUSE_INT128, a platform that supports __int128; otherwise,
+   a so-far-only-theoretical platform with at-least-128-bit uintmax_t.
    This is for performance; the 64-bit mainstream code will still work.  */
 static wide_uint const BIG_POWER_OF_10 =
   (wide_uint) 10000000000000000000llu * 10000000000000000000llu;
@@ -1186,8 +1198,21 @@ prime_p (wide_uint n)
   if (n <= 1)
     return false;
 
+  wide_uint cast_out_limit
+    = (wide_uint) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME;
+
+#ifndef EXHIBIT_INT128_BUG
+  /* FIXME: Do the small-prime performance improvement only if
+     wide_uint is exactly 64 bits wide.  We don't know why the code
+     misbehaves when wide_uint is wider; e.g., when compiled with
+     'gcc -DUSE_INT128 -DEXHIBIT_INT128_BUG', 'factor' mishandles
+     340282366920938463463374607431768211355.  */
+  if (W_TYPE_SIZE != 64)
+    cast_out_limit = 2;
+#endif
+
   /* We have already cast out small primes.  */
-  if (n < (wide_uint) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME)
+  if (n < cast_out_limit)
     return true;
 
   /* Precomputation for Miller-Rabin.  */
