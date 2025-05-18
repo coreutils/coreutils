@@ -141,7 +141,7 @@ typedef __int128 wide_int;
 #else
 typedef uintmax_t wide_uint;
 typedef intmax_t wide_int;
-#define W_TYPE_SIZE UINTMAX_WIDTH
+# define W_TYPE_SIZE UINTMAX_WIDTH
 #endif
 #define WIDE_UINT_MAX ((wide_uint) -1)
 
