@@ -21,7 +21,7 @@
    In 2012, the core was rewritten by Torbjörn Granlund and Niels Möller.
    Contains code from GNU MP.  */
 
-/* Efficiently factor numbers that fit in one or two words (word = uintmax_t),
+/* Efficiently factor numbers that fit in one or two words (word = wide_uint),
    or, with GMP, numbers of any size.
 
   Code organization:
@@ -71,7 +71,7 @@
     * Implement less naive powm, using k-ary exponentiation for k = 3 or
       perhaps k = 4.
 
-    * Try to speed trial division code for single uintmax_t numbers, i.e., the
+    * Try to speed trial division code for single wide_uint numbers, i.e., the
       code using DIVBLOCK.  It currently runs at 2 cycles per prime (Intel SBR,
       IBR), 3 cycles per prime (AMD Stars) and 5 cycles per prime (AMD BD) when
       using gcc 4.6 and 4.7.  Some software pipelining should help; 1, 2, and 4
@@ -126,24 +126,28 @@
 /* Token delimiters when reading from a file.  */
 #define DELIM "\n\t "
 
+/* Typedefs and macros related to an unsigned type that is no narrower
+   than 32 bits and no narrower than unsigned int.  For efficiency,
+   use the widest hardware-supported type.  */
+typedef uintmax_t wide_uint;
+typedef intmax_t wide_int;
+#define WIDE_UINT_MAX UINTMAX_MAX
+#define W_TYPE_SIZE UINTMAX_WIDTH
+
 #ifndef USE_LONGLONG_H
 /* With the way we use longlong.h, it's only safe to use
    when UWtype = UHWtype, as there were various cases
    (as can be seen in the history for longlong.h) where
    for example, _LP64 was required to enable W_TYPE_SIZE==64 code,
    to avoid compile time or run time issues.  */
-# if LONG_MAX == INTMAX_MAX
-#  define USE_LONGLONG_H 1
-# endif
+# define USE_LONGLONG_H (W_TYPE_SIZE == ULONG_WIDTH)
 #endif
-
-#define W_TYPE_SIZE UINTMAX_WIDTH
 
 #if USE_LONGLONG_H
 
 /* Make definitions for longlong.h to make it do what it can do for us */
 
-# define UWtype  uintmax_t
+# define UWtype  wide_uint
 # define UHWtype unsigned long int
 # undef UDWtype
 # if HAVE_ATTRIBUTE_MODE
@@ -191,9 +195,9 @@ typedef unsigned long int UDItype;
 
 #else /* not USE_LONGLONG_H */
 
-# define __ll_B ((uintmax_t) 1 << (W_TYPE_SIZE / 2))
-# define __ll_lowpart(t)  ((uintmax_t) (t) & (__ll_B - 1))
-# define __ll_highpart(t) ((uintmax_t) (t) >> (W_TYPE_SIZE / 2))
+# define __ll_B ((wide_uint) 1 << (W_TYPE_SIZE / 2))
+# define __ll_lowpart(t)  ((wide_uint) (t) & (__ll_B - 1))
+# define __ll_highpart(t) ((wide_uint) (t) >> (W_TYPE_SIZE / 2))
 
 #endif
 
@@ -217,48 +221,48 @@ static struct option const long_options[] =
 /* If true, use p^e output format.  */
 static bool print_exponents;
 
-/* This represents an unsigned integer twice as wide as uintmax_t.  */
-typedef struct { uintmax_t uu[2]; } uuint;
+/* This represents an unsigned integer twice as wide as wide_uint.  */
+typedef struct { wide_uint uu[2]; } uuint;
 
-/* Accessors and constructors for the type.  Pprograms should not
+/* Accessors and constructors for the type.  Programs should not
    access the type's internals directly, in case some future version
-   replaces the type with unsigned __int128 or whatever.  */
-static uintmax_t lo (uuint u) { return u.uu[0]; }
-static uintmax_t hi (uuint u) { return u.uu[1]; }
-static void hiset (uuint *u, uintmax_t hi) { u->uu[1] = hi; }
+   replaces the type with unsigned __int256 or whatever.  */
+static wide_uint lo (uuint u) { return u.uu[0]; }
+static wide_uint hi (uuint u) { return u.uu[1]; }
+static void hiset (uuint *u, wide_uint hi) { u->uu[1] = hi; }
 static void
-uuset (uintmax_t *phi, uintmax_t *plo, uuint uu)
+uuset (wide_uint *phi, wide_uint *plo, uuint uu)
 {
   *phi = hi (uu);
   *plo = lo (uu);
 }
 static uuint
-make_uuint (uintmax_t hi, uintmax_t lo)
+make_uuint (wide_uint hi, wide_uint lo)
 {
   return (uuint) {{lo, hi}};
 }
 
-/* BIG_POWER_OF_10 is a positive power of 10 that does not exceed UINTMAX_MAX.
+/* BIG_POWER_OF_10 is a positive power of 10 that does not exceed WIDE_UINT_MAX.
    The larger it is, the more efficient the code will likely be.
    LOG_BIG_POWER_OF_10 = log (BIG_POWER_OF_10).  */
-#if UINTMAX_WIDTH < 64
+#if W_TYPE_SIZE < 64
 # error "platform does not support 64-bit integers"
-#elif UINTMAX_WIDTH < 128 || !defined UINTMAX_C
-/* Mainstream platforms as of 2024, with at-least-64-bit uintmax_t.  */
-static uintmax_t const BIG_POWER_OF_10 = 10000000000000000000llu;
+#elif W_TYPE_SIZE < 128
+/* A mainstream platforms, with at-least-64-bit uintmax_t.  */
+static wide_uint const BIG_POWER_OF_10 = 10000000000000000000llu;
 enum { LOG_BIG_POWER_OF_10 = 19 };
 #else
-/* For so-far-only-theoretical platforms with at-least-128-bit uintmax_t.
+/* A so-far-only-theoretical platform with at-least-128-bit uintmax_t.
    This is for performance; the 64-bit mainstream code will still work.  */
-static uintmax_t const BIG_POWER_OF_10 =
-  UINTMAX_C (100000000000000000000000000000000000000);
+static wide_uint const BIG_POWER_OF_10 =
+  (wide_uint) 10000000000000000000llu * 10000000000000000000llu;
 enum { LOG_BIG_POWER_OF_10 = 38 };
 #endif
 
 struct factors
 {
   uuint plarge; /* Can have a single large factor */
-  uintmax_t     p[MAX_NFACTS];
+  wide_uint     p[MAX_NFACTS];
   unsigned char e[MAX_NFACTS];
   unsigned char nfactors;
 };
@@ -271,24 +275,24 @@ struct mp_factors
   idx_t nalloc;
 };
 
-static void factor (uintmax_t, uintmax_t, struct factors *);
+static void factor (wide_uint, wide_uint, struct factors *);
 
 #ifndef umul_ppmm
 # define umul_ppmm(w1, w0, u, v)                                        \
   do {                                                                  \
-    uintmax_t __x0, __x1, __x2, __x3;                                   \
+    wide_uint __x0, __x1, __x2, __x3;                                   \
     unsigned long int __ul, __vl, __uh, __vh;                           \
-    uintmax_t __u = (u), __v = (v);                                     \
+    wide_uint __u = (u), __v = (v);                                     \
                                                                         \
     __ul = __ll_lowpart (__u);                                          \
     __uh = __ll_highpart (__u);                                         \
     __vl = __ll_lowpart (__v);                                          \
     __vh = __ll_highpart (__v);                                         \
                                                                         \
-    __x0 = (uintmax_t) __ul * __vl;                                     \
-    __x1 = (uintmax_t) __ul * __vh;                                     \
-    __x2 = (uintmax_t) __uh * __vl;                                     \
-    __x3 = (uintmax_t) __uh * __vh;                                     \
+    __x0 = (wide_uint) __ul * __vl;                                     \
+    __x1 = (wide_uint) __ul * __vh;                                     \
+    __x2 = (wide_uint) __uh * __vl;                                     \
+    __x3 = (wide_uint) __uh * __vh;                                     \
                                                                         \
     __x1 += __ll_highpart (__x0);/* This can't give carry.  */		\
     if (ckd_add (&__x1, __x1, __x2))	/* Did this give a carry?  */	\
@@ -306,7 +310,7 @@ static void factor (uintmax_t, uintmax_t, struct factors *);
 # undef udiv_qrnnd
 # define udiv_qrnnd(q, r, n1, n0, d)                                    \
   do {                                                                  \
-    uintmax_t __d1, __d0, __q, __r1, __r0;                              \
+    wide_uint __d1, __d0, __q, __r1, __r0;                              \
                                                                         \
     __d1 = (d); __d0 = 0;                                               \
     __r1 = (n1); __r0 = (n0);                                           \
@@ -330,7 +334,7 @@ static void factor (uintmax_t, uintmax_t, struct factors *);
 #if !defined add_ssaaaa
 # define add_ssaaaa(sh, sl, ah, al, bh, bl)                             \
   do {                                                                  \
-    uintmax_t _add_x;                                                   \
+    wide_uint _add_x;							\
     (sh) = (ah) + (bh) + ckd_add (&_add_x, al, bl);			\
     (sl) = _add_x;                                                      \
   } while (0)
@@ -364,7 +368,7 @@ static void factor (uintmax_t, uintmax_t, struct factors *);
 /* Requires that a < n and b <= n */
 #define submod(r,a,b,n)                                                 \
   do {                                                                  \
-    uintmax_t _s, _t = -ckd_sub (&_s, a, b);				\
+    wide_uint _s, _t = -ckd_sub (&_s, a, b);				\
     (r) = ((n) & _t) + _s;						\
   } while (0)
 
@@ -383,20 +387,20 @@ static void factor (uintmax_t, uintmax_t, struct factors *);
 #define submod2(r1, r0, a1, a0, b1, b0, n1, n0)                         \
   do {                                                                  \
     sub_ddmmss ((r1), (r0), (a1), (a0), (b1), (b0));                    \
-    if ((intmax_t) (r1) < 0)                                            \
+    if ((wide_int) (r1) < 0)                                            \
       add_ssaaaa ((r1), (r0), (r1), (r0), (n1), (n0));                  \
   } while (0)
 
 #define HIGHBIT_TO_MASK(x)                                              \
-  (((intmax_t)-1 >> 1) < 0                                              \
-   ? (uintmax_t)((intmax_t)(x) >> (W_TYPE_SIZE - 1))                    \
-   : ((x) & ((uintmax_t) 1 << (W_TYPE_SIZE - 1))                        \
-      ? UINTMAX_MAX : (uintmax_t) 0))
+  (((wide_int)-1 >> 1) < 0                                              \
+   ? (wide_uint)((wide_int)(x) >> (W_TYPE_SIZE - 1))                    \
+   : ((x) & ((wide_uint) 1 << (W_TYPE_SIZE - 1))                        \
+      ? WIDE_UINT_MAX : (wide_uint) 0))
 
 /* Return r = a mod d, where a = <a1,a0>, d = <d1,d0>.
    Requires that d1 != 0.  */
 ATTRIBUTE_PURE static uuint
-mod2 (uintmax_t a1, uintmax_t a0, uintmax_t d1, uintmax_t d0)
+mod2 (wide_uint a1, wide_uint a0, wide_uint d1, wide_uint d0)
 {
   affirm (d1 != 0);
 
@@ -421,12 +425,12 @@ mod2 (uintmax_t a1, uintmax_t a0, uintmax_t d1, uintmax_t d0)
 }
 
 ATTRIBUTE_CONST
-static uintmax_t
-gcd_odd (uintmax_t a, uintmax_t b)
+static wide_uint
+gcd_odd (wide_uint a, wide_uint b)
 {
   if ((b & 1) == 0)
     {
-      uintmax_t t = b;
+      wide_uint t = b;
       b = a;
       a = t;
     }
@@ -438,8 +442,8 @@ gcd_odd (uintmax_t a, uintmax_t b)
 
   for (;;)
     {
-      uintmax_t t;
-      uintmax_t bgta;
+      wide_uint t;
+      wide_uint bgta;
 
       assume (a);
       a >>= stdc_trailing_zeros (a);
@@ -460,7 +464,7 @@ gcd_odd (uintmax_t a, uintmax_t b)
 }
 
 ATTRIBUTE_PURE static uuint
-gcd2_odd (uintmax_t a1, uintmax_t a0, uintmax_t b1, uintmax_t b0)
+gcd2_odd (wide_uint a1, wide_uint a0, wide_uint b1, wide_uint b0)
 {
   affirm (b0 & 1);
 
@@ -507,10 +511,10 @@ gcd2_odd (uintmax_t a1, uintmax_t a0, uintmax_t b1, uintmax_t b0)
 
 static void
 factor_insert_multiplicity (struct factors *factors,
-                            uintmax_t prime, int m)
+                            wide_uint prime, int m)
 {
   int nfactors = factors->nfactors;
-  uintmax_t *p = factors->p;
+  wide_uint *p = factors->p;
   unsigned char *e = factors->e;
 
   /* Locate position for insert new or increment e.  */
@@ -542,7 +546,7 @@ factor_insert_multiplicity (struct factors *factors,
 
 static void
 factor_insert_large (struct factors *factors,
-                     uintmax_t p1, uintmax_t p0)
+                     wide_uint p1, wide_uint p0)
 {
   if (p1 > 0)
     {
@@ -667,7 +671,7 @@ static const unsigned char primes_diff8[] = {
 
 struct primes_dtab
 {
-  uintmax_t binv, lim;
+  wide_uint binv, lim;
 };
 
 #define P(a,b,c,d) {c,d},
@@ -677,9 +681,9 @@ static const struct primes_dtab primes_dtab[] = {
 };
 #undef P
 
-/* Verify that uintmax_t is not wider than
+/* Verify that wide_uint is not wider than
    the integers used to generate primes.h.  */
-static_assert (UINTMAX_WIDTH <= WIDE_UINT_BITS);
+static_assert (W_TYPE_SIZE <= WIDE_UINT_BITS);
 
 /* debugging for developers.  Enables devmsg().
    This flag is used only in the GMP code.  */
@@ -692,7 +696,7 @@ static bool flag_prove_primality = PROVE_PRIMALITY;
 #define MR_REPS 25
 
 static void
-factor_insert_refind (struct factors *factors, uintmax_t p, int i, int off)
+factor_insert_refind (struct factors *factors, wide_uint p, int i, int off)
 {
   for (int j = 0; j < off; j++)
     p += primes_diff[i + j];
@@ -733,7 +737,7 @@ factor_insert_refind (struct factors *factors, uintmax_t p, int i, int off)
  */
 
 static uuint
-factor_using_division (uintmax_t t1, uintmax_t t0,
+factor_using_division (wide_uint t1, wide_uint t0,
                        struct factors *factors)
 {
   if (t0 % 2 == 0)
@@ -757,14 +761,14 @@ factor_using_division (uintmax_t t1, uintmax_t t0,
       factor_insert_multiplicity (factors, 2, cnt);
     }
 
-  uintmax_t p = 3;
+  wide_uint p = 3;
   idx_t i;
   for (i = 0; t1 > 0 && i < PRIMES_PTAB_ENTRIES; i++)
     {
       for (;;)
         {
-          uintmax_t q1, q0, hi;
-          MAYBE_UNUSED uintmax_t lo;
+          wide_uint q1, q0, hi;
+          MAYBE_UNUSED wide_uint lo;
 
           q0 = t0 * primes_dtab[i].binv;
           umul_ppmm (hi, lo, q0, p);
@@ -794,7 +798,7 @@ factor_using_division (uintmax_t t1, uintmax_t t0,
 
   for (; i < PRIMES_PTAB_ENTRIES; i += 8)
     {
-      uintmax_t q;
+      wide_uint q;
       const struct primes_dtab *pd = &primes_dtab[i];
       DIVBLOCK (0);
       DIVBLOCK (1);
@@ -874,8 +878,8 @@ static const unsigned char  binvert_table[128] =
 /* Compute n^(-1) mod B, using a Newton iteration.  */
 #define binv(inv,n)                                                     \
   do {                                                                  \
-    uintmax_t  __n = (n);                                               \
-    uintmax_t  __inv;                                                   \
+    wide_uint  __n = (n);                                               \
+    wide_uint  __inv;                                                   \
                                                                         \
     __inv = binvert_table[(__n / 2) & 0x7F]; /*  8 */                   \
     if (W_TYPE_SIZE > 8)   __inv = 2 * __inv - __inv * __inv * __n;     \
@@ -897,13 +901,13 @@ static const unsigned char  binvert_table[128] =
 /* q = u / d, assuming d|u.  */
 #define divexact_21(q1, q0, u1, u0, d)                                  \
   do {                                                                  \
-    uintmax_t _di, _q0;                                                 \
+    wide_uint _di, _q0;                                                 \
     binv (_di, (d));                                                    \
     _q0 = (u0) * _di;                                                   \
     if ((u1) >= (d))                                                    \
       {                                                                 \
-        uintmax_t _p1;                                                  \
-        MAYBE_UNUSED intmax_t _p0;                                      \
+        wide_uint _p1;                                                  \
+        MAYBE_UNUSED wide_int _p0;                                      \
         umul_ppmm (_p1, _p0, _q0, d);                                   \
         (q1) = ((u1) - _p1) * _di;                                      \
         (q0) = _q0;                                                     \
@@ -918,14 +922,14 @@ static const unsigned char  binvert_table[128] =
 /* x B (mod n).  */
 #define redcify(r_prim, r, n)                                           \
   do {                                                                  \
-    MAYBE_UNUSED uintmax_t _redcify_q;					\
+    MAYBE_UNUSED wide_uint _redcify_q;					\
     udiv_qrnnd (_redcify_q, r_prim, r, 0, n);                           \
   } while (0)
 
 /* x B^2 (mod n).  Requires x > 0, n1 < B/2.  */
 #define redcify2(r1, r0, x, n1, n0)                                     \
   do {                                                                  \
-    uintmax_t _r1, _r0, _i;                                             \
+    wide_uint _r1, _r0, _i;                                             \
     if ((x) < (n1))                                                     \
       {                                                                 \
         _r1 = (x); _r0 = 0;                                             \
@@ -948,11 +952,11 @@ static const unsigned char  binvert_table[128] =
 
 /* Modular two-word multiplication, r = a * b mod m, with mi = m^(-1) mod B.
    Both a and b must be in redc form, the result will be in redc form too.  */
-static inline uintmax_t
-mulredc (uintmax_t a, uintmax_t b, uintmax_t m, uintmax_t mi)
+static inline wide_uint
+mulredc (wide_uint a, wide_uint b, wide_uint m, wide_uint mi)
 {
-  uintmax_t rh, rl, q, th, xh;
-  MAYBE_UNUSED uintmax_t tl;
+  wide_uint rh, rl, q, th, xh;
+  MAYBE_UNUSED wide_uint tl;
 
   umul_ppmm (rh, rl, a, b);
   q = rl * mi;
@@ -966,13 +970,13 @@ mulredc (uintmax_t a, uintmax_t b, uintmax_t m, uintmax_t mi)
 /* Modular two-word multiplication, r = a * b mod m, with mi = m^(-1) mod B.
    Both a and b must be in redc form, the result will be in redc form too.
    For performance reasons, the most significant bit of m must be clear.  */
-static uintmax_t
-mulredc2 (uintmax_t *r1p,
-          uintmax_t a1, uintmax_t a0, uintmax_t b1, uintmax_t b0,
-          uintmax_t m1, uintmax_t m0, uintmax_t mi)
+static wide_uint
+mulredc2 (wide_uint *r1p,
+          wide_uint a1, wide_uint a0, wide_uint b1, wide_uint b0,
+          wide_uint m1, wide_uint m0, wide_uint mi)
 {
-  uintmax_t r1, r0, q, p1, t1, t0, s1, s0;
-  MAYBE_UNUSED uintmax_t p0;
+  wide_uint r1, r0, q, p1, t1, t0, s1, s0;
+  MAYBE_UNUSED wide_uint p0;
   mi = -mi;
   affirm ((m1 >> (W_TYPE_SIZE - 1)) == 0);
 
@@ -1034,10 +1038,10 @@ mulredc2 (uintmax_t *r1p,
 }
 
 ATTRIBUTE_CONST
-static uintmax_t
-powm (uintmax_t b, uintmax_t e, uintmax_t n, uintmax_t ni, uintmax_t one)
+static wide_uint
+powm (wide_uint b, wide_uint e, wide_uint n, wide_uint ni, wide_uint one)
 {
-  uintmax_t y = one;
+  wide_uint y = one;
 
   if (e & 1)
     y = b;
@@ -1055,12 +1059,12 @@ powm (uintmax_t b, uintmax_t e, uintmax_t n, uintmax_t ni, uintmax_t one)
 }
 
 ATTRIBUTE_PURE static uuint
-powm2 (const uintmax_t *bp, const uintmax_t *ep, const uintmax_t *np,
-       uintmax_t ni, const uintmax_t *one)
+powm2 (const wide_uint *bp, const wide_uint *ep, const wide_uint *np,
+       wide_uint ni, const wide_uint *one)
 {
-  uintmax_t r1, r0, b1, b0, n1, n0;
+  wide_uint r1, r0, b1, b0, n1, n0;
   int i;
-  uintmax_t e;
+  wide_uint e;
 
   b0 = bp[0];
   b1 = bp[1];
@@ -1074,11 +1078,11 @@ powm2 (const uintmax_t *bp, const uintmax_t *ep, const uintmax_t *np,
     {
       if (e & 1)
         {
-          uintmax_t r1m1;
+          wide_uint r1m1;
           r0 = mulredc2 (&r1m1, r1, r0, b1, b0, n1, n0, ni);
           r1 = r1m1;
         }
-      uintmax_t r1m;
+      wide_uint r1m;
       b0 = mulredc2 (&r1m, b1, b0, b1, b0, n1, n0, ni);
       b1 = r1m;
     }
@@ -1086,11 +1090,11 @@ powm2 (const uintmax_t *bp, const uintmax_t *ep, const uintmax_t *np,
     {
       if (e & 1)
         {
-          uintmax_t r1m1;
+          wide_uint r1m1;
           r0 = mulredc2 (&r1m1, r1, r0, b1, b0, n1, n0, ni);
           r1 = r1m1;
         }
-      uintmax_t r1m;
+      wide_uint r1m;
       b0 = mulredc2 (&r1m, b1, b0, b1, b0, n1, n0, ni);
       b1 = r1m;
     }
@@ -1099,12 +1103,12 @@ powm2 (const uintmax_t *bp, const uintmax_t *ep, const uintmax_t *np,
 
 ATTRIBUTE_CONST
 static bool
-millerrabin (uintmax_t n, uintmax_t ni, uintmax_t b, uintmax_t q,
-             int k, uintmax_t one)
+millerrabin (wide_uint n, wide_uint ni, wide_uint b, wide_uint q,
+             int k, wide_uint one)
 {
-  uintmax_t y = powm (b, q, n, ni, one);
+  wide_uint y = powm (b, q, n, ni, one);
 
-  uintmax_t nm1 = n - one;      /* -1, but in redc representation.  */
+  wide_uint nm1 = n - one;      /* -1, but in redc representation.  */
 
   if (y == one || y == nm1)
     return true;
@@ -1122,10 +1126,10 @@ millerrabin (uintmax_t n, uintmax_t ni, uintmax_t b, uintmax_t q,
 }
 
 ATTRIBUTE_PURE static bool
-millerrabin2 (const uintmax_t *np, uintmax_t ni, const uintmax_t *bp,
-              const uintmax_t *qp, int k, const uintmax_t *one)
+millerrabin2 (const wide_uint *np, wide_uint ni, const wide_uint *bp,
+              const wide_uint *qp, int k, const wide_uint *one)
 {
-  uintmax_t y1, y0, nm1_1, nm1_0, r1m;
+  wide_uint y1, y0, nm1_1, nm1_0, r1m;
 
   uuset (&y1, &y0, powm2 (bp, qp, np, ni, one));
 
@@ -1173,24 +1177,24 @@ mp_millerrabin (mpz_srcptr n, mpz_srcptr nm1, mpz_ptr x, mpz_ptr y,
 /* Lucas' prime test.  The number of iterations vary greatly, up to a few dozen
    have been observed.  The average seem to be about 2.  */
 static bool ATTRIBUTE_PURE
-prime_p (uintmax_t n)
+prime_p (wide_uint n)
 {
   bool is_prime;
-  uintmax_t a_prim, one, ni;
+  wide_uint a_prim, one, ni;
   struct factors factors;
 
   if (n <= 1)
     return false;
 
   /* We have already cast out small primes.  */
-  if (n < (uintmax_t) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME)
+  if (n < (wide_uint) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME)
     return true;
 
   /* Precomputation for Miller-Rabin.  */
   int k = stdc_trailing_zeros (n - 1);
-  uintmax_t q = (n - 1) >> k;
+  wide_uint q = (n - 1) >> k;
 
-  uintmax_t a = 2;
+  wide_uint a = 2;
   binv (ni, n);                 /* ni <- 1/n mod B */
   redcify (one, 1, n);
   addmod (a_prim, one, one, n); /* i.e., redcify a = 2 */
@@ -1233,13 +1237,13 @@ prime_p (uintmax_t n)
          on most processors, since it avoids udiv_qrnnd.  If we go down the
          udiv_qrnnd_preinv path, this code should be replaced.  */
       {
-        uintmax_t s1, s0;
+        wide_uint s1, s0;
         umul_ppmm (s1, s0, one, a);
         if (LIKELY (s1 == 0))
           a_prim = s0 % n;
         else
           {
-            MAYBE_UNUSED uintmax_t dummy;
+            MAYBE_UNUSED wide_uint dummy;
             udiv_qrnnd (dummy, a_prim, s1, s0, n);
           }
       }
@@ -1252,13 +1256,13 @@ prime_p (uintmax_t n)
 }
 
 static bool ATTRIBUTE_PURE
-prime2_p (uintmax_t n1, uintmax_t n0)
+prime2_p (wide_uint n1, wide_uint n0)
 {
-  uintmax_t q[2], nm1[2];
-  uintmax_t a_prim[2];
-  uintmax_t one[2];
-  uintmax_t na[2];
-  uintmax_t ni;
+  wide_uint q[2], nm1[2];
+  wide_uint a_prim[2];
+  wide_uint one[2];
+  wide_uint na[2];
+  wide_uint ni;
   int k;
   struct factors factors;
 
@@ -1282,7 +1286,7 @@ prime2_p (uintmax_t n1, uintmax_t n0)
       rsh2 (q[1], q[0], nm1[1], nm1[0], k);
     }
 
-  uintmax_t a = 2;
+  wide_uint a = 2;
   binv (ni, n0);
   redcify2 (one[1], one[0], 1, n1, n0);
   addmod2 (a_prim[1], a_prim[0], one[1], one[0], one[1], one[0], n1, n0);
@@ -1305,7 +1309,7 @@ prime2_p (uintmax_t n1, uintmax_t n0)
   for (idx_t r = 0; r < PRIMES_PTAB_ENTRIES; r++)
     {
       bool is_prime;
-      uintmax_t e[2];
+      wide_uint e[2];
       uuint y;
 
       if (flag_prove_primality)
@@ -1313,7 +1317,7 @@ prime2_p (uintmax_t n1, uintmax_t n0)
           is_prime = true;
           if (hi (factors.plarge))
             {
-              uintmax_t pi;
+              wide_uint pi;
               binv (pi, lo (factors.plarge));
               e[0] = pi * nm1[0];
               e[1] = 0;
@@ -1435,10 +1439,10 @@ mp_prime_p (mpz_t n)
 }
 
 static void
-factor_using_pollard_rho (uintmax_t n, unsigned long int a,
+factor_using_pollard_rho (wide_uint n, unsigned long int a,
                           struct factors *factors)
 {
-  uintmax_t x, z, y, P, t, ni, g;
+  wide_uint x, z, y, P, t, ni, g;
 
   unsigned long int k = 1;
   unsigned long int l = 1;
@@ -1521,10 +1525,10 @@ factor_using_pollard_rho (uintmax_t n, unsigned long int a,
 }
 
 static void
-factor_using_pollard_rho2 (uintmax_t n1, uintmax_t n0, unsigned long int a,
+factor_using_pollard_rho2 (wide_uint n1, wide_uint n0, unsigned long int a,
                            struct factors *factors)
 {
-  uintmax_t x1, x0, z1, z0, y1, y0, P1, P0, t1, t0, ni, g1, g0, r1m;
+  wide_uint x1, x0, z1, z0, y1, y0, P1, P0, t1, t0, ni, g1, g0, r1m;
 
   unsigned long int k = 1;
   unsigned long int l = 1;
@@ -1544,7 +1548,7 @@ factor_using_pollard_rho2 (uintmax_t n1, uintmax_t n0, unsigned long int a,
             {
               x0 = mulredc2 (&r1m, x1, x0, x1, x0, n1, n0, ni);
               x1 = r1m;
-              addmod2 (x1, x0, x1, x0, 0, (uintmax_t) a, n1, n0);
+              addmod2 (x1, x0, x1, x0, 0, (wide_uint) a, n1, n0);
 
               submod2 (t1, t0, z1, z0, x1, x0, n1, n0);
               P0 = mulredc2 (&r1m, P1, P0, t1, t0, n1, n0, ni);
@@ -1567,7 +1571,7 @@ factor_using_pollard_rho2 (uintmax_t n1, uintmax_t n0, unsigned long int a,
             {
               x0 = mulredc2 (&r1m, x1, x0, x1, x0, n1, n0, ni);
               x1 = r1m;
-              addmod2 (x1, x0, x1, x0, 0, (uintmax_t) a, n1, n0);
+              addmod2 (x1, x0, x1, x0, 0, (wide_uint) a, n1, n0);
             }
           y1 = x1; y0 = x0;
         }
@@ -1577,7 +1581,7 @@ factor_using_pollard_rho2 (uintmax_t n1, uintmax_t n0, unsigned long int a,
         {
           y0 = mulredc2 (&r1m, y1, y0, y1, y0, n1, n0, ni);
           y1 = r1m;
-          addmod2 (y1, y0, y1, y0, 0, (uintmax_t) a, n1, n0);
+          addmod2 (y1, y0, y1, y0, 0, (wide_uint) a, n1, n0);
 
           submod2 (t1, t0, z1, z0, y1, y0, n1, n0);
           uuset (&g1, &g0, gcd2_odd (t1, t0, n1, n0));
@@ -1598,7 +1602,7 @@ factor_using_pollard_rho2 (uintmax_t n1, uintmax_t n0, unsigned long int a,
         {
           /* The found factor is two words.  This is highly unlikely, thus hard
              to trigger.  Please be careful before you change this code!  */
-          uintmax_t ginv;
+          wide_uint ginv;
 
           if (n1 == g1 && n0 == g0)
             {
@@ -1740,8 +1744,8 @@ mp_factor_using_pollard_rho (mpz_t n, unsigned long int a,
 /* FIXME: Maybe better to use an iteration converging to 1/sqrt(n)?  If
    algorithm is replaced, consider also returning the remainder.  */
 ATTRIBUTE_CONST
-static uintmax_t
-isqrt (uintmax_t n)
+static wide_uint
+isqrt (wide_uint n)
 {
   if (n == 0)
     return 0;
@@ -1749,11 +1753,11 @@ isqrt (uintmax_t n)
   int c = stdc_leading_zeros (n);
 
   /* Make x > sqrt(n).  This will be invariant through the loop.  */
-  uintmax_t x = (uintmax_t) 1 << ((W_TYPE_SIZE + 1 - c) >> 1);
+  wide_uint x = (wide_uint) 1 << ((W_TYPE_SIZE + 1 - c) >> 1);
 
   for (;;)
     {
-      uintmax_t y = (x + n / x) / 2;
+      wide_uint y = (x + n / x) / 2;
       if (y >= x)
         return x;
 
@@ -1762,11 +1766,11 @@ isqrt (uintmax_t n)
 }
 
 ATTRIBUTE_CONST
-static uintmax_t
-isqrt2 (uintmax_t nh, uintmax_t nl)
+static wide_uint
+isqrt2 (wide_uint nh, wide_uint nl)
 {
-  /* Ensures the remainder fits in an uintmax_t.  */
-  affirm (nh < ((uintmax_t) 1 << (W_TYPE_SIZE - 2)));
+  /* Ensures the remainder fits in a wide_uint.  */
+  affirm (nh < ((wide_uint) 1 << (W_TYPE_SIZE - 2)));
 
   if (nh == 0)
     return isqrt (nl);
@@ -1774,20 +1778,20 @@ isqrt2 (uintmax_t nh, uintmax_t nl)
   int shift = stdc_leading_zeros (nh) & ~1;
 
   /* Make x > sqrt (n).  */
-  uintmax_t x = isqrt ((nh << shift) + (nl >> (W_TYPE_SIZE - shift))) + 1;
+  wide_uint x = isqrt ((nh << shift) + (nl >> (W_TYPE_SIZE - shift))) + 1;
   x <<= (W_TYPE_SIZE - shift) >> 1;
 
   /* Do we need more than one iteration?  */
   for (;;)
     {
-      MAYBE_UNUSED uintmax_t r;
-      uintmax_t q, y;
+      MAYBE_UNUSED wide_uint r;
+      wide_uint q, y;
       udiv_qrnnd (q, r, nh, nl, x);
       y = (x + q) / 2;
 
       if (y >= x)
         {
-          uintmax_t hi, lo;
+          wide_uint hi, lo;
           umul_ppmm (hi, lo, x + 1, x + 1);
           affirm (gt2 (hi, lo, nh, nl));
 
@@ -1811,8 +1815,8 @@ isqrt2 (uintmax_t nh, uintmax_t nl)
 
 /* Return the square root if the input is a square, otherwise 0.  */
 ATTRIBUTE_CONST
-static uintmax_t
-is_square (uintmax_t x)
+static wide_uint
+is_square (wide_uint x)
 {
   /* Uses the tests suggested by Cohen.  Excludes 99% of the non-squares before
      computing the square root.  */
@@ -1822,7 +1826,7 @@ is_square (uintmax_t x)
       && ((MAGIC65 >> ((x % 65) & 63)) & 1)
       && ((MAGIC11 >> (x % 11) & 1)))
     {
-      uintmax_t r = isqrt (x);
+      wide_uint r = isqrt (x);
       if (r * r == x)
         return r;
     }
@@ -1857,7 +1861,7 @@ static short const invtab[0x81] =
   do {                                                                  \
     if ((u) / 0x40 < (d))                                               \
       {                                                                 \
-        uintmax_t _dinv, _mask, _q, _r;                                 \
+        wide_uint _dinv, _mask, _q, _r;                                 \
         int _cnt = stdc_leading_zeros (d);				\
         _r = (u);                                                       \
         if (UNLIKELY (_cnt > (W_TYPE_SIZE - 8)))                        \
@@ -1872,14 +1876,14 @@ static short const invtab[0x81] =
           }                                                             \
         _r -= _q * (d);                                                 \
                                                                         \
-        _mask = -(uintmax_t) (_r >= (d));                               \
+        _mask = -(wide_uint) (_r >= (d));                               \
         (r) = _r - (_mask & (d));                                       \
         (q) = _q - _mask;                                               \
         affirm ((q) * (d) + (r) == u);					\
       }                                                                 \
     else                                                                \
       {                                                                 \
-        uintmax_t _q = (u) / (d);                                       \
+        wide_uint _q = (u) / (d);                                       \
         (r) = (u) - _q * (d);                                           \
         (q) = _q;                                                       \
       }                                                                 \
@@ -1933,7 +1937,7 @@ static int q_freq[Q_FREQ_SIZE + 1];
 /* Return true on success.  Expected to fail only for numbers
    >= 2^{2*W_TYPE_SIZE - 2}, or close to that limit.  */
 static bool
-factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
+factor_using_squfof (wide_uint n1, wide_uint n0, struct factors *factors)
 {
   /* Uses algorithm and notation from
 
@@ -1952,16 +1956,16 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
       1155, 15, 231, 35, 3, 55, 7, 11, 0
     };
 
-  struct { uintmax_t Q; uintmax_t P; } queue[QUEUE_SIZE];
+  struct { wide_uint Q; wide_uint P; } queue[QUEUE_SIZE];
 
-  if (n1 >= ((uintmax_t) 1 << (W_TYPE_SIZE - 2)))
+  if (n1 >= ((wide_uint) 1 << (W_TYPE_SIZE - 2)))
     return false;
 
-  uintmax_t sqrt_n = isqrt2 (n1, n0);
+  wide_uint sqrt_n = isqrt2 (n1, n0);
 
   if (n0 == sqrt_n * sqrt_n)
     {
-      uintmax_t p1, p0;
+      wide_uint p1, p0;
 
       umul_ppmm (p1, p0, sqrt_n, sqrt_n);
       affirm (p0 == n0);
@@ -1992,7 +1996,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
   for (short const *m = (n0 % 4 == 1) ? multipliers_3 : multipliers_1;
        *m; m++)
     {
-      uintmax_t S, Dh, Dl, Q1, Q, P, L, L1, B;
+      wide_uint S, Dh, Dl, Q1, Q, P, L, L1, B;
       unsigned int i;
       unsigned int mu = *m;
       int qpos = 0;
@@ -2011,19 +2015,19 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
          Requiring 64 mu^3 < n seems sufficient.  */
       if (n1 == 0)
         {
-          if ((uintmax_t) mu * mu * mu >= n0 / 64)
+          if ((wide_uint) mu * mu * mu >= n0 / 64)
             continue;
         }
       else
         {
-          if (n1 > ((uintmax_t) 1 << (W_TYPE_SIZE - 2)) / mu)
+          if (n1 > ((wide_uint) 1 << (W_TYPE_SIZE - 2)) / mu)
             continue;
         }
       umul_ppmm (Dh, Dl, n0, mu);
       Dh += n1 * mu;
 
       affirm (Dl % 4 != 1);
-      affirm (Dh < (uintmax_t) 1 << (W_TYPE_SIZE - 2));
+      affirm (Dh < (wide_uint) 1 << (W_TYPE_SIZE - 2));
 
       S = isqrt2 (Dh, Dl);
 
@@ -2042,7 +2046,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
 
       for (i = 0; i <= B; i++)
         {
-          uintmax_t q, P1, t, rem;
+          wide_uint q, P1, t, rem;
 
           div_smallq (q, rem, S + P, Q);
           P1 = S - rem; /* P1 = q*Q - P */
@@ -2056,7 +2060,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
 
           if (Q <= L1)
             {
-              uintmax_t g = Q;
+              wide_uint g = Q;
 
               if ((Q & 1) == 0)
                 g /= 2;
@@ -2082,7 +2086,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
 
           if ((i & 1) == 0)
             {
-              uintmax_t r = is_square (Q);
+              wide_uint r = is_square (Q);
               if (r)
                 {
                   for (int j = 0; j < qpos; j++)
@@ -2120,7 +2124,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
                      for the case D = 2N.  */
                   /* Compute Q = (D - P*P) / Q1, but we need double
                      precision.  */
-                  uintmax_t hi, lo;
+                  wide_uint hi, lo;
                   umul_ppmm (hi, lo, P, P);
                   sub_ddmmss (hi, lo, Dh, Dl, hi, lo);
                   udiv_qrnnd (Q, rem, hi, lo, Q1);
@@ -2188,7 +2192,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
 /* Compute the prime factors of the 128-bit number (T1,T0), and put the
    results in FACTORS.  */
 static void
-factor (uintmax_t t1, uintmax_t t0, struct factors *factors)
+factor (wide_uint t1, wide_uint t0, struct factors *factors)
 {
   factors->nfactors = 0;
   hiset (&factors->plarge, 0);
@@ -2240,10 +2244,10 @@ mp_factor (mpz_t t, struct mp_factors *factors)
 }
 
 static strtol_error
-strto2uintmax (uintmax_t *hip, uintmax_t *lop, char const *s)
+strto2wide_uint (wide_uint *hip, wide_uint *lop, char const *s)
 {
   int lo_carry;
-  uintmax_t hi = 0, lo = 0;
+  wide_uint hi = 0, lo = 0;
 
   strtol_error err = LONGINT_INVALID;
 
@@ -2300,7 +2304,7 @@ strto2uintmax (uintmax_t *hip, uintmax_t *lop, char const *s)
    and also is the max guaranteed size that
    consumers can read atomically through pipes.
    Also it's big enough to cater for max line length
-   even with 128 bit uintmax_t.  */
+   even with 128 bit wide_uint.  */
 #ifndef _POSIX_PIPE_BUF
 # define _POSIX_PIPE_BUF 512
 #endif
@@ -2388,7 +2392,7 @@ lbuf_putnl (void)
    everything from BUFEND to lbuf_buf's end.  Use the area just before
    BUFEND temporarily.  */
 static void
-lbuf_putint_append (uintmax_t i, char *bufend)
+lbuf_putint_append (wide_uint i, char *bufend)
 {
   char *istr = bufend;
   do
@@ -2408,7 +2412,7 @@ lbuf_putint_append (uintmax_t i, char *bufend)
 
 /* Append the string representation of I to lbuf_buf.  */
 static void
-lbuf_putint (uintmax_t i)
+lbuf_putint (wide_uint i)
 {
   lbuf_putint_append (i, lbuf_buf + sizeof lbuf_buf);
 }
@@ -2417,12 +2421,12 @@ lbuf_putint (uintmax_t i)
 static void
 print_uuint (uuint t)
 {
-  uintmax_t t1 = hi (t), t0 = lo (t);
+  wide_uint t1 = hi (t), t0 = lo (t);
   char *bufend = lbuf_buf + sizeof lbuf_buf;
 
   while (t1)
     {
-      uintmax_t r = t1 % BIG_POWER_OF_10;
+      wide_uint r = t1 % BIG_POWER_OF_10;
       t1 /= BIG_POWER_OF_10;
       udiv_qrnnd (t0, r, r, t0, BIG_POWER_OF_10);
       for (int i = 0; i < LOG_BIG_POWER_OF_10; i++)
@@ -2464,7 +2468,7 @@ lbuf_putmpz (mpz_t const i)
 
 /* Single-precision factoring */
 static void
-print_factors_single (uintmax_t t1, uintmax_t t0)
+print_factors_single (wide_uint t1, wide_uint t0)
 {
   struct factors factors;
 
@@ -2509,13 +2513,13 @@ print_factors (char const *input)
     str++;
   str += *str == '+';
 
-  uintmax_t t1, t0;
+  wide_uint t1, t0;
 
   /* Try converting the number to one or two words.  If it fails, use GMP or
      print an error message.  The 2nd condition checks that the most
      significant bit of the two-word number is clear, in a typesize neutral
      way.  */
-  strtol_error err = strto2uintmax (&t1, &t0, str);
+  strtol_error err = strto2wide_uint (&t1, &t0, str);
 
   switch (err)
     {

@@ -108,7 +108,7 @@ print_wide_uint (wide_uint n, int nesting, unsigned wide_uint_bits)
     }
   else if (nesting)
     {
-      printf ("(uintmax_t) ");
+      printf ("(wide_uint) ");
       hex_digits_per_literal
         = ((wide_uint_bits - 1) % bits_per_literal) % 4 + 1;
     }
