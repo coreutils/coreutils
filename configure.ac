@@ -242,6 +242,7 @@ if test $gl_gcc_warnings != no; then
   # For gnulib-tests, the set is slightly smaller still.
   nw=
   # It's not worth being this picky about test programs.
+  nw="$nw -Wmissing-variable-declarations"
   nw="$nw -Wsuggest-attribute=cold"
   nw="$nw -Wsuggest-attribute=const"
   nw="$nw -Wsuggest-attribute=format"
