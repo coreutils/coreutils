@@ -388,6 +388,7 @@ all_tests =					\
   tests/sort/sort-debug-keys.sh			\
   tests/sort/sort-debug-warn.sh			\
   tests/sort/sort-discrim.sh			\
+  tests/sort/sort-field-limit.sh		\
   tests/sort/sort-files0-from.pl		\
   tests/sort/sort-float.sh			\
   tests/sort/sort-h-thousands-sep.sh		\
