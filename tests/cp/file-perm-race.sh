@@ -30,7 +30,7 @@ cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 
 # Copy a fifo's contents.  That way, we can examine the
 # destination permissions before they're finalized.
-cp -p --copy-contents fifo fifo-copy & pid=$!
+timeout 60 cp -p --copy-contents fifo fifo-copy & pid=$!
 
 (
   # Now 'cp' is reading the fifo.  Wait for the destination file to
