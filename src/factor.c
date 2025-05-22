@@ -149,29 +149,25 @@ static_assert (MP_LIMB_MAX >> (W_TYPE_SIZE - 1) == 1);
 static_assert (INT_MAX < MP_LIMB_MAX);
 
 #ifndef USE_LONGLONG_H
-# define USE_LONGLONG_H true
+# if (defined INT32_MAX && defined UINT32_MAX \
+      && defined INT64_MAX && defined UINT64_MAX)
+#  define USE_LONGLONG_H true
+# else
+#  define USE_LONGLONG_H false
+# endif
 #endif
 
 #if USE_LONGLONG_H
 
 /* Make definitions for longlong.h to make it do what it can do for us */
 
-# define UWtype  mp_limb_t
-# define UHWtype unsigned int
+typedef mp_limb_t UWtype;
+typedef unsigned int UHWtype;
 # undef UDWtype
-# if HAVE_ATTRIBUTE_MODE
-typedef unsigned int UQItype    __attribute__ ((mode (QI)));
-typedef          int SItype     __attribute__ ((mode (SI)));
-typedef unsigned int USItype    __attribute__ ((mode (SI)));
-typedef          int DItype     __attribute__ ((mode (DI)));
-typedef unsigned int UDItype    __attribute__ ((mode (DI)));
-# else
-typedef unsigned char UQItype;
-typedef          long SItype;
-typedef unsigned long int USItype;
-typedef long long int DItype;
-typedef unsigned long long int UDItype;
-# endif
+typedef int32_t SItype;
+typedef uint32_t USItype;
+typedef int64_t DItype;
+typedef uint64_t UDItype;
 # define LONGLONG_STANDALONE     /* Don't require GMP's longlong.h mdep files */
 
 /* FIXME make longlong.h really standalone, so that ASSERT, __GMP_DECLSPEC
@@ -188,8 +184,7 @@ typedef unsigned long long int UDItype;
 
 /* longlong.h uses these macros only in certain system compiler combinations.
    Ensure usage to pacify -Wunused-macros.  */
-# if (defined ASSERT || defined UHWtype \
-      || defined __GMP_DECLSPEC || defined __GMP_GNUC_PREREQ)
+# if defined ASSERT || defined __GMP_DECLSPEC || defined __GMP_GNUC_PREREQ
 # endif
 
 # if _ARCH_PPC
