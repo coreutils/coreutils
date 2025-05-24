@@ -865,8 +865,10 @@ exclude_file_name_regexp--sc_bindtextdomain = \
   ^(gl/.*|lib/euidaccess-stat|src/make-prime-list|src/cksum)\.c$$
 exclude_file_name_regexp--sc_trailing_blank = \
   ^(tests/pr/|gl/.*\.diff$$|man/help2man)
+_x_system_h := (system|copy|chown-core|find-mount-point)\.h
+_x_system_c := (libstdbuf|make-prime-list)\.c
 exclude_file_name_regexp--sc_system_h_headers = \
-  ^src/((system|copy|chown-core|find-mount-point)\.h|make-prime-list\.c)$$
+  ^src/($(_x_system_h)|$(_x_system_c))$$
 
 _src := (false|lbracket|chown-(chgrp|chown)
 _src := $(_src)|ls-(dir|ls|vdir)|make-prime-list|tac-pipe|uname-(arch|uname))
