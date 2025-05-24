@@ -200,8 +200,16 @@ typedef uint64_t UDItype;
 
 #endif
 
-/* 2*3*5*7*11...*101 is 128 bits, and has 26 prime factors */
-#define MAX_NFACTS 26
+/* 2*3*5*7*11...*101 fits in 128 bits, and has 26 prime factors.
+   This code can be extended in the future as needed; show as an example
+   2*3*5*7*11...*193 which fits in 257 bits, and has 44 prime factors.  */
+#if 2 * W_TYPE_SIZE <= 128
+# define MAX_NFACTS 26
+#elif 2 * W_TYPE_SIZE <= 257
+# define MAX_NFACTS 44
+#else
+# error "configuration has a wide word; please update MAX_NFACTS definition"
+#endif
 
 enum
 {
@@ -265,6 +273,13 @@ static mp_limb_t const BIG_POWER_OF_10 =
   (mp_limb_t) 10000000000000000000llu * 10000000000000000000llu;
 enum { LOG_BIG_POWER_OF_10 = 38 };
 #endif
+
+/* Check that struct factors can use unsigned char to record a uuint's
+   prime factor's multiplicity, which is at most 2 * W_TYPE_SIZE - 1.  */
+static_assert (2 * W_TYPE_SIZE - 1 <= UCHAR_MAX);
+
+/* Likewise for recording the number of prime factors.  */
+static_assert (MAX_NFACTS <= UCHAR_MAX);
 
 struct factors
 {
