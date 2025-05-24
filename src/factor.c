@@ -79,8 +79,8 @@
     * The redcify function could be vastly improved by using (plain Euclidean)
       pre-inversion (such as GMP's invert_limb) and udiv_qrnnd_preinv (from
       GMP's gmp-impl.h).  The redcify2 function could be vastly improved using
-      similar methods.  These functions currently dominate run time when using
-      the -w option.
+      similar methods.  These functions currently dominate run time when
+      PROVE_PRIMALITY is nonzero (the default).
 */
 
 /* Whether to recursively factor to prove primality,
