@@ -315,12 +315,9 @@ static void factor (mp_limb_t, mp_limb_t, struct factors *);
 # undef udiv_qrnnd
 # define udiv_qrnnd(q, r, n1, n0, d)                                    \
   do {                                                                  \
-    mp_limb_t __d1, __d0, __q, __r1, __r0;				\
+    mp_limb_t __d1 = d, __d0 = 0, __q = 0, __r1 = n1, __r0 = n0;	\
                                                                         \
-    __d1 = (d); __d0 = 0;                                               \
-    __r1 = (n1); __r0 = (n0);                                           \
     affirm (__r1 < __d1);                                               \
-    __q = 0;                                                            \
     for (int __i = W_TYPE_SIZE; __i > 0; __i--)                         \
       {                                                                 \
         rsh2 (__d1, __d0, __d1, __d0, 1);                               \
@@ -378,22 +375,22 @@ static void factor (mp_limb_t, mp_limb_t, struct factors *);
   } while (0)
 
 #define addmod(r,a,b,n)                                                 \
-  submod ((r), (a), ((n) - (b)), (n))
+  submod (r, a, (n) - (b), n)
 
 /* Modular two-word addition and subtraction.  For performance reasons, the
    most significant bit of n1 must be clear.  The destination variables must be
    distinct from the mod operand.  */
 #define addmod2(r1, r0, a1, a0, b1, b0, n1, n0)                         \
   do {                                                                  \
-    add_ssaaaa ((r1), (r0), (a1), (a0), (b1), (b0));                    \
-    if (ge2 ((r1), (r0), (n1), (n0)))                                   \
-      sub_ddmmss ((r1), (r0), (r1), (r0), (n1), (n0));                  \
+    add_ssaaaa (r1, r0, a1, a0, b1, b0);				\
+    if (ge2 (r1, r0, n1, n0))						\
+      sub_ddmmss (r1, r0, r1, r0, n1, n0);				\
   } while (0)
 #define submod2(r1, r0, a1, a0, b1, b0, n1, n0)                         \
   do {                                                                  \
-    sub_ddmmss ((r1), (r0), (a1), (a0), (b1), (b0));                    \
+    sub_ddmmss (r1, r0, a1, a0, b1, b0);				\
     if ((r1) >> (W_TYPE_SIZE - 1) != 0)					\
-      add_ssaaaa ((r1), (r0), (r1), (r0), (n1), (n0));                  \
+      add_ssaaaa (r1, r0, r1, r0, n1, n0);				\
   } while (0)
 
 #define HIGHBIT_TO_MASK(x) (- ((mp_limb_t) (x) >> (W_TYPE_SIZE - 1)))
@@ -903,7 +900,7 @@ static const unsigned char  binvert_table[128] =
 #define divexact_21(q1, q0, u1, u0, d)                                  \
   do {                                                                  \
     mp_limb_t _di, _q0;							\
-    binv (_di, (d));                                                    \
+    binv (_di, d);							\
     _q0 = (u0) * _di;                                                   \
     if ((u1) >= (d))                                                    \
       {                                                                 \
@@ -944,8 +941,8 @@ static const unsigned char  binvert_table[128] =
     while (_i-- > 0)                                                    \
       {                                                                 \
         lsh2 (_r1, _r0, _r1, _r0, 1);                                   \
-        if (ge2 (_r1, _r0, (n1), (n0)))                                 \
-          sub_ddmmss (_r1, _r0, _r1, _r0, (n1), (n0));                  \
+        if (ge2 (_r1, _r0, n1, n0))					\
+          sub_ddmmss (_r1, _r0, _r1, _r0, n1, n0);			\
       }                                                                 \
     (r1) = _r1;                                                         \
     (r0) = _r0;                                                         \
