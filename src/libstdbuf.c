@@ -17,16 +17,19 @@
 /* Written by Pádraig Brady.  LD_PRELOAD idea from Brian Dessent.  */
 
 #include <config.h>
+#include <stddef.h>
 #include <stdio.h>
-#include <stdint.h>
-#include "system.h"
+#include <stdlib.h>
+
+#include "gettext.h"
+#define _(msgid) gettext (msgid)
 
 /* Deactivate config.h's "rpl_"-prefixed definitions, since we don't
    link gnulib here, and the replacements aren't needed.  */
 #undef fprintf
 #undef free
 #undef malloc
-#undef strtoumax
+#undef strtoul
 
 /* Note currently for glibc (2.3.5) the following call does not change
    the buffer size, and more problematically does not give any indication
@@ -64,36 +67,12 @@
    However I think it's just a buggy implementation due to the various
    inconsistencies with write sizes and subsequent writes.  */
 
-static char const *
-fileno_to_name (const int fd)
-{
-  char const *ret = nullptr;
-
-  switch (fd)
-    {
-    case 0:
-      ret = "stdin";
-      break;
-    case 1:
-      ret = "stdout";
-      break;
-    case 2:
-      ret = "stderr";
-      break;
-    default:
-      ret = "unknown";
-      break;
-    }
-
-  return ret;
-}
-
 static void
-apply_mode (FILE *stream, char const *mode)
+apply_mode (FILE *stream, char const *stream_name, char const *mode)
 {
   char *buf = nullptr;
   int setvbuf_mode;
-  uintmax_t size = 0;
+  unsigned long int size = 0;
 
   if (*mode == '0')
     setvbuf_mode = _IONBF;
@@ -103,22 +82,24 @@ apply_mode (FILE *stream, char const *mode)
     {
       setvbuf_mode = _IOFBF;
       char *mode_end;
-      size = strtoumax (mode, &mode_end, 10);
+      size = strtoul (mode, &mode_end, 10);
       if (size == 0 || *mode_end)
         {
           fprintf (stderr, _("invalid buffering mode %s for %s\n"),
-                   mode, fileno_to_name (fileno (stream)));
+                   mode, stream_name);
           return;
         }
 
-      buf = size <= SIZE_MAX ? malloc (size) : nullptr;
+      buf = (size <= ((unsigned long int) -2 < (size_t) -1
+                      ? (unsigned long int) -2 : (size_t) -1)
+             ? malloc (size) : nullptr);
       if (!buf)
         {
           /* We could defer the allocation to libc, however since
              glibc currently ignores the combination of null buffer
              with non zero size, we'll fail here.  */
           fprintf (stderr,
-                   _("failed to allocate a %ju byte stdio buffer\n"),
+                   _("failed to allocate a %lu byte stdio buffer\n"),
                    size);
           return;
         }
@@ -128,7 +109,7 @@ apply_mode (FILE *stream, char const *mode)
   if (setvbuf (stream, buf, setvbuf_mode, size) != 0)
     {
       fprintf (stderr, _("could not set buffering of %s to mode %s\n"),
-               fileno_to_name (fileno (stream)), mode);
+               stream_name, mode);
       free (buf);
     }
 }
@@ -141,9 +122,9 @@ stdbuf (void)
   char *i_mode = getenv ("_STDBUF_I");
   char *o_mode = getenv ("_STDBUF_O");
   if (e_mode) /* Do first so can write errors to stderr  */
-    apply_mode (stderr, e_mode);
+    apply_mode (stderr, "stderr", e_mode);
   if (i_mode)
-    apply_mode (stdin, i_mode);
+    apply_mode (stdin, "stdin", i_mode);
   if (o_mode)
-    apply_mode (stdout, o_mode);
+    apply_mode (stdout, "stdout", o_mode);
 }
