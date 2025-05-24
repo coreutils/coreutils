@@ -94,8 +94,11 @@ apply_mode (FILE *stream, char const *stream_name, char const *envvar)
           return;
         }
 
-      buf = (size <= ((unsigned long int) -2 < (size_t) -1
-                      ? (unsigned long int) -2 : (size_t) -1)
+      /* If strtoul might have overflowed or if the size is more than
+         half of size_t range, treat it as an allocation failure.
+         Huge sizes can cause problems with some stdio implementations.  */
+      buf = (size <= ((unsigned long int) -2 < (size_t) -1 / 2
+                      ? (unsigned long int) -2 : (size_t) -1 / 2)
              ? malloc (size) : nullptr);
       if (!buf)
         {
