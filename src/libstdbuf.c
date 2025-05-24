@@ -44,7 +44,7 @@
    size specifies the size of the array; otherwise, size _may_ determine
    the size of a buffer allocated by the setvbuf function. ...
 
-   Obviously some interpret the above to mean setvbuf(....,size)
+   Obviously some interpret the above to mean setvbuf (..., size)
    is only a hint from the application which I don't agree with.
 
    FreeBSD's libc seems more sensible in this regard. From the man page:
@@ -60,7 +60,7 @@
    Another issue is that on glibc-2.7 the following doesn't buffer
    the first write if it's greater than 1 byte.
 
-       setvbuf(stdout,buf,_IOFBF,127);
+       setvbuf (stdout, buf, _IOFBF, 127);
 
    Now the POSIX standard says that "allocating a buffer of size bytes does
    not necessarily imply that all of size bytes are used for the buffer area".
@@ -68,11 +68,15 @@
    inconsistencies with write sizes and subsequent writes.  */
 
 static void
-apply_mode (FILE *stream, char const *stream_name, char const *mode)
+apply_mode (FILE *stream, char const *stream_name, char const *envvar)
 {
   char *buf = nullptr;
   int setvbuf_mode;
   unsigned long int size = 0;
+
+  char const *mode = getenv (envvar);
+  if (!mode)
+    return;
 
   if (*mode == '0')
     setvbuf_mode = _IONBF;
@@ -118,13 +122,9 @@ apply_mode (FILE *stream, char const *stream_name, char const *mode)
 static void __attribute ((constructor))
 stdbuf (void)
 {
-  char *e_mode = getenv ("_STDBUF_E");
-  char *i_mode = getenv ("_STDBUF_I");
-  char *o_mode = getenv ("_STDBUF_O");
-  if (e_mode) /* Do first so can write errors to stderr  */
-    apply_mode (stderr, "stderr", e_mode);
-  if (i_mode)
-    apply_mode (stdin, "stdin", i_mode);
-  if (o_mode)
-    apply_mode (stdout, "stdout", o_mode);
+  /* Do first so can write errors to stderr.  */
+  apply_mode (stderr, "stderr", "_STDBUF_E");
+
+  apply_mode (stdin, "stdin", "_STDBUF_I");
+  apply_mode (stdout, "stdout", "_STDBUF_O");
 }
