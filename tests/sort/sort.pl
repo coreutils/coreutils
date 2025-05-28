@@ -350,6 +350,11 @@ my @Tests =
 # Specifying two -o options should evoke a failure
 ["o2", qw(-o x -o y), {EXIT=>2},
  {ERR=>"foo\n"}, {ERR_SUBST => 's/^$prog: .*/foo/'}],
+# Specifying duplicate -o options should NOT evoke a failure
+["o3", qw(-o x -o x), {IN=>""}, {OUT=>""}],
+# Note we do simple string comparisons for this
+["o4", qw(-o x -o ./x), {EXIT=>2},
+ {ERR=>"foo\n"}, {ERR_SUBST => 's/^$prog: .*/foo/'}],
 
 # Specifying incompatible options should evoke a failure.
 ["incompat1", '-in', {EXIT=>2},
