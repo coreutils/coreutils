@@ -63,56 +63,14 @@ target_directory_operand (char const *file, struct stat *st)
   if (must_be_working_directory (file))
     return AT_FDCWD;
 
-  int fd = -1;
-  int try_to_open = 1;
-  int stat_result;
+  int fd = open (file, O_PATHSEARCH | O_DIRECTORY);
 
-  /* On old systems without O_DIRECTORY, like Solaris 10, check with
-     stat first lest we try to open a fifo for example and hang.  */
-  if (!O_DIRECTORY)
-    {
-      stat_result = stat (file, st);
-      if (stat_result == 0)
-        {
-          try_to_open = S_ISDIR (st->st_mode);
-          errno = ENOTDIR;
-        }
-      else
-        {
-          /* On EOVERFLOW failure, give up on checking, as there is no
-             easy way to check.  This should be rare.  */
-          try_to_open = errno == EOVERFLOW;
-        }
-    }
-
-  if (try_to_open)
-    {
-      fd = open (file, O_PATHSEARCH | O_DIRECTORY);
-
-      /* On platforms lacking O_PATH, using O_SEARCH | O_DIRECTORY to
-         open an overly-protected non-directory can fail with either
-         EACCES or ENOTDIR.  Prefer ENOTDIR as it makes for better
-         diagnostics.  */
-      if (O_PATHSEARCH == O_SEARCH && fd < 0 && errno == EACCES)
-        errno = (((O_DIRECTORY ? stat (file, st) : stat_result) == 0
-                  && !S_ISDIR (st->st_mode))
-                 ? ENOTDIR : EACCES);
-    }
-
-  if (!O_DIRECTORY && 0 <= fd)
-    {
-      /* On old systems like Solaris 10 double check type,
-         to ensure we've opened a directory.  */
-      int err;
-      if (fstat (fd, st) == 0
-          ? !S_ISDIR (st->st_mode) && (err = ENOTDIR, true)
-          : (err = errno) != EOVERFLOW)
-        {
-          close (fd);
-          errno = err;
-          fd = -1;
-        }
-    }
+  /* On platforms lacking O_PATH, using O_SEARCH | O_DIRECTORY to
+     open an overly-protected non-directory can fail with either
+     EACCES or ENOTDIR.  Prefer ENOTDIR as it makes for better
+     diagnostics.  */
+  if (O_PATHSEARCH == O_SEARCH && fd < 0 && errno == EACCES)
+    errno = stat (file, st) < 0 || S_ISDIR (st->st_mode) ? EACCES : ENOTDIR;
 
   return fd - (AT_FDCWD == -1 && fd < 0);
 }

@@ -604,8 +604,7 @@ Each FLAG symbol may be:\n\
         fputs (_("  cio       use concurrent I/O for data\n"), stdout);
       if (O_DIRECT)
         fputs (_("  direct    use direct I/O for data\n"), stdout);
-      if (O_DIRECTORY)
-        fputs (_("  directory  fail unless a directory\n"), stdout);
+      fputs (_("  directory  fail unless a directory\n"), stdout);
       if (O_DSYNC)
         fputs (_("  dsync     use synchronized I/O for data\n"), stdout);
       if (O_SYNC)
