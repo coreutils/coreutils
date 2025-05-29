@@ -693,8 +693,9 @@ AC_LINK_IFELSE(
                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
       a = _mm512_clmulepi64_epi128 (a, b, 0x00);
       a = _mm512_shuffle_epi8 (a, b);
-      return __builtin_cpu_supports ("avx512bw") &&
-        __builtin_cpu_supports ("avx512f");
+      return (__builtin_cpu_supports ("avx512bw")
+              && __builtin_cpu_supports ("avx512f")
+              && __builtin_cpu_supports ("vpclmulqdq"));
     }
   ]])
   ],[

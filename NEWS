@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cksum was not compilable by Apple LLVM 10.0.0 x86-64, which
+  lacks support for checking for the VPCLMULQDQ instruction.
+  [bug introduced in coreutils-9.6]
+
   'cp -p' had spurious "Operation not supported" failures when
   copying to non-NFS files from NFSv4 files with trivial ACLs.
   [bug introduced in coreutils-9.6]
