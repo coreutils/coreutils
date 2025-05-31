@@ -532,27 +532,22 @@ factor_insert_multiplicity (struct factors *factors,
 
   /* Locate position for insert new or increment e.  */
   int i;
-  for (i = nfactors - 1; i >= 0; i--)
+  for (i = nfactors; 0 < i; i--)
     {
-      if (p[i] <= prime)
+      if (p[i - 1] < prime)
         break;
+      if (p[i - 1] == prime)
+        {
+          e[i - 1] += m;
+          return;
+        }
     }
 
-  if (i < 0 || p[i] != prime)
-    {
-      for (int j = nfactors - 1; j > i; j--)
-        {
-          p[j + 1] = p[j];
-          e[j + 1] = e[j];
-        }
-      p[i + 1] = prime;
-      e[i + 1] = m;
-      factors->nfactors = nfactors + 1;
-    }
-  else
-    {
-      e[i] += m;
-    }
+  factors->nfactors = nfactors + 1;
+  memmove (&p[i + 1], &p[i], (nfactors - i) * sizeof *p);
+  memmove (&e[i + 1], &e[i], (nfactors - i) * sizeof *e);
+  e[i] = m;
+  p[i] = prime;
 }
 
 #define factor_insert(f, p) factor_insert_multiplicity (f, p, 1)
@@ -619,40 +614,32 @@ mp_factor_insert (struct mp_factors *factors, mpz_t prime)
   idx_t nfactors = factors->nfactors;
   mpz_t *p = factors->p;
   mp_bitcnt_t *e = factors->e;
-  ptrdiff_t i;
+  idx_t i;
 
   /* Locate position for insert new or increment e.  */
-  for (i = nfactors - 1; i >= 0; i--)
+  for (i = nfactors; 0 < i; i--)
     {
-      if (mpz_cmp (p[i], prime) <= 0)
+      int sgn = mpz_cmp (p[i - 1], prime);
+      if (sgn < 0)
         break;
-    }
-
-  if (i < 0 || mpz_cmp (p[i], prime) != 0)
-    {
-      if (factors->nfactors == factors->nalloc)
+      if (sgn == 0)
         {
-          p = xpalloc (p, &factors->nalloc, 1, -1, sizeof *p);
-          e = xireallocarray (e, factors->nalloc, sizeof *e);
+          e[i - 1]++;
+          return;
         }
-
-      mpz_init (p[nfactors]);
-      for (ptrdiff_t j = nfactors - 1; j > i; j--)
-        {
-          mpz_set (p[j + 1], p[j]);
-          e[j + 1] = e[j];
-        }
-      mpz_set (p[i + 1], prime);
-      e[i + 1] = 1;
-
-      factors->p = p;
-      factors->e = e;
-      factors->nfactors = nfactors + 1;
     }
-  else
+
+  if (nfactors == factors->nalloc)
     {
-      e[i] += 1;
+      factors->p = p = xpalloc (p, &factors->nalloc, 1, -1, sizeof *p);
+      factors->e = e = xireallocarray (e, factors->nalloc, sizeof *e);
     }
+
+  factors->nfactors = nfactors + 1;
+  memmove (&p[i + 1], &p[i], (nfactors - i) * sizeof *p);
+  memmove (&e[i + 1], &e[i], (nfactors - i) * sizeof *e);
+  e[i] = 1;
+  mpz_init_set (p[i], prime);
 }
 
 static void
