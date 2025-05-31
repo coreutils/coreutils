@@ -281,16 +281,26 @@ static_assert (2 * W_TYPE_SIZE - 1 <= UCHAR_MAX);
 /* Likewise for recording the number of prime factors.  */
 static_assert (MAX_NFACTS <= UCHAR_MAX);
 
+/* Prime factors of a uuint.  At most one is a uuint.  */
 struct factors
 {
-  uuint plarge; /* Can have a single large factor */
+  /* If PLARGE.uu[1] is nonzero, PLARGE is a double-word prime factor
+     with multiplicity 1; otherwise, PLARGE is not a factor and
+     PLARGE.uu[0] might not be initialized.  */
+  uuint plarge;
+
+  /* Distinct single-word prime factors, their multiplicities,
+     and their number.  */
   mp_limb_t     p[MAX_NFACTS];
   unsigned char e[MAX_NFACTS];
   unsigned char nfactors;
 };
 
+/* Prime factors of an mpz_t.  */
 struct mp_factors
 {
+ /* Distinct prime factors, their multiplicities, their number, and
+    the size of the arrays allocated for the factors and multiplicities.  */
   mpz_t *p;
   mp_bitcnt_t *e;
   idx_t nfactors;
