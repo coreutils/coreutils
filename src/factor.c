@@ -1796,7 +1796,7 @@ mp_factor (mpz_t t, struct mp_factors *factors)
 }
 
 static strtol_error
-strtouuint (mp_limb_t *hip, mp_limb_t *lop, char const *s)
+strtouuint (uuint *u, char const *s)
 {
   int lo_carry;
   mp_limb_t hi = 0, lo = 0;
@@ -1846,9 +1846,7 @@ strtouuint (mp_limb_t *hip, mp_limb_t *lop, char const *s)
         }
     }
 
-  *hip = hi;
-  *lop = lo;
-
+  *u = make_uuint (hi, lo);
   return err;
 }
 
@@ -2028,14 +2026,14 @@ lbuf_putmpz (mpz_t const i)
 
 /* Single-precision factoring */
 static void
-print_factors_single (mp_limb_t t1, mp_limb_t t0)
+print_factors_single (uuint t)
 {
   struct factors factors;
 
-  print_uuint (make_uuint (t1, t0));
+  print_uuint (t);
   lbuf_putc (':');
 
-  factor (t1, t0, &factors);
+  factor (hi (t), lo (t), &factors);
 
   for (int j = 0; j < factors.nfactors; j++)
     for (int k = 0; k < factors.e[j]; k++)
@@ -2073,21 +2071,20 @@ print_factors (char const *input)
     str++;
   str += *str == '+';
 
-  mp_limb_t t1, t0;
-
   /* Try converting the number to one or two words.  If it fails, use GMP or
      print an error message.  The 2nd condition checks that the most
      significant bit of the two-word number is clear, in a typesize neutral
      way.  */
-  strtol_error err = strtouuint (&t1, &t0, str);
+  uuint u;
+  strtol_error err = strtouuint (&u, str);
 
   switch (err)
     {
     case LONGINT_OK:
-      if (((t1 << 1) >> 1) == t1)
+      if (hi (u) >> (W_TYPE_SIZE - 1) == 0)
         {
           devmsg ("[using single-precision arithmetic] ");
-          print_factors_single (t1, t0);
+          print_factors_single (u);
           return true;
         }
       FALLTHROUGH;
