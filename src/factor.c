@@ -236,6 +236,7 @@ typedef struct { wide_uint uu[2]; } uuint;
 static wide_uint lo (uuint u) { return u.uu[0]; }
 static wide_uint hi (uuint u) { return u.uu[1]; }
 static void hiset (uuint *u, wide_uint hi) { u->uu[1] = hi; }
+static bool hi_is_set (uuint const *pu) { return pu->uu[1] != 0; }
 static void
 uuset (wide_uint *phi, wide_uint *plo, uuint uu)
 {
@@ -557,7 +558,7 @@ factor_insert_large (struct factors *factors,
 {
   if (p1 > 0)
     {
-      affirm (hi (factors->plarge) == 0);
+      affirm (!hi_is_set (&factors->plarge));
       factors->plarge = make_uuint (p1, p0);
     }
   else
@@ -1335,7 +1336,7 @@ prime2_p (wide_uint n1, wide_uint n0)
       if (flag_prove_primality)
         {
           is_prime = true;
-          if (hi (factors.plarge))
+          if (hi_is_set (&factors.plarge))
             {
               wide_uint pi;
               binv (pi, lo (factors.plarge));
@@ -2510,7 +2511,7 @@ print_factors_single (wide_uint t1, wide_uint t0)
           }
       }
 
-  if (hi (factors.plarge))
+  if (hi_is_set (&factors.plarge))
     {
       lbuf_putc (' ');
       print_uuint (factors.plarge);
