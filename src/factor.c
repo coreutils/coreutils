@@ -115,36 +115,42 @@
 /* Token delimiters when reading from a file.  */
 #define DELIM "\n\t "
 
-/* __int128 is experimental; to use it, compile with -DUSE_INT128.  */
-#ifndef USE_INT128
-# define USE_INT128 false
-#endif
+/* GMP uses the unsigned integer type mp_limb_t as its word in
+   multiprecision arithmetic.  This code uses the same word for single
+   and double precision integer arithmetic.  Although previous
+   versions of this code used uintmax_t for single and double
+   precision, that introduced opportunities for bugs and was not worth
+   the hassle, as mp_limb_t and uintmax_t are invariably the same on
+   64-bit platforms, and 32-bit platforms are less important now.
 
-/* Typedefs and macros related to an unsigned type that is no narrower
-   than 32 bits and no narrower than unsigned int.  For efficiency,
-   use the widest hardware-supported type.  */
-#if USE_INT128
-typedef unsigned __int128 wide_uint;
-# define W_TYPE_SIZE 128
+   Although GMP can be built with GMP_NUMB_BITS < GMP_LIMB_BITS,
+   so that some high-order bits of a word are not used, do not
+   do this in single and double precision integer arithmetic.
+   Instead, always use the full word.  */
+
+/* A word and its size in bits.  */
+typedef mp_limb_t wide_uint;
+#ifdef GMP_LIMB_BITS
+# define W_TYPE_SIZE GMP_LIMB_BITS
 #else
-typedef uintmax_t wide_uint;
-# define W_TYPE_SIZE UINTMAX_WIDTH
+/* An older GMP, or mini-gmp; guess the usual value.  */
+# define W_TYPE_SIZE ULONG_WIDTH
 #endif
-#define WIDE_UINT_MAX ((wide_uint) -1)
 
-/* Check that we are not on a theoretical (but allowed by
-   POSIX) platform where WIDE_UINT_MAX <= INT_MAX.
+/* The maximum value of a word.  */
+#define MP_LIMB_MAX ((mp_limb_t) -1)
+
+/* Check W_TYPE_SIZE's value, as it might be a guess.  */
+static_assert (MP_LIMB_MAX >> (W_TYPE_SIZE - 1) == 1);
+
+/* Check that the builder didn't specify something perverse like
+   "-DMINI_GMP_LIMB_TYPE=short -DW_TYPE_SIZE=USHRT_WIDTH".
    This could result in undefined behavior due to signed integer
    overflow if a word promotes to int.  */
-static_assert (INT_MAX < WIDE_UINT_MAX);
+static_assert (INT_MAX < MP_LIMB_MAX);
 
 #ifndef USE_LONGLONG_H
-/* With the way we use longlong.h, it's only safe to use
-   when UWtype = UHWtype, as there were various cases
-   (as can be seen in the history for longlong.h) where
-   for example, _LP64 was required to enable W_TYPE_SIZE==64 code,
-   to avoid compile time or run time issues.  */
-# define USE_LONGLONG_H (W_TYPE_SIZE == ULONG_WIDTH)
+# define USE_LONGLONG_H true
 #endif
 
 #if USE_LONGLONG_H
@@ -152,7 +158,7 @@ static_assert (INT_MAX < WIDE_UINT_MAX);
 /* Make definitions for longlong.h to make it do what it can do for us */
 
 # define UWtype  wide_uint
-# define UHWtype unsigned long int
+# define UHWtype unsigned int
 # undef UDWtype
 # if HAVE_ATTRIBUTE_MODE
 typedef unsigned int UQItype    __attribute__ ((mode (QI)));
@@ -1189,21 +1195,8 @@ prime_p (wide_uint n)
   if (n <= 1)
     return false;
 
-  wide_uint cast_out_limit
-    = (wide_uint) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME;
-
-#ifndef EXHIBIT_INT128_BUG
-  /* FIXME: Do the small-prime performance improvement only if
-     wide_uint is exactly 64 bits wide.  We don't know why the code
-     misbehaves when wide_uint is wider; e.g., when compiled with
-     'gcc -DUSE_INT128 -DEXHIBIT_INT128_BUG', 'factor' mishandles
-     340282366920938463463374607431768211355.  */
-  if (W_TYPE_SIZE != 64)
-    cast_out_limit = 2;
-#endif
-
   /* We have already cast out small primes.  */
-  if (n < cast_out_limit)
+  if (n < (wide_uint) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME)
     return true;
 
   /* Precomputation for Miller-Rabin.  */
@@ -1978,6 +1971,14 @@ lbuf_putint (wide_uint i)
 {
   lbuf_putint_append (i, lbuf_buf + sizeof lbuf_buf);
 }
+static void
+lbuf_putbitcnt (mp_bitcnt_t i)
+{
+  char *bufend = lbuf_buf + sizeof lbuf_buf;
+  for (; MP_LIMB_MAX < i; i /= 10)
+    *--bufend = '0' + i % 10;
+  lbuf_putint_append (i, bufend);
+}
 
 /* Append the string representation of T to lbuf_buf.  */
 static void
@@ -2124,7 +2125,7 @@ print_factors (char const *input)
         if (print_exponents && factors.e[j] > 1)
           {
             lbuf_putc ('^');
-            lbuf_putint (factors.e[j]);
+            lbuf_putbitcnt (factors.e[j]);
             break;
           }
       }

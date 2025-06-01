@@ -146,7 +146,7 @@ output_primes (const struct prime *primes, unsigned nprimes)
         abort ();
       printf ("P (%u, %u,\n   (", primes[i].p - p, d8);
       print_wide_uint (primes[i].pinv, 0, wide_uint_bits);
-      printf ("),\n   UINTMAX_MAX / %u)\n", primes[i].p);
+      printf ("),\n   (wide_uint) -1 / %u)\n", primes[i].p);
       p = primes[i].p;
     }
 
