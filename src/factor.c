@@ -134,6 +134,12 @@ typedef intmax_t wide_int;
 #endif
 #define WIDE_UINT_MAX ((wide_uint) -1)
 
+/* Check that we are not on a theoretical (but allowed by
+   POSIX) platform where WIDE_UINT_MAX <= INT_MAX.
+   This could result in undefined behavior due to signed integer
+   overflow if a word promotes to int.  */
+static_assert (INT_MAX < WIDE_UINT_MAX);
+
 #ifndef USE_LONGLONG_H
 /* With the way we use longlong.h, it's only safe to use
    when UWtype = UHWtype, as there were various cases
