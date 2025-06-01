@@ -2090,8 +2090,7 @@ print_factors (char const *input)
           print_factors_single (t1, t0);
           return true;
         }
-      break;
-
+      FALLTHROUGH;
     case LONGINT_OVERFLOW:
       /* Try GMP.  */
       break;
