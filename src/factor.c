@@ -242,19 +242,25 @@ make_uuint (wide_uint hi, wide_uint lo)
   return (uuint) {{lo, hi}};
 }
 
-/* BIG_POWER_OF_10 is a positive power of 10 that does not exceed WIDE_UINT_MAX.
+/* BIG_POWER_OF_10 is a positive power of 10 that fits in a word.
    The larger it is, the more efficient the code will likely be.
    LOG_BIG_POWER_OF_10 = log (BIG_POWER_OF_10).  */
-#if W_TYPE_SIZE < 64
-# error "platform does not support 64-bit integers"
+#if W_TYPE_SIZE < 4
+# error "Configuration error; platform word is impossibly narrow"
+#elif W_TYPE_SIZE < 30
+/* An unusually narrow word.  */
+static wide_uint const BIG_POWER_OF_10 = 10;
+enum { LOG_BIG_POWER_OF_10 = 1 };
+#elif W_TYPE_SIZE < 64
+/* Almost surely a 32-bit word.  */
+static wide_uint const BIG_POWER_OF_10 = 1000000000;
+enum { LOG_BIG_POWER_OF_10 = 9 };
 #elif W_TYPE_SIZE < 128
-/* A mainstream platforms, with at-least-64-bit uintmax_t.  */
+/* Almost surely a 64-bit word.  */
 static wide_uint const BIG_POWER_OF_10 = 10000000000000000000llu;
 enum { LOG_BIG_POWER_OF_10 = 19 };
 #else
-/* If built with -DUSE_INT128, a platform that supports __int128; otherwise,
-   a so-far-only-theoretical platform with at-least-128-bit uintmax_t.
-   This is for performance; the 64-bit mainstream code will still work.  */
+/* An unusually wide word.  */
 static wide_uint const BIG_POWER_OF_10 =
   (wide_uint) 10000000000000000000llu * 10000000000000000000llu;
 enum { LOG_BIG_POWER_OF_10 = 38 };
