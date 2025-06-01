@@ -108,7 +108,7 @@ print_wide_uint (wide_uint n, int nesting, unsigned wide_uint_bits)
     }
   else if (nesting)
     {
-      printf ("(wide_uint) ");
+      printf ("(mp_limb_t) ");
       hex_digits_per_literal
         = ((wide_uint_bits - 1) % bits_per_literal) % 4 + 1;
     }
@@ -146,7 +146,7 @@ output_primes (const struct prime *primes, unsigned nprimes)
         abort ();
       printf ("P (%u, %u,\n   (", primes[i].p - p, d8);
       print_wide_uint (primes[i].pinv, 0, wide_uint_bits);
-      printf ("),\n   (wide_uint) -1 / %u)\n", primes[i].p);
+      printf ("),\n   (mp_limb_t) -1 / %u)\n", primes[i].p);
       p = primes[i].p;
     }
 

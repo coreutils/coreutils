@@ -21,7 +21,7 @@
    In 2012, the core was rewritten by Torbjörn Granlund and Niels Möller.
    Contains code from GNU MP.  */
 
-/* Efficiently factor numbers that fit in one or two words (word = wide_uint),
+/* Efficiently factor numbers that fit in one or two words (word = mp_limb_t),
    or, with GMP, numbers of any size.
 
   Code organization:
@@ -70,7 +70,7 @@
     * Implement less naive powm, using k-ary exponentiation for k = 3 or
       perhaps k = 4.
 
-    * Try to speed trial division code for single wide_uint numbers, i.e., the
+    * Try to speed trial division code for single word numbers, i.e., the
       code using DIVBLOCK.  It currently runs at 2 cycles per prime (Intel SBR,
       IBR), 3 cycles per prime (AMD Stars) and 5 cycles per prime (AMD BD) when
       using gcc 4.6 and 4.7.  Some software pipelining should help; 1, 2, and 4
@@ -128,8 +128,7 @@
    do this in single and double precision integer arithmetic.
    Instead, always use the full word.  */
 
-/* A word and its size in bits.  */
-typedef mp_limb_t wide_uint;
+/* The word size in bits.  */
 #ifdef GMP_LIMB_BITS
 # define W_TYPE_SIZE GMP_LIMB_BITS
 #else
@@ -157,7 +156,7 @@ static_assert (INT_MAX < MP_LIMB_MAX);
 
 /* Make definitions for longlong.h to make it do what it can do for us */
 
-# define UWtype  wide_uint
+# define UWtype  mp_limb_t
 # define UHWtype unsigned int
 # undef UDWtype
 # if HAVE_ATTRIBUTE_MODE
@@ -200,9 +199,9 @@ typedef unsigned long long int UDItype;
 
 #else /* not USE_LONGLONG_H */
 
-# define __ll_B ((wide_uint) 1 << (W_TYPE_SIZE / 2))
-# define __ll_lowpart(t)  ((wide_uint) (t) & (__ll_B - 1))
-# define __ll_highpart(t) ((wide_uint) (t) >> (W_TYPE_SIZE / 2))
+# define __ll_B ((mp_limb_t) 1 << (W_TYPE_SIZE / 2))
+# define __ll_lowpart(t)  ((mp_limb_t) (t) & (__ll_B - 1))
+# define __ll_highpart(t) ((mp_limb_t) (t) >> (W_TYPE_SIZE / 2))
 
 #endif
 
@@ -226,24 +225,24 @@ static struct option const long_options[] =
 /* If true, use p^e output format.  */
 static bool print_exponents;
 
-/* This represents an unsigned integer twice as wide as wide_uint.  */
-typedef struct { wide_uint uu[2]; } uuint;
+/* This represents an unsigned integer twice as wide as a word.  */
+typedef struct { mp_limb_t uu[2]; } uuint;
 
 /* Accessors and constructors for the type.  Programs should not
    access the type's internals directly, in case some future version
    replaces the type with unsigned __int256 or whatever.  */
-static wide_uint lo (uuint u) { return u.uu[0]; }
-static wide_uint hi (uuint u) { return u.uu[1]; }
-static void hiset (uuint *u, wide_uint hi) { u->uu[1] = hi; }
+static mp_limb_t lo (uuint u) { return u.uu[0]; }
+static mp_limb_t hi (uuint u) { return u.uu[1]; }
+static void hiset (uuint *u, mp_limb_t hi) { u->uu[1] = hi; }
 static bool hi_is_set (uuint const *pu) { return pu->uu[1] != 0; }
 static void
-uuset (wide_uint *phi, wide_uint *plo, uuint uu)
+uuset (mp_limb_t *phi, mp_limb_t *plo, uuint uu)
 {
   *phi = hi (uu);
   *plo = lo (uu);
 }
 static uuint
-make_uuint (wide_uint hi, wide_uint lo)
+make_uuint (mp_limb_t hi, mp_limb_t lo)
 {
   return (uuint) {{lo, hi}};
 }
@@ -255,27 +254,27 @@ make_uuint (wide_uint hi, wide_uint lo)
 # error "Configuration error; platform word is impossibly narrow"
 #elif W_TYPE_SIZE < 30
 /* An unusually narrow word.  */
-static wide_uint const BIG_POWER_OF_10 = 10;
+static mp_limb_t const BIG_POWER_OF_10 = 10;
 enum { LOG_BIG_POWER_OF_10 = 1 };
 #elif W_TYPE_SIZE < 64
 /* Almost surely a 32-bit word.  */
-static wide_uint const BIG_POWER_OF_10 = 1000000000;
+static mp_limb_t const BIG_POWER_OF_10 = 1000000000;
 enum { LOG_BIG_POWER_OF_10 = 9 };
 #elif W_TYPE_SIZE < 128
 /* Almost surely a 64-bit word.  */
-static wide_uint const BIG_POWER_OF_10 = 10000000000000000000llu;
+static mp_limb_t const BIG_POWER_OF_10 = 10000000000000000000llu;
 enum { LOG_BIG_POWER_OF_10 = 19 };
 #else
 /* An unusually wide word.  */
-static wide_uint const BIG_POWER_OF_10 =
-  (wide_uint) 10000000000000000000llu * 10000000000000000000llu;
+static mp_limb_t const BIG_POWER_OF_10 =
+  (mp_limb_t) 10000000000000000000llu * 10000000000000000000llu;
 enum { LOG_BIG_POWER_OF_10 = 38 };
 #endif
 
 struct factors
 {
   uuint plarge; /* Can have a single large factor */
-  wide_uint     p[MAX_NFACTS];
+  mp_limb_t     p[MAX_NFACTS];
   unsigned char e[MAX_NFACTS];
   unsigned char nfactors;
 };
@@ -288,24 +287,22 @@ struct mp_factors
   idx_t nalloc;
 };
 
-static void factor (wide_uint, wide_uint, struct factors *);
+static void factor (mp_limb_t, mp_limb_t, struct factors *);
 
 #ifndef umul_ppmm
 # define umul_ppmm(w1, w0, u, v)                                        \
   do {                                                                  \
-    wide_uint __x0, __x1, __x2, __x3;                                   \
-    unsigned long int __ul, __vl, __uh, __vh;                           \
-    wide_uint __u = (u), __v = (v);                                     \
+    mp_limb_t __u = u, __v = v,						\
                                                                         \
-    __ul = __ll_lowpart (__u);                                          \
-    __uh = __ll_highpart (__u);                                         \
-    __vl = __ll_lowpart (__v);                                          \
-    __vh = __ll_highpart (__v);                                         \
+      __ul = __ll_lowpart (__u),					\
+      __uh = __ll_highpart (__u),					\
+      __vl = __ll_lowpart (__v),					\
+      __vh = __ll_highpart (__v),					\
                                                                         \
-    __x0 = (wide_uint) __ul * __vl;                                     \
-    __x1 = (wide_uint) __ul * __vh;                                     \
-    __x2 = (wide_uint) __uh * __vl;                                     \
-    __x3 = (wide_uint) __uh * __vh;                                     \
+      __x0 = __ul * __vl,						\
+      __x1 = __ul * __vh,						\
+      __x2 = __uh * __vl,						\
+      __x3 = __uh * __vh;						\
                                                                         \
     __x1 += __ll_highpart (__x0);/* This can't give carry.  */		\
     if (ckd_add (&__x1, __x1, __x2))	/* Did this give a carry?  */	\
@@ -323,7 +320,7 @@ static void factor (wide_uint, wide_uint, struct factors *);
 # undef udiv_qrnnd
 # define udiv_qrnnd(q, r, n1, n0, d)                                    \
   do {                                                                  \
-    wide_uint __d1, __d0, __q, __r1, __r0;                              \
+    mp_limb_t __d1, __d0, __q, __r1, __r0;				\
                                                                         \
     __d1 = (d); __d0 = 0;                                               \
     __r1 = (n1); __r0 = (n0);                                           \
@@ -347,7 +344,7 @@ static void factor (wide_uint, wide_uint, struct factors *);
 #if !defined add_ssaaaa
 # define add_ssaaaa(sh, sl, ah, al, bh, bl)                             \
   do {                                                                  \
-    wide_uint _add_x;							\
+    mp_limb_t _add_x;							\
     (sh) = (ah) + (bh) + ckd_add (&_add_x, al, bl);			\
     (sl) = _add_x;                                                      \
   } while (0)
@@ -381,7 +378,7 @@ static void factor (wide_uint, wide_uint, struct factors *);
 /* Requires that a < n and b <= n */
 #define submod(r,a,b,n)                                                 \
   do {                                                                  \
-    wide_uint _s, _t = -ckd_sub (&_s, a, b);				\
+    mp_limb_t _s, _t = -ckd_sub (&_s, a, b);				\
     (r) = ((n) & _t) + _s;						\
   } while (0)
 
@@ -404,12 +401,12 @@ static void factor (wide_uint, wide_uint, struct factors *);
       add_ssaaaa ((r1), (r0), (r1), (r0), (n1), (n0));                  \
   } while (0)
 
-#define HIGHBIT_TO_MASK(x) (- ((wide_uint) (x) >> (W_TYPE_SIZE - 1)))
+#define HIGHBIT_TO_MASK(x) (- ((mp_limb_t) (x) >> (W_TYPE_SIZE - 1)))
 
 /* Return r = a mod d, where a = <a1,a0>, d = <d1,d0>.
    Requires that d1 != 0.  */
 ATTRIBUTE_PURE static uuint
-mod2 (wide_uint a1, wide_uint a0, wide_uint d1, wide_uint d0)
+mod2 (mp_limb_t a1, mp_limb_t a0, mp_limb_t d1, mp_limb_t d0)
 {
   affirm (d1 != 0);
 
@@ -434,12 +431,12 @@ mod2 (wide_uint a1, wide_uint a0, wide_uint d1, wide_uint d0)
 }
 
 ATTRIBUTE_CONST
-static wide_uint
-gcd_odd (wide_uint a, wide_uint b)
+static mp_limb_t
+gcd_odd (mp_limb_t a, mp_limb_t b)
 {
   if ((b & 1) == 0)
     {
-      wide_uint t = b;
+      mp_limb_t t = b;
       b = a;
       a = t;
     }
@@ -451,8 +448,8 @@ gcd_odd (wide_uint a, wide_uint b)
 
   for (;;)
     {
-      wide_uint t;
-      wide_uint bgta;
+      mp_limb_t t;
+      mp_limb_t bgta;
 
       assume (a);
       a >>= stdc_trailing_zeros (a);
@@ -473,7 +470,7 @@ gcd_odd (wide_uint a, wide_uint b)
 }
 
 ATTRIBUTE_PURE static uuint
-gcd2_odd (wide_uint a1, wide_uint a0, wide_uint b1, wide_uint b0)
+gcd2_odd (mp_limb_t a1, mp_limb_t a0, mp_limb_t b1, mp_limb_t b0)
 {
   affirm (b0 & 1);
 
@@ -520,10 +517,10 @@ gcd2_odd (wide_uint a1, wide_uint a0, wide_uint b1, wide_uint b0)
 
 static void
 factor_insert_multiplicity (struct factors *factors,
-                            wide_uint prime, int m)
+                            mp_limb_t prime, int m)
 {
   int nfactors = factors->nfactors;
-  wide_uint *p = factors->p;
+  mp_limb_t *p = factors->p;
   unsigned char *e = factors->e;
 
   /* Locate position for insert new or increment e.  */
@@ -555,7 +552,7 @@ factor_insert_multiplicity (struct factors *factors,
 
 static void
 factor_insert_large (struct factors *factors,
-                     wide_uint p1, wide_uint p0)
+                     mp_limb_t p1, mp_limb_t p0)
 {
   if (p1 > 0)
     {
@@ -680,7 +677,7 @@ static const unsigned char primes_diff8[] = {
 
 struct primes_dtab
 {
-  wide_uint binv, lim;
+  mp_limb_t binv, lim;
 };
 
 #define P(a,b,c,d) {c,d},
@@ -690,7 +687,7 @@ static const struct primes_dtab primes_dtab[] = {
 };
 #undef P
 
-/* Verify that wide_uint is not wider than
+/* Verify that a word is not wider than
    the integers used to generate primes.h.  */
 static_assert (W_TYPE_SIZE <= WIDE_UINT_BITS);
 
@@ -705,7 +702,7 @@ static bool flag_prove_primality = PROVE_PRIMALITY;
 #define MR_REPS 25
 
 static void
-factor_insert_refind (struct factors *factors, wide_uint p, int i, int off)
+factor_insert_refind (struct factors *factors, mp_limb_t p, int i, int off)
 {
   for (int j = 0; j < off; j++)
     p += primes_diff[i + j];
@@ -746,7 +743,7 @@ factor_insert_refind (struct factors *factors, wide_uint p, int i, int off)
  */
 
 static uuint
-factor_using_division (wide_uint t1, wide_uint t0,
+factor_using_division (mp_limb_t t1, mp_limb_t t0,
                        struct factors *factors)
 {
   if (t0 % 2 == 0)
@@ -770,14 +767,14 @@ factor_using_division (wide_uint t1, wide_uint t0,
       factor_insert_multiplicity (factors, 2, cnt);
     }
 
-  wide_uint p = 3;
+  mp_limb_t p = 3;
   idx_t i;
   for (i = 0; t1 > 0 && i < PRIMES_PTAB_ENTRIES; i++)
     {
       for (;;)
         {
-          wide_uint q1, q0, hi;
-          MAYBE_UNUSED wide_uint lo;
+          mp_limb_t q1, q0, hi;
+          MAYBE_UNUSED mp_limb_t lo;
 
           q0 = t0 * primes_dtab[i].binv;
           umul_ppmm (hi, lo, q0, p);
@@ -807,7 +804,7 @@ factor_using_division (wide_uint t1, wide_uint t0,
 
   for (; i < PRIMES_PTAB_ENTRIES; i += 8)
     {
-      wide_uint q;
+      mp_limb_t q;
       const struct primes_dtab *pd = &primes_dtab[i];
       DIVBLOCK (0);
       DIVBLOCK (1);
@@ -887,8 +884,8 @@ static const unsigned char  binvert_table[128] =
 /* Compute n^(-1) mod B, using a Newton iteration.  */
 #define binv(inv,n)                                                     \
   do {                                                                  \
-    wide_uint  __n = (n);                                               \
-    wide_uint  __inv;                                                   \
+    mp_limb_t __n = n;							\
+    mp_limb_t __inv;							\
                                                                         \
     __inv = binvert_table[(__n / 2) & 0x7F]; /*  8 */                   \
     if (W_TYPE_SIZE > 8)   __inv = 2 * __inv - __inv * __inv * __n;     \
@@ -910,13 +907,13 @@ static const unsigned char  binvert_table[128] =
 /* q = u / d, assuming d|u.  */
 #define divexact_21(q1, q0, u1, u0, d)                                  \
   do {                                                                  \
-    wide_uint _di, _q0;                                                 \
+    mp_limb_t _di, _q0;							\
     binv (_di, (d));                                                    \
     _q0 = (u0) * _di;                                                   \
     if ((u1) >= (d))                                                    \
       {                                                                 \
-        wide_uint _p1;                                                  \
-        MAYBE_UNUSED wide_uint _p0;					\
+        mp_limb_t _p1;							\
+        MAYBE_UNUSED mp_limb_t _p0;					\
         umul_ppmm (_p1, _p0, _q0, d);                                   \
         (q1) = ((u1) - _p1) * _di;                                      \
         (q0) = _q0;                                                     \
@@ -931,14 +928,14 @@ static const unsigned char  binvert_table[128] =
 /* x B (mod n).  */
 #define redcify(r_prim, r, n)                                           \
   do {                                                                  \
-    MAYBE_UNUSED wide_uint _redcify_q;					\
+    MAYBE_UNUSED mp_limb_t _redcify_q;					\
     udiv_qrnnd (_redcify_q, r_prim, r, 0, n);                           \
   } while (0)
 
 /* x B^2 (mod n).  Requires x > 0, n1 < B/2.  */
 #define redcify2(r1, r0, x, n1, n0)                                     \
   do {                                                                  \
-    wide_uint _r1, _r0, _i;                                             \
+    mp_limb_t _r1, _r0, _i;						\
     if ((x) < (n1))                                                     \
       {                                                                 \
         _r1 = (x); _r0 = 0;                                             \
@@ -961,11 +958,11 @@ static const unsigned char  binvert_table[128] =
 
 /* Modular two-word multiplication, r = a * b mod m, with mi = m^(-1) mod B.
    Both a and b must be in redc form, the result will be in redc form too.  */
-static inline wide_uint
-mulredc (wide_uint a, wide_uint b, wide_uint m, wide_uint mi)
+static inline mp_limb_t
+mulredc (mp_limb_t a, mp_limb_t b, mp_limb_t m, mp_limb_t mi)
 {
-  wide_uint rh, rl, q, th, xh;
-  MAYBE_UNUSED wide_uint tl;
+  mp_limb_t rh, rl, q, th, xh;
+  MAYBE_UNUSED mp_limb_t tl;
 
   umul_ppmm (rh, rl, a, b);
   q = rl * mi;
@@ -979,13 +976,13 @@ mulredc (wide_uint a, wide_uint b, wide_uint m, wide_uint mi)
 /* Modular two-word multiplication, r = a * b mod m, with mi = m^(-1) mod B.
    Both a and b must be in redc form, the result will be in redc form too.
    For performance reasons, the most significant bit of m must be clear.  */
-static wide_uint
-mulredc2 (wide_uint *r1p,
-          wide_uint a1, wide_uint a0, wide_uint b1, wide_uint b0,
-          wide_uint m1, wide_uint m0, wide_uint mi)
+static mp_limb_t
+mulredc2 (mp_limb_t *r1p,
+          mp_limb_t a1, mp_limb_t a0, mp_limb_t b1, mp_limb_t b0,
+          mp_limb_t m1, mp_limb_t m0, mp_limb_t mi)
 {
-  wide_uint r1, r0, q, p1, t1, t0, s1, s0;
-  MAYBE_UNUSED wide_uint p0;
+  mp_limb_t r1, r0, q, p1, t1, t0, s1, s0;
+  MAYBE_UNUSED mp_limb_t p0;
   mi = -mi;
   affirm ((m1 >> (W_TYPE_SIZE - 1)) == 0);
 
@@ -1047,10 +1044,10 @@ mulredc2 (wide_uint *r1p,
 }
 
 ATTRIBUTE_CONST
-static wide_uint
-powm (wide_uint b, wide_uint e, wide_uint n, wide_uint ni, wide_uint one)
+static mp_limb_t
+powm (mp_limb_t b, mp_limb_t e, mp_limb_t n, mp_limb_t ni, mp_limb_t one)
 {
-  wide_uint y = one;
+  mp_limb_t y = one;
 
   if (e & 1)
     y = b;
@@ -1068,12 +1065,12 @@ powm (wide_uint b, wide_uint e, wide_uint n, wide_uint ni, wide_uint one)
 }
 
 ATTRIBUTE_PURE static uuint
-powm2 (const wide_uint *bp, const wide_uint *ep, const wide_uint *np,
-       wide_uint ni, const wide_uint *one)
+powm2 (const mp_limb_t *bp, const mp_limb_t *ep, const mp_limb_t *np,
+       mp_limb_t ni, const mp_limb_t *one)
 {
-  wide_uint r1, r0, b1, b0, n1, n0;
+  mp_limb_t r1, r0, b1, b0, n1, n0;
   int i;
-  wide_uint e;
+  mp_limb_t e;
 
   b0 = bp[0];
   b1 = bp[1];
@@ -1087,11 +1084,11 @@ powm2 (const wide_uint *bp, const wide_uint *ep, const wide_uint *np,
     {
       if (e & 1)
         {
-          wide_uint r1m1;
+          mp_limb_t r1m1;
           r0 = mulredc2 (&r1m1, r1, r0, b1, b0, n1, n0, ni);
           r1 = r1m1;
         }
-      wide_uint r1m;
+      mp_limb_t r1m;
       b0 = mulredc2 (&r1m, b1, b0, b1, b0, n1, n0, ni);
       b1 = r1m;
     }
@@ -1099,11 +1096,11 @@ powm2 (const wide_uint *bp, const wide_uint *ep, const wide_uint *np,
     {
       if (e & 1)
         {
-          wide_uint r1m1;
+          mp_limb_t r1m1;
           r0 = mulredc2 (&r1m1, r1, r0, b1, b0, n1, n0, ni);
           r1 = r1m1;
         }
-      wide_uint r1m;
+      mp_limb_t r1m;
       b0 = mulredc2 (&r1m, b1, b0, b1, b0, n1, n0, ni);
       b1 = r1m;
     }
@@ -1112,12 +1109,12 @@ powm2 (const wide_uint *bp, const wide_uint *ep, const wide_uint *np,
 
 ATTRIBUTE_CONST
 static bool
-millerrabin (wide_uint n, wide_uint ni, wide_uint b, wide_uint q,
-             int k, wide_uint one)
+millerrabin (mp_limb_t n, mp_limb_t ni, mp_limb_t b, mp_limb_t q,
+             int k, mp_limb_t one)
 {
-  wide_uint y = powm (b, q, n, ni, one);
+  mp_limb_t y = powm (b, q, n, ni, one);
 
-  wide_uint nm1 = n - one;      /* -1, but in redc representation.  */
+  mp_limb_t nm1 = n - one;      /* -1, but in redc representation.  */
 
   if (y == one || y == nm1)
     return true;
@@ -1135,10 +1132,10 @@ millerrabin (wide_uint n, wide_uint ni, wide_uint b, wide_uint q,
 }
 
 ATTRIBUTE_PURE static bool
-millerrabin2 (const wide_uint *np, wide_uint ni, const wide_uint *bp,
-              const wide_uint *qp, int k, const wide_uint *one)
+millerrabin2 (const mp_limb_t *np, mp_limb_t ni, const mp_limb_t *bp,
+              const mp_limb_t *qp, int k, const mp_limb_t *one)
 {
-  wide_uint y1, y0, nm1_1, nm1_0, r1m;
+  mp_limb_t y1, y0, nm1_1, nm1_0, r1m;
 
   uuset (&y1, &y0, powm2 (bp, qp, np, ni, one));
 
@@ -1186,24 +1183,24 @@ mp_millerrabin (mpz_srcptr n, mpz_srcptr nm1, mpz_ptr x, mpz_ptr y,
 /* Lucas' prime test.  The number of iterations vary greatly, up to a few dozen
    have been observed.  The average seem to be about 2.  */
 static bool ATTRIBUTE_PURE
-prime_p (wide_uint n)
+prime_p (mp_limb_t n)
 {
   bool is_prime;
-  wide_uint a_prim, one, ni;
+  mp_limb_t a_prim, one, ni;
   struct factors factors;
 
   if (n <= 1)
     return false;
 
   /* We have already cast out small primes.  */
-  if (n < (wide_uint) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME)
+  if (n < (mp_limb_t) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME)
     return true;
 
   /* Precomputation for Miller-Rabin.  */
   int k = stdc_trailing_zeros (n - 1);
-  wide_uint q = (n - 1) >> k;
+  mp_limb_t q = (n - 1) >> k;
 
-  wide_uint a = 2;
+  mp_limb_t a = 2;
   binv (ni, n);                 /* ni <- 1/n mod B */
   redcify (one, 1, n);
   addmod (a_prim, one, one, n); /* i.e., redcify a = 2 */
@@ -1246,13 +1243,13 @@ prime_p (wide_uint n)
          on most processors, since it avoids udiv_qrnnd.  If we go down the
          udiv_qrnnd_preinv path, this code should be replaced.  */
       {
-        wide_uint s1, s0;
+        mp_limb_t s1, s0;
         umul_ppmm (s1, s0, one, a);
         if (LIKELY (s1 == 0))
           a_prim = s0 % n;
         else
           {
-            MAYBE_UNUSED wide_uint dummy;
+            MAYBE_UNUSED mp_limb_t dummy;
             udiv_qrnnd (dummy, a_prim, s1, s0, n);
           }
       }
@@ -1265,13 +1262,13 @@ prime_p (wide_uint n)
 }
 
 static bool ATTRIBUTE_PURE
-prime2_p (wide_uint n1, wide_uint n0)
+prime2_p (mp_limb_t n1, mp_limb_t n0)
 {
-  wide_uint q[2], nm1[2];
-  wide_uint a_prim[2];
-  wide_uint one[2];
-  wide_uint na[2];
-  wide_uint ni;
+  mp_limb_t q[2], nm1[2];
+  mp_limb_t a_prim[2];
+  mp_limb_t one[2];
+  mp_limb_t na[2];
+  mp_limb_t ni;
   int k;
   struct factors factors;
 
@@ -1295,7 +1292,7 @@ prime2_p (wide_uint n1, wide_uint n0)
       rsh2 (q[1], q[0], nm1[1], nm1[0], k);
     }
 
-  wide_uint a = 2;
+  mp_limb_t a = 2;
   binv (ni, n0);
   redcify2 (one[1], one[0], 1, n1, n0);
   addmod2 (a_prim[1], a_prim[0], one[1], one[0], one[1], one[0], n1, n0);
@@ -1318,7 +1315,7 @@ prime2_p (wide_uint n1, wide_uint n0)
   for (idx_t r = 0; r < PRIMES_PTAB_ENTRIES; r++)
     {
       bool is_prime;
-      wide_uint e[2];
+      mp_limb_t e[2];
       uuint y;
 
       if (flag_prove_primality)
@@ -1326,7 +1323,7 @@ prime2_p (wide_uint n1, wide_uint n0)
           is_prime = true;
           if (hi_is_set (&factors.plarge))
             {
-              wide_uint pi;
+              mp_limb_t pi;
               binv (pi, lo (factors.plarge));
               e[0] = pi * nm1[0];
               e[1] = 0;
@@ -1448,10 +1445,10 @@ mp_prime_p (mpz_t n)
 }
 
 static void
-factor_using_pollard_rho (wide_uint n, unsigned long int a,
+factor_using_pollard_rho (mp_limb_t n, unsigned long int a,
                           struct factors *factors)
 {
-  wide_uint x, z, y, P, t, ni, g;
+  mp_limb_t x, z, y, P, t, ni, g;
 
   unsigned long int k = 1;
   unsigned long int l = 1;
@@ -1534,10 +1531,10 @@ factor_using_pollard_rho (wide_uint n, unsigned long int a,
 }
 
 static void
-factor_using_pollard_rho2 (wide_uint n1, wide_uint n0, unsigned long int a,
+factor_using_pollard_rho2 (mp_limb_t n1, mp_limb_t n0, unsigned long int a,
                            struct factors *factors)
 {
-  wide_uint x1, x0, z1, z0, y1, y0, P1, P0, t1, t0, ni, g1, g0, r1m;
+  mp_limb_t x1, x0, z1, z0, y1, y0, P1, P0, t1, t0, ni, g1, g0, r1m;
 
   unsigned long int k = 1;
   unsigned long int l = 1;
@@ -1557,7 +1554,7 @@ factor_using_pollard_rho2 (wide_uint n1, wide_uint n0, unsigned long int a,
             {
               x0 = mulredc2 (&r1m, x1, x0, x1, x0, n1, n0, ni);
               x1 = r1m;
-              addmod2 (x1, x0, x1, x0, 0, (wide_uint) a, n1, n0);
+              addmod2 (x1, x0, x1, x0, 0, (mp_limb_t) a, n1, n0);
 
               submod2 (t1, t0, z1, z0, x1, x0, n1, n0);
               P0 = mulredc2 (&r1m, P1, P0, t1, t0, n1, n0, ni);
@@ -1580,7 +1577,7 @@ factor_using_pollard_rho2 (wide_uint n1, wide_uint n0, unsigned long int a,
             {
               x0 = mulredc2 (&r1m, x1, x0, x1, x0, n1, n0, ni);
               x1 = r1m;
-              addmod2 (x1, x0, x1, x0, 0, (wide_uint) a, n1, n0);
+              addmod2 (x1, x0, x1, x0, 0, (mp_limb_t) a, n1, n0);
             }
           y1 = x1; y0 = x0;
         }
@@ -1590,7 +1587,7 @@ factor_using_pollard_rho2 (wide_uint n1, wide_uint n0, unsigned long int a,
         {
           y0 = mulredc2 (&r1m, y1, y0, y1, y0, n1, n0, ni);
           y1 = r1m;
-          addmod2 (y1, y0, y1, y0, 0, (wide_uint) a, n1, n0);
+          addmod2 (y1, y0, y1, y0, 0, (mp_limb_t) a, n1, n0);
 
           submod2 (t1, t0, z1, z0, y1, y0, n1, n0);
           uuset (&g1, &g0, gcd2_odd (t1, t0, n1, n0));
@@ -1611,7 +1608,7 @@ factor_using_pollard_rho2 (wide_uint n1, wide_uint n0, unsigned long int a,
         {
           /* The found factor is two words.  This is highly unlikely, thus hard
              to trigger.  Please be careful before you change this code!  */
-          wide_uint ginv;
+          mp_limb_t ginv;
 
           if (n1 == g1 && n0 == g0)
             {
@@ -1752,7 +1749,7 @@ mp_factor_using_pollard_rho (mpz_t n, unsigned long int a,
 /* Compute the prime factors of the 128-bit number (T1,T0), and put the
    results in FACTORS.  */
 static void
-factor (wide_uint t1, wide_uint t0, struct factors *factors)
+factor (mp_limb_t t1, mp_limb_t t0, struct factors *factors)
 {
   factors->nfactors = 0;
   hiset (&factors->plarge, 0);
@@ -1799,10 +1796,10 @@ mp_factor (mpz_t t, struct mp_factors *factors)
 }
 
 static strtol_error
-strto2wide_uint (wide_uint *hip, wide_uint *lop, char const *s)
+strtouuint (mp_limb_t *hip, mp_limb_t *lop, char const *s)
 {
   int lo_carry;
-  wide_uint hi = 0, lo = 0;
+  mp_limb_t hi = 0, lo = 0;
 
   strtol_error err = LONGINT_INVALID;
 
@@ -1859,7 +1856,7 @@ strto2wide_uint (wide_uint *hip, wide_uint *lop, char const *s)
    and also is the max guaranteed size that
    consumers can read atomically through pipes.
    Also it's big enough to cater for max line length
-   even with 128 bit wide_uint.  */
+   even with 128 bit word.  */
 #ifndef _POSIX_PIPE_BUF
 # define _POSIX_PIPE_BUF 512
 #endif
@@ -1947,7 +1944,7 @@ lbuf_putnl (void)
    everything from BUFEND to lbuf_buf's end.  Use the area just before
    BUFEND temporarily.  */
 static void
-lbuf_putint_append (wide_uint i, char *bufend)
+lbuf_putint_append (mp_limb_t i, char *bufend)
 {
   char *istr = bufend;
   do
@@ -1967,7 +1964,7 @@ lbuf_putint_append (wide_uint i, char *bufend)
 
 /* Append the string representation of I to lbuf_buf.  */
 static void
-lbuf_putint (wide_uint i)
+lbuf_putint (mp_limb_t i)
 {
   lbuf_putint_append (i, lbuf_buf + sizeof lbuf_buf);
 }
@@ -1984,12 +1981,12 @@ lbuf_putbitcnt (mp_bitcnt_t i)
 static void
 print_uuint (uuint t)
 {
-  wide_uint t1 = hi (t), t0 = lo (t);
+  mp_limb_t t1 = hi (t), t0 = lo (t);
   char *bufend = lbuf_buf + sizeof lbuf_buf;
 
   while (t1)
     {
-      wide_uint r = t1 % BIG_POWER_OF_10;
+      mp_limb_t r = t1 % BIG_POWER_OF_10;
       t1 /= BIG_POWER_OF_10;
       udiv_qrnnd (t0, r, r, t0, BIG_POWER_OF_10);
       for (int i = 0; i < LOG_BIG_POWER_OF_10; i++)
@@ -2031,7 +2028,7 @@ lbuf_putmpz (mpz_t const i)
 
 /* Single-precision factoring */
 static void
-print_factors_single (wide_uint t1, wide_uint t0)
+print_factors_single (mp_limb_t t1, mp_limb_t t0)
 {
   struct factors factors;
 
@@ -2076,13 +2073,13 @@ print_factors (char const *input)
     str++;
   str += *str == '+';
 
-  wide_uint t1, t0;
+  mp_limb_t t1, t0;
 
   /* Try converting the number to one or two words.  If it fails, use GMP or
      print an error message.  The 2nd condition checks that the most
      significant bit of the two-word number is clear, in a typesize neutral
      way.  */
-  strtol_error err = strto2wide_uint (&t1, &t0, str);
+  strtol_error err = strtouuint (&t1, &t0, str);
 
   switch (err)
     {
