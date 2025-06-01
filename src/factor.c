@@ -125,11 +125,9 @@
    use the widest hardware-supported type.  */
 #if USE_INT128
 typedef unsigned __int128 wide_uint;
-typedef __int128 wide_int;
 # define W_TYPE_SIZE 128
 #else
 typedef uintmax_t wide_uint;
-typedef intmax_t wide_int;
 # define W_TYPE_SIZE UINTMAX_WIDTH
 #endif
 #define WIDE_UINT_MAX ((wide_uint) -1)
@@ -390,15 +388,11 @@ static void factor (wide_uint, wide_uint, struct factors *);
 #define submod2(r1, r0, a1, a0, b1, b0, n1, n0)                         \
   do {                                                                  \
     sub_ddmmss ((r1), (r0), (a1), (a0), (b1), (b0));                    \
-    if ((wide_int) (r1) < 0)                                            \
+    if ((r1) >> (W_TYPE_SIZE - 1) != 0)					\
       add_ssaaaa ((r1), (r0), (r1), (r0), (n1), (n0));                  \
   } while (0)
 
-#define HIGHBIT_TO_MASK(x)                                              \
-  (((wide_int)-1 >> 1) < 0                                              \
-   ? (wide_uint)((wide_int)(x) >> (W_TYPE_SIZE - 1))                    \
-   : ((x) & ((wide_uint) 1 << (W_TYPE_SIZE - 1))                        \
-      ? WIDE_UINT_MAX : (wide_uint) 0))
+#define HIGHBIT_TO_MASK(x) (- ((wide_uint) (x) >> (W_TYPE_SIZE - 1)))
 
 /* Return r = a mod d, where a = <a1,a0>, d = <d1,d0>.
    Requires that d1 != 0.  */
@@ -910,7 +904,7 @@ static const unsigned char  binvert_table[128] =
     if ((u1) >= (d))                                                    \
       {                                                                 \
         wide_uint _p1;                                                  \
-        MAYBE_UNUSED wide_int _p0;                                      \
+        MAYBE_UNUSED wide_uint _p0;					\
         umul_ppmm (_p1, _p0, _q0, d);                                   \
         (q1) = ((u1) - _p1) * _di;                                      \
         (q0) = _q0;                                                     \
