@@ -627,7 +627,7 @@ mp_factor_clear (struct mp_factors *factors)
 }
 
 static void
-mp_factor_insert (struct mp_factors *factors, mpz_t prime)
+mp_factor_insert (struct mp_factors *factors, mpz_t prime, mp_bitcnt_t m)
 {
   idx_t nfactors = factors->nfactors;
   mpz_t *p = factors->p;
@@ -642,7 +642,7 @@ mp_factor_insert (struct mp_factors *factors, mpz_t prime)
         break;
       if (sgn == 0)
         {
-          e[i - 1]++;
+          e[i - 1] += m;
           return;
         }
     }
@@ -656,17 +656,18 @@ mp_factor_insert (struct mp_factors *factors, mpz_t prime)
   factors->nfactors = nfactors + 1;
   memmove (&p[i + 1], &p[i], (nfactors - i) * sizeof *p);
   memmove (&e[i + 1], &e[i], (nfactors - i) * sizeof *e);
-  e[i] = 1;
+  e[i] = m;
   mpz_init_set (p[i], prime);
 }
 
 static void
-mp_factor_insert_ui (struct mp_factors *factors, unsigned long int prime)
+mp_factor_insert_ui (struct mp_factors *factors, unsigned long int prime,
+                     mp_bitcnt_t m)
 {
   mpz_t pz;
 
   mpz_init_set_ui (pz, prime);
-  mp_factor_insert (factors, pz);
+  mp_factor_insert (factors, pz, m);
   mpz_clear (pz);
 }
 
@@ -841,34 +842,28 @@ static void
 mp_factor_using_division (mpz_t t, struct mp_factors *factors)
 {
   mpz_t q;
-  mp_bitcnt_t p;
 
   devmsg ("[trial division] ");
 
   mpz_init (q);
 
-  p = mpz_scan1 (t, 0);
-  mpz_fdiv_q_2exp (t, t, p);
-  while (p)
+  mp_bitcnt_t m = mpz_scan1 (t, 0);
+  if (m)
     {
-      mp_factor_insert_ui (factors, 2);
-      --p;
+      mpz_fdiv_q_2exp (t, t, m);
+      mp_factor_insert_ui (factors, 2, m);
     }
 
   unsigned long int d = 3;
   for (idx_t i = 1; i <= PRIMES_PTAB_ENTRIES;)
     {
-      if (! mpz_divisible_ui_p (t, d))
-        {
-          d += primes_diff[i++];
-          if (mpz_cmp_ui (t, d * d) < 0)
-            break;
-        }
-      else
-        {
-          mpz_tdiv_q_ui (t, t, d);
-          mp_factor_insert_ui (factors, d);
-        }
+      for (m = 0; mpz_divisible_ui_p (t, d); m++)
+        mpz_tdiv_q_ui (t, t, d);
+      if (m)
+        mp_factor_insert_ui (factors, d, m);
+      d += primes_diff[i++];
+      if (mpz_cmp_ui (t, d * d) < 0)
+        break;
     }
 
   mpz_clear (q);
@@ -1743,12 +1738,12 @@ mp_factor_using_pollard_rho (mpz_t n, unsigned long int a,
         }
       else
         {
-          mp_factor_insert (factors, t);
+          mp_factor_insert (factors, t, 1);
         }
 
       if (mp_prime_p (n))
         {
-          mp_factor_insert (factors, n);
+          mp_factor_insert (factors, n, 1);
           break;
         }
 
@@ -1802,7 +1797,7 @@ mp_factor (mpz_t t, struct mp_factors *factors)
         {
           devmsg ("[is number prime?] ");
           if (mp_prime_p (t))
-            mp_factor_insert (factors, t);
+            mp_factor_insert (factors, t, 1);
           else
             mp_factor_using_pollard_rho (t, 1, factors);
         }
