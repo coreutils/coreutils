@@ -841,11 +841,7 @@ factor_using_division (mp_limb_t t1, mp_limb_t t0,
 static void
 mp_factor_using_division (mpz_t t, struct mp_factors *factors)
 {
-  mpz_t q;
-
   devmsg ("[trial division] ");
-
-  mpz_init (q);
 
   mp_bitcnt_t m = mpz_scan1 (t, 0);
   if (m)
@@ -865,8 +861,6 @@ mp_factor_using_division (mpz_t t, struct mp_factors *factors)
       if (mpz_cmp_ui (t, d * d) < 0)
         break;
     }
-
-  mpz_clear (q);
 }
 
 /* Entry i contains (2i+1)^(-1) mod 2^8.  */
