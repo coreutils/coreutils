@@ -276,8 +276,8 @@ struct factors
 
 struct mp_factors
 {
-  mpz_t             *p;
-  unsigned long int *e;
+  mpz_t *p;
+  mp_bitcnt_t *e;
   idx_t nfactors;
   idx_t nalloc;
 };
@@ -608,7 +608,7 @@ mp_factor_insert (struct mp_factors *factors, mpz_t prime)
 {
   idx_t nfactors = factors->nfactors;
   mpz_t *p = factors->p;
-  unsigned long int *e = factors->e;
+  mp_bitcnt_t *e = factors->e;
   ptrdiff_t i;
 
   /* Locate position for insert new or increment e.  */
@@ -2117,7 +2117,7 @@ print_factors (char const *input)
   mp_factor (t, &factors);
 
   for (idx_t j = 0; j < factors.nfactors; j++)
-    for (unsigned long int k = 0; k < factors.e[j]; k++)
+    for (mp_bitcnt_t k = 0; k < factors.e[j]; k++)
       {
         lbuf_putc (' ');
         lbuf_putmpz (factors.p[j]);
