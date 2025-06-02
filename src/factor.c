@@ -194,9 +194,9 @@ typedef uint64_t UDItype;
 
 #else /* not USE_LONGLONG_H */
 
-# define __ll_B ((mp_limb_t) 1 << (W_TYPE_SIZE / 2))
-# define __ll_lowpart(t)  ((mp_limb_t) (t) & (__ll_B - 1))
-# define __ll_highpart(t) ((mp_limb_t) (t) >> (W_TYPE_SIZE / 2))
+static mp_limb_t const __ll_B = (mp_limb_t) 1 << (W_TYPE_SIZE / 2);
+static mp_limb_t __ll_lowpart (mp_limb_t t) { return t & (__ll_B - 1); }
+static mp_limb_t __ll_highpart (mp_limb_t t) { return t >> (W_TYPE_SIZE / 2); }
 
 #endif
 
@@ -204,9 +204,9 @@ typedef uint64_t UDItype;
    This code can be extended in the future as needed; show as an example
    2*3*5*7*11...*193 which fits in 257 bits, and has 44 prime factors.  */
 #if 2 * W_TYPE_SIZE <= 128
-# define MAX_NFACTS 26
+enum { MAX_NFACTS = 26 };
 #elif 2 * W_TYPE_SIZE <= 257
-# define MAX_NFACTS 44
+enum { MAX_NFACTS = 44 };
 #else
 # error "configuration has a wide word; please update MAX_NFACTS definition"
 #endif
@@ -418,7 +418,11 @@ static void factor (mp_limb_t, mp_limb_t, struct factors *);
       add_ssaaaa (r1, r0, r1, r0, n1, n0);				\
   } while (0)
 
-#define HIGHBIT_TO_MASK(x) (- ((mp_limb_t) (x) >> (W_TYPE_SIZE - 1)))
+static mp_limb_t
+highbit_to_mask (mp_limb_t x)
+{
+  return - (x >> (W_TYPE_SIZE - 1));
+}
 
 /* Return r = a mod d, where a = <a1,a0>, d = <d1,d0>.
    Requires that d1 != 0.  */
@@ -476,7 +480,7 @@ gcd_odd (mp_limb_t a, mp_limb_t b)
       if (t == 0)
         return (a << 1) + 1;
 
-      bgta = HIGHBIT_TO_MASK (t);
+      bgta = highbit_to_mask (t);
 
       /* b <-- min (a, b) */
       b += (bgta & t);
@@ -560,7 +564,11 @@ factor_insert_multiplicity (struct factors *factors,
   p[i] = prime;
 }
 
-#define factor_insert(f, p) factor_insert_multiplicity (f, p, 1)
+static void
+factor_insert (struct factors *factors, mp_limb_t prime)
+{
+  factor_insert_multiplicity (factors, prime, 1);
+}
 
 static void
 factor_insert_large (struct factors *factors,
@@ -670,7 +678,7 @@ static const unsigned char primes_diff[] = {
 };
 #undef P
 
-#define PRIMES_PTAB_ENTRIES (ARRAY_CARDINALITY (primes_diff) - 8 + 1)
+enum { PRIMES_PTAB_ENTRIES = ARRAY_CARDINALITY (primes_diff) - 8 + 1 };
 
 #define P(a,b,c,d) b,
 static const unsigned char primes_diff8[] = {
