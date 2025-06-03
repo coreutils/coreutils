@@ -254,8 +254,7 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION] DURATION COMMAND [ARG]...\n\
-  or:  %s [OPTION]\n"), program_name, program_name);
+Usage: %s [OPTION]... DURATION COMMAND [ARG]...\n"), program_name);
 
       fputs (_("\
 Start COMMAND, and kill it if still running after DURATION.\n\

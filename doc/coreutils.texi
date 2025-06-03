@@ -1656,7 +1656,7 @@ in some way.
 standard input if none are given, to standard output.  Synopsis:
 
 @example
-cat [@var{option}] [@var{file}]@dots{}
+cat [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -3327,7 +3327,7 @@ sections of @var{input}  (standard input if none is given or @var{input}
 is @samp{-}).  Synopsis:
 
 @example
-split [@var{option}] [@var{input} [@var{prefix}]]
+split [@var{option}]@dots{} [@var{input} [@var{prefix}]]
 @end example
 
 By default, @command{split} puts 1000 lines of @var{input} (or whatever is
@@ -11262,7 +11262,7 @@ Print a message for each created directory.  This is most useful with
 specified names.  Synopsis:
 
 @example
-mkfifo [@var{option}] @var{name}@dots{}
+mkfifo [@var{option}]@dots{} @var{name}@dots{}
 @end example
 
 A @dfn{FIFO} is a special file type that permits independent processes
@@ -16260,7 +16260,7 @@ should not rely on its existence on non-POSIX platforms.
 Synopsis:
 
 @example
-@command{who} [@var{option}] [@var{file}] [am i]
+who [@var{option}]@dots{} [@var{file}] [am i]
 @end example
 
 @cindex terminal lines, currently used
@@ -16410,7 +16410,7 @@ should not rely on its existence on non-POSIX platforms.
 Synopsis:
 
 @example
-@command{pinky} [@var{option}] [@var{username}]@dots{}
+pinky [@var{option}]@dots{} [@var{username}]@dots{}
 @end example
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -17791,8 +17791,7 @@ with systems where this is allowed for non-privileged users.}.
 Synopses:
 
 @example
-chroot @var{option} @var{newroot} [@var{command} [@var{args}]@dots{}]
-chroot @var{option}
+chroot [@var{option}]@dots{} @var{newroot} [@var{command} [@var{args}]@dots{}]
 @end example
 
 Ordinarily, file names are looked up starting at the root of the
@@ -18829,7 +18828,7 @@ the exit status of @var{command} otherwise
 still running after the specified time interval.  Synopsis:
 
 @example
-timeout [@var{option}] @var{duration} @var{command} [@var{arg}]@dots{}
+timeout [@var{option}]@dots{} @var{duration} @var{command} [@var{arg}]@dots{}
 @end example
 
 @var{command} must not be a special built-in utility (@pxref{Special

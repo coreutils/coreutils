@@ -184,9 +184,7 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION] NEWROOT [COMMAND [ARG]...]\n\
-  or:  %s OPTION\n\
-"), program_name, program_name);
+Usage: %s [OPTION]... NEWROOT [COMMAND [ARG]...]\n"), program_name);
 
       fputs (_("\
 Run COMMAND with root directory set to NEWROOT.\n\

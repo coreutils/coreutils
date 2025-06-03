@@ -60,7 +60,7 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... [VARIABLE]...\n\
+Usage: %s [OPTION] [VARIABLE]...\n\
 Print the values of the specified environment VARIABLE(s).\n\
 If no VARIABLE is specified, print name and value pairs for them all.\n\
 \n\
