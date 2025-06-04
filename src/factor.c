@@ -838,6 +838,48 @@ factor_using_division (mp_limb_t t1, mp_limb_t t0,
   return make_uuint (t1, t0);
 }
 
+/* Return the number of limbs in positive N.  */
+static mp_size_t
+mp_size (mpz_t n)
+{
+  /* Tell the compiler that N is positive; this can speed up access to N.  */
+  assume (0 < mpz_sgn (n));
+
+  return mpz_size (n);
+}
+
+/* If N is small enough to be factorable by 'factor',
+   add its factors to MP_FACTORS and return true.
+   Otherwise, return false.  */
+static bool
+mp_finish_in_single (mpz_t n, struct mp_factors *mp_factors)
+{
+  if (2 < mp_size (n))
+    return false;
+  mp_limb_t n1 = mpz_getlimbn (n, 1);
+  if (n1 >> (W_TYPE_SIZE - 1))
+    return false;
+  mp_limb_t n0 = mpz_getlimbn (n, 0);
+  mpz_set_ui (n, 1);
+
+  struct factors factors;
+  factor (n1, n0, &factors);
+
+  if (hi_is_set (&factors.plarge))
+    {
+      mpz_t p = MPZ_ROINIT_N (factors.plarge.uu, 2);
+      mp_factor_insert (mp_factors, p, 1);
+    }
+
+  for (int i = factors.nfactors; 0 < i; i--)
+    {
+      mpz_t p = MPZ_ROINIT_N (&factors.p[i - 1], 1);
+      mp_factor_insert (mp_factors, p, factors.e[i - 1]);
+    }
+
+  return true;
+}
+
 static void
 mp_factor_using_division (mpz_t t, struct mp_factors *factors)
 {
@@ -848,13 +890,22 @@ mp_factor_using_division (mpz_t t, struct mp_factors *factors)
     {
       mpz_fdiv_q_2exp (t, t, m);
       mp_factor_insert_ui (factors, 2, m);
+      if (mp_finish_in_single (t, factors))
+        return;
     }
 
   unsigned long int d = 3;
   for (idx_t i = 1; i <= PRIMES_PTAB_ENTRIES;)
     {
       for (m = 0; mpz_divisible_ui_p (t, d); m++)
-        mpz_tdiv_q_ui (t, t, d);
+        {
+          mpz_tdiv_q_ui (t, t, d);
+          if (mp_finish_in_single (t, factors))
+            {
+              mp_factor_insert_ui (factors, d, m + 1);
+              return;
+            }
+        }
       if (m)
         mp_factor_insert_ui (factors, d, m);
       d += primes_diff[i++];
@@ -1725,15 +1776,19 @@ mp_factor_using_pollard_rho (mpz_t n, unsigned long int a,
 
       mpz_divexact (n, n, t);   /* divide by t, before t is overwritten */
 
-      if (!mp_prime_p (t))
+      if (!mp_finish_in_single (t, factors))
         {
-          devmsg ("[composite factor--restarting pollard-rho] ");
-          mp_factor_using_pollard_rho (t, a + 1, factors);
+          if (mp_prime_p (t))
+            mp_factor_insert (factors, t, 1);
+          else
+            {
+              devmsg ("[composite factor--restarting pollard-rho] ");
+              mp_factor_using_pollard_rho (t, a + 1, factors);
+            }
         }
-      else
-        {
-          mp_factor_insert (factors, t, 1);
-        }
+
+      if (mp_finish_in_single (n, factors))
+        break;
 
       if (mp_prime_p (n))
         {
