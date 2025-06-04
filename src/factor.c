@@ -717,9 +717,9 @@ static bool flag_prove_primality = PROVE_PRIMALITY;
 #endif
 
 static void
-factor_insert_refind (struct factors *factors, mp_limb_t p, int i, int off)
+factor_insert_refind (struct factors *factors, mp_limb_t p, idx_t i, idx_t off)
 {
-  for (int j = 0; j < off; j++)
+  for (idx_t j = 0; j < off; j++)
     p += primes_diff[i + j];
   factor_insert (factors, p);
 }
