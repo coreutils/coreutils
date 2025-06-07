@@ -267,10 +267,10 @@ Use --sparse=never to inhibit creation of sparse files.\n\
       emit_update_parameters_note ();
       fputs (_("\
 \n\
-When --reflink[=always] is specified, perform a lightweight copy, where the\n\
-data blocks are copied only when modified.  If this is not possible the copy\n\
-fails, or if --reflink=auto is specified, fall back to a standard copy.\n\
-Use --reflink=never to ensure a standard copy is performed.\n\
+By default or with --reflink=auto, cp will try a lightweight copy, where the\n\
+data blocks are copied only when modified, falling back to a standard copy\n\
+if this is not possible.  With --reflink[=always] cp will fail if CoW is not\n\
+supported, while --reflink=never ensures a standard copy is performed.\n\
 "), stdout);
       emit_backup_suffix_note ();
       fputs (_("\
