@@ -128,7 +128,9 @@
    do this in single and double precision integer arithmetic.
    Instead, always use the full word.  */
 
-/* The word size in bits.  */
+/* The word size in bits.
+   In the rest of this file's comments, B = 2^W_TYPE_SIZE is the base,
+   and the notation (a1,a0) stands for B*a1 + a0.  */
 #ifdef GMP_LIMB_BITS
 # define W_TYPE_SIZE GMP_LIMB_BITS
 #else
@@ -308,6 +310,8 @@ struct mp_factors
 };
 
 static void factor (mp_limb_t, mp_limb_t, struct factors *);
+static void factor_up (mp_limb_t, mp_limb_t, struct factors *,
+                       idx_t, mp_limb_t);
 
 #ifndef umul_ppmm
 # define umul_ppmm(w1, w0, u, v)                                        \
@@ -726,8 +730,8 @@ factor_insert_refind (struct factors *factors, mp_limb_t p, idx_t i, idx_t off)
 
 /* Trial division with odd primes uses the following trick.
 
-   Let p be an odd prime, and B = 2^{W_TYPE_SIZE}.  For simplicity,
-   consider the case t < B (this is the second loop below).
+   Let p be an odd prime.  For simplicity, consider the case t < B;
+   this is the second loop below.
 
    From our tables we get
 
@@ -757,9 +761,14 @@ factor_insert_refind (struct factors *factors, mp_limb_t p, idx_t i, idx_t off)
    order, and the non-multiples of p onto the range lim < q < B.
  */
 
+/* Find factors of (T1,T0), and insert them into FACTORS.
+   The candidate factors are 2 and the primes in the primes table.
+   However, primes less than the prime with index I and value P have
+   already been considered, and need not be looked at again.  */
+
 static uuint
-factor_using_division (mp_limb_t t1, mp_limb_t t0,
-                       struct factors *factors)
+factor_using_division (mp_limb_t t1, mp_limb_t t0, struct factors *factors,
+                       idx_t i, mp_limb_t p)
 {
   if (t0 % 2 == 0)
     {
@@ -782,9 +791,7 @@ factor_using_division (mp_limb_t t1, mp_limb_t t0,
       factor_insert_multiplicity (factors, 2, cnt);
     }
 
-  mp_limb_t p = 3;
-  idx_t i;
-  for (i = 0; t1 > 0 && i < PRIMES_PTAB_ENTRIES; i++)
+  for (; t1 > 0 && i < PRIMES_PTAB_ENTRIES; i++)
     {
       for (;;)
         {
@@ -852,7 +859,8 @@ mp_size (mpz_t n)
    add its factors to MP_FACTORS and return true.
    Otherwise, return false.  */
 static bool
-mp_finish_in_single (mpz_t n, struct mp_factors *mp_factors)
+mp_finish_up_in_single (mpz_t n, struct mp_factors *mp_factors,
+                        idx_t prime_idx, mp_limb_t prime)
 {
   if (2 < mp_size (n))
     return false;
@@ -863,7 +871,7 @@ mp_finish_in_single (mpz_t n, struct mp_factors *mp_factors)
   mpz_set_ui (n, 1);
 
   struct factors factors;
-  factor (n1, n0, &factors);
+  factor_up (n1, n0, &factors, prime_idx, prime);
 
   if (hi_is_set (&factors.plarge))
     {
@@ -878,6 +886,11 @@ mp_finish_in_single (mpz_t n, struct mp_factors *mp_factors)
     }
 
   return true;
+}
+static bool
+mp_finish_in_single (mpz_t n, struct mp_factors *mp_factors)
+{
+  return mp_finish_up_in_single (n, mp_factors, 0, 3);
 }
 
 static void
@@ -1807,7 +1820,8 @@ mp_factor_using_pollard_rho (mpz_t n, unsigned long int a,
 /* Compute the prime factors of the 128-bit number (T1,T0), and put the
    results in FACTORS.  */
 static void
-factor (mp_limb_t t1, mp_limb_t t0, struct factors *factors)
+factor_up (mp_limb_t t1, mp_limb_t t0, struct factors *factors,
+           idx_t prime_idx, mp_limb_t prime)
 {
   factors->nfactors = 0;
   hiset (&factors->plarge, 0);
@@ -1815,7 +1829,7 @@ factor (mp_limb_t t1, mp_limb_t t0, struct factors *factors)
   if (t1 == 0 && t0 < 2)
     return;
 
-  uuset (&t1, &t0, factor_using_division (t1, t0, factors));
+  uuset (&t1, &t0, factor_using_division (t1, t0, factors, prime_idx, prime));
 
   if (t1 == 0 && t0 < 2)
     return;
@@ -1829,6 +1843,11 @@ factor (mp_limb_t t1, mp_limb_t t0, struct factors *factors)
       else
         factor_using_pollard_rho2 (t1, t0, 1, factors);
     }
+}
+static void
+factor (mp_limb_t t1, mp_limb_t t0, struct factors *factors)
+{
+  return factor_up (t1, t0, factors, 0, 3);
 }
 
 /* Use Pollard-rho to compute the prime factors of
