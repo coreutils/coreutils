@@ -913,7 +913,7 @@ mp_factor_using_division (mpz_t t, struct mp_factors *factors)
       for (m = 0; mpz_divisible_ui_p (t, d); m++)
         {
           mpz_tdiv_q_ui (t, t, d);
-          if (mp_finish_in_single (t, factors))
+          if (mp_finish_up_in_single (t, factors, i, d))
             {
               mp_factor_insert_ui (factors, d, m + 1);
               return;
