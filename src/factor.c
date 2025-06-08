@@ -908,7 +908,7 @@ mp_factor_using_division (mpz_t t, struct mp_factors *factors)
     }
 
   unsigned long int d = 3;
-  for (idx_t i = 1; i <= PRIMES_PTAB_ENTRIES;)
+  for (idx_t i = 0; i < PRIMES_PTAB_ENTRIES; i++)
     {
       for (m = 0; mpz_divisible_ui_p (t, d); m++)
         {
@@ -921,7 +921,7 @@ mp_factor_using_division (mpz_t t, struct mp_factors *factors)
         }
       if (m)
         mp_factor_insert_ui (factors, d, m);
-      d += primes_diff[i++];
+      d += primes_diff[i + 1];
       if (mpz_cmp_ui (t, d * d) < 0)
         break;
     }
