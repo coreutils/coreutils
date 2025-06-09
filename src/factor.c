@@ -298,13 +298,19 @@ struct factors
   unsigned char nfactors;
 };
 
+/* An mpz's prime factor and multiplicity.  */
+struct mp_factor
+{
+  mpz_t p;
+  mp_bitcnt_t e;
+};
+
 /* Prime factors of an mpz_t.  */
 struct mp_factors
 {
- /* Distinct prime factors, their multiplicities, their number, and
-    the size of the arrays allocated for the factors and multiplicities.  */
-  mpz_t *p;
-  mp_bitcnt_t *e;
+  /* A vector of distinct prime factors, a count of the factors,
+     and the number of allocated slots in the vector.  */
+  struct mp_factor *f;
   idx_t nfactors;
   idx_t nalloc;
 };
@@ -614,8 +620,7 @@ static void mp_factor (mpz_t, struct mp_factors *);
 static void
 mp_factor_init (struct mp_factors *factors)
 {
-  factors->p = nullptr;
-  factors->e = nullptr;
+  factors->f = nullptr;
   factors->nfactors = 0;
   factors->nalloc = 0;
 }
@@ -623,45 +628,39 @@ mp_factor_init (struct mp_factors *factors)
 static void
 mp_factor_clear (struct mp_factors *factors)
 {
+  struct mp_factor *f = factors->f;
   for (idx_t i = 0; i < factors->nfactors; i++)
-    mpz_clear (factors->p[i]);
-
-  free (factors->p);
-  free (factors->e);
+    mpz_clear (f[i].p);
+  free (f);
 }
 
 static void
 mp_factor_insert (struct mp_factors *factors, mpz_t prime, mp_bitcnt_t m)
 {
   idx_t nfactors = factors->nfactors;
-  mpz_t *p = factors->p;
-  mp_bitcnt_t *e = factors->e;
+  struct mp_factor *f = factors->f;
   idx_t i;
 
   /* Locate position for insert new or increment e.  */
   for (i = nfactors; 0 < i; i--)
     {
-      int sgn = mpz_cmp (p[i - 1], prime);
+      int sgn = mpz_cmp (f[i - 1].p, prime);
       if (sgn < 0)
         break;
       if (sgn == 0)
         {
-          e[i - 1] += m;
+          f[i - 1].e += m;
           return;
         }
     }
 
   if (nfactors == factors->nalloc)
-    {
-      factors->p = p = xpalloc (p, &factors->nalloc, 1, -1, sizeof *p);
-      factors->e = e = xireallocarray (e, factors->nalloc, sizeof *e);
-    }
+    factors->f = f = xpalloc (f, &factors->nalloc, 1, -1, sizeof *f);
 
   factors->nfactors = nfactors + 1;
-  memmove (&p[i + 1], &p[i], (nfactors - i) * sizeof *p);
-  memmove (&e[i + 1], &e[i], (nfactors - i) * sizeof *e);
-  e[i] = m;
-  mpz_init_set (p[i], prime);
+  memmove (&f[i + 1], &f[i], (nfactors - i) * sizeof *f);
+  f[i].e = m;
+  mpz_init_set (f[i].p, prime);
 }
 
 static void
@@ -1477,7 +1476,7 @@ mp_prime_p (mpz_t n)
           is_prime = true;
           for (idx_t i = 0; i < factors.nfactors && is_prime; i++)
             {
-              mpz_divexact (tmp, nm1, factors.p[i]);
+              mpz_divexact (tmp, nm1, factors.f[i].p);
               mpz_powm (tmp, a, tmp, n);
               is_prime = mpz_cmp_ui (tmp, 1) != 0;
             }
@@ -2188,14 +2187,14 @@ print_factors (char const *input)
   mp_factor (t, &factors);
 
   for (idx_t j = 0; j < factors.nfactors; j++)
-    for (mp_bitcnt_t k = 0; k < factors.e[j]; k++)
+    for (mp_bitcnt_t k = 0; k < factors.f[j].e; k++)
       {
         lbuf_putc (' ');
-        lbuf_putmpz (factors.p[j]);
-        if (print_exponents && factors.e[j] > 1)
+        lbuf_putmpz (factors.f[j].p);
+        if (print_exponents && factors.f[j].e > 1)
           {
             lbuf_putc ('^');
-            lbuf_putbitcnt (factors.e[j]);
+            lbuf_putbitcnt (factors.f[j].e);
             break;
           }
       }
