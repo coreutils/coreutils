@@ -615,14 +615,12 @@ mpz_va_init (void (*mpz_single_init)(mpz_t), ...)
 }
 #endif
 
-static void mp_factor (mpz_t, struct mp_factors *);
+static struct mp_factors mp_factor (mpz_t);
 
-static void
-mp_factor_init (struct mp_factors *factors)
+static struct mp_factors
+mp_no_factors (void)
 {
-  factors->f = nullptr;
-  factors->nfactors = 0;
-  factors->nalloc = 0;
+  return (struct mp_factors) {0,};
 }
 
 static void
@@ -892,18 +890,19 @@ mp_finish_in_single (mpz_t n, struct mp_factors *mp_factors)
   return mp_finish_up_in_single (n, mp_factors, 0, 3);
 }
 
-static void
-mp_factor_using_division (mpz_t t, struct mp_factors *factors)
+static struct mp_factors
+mp_factor_using_division (mpz_t t)
 {
   devmsg ("[trial division] ");
+  struct mp_factors factors = mp_no_factors ();
 
   mp_bitcnt_t m = mpz_scan1 (t, 0);
   if (m)
     {
       mpz_fdiv_q_2exp (t, t, m);
-      mp_factor_insert_ui (factors, 2, m);
-      if (mp_finish_in_single (t, factors))
-        return;
+      mp_factor_insert_ui (&factors, 2, m);
+      if (mp_finish_in_single (t, &factors))
+        return factors;
     }
 
   unsigned long int d = 3;
@@ -912,18 +911,20 @@ mp_factor_using_division (mpz_t t, struct mp_factors *factors)
       for (m = 0; mpz_divisible_ui_p (t, d); m++)
         {
           mpz_tdiv_q_ui (t, t, d);
-          if (mp_finish_up_in_single (t, factors, i, d))
+          if (mp_finish_up_in_single (t, &factors, i, d))
             {
-              mp_factor_insert_ui (factors, d, m + 1);
-              return;
+              mp_factor_insert_ui (&factors, d, m + 1);
+              return factors;
             }
         }
       if (m)
-        mp_factor_insert_ui (factors, d, m);
+        mp_factor_insert_ui (&factors, d, m);
       d += primes_diff[i + 1];
       if (mpz_cmp_ui (t, d * d) < 0)
         break;
     }
+
+  return factors;
 }
 
 /* Entry i contains (2i+1)^(-1) mod 2^8.  */
@@ -1464,7 +1465,7 @@ mp_prime_p (mpz_t n)
     {
       /* Factor n-1 for Lucas.  */
       mpz_set (tmp, nm1);
-      mp_factor (tmp, &factors);
+      factors = mp_factor (tmp);
     }
 
   /* Loop until Lucas proves our number prime, or Miller-Rabin proves our
@@ -1851,24 +1852,26 @@ factor (mp_limb_t t1, mp_limb_t t0, struct factors *factors)
 
 /* Use Pollard-rho to compute the prime factors of
    arbitrary-precision T, and put the results in FACTORS.  */
-static void
-mp_factor (mpz_t t, struct mp_factors *factors)
+static struct mp_factors
+mp_factor (mpz_t t)
 {
-  mp_factor_init (factors);
+  struct mp_factors factors = mp_no_factors ();
 
   if (mpz_sgn (t) != 0)
     {
-      mp_factor_using_division (t, factors);
+      factors = mp_factor_using_division (t);
 
       if (mpz_cmp_ui (t, 1) != 0)
         {
           devmsg ("[is number prime?] ");
           if (mp_prime_p (t))
-            mp_factor_insert (factors, t, 1);
+            mp_factor_insert (&factors, t, 1);
           else
-            mp_factor_using_pollard_rho (t, 1, factors);
+            mp_factor_using_pollard_rho (t, 1, &factors);
         }
     }
+
+  return factors;
 }
 
 static strtol_error
@@ -2178,13 +2181,11 @@ print_factors (char const *input)
 
   devmsg ("[using arbitrary-precision arithmetic] ");
   mpz_t t;
-  struct mp_factors factors;
-
   mpz_init_set_str (t, str, 10);
 
   lbuf_putmpz (t);
   lbuf_putc (':');
-  mp_factor (t, &factors);
+  struct mp_factors factors = mp_factor (t);
 
   for (idx_t j = 0; j < factors.nfactors; j++)
     for (mp_bitcnt_t k = 0; k < factors.f[j].e; k++)
