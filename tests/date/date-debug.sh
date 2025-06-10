@@ -75,8 +75,6 @@ date: input timezone: TZ="America/Edmonton" in date string
 date: using specified time as starting value: '02:30:00'
 date: error: invalid date/time value:
 date:     user provided time: '(Y-M-D) 2006-04-02 02:30:00'
-date:        normalized time: '(Y-M-D) 2006-04-02 XX:XX:XX'
-date:                                             --
 date:      possible reasons:
 date:        nonexistent due to daylight-saving time;
 date:        invalid day/month combination;
@@ -90,7 +88,12 @@ returns_ 1 date --debug -d "$in2" >out2-t 2>&1 || fail=1
 # The output line of "normalized time" can differ between systems
 # (e.g. glibc vs musl) and should not be checked.
 # See: https://lists.gnu.org/archive/html/coreutils/2019-05/msg00039.html
-sed '/normalized time:/s/ [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/ XX:XX:XX/' \
+sed '
+      /^date: *normalized time:/d
+      /^date: *time could not be normalized/d
+      /^date: *--*$/d
+      /^date: *numeric values overflow;$/d
+    ' \
     out2-t > out2 || framework_failure_
 
 compare exp2 out2 || fail=1
