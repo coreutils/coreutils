@@ -928,7 +928,7 @@ mp_factor_using_division (mpz_t t)
 }
 
 /* Entry i contains (2i+1)^(-1) mod 2^8.  */
-static const unsigned char  binvert_table[128] =
+static const unsigned char binvert_table[128] =
 {
   0x01, 0xAB, 0xCD, 0xB7, 0x39, 0xA3, 0xC5, 0xEF,
   0xF1, 0x1B, 0x3D, 0xA7, 0x29, 0x13, 0x35, 0xDF,
@@ -948,34 +948,24 @@ static const unsigned char  binvert_table[128] =
   0x11, 0x3B, 0x5D, 0xC7, 0x49, 0x33, 0x55, 0xFF
 };
 
-/* Compute n^(-1) mod B, using a Newton iteration.  */
-#define binv(inv,n)                                                     \
-  do {                                                                  \
-    mp_limb_t __n = n;							\
-    mp_limb_t __inv;							\
-                                                                        \
-    __inv = binvert_table[(__n / 2) & 0x7F]; /*  8 */                   \
-    if (W_TYPE_SIZE > 8)   __inv = 2 * __inv - __inv * __inv * __n;     \
-    if (W_TYPE_SIZE > 16)  __inv = 2 * __inv - __inv * __inv * __n;     \
-    if (W_TYPE_SIZE > 32)  __inv = 2 * __inv - __inv * __inv * __n;     \
-                                                                        \
-    if (W_TYPE_SIZE > 64)                                               \
-      {                                                                 \
-        int  __invbits = 64;                                            \
-        do {                                                            \
-          __inv = 2 * __inv - __inv * __inv * __n;                      \
-          __invbits *= 2;                                               \
-        } while (__invbits < W_TYPE_SIZE);                              \
-      }                                                                 \
-                                                                        \
-    (inv) = __inv;                                                      \
-  } while (0)
+/* Compute n^(-1) mod B.  n must be odd.  */
+static mp_limb_t
+binv_limb (mp_limb_t n)
+{
+  mp_limb_t inv = binvert_table[(n / 2) & 0x7F];
+  if ( 8 < W_TYPE_SIZE) inv = 2 * inv - inv * inv * n;
+  if (16 < W_TYPE_SIZE) inv = 2 * inv - inv * inv * n;
+  if (32 < W_TYPE_SIZE) inv = 2 * inv - inv * inv * n;
+  for (int invbits = 64; invbits < W_TYPE_SIZE; invbits *= 2)
+    inv = 2 * inv - inv * inv * n;
+  return inv;
+}
 
 /* q = u / d, assuming d|u.  */
 #define divexact_21(q1, q0, u1, u0, d)                                  \
   do {                                                                  \
     mp_limb_t _di, _q0;							\
-    binv (_di, d);							\
+    _di = binv_limb (d);						\
     _q0 = (u0) * _di;                                                   \
     if ((u1) >= (d))                                                    \
       {                                                                 \
@@ -1268,7 +1258,7 @@ prime_p (mp_limb_t n)
   mp_limb_t q = (n - 1) >> k;
 
   mp_limb_t a = 2;
-  binv (ni, n);                 /* ni <- 1/n mod B */
+  ni = binv_limb (n);		/* ni <- 1/n mod B */
   redcify (one, 1, n);
   addmod (a_prim, one, one, n); /* i.e., redcify a = 2 */
 
@@ -1360,7 +1350,7 @@ prime2_p (mp_limb_t n1, mp_limb_t n0)
     }
 
   mp_limb_t a = 2;
-  binv (ni, n0);
+  ni = binv_limb (n0);
   redcify2 (one[1], one[0], 1, n1, n0);
   addmod2 (a_prim[1], a_prim[0], one[1], one[0], one[1], one[0], n1, n0);
 
@@ -1390,9 +1380,7 @@ prime2_p (mp_limb_t n1, mp_limb_t n0)
           is_prime = true;
           if (hi_is_set (&factors.plarge))
             {
-              mp_limb_t pi;
-              binv (pi, lo (factors.plarge));
-              e[0] = pi * nm1[0];
+              e[0] = binv_limb (lo (factors.plarge)) * nm1[0];
               e[1] = 0;
               y = powm2 (a_prim, e, na, ni, one);
               is_prime = (lo (y) != one[0] || hi (y) != one[1]);
@@ -1528,7 +1516,7 @@ factor_using_pollard_rho (mp_limb_t n, unsigned long int a,
     {
       affirm (a < n);
 
-      binv (ni, n);             /* FIXME: when could we use old 'ni' value?  */
+      ni = binv_limb (n);	/* FIXME: when could we use old 'ni' value?  */
 
       for (;;)
         {
@@ -1601,7 +1589,7 @@ static void
 factor_using_pollard_rho2 (mp_limb_t n1, mp_limb_t n0, unsigned long int a,
                            struct factors *factors)
 {
-  mp_limb_t x1, x0, z1, z0, y1, y0, P1, P0, t1, t0, ni, g1, g0, r1m;
+  mp_limb_t x1, x0, z1, z0, y1, y0, P1, P0, t1, t0, g1, g0, r1m;
 
   unsigned long int k = 1;
   unsigned long int l = 1;
@@ -1613,7 +1601,7 @@ factor_using_pollard_rho2 (mp_limb_t n1, mp_limb_t n0, unsigned long int a,
 
   while (n1 != 0 || n0 != 1)
     {
-      binv (ni, n0);
+      mp_limb_t ni = binv_limb (n0);
 
       for (;;)
         {
@@ -1675,7 +1663,6 @@ factor_using_pollard_rho2 (mp_limb_t n1, mp_limb_t n0, unsigned long int a,
         {
           /* The found factor is two words.  This is highly unlikely, thus hard
              to trigger.  Please be careful before you change this code!  */
-          mp_limb_t ginv;
 
           if (n1 == g1 && n0 == g0)
             {
@@ -1687,8 +1674,7 @@ factor_using_pollard_rho2 (mp_limb_t n1, mp_limb_t n0, unsigned long int a,
           /* Compute n = n / g.  Since the result will fit one word,
              we can compute the quotient modulo B, ignoring the high
              divisor word.  */
-          binv (ginv, g0);
-          n0 = ginv * n0;
+          n0 = binv_limb (g0) * n0;
           n1 = 0;
 
           if (!prime2_p (g1, g0))
