@@ -1707,100 +1707,156 @@ factor_using_pollard_rho2 (mp_limb_t n1, mp_limb_t n0, unsigned long int a,
     }
 }
 
+/* Set RP = (AP + BP) mod MP.  All values are nonnegative and take up
+   N>0 words, and AP and BP are both less than MP.  */
 static void
-mp_factor_using_pollard_rho (mpz_t n, unsigned long int a,
-                             struct mp_factors *factors)
+mp_modadd (mp_limb_t *rp, mp_limb_t const *ap, mp_limb_t const *bp,
+           mp_limb_t const *mp, mp_size_t n)
 {
-  mpz_t x, z, y, P;
-  mpz_t t, t2;
+  mp_limb_t cy = mpn_add_n (rp, ap, bp, n);
+  if (cy || mpn_cmp (rp, mp, n) >= 0)
+    mpn_sub_n (rp, rp, mp, n);
+}
 
-  devmsg ("[pollard-rho (%lu)] ", a);
+/* Set RP = (AP - BP) mod MP.  All values are nonnegative and take up
+   N>0 words, and AP and BP are both less than MP.  */
+static void
+mp_modsub (mp_limb_t *rp, mp_limb_t const *ap, mp_limb_t const *bp,
+           mp_limb_t const *mp, mp_size_t n)
+{
+  mp_limb_t cy = mpn_sub_n (rp, ap, bp, n);
+  if (cy)
+    mpn_add_n (rp, rp, mp, n);
+}
 
-  mpz_inits (t, t2, nullptr);
-  mpz_init_set_si (y, 2);
-  mpz_init_set_si (x, 2);
-  mpz_init_set_si (z, 2);
-  mpz_init_set_ui (P, 1);
+/* Set RP = (AP - B0) mod MP.  All values are nonnegative, AP and MP
+   both take up N>0 words, and AP < MP.  */
+static void
+mp_modadd_1 (mp_limb_t *rp, mp_limb_t const *ap, mp_limb_t b0,
+             mp_limb_t const *mp, mp_size_t n)
+{
+  mp_limb_t cy = mpn_add_1 (rp, ap, n, b0);
+  if (cy || mpn_cmp (rp, mp, n) >= 0)
+    mpn_sub_n (rp, rp, mp, n);
+}
 
-  unsigned long long int k = 1;
-  unsigned long long int l = 1;
+static void
+mp_mulredc (mp_limb_t *rp, mp_limb_t const *ap, mp_limb_t const *bp,
+            mp_limb_t const *mp, mp_size_t n, mp_limb_t m0inv, mp_limb_t *tp)
+{
+  tp[n] = mpn_mul_1 (tp, ap, n, bp[0]);
+  tp[0] = mpn_addmul_1 (tp, mp, n, tp[0] * m0inv);
 
-  while (mpz_cmp_ui (n, 1) != 0)
+  for (mp_size_t i = 1; i < n; i++)
     {
-      for (;;)
+      tp[n + i] = mpn_addmul_1 (tp + i, ap, n, bp[i]);
+      tp[i] = mpn_addmul_1 (tp + i, mp, n, tp[i] * m0inv);
+    }
+  mp_modadd (rp, tp, tp + n, mp, n);
+}
+
+/* Maximum value for N in mp_factor_using_pollard_rho,
+   to avoid integer overflow when it calls xinmalloc.  */
+#define MP_FACTOR_USING_POLLARD_RHO_N_MAX \
+  ((MIN (IDX_MAX, TYPE_MAXIMUM (mp_size_t)) - 3) / 10)
+
+static void
+mp_factor_using_pollard_rho (struct mp_factors *factors,
+                             mp_limb_t const *mp, mp_size_t n,
+                             mp_limb_t a)
+{
+  devmsg ("[pollard-rho (%lu)] ", (unsigned long int) a);
+
+  static_assert (10 * MP_FACTOR_USING_POLLARD_RHO_N_MAX + 3
+                 <= MIN (IDX_MAX, TYPE_MAXIMUM (mp_size_t)));
+  mp_limb_t *scratch = xinmalloc (10 * n + 3, sizeof *scratch);
+  mp_limb_t *qp = scratch + 2 * n + 1, *pp = qp + n + 2,
+    *xp = pp + n, *yp = xp + n, *zp = yp + n,
+    *tp = zp + n, *sp = tp + n, *gp = sp + n;
+  mp_size_t gn;
+
+  mpn_zero (scratch, n);
+  scratch[n] = 1;
+  mpn_tdiv_qr (qp, pp, 0, scratch, n + 1, mp, n);
+
+  mp_modadd (xp, pp, pp, mp, n);
+  mpn_copyi (yp, xp, n);
+  mpn_copyi (zp, xp, n);
+
+  mp_limb_t m0inv = binv_limb (-mp[0]);
+
+  for (unsigned long int k = 1; ; k *= 2)
+    {
+      for (unsigned long int i = k; i != 0; i--)
         {
-          do
+          mp_mulredc (tp, xp, xp, mp, n, m0inv, scratch);
+          mp_modadd_1 (xp, tp, a, mp, n);
+
+          mp_modsub (tp, zp, xp, mp, n);
+          mp_mulredc (pp, pp, tp, mp, n, m0inv, scratch);
+
+          if (i % 128 == 1)
             {
-              mpz_mul (t, x, x);
-              mpz_mod (x, t, n);
-              mpz_add_ui (x, x, a);
-
-              mpz_sub (t, z, x);
-              mpz_mul (t2, P, t);
-              mpz_mod (P, t2, n);
-
-              if (k % 32 == 1)
+              if (mpn_zero_p (pp, n))
                 {
-                  mpz_gcd (t, P, n);
-                  if (mpz_cmp_ui (t, 1) != 0)
-                    goto factor_found;
-                  mpz_set (y, x);
+                  mp_factor_using_pollard_rho (factors, mp, n, a + 1);
+                  goto finish;
                 }
-            }
-          while (--k != 0);
-
-          mpz_set (z, x);
-          k = l;
-          l = 2 * l;
-          for (unsigned long long int i = 0; i < k; i++)
-            {
-              mpz_mul (t, x, x);
-              mpz_mod (x, t, n);
-              mpz_add_ui (x, x, a);
-            }
-          mpz_set (y, x);
-        }
-
-    factor_found:
-      do
-        {
-          mpz_mul (t, y, y);
-          mpz_mod (y, t, n);
-          mpz_add_ui (y, y, a);
-
-          mpz_sub (t, z, y);
-          mpz_gcd (t, t, n);
-        }
-      while (mpz_cmp_ui (t, 1) == 0);
-
-      mpz_divexact (n, n, t);   /* divide by t, before t is overwritten */
-
-      if (!mp_finish_in_single (t, factors))
-        {
-          if (mp_prime_p (t))
-            mp_factor_insert (factors, t, 1);
-          else
-            {
-              devmsg ("[composite factor--restarting pollard-rho] ");
-              mp_factor_using_pollard_rho (t, a + 1, factors);
+              mpn_copyi (tp, pp, n);
+              mpn_copyi (sp, mp, n);
+              gn = mpn_gcd (gp, tp, n, sp, n);
+              if (gn != 1 || gp[0] != 1)
+                goto factor_found;
+              mpn_copyi (yp, xp, n);
             }
         }
 
-      if (mp_finish_in_single (n, factors))
-        break;
-
-      if (mp_prime_p (n))
+      mpn_copyi (zp, xp, n);
+      for (unsigned long int i = 2 * k; i != 0; i--)
         {
-          mp_factor_insert (factors, n, 1);
-          break;
+          mp_mulredc (tp, xp, xp, mp, n, m0inv, scratch);
+          mp_modadd_1 (xp, tp, a, mp, n);
         }
-
-      mpz_mod (x, x, n);
-      mpz_mod (z, z, n);
-      mpz_mod (y, y, n);
+      mpn_copyi (yp, xp, n);
     }
 
-  mpz_clears (P, t2, t, z, x, y, nullptr);
+ factor_found:
+  do
+    {
+      mp_mulredc (tp, yp, yp, mp, n, m0inv, scratch);
+      mp_modadd_1 (yp, tp, a, mp, n);
+      mp_modsub (tp, zp, yp, mp, n);
+      mpn_copyi (sp, mp, n);
+      gn = mpn_gcd (gp, tp, n, sp, n);
+    }
+  while (gn == 1 && gp[0] == 1);
+
+  mpz_t g = MPZ_ROINIT_N (gp, gn);
+  if (!mp_finish_in_single (g, factors))
+    {
+      if (mp_prime_p (g))
+        mp_factor_insert (factors, g, 1);
+      else
+        mp_factor_using_pollard_rho (factors, gp, gn, a + 1);
+    }
+
+  mpn_tdiv_qr (qp, tp, 0, mp, n, gp, gn);	/* could use divexact */
+  mp_size_t qn = n - gn + (qp[n - 1] != 0);
+  mpz_t q = MPZ_ROINIT_N (qp, qn);
+
+  if (!mp_finish_in_single (q, factors))
+    {
+      if (mp_prime_p (q))
+        mp_factor_insert (factors, q, 1);
+      else
+        {
+          devmsg ("[composite factor--restarting pollard-rho] ");
+          mp_factor_using_pollard_rho (factors, qp, qn, a + 1);
+        }
+    }
+
+ finish:
+  free (scratch);
 }
 
 /* Compute the prime factors of the 128-bit number (T1,T0), and put the
@@ -1853,7 +1909,8 @@ mp_factor (mpz_t t)
           if (mp_prime_p (t))
             mp_factor_insert (&factors, t, 1);
           else
-            mp_factor_using_pollard_rho (t, 1, &factors);
+            mp_factor_using_pollard_rho (&factors, mpz_limbs_read (t),
+                                         mp_size (t), 1);
         }
     }
 
@@ -2168,6 +2225,8 @@ print_factors (char const *input)
   devmsg ("[using arbitrary-precision arithmetic] ");
   mpz_t t;
   mpz_init_set_str (t, str, 10);
+  if (MP_FACTOR_USING_POLLARD_RHO_N_MAX < mp_size (t))
+    xalloc_die ();
 
   lbuf_putmpz (t);
   lbuf_putc (':');
