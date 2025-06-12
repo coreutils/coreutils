@@ -1297,7 +1297,7 @@ prime_p (mp_limb_t n)
 
   /* Loop until Lucas proves our number prime, or Miller-Rabin proves our
      number composite.  */
-  for (idx_t r = 0; r < PRIMES_PTAB_ENTRIES; r++)
+  for (idx_t r = 0; ; r++)
     {
       bool is_prime;
 
@@ -1319,6 +1319,9 @@ prime_p (mp_limb_t n)
       if (is_prime)
         return true;
 
+      /* A Lucas prime test failure should not happen.  */
+      affirm (r < PRIMES_PTAB_ENTRIES);
+
       a += primes_diff[r];      /* Establish new base.  */
 
       /* The following is equivalent to redcify (a_prim, a, n).  It runs faster
@@ -1339,8 +1342,6 @@ prime_p (mp_limb_t n)
       if (!millerrabin (n, ni, a_prim, q, k, one))
         return false;
     }
-
-  affirm (!"Lucas prime test failure.  This should not happen");
 }
 
 static bool ATTRIBUTE_PURE
@@ -1394,7 +1395,7 @@ prime2_p (mp_limb_t n1, mp_limb_t n0)
 
   /* Loop until Lucas proves our number prime, or Miller-Rabin proves our
      number composite.  */
-  for (idx_t r = 0; r < PRIMES_PTAB_ENTRIES; r++)
+  for (idx_t r = 0; ; r++)
     {
       bool is_prime;
       mp_limb_t e[2];
@@ -1432,14 +1433,15 @@ prime2_p (mp_limb_t n1, mp_limb_t n0)
       if (is_prime)
         return true;
 
+      /* A Lucas prime test failure should not happen.  */
+      affirm (r < PRIMES_PTAB_ENTRIES);
+
       a += primes_diff[r];      /* Establish new base.  */
       redcify2 (a_prim[1], a_prim[0], a, n1, n0);
 
       if (!millerrabin2 (na, ni, a_prim, q, k, one))
         return false;
     }
-
-  affirm (!"Lucas prime test failure.  This should not happen");
 }
 
 static bool
@@ -1483,7 +1485,7 @@ mp_prime_p (mpz_t n)
 
   /* Loop until Lucas proves our number prime, or Miller-Rabin proves our
      number composite.  */
-  for (idx_t r = 0; r < PRIMES_PTAB_ENTRIES; r++)
+  for (idx_t r = 0; ; r++)
     {
       if (flag_prove_primality)
         {
@@ -1502,20 +1504,20 @@ mp_prime_p (mpz_t n)
         }
 
       if (is_prime)
-        goto ret1;
+        break;
+
+      /* A Lucas prime test failure should not happen.  */
+      affirm (r < PRIMES_PTAB_ENTRIES);
 
       mpz_add_ui (a, a, primes_diff[r]);        /* Establish new base.  */
 
       if (!mp_millerrabin (n, nm1, a, tmp, q, k))
         {
           is_prime = false;
-          goto ret1;
+          break;
         }
     }
 
-  affirm (!"Lucas prime test failure.  This should not happen");
-
- ret1:
   if (flag_prove_primality)
     mp_factor_clear (&factors);
  ret2:
