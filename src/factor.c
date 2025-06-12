@@ -1266,7 +1266,6 @@ mp_millerrabin (mpz_srcptr n, mpz_srcptr nm1, mpz_ptr x, mpz_ptr y,
 static bool ATTRIBUTE_PURE
 prime_p (mp_limb_t n)
 {
-  bool is_prime;
   mp_limb_t a_prim, one, ni;
   struct factors factors;
 
@@ -1300,6 +1299,8 @@ prime_p (mp_limb_t n)
      number composite.  */
   for (idx_t r = 0; r < PRIMES_PTAB_ENTRIES; r++)
     {
+      bool is_prime;
+
       if (flag_prove_primality)
         {
           is_prime = true;
