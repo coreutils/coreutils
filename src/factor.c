@@ -1449,13 +1449,18 @@ mp_prime_p (mpz_t n)
 {
   bool is_prime;
   mpz_t q, a, nm1, tmp;
-  struct mp_factors factors;
 
   if (mpz_cmp_ui (n, 1) <= 0)
     return false;
 
   /* We have already cast out small primes.  */
   if (mpz_cmp_ui (n, (long) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME) < 0)
+    return true;
+
+  int probab_prime = mpz_probab_prime_p (n, MR_REPS);
+  if (probab_prime == 0)
+    return false;
+  if (flag_prove_primality < probab_prime)
     return true;
 
   mpz_inits (q, a, nm1, tmp, nullptr);
@@ -1469,38 +1474,20 @@ mp_prime_p (mpz_t n)
 
   mpz_set_ui (a, 2);
 
-  /* Perform a Miller-Rabin test, finds most composites quickly.  */
-  if (!mp_millerrabin (n, nm1, a, tmp, q, k))
-    {
-      is_prime = false;
-      goto ret2;
-    }
-
-  if (flag_prove_primality)
-    {
-      /* Factor n-1 for Lucas.  */
-      mpz_set (tmp, nm1);
-      factors = mp_factor (tmp);
-    }
+  /* Factor n-1 for Lucas.  */
+  mpz_set (tmp, nm1);
+  struct mp_factors factors = mp_factor (tmp);
 
   /* Loop until Lucas proves our number prime, or Miller-Rabin proves our
      number composite.  */
   for (idx_t r = 0; ; r++)
     {
-      if (flag_prove_primality)
+      is_prime = true;
+      for (idx_t i = 0; i < factors.nfactors && is_prime; i++)
         {
-          is_prime = true;
-          for (idx_t i = 0; i < factors.nfactors && is_prime; i++)
-            {
-              mpz_divexact (tmp, nm1, factors.f[i].p);
-              mpz_powm (tmp, a, tmp, n);
-              is_prime = mpz_cmp_ui (tmp, 1) != 0;
-            }
-        }
-      else
-        {
-          /* After enough Miller-Rabin runs, be content.  */
-          is_prime = (r == MR_REPS - 1);
+          mpz_divexact (tmp, nm1, factors.f[i].p);
+          mpz_powm (tmp, a, tmp, n);
+          is_prime = mpz_cmp_ui (tmp, 1) != 0;
         }
 
       if (is_prime)
@@ -1518,11 +1505,8 @@ mp_prime_p (mpz_t n)
         }
     }
 
-  if (flag_prove_primality)
-    mp_factor_clear (&factors);
- ret2:
+  mp_factor_clear (&factors);
   mpz_clears (q, a, nm1, tmp, nullptr);
-
   return is_prime;
 }
 
