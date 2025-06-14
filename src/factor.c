@@ -703,7 +703,9 @@ static bool dev_debug = false;
 static bool flag_prove_primality = PROVE_PRIMALITY;
 
 /* Number of Miller-Rabin tests to run when not proving primality.  */
-#define MR_REPS 25
+#ifndef MR_REPS
+# define MR_REPS 25
+#endif
 
 static void
 factor_insert_refind (struct factors *factors, mp_limb_t p, int i, int off)
