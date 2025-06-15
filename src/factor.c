@@ -1261,9 +1261,18 @@ mp_millerrabin (mpz_srcptr n, mpz_srcptr nm1, mpz_ptr x, mpz_ptr y,
   return false;
 }
 
-/* Lucas' prime test.  The number of iterations vary greatly, up to a few dozen
-   have been observed.  The average seem to be about 2.  */
-static bool ATTRIBUTE_PURE
+static bool mp_prime_p (mpz_t);
+
+/* Use the Baillie-PSW primality test for all integers.
+   Code that is currently never executed because it is protected by
+   the equivalent of "if (!USE_BAILLIE_PSW)" dates back to when
+   factor.c used an inferior primality test.
+   FIXME: Either remove the !USE_BAILLIE_PSW code, or fix it to be
+   more efficient than the USE_BAILLIE_PSW code, by special casing
+   Baillie-PSW for single- and/or double-word args.  */
+enum { USE_BAILLIE_PSW = true };
+
+static bool
 prime_p (mp_limb_t n)
 {
   mp_limb_t a_prim, one, ni;
@@ -1275,6 +1284,12 @@ prime_p (mp_limb_t n)
   /* We have already cast out small primes.  */
   if (n < (mp_limb_t) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME)
     return true;
+
+  if (USE_BAILLIE_PSW)
+    {
+      mpz_t mn = MPZ_ROINIT_N (&n, 1);
+      return mp_prime_p (mn);
+    }
 
   /* Precomputation for Miller-Rabin.  */
   int k = stdc_trailing_zeros (n - 1);
@@ -1344,7 +1359,7 @@ prime_p (mp_limb_t n)
     }
 }
 
-static bool ATTRIBUTE_PURE
+static bool
 prime2_p (mp_limb_t n1, mp_limb_t n0)
 {
   mp_limb_t q[2], nm1[2];
@@ -1357,6 +1372,13 @@ prime2_p (mp_limb_t n1, mp_limb_t n0)
 
   if (n1 == 0)
     return prime_p (n0);
+
+  if (USE_BAILLIE_PSW)
+    {
+      uuint un = make_uuint (n1, n0);
+      mpz_t mn = MPZ_ROINIT_N (un.uu, 2);
+      return mp_prime_p (mn);
+    }
 
   nm1[1] = n1 - (n0 == 0);
   nm1[0] = n0 - 1;
