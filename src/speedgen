@@ -1,0 +1,85 @@
+#!/bin/sh -e
+
+out="$1"
+tmp="$out.tmp"
+
+if [ -z "$out" ]; then
+    echo "Usage: $0 outfile" 2>&1
+    exit 1
+fi
+
+s='[[:space:]]'			# For brevity's sake
+
+trap "rm -f '$tmp'" EXIT
+trap "rm -f '$tmp' '$out'" ERR HUP INT QUIT TERM
+
+# Fallback list of speeds that are always tested for
+defspeeds="0 50 75 110 134 150 200 300 600 1200 1800 2400 4800 7200 9600 \
+14400 19200 28800 33600 38400 57600 76800 115200 153600 230400 307200 \
+460800 500000 576000 614400 921600 1000000 1152000 1500000 \
+2000000 2500000 3000000 3500000 4000000 5000000 10000000"
+(
+    sed -n -e "s/^$s*\#$s*define$s$s*B\\([1-9][0-9]*\\)$s.*\$/\\1/p"
+    for s in $defspeeds; do echo "$s"; done
+) | sort -n | uniq > "$tmp"
+
+cat > "$out" <<'EOF'
+#ifndef SPEEDLIST_H
+# define SPEEDLIST_H 1
+
+# if 1 \
+EOF
+
+sed -e 's/^.*$/ \&\& (!defined(B&) || B& == &) \\/' < "$tmp" >> "$out"
+
+cat >> "$out" <<'EOF'
+
+#  define TERMIOS_SPEED_T_SANE 1
+
+# endif
+
+ATTRIBUTE_CONST
+static unsigned long int
+baud_to_value (speed_t speed)
+{
+# ifdef TERMIOS_SPEED_T_SANE
+  return speed;
+# else
+  switch (speed)
+    {
+EOF
+
+sed -e 's/^.*$/#  ifdef B&\n      case B&: return &;\n#  endif/' \
+    < "$tmp" >> "$out"
+
+cat >> "$out" <<'EOF'
+      default: return -1;
+    }
+# endif
+}
+
+ATTRIBUTE_CONST
+static speed_t
+value_to_baud (unsigned long int value)
+{
+# ifdef TERMIOS_SPEED_T_SANE
+  speed_t speed = value;
+  if (speed != value)
+    speed = (speed_t) -1;	/* Unrepresentable (overflow?) */
+  return speed;
+# else
+  switch (value)
+    {
+EOF
+
+sed -e 's/^.*$/#  ifdef B&\n      case &: return B&;\n#  endif/' \
+    < "$tmp" >> "$out"
+
+cat >> "$out" <<'EOF'
+      default: return (speed_t) -1;
+    }
+# endif
+}
+
+#endif
+EOF

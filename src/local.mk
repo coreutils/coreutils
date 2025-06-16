@@ -72,7 +72,8 @@ EXTRA_DIST +=		\
   src/primes.h		\
   src/crctab.c		\
   src/tac-pipe.c	\
-  src/extract-magic
+  src/extract-magic	\
+  src/speedgen
 
 CLEANFILES += $(SCRIPTS)
 
@@ -692,6 +693,20 @@ src/version.h: Makefile
 	$(AM_V_at)printf 'extern char const *Version;\n' > $@t
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
+
+# Target-specific termios baud rate file. This is opportunistic;
+# if cc -E doesn't support -dM, the speedgen script still includes
+# an extensive fallback list of common constants.
+CLEANFILES += src/speedlist.h
+src/speedlist.h: src/termios.c lib/config.h src/speedgen
+	$(AM_V_GEN)rm -f $@
+	$(AM_V_at)${MKDIR_P} src
+	$(AM_V_at)$(COMPILE) -E -dM $< 2>/dev/null |		\
+		  $(SHELL) $(srcdir)/src/speedgen $@t
+	$(AM_V_at)chmod a-w $@t
+	$(AM_V_at)mv $@t $@
+
+src/stty.$(OBJEXT): src/speedlist.h
 
 # Generates a list of macro invocations like:
 #   SINGLE_BINARY_PROGRAM(program_name_str, main_name)

@@ -17,6 +17,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   'sort +0.18446744073709551615R input' on 64 bit systems.
   [bug introduced in coreutils-7.2]
 
+** Improvements
+
+  stty supports setting arbitrary baud rates on supported systems,
+  like Hurd, Linux with glibc >= 2.42, and some BSDs.
+  Also on other systems the full set of supported baud rates
+  are determined at build time.
+
 
 * Noteworthy changes in release 9.7 (2025-04-09) [stable]
 

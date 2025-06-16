@@ -87,6 +87,7 @@ shred
 shuf
 sleep
 sort
+speedlist.h
 split
 stat
 stdbuf
