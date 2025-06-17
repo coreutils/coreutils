@@ -95,4 +95,14 @@ for W in $(seq 80 90); do
   test "$output_width" -le "$W" || fail=1
 done
 
+# Ensure we support varied numeric forms
+# with appropriate rounding
+if stty ispeed '9600'; then
+  stty ispeed '  +9600' || fail=1
+  stty ispeed '9600.49' || fail=1
+  stty ispeed '9600.50' || fail=1
+  stty ispeed '9599.51' || fail=1
+  stty ispeed '  9600.' || fail=1
+fi
+
 Exit $fail

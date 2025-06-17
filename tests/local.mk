@@ -425,6 +425,7 @@ all_tests =					\
   tests/stat/stat-printf.pl			\
   tests/stat/stat-slash.sh			\
   tests/misc/stdbuf.sh				\
+  tests/stty/bad-speed.sh			\
   tests/stty/stty.sh				\
   tests/stty/stty-invalid.sh			\
   tests/stty/stty-pairs.sh			\

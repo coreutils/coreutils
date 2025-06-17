@@ -20,6 +20,7 @@
 print_ver_ stty
 require_controlling_input_terminal_
 require_trap_signame_
+getlimits_
 
 trap '' TTOU # Ignore SIGTTOU
 
@@ -50,8 +51,13 @@ if tty -s </dev/tty; then
   returns_ 1 stty eol -F/dev/tty eol || fail=1
 fi
 
-# coreutils <= 9.1 would not validate speeds to ispeed or ospeed
-returns_ 1 stty ispeed 420 || fail=1
+# coreutils >= 9.8 supports arbitrary speeds on some systems
+# so restrict tests here to invalid numbers
+# We simulate unsupported numbers in a separate "LD_PRELOAD" test.
+WRAP_9600="$(expr $ULONG_OFLOW - 9600)"
+for speed in 9600.. ++9600 -$WRAP_9600 --$WRAP_9600 0x2580 96E2; do
+  returns_ 1 stty ispeed "$speed" || fail=1
+done
 
 # Just in case either of the above mistakenly succeeds (and changes
 # the state of our tty), try to restore the initial state.
