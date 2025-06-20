@@ -33,8 +33,9 @@
 enum
   {
     TTY_STDIN_NOTTY = 1,
-    TTY_FAILURE = 2,
-    TTY_WRITE_ERROR = 3
+    TTY_USAGE = 2,
+    TTY_WRITE_ERROR = 3,
+    TTY_TTYNAME_FAILURE = 4
   };
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -103,26 +104,29 @@ main (int argc, char **argv)
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
         default:
-          usage (TTY_FAILURE);
+          usage (TTY_USAGE);
         }
     }
 
   if (optind < argc)
     {
       error (0, 0, _("extra operand %s"), quote (argv[optind]));
-      usage (TTY_FAILURE);
+      usage (TTY_USAGE);
     }
-
-  errno = ENOENT;
 
   if (silent)
     return isatty (STDIN_FILENO) ? EXIT_SUCCESS : TTY_STDIN_NOTTY;
 
-  int status = EXIT_SUCCESS;
+  int status;
   char const *tty = ttyname (STDIN_FILENO);
 
-  if (! tty)
+  if (tty)
+    status = EXIT_SUCCESS;
+  else
     {
+      int ttyname_err = errno;
+      if (isatty (STDIN_FILENO))
+        error (TTY_TTYNAME_FAILURE, ttyname_err, "ttyname");
       tty = _("not a tty");
       status = TTY_STDIN_NOTTY;
     }

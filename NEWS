@@ -17,6 +17,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   'sort +0.18446744073709551615R input' on 64 bit systems.
   [bug introduced in coreutils-7.2]
 
+  tty now exits with status 4 with a special diagnostic if ttyname
+  fails even though standard input is a tty.  Formerly it quietly
+  pretended that standard input was not a tty.
+  [This bug was present in "the beginning".]
+
 ** Improvements
 
   stty supports setting arbitrary baud rates on supported systems,

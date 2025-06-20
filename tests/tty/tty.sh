@@ -20,8 +20,14 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tty
 
+tty_works_on_stdin=false
+
 if test -t 0; then
-  tty || fail=1
+  if tty; then
+    tty_works_on_stdin=true
+  else
+    test $? -eq 4 || fail=1
+  fi
   tty -s || fail=1
 fi
 
@@ -34,7 +40,7 @@ returns_ 2 tty a || fail=1
 returns_ 2 tty -s a || fail=1
 
 if test -w /dev/full && test -c /dev/full; then
-  if test -t 0; then
+  if $tty_works_on_stdin; then
     returns_ 3 tty >/dev/full || fail=1
   fi
   returns_ 3 tty </dev/null >/dev/full || fail=1
