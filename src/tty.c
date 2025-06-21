@@ -126,7 +126,7 @@ main (int argc, char **argv)
     {
       int ttyname_err = errno;
       if (isatty (STDIN_FILENO))
-        error (TTY_TTYNAME_FAILURE, ttyname_err, "ttyname");
+        error (TTY_TTYNAME_FAILURE, ttyname_err, _("ttyname error"));
       tty = _("not a tty");
       status = TTY_STDIN_NOTTY;
     }
