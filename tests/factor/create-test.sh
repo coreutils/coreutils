@@ -27,6 +27,10 @@ t2=170141183460469229545748130981302223887
 # https://bugs.gnu.org/73474
 bug73474=22222222222222222202111121111
 
+# 2^400 - 593
+bigprime=25822498780869085896559191720030118743297057928292235128306593565406\
+47622016841194629645353280137831435903171972747492783
+
 # Each test is a triple: lo, hi, sha1 of result.
 # The test script, run.sh, runs seq lo hi|factor|sha1sum
 # and verifies that the actual and expected checksums are the same.
@@ -70,6 +74,7 @@ case $t in
   t35) set   ${q}958336   ${q}960335 2374919a89196e1fce93adfe779cb4664556d4b6 ;;
   t36) set   ${q}960336   ${q}962335 569e4363e8d9e8830a187d9ab27365eef08abde1 ;;
   t37) set    $bug73474    $bug73474 61d04aaf757acc5a37eb1d5581a98eea78ef50e8 ;;
+  t38) set    $bigprime    $bigprime 02f3c51a2896ff4524fd76de5f5854029879a179 ;;
   *)
     echo "$0: error: unknown test: '$test_name' -> '$t'" >&2
     exit 1

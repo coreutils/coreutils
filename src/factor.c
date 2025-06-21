@@ -80,13 +80,15 @@
       pre-inversion (such as GMP's invert_limb) and udiv_qrnnd_preinv (from
       GMP's gmp-impl.h).  The redcify2 function could be vastly improved using
       similar methods.  These functions currently dominate run time when
-      PROVE_PRIMALITY is nonzero (the default).
+      PROVE_PRIMALITY is true (which is not the default).
 */
 
 /* Whether to recursively factor to prove primality,
-   or run faster probabilistic tests.  */
+   or run faster probabilistic tests.
+   FIXME: Simplify the code by assuming PROVE_PRIMALITY is false,
+   and remove PROVE_PRIMALITY.  */
 #ifndef PROVE_PRIMALITY
-# define PROVE_PRIMALITY 1
+# define PROVE_PRIMALITY false
 #endif
 
 
@@ -1523,6 +1525,7 @@ mp_prime_p (mpz_t n)
     return true;
 
   int probab_prime = mpz_probab_prime_p (n, MR_REPS);
+  assume (0 <= probab_prime);
   if (probab_prime == 0)
     return false;
   if (flag_prove_primality < probab_prime)

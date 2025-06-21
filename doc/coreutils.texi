@@ -19180,11 +19180,21 @@ takes about 14 seconds, and the slower algorithm would have taken
 about 750 ms to factor @math{2^{127} - 3} instead of the 50 ms needed by
 the faster algorithm.
 
-Factoring large numbers is, in general, hard.  The Pollard-Brent rho
+Factoring large numbers is, in general, hard.  The Pollard--Brent rho
 algorithm used by @command{factor} is particularly effective for
-numbers with relatively small factors.  If you wish to factor large
-numbers which do not have small factors (for example, numbers which
-are the product of two large primes), other methods are far better.
+numbers with relatively small factors.  Other methods are far better
+for factoring large composite numbers that lack relatively small
+factors, such as numbers that are the product of two large primes.
+
+When testing whether a number is prime, @command{factor} uses the
+Baillie--PSW primality heuristic for speed.  Although Baillie--PSW has
+not been proven to reject all composite numbers, the probability of a
+Baillie--PSW pseudoprime is astronomically small and no such
+pseudoprime has been discovered despite decades of searching by
+mathematicians.  Any such pseudoprime is greater than @math{2^{64}}.
+For more, see: Baillie R, Fiori A, Wagstaff Jr SS.@: Strengthening the
+Baillie--PSW primality test.@: @i{Math Comp}.@: 2021;90:1931--1955.@:
+@uref{https://doi.org/10.1090/mcom/3616}.
 
 @exitstatus
 

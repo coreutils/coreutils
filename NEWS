@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Changes in behavior
+
+  'factor' is now much faster at identifying large prime numbers.
+
 ** Bug fixes
 
   cksum was not compilable by Apple LLVM 10.0.0 x86-64, which
