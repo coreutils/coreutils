@@ -27,7 +27,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   stty supports setting arbitrary baud rates on supported systems,
   like Hurd, Linux with glibc >= 2.42, and some BSDs.
   Also on other systems the full set of supported baud rates
-  are determined at build time.
+  is determined at build time if possible.
 
 
 * Noteworthy changes in release 9.7 (2025-04-09) [stable]
