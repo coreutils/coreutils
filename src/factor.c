@@ -319,6 +319,7 @@ static void factor (mp_limb_t, mp_limb_t, struct factors *);
 static void factor_up (mp_limb_t, mp_limb_t, struct factors *,
                        idx_t, mp_limb_t);
 
+/* Set (w1,w0) = u * v.  */
 #ifndef umul_ppmm
 # define umul_ppmm(w1, w0, u, v)                                        \
   do {                                                                  \
@@ -343,6 +344,7 @@ static void factor_up (mp_limb_t, mp_limb_t, struct factors *,
   } while (0)
 #endif
 
+/* Set (q,r) to the quotient and remainder of dividing (n1,n0) by d.  */
 #if !defined udiv_qrnnd || defined UDIV_NEEDS_NORMALIZATION
 /* Define our own, not needing normalization.  This function is
    currently not performance critical, so keep it simple.  Similar to
@@ -368,6 +370,7 @@ static void factor_up (mp_limb_t, mp_limb_t, struct factors *,
   } while (0)
 #endif
 
+/* Set (sh,sl) = (ah,al) + (bh,bl).  Overflow wraps around.  */
 #if !defined add_ssaaaa
 # define add_ssaaaa(sh, sl, ah, al, bh, bl)                             \
   do {                                                                  \
@@ -384,31 +387,36 @@ static void factor_up (mp_limb_t, mp_limb_t, struct factors *,
     (rh) = (ah) >> (cnt);                                               \
   } while (0)
 
-/* Set (rh,rl) = (ah,al) << cnt, where 0 < cnt < W_TYPE_SIZE.  */
+/* Set (rh,rl) = (ah,al) << cnt, where 0 < cnt < W_TYPE_SIZE.
+   Overflow wraps around.  */
 #define lsh2(rh, rl, ah, al, cnt)                                       \
   do {                                                                  \
     (rh) = ((ah) << cnt) | ((al) >> (W_TYPE_SIZE - (cnt)));             \
     (rl) = (al) << (cnt);                                               \
   } while (0)
 
+/* (ah,hl) >= (bh,bl)?  */
 #define ge2(ah, al, bh, bl)                                             \
   ((ah) > (bh) || ((ah) == (bh) && (al) >= (bl)))
 
+/* (ah,hl) > (bh,bl)?  */
 #define gt2(ah, al, bh, bl)                                             \
   ((ah) > (bh) || ((ah) == (bh) && (al) > (bl)))
 
+/* Set (rh,rl) = (ah,al) - (bh,bl).  Overflow wraps around.  */
 #ifndef sub_ddmmss
 # define sub_ddmmss(rh, rl, ah, al, bh, bl)                             \
    ((rh) = (ah) - (bh) - ckd_sub (&(rl), al, bl))
 #endif
 
-/* Requires that a < n and b <= n */
+/* Set r = (a - b) mod n, where a < n & b <= n.  */
 #define submod(r,a,b,n)                                                 \
   do {                                                                  \
     mp_limb_t _s, _t = -ckd_sub (&_s, a, b);				\
     (r) = ((n) & _t) + _s;						\
   } while (0)
 
+/* Set r = (a + b) mod n, where a < n & b <= n.  */
 #define addmod(r,a,b,n)                                                 \
   submod (r, a, (n) - (b), n)
 
@@ -428,14 +436,14 @@ static void factor_up (mp_limb_t, mp_limb_t, struct factors *,
       add_ssaaaa (r1, r0, r1, r0, n1, n0);				\
   } while (0)
 
+/* Return 0 if x < B/2, MP_LIMB_MAX otherwise.  */
 static mp_limb_t
 highbit_to_mask (mp_limb_t x)
 {
   return - (x >> (W_TYPE_SIZE - 1));
 }
 
-/* Return r = a mod d, where a = <a1,a0>, d = <d1,d0>.
-   Requires that d1 != 0.  */
+/* Return (a1,a0) mod (d1,d0), where d1 != 0.  */
 ATTRIBUTE_PURE static uuint
 mod2 (mp_limb_t a1, mp_limb_t a0, mp_limb_t d1, mp_limb_t d0)
 {
@@ -461,6 +469,8 @@ mod2 (mp_limb_t a1, mp_limb_t a0, mp_limb_t d1, mp_limb_t d0)
   return make_uuint (a1, a0);
 }
 
+/* Return the greatest common divisor of a and b,
+   where at least one is odd.  */
 ATTRIBUTE_CONST
 static mp_limb_t
 gcd_odd (mp_limb_t a, mp_limb_t b)
@@ -500,6 +510,8 @@ gcd_odd (mp_limb_t a, mp_limb_t b)
     }
 }
 
+/* Return the greatest common divisor of (a1,a0) and (b1,b0),
+   where at least one is odd.  */
 ATTRIBUTE_PURE static uuint
 gcd2_odd (mp_limb_t a1, mp_limb_t a0, mp_limb_t b1, mp_limb_t b0)
 {
@@ -546,6 +558,7 @@ gcd2_odd (mp_limb_t a1, mp_limb_t a0, mp_limb_t b1, mp_limb_t b0)
   return make_uuint (a1, a0);
 }
 
+/* Store into FACTORS a prime factor PRIME with multiplicity M.  */
 static void
 factor_insert_multiplicity (struct factors *factors,
                             mp_limb_t prime, int m)
@@ -574,12 +587,15 @@ factor_insert_multiplicity (struct factors *factors,
   p[i] = prime;
 }
 
+/* Store into FACTORS a prime factor PRIME.  */
 static void
 factor_insert (struct factors *factors, mp_limb_t prime)
 {
   factor_insert_multiplicity (factors, prime, 1);
 }
 
+/* Store into FACTORS a prime factor (P1,P0).  If P1 != 0,
+   FACTORS must not already contain a large prime factor.  */
 static void
 factor_insert_large (struct factors *factors,
                      mp_limb_t p1, mp_limb_t p0)
@@ -641,12 +657,14 @@ mpn_tdiv_qr (mp_limb_t *qp, mp_limb_t *rp, MAYBE_UNUSED mp_size_t qxn,
 
 static struct mp_factors mp_factor (mpz_t);
 
+/* Return an empty set of factors.  */
 static struct mp_factors
 mp_no_factors (void)
 {
   return (struct mp_factors) {0,};
 }
 
+/* Free storage allocated for FACTORS, making it uninitialized.  */
 static void
 mp_factor_clear (struct mp_factors *factors)
 {
@@ -656,6 +674,7 @@ mp_factor_clear (struct mp_factors *factors)
   free (f);
 }
 
+/* Store into FACTORS a prime factor PRIME with multiplicity M.  */
 static void
 mp_factor_insert (struct mp_factors *factors, mpz_t prime, mp_bitcnt_t m)
 {
@@ -685,6 +704,7 @@ mp_factor_insert (struct mp_factors *factors, mpz_t prime, mp_bitcnt_t m)
   mpz_init_set (f[i].p, prime);
 }
 
+/* Store into FACTORS a prime factor PRIME with multiplicity M.  */
 static void
 mp_factor_insert_ui (struct mp_factors *factors, unsigned long int prime,
                      mp_bitcnt_t m)
@@ -697,6 +717,9 @@ mp_factor_insert_ui (struct mp_factors *factors, unsigned long int prime,
 }
 
 
+/* primes_diff[i] is the difference between prime i and prime i-1,
+   where the zeroth prime is 3.
+   However, the last 7 entries are sentinels.  */
 #define P(a,b,c,d) a,
 static const unsigned char primes_diff[] = {
 #include "primes.h"
@@ -706,6 +729,9 @@ static const unsigned char primes_diff[] = {
 
 enum { PRIMES_PTAB_ENTRIES = ARRAY_CARDINALITY (primes_diff) - 8 + 1 };
 
+/* primes_diff8[i] is the difference between prime i+8 and prime i,
+   where the zeroth prime is 3.
+   However, the last 7 entries are sentinels.  */
 #define P(a,b,c,d) b,
 static const unsigned char primes_diff8[] = {
 #include "primes.h"
@@ -718,6 +744,12 @@ struct primes_dtab
   mp_limb_t binv, lim;
 };
 
+/* primes_dtab[i].binv is the multiplicative inverse of prime i
+   modulo B, where the zeroth prime is 3.  That is,
+   ((primes_dtab[i].binv) * (prime i)) mod B = 1.
+   primes_dtab[i].lim is the maximum value that won't overflow in
+   mp_limb_t arithmetic when multiplied by the ith prime.
+   However, the last 7 entries of primes_dtab are sentinels.  */
 #define P(a,b,c,d) {c,d},
 static const struct primes_dtab primes_dtab[] = {
 #include "primes.h"
@@ -741,6 +773,8 @@ static bool flag_prove_primality = PROVE_PRIMALITY;
 # define MR_REPS 25
 #endif
 
+/* Insert a prime into FACTORS.  P is prime I, and the prime to be
+   inserted is prime I+OFF.  */
 static void
 factor_insert_refind (struct factors *factors, mp_limb_t p, idx_t i, idx_t off)
 {
@@ -784,9 +818,9 @@ factor_insert_refind (struct factors *factors, mp_limb_t p, idx_t i, idx_t off)
 
 /* Find factors of (T1,T0), and insert them into FACTORS.
    The candidate factors are 2 and the primes in the primes table.
-   However, primes less than the prime with index I and value P have
-   already been considered, and need not be looked at again.  */
-
+   However, primes less than prime I with value P have
+   already been considered, and need not be looked at again.
+   Return (T1,T0) divided by the factors found.  */
 static uuint
 factor_using_division (mp_limb_t t1, mp_limb_t t0, struct factors *factors,
                        idx_t i, mp_limb_t p)
@@ -876,9 +910,10 @@ mp_size (mpz_t n)
   return mpz_size (n);
 }
 
-/* If N is small enough to be factorable by 'factor',
-   add its factors to MP_FACTORS and return true.
-   Otherwise, return false.  */
+/* If N < B^2 / 2, add N's factors to MP_FACTORS and return true.
+   Otherwise, return false.
+   Primes less than prime PRIME_IDX with value PRIME have
+   already been considered, and need not be looked at again.  */
 static bool
 mp_finish_up_in_single (mpz_t n, struct mp_factors *mp_factors,
                         idx_t prime_idx, mp_limb_t prime)
@@ -908,12 +943,17 @@ mp_finish_up_in_single (mpz_t n, struct mp_factors *mp_factors,
 
   return true;
 }
+
+/* If N < B^2 / 2, add its factors to MP_FACTORS and return true.
+   Otherwise, return false.  N must be odd.  */
 static bool
 mp_finish_in_single (mpz_t n, struct mp_factors *mp_factors)
 {
   return mp_finish_up_in_single (n, mp_factors, 0, 3);
 }
 
+/* Return some or all factors of T, where B^2 / 2 <= T.
+   Divide T by the factors found.  */
 static struct mp_factors
 mp_factor_using_division (mpz_t t)
 {
@@ -1067,7 +1107,7 @@ mulredc2 (mp_limb_t *r1p,
   mi = -mi;
   affirm ((m1 >> (W_TYPE_SIZE - 1)) == 0);
 
-  /* First compute a0 * <b1, b0> B^{-1}
+  /* First compute a0 * (b1,b0) B^{-1}
         +-----+
         |a0 b0|
      +--+--+--+
@@ -1090,7 +1130,7 @@ mulredc2 (mp_limb_t *r1p,
   add_ssaaaa (r1, r0, r1, r0, 0, t1);
   add_ssaaaa (r1, r0, r1, r0, s1, s0);
 
-  /* Next, (a1 * <b1, b0> + <r1, r0> B^{-1}
+  /* Next, (a1 * (b1,b0) + (r1,r0) B^{-1}
         +-----+
         |a1 b0|
         +--+--+
@@ -1272,6 +1312,7 @@ static bool mp_prime_p (mpz_t);
    Baillie-PSW for single- and/or double-word args.  */
 enum { USE_BAILLIE_PSW = true };
 
+/* Is N prime?  */
 static bool
 prime_p (mp_limb_t n)
 {
@@ -1359,6 +1400,7 @@ prime_p (mp_limb_t n)
     }
 }
 
+/* Is (n1,n0) prime, where n1 != 0?  */
 static bool
 prime2_p (mp_limb_t n1, mp_limb_t n0)
 {
@@ -1466,6 +1508,7 @@ prime2_p (mp_limb_t n1, mp_limb_t n0)
     }
 }
 
+/* Is N prime, where B^2 / 2 <= N?  */
 static bool
 mp_prime_p (mpz_t n)
 {
@@ -1532,6 +1575,8 @@ mp_prime_p (mpz_t n)
   return is_prime;
 }
 
+/* Put into FACTORS the result of factoring N,
+   using Pollard-rho with starting value A.  */
 static void
 factor_using_pollard_rho (mp_limb_t n, unsigned long int a,
                           struct factors *factors)
@@ -1793,6 +1838,8 @@ mp_mulredc (mp_limb_t *rp, mp_limb_t const *ap, mp_limb_t const *bp,
 #define MP_FACTOR_USING_POLLARD_RHO_N_MAX \
   ((MIN (IDX_MAX, TYPE_MAXIMUM (mp_size_t)) - 3) / 10)
 
+/* Put into FACTORS the result of factoring MP, of size N,
+   using Pollard-rho with starting value A.  */
 static void
 mp_factor_using_pollard_rho (struct mp_factors *factors,
                              mp_limb_t const *mp, mp_size_t n,
@@ -1892,8 +1939,10 @@ mp_factor_using_pollard_rho (struct mp_factors *factors,
   free (scratch);
 }
 
-/* Compute the prime factors of the 128-bit number (T1,T0), and put the
-   results in FACTORS.  */
+/* Compute the prime factors of the 128-bit number (T1,T0),
+   and put the results in FACTORS.
+   Primes less than the prime with index PRIME_IDX and value PRIME
+   have already been considered, and need not be looked at again.  */
 static void
 factor_up (mp_limb_t t1, mp_limb_t t0, struct factors *factors,
            idx_t prime_idx, mp_limb_t prime)
@@ -1919,14 +1968,16 @@ factor_up (mp_limb_t t1, mp_limb_t t0, struct factors *factors,
         factor_using_pollard_rho2 (t1, t0, 1, factors);
     }
 }
+
+/* Compute the prime factors of the 128-bit number (T1,T0),
+   and put the results in FACTORS.  */
 static void
 factor (mp_limb_t t1, mp_limb_t t0, struct factors *factors)
 {
   return factor_up (t1, t0, factors, 0, 3);
 }
 
-/* Use Pollard-rho to compute the prime factors of
-   arbitrary-precision T, and put the results in FACTORS.  */
+/* Return the prime factors of T, where B^2 / 2 <= T.  */
 static struct mp_factors
 mp_factor (mpz_t t)
 {
@@ -1950,6 +2001,8 @@ mp_factor (mpz_t t)
   return factors;
 }
 
+/* Convert to *U the value represnted by S.
+   Return an error indicator.  */
 static strtol_error
 strtouuint (uuint *u, char const *s)
 {
@@ -2152,7 +2205,7 @@ print_uuint (uuint t)
   lbuf_putint_append (t0, bufend);
 }
 
-/* Buffer an mpz to the internal LBUF, possibly writing if it is long.  */
+/* Buffer the mpz I to lbuf_buf, possibly writing if it is long.  */
 static void
 lbuf_putmpz (mpz_t const i)
 {
@@ -2179,7 +2232,7 @@ lbuf_putmpz (mpz_t const i)
     }
 }
 
-/* Single-precision factoring */
+/* Emit the factors of T, which is less than B^2 / 2.  */
 static void
 print_factors_single (uuint t)
 {
@@ -2284,6 +2337,7 @@ print_factors (char const *input)
   return true;
 }
 
+/* Output a usage diagnostic and exit with STATUS.  */
 void
 usage (int status)
 {
@@ -2310,6 +2364,7 @@ are specified on the command line, read them from standard input.\n\
   exit (status);
 }
 
+/* Read numbers from stdin, one per line, and output their factors.  */
 static bool
 do_stdin (void)
 {
