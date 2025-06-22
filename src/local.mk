@@ -73,7 +73,8 @@ EXTRA_DIST +=		\
   src/crctab.c		\
   src/tac-pipe.c	\
   src/extract-magic	\
-  src/speedgen
+  src/speedgen		\
+  src/termios.c
 
 CLEANFILES += $(SCRIPTS)
 
