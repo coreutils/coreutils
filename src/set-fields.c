@@ -61,7 +61,7 @@ static int
 compare_ranges (const void *a, const void *b)
 {
   struct field_range_pair const *ap = a, *bp = b;
-  return (ap->lo > bp->lo) - (ap->lo < bp->lo);
+  return _GL_CMP (ap->lo, bp->lo);
 }
 
 /* Reallocate Range Pair entries, with corresponding

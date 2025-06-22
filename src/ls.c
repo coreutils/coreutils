@@ -3898,7 +3898,7 @@ cmp_btime (struct fileinfo const *a, struct fileinfo const *b,
 static int
 off_cmp (off_t a, off_t b)
 {
-  return (a > b) - (a < b);
+  return _GL_CMP (a, b);
 }
 
 static int

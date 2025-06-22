@@ -318,8 +318,7 @@ compare_files (char **infiles)
               size_t len = MIN (thisline[0]->length, thisline[1]->length) - 1;
               order = memcmp (thisline[0]->buffer, thisline[1]->buffer, len);
               if (order == 0)
-                order = ((thisline[0]->length > thisline[1]->length)
-                         - (thisline[0]->length < thisline[1]->length));
+                order = _GL_CMP (thisline[0]->length, thisline[1]->length);
             }
         }
 

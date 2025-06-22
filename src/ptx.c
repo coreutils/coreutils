@@ -558,7 +558,7 @@ compare_words (const void *void_first, const void *void_second)
         }
     }
 
-  return (first->size > second->size) - (first->size < second->size);
+  return _GL_CMP (first->size, second->size);
 }
 
 /*-----------------------------------------------------------------------.
@@ -576,8 +576,7 @@ compare_occurs (const void *void_first, const void *void_second)
 
   value = compare_words (&first->key, &second->key);
   return (value ? value
-          : ((first->key.start > second->key.start)
-             - (first->key.start < second->key.start)));
+          : _GL_CMP (first->key.start, second->key.start));
 #undef first
 #undef second
 }

@@ -2295,7 +2295,7 @@ compare_random (char *restrict texta, size_t lena,
             {
               xfrm_diff = memcmp (buf, buf + sizea, MIN (sizea, sizeb));
               if (! xfrm_diff)
-                xfrm_diff = (sizea > sizeb) - (sizea < sizeb);
+                xfrm_diff = _GL_CMP (sizea, sizeb);
             }
         }
     }
@@ -2312,7 +2312,7 @@ compare_random (char *restrict texta, size_t lena,
         {
           xfrm_diff = memcmp (texta, textb, MIN (lena, lenb));
           if (! xfrm_diff)
-            xfrm_diff = (lena > lenb) - (lena < lenb);
+            xfrm_diff = _GL_CMP (lena, lenb);
         }
 
       diff = xfrm_diff;
@@ -2678,7 +2678,7 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
 static int
 diff_reversed (int diff, bool reversed)
 {
-  return reversed ? (diff < 0) - (diff > 0) : diff;
+  return reversed ? _GL_CMP (0, diff) : diff;
 }
 
 /* Compare two lines A and B trying every key in sequence until there
@@ -2842,7 +2842,7 @@ keycompare (struct line const *a, struct line const *b)
             diff = memcmp (texta, textb, lenmin);
 
           if (! diff)
-            diff = (lena > lenb) - (lena < lenb);
+            diff = _GL_CMP (lena, lenb);
         }
 
       if (diff)
@@ -2915,7 +2915,7 @@ compare (struct line const *a, struct line const *b)
     {
       diff = memcmp (a->text, b->text, MIN (alen, blen));
       if (!diff)
-        diff = (alen > blen) - (alen < blen);
+        diff = _GL_CMP (alen, blen);
     }
 
   return diff_reversed (diff, reverse);

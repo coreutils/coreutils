@@ -384,7 +384,7 @@ keycmp (struct line const *line1, struct line const *line2,
 
   if (diff)
     return diff;
-  return (len1 > len2) - (len1 < len2);
+  return _GL_CMP (len1, len2);
 }
 
 /* Check that successive input lines PREV and CURRENT from input file
