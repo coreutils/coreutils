@@ -55,7 +55,8 @@ fi
 # so restrict tests here to invalid numbers
 # We simulate unsupported numbers in a separate "LD_PRELOAD" test.
 WRAP_9600="$(expr $ULONG_OFLOW - 9600)"
-for speed in 9600.. ++9600 -$WRAP_9600 --$WRAP_9600 0x2580 96E2; do
+for speed in 9599.. 9600.. 9600.5. 9600.50. 9600.0. ++9600 \
+             -$WRAP_9600 --$WRAP_9600 0x2580 96E2 9600,0 '9600.0 '; do
   returns_ 1 stty ispeed "$speed" || fail=1
 done
 

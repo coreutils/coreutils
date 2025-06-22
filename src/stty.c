@@ -2200,25 +2200,24 @@ string_to_baud (char const *arg)
       c = *ep++;
       if (c)
         {
-          c -= '0';
-          if (c > 9)
+          unsigned char d = c - '0';
+          if (d > 5)
+            value++;
+          else if (d == 5)
             {
-              return (speed_t) -1; /* Garbage after otherwise valid number */
-            }
-          else if (c > 5)
-            {
-              value++;
-            }
-          else if (c == 5)
-            {
-              while ((c = *ep++) == '0')
-              ; /* Skip zeroes after .5 */
+              while ((c = *ep++) == '0'); /* Skip zeroes after .5 */
 
-              if (c >= '1' && c <= '9')
-                value++;                /* Nonzero digit, round up */
+              if (c)
+                value++;                /* Nonzero, round up */
               else
                 value += (value & 1);   /* Exactly in the middle, round even */
             }
+
+          while (c_isdigit (c)) /* Skip remaining digits.  */
+            c = *ep++;
+
+          if (c)
+            return (speed_t) -1; /* Garbage after otherwise valid number */
         }
     }
   else if (c)
