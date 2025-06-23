@@ -770,9 +770,26 @@ static bool dev_debug = false;
 /* Prove primality or run probabilistic tests.  */
 static bool flag_prove_primality = PROVE_PRIMALITY;
 
-/* Number of Miller-Rabin tests to run when not proving primality.  */
+/* Number of Miller-Rabin tests to run when not proving primality.
+
+   For more, see:
+
+     Ishmukhametov ST, Mubarakov BG, Rubtsova RG.
+     On the Number of Witnesses in the Miller-Rabin Primality Test.
+     Symmetry. 2020;12(6):890. https://doi.org/10.3390/sym12060890
+
+   Its Corollary 1 suggests that the probability of error on random inputs
+   is less than 16^-MR_REPS, an improvement on the 4^-MR_REPS commonly cited.
+   If MR_REPS is 24 this means the probability of error is less than 1.26e-29,
+   which is much less than the likelihood of hardware error and so can
+   be treated as essentially zero.
+
+   For adversarial inputs, no known false positives exist for Baillie-PSW,
+   which mpz_probab_prime_p always uses.  So default MR_REPS to 24,
+   the maximum value for which mpz_probab_prime_p does not do extra
+   Miller-Rabin tests.  */
 #ifndef MR_REPS
-# define MR_REPS 25
+# define MR_REPS 24
 #endif
 
 /* Insert a prime into FACTORS.  P is prime I, and the prime to be
