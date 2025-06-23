@@ -695,15 +695,26 @@ src/version.h: Makefile
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
 
-# Target-specific termios baud rate file. This is opportunistic;
-# if cc -E doesn't support -dM, the speedgen script still includes
-# an extensive fallback list of common constants.
+# Target-specific termios baud rate file. This is opportunistic; if cc
+# -E doesn't support any of the macro extraction options, the speedgen
+# script still includes an extensive fallback list of common
+# constants.
+
+# List of options used by various compilers to extract macro definitions;
+# these are tried in the order listed until the compiler exits successfully.
+# -dM: gcc, clang and derived compilers, icc classic
+# -xdumpmacros: Sun Studio (writes to stderr!)
+# -qshowmacros: IBM XL classic
+# -PD: MSVC (usable with a wrapper such as cccl from the SWIG project)
+getmacopts = -dM -xdumpmacros -qshowmacros -PD
+
 CLEANFILES += src/speedlist.h
 src/speedlist.h: src/termios.c lib/config.h src/speedgen
 	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)${MKDIR_P} src
-	$(AM_V_at)$(COMPILE) -E -dM $< 2>/dev/null |		\
-		  $(SHELL) $(srcdir)/src/speedgen $@t
+	$(AM_V_at)( for opt in $(getmacopts); do \
+			$(COMPILE) -E $$opt $< 2>&1 && break; \
+		    done ) | $(SHELL) $(srcdir)/src/speedgen $@t
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
 
