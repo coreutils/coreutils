@@ -61,8 +61,9 @@ baud_to_value (speed_t speed)
     {
 EOF
 
-sed -e 's/^.*$/#  ifdef B&\n      case B&: return &;\n#  endif/' \
-    < "$tmp" >> "$out"
+while read n; do
+  printf '#  ifdef B%s\n      case B%s: return %s;\n#  endif\n' "$n" "$n" "$n"
+done < "$tmp" >> "$out"
 
 cat >> "$out" <<'EOF'
       default: return -1;
@@ -84,8 +85,9 @@ value_to_baud (unsigned long int value)
     {
 EOF
 
-sed -e 's/^.*$/#  ifdef B&\n      case &: return B&;\n#  endif/' \
-    < "$tmp" >> "$out"
+while read n; do
+  printf '#  ifdef B%s\n      case %s: return B%s;\n#  endif\n' "$n" "$n" "$n"
+done < "$tmp" >> "$out"
 
 cat >> "$out" <<'EOF'
       default: return (speed_t) -1;
