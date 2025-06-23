@@ -13,7 +13,19 @@ s='[[:space:]]'			# For brevity's sake
 trap "rm -f '$tmp'" EXIT
 trap "rm -f '$tmp' '$out'" ERR HUP INT QUIT TERM
 
-# Fallback list of speeds that are always tested for
+# Fallback list of speeds that are always tested for.
+#
+# It is safe to add additional speeds to this list; speeds not defined
+# on any particular platform are simply ignored.  It is specifically
+# encouraged to add additional speeds here if some are found to be
+# defined on a platform for which:
+#
+# - the C compiler(s) normally used does not support the -dM option
+#   (gcc, clang, and derived compilers do support this option), AND
+# - there are baud rate constants (B<num>) defined in <termios.h>
+#   that are not identity-mapped (i.e., B<num> != <num> for at least
+#   some <num>).
+#
 defspeeds="0 50 75 110 134 150 200 300 600 1200 1800 2400 4800 7200 9600 \
 14400 19200 28800 33600 38400 57600 76800 115200 153600 230400 307200 \
 460800 500000 576000 614400 921600 1000000 1152000 1500000 \
