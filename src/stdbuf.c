@@ -192,6 +192,9 @@ set_LD_PRELOAD (void)
   int ret;
 #ifdef __APPLE__
   char const *preload_env = "DYLD_INSERT_LIBRARIES";
+#elif defined _AIX
+  char const *preload_env = (sizeof (void *) < 8
+                             ? "LDR_PRELOAD" : "LDR_PRELOAD64");
 #else
   char const *preload_env = "LD_PRELOAD";
 #endif
