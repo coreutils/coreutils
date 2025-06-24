@@ -12,6 +12,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   copying to non-NFS files from NFSv4 files with trivial ACLs.
   [bug introduced in coreutils-9.6]
 
+  od --strings with -N now works correctly.  Previously od might
+  write a NUL byte after a heap buffer, or output invalid addresses.
+  [These bugs were present in "the beginning".]
+
   sort with key character offsets of SIZE_MAX, could induce
   a read of 1 byte before an allocated heap buffer. For example:
   'sort +0.18446744073709551615R input' on 64 bit systems.

@@ -2075,6 +2075,8 @@ least @var{bytes} consecutive printable characters,
 followed by a zero byte (ASCII NUL).
 Prefixes and suffixes on @var{bytes} are interpreted as for the
 @option{-j} option.
+If combined with the @option{-N} option, truncated strings
+are considered ASCII NUL terminated.
 
 If @var{bytes} is omitted with @option{--strings}, the default is 3.
 

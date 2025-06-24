@@ -1505,70 +1505,58 @@ dump (void)
 }
 
 /* STRINGS mode.  Find each "string constant" in the input.
-   A string constant is a run of at least 'string_min' ASCII
-   graphic (or formatting) characters terminated by a null.
+   A string constant is a run of at least STRING_MIN
+   printable characters terminated by a NUL or END_OFFSET.
    Based on a function written by Richard Stallman for a
    traditional version of od.  Return true if successful.  */
 
 static bool
 dump_strings (void)
 {
-  idx_t bufsize = MAX (100, string_min);
+  idx_t bufsize = MAX (100, string_min + 1);
   char *buf = xmalloc (bufsize);
   uintmax_t address = n_bytes_to_skip;
   bool ok = true;
 
   while (true)
     {
-      idx_t i;
-      int c;
-
-      /* See if the next 'string_min' chars are all printing chars.  */
-    tryline:
+      idx_t i = 0;
+      int c = 1;  /* Init to 1 so can distinguish if NUL read.  */
 
       if (limit_bytes_to_format
-          && (end_offset < string_min || end_offset - string_min <= address))
+          && (end_offset < string_min || end_offset - string_min < address))
         break;
 
-      for (i = 0; i < string_min; i++)
-        {
-          ok &= read_char (&c);
-          address++;
-          if (c < 0)
-            {
-              free (buf);
-              return ok;
-            }
-          if (! isprint (c))
-            /* Found a non-printing.  Try again starting with next char.  */
-            goto tryline;
-          buf[i] = c;
-        }
-
-      /* We found a run of 'string_min' printable characters.
-         Now see if it is terminated with a null byte.  */
+      /* Store consecutive printable characters to BUF.  */
       while (!limit_bytes_to_format || address < end_offset)
         {
-          if (i == bufsize)
+          if (i == bufsize - 1)
             buf = xpalloc (buf, &bufsize, 1, -1, sizeof *buf);
           ok &= read_char (&c);
-          address++;
           if (c < 0)
             {
               free (buf);
               return ok;
             }
+          address++;
+          buf[i++] = c;
           if (c == '\0')
-            break;		/* It is; print this string.  */
+            break;		/* Print this string.  */
           if (! isprint (c))
-            goto tryline;	/* It isn't; give up on this string.  */
-          buf[i++] = c;		/* String continues; store it all.  */
+            {
+              c = -1;		/* Give up on this string.  */
+              break;
+            }
         }
 
-      /* If we get here, the string is all printable and null-terminated,
-         so print it.  It is all in 'buf' and 'i' is its length.  */
+      if (c == -1 || i - !c < string_min)
+        continue;
+
       buf[i] = 0;
-      format_address (address - i - 1, ' ');
+
+      /* If we get here, the string is all printable, so print it.  */
+
+      format_address (address - i, ' ');
 
       for (i = 0; (c = buf[i]); i++)
         {
