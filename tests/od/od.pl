@@ -23,6 +23,8 @@ use strict;
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+my $prog = 'od';
+
 # Use a file in /proc whose size is not likely to
 # change between the wc and od invocations.
 my $proc_file = '/proc/version';
@@ -64,11 +66,19 @@ my @Tests =
      ['wide-a',   '-a -w65537 -An', {IN=>{g=>'x'}}, {OUT=>"   x\n"}],
      ['wide-c',   '-c -w65537 -An', {IN=>{g=>'x'}}, {OUT=>"   x\n"}],
      ['wide-x', '-tx1 -w65537 -An', {IN=>{g=>'B'}}, {OUT=>" 42\n"}],
+
+     # Ensure that invalid widths do not cause trouble.
+     # From coreutils-9.3 through coreutils-9.7, these would abort
+     ['invalid-w-1',   '-w0 -An', {IN=>""}, {EXIT=>1},
+      {ERR=>"$prog: invalid -w argument '0'\n"}],
+     ['invalid-w-2',   '-w-1 -An', {IN=>""}, {EXIT=>1},
+      {ERR=>"$prog: invalid -w argument '-1'\n"}],
+     ['invalid-w-3',   '-ww -An', {IN=>""}, {EXIT=>1},
+      {ERR=>"$prog: invalid -w argument 'w'\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 
-my $prog = 'od';
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;

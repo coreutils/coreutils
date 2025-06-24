@@ -1820,7 +1820,9 @@ main (int argc, char **argv)
             {
               intmax_t w_tmp;
               s_err = xstrtoimax (optarg, nullptr, 10, &w_tmp, "");
-              if (s_err != LONGINT_OK || w_tmp <= 0)
+              if (s_err == LONGINT_OK && w_tmp <= 0)
+                s_err = LONGINT_INVALID;
+              if (s_err != LONGINT_OK)
                 xstrtol_fatal (s_err, oi, c, long_options, optarg);
               if (ckd_add (&desired_width, w_tmp, 0))
                 error (EXIT_FAILURE, 0, _("%s is too large"), quote (optarg));
