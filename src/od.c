@@ -123,7 +123,7 @@ struct tspec
        fields to leave blank.  WIDTH is width of one field, excluding
        leading space, and PAD is total pad to divide among FIELDS.
        PAD is at least as large as FIELDS.  */
-    void (*print_function) (size_t fields, size_t blank, void const *data,
+    void (*print_function) (idx_t fields, idx_t blank, void const *data,
                             char const *fmt, int width, int pad);
     char fmt_string[FMT_BYTES_ALLOCATED]; /* Of the style "%*d".  */
     bool hexl_mode_trailer;
@@ -261,7 +261,7 @@ static idx_t n_specs_allocated;
    a multiple of the least common multiple of the sizes associated with
    the specified output types.  It should be as large as possible, but
    no larger than 16 -- unless specified with the -w option.  */
-static size_t bytes_per_block;
+static idx_t bytes_per_block;
 
 /* Human-readable representation of *file_list (for error messages).
    It differs from file_list[-1] only when file_list[-1] is "-".  */
@@ -452,25 +452,23 @@ Binary prefixes can be used, too: KiB=K, MiB=M, and so on.\n\
 
 #define PRINT_FIELDS(N, T, FMT_STRING_DECL, ACTION)                     \
 static void                                                             \
-N (size_t fields, size_t blank, void const *block,                      \
+N (idx_t fields, idx_t blank, void const *block,			\
    FMT_STRING_DECL, int width, int pad)                                 \
 {                                                                       \
   T const *p = block;                                                   \
-  uintmax_t i;                                                          \
   int pad_remaining = pad;                                              \
-  for (i = fields; blank < i; i--)                                      \
+  for (idx_t i = fields; blank < i; i--)				\
     {                                                                   \
       int next_pad = pad * (i - 1) / fields;                            \
       int adjusted_width = pad_remaining - next_pad + width;            \
       T x;                                                              \
       if (input_swap && sizeof (T) > 1)                                 \
         {                                                               \
-          size_t j;                                                     \
           union {                                                       \
             T x;                                                        \
             char b[sizeof (T)];                                         \
           } u;                                                          \
-          for (j = 0; j < sizeof (T); j++)                              \
+          for (idx_t j = 0; j < sizeof (T); j++)			\
             u.b[j] = ((char const *) p)[sizeof (T) - 1 - j];            \
           x = u.x;                                                      \
         }                                                               \
@@ -510,10 +508,10 @@ PRINT_FLOATTYPE (print_long_double, long double, ldtoastr, LDBL_BUFSIZE_BOUND)
 #undef PRINT_FLOATTYPE
 
 static void
-dump_hexl_mode_trailer (size_t n_bytes, char const *block)
+dump_hexl_mode_trailer (idx_t n_bytes, char const *block)
 {
   fputs ("  >", stdout);
-  for (size_t i = n_bytes; i > 0; i--)
+  for (idx_t i = n_bytes; i > 0; i--)
     {
       unsigned char c = *block++;
       unsigned char c2 = (isprint (c) ? c : '.');
@@ -523,14 +521,13 @@ dump_hexl_mode_trailer (size_t n_bytes, char const *block)
 }
 
 static void
-print_named_ascii (size_t fields, size_t blank, void const *block,
+print_named_ascii (idx_t fields, idx_t blank, void const *block,
                    MAYBE_UNUSED char const *unused_fmt_string,
                    int width, int pad)
 {
   unsigned char const *p = block;
-  uintmax_t i;
   int pad_remaining = pad;
-  for (i = fields; blank < i; i--)
+  for (idx_t i = fields; blank < i; i--)
     {
       int next_pad = pad * (i - 1) / fields;
       int masked_c = *p++ & 0x7f;
@@ -554,14 +551,13 @@ print_named_ascii (size_t fields, size_t blank, void const *block,
 }
 
 static void
-print_ascii (size_t fields, size_t blank, void const *block,
+print_ascii (idx_t fields, idx_t blank, void const *block,
              MAYBE_UNUSED char const *unused_fmt_string, int width,
              int pad)
 {
   unsigned char const *p = block;
-  uintmax_t i;
   int pad_remaining = pad;
-  for (i = fields; blank < i; i--)
+  for (idx_t i = fields; blank < i; i--)
     {
       int next_pad = pad * (i - 1) / fields;
       unsigned char c = *p++;
@@ -659,7 +655,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
   enum size_spec size_spec;
   int size;
   enum output_format fmt;
-  void (*print_function) (size_t, size_t, void const *, char const *,
+  void (*print_function) (idx_t, idx_t, void const *, char const *,
                           int, int);
   char const *p;
   char c;
@@ -868,7 +864,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
 
       {
         struct lconv const *locale = localeconv ();
-        size_t decimal_point_len =
+        idx_t decimal_point_len =
           (locale->decimal_point[0] ? strlen (locale->decimal_point) : 1);
 
         switch (+size_spec)
@@ -1111,7 +1107,7 @@ skip (uintmax_t n_skip)
           else
             {
               char buf[BUFSIZ];
-              size_t n_bytes_read, n_bytes_to_read = BUFSIZ;
+              idx_t n_bytes_read, n_bytes_to_read = BUFSIZ;
 
               while (0 < n_skip)
                 {
@@ -1228,7 +1224,7 @@ format_address_label (uintmax_t address, char c)
    That condition may be false only for the last input block.  */
 
 static void
-write_block (uintmax_t current_offset, size_t n_bytes,
+write_block (uintmax_t current_offset, idx_t n_bytes,
              char const *prev_block, char const *curr_block)
 {
   static bool first = true;
@@ -1329,7 +1325,7 @@ read_char (int *c)
    as usual and return false.  Otherwise return true.  */
 
 static bool
-read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
+read_block (idx_t n, char *block, idx_t *n_bytes_in_buffer)
 {
   bool ok = true;
 
@@ -1339,11 +1335,9 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
 
   while (in_stream != nullptr)	/* EOF.  */
     {
-      size_t n_needed;
-      size_t n_read;
-
-      n_needed = n - *n_bytes_in_buffer;
-      n_read = fread (block + *n_bytes_in_buffer, 1, n_needed, in_stream);
+      idx_t n_needed = n - *n_bytes_in_buffer;
+      idx_t n_read = fread (block + *n_bytes_in_buffer,
+                            1, n_needed, in_stream);
 
       *n_bytes_in_buffer += n_read;
 
@@ -1422,7 +1416,7 @@ dump (void)
   uintmax_t current_offset;
   bool idx = false;
   bool ok = true;
-  size_t n_bytes_read;
+  idx_t n_bytes_read;
 
   block[0] = xinmalloc (2, bytes_per_block);
   block[1] = block[0] + bytes_per_block;
@@ -1433,7 +1427,7 @@ dump (void)
     {
       while (ok)
         {
-          size_t n_needed;
+          idx_t n_needed;
           if (current_offset >= end_offset)
             {
               n_bytes_read = 0;
@@ -1472,14 +1466,11 @@ dump (void)
 
   if (n_bytes_read > 0)
     {
-      int l_c_m;
-      size_t bytes_to_write;
-
-      l_c_m = get_lcm ();
+      int l_c_m = get_lcm ();
 
       /* Ensure zero-byte padding up to the smallest multiple of l_c_m that
          is at least as large as n_bytes_read.  */
-      bytes_to_write = l_c_m * ((n_bytes_read + l_c_m - 1) / l_c_m);
+      idx_t bytes_to_write = l_c_m * ((n_bytes_read + l_c_m - 1) / l_c_m);
 
       memset (block[idx] + n_bytes_read, 0, bytes_to_write - n_bytes_read);
       write_block (current_offset, n_bytes_read, block[!idx], block[idx]);
@@ -1607,7 +1598,7 @@ main (int argc, char **argv)
   bool modern = false;
   bool width_specified = false;
   bool ok = true;
-  size_t width_per_block = 0;
+  idx_t width_per_block = 0;
   static char const multipliers[] = "bEGKkMmPQRTYZ0";
 
   /* The old-style 'pseudo starting address' to be printed in parentheses
