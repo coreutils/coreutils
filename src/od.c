@@ -43,14 +43,6 @@
 /* The default number of input bytes per output line.  */
 #define DEFAULT_BYTES_PER_BLOCK 16
 
-#if HAVE_UNSIGNED_LONG_LONG_INT
-typedef unsigned long long int unsigned_long_long_int;
-#else
-/* This is just a place-holder to avoid a few '#if' directives.
-   In this case, the type isn't actually used.  */
-typedef unsigned long int unsigned_long_long_int;
-#endif
-
 #if FLOAT16_SUPPORTED
   /* Available since clang 6 (2018), and gcc 7 (2017).  */
   typedef _Float16 float16;
@@ -100,7 +92,7 @@ enum output_format
     CHARACTER
   };
 
-#define MAX_INTEGRAL_TYPE_SIZE sizeof (unsigned_long_long_int)
+#define MAX_INTEGRAL_TYPE_SIZE sizeof (unsigned long long int)
 
 /* The maximum number of bytes needed for a format string, including
    the trailing nul.  Each format string expects a variable amount of
@@ -180,7 +172,7 @@ static const int width_bytes[] =
   sizeof (short int),
   sizeof (int),
   sizeof (long int),
-  sizeof (unsigned_long_long_int),
+  sizeof (unsigned long long int),
 #if BF16_SUPPORTED
   sizeof (bfloat16),
 #else
@@ -506,7 +498,7 @@ PRINT_TYPE (print_s_short, short int)
 PRINT_TYPE (print_short, unsigned short int)
 PRINT_TYPE (print_int, unsigned int)
 PRINT_TYPE (print_long, unsigned long int)
-PRINT_TYPE (print_long_long, unsigned_long_long_int)
+PRINT_TYPE (print_long_long, unsigned long long int)
 
 PRINT_FLOATTYPE (print_bfloat, bfloat16, ftoastr, FLT_BUFSIZE_BOUND)
 PRINT_FLOATTYPE (print_halffloat, float16, ftoastr, FLT_BUFSIZE_BOUND)
@@ -1637,11 +1629,9 @@ main (int argc, char **argv)
   integral_type_size[sizeof (short int)] = SHORT;
   integral_type_size[sizeof (int)] = INT;
   integral_type_size[sizeof (long int)] = LONG;
-#if HAVE_UNSIGNED_LONG_LONG_INT
   /* If 'long int' and 'long long int' have the same size, it's fine
      to overwrite the entry for 'long' with this one.  */
-  integral_type_size[sizeof (unsigned_long_long_int)] = LONG_LONG;
-#endif
+  integral_type_size[sizeof (unsigned long long int)] = LONG_LONG;
 
   for (idx_t i = 0; i <= MAX_FP_TYPE_SIZE; i++)
     fp_type_size[i] = NO_SIZE;

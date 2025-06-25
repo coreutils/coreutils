@@ -171,13 +171,8 @@ typedef unsigned int UDItype    __attribute__ ((mode (DI)));
 typedef unsigned char UQItype;
 typedef          long SItype;
 typedef unsigned long int USItype;
-#  if HAVE_LONG_LONG_INT
 typedef long long int DItype;
 typedef unsigned long long int UDItype;
-#  else /* Assume `long' gives us a wide enough type.  Needed for hppa2.0w.  */
-typedef long int DItype;
-typedef unsigned long int UDItype;
-#  endif
 # endif
 # define LONGLONG_STANDALONE     /* Don't require GMP's longlong.h mdep files */
 
