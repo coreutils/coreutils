@@ -562,7 +562,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
                   uintmax_t off = offset;
                   int percent = (size == 0
                                  ? 100
-                                 : (off <= TYPE_MAXIMUM (uintmax_t) / 100
+                                 : (off <= UINTMAX_MAX / 100
                                     ? off * 100 / size
                                     : off / (size / 100)));
                   char const *human_size

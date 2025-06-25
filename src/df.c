@@ -1174,7 +1174,7 @@ get_dev (char const *device, char const *mount_point, char const *file,
             if (! known_value (v->used) || ! known_value (v->available))
               ;
             else if (!v->negate_used
-                     && v->used <= TYPE_MAXIMUM (uintmax_t) / 100
+                     && v->used <= UINTMAX_MAX / 100
                      && v->used + v->available != 0
                      && (v->used + v->available < v->used)
                      == v->negate_available)
