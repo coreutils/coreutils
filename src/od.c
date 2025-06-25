@@ -92,7 +92,8 @@ enum output_format
     CHARACTER
   };
 
-#define MAX_INTEGRAL_TYPE_SIZE sizeof (unsigned long long int)
+enum { MAX_INTEGRAL_TYPE_SIZE = sizeof (unsigned long long int) };
+enum { MAX_INTEGRAL_TYPE_WIDTH = ULLONG_WIDTH };
 
 /* The maximum number of bytes needed for a format string, including
    the trailing nul.  Each format string expects a variable amount of
@@ -104,13 +105,13 @@ enum
            (sizeof "%*.99" + 1
             + MAX (sizeof "ld",
                    MAX (sizeof "jd",
-                        MAX (sizeof "jd",
+                        MAX (sizeof "jo",
                              MAX (sizeof "ju",
                                   sizeof "jx")))))
   };
 
 /* Ensure that our choice for FMT_BYTES_ALLOCATED is reasonable.  */
-static_assert (MAX_INTEGRAL_TYPE_SIZE * CHAR_BIT / 3 <= 99);
+static_assert (MAX_INTEGRAL_TYPE_WIDTH <= 3 * 99);
 
 /* Each output format specification (from '-t spec' or from
    old-style options) is represented by one of these structures.  */
@@ -202,8 +203,7 @@ static int address_base;
 
 /* The number of octal digits required to represent the largest
    address value.  */
-#define MAX_ADDRESS_LENGTH \
-  ((sizeof (uintmax_t) * CHAR_BIT + CHAR_BIT - 1) / 3)
+enum { MAX_ADDRESS_LENGTH = UINTMAX_WIDTH / 3 + (UINTMAX_WIDTH % 3 != 0) };
 
 /* Width of a normal address.  */
 static int address_pad_len;
