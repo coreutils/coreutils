@@ -124,11 +124,11 @@ struct tspec
        leading space, and PAD is total pad to divide among FIELDS.
        PAD is at least as large as FIELDS.  */
     void (*print_function) (idx_t fields, idx_t blank, void const *data,
-                            char const *fmt, int width, int pad);
+                            char const *fmt, int width, idx_t pad);
     char fmt_string[FMT_BYTES_ALLOCATED]; /* Of the style "%*d".  */
     bool hexl_mode_trailer;
     int field_width; /* Minimum width of a field, excluding leading space.  */
-    int pad_width; /* Total padding to be divided among fields.  */
+    idx_t pad_width; /* Total padding to be divided among fields.  */
   };
 
 /* Convert the number of 8-bit bytes of a binary representation to
@@ -450,16 +450,44 @@ Binary prefixes can be used, too: KiB=K, MiB=M, and so on.\n\
 
 /* Define the print functions.  */
 
+/* Print N spaces, where 0 <= N.
+   Do not rely on printf ("%*s", N, "") as N may exceed INT_MAX.  */
+static void
+print_n_spaces (intmax_t n)
+{
+  for (; 0 < n; n--)
+    putchar (' ');
+}
+
+/* If there are FIELDS fields, return the total padding up to the
+   start of field I, where I < FIELDS.  PAD is the total padding for
+   all fields.  The result equals (PAD * I) / FIELDS, except it does
+   not suffer from internal overflow.  */
+static idx_t
+pad_at (idx_t fields, idx_t i, idx_t pad)
+{
+  /* This implementation assumes that (FIELDS - 1)^2 does not overflow
+     intmax_t, an assumption checked by pad_at_overflow.  */
+  intmax_t m = pad % fields;
+  return pad / fields * i + m * i / fields;
+}
+static bool
+pad_at_overflow (idx_t fields)
+{
+  intmax_t product;
+  return ckd_mul (&product, fields - 1, fields - 1);
+}
+
 #define PRINT_FIELDS(N, T, FMT_STRING_DECL, ACTION)                     \
 static void                                                             \
 N (idx_t fields, idx_t blank, void const *block,			\
-   FMT_STRING_DECL, int width, int pad)                                 \
+   FMT_STRING_DECL, int width, idx_t pad)				\
 {                                                                       \
   T const *p = block;                                                   \
-  int pad_remaining = pad;                                              \
+  idx_t pad_remaining = pad;						\
   for (idx_t i = fields; blank < i; i--)				\
     {                                                                   \
-      int next_pad = pad * (i - 1) / fields;                            \
+      idx_t next_pad = pad_at (fields, i - 1, pad);			\
       int adjusted_width = pad_remaining - next_pad + width;            \
       T x;                                                              \
       if (input_swap && sizeof (T) > 1)                                 \
@@ -523,13 +551,12 @@ dump_hexl_mode_trailer (idx_t n_bytes, char const *block)
 static void
 print_named_ascii (idx_t fields, idx_t blank, void const *block,
                    MAYBE_UNUSED char const *unused_fmt_string,
-                   int width, int pad)
+                   int width, idx_t pad)
 {
   unsigned char const *p = block;
-  int pad_remaining = pad;
+  idx_t pad_remaining = pad;
   for (idx_t i = fields; blank < i; i--)
     {
-      int next_pad = pad * (i - 1) / fields;
       int masked_c = *p++ & 0x7f;
       char const *s;
       char buf[2];
@@ -545,7 +572,9 @@ print_named_ascii (idx_t fields, idx_t blank, void const *block,
           s = buf;
         }
 
-      xprintf ("%*s", pad_remaining - next_pad + width, s);
+      idx_t next_pad = pad_at (fields, i - 1, pad);
+      int adjusted_width = pad_remaining - next_pad + width;
+      xprintf ("%*s", adjusted_width, s);
       pad_remaining = next_pad;
     }
 }
@@ -553,13 +582,12 @@ print_named_ascii (idx_t fields, idx_t blank, void const *block,
 static void
 print_ascii (idx_t fields, idx_t blank, void const *block,
              MAYBE_UNUSED char const *unused_fmt_string, int width,
-             int pad)
+             idx_t pad)
 {
   unsigned char const *p = block;
-  int pad_remaining = pad;
+  idx_t pad_remaining = pad;
   for (idx_t i = fields; blank < i; i--)
     {
-      int next_pad = pad * (i - 1) / fields;
       unsigned char c = *p++;
       char const *s;
       char buf[4];
@@ -603,7 +631,9 @@ print_ascii (idx_t fields, idx_t blank, void const *block,
           s = buf;
         }
 
-      xprintf ("%*s", pad_remaining - next_pad + width, s);
+      idx_t next_pad = pad_at (fields, i - 1, pad);
+      int adjusted_width = pad_remaining - next_pad + width;
+      xprintf ("%*s", adjusted_width, s);
       pad_remaining = next_pad;
     }
 }
@@ -656,7 +686,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
   int size;
   enum output_format fmt;
   void (*print_function) (idx_t, idx_t, void const *, char const *,
-                          int, int);
+                          int, idx_t);
   char const *p;
   char c;
   int field_width;
@@ -1253,22 +1283,24 @@ write_block (uintmax_t current_offset, idx_t n_bytes,
       for (idx_t i = 0; i < n_specs; i++)
         {
           int datum_width = width_bytes[spec[i].size];
-          int fields_per_block = bytes_per_block / datum_width;
-          int blank_fields = (bytes_per_block - n_bytes) / datum_width;
+          idx_t fields_per_block = bytes_per_block / datum_width;
+          idx_t blank_fields = (bytes_per_block - n_bytes) / datum_width;
           if (i == 0)
             format_address (current_offset, '\0');
           else
-            printf ("%*s", address_pad_len, "");
+            print_n_spaces (address_pad_len);
           (*spec[i].print_function) (fields_per_block, blank_fields,
                                      curr_block, spec[i].fmt_string,
                                      spec[i].field_width, spec[i].pad_width);
           if (spec[i].hexl_mode_trailer)
             {
-              /* space-pad out to full line width, then dump the trailer */
+              /* Space-pad out to full line width, then dump the trailer.  */
               int field_width = spec[i].field_width;
-              int pad_width = (spec[i].pad_width * blank_fields
-                               / fields_per_block);
-              printf ("%*s", blank_fields * field_width + pad_width, "");
+              for (idx_t f = 0; f < blank_fields; f++)
+                print_n_spaces (field_width);
+              idx_t pad_width = pad_at (fields_per_block, blank_fields,
+                                        spec[i].pad_width);
+              print_n_spaces (pad_width);
               dump_hexl_mode_trailer (n_bytes, curr_block);
             }
           putchar ('\n');
@@ -1594,9 +1626,8 @@ main (int argc, char **argv)
 {
   int n_files;
   int l_c_m;
-  idx_t desired_width IF_LINT ( = 0);
+  idx_t desired_width = 0;
   bool modern = false;
-  bool width_specified = false;
   bool ok = true;
   idx_t width_per_block = 0;
   static char const multipliers[] = "bEGKkMmPQRTYZ0";
@@ -1792,7 +1823,6 @@ main (int argc, char **argv)
 
         case 'w':
           modern = true;
-          width_specified = true;
           if (optarg == nullptr)
             {
               desired_width = 32;
@@ -1958,9 +1988,9 @@ main (int argc, char **argv)
   /* Compute output block length.  */
   l_c_m = get_lcm ();
 
-  if (width_specified)
+  if (desired_width != 0)
     {
-      if (desired_width != 0 && desired_width % l_c_m == 0)
+      if (desired_width % l_c_m == 0)
         bytes_per_block = desired_width;
       else
         {
@@ -1980,23 +2010,25 @@ main (int argc, char **argv)
   /* Compute padding necessary to align output block.  */
   for (idx_t i = 0; i < n_specs; i++)
     {
-      int fields_per_block = bytes_per_block / width_bytes[spec[i].size];
-      int block_width = (spec[i].field_width + 1) * fields_per_block;
+      idx_t fields_per_block = bytes_per_block / width_bytes[spec[i].size];
+      if (pad_at_overflow (fields_per_block))
+        error (EXIT_FAILURE, 0, _("%td is too large"), desired_width);
+      idx_t block_width = (spec[i].field_width + 1) * fields_per_block;
       if (width_per_block < block_width)
         width_per_block = block_width;
     }
   for (idx_t i = 0; i < n_specs; i++)
     {
-      int fields_per_block = bytes_per_block / width_bytes[spec[i].size];
-      int block_width = spec[i].field_width * fields_per_block;
+      idx_t fields_per_block = bytes_per_block / width_bytes[spec[i].size];
+      idx_t block_width = spec[i].field_width * fields_per_block;
       spec[i].pad_width = width_per_block - block_width;
     }
 
 #ifdef DEBUG
-  printf ("lcm=%d, width_per_block=%zu\n", l_c_m, width_per_block);
+  printf ("lcm=%d, width_per_block=%td\n", l_c_m, width_per_block);
   for (idx_t i = 0; i < n_specs; i++)
     {
-      int fields_per_block = bytes_per_block / width_bytes[spec[i].size];
+      idx_t fields_per_block = bytes_per_block / width_bytes[spec[i].size];
       affirm (bytes_per_block % width_bytes[spec[i].size] == 0);
       affirm (1 <= spec[i].pad_width / fields_per_block);
       printf ("%d: fmt=\"%s\" in_width=%d out_width=%d pad=%d\n",

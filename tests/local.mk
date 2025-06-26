@@ -269,6 +269,7 @@ all_tests =					\
   tests/tail/overlay-headers.sh			\
   tests/tail/pid.sh				\
   tests/tail/pid-pipe.sh			\
+  tests/od/big-w.sh				\
   tests/od/od.pl				\
   tests/od/od-endian.sh				\
   tests/od/od-float.sh				\
