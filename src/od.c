@@ -203,7 +203,8 @@ static int address_base;
 
 /* The number of octal digits required to represent the largest
    address value.  */
-enum { MAX_ADDRESS_LENGTH = UINTMAX_WIDTH / 3 + (UINTMAX_WIDTH % 3 != 0) };
+enum { MAX_ADDRESS_LENGTH = ((INTMAX_WIDTH - 1) / 3
+                             + ((INTMAX_WIDTH - 1) % 3 != 0)) };
 
 /* Width of a normal address.  */
 static int address_pad_len;
@@ -224,24 +225,24 @@ static bool flag_pseudo_start;
 
 /* The difference between the old-style pseudo starting address and
    the number of bytes to skip.  */
-static uintmax_t pseudo_offset;
+static intmax_t pseudo_offset;
 
 /* Function that accepts an address and an optional following char,
    and prints the address and char to stdout.  */
-static void (*format_address) (uintmax_t, char);
+static void (*format_address) (intmax_t, char);
 
 /* The number of input bytes to skip before formatting and writing.  */
-static uintmax_t n_bytes_to_skip = 0;
+static intmax_t n_bytes_to_skip = 0;
 
 /* When false, MAX_BYTES_TO_FORMAT and END_OFFSET are ignored, and all
    input is formatted.  */
 static bool limit_bytes_to_format = false;
 
 /* The maximum number of bytes that will be formatted.  */
-static uintmax_t max_bytes_to_format;
+static intmax_t max_bytes_to_format;
 
 /* The offset of the first byte after the last byte to be formatted.  */
-static uintmax_t end_offset;
+static intmax_t end_offset;
 
 /* When true and two or more consecutive blocks are equal, format
    only the first block and output an asterisk alone on the following
@@ -1079,7 +1080,7 @@ decode_format_string (char const *s)
    advance IN_STREAM.  */
 
 static bool
-skip (uintmax_t n_skip)
+skip (intmax_t n_skip)
 {
   bool ok = true;
   int in_errno = 0;
@@ -1114,7 +1115,7 @@ skip (uintmax_t n_skip)
              proc-like file systems.  */
           if (usable_size && STP_BLKSIZE (&file_stats) < file_stats.st_size)
             {
-              if ((uintmax_t) file_stats.st_size < n_skip)
+              if (file_stats.st_size < n_skip)
                 n_skip -= file_stats.st_size;
               else
                 {
@@ -1182,13 +1183,13 @@ skip (uintmax_t n_skip)
 }
 
 static void
-format_address_none (MAYBE_UNUSED uintmax_t address,
+format_address_none (MAYBE_UNUSED intmax_t address,
                      MAYBE_UNUSED char c)
 {
 }
 
 static void
-format_address_std (uintmax_t address, char c)
+format_address_std (intmax_t address, char c)
 {
   char buf[MAX_ADDRESS_LENGTH + 2];
   char *p = buf + sizeof buf;
@@ -1228,7 +1229,7 @@ format_address_std (uintmax_t address, char c)
 }
 
 static void
-format_address_paren (uintmax_t address, char c)
+format_address_paren (intmax_t address, char c)
 {
   putchar ('(');
   format_address_std (address, ')');
@@ -1237,7 +1238,7 @@ format_address_paren (uintmax_t address, char c)
 }
 
 static void
-format_address_label (uintmax_t address, char c)
+format_address_label (intmax_t address, char c)
 {
   format_address_std (address, ' ');
   format_address_paren (address + pseudo_offset, c);
@@ -1254,7 +1255,7 @@ format_address_label (uintmax_t address, char c)
    That condition may be false only for the last input block.  */
 
 static void
-write_block (uintmax_t current_offset, idx_t n_bytes,
+write_block (intmax_t current_offset, idx_t n_bytes,
              char const *prev_block, char const *curr_block)
 {
   static bool first = true;
@@ -1398,11 +1399,23 @@ get_lcm (void)
   return l_c_m;
 }
 
+/* Act like xstrtoimax (NPTR, nullptr, BASE, VAL, VALID_SUFFIXES),
+   except reject negative values, and *VAL may be set if
+   LONGINT_INVALID is returned.  */
+static strtol_error
+xstr2nonneg (char const *restrict nptr, int base, intmax_t *val,
+             char const *restrict valid_suffixes)
+{
+  strtol_error s_err = xstrtoimax (nptr, nullptr, base, val, valid_suffixes);
+  return s_err != LONGINT_INVALID && *val < 0 ? LONGINT_INVALID : s_err;
+}
+
 /* If S is a valid traditional offset specification with an optional
-   leading '+' return true and set *OFFSET to the offset it denotes.  */
+   leading '+' return true and set *OFFSET to the offset it denotes.
+   Otherwise return false and possibly set *OFFSET.  */
 
 static bool
-parse_old_offset (char *s, uintmax_t *offset)
+parse_old_offset (char *s, intmax_t *offset)
 {
   int radix;
 
@@ -1440,7 +1453,7 @@ parse_old_offset (char *s, uintmax_t *offset)
         radix = 8;
     }
 
-  enum strtol_error s_err = xstrtoumax (s, nullptr, radix, offset, "Bb");
+  enum strtol_error s_err = xstr2nonneg (s, radix, offset, "Bb");
 
   if (dot)
     {
@@ -1468,7 +1481,7 @@ static bool
 dump (void)
 {
   char *block[2];
-  uintmax_t current_offset;
+  intmax_t current_offset;
   bool idx = false;
   bool ok = true;
   idx_t n_bytes_read;
@@ -1482,14 +1495,12 @@ dump (void)
     {
       while (ok)
         {
-          idx_t n_needed;
           if (current_offset >= end_offset)
             {
               n_bytes_read = 0;
               break;
             }
-          n_needed = MIN (end_offset - current_offset,
-                          (uintmax_t) bytes_per_block);
+          idx_t n_needed = MIN (end_offset - current_offset, bytes_per_block);
           ok &= read_block (n_needed, block[idx], &n_bytes_read);
           if (n_bytes_read < bytes_per_block)
             break;
@@ -1553,7 +1564,7 @@ dump_strings (void)
 {
   idx_t bufsize = MAX (100, string_min + 1);
   char *buf = ximalloc (bufsize);
-  uintmax_t address = n_bytes_to_skip;
+  intmax_t address = n_bytes_to_skip;
   bool ok = true;
 
   while (true)
@@ -1657,7 +1668,7 @@ main (int argc, char **argv)
 
   /* The old-style 'pseudo starting address' to be printed in parentheses
      after any true address.  */
-  uintmax_t pseudo_start IF_LINT ( = 0);
+  intmax_t pseudo_start IF_LINT ( = 0);
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -1704,7 +1715,7 @@ main (int argc, char **argv)
 
   while (true)
     {
-      uintmax_t tmp;
+      intmax_t tmp;
       enum strtol_error s_err;
       int oi = -1;
       int c = getopt_long (argc, argv, short_options, long_options, &oi);
@@ -1747,8 +1758,7 @@ main (int argc, char **argv)
 
         case 'j':
           modern = true;
-          s_err = xstrtoumax (optarg, nullptr, 0,
-                              &n_bytes_to_skip, multipliers);
+          s_err = xstr2nonneg (optarg, 0, &n_bytes_to_skip, multipliers);
           if (s_err != LONGINT_OK)
             xstrtol_fatal (s_err, oi, c, long_options, optarg);
           break;
@@ -1757,8 +1767,7 @@ main (int argc, char **argv)
           modern = true;
           limit_bytes_to_format = true;
 
-          s_err = xstrtoumax (optarg, nullptr, 0, &max_bytes_to_format,
-                              multipliers);
+          s_err = xstr2nonneg (optarg, 0, &max_bytes_to_format, multipliers);
           if (s_err != LONGINT_OK)
             xstrtol_fatal (s_err, oi, c, long_options, optarg);
           break;
@@ -1769,16 +1778,14 @@ main (int argc, char **argv)
             string_min = 3;
           else
             {
-              s_err = xstrtoumax (optarg, nullptr, 0, &tmp, multipliers);
+              s_err = xstr2nonneg (optarg, 0, &tmp, multipliers);
+              /* The minimum string length + 1 must fit in idx_t,
+                 since we may allocate a buffer of this size + 1.  */
+              idx_t i;
+              if (s_err == LONGINT_OK && ckd_add (&i, tmp, 1))
+                s_err = LONGINT_OVERFLOW;
               if (s_err != LONGINT_OK)
                 xstrtol_fatal (s_err, oi, c, long_options, optarg);
-
-              /* The minimum string length must be less than
-                 MIN (IDX_MAX, SIZE_MAX), since we may allocate a
-                 buffer of this size + 1.  */
-              if (MIN (IDX_MAX, SIZE_MAX) <= tmp)
-                error (EXIT_FAILURE, 0, _("%s is too large"), quote (optarg));
-
               string_min = tmp;
             }
           flag_dump_strings = true;
@@ -1853,13 +1860,16 @@ main (int argc, char **argv)
           else
             {
               intmax_t w_tmp;
-              s_err = xstrtoimax (optarg, nullptr, 10, &w_tmp, "");
-              if (s_err == LONGINT_OK && w_tmp <= 0)
-                s_err = LONGINT_INVALID;
+              s_err = xstr2nonneg (optarg, 10, &w_tmp, "");
+              if (s_err == LONGINT_OK)
+                {
+                  if (ckd_add (&desired_width, w_tmp, 0))
+                    s_err = LONGINT_OVERFLOW;
+                  else if (desired_width == 0)
+                    s_err = LONGINT_INVALID;
+                }
               if (s_err != LONGINT_OK)
                 xstrtol_fatal (s_err, oi, c, long_options, optarg);
-              if (ckd_add (&desired_width, w_tmp, 0))
-                error (EXIT_FAILURE, 0, _("%s is too large"), quote (optarg));
             }
           break;
 
@@ -1896,8 +1906,8 @@ main (int argc, char **argv)
 
   if (!modern || traditional)
     {
-      uintmax_t o1;
-      uintmax_t o2;
+      intmax_t o1;
+      intmax_t o2;
 
       switch (n_files)
         {
@@ -1970,12 +1980,9 @@ main (int argc, char **argv)
         format_address = format_address_label;
     }
 
-  if (limit_bytes_to_format)
-    {
-      end_offset = n_bytes_to_skip + max_bytes_to_format;
-      if (end_offset < n_bytes_to_skip)
-        error (EXIT_FAILURE, 0, _("skip-bytes + read-bytes is too large"));
-    }
+  if (limit_bytes_to_format
+      && ckd_add (&end_offset, n_bytes_to_skip, max_bytes_to_format))
+    error (EXIT_FAILURE, 0, _("skip-bytes + read-bytes is too large"));
 
   if (n_specs == 0)
     decode_format_string ("oS");
