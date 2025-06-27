@@ -4204,13 +4204,17 @@ for reading standard input when standard input is a terminal.
 Read file names and checksum information (not data) from each
 @var{file} (or from standard input if no @var{file} was specified) and report
 whether the checksums match the contents of the named files.
-The input to this mode is usually the output of
-a prior, checksum-generating run of the command.
+The input to this mode is usually the output of a prior,
+checksum-generating run of the command.  However the
+@command{cksum} command does not support @option{--check}
+with the legacy output format from the @samp{sysv}, @samp{bsd},
+@samp{crc} or @samp{crc32b} algorithms.
 
-Three input formats are supported.  Either the default output
-format described above, the @option{--tag} output format,
-or the BSD reversed mode format which is similar to the default mode,
+Three input formats are supported.  Either the "untagged" output format,
+the "tagged" output format, or the BSD reversed mode format
+which is similar to the "untagged" output format
 but doesn't use a character to distinguish binary and text modes.
+@xref{cksum output modes} for details of these formats.
 
 For the @command{cksum} command, the @option{--check} option
 supports auto-detecting the digest algorithm to use,
@@ -4236,8 +4240,6 @@ If any listed file cannot be opened or read, if any valid line has
 a checksum inconsistent with the associated file, or if no valid
 line is found, @command{cksum} exits with nonzero status.  Otherwise,
 it exits successfully.
-The @command{cksum} command does not support @option{--check}
-with the older @samp{sysv}, @samp{bsd}, @samp{crc} or @samp{crc32b} algorithms.
 
 @item --ignore-missing
 @opindex --ignore-missing
