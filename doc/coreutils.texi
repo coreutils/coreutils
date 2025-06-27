@@ -9921,7 +9921,8 @@ interpreted as a block count rather than a count of read operations.
 
 @end table
 
-These flags are all GNU extensions to POSIX.
+These flags are all GNU extensions to POSIX, except for @samp{fullblock}
+which was added by POSIX.1-2024.
 They are not supported on all systems, and @samp{dd} rejects
 attempts to use them when they are not supported.  When reading from
 standard input or writing to standard output, the @samp{nofollow} and
