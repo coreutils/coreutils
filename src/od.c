@@ -65,7 +65,7 @@
 
 enum size_spec
   {
-    NO_SIZE,
+    NO_SIZE = 0,
     CHAR,
     SHORT,
     INT,
@@ -92,7 +92,6 @@ enum output_format
     CHARACTER
   };
 
-enum { MAX_INTEGRAL_TYPE_SIZE = sizeof (unsigned long long int) };
 enum { MAX_INTEGRAL_TYPE_WIDTH = ULLONG_WIDTH };
 
 /* The maximum number of bytes needed for a format string, including
@@ -152,12 +151,6 @@ static char const bytes_to_unsigned_dec_digits[] =
 
 static char const bytes_to_hex_digits[] =
 {0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32};
-
-/* It'll be a while before we see integral types wider than 16 bytes,
-   but if/when it happens, this check will catch it.  Without this check,
-   a wider type would provoke a buffer overrun.  */
-static_assert (MAX_INTEGRAL_TYPE_SIZE
-               < ARRAY_CARDINALITY (bytes_to_hex_digits));
 
 /* Make sure the other arrays have the same length.  */
 static_assert (sizeof bytes_to_oct_digits == sizeof bytes_to_signed_dec_digits);
@@ -281,11 +274,53 @@ static FILE *in_stream;
 /* If true, at least one of the files we read was standard input.  */
 static bool have_read_stdin;
 
-/* Map the size in bytes to a type identifier.  */
-static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
+/* Map the size in bytes to a type identifier.
+   When two types have the same machine layout:
+     - Prefer unsigned int to higher ranked types, as its format is shorter.
+     - Prefer unsigned long to higher-ranked types, as it is older.
+     - Prefer uintmax_t to unsigned long long int; this wins if %lld
+       does not work but %jd does (e.g., MS-Windows).  */
+static enum size_spec const integral_type_size[] =
+  {
+#if UCHAR_MAX < USHRT_MAX
+    [sizeof (unsigned char)] = CHAR,
+#endif
+#if USHRT_MAX < UINT_MAX
+    [sizeof (unsigned short int)] = SHORT,
+#endif
+    [sizeof (unsigned int)] = INT,
+#if UINT_MAX < ULONG_MAX
+    [sizeof (unsigned long int)] = LONG,
+#endif
+#if ULONG_MAX < ULLONG_MAX
+    [sizeof (unsigned long long int)] = LONG_LONG,
+#endif
+  };
 
-#define MAX_FP_TYPE_SIZE sizeof (long double)
-static enum size_spec fp_type_size[MAX_FP_TYPE_SIZE + 1];
+/* Map the size in bytes to a floating type identifier.
+   When two types have the same machine layout:
+     - Prefer double to the other types, as its format is shorter.  */
+static enum size_spec const fp_type_size[] =
+  {
+#if FLOAT16_SUPPORTED
+    [sizeof (float16)] = FLOAT_HALF,
+#elif BF16_SUPPORTED
+    [sizeof (bfloat16)] = FLOAT_HALF,
+#endif
+#if FLT_MANT_DIG < DBL_MANT_DIG || FLT_MAX_EXP < DBL_MAX_EXP
+    [sizeof (float)] = FLOAT_SINGLE,
+#endif
+    [sizeof (double)] = FLOAT_DOUBLE,
+#if DBL_MANT_DIG < LDBL_MANT_DIG || DBL_MAX_EXP < LDBL_MAX_EXP
+    [sizeof (long double)] = FLOAT_LONG_DOUBLE,
+#endif
+  };
+
+/* It'll be a while before we see integral types wider than 16 bytes,
+   but if/when it happens, this check will catch it.  Without this check,
+   a wider type would provoke a buffer overrun.  */
+static_assert (ARRAY_CARDINALITY (integral_type_size)
+               <= ARRAY_CARDINALITY (bytes_to_hex_digits));
 
 #ifndef WORDS_BIGENDIAN
 # define WORDS_BIGENDIAN 0
@@ -735,7 +770,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
             size = sizeof (int);
           else
             {
-              if (MAX_INTEGRAL_TYPE_SIZE < size
+              if (ARRAY_CARDINALITY (integral_type_size) <= size
                   || integral_type_size[size] == NO_SIZE)
                 {
                   error (0, 0, _("invalid type string %s;\nthis system"
@@ -865,7 +900,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
             size = sizeof (double);
           else
             {
-              if (size > MAX_FP_TYPE_SIZE
+              if (ARRAY_CARDINALITY (fp_type_size) <= size
                   || fp_type_size[size] == NO_SIZE
                   || (! FLOAT16_SUPPORTED && BF16_SUPPORTED
                       && size == sizeof (bfloat16))
@@ -1677,32 +1712,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  for (idx_t i = 0; i <= MAX_INTEGRAL_TYPE_SIZE; i++)
-    integral_type_size[i] = NO_SIZE;
-
-  integral_type_size[sizeof (char)] = CHAR;
-  integral_type_size[sizeof (short int)] = SHORT;
-  integral_type_size[sizeof (int)] = INT;
-  integral_type_size[sizeof (long int)] = LONG;
-  /* If 'long int' and 'long long int' have the same size, it's fine
-     to overwrite the entry for 'long' with this one.  */
-  integral_type_size[sizeof (unsigned long long int)] = LONG_LONG;
-
-  for (idx_t i = 0; i <= MAX_FP_TYPE_SIZE; i++)
-    fp_type_size[i] = NO_SIZE;
-
-#if FLOAT16_SUPPORTED
-  fp_type_size[sizeof (float16)] = FLOAT_HALF;
-#elif BF16_SUPPORTED
-  fp_type_size[sizeof (bfloat16)] = FLOAT_HALF;
-#endif
-  fp_type_size[sizeof (float)] = FLOAT_SINGLE;
-  /* The array entry for 'double' is filled in after that for 'long double'
-     so that if they are the same size, we avoid any overhead of
-     long double computation in libc.  */
-  fp_type_size[sizeof (long double)] = FLOAT_LONG_DOUBLE;
-  fp_type_size[sizeof (double)] = FLOAT_DOUBLE;
 
   n_specs = 0;
   n_specs_allocated = 0;
