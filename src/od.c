@@ -101,12 +101,7 @@ enum { MAX_INTEGRAL_TYPE_WIDTH = UINTMAX_WIDTH };
 enum
   {
     FMT_BYTES_ALLOCATED =
-           (sizeof "%*.99" - 1
-            + MAX (sizeof "lld",
-                   MAX (sizeof "jd",
-                        MAX (sizeof "jo",
-                             MAX (sizeof "ju",
-                                  sizeof "jx")))))
+      sizeof "%*.%dlld" - sizeof "%d" + INT_STRLEN_BOUND (int) + 1
   };
 
 /* Ensure that our choice for FMT_BYTES_ALLOCATED is reasonable.  */
@@ -129,34 +124,6 @@ struct tspec
     int field_width; /* Minimum width of a field, excluding leading space.  */
     idx_t pad_width; /* Total padding to be divided among fields.  */
   };
-
-/* Convert the number of 8-bit bytes of a binary representation to
-   the number of characters (digits + sign if the type is signed)
-   required to represent the same quantity in the specified base/type.
-   For example, a 32-bit (4-byte) quantity may require a field width
-   as wide as the following for these types:
-   11	unsigned octal
-   11	signed decimal
-   10	unsigned decimal
-   8	unsigned hexadecimal  */
-
-static char const bytes_to_oct_digits[] =
-{0, 3, 6, 8, 11, 14, 16, 19, 22, 25, 27, 30, 32, 35, 38, 41, 43};
-
-static char const bytes_to_signed_dec_digits[] =
-{1, 4, 6, 8, 11, 13, 16, 18, 20, 23, 25, 28, 30, 33, 35, 37, 40};
-
-static char const bytes_to_unsigned_dec_digits[] =
-{0, 3, 5, 8, 10, 13, 15, 17, 20, 22, 25, 27, 29, 32, 34, 37, 39};
-
-static char const bytes_to_hex_digits[] =
-{0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32};
-
-/* Make sure the other arrays have the same length.  */
-static_assert (sizeof bytes_to_oct_digits == sizeof bytes_to_signed_dec_digits);
-static_assert (sizeof bytes_to_oct_digits
-               == sizeof bytes_to_unsigned_dec_digits);
-static_assert (sizeof bytes_to_oct_digits == sizeof bytes_to_hex_digits);
 
 /* Convert enum size_spec to the size of the named type.  */
 static const int width_bytes[] =
@@ -319,12 +286,6 @@ static enum size_spec const fp_type_size[] =
     [sizeof (long double)] = FLOAT_LONG_DOUBLE,
 #endif
   };
-
-/* It'll be a while before we see integral types wider than 16 bytes,
-   but if/when it happens, this check will catch it.  Without this check,
-   a wider type would provoke a buffer overrun.  */
-static_assert (ARRAY_CARDINALITY (integral_type_size)
-               <= ARRAY_CARDINALITY (bytes_to_hex_digits));
 
 #ifndef WORDS_BIGENDIAN
 # define WORDS_BIGENDIAN 0
@@ -800,29 +761,29 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
         {
         case 'd':
           fmt = SIGNED_DECIMAL;
-          field_width = bytes_to_signed_dec_digits[size];
+          field_width = INT_BITS_STRLEN_BOUND (CHAR_BIT * size - 1) + 1;
           sprintf (tspec->fmt_string, "%%*%s",
                    ISPEC_TO_FORMAT (size_spec, "d", "ld", "lld", "jd"));
           break;
 
         case 'o':
           fmt = OCTAL;
-          sprintf (tspec->fmt_string, "%%*.%d%s",
-                   (field_width = bytes_to_oct_digits[size]),
+          field_width = (CHAR_BIT * size + 2) / 3;
+          sprintf (tspec->fmt_string, "%%*.%d%s", field_width,
                    ISPEC_TO_FORMAT (size_spec, "o", "lo", "llo", "jo"));
           break;
 
         case 'u':
           fmt = UNSIGNED_DECIMAL;
-          field_width = bytes_to_unsigned_dec_digits[size];
+          field_width = INT_BITS_STRLEN_BOUND (CHAR_BIT * size);
           sprintf (tspec->fmt_string, "%%*%s",
                    ISPEC_TO_FORMAT (size_spec, "u", "lu", "llu", "ju"));
           break;
 
         case 'x':
           fmt = HEXADECIMAL;
-          sprintf (tspec->fmt_string, "%%*.%d%s",
-                   (field_width = bytes_to_hex_digits[size]),
+          field_width = (CHAR_BIT * size + 3) / 4;
+          sprintf (tspec->fmt_string, "%%*.%d%s", field_width,
                    ISPEC_TO_FORMAT (size_spec, "x", "lx", "llx", "jx"));
           break;
 
