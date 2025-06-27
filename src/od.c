@@ -71,7 +71,7 @@ enum size_spec
     INT,
     LONG,
     LONG_LONG,
-    /* FIXME: add INTMAX support, too */
+    INTMAX,
     FLOAT_HALF,
     FLOAT_SINGLE,
     FLOAT_DOUBLE,
@@ -92,7 +92,7 @@ enum output_format
     CHARACTER
   };
 
-enum { MAX_INTEGRAL_TYPE_WIDTH = ULLONG_WIDTH };
+enum { MAX_INTEGRAL_TYPE_WIDTH = UINTMAX_WIDTH };
 
 /* The maximum number of bytes needed for a format string, including
    the trailing nul.  Each format string expects a variable amount of
@@ -101,8 +101,8 @@ enum { MAX_INTEGRAL_TYPE_WIDTH = ULLONG_WIDTH };
 enum
   {
     FMT_BYTES_ALLOCATED =
-           (sizeof "%*.99" + 1
-            + MAX (sizeof "ld",
+           (sizeof "%*.99" - 1
+            + MAX (sizeof "lld",
                    MAX (sizeof "jd",
                         MAX (sizeof "jo",
                              MAX (sizeof "ju",
@@ -167,6 +167,7 @@ static const int width_bytes[] =
   sizeof (int),
   sizeof (long int),
   sizeof (unsigned long long int),
+  sizeof (uintmax_t),
 #if BF16_SUPPORTED
   sizeof (bfloat16),
 #else
@@ -292,8 +293,11 @@ static enum size_spec const integral_type_size[] =
 #if UINT_MAX < ULONG_MAX
     [sizeof (unsigned long int)] = LONG,
 #endif
-#if ULONG_MAX < ULLONG_MAX
+#if ULONG_MAX < ULLONG_MAX && ULLONG_MAX < UINTMAX_MAX
     [sizeof (unsigned long long int)] = LONG_LONG,
+#endif
+#if ULONG_MAX < UINTMAX_MAX
+    [sizeof (uintmax_t)] = INTMAX,
 #endif
   };
 
@@ -561,6 +565,7 @@ PRINT_TYPE (print_short, unsigned short int)
 PRINT_TYPE (print_int, unsigned int)
 PRINT_TYPE (print_long, unsigned long int)
 PRINT_TYPE (print_long_long, unsigned long long int)
+PRINT_TYPE (print_intmax, uintmax_t)
 
 PRINT_FLOATTYPE (print_bfloat, bfloat16, ftoastr, FLT_BUFSIZE_BOUND)
 PRINT_FLOATTYPE (print_halffloat, float16, ftoastr, FLT_BUFSIZE_BOUND)
@@ -783,10 +788,11 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           break;
         }
 
-#define ISPEC_TO_FORMAT(Spec, Min_format, Long_format, Max_format)	\
-  ((Spec) == LONG_LONG ? (Max_format)					\
-   : ((Spec) == LONG ? (Long_format)					\
-      : (Min_format)))							\
+#define ISPEC_TO_FORMAT(Spec, Min_fmt, Long_fmt, Long_long_fmt, Max_fmt) \
+  ((Spec) == INTMAX ? (Max_fmt)						\
+   : (Spec) == LONG_LONG ? (Long_long_fmt)				\
+   : (Spec) == LONG ? (Long_fmt)					\
+   : (Min_fmt))
 
       size_spec = integral_type_size[size];
 
@@ -796,28 +802,28 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           fmt = SIGNED_DECIMAL;
           field_width = bytes_to_signed_dec_digits[size];
           sprintf (tspec->fmt_string, "%%*%s",
-                   ISPEC_TO_FORMAT (size_spec, "d", "ld", "jd"));
+                   ISPEC_TO_FORMAT (size_spec, "d", "ld", "lld", "jd"));
           break;
 
         case 'o':
           fmt = OCTAL;
           sprintf (tspec->fmt_string, "%%*.%d%s",
                    (field_width = bytes_to_oct_digits[size]),
-                   ISPEC_TO_FORMAT (size_spec, "o", "lo", "jo"));
+                   ISPEC_TO_FORMAT (size_spec, "o", "lo", "llo", "jo"));
           break;
 
         case 'u':
           fmt = UNSIGNED_DECIMAL;
           field_width = bytes_to_unsigned_dec_digits[size];
           sprintf (tspec->fmt_string, "%%*%s",
-                   ISPEC_TO_FORMAT (size_spec, "u", "lu", "ju"));
+                   ISPEC_TO_FORMAT (size_spec, "u", "lu", "llu", "ju"));
           break;
 
         case 'x':
           fmt = HEXADECIMAL;
           sprintf (tspec->fmt_string, "%%*.%d%s",
                    (field_width = bytes_to_hex_digits[size]),
-                   ISPEC_TO_FORMAT (size_spec, "x", "lx", "jx"));
+                   ISPEC_TO_FORMAT (size_spec, "x", "lx", "llx", "jx"));
           break;
 
         default:
@@ -848,6 +854,10 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
 
         case LONG_LONG:
           print_function = print_long_long;
+          break;
+
+        case INTMAX:
+          print_function = print_intmax;
           break;
 
         default:
