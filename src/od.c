@@ -1314,15 +1314,9 @@ read_char (int *c)
 
   *c = EOF;
 
-  while (in_stream != nullptr)	/* EOF.  */
+  while (in_stream && (*c = fgetc (in_stream)) < 0)
     {
-      *c = fgetc (in_stream);
-
-      if (*c != EOF)
-        break;
-
       ok &= check_and_close (errno);
-
       ok &= open_next_file ();
     }
 
@@ -1568,7 +1562,7 @@ dump_strings (void)
             }
         }
 
-      if (c == -1 || i - !c < string_min)
+      if (c < 0 || i - !c < string_min)
         continue;
 
       buf[i] = 0;
@@ -2009,7 +2003,7 @@ main (int argc, char **argv)
 
 cleanup:
 
-  if (have_read_stdin && fclose (stdin) == EOF)
+  if (have_read_stdin && fclose (stdin) < 0)
     error (EXIT_FAILURE, errno, _("standard input"));
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
