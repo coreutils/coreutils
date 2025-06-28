@@ -1432,7 +1432,7 @@ dump (void)
   bool ok = true;
   size_t n_bytes_read;
 
-  block[0] = xnmalloc (2, bytes_per_block);
+  block[0] = xinmalloc (2, bytes_per_block);
   block[1] = block[0] + bytes_per_block;
 
   current_offset = n_bytes_to_skip;
@@ -1514,7 +1514,7 @@ static bool
 dump_strings (void)
 {
   idx_t bufsize = MAX (100, string_min + 1);
-  char *buf = xmalloc (bufsize);
+  char *buf = ximalloc (bufsize);
   uintmax_t address = n_bytes_to_skip;
   bool ok = true;
 
