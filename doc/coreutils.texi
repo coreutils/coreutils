@@ -1173,6 +1173,15 @@ POSIX 1003.1-2001 systems that support the XRT extension
 also support at least eight real-time signals called @samp{RTMIN},
 @samp{RTMIN+1}, @dots{}, @samp{RTMAX-1}, @samp{RTMAX}.
 
+@noindent
+All systems conforming to POSIX 1003.1-2024 also support the following
+signals:
+
+@table @samp
+@item WINCH
+Terminal window size changed.
+@end table
+
 @node Disambiguating names and IDs
 @section chown, chgrp, chroot, id: Disambiguating user names and IDs
 @cindex user names, disambiguating
