@@ -1527,7 +1527,8 @@ dump (void)
 
       /* Ensure zero-byte padding up to the smallest multiple of l_c_m that
          is at least as large as n_bytes_read.  */
-      idx_t bytes_to_write = l_c_m * ((n_bytes_read + l_c_m - 1) / l_c_m);
+      idx_t bytes_to_write = (n_bytes_read + l_c_m - 1
+                              - (n_bytes_read + l_c_m - 1) % l_c_m);
 
       memset (block[idx] + n_bytes_read, 0, bytes_to_write - n_bytes_read);
       write_block (current_offset, n_bytes_read, block[!idx], block[idx]);
@@ -1997,7 +1998,8 @@ main (int argc, char **argv)
   else
     {
       if (l_c_m < DEFAULT_BYTES_PER_BLOCK)
-        bytes_per_block = l_c_m * (DEFAULT_BYTES_PER_BLOCK / l_c_m);
+        bytes_per_block = (DEFAULT_BYTES_PER_BLOCK
+                           - DEFAULT_BYTES_PER_BLOCK % l_c_m);
       else
         bytes_per_block = l_c_m;
     }
