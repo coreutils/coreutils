@@ -172,7 +172,7 @@ static char const charname[33][4] =
 };
 
 /* Address base (8, 10 or 16).  */
-static int address_base;
+static int address_base = 8;
 
 /* The number of octal digits required to represent the largest
    address value.  */
@@ -180,7 +180,7 @@ enum { MAX_ADDRESS_LENGTH = ((INTMAX_WIDTH - 1) / 3
                              + ((INTMAX_WIDTH - 1) % 3 != 0)) };
 
 /* Width of a normal address.  */
-static int address_pad_len;
+static int address_pad_len = 7;
 
 /* Minimum length when detecting --strings.  */
 static idx_t string_min;
@@ -202,20 +202,15 @@ static intmax_t pseudo_offset;
 
 /* Function that accepts an address and an optional following char,
    and prints the address and char to stdout.  */
-static void (*format_address) (intmax_t, char);
+static void format_address_std (intmax_t, char);
+static void (*format_address) (intmax_t, char) = format_address_std;
 
 /* The number of input bytes to skip before formatting and writing.  */
-static intmax_t n_bytes_to_skip = 0;
+static intmax_t n_bytes_to_skip;
 
-/* When false, MAX_BYTES_TO_FORMAT and END_OFFSET are ignored, and all
-   input is formatted.  */
-static bool limit_bytes_to_format = false;
-
-/* The maximum number of bytes that will be formatted.  */
-static intmax_t max_bytes_to_format;
-
-/* The offset of the first byte after the last byte to be formatted.  */
-static intmax_t end_offset;
+/* The offset of the first byte after the last byte to be formatted.
+   If negative, there is no limit.  */
+static intmax_t end_offset = -1;
 
 /* When true and two or more consecutive blocks are equal, format
    only the first block and output an asterisk alone on the following
@@ -992,7 +987,7 @@ open_next_file (void)
     }
   while (in_stream == nullptr);
 
-  if (limit_bytes_to_format && !flag_dump_strings)
+  if (0 <= end_offset && !flag_dump_strings)
     setvbuf (in_stream, nullptr, _IONBF, 0);
 
   return ok;
@@ -1482,7 +1477,7 @@ dump (void)
 
   current_offset = n_bytes_to_skip;
 
-  if (limit_bytes_to_format)
+  if (0 <= end_offset)
     {
       while (ok)
         {
@@ -1537,7 +1532,7 @@ dump (void)
 
   format_address (current_offset, '\n');
 
-  if (limit_bytes_to_format && current_offset >= end_offset)
+  if (0 <= end_offset && end_offset <= current_offset)
     ok &= check_and_close (0);
 
   free (block[0]);
@@ -1564,12 +1559,12 @@ dump_strings (void)
       idx_t i = 0;
       int c = 1;  /* Init to 1 so can distinguish if NUL read.  */
 
-      if (limit_bytes_to_format
+      if (0 <= end_offset
           && (end_offset < string_min || end_offset - string_min < address))
         break;
 
       /* Store consecutive printable characters to BUF.  */
-      while (!limit_bytes_to_format || address < end_offset)
+      while (! (0 <= end_offset && end_offset <= address))
         {
           if (i == bufsize - 1)
             buf = xpalloc (buf, &bufsize, 1, -1, sizeof *buf);
@@ -1658,6 +1653,10 @@ main (int argc, char **argv)
   idx_t width_per_block = 0;
   static char const multipliers[] = "bEGKkMmPQRTYZ0";
 
+  /* The maximum number of bytes that will be formatted.
+     If negative, there is no limit.  */
+  intmax_t max_bytes_to_format = -1;
+
   /* The old-style 'pseudo starting address' to be printed in parentheses
      after any true address.  */
   intmax_t pseudo_start IF_LINT ( = 0);
@@ -1669,15 +1668,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  n_specs = 0;
-  n_specs_allocated = 0;
-  spec = nullptr;
-
-  format_address = format_address_std;
-  address_base = 8;
-  address_pad_len = 7;
-  flag_dump_strings = false;
 
   while (true)
     {
@@ -1731,8 +1721,6 @@ main (int argc, char **argv)
 
         case 'N':
           modern = true;
-          limit_bytes_to_format = true;
-
           s_err = xstr2nonneg (optarg, 0, &max_bytes_to_format, multipliers);
           if (s_err != LONGINT_OK)
             xstrtol_fatal (s_err, oi, c, long_options, optarg);
@@ -1946,7 +1934,7 @@ main (int argc, char **argv)
         format_address = format_address_label;
     }
 
-  if (limit_bytes_to_format
+  if (0 <= max_bytes_to_format
       && ckd_add (&end_offset, n_bytes_to_skip, max_bytes_to_format))
     error (EXIT_FAILURE, 0, _("skip-bytes + read-bytes is too large"));
 
