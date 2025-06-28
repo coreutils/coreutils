@@ -1467,7 +1467,6 @@ static bool
 dump (void)
 {
   char *block[2];
-  intmax_t current_offset;
   bool idx = false;
   bool ok = true;
   idx_t n_bytes_read;
@@ -1475,46 +1474,30 @@ dump (void)
   block[0] = xinmalloc (2, bytes_per_block);
   block[1] = block[0] + bytes_per_block;
 
-  current_offset = n_bytes_to_skip;
+  intmax_t current_offset = n_bytes_to_skip;
 
-  if (0 <= end_offset)
+  do
     {
-      while (ok)
+      intmax_t needed_bound
+        = end_offset < 0 ? INTMAX_MAX : end_offset - current_offset;
+      if (needed_bound <= 0)
         {
-          if (current_offset >= end_offset)
-            {
-              n_bytes_read = 0;
-              break;
-            }
-          idx_t n_needed = MIN (end_offset - current_offset, bytes_per_block);
-          ok &= read_block (n_needed, block[idx], &n_bytes_read);
-          if (n_bytes_read < bytes_per_block)
-            break;
-          affirm (n_bytes_read == bytes_per_block);
-          write_block (current_offset, n_bytes_read,
-                       block[!idx], block[idx]);
-          if (ferror (stdout))
-            ok = false;
-          current_offset += n_bytes_read;
-          idx = !idx;
+          n_bytes_read = 0;
+          break;
         }
+      idx_t n_needed = MIN (bytes_per_block, needed_bound);
+      ok &= read_block (n_needed, block[idx], &n_bytes_read);
+      if (n_bytes_read < bytes_per_block)
+        break;
+      affirm (n_bytes_read == bytes_per_block);
+      write_block (current_offset, n_bytes_read,
+                   block[!idx], block[idx]);
+      if (ferror (stdout))
+        ok = false;
+      current_offset += n_bytes_read;
+      idx = !idx;
     }
-  else
-    {
-      while (ok)
-        {
-          ok &= read_block (bytes_per_block, block[idx], &n_bytes_read);
-          if (n_bytes_read < bytes_per_block)
-            break;
-          affirm (n_bytes_read == bytes_per_block);
-          write_block (current_offset, n_bytes_read,
-                       block[!idx], block[idx]);
-          if (ferror (stdout))
-            ok = false;
-          current_offset += n_bytes_read;
-          idx = !idx;
-        }
-    }
+  while (ok);
 
   if (n_bytes_read > 0)
     {
