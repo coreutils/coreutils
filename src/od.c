@@ -67,15 +67,17 @@ enum size_spec
   {
     NO_SIZE = 0,
     CHAR,
-    SHORT,
-    INT,
-    LONG,
-    LONG_LONG,
-    INTMAX,
-    FLOAT_HALF,
-    FLOAT_SINGLE,
-    FLOAT_DOUBLE,
-    FLOAT_LONG_DOUBLE,
+    SHORT = CHAR + (UCHAR_MAX < USHRT_MAX),
+    INT = SHORT + (USHRT_MAX < UINT_MAX),
+    LONG = INT + (UINT_MAX < ULONG_MAX),
+    LONG_LONG = LONG + (ULONG_MAX < ULLONG_MAX),
+    INTMAX = LONG_LONG + (ULLONG_MAX < UINTMAX_MAX),
+    FLOAT_HALF, /* Used only if (FLOAT16_SUPPORTED || BF16_SUPPORTED).  */
+    FLOAT_SINGLE = FLOAT_HALF + (FLOAT16_SUPPORTED || BF16_SUPPORTED),
+    FLOAT_DOUBLE = FLOAT_SINGLE + (FLT_MANT_DIG < DBL_MANT_DIG
+                                   || FLT_MAX_EXP < DBL_MAX_EXP),
+    FLOAT_LONG_DOUBLE = FLOAT_DOUBLE + (DBL_MANT_DIG < LDBL_MANT_DIG
+                                        || DBL_MAX_EXP < LDBL_MAX_EXP),
     N_SIZE_SPECS
   };
 
@@ -130,14 +132,24 @@ static const int width_bytes[] =
 {
   -1,
   sizeof (char),
+#if UCHAR_MAX < USHRT_MAX
   sizeof (short int),
+#endif
+#if USHRT_MAX < UINT_MAX
   sizeof (int),
+#endif
+#if UINT_MAX < ULONG_MAX
   sizeof (long int),
+#endif
+#if ULONG_MAX < ULLONG_MAX
   sizeof (unsigned long long int),
+#endif
+#if ULLONG_MAX < UINTMAX_MAX
   sizeof (uintmax_t),
+#endif
 #if BF16_SUPPORTED
   sizeof (bfloat16),
-#else
+#elif FLOAT16_SUPPORTED
   sizeof (float16),
 #endif
   sizeof (float),
@@ -244,7 +256,7 @@ static bool have_read_stdin;
 
 /* Map the size in bytes to a type identifier.
    When two types have the same machine layout:
-     - Prefer unsigned int to higher ranked types, as its format is shorter.
+     - Prefer unsigned int to other types, as its format is shorter.
      - Prefer unsigned long to higher-ranked types, as it is older.
      - Prefer uintmax_t to unsigned long long int; this wins if %lld
        does not work but %jd does (e.g., MS-Windows).  */
@@ -750,9 +762,9 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
         }
 
 #define ISPEC_TO_FORMAT(Spec, Min_fmt, Long_fmt, Long_long_fmt, Max_fmt) \
-  ((Spec) == INTMAX ? (Max_fmt)						\
-   : (Spec) == LONG_LONG ? (Long_long_fmt)				\
-   : (Spec) == LONG ? (Long_fmt)					\
+  (LONG < INTMAX && (Spec) == INTMAX ? (Max_fmt)			\
+   : LONG < LONG_LONG && (Spec) == LONG_LONG ? (Long_long_fmt)		\
+   : INT < LONG && (Spec) == LONG ? (Long_fmt)				\
    : (Min_fmt))
 
       size_spec = integral_type_size[size];
@@ -791,39 +803,18 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           unreachable ();
         }
 
-      switch (+size_spec)
-        {
-        case CHAR:
-          print_function = (fmt == SIGNED_DECIMAL
-                            ? print_s_char
-                            : print_char);
-          break;
-
-        case SHORT:
-          print_function = (fmt == SIGNED_DECIMAL
-                            ? print_s_short
-                            : print_short);
-          break;
-
-        case INT:
-          print_function = print_int;
-          break;
-
-        case LONG:
-          print_function = print_long;
-          break;
-
-        case LONG_LONG:
-          print_function = print_long_long;
-          break;
-
-        case INTMAX:
-          print_function = print_intmax;
-          break;
-
-        default:
-          affirm (false);
-        }
+      /* Prefer INT, prefer LONG to longer types,
+         and prefer INTMAX to LONG_LONG.  */
+      print_function
+        = (size_spec == INT ? print_int
+           : size_spec == SHORT ? (fmt == SIGNED_DECIMAL
+                                   ? print_s_short : print_short)
+           : size_spec == CHAR ? (fmt == SIGNED_DECIMAL
+                                  ? print_s_char : print_char)
+           : size_spec == LONG ? print_long
+           : size_spec == INTMAX ? print_intmax
+           : size_spec == LONG_LONG ? print_long_long
+           : (affirm (false), nullptr));
       break;
 
     case 'f':
@@ -872,10 +863,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           else
             {
               if (ARRAY_CARDINALITY (fp_type_size) <= size
-                  || fp_type_size[size] == NO_SIZE
-                  || (! FLOAT16_SUPPORTED && BF16_SUPPORTED
-                      && size == sizeof (bfloat16))
-                  )
+                  || fp_type_size[size] == NO_SIZE)
                 {
                   error (0, 0,
                          _("invalid type string %s;\n"
@@ -904,32 +892,29 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
         idx_t decimal_point_len =
           (locale->decimal_point[0] ? strlen (locale->decimal_point) : 1);
 
-        switch (+size_spec)
+        if (size_spec == FLOAT_DOUBLE)
           {
-          case FLOAT_HALF:
+            print_function = print_double;
+            field_width = DBL_STRLEN_BOUND_L (decimal_point_len);
+          }
+        else if (size_spec == FLOAT_SINGLE)
+          {
+            print_function = print_float;
+            field_width = FLT_STRLEN_BOUND_L (decimal_point_len);
+          }
+        else if (size_spec == FLOAT_HALF)
+          {
             print_function = fmt == BFLOATING_POINT
                              ? print_bfloat : print_halffloat;
             field_width = FLT_STRLEN_BOUND_L (decimal_point_len);
-            break;
-
-          case FLOAT_SINGLE:
-            print_function = print_float;
-            field_width = FLT_STRLEN_BOUND_L (decimal_point_len);
-            break;
-
-          case FLOAT_DOUBLE:
-            print_function = print_double;
-            field_width = DBL_STRLEN_BOUND_L (decimal_point_len);
-            break;
-
-          case FLOAT_LONG_DOUBLE:
+          }
+        else if (size_spec == FLOAT_LONG_DOUBLE)
+          {
             print_function = print_long_double;
             field_width = LDBL_STRLEN_BOUND_L (decimal_point_len);
-            break;
-
-          default:
-            affirm (false);
           }
+        else
+          affirm (false);
 
         break;
       }
