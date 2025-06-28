@@ -1738,10 +1738,10 @@ main (int argc, char **argv)
               if (s_err != LONGINT_OK)
                 xstrtol_fatal (s_err, oi, c, long_options, optarg);
 
-              /* The minimum string length may be no larger than
+              /* The minimum string length must be less than
                  MIN (IDX_MAX, SIZE_MAX), since we may allocate a
-                 buffer of this size.  */
-              if (MIN (IDX_MAX, SIZE_MAX) < tmp)
+                 buffer of this size + 1.  */
+              if (MIN (IDX_MAX, SIZE_MAX) <= tmp)
                 error (EXIT_FAILURE, 0, _("%s is too large"), quote (optarg));
 
               string_min = tmp;
