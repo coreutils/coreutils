@@ -1314,7 +1314,7 @@ read_char (int *c)
 
   *c = EOF;
 
-  while (in_stream && (*c = fgetc (in_stream)) < 0)
+  while (in_stream && (*c = getc (in_stream)) < 0)
     {
       ok &= check_and_close (errno);
       ok &= open_next_file ();
