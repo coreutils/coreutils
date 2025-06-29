@@ -1402,7 +1402,7 @@ get_lcm (void)
    leading '+' return true and set *OFFSET to the offset it denotes.  */
 
 static bool
-parse_old_offset (char const *s, uintmax_t *offset)
+parse_old_offset (char *s, uintmax_t *offset)
 {
   int radix;
 
@@ -1414,10 +1414,24 @@ parse_old_offset (char const *s, uintmax_t *offset)
     ++s;
 
   /* Determine the radix we'll use to interpret S.  If there is a '.',
+     optionally followed by 'B' or 'b' and then end of string,
      it's decimal, otherwise, if the string begins with '0X'or '0x',
      it's hexadecimal, else octal.  */
-  if (strchr (s, '.') != nullptr)
-    radix = 10;
+  char *dot = strchr (s, '.');
+  if (dot)
+    {
+      bool b = dot[1] == 'B' || dot[1] == 'b';
+      if (dot[b + 1])
+        dot = nullptr;
+    }
+
+  if (dot)
+    {
+      /* Temporarily remove the '.' from the decimal string.  */
+      dot[0] = dot[1];
+      dot[1] = '\0';
+      radix = 10;
+    }
   else
     {
       if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X'))
@@ -1426,7 +1440,16 @@ parse_old_offset (char const *s, uintmax_t *offset)
         radix = 8;
     }
 
-  return xstrtoumax (s, nullptr, radix, offset, "Bb") == LONGINT_OK;
+  enum strtol_error s_err = xstrtoumax (s, nullptr, radix, offset, "Bb");
+
+  if (dot)
+    {
+      /* Restore the decimal string's original value.  */
+      dot[1] = dot[0];
+      dot[0] = '.';
+    }
+
+  return s_err == LONGINT_OK;
 }
 
 /* Read a chunk of size BYTES_PER_BLOCK from the input files, write the

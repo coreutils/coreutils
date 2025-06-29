@@ -60,6 +60,10 @@ my @Tests =
      ['j-proc', "-An -c -j $proc_file_byte_count $proc_file",
                                {IN=>{f2=>'e'}}, {OUT=>"   e\n"}],
 
+     # Check that the traditional form '+N.' works, as per POSIX.
+     ['trad-dot1', '+1.', {IN_PIPE=>'a'}, {OUT=>"0000001\n"}],
+     ['trad-dot512', '+1.b', {IN_PIPE => 'a' x 512}, {OUT=>"0001000\n"}],
+
      # Ensure that a large width does not cause trouble.
      # From coreutils-7.0 through coreutils-8.21, these would print
      # approximately 128KiB of padding.
