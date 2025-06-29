@@ -131,15 +131,15 @@ struct tspec
 static const int width_bytes[] =
 {
   -1,
-  sizeof (char),
+  sizeof (unsigned char),
 #if UCHAR_MAX < USHRT_MAX
-  sizeof (short int),
+  sizeof (unsigned short int),
 #endif
 #if USHRT_MAX < UINT_MAX
-  sizeof (int),
+  sizeof (unsigned int),
 #endif
 #if UINT_MAX < ULONG_MAX
-  sizeof (long int),
+  sizeof (unsigned long int),
 #endif
 #if ULONG_MAX < ULLONG_MAX
   sizeof (unsigned long long int),
@@ -712,22 +712,22 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
         {
         case 'C':
           ++s;
-          size = sizeof (char);
+          size = sizeof (unsigned char);
           break;
 
         case 'S':
           ++s;
-          size = sizeof (short int);
+          size = sizeof (unsigned short int);
           break;
 
         case 'I':
           ++s;
-          size = sizeof (int);
+          size = sizeof (unsigned int);
           break;
 
         case 'L':
           ++s;
-          size = sizeof (long int);
+          size = sizeof (unsigned long int);
           break;
 
         default:
@@ -740,7 +740,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
               return false;
             }
           if (p == s)
-            size = sizeof (int);
+            size = sizeof (unsigned int);
           else
             {
               if (ARRAY_CARDINALITY (integral_type_size) <= size
