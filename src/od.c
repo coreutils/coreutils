@@ -1227,7 +1227,12 @@ static void
 format_address_label (intmax_t address, char c)
 {
   format_address_std (address, ' ');
-  format_address_paren (address + pseudo_offset, c);
+
+  intmax_t addr;
+  if (ckd_add (&addr, address, pseudo_offset))
+    error (EXIT_FAILURE, 0, _("pseudo address too large for input"));
+
+  format_address_paren (addr, c);
 }
 
 /* Write N_BYTES bytes from CURR_BLOCK to standard output once for each
