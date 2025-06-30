@@ -1409,18 +1409,20 @@ xstr2nonneg (char const *restrict nptr, int base, intmax_t *val,
   return s_err != LONGINT_INVALID && *val < 0 ? LONGINT_INVALID : s_err;
 }
 
-/* If S is a valid traditional offset specification with an optional
-   leading '+' return true and set *OFFSET to the offset it denotes.
-   Otherwise return false and possibly set *OFFSET.  */
+/* If STR is a valid traditional offset specification with an optional
+   leading '+', and can be represented in intmax_t, return true and
+   set *OFFSET to the offset it denotes.  If it is valid but cannot be
+   represented, diagnose the problem and exit.  Otherwise return false
+   and possibly set *OFFSET.  */
 
 static bool
-parse_old_offset (char *s, intmax_t *offset)
+parse_old_offset (char *str, intmax_t *offset)
 {
-  if (*s == '\0')
-    return false;
-
   /* Skip over any leading '+'.  */
-  s += s[0] == '+';
+  char *s = str + (str[0] == '+');
+
+  if (! c_isdigit (s[0]))
+    return false;
 
   /* Determine the radix for S.  If there is a '.', followed first by
      optional 'b' or (undocumented) 'B' and then by end of string,
@@ -1447,6 +1449,8 @@ parse_old_offset (char *s, intmax_t *offset)
       dot[0] = '.';
     }
 
+  if (s_err == LONGINT_OVERFLOW)
+    error (EXIT_FAILURE, ERANGE, "%s", quotearg_colon (str));
   return s_err == LONGINT_OK;
 }
 
