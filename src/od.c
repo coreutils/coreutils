@@ -668,6 +668,21 @@ simple_strtoi (char const *s, char const **p, int *val)
   return true;
 }
 
+/* Return a printf format for SPEC, given that remaining arguments are
+   formats for int, long, long long, and intmax_t, respectively.  */
+static char const *
+ispec_to_format (enum size_spec size_spec,
+                 char const *int_format,
+                 char const *long_format,
+                 char const *long_long_format,
+                 char const *intmax_format)
+{
+  return (LONG < INTMAX && size_spec == INTMAX ? intmax_format
+          : LONG < LONG_LONG && size_spec == LONG_LONG ? long_long_format
+          : INT < LONG && size_spec == LONG ? long_format
+          : int_format);
+}
+
 /* If S points to a single valid modern od format string, put
    a description of that format in *TSPEC, make *NEXT point at the
    character following the just-decoded format (if *NEXT is non-null),
@@ -756,12 +771,6 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           break;
         }
 
-#define ISPEC_TO_FORMAT(Spec, Min_fmt, Long_fmt, Long_long_fmt, Max_fmt) \
-  (LONG < INTMAX && (Spec) == INTMAX ? (Max_fmt)			\
-   : LONG < LONG_LONG && (Spec) == LONG_LONG ? (Long_long_fmt)		\
-   : INT < LONG && (Spec) == LONG ? (Long_fmt)				\
-   : (Min_fmt))
-
       size_spec = integral_type_size[size];
 
       switch (c)
@@ -770,28 +779,28 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           fmt = SIGNED_DECIMAL;
           field_width = INT_BITS_STRLEN_BOUND (CHAR_BIT * size - 1) + 1;
           sprintf (tspec->fmt_string, "%%*%s",
-                   ISPEC_TO_FORMAT (size_spec, "d", "ld", "lld", "jd"));
+                   ispec_to_format (size_spec, "d", "ld", "lld", "jd"));
           break;
 
         case 'o':
           fmt = OCTAL;
           field_width = (CHAR_BIT * size + 2) / 3;
           sprintf (tspec->fmt_string, "%%*.%d%s", field_width,
-                   ISPEC_TO_FORMAT (size_spec, "o", "lo", "llo", "jo"));
+                   ispec_to_format (size_spec, "o", "lo", "llo", "jo"));
           break;
 
         case 'u':
           fmt = UNSIGNED_DECIMAL;
           field_width = INT_BITS_STRLEN_BOUND (CHAR_BIT * size);
           sprintf (tspec->fmt_string, "%%*%s",
-                   ISPEC_TO_FORMAT (size_spec, "u", "lu", "llu", "ju"));
+                   ispec_to_format (size_spec, "u", "lu", "llu", "ju"));
           break;
 
         case 'x':
           fmt = HEXADECIMAL;
           field_width = (CHAR_BIT * size + 3) / 4;
           sprintf (tspec->fmt_string, "%%*.%d%s", field_width,
-                   ISPEC_TO_FORMAT (size_spec, "x", "lx", "llx", "jx"));
+                   ispec_to_format (size_spec, "x", "lx", "llx", "jx"));
           break;
 
         default:
@@ -801,14 +810,18 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
       /* Prefer INT, prefer LONG to longer types,
          and prefer INTMAX to LONG_LONG.  */
       print_function
-        = (size_spec == INT ? print_int
-           : size_spec == SHORT ? (fmt == SIGNED_DECIMAL
-                                   ? print_s_short : print_short)
-           : size_spec == CHAR ? (fmt == SIGNED_DECIMAL
-                                  ? print_s_char : print_char)
-           : size_spec == LONG ? print_long
-           : size_spec == INTMAX ? print_intmax
-           : size_spec == LONG_LONG ? print_long_long
+        = (size_spec == INT
+           ? print_int
+           : SHORT < INT && size_spec == SHORT
+           ? (fmt == SIGNED_DECIMAL ? print_s_short : print_short)
+           : CHAR < SHORT && size_spec == CHAR
+           ? (fmt == SIGNED_DECIMAL ? print_s_char : print_char)
+           : INT < LONG && size_spec == LONG
+           ? print_long
+           : LONG < INTMAX && size_spec == INTMAX
+           ? print_intmax
+           : LONG < LONG_LONG && LONG_LONG < INTMAX && size_spec == LONG_LONG
+           ? print_long_long
            : (affirm (false), nullptr));
       break;
 
@@ -892,18 +905,19 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
             print_function = print_double;
             field_width = DBL_STRLEN_BOUND_L (decimal_point_len);
           }
-        else if (size_spec == FLOAT_SINGLE)
+        else if (FLOAT_SINGLE < FLOAT_DOUBLE && size_spec == FLOAT_SINGLE)
           {
             print_function = print_float;
             field_width = FLT_STRLEN_BOUND_L (decimal_point_len);
           }
-        else if (size_spec == FLOAT_HALF)
+        else if (FLOAT_HALF < FLOAT_SINGLE && size_spec == FLOAT_HALF)
           {
             print_function = fmt == BFLOATING_POINT
                              ? print_bfloat : print_halffloat;
             field_width = FLT_STRLEN_BOUND_L (decimal_point_len);
           }
-        else if (size_spec == FLOAT_LONG_DOUBLE)
+        else if (FLOAT_DOUBLE < FLOAT_LONG_DOUBLE
+                 && size_spec == FLOAT_LONG_DOUBLE)
           {
             print_function = print_long_double;
             field_width = LDBL_STRLEN_BOUND_L (decimal_point_len);
