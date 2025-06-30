@@ -1416,43 +1416,29 @@ xstr2nonneg (char const *restrict nptr, int base, intmax_t *val,
 static bool
 parse_old_offset (char *s, intmax_t *offset)
 {
-  int radix;
-
   if (*s == '\0')
     return false;
 
-  /* Skip over any leading '+'. */
-  if (s[0] == '+')
-    ++s;
+  /* Skip over any leading '+'.  */
+  s += s[0] == '+';
 
-  /* Determine the radix we'll use to interpret S.  If there is a '.',
-     optionally followed by 'B' or 'b' and then end of string,
-     it's decimal, otherwise, if the string begins with '0X'or '0x',
+  /* Determine the radix for S.  If there is a '.', followed first by
+     optional 'b' or (undocumented) 'B' and then by end of string,
+     it's decimal, otherwise, if the string begins with '0X' or '0x',
      it's hexadecimal, else octal.  */
   char *dot = strchr (s, '.');
-  if (dot)
-    {
-      bool b = dot[1] == 'B' || dot[1] == 'b';
-      if (dot[b + 1])
-        dot = nullptr;
-    }
+  if (dot && dot[(dot[1] == 'b' || dot[1] == 'B') + 1])
+    dot = nullptr;
+  int radix = dot ? 10 : s[0] == '0' && (s[1] == 'x' || s[1] == 'X') ? 16 : 8;
 
   if (dot)
     {
       /* Temporarily remove the '.' from the decimal string.  */
       dot[0] = dot[1];
       dot[1] = '\0';
-      radix = 10;
-    }
-  else
-    {
-      if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X'))
-        radix = 16;
-      else
-        radix = 8;
     }
 
-  enum strtol_error s_err = xstr2nonneg (s, radix, offset, "Bb");
+  enum strtol_error s_err = xstr2nonneg (s, radix, offset, "bB");
 
   if (dot)
     {
