@@ -718,7 +718,7 @@ src/speedlist.h: src/termios.c lib/config.h src/speedgen
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
 
-src/stty.$(OBJEXT): src/speedlist.h
+src/stty.c: src/speedlist.h
 
 # Generates a list of macro invocations like:
 #   SINGLE_BINARY_PROGRAM(program_name_str, main_name)
