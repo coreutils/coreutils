@@ -317,8 +317,8 @@ struct mp_factors
   idx_t nalloc;
 };
 
-static void factor (mp_limb_t, mp_limb_t, struct factors *);
-static void factor_up (mp_limb_t, mp_limb_t, struct factors *,
+static void factor (struct factors *, mp_limb_t, mp_limb_t);
+static void factor_up (struct factors *, mp_limb_t, mp_limb_t,
                        idx_t, mp_limb_t);
 
 /* Set (w1,w0) = u * v.  */
@@ -835,13 +835,13 @@ factor_insert_refind (struct factors *factors, mp_limb_t p, idx_t i, idx_t off)
    order, and the non-multiples of p onto the range lim < q < B.
  */
 
-/* Find factors of (T1,T0), and insert them into FACTORS.
+/* Insert into FACTORS the factors of (T1,T0) found via trial division.
    The candidate factors are 2 and the primes in the primes table.
    However, primes less than prime I with value P have
    already been considered, and need not be looked at again.
    Return (T1,T0) divided by the factors found.  */
 static uuint
-factor_using_division (mp_limb_t t1, mp_limb_t t0, struct factors *factors,
+factor_using_division (struct factors *factors, mp_limb_t t1, mp_limb_t t0,
                        idx_t i, mp_limb_t p)
 {
   if (t0 % 2 == 0)
@@ -929,12 +929,12 @@ mp_size (mpz_t n)
   return mpz_size (n);
 }
 
-/* If N < B^2 / 2, add N's factors to MP_FACTORS and return true.
-   Otherwise, return false.
+/* Insert into MP_FACTORS the factors of N if N < B^2 / 2,
+   and return true.  Otherwise, return false.
    Primes less than prime PRIME_IDX with value PRIME have
    already been considered, and need not be looked at again.  */
 static bool
-mp_finish_up_in_single (mpz_t n, struct mp_factors *mp_factors,
+mp_finish_up_in_single (struct mp_factors *mp_factors, mpz_t n,
                         idx_t prime_idx, mp_limb_t prime)
 {
   if (2 < mp_size (n))
@@ -946,7 +946,7 @@ mp_finish_up_in_single (mpz_t n, struct mp_factors *mp_factors,
   mpz_set_ui (n, 1);
 
   struct factors factors;
-  factor_up (n1, n0, &factors, prime_idx, prime);
+  factor_up (&factors, n1, n0, prime_idx, prime);
 
   if (hi_is_set (&factors.plarge))
     {
@@ -963,12 +963,12 @@ mp_finish_up_in_single (mpz_t n, struct mp_factors *mp_factors,
   return true;
 }
 
-/* If N < B^2 / 2, add its factors to MP_FACTORS and return true.
-   Otherwise, return false.  N must be odd.  */
+/* Insert into MP_FACTORS the factors of N if N < B^2 / 2, and
+   return true.  Otherwise, return false.  N must be odd.  */
 static bool
-mp_finish_in_single (mpz_t n, struct mp_factors *mp_factors)
+mp_finish_in_single (struct mp_factors *mp_factors, mpz_t n)
 {
-  return mp_finish_up_in_single (n, mp_factors, 0, 3);
+  return mp_finish_up_in_single (mp_factors, n, 0, 3);
 }
 
 /* Return some or all factors of T, where B^2 / 2 <= T.
@@ -984,7 +984,7 @@ mp_factor_using_division (mpz_t t)
     {
       mpz_fdiv_q_2exp (t, t, m);
       mp_factor_insert_ui (&factors, 2, m);
-      if (mp_finish_in_single (t, &factors))
+      if (mp_finish_in_single (&factors, t))
         return factors;
     }
 
@@ -994,7 +994,7 @@ mp_factor_using_division (mpz_t t)
       for (m = 0; mpz_divisible_ui_p (t, d); m++)
         {
           mpz_tdiv_q_ui (t, t, d);
-          if (mp_finish_up_in_single (t, &factors, i, d))
+          if (mp_finish_up_in_single (&factors, t, i, d))
             {
               mp_factor_insert_ui (&factors, d, m + 1);
               return factors;
@@ -1367,7 +1367,7 @@ prime_p (mp_limb_t n)
   if (flag_prove_primality)
     {
       /* Factor n-1 for Lucas.  */
-      factor (0, n - 1, &factors);
+      factor (&factors, 0, n - 1);
     }
 
   /* Loop until Lucas proves our number prime, or Miller-Rabin proves our
@@ -1473,7 +1473,7 @@ prime2_p (mp_limb_t n1, mp_limb_t n0)
   if (flag_prove_primality)
     {
       /* Factor n-1 for Lucas.  */
-      factor (nm1[1], nm1[0], &factors);
+      factor (&factors, nm1[1], nm1[0]);
     }
 
   /* Loop until Lucas proves our number prime, or Miller-Rabin proves our
@@ -1595,11 +1595,11 @@ mp_prime_p (mpz_t n)
   return is_prime;
 }
 
-/* Put into FACTORS the result of factoring N,
+/* Insert into FACTORS the result of factoring N,
    using Pollard-rho with starting value A.  */
 static void
-factor_using_pollard_rho (mp_limb_t n, unsigned long int a,
-                          struct factors *factors)
+factor_using_pollard_rho (struct factors *factors,
+                          mp_limb_t n, unsigned long int a)
 {
   mp_limb_t x, z, y, P, t, ni, g;
 
@@ -1660,14 +1660,14 @@ factor_using_pollard_rho (mp_limb_t n, unsigned long int a,
       if (n == g)
         {
           /* Found n itself as factor.  Restart with different params.  */
-          factor_using_pollard_rho (n, a + 1, factors);
+          factor_using_pollard_rho (factors, n, a + 1);
           return;
         }
 
       n = n / g;
 
       if (!prime_p (g))
-        factor_using_pollard_rho (g, a + 1, factors);
+        factor_using_pollard_rho (factors, g, a + 1);
       else
         factor_insert (factors, g);
 
@@ -1684,8 +1684,8 @@ factor_using_pollard_rho (mp_limb_t n, unsigned long int a,
 }
 
 static void
-factor_using_pollard_rho2 (mp_limb_t n1, mp_limb_t n0, unsigned long int a,
-                           struct factors *factors)
+factor_using_pollard_rho2 (struct factors *factors,
+                           mp_limb_t n1, mp_limb_t n0, unsigned long int a)
 {
   mp_limb_t x1, x0, z1, z0, y1, y0, P1, P0, t1, t0, g1, g0, r1m;
 
@@ -1753,7 +1753,7 @@ factor_using_pollard_rho2 (mp_limb_t n1, mp_limb_t n0, unsigned long int a,
           divexact_21 (n1, n0, n1, n0, g0);     /* n = n / g */
 
           if (!prime_p (g0))
-            factor_using_pollard_rho (g0, a + 1, factors);
+            factor_using_pollard_rho (factors, g0, a + 1);
           else
             factor_insert (factors, g0);
         }
@@ -1765,7 +1765,7 @@ factor_using_pollard_rho2 (mp_limb_t n1, mp_limb_t n0, unsigned long int a,
           if (n1 == g1 && n0 == g0)
             {
               /* Found n itself as factor.  Restart with different params.  */
-              factor_using_pollard_rho2 (n1, n0, a + 1, factors);
+              factor_using_pollard_rho2 (factors, n1, n0, a + 1);
               return;
             }
 
@@ -1776,7 +1776,7 @@ factor_using_pollard_rho2 (mp_limb_t n1, mp_limb_t n0, unsigned long int a,
           n1 = 0;
 
           if (!prime2_p (g1, g0))
-            factor_using_pollard_rho2 (g1, g0, a + 1, factors);
+            factor_using_pollard_rho2 (factors, g1, g0, a + 1);
           else
             factor_insert_large (factors, g1, g0);
         }
@@ -1789,7 +1789,7 @@ factor_using_pollard_rho2 (mp_limb_t n1, mp_limb_t n0, unsigned long int a,
               break;
             }
 
-          factor_using_pollard_rho (n0, a, factors);
+          factor_using_pollard_rho (factors, n0, a);
           return;
         }
 
@@ -1858,7 +1858,7 @@ mp_mulredc (mp_limb_t *rp, mp_limb_t const *ap, mp_limb_t const *bp,
 #define MP_FACTOR_USING_POLLARD_RHO_N_MAX \
   ((MIN (IDX_MAX, TYPE_MAXIMUM (mp_size_t)) - 3) / 10)
 
-/* Put into FACTORS the result of factoring MP, of size N,
+/* Insert into FACTORS the result of factoring MP, of size N,
    using Pollard-rho with starting value A.  */
 static void
 mp_factor_using_pollard_rho (struct mp_factors *factors,
@@ -1932,7 +1932,7 @@ mp_factor_using_pollard_rho (struct mp_factors *factors,
   while (gn == 1 && gp[0] == 1);
 
   mpz_t g = MPZ_ROINIT_N (gp, gn);
-  if (!mp_finish_in_single (g, factors))
+  if (!mp_finish_in_single (factors, g))
     {
       if (mp_prime_p (g))
         mp_factor_insert (factors, g, 1);
@@ -1944,7 +1944,7 @@ mp_factor_using_pollard_rho (struct mp_factors *factors,
   mp_size_t qn = n - gn + (qp[n - 1] != 0);
   mpz_t q = MPZ_ROINIT_N (qp, qn);
 
-  if (!mp_finish_in_single (q, factors))
+  if (!mp_finish_in_single (factors, q))
     {
       if (mp_prime_p (q))
         mp_factor_insert (factors, q, 1);
@@ -1959,12 +1959,11 @@ mp_factor_using_pollard_rho (struct mp_factors *factors,
   free (scratch);
 }
 
-/* Compute the prime factors of the 128-bit number (T1,T0),
-   and put the results in FACTORS.
+/* Insert into FACTORS the prime factors of the two-word number (T1,T0).
    Primes less than the prime with index PRIME_IDX and value PRIME
    have already been considered, and need not be looked at again.  */
 static void
-factor_up (mp_limb_t t1, mp_limb_t t0, struct factors *factors,
+factor_up (struct factors *factors, mp_limb_t t1, mp_limb_t t0,
            idx_t prime_idx, mp_limb_t prime)
 {
   factors->nfactors = 0;
@@ -1973,7 +1972,7 @@ factor_up (mp_limb_t t1, mp_limb_t t0, struct factors *factors,
   if (t1 == 0 && t0 < 2)
     return;
 
-  uuset (&t1, &t0, factor_using_division (t1, t0, factors, prime_idx, prime));
+  uuset (&t1, &t0, factor_using_division (factors, t1, t0, prime_idx, prime));
 
   if (t1 == 0 && t0 < 2)
     return;
@@ -1983,18 +1982,18 @@ factor_up (mp_limb_t t1, mp_limb_t t0, struct factors *factors,
   else
     {
       if (t1 == 0)
-        factor_using_pollard_rho (t0, 1, factors);
+        factor_using_pollard_rho (factors, t0, 1);
       else
-        factor_using_pollard_rho2 (t1, t0, 1, factors);
+        factor_using_pollard_rho2 (factors, t1, t0, 1);
     }
 }
 
-/* Compute the prime factors of the 128-bit number (T1,T0),
+/* Compute the prime factors of the two-word number (T1,T0),
    and put the results in FACTORS.  */
 static void
-factor (mp_limb_t t1, mp_limb_t t0, struct factors *factors)
+factor (struct factors *factors, mp_limb_t t1, mp_limb_t t0)
 {
-  return factor_up (t1, t0, factors, 0, 3);
+  return factor_up (factors, t1, t0, 0, 3);
 }
 
 /* Return the prime factors of T, where B^2 / 2 <= T.  */
@@ -2261,7 +2260,7 @@ print_factors_single (uuint t)
   print_uuint (t);
   lbuf_putc (':');
 
-  factor (hi (t), lo (t), &factors);
+  factor (&factors, hi (t), lo (t));
 
   for (int j = 0; j < factors.nfactors; j++)
     for (int k = 0; k < factors.e[j]; k++)
