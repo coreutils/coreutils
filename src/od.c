@@ -109,18 +109,21 @@ enum
 /* Ensure that our choice for FMT_BYTES_ALLOCATED is reasonable.  */
 static_assert (MAX_INTEGRAL_TYPE_WIDTH <= 3 * 99);
 
+/* The type of a print function.  FIELDS is the number of fields per
+   line, BLANK is the number of fields to leave blank.  WIDTH is width
+   of one field, excluding leading space, and PAD is total pad to
+   divide among FIELDS.  PAD is at least as large as FIELDS.  */
+typedef void (*print_function_type)
+  (idx_t fields, idx_t blank, void const *data,
+   char const *fmt, int width, idx_t pad);
+
 /* Each output format specification (from '-t spec' or from
    old-style options) is represented by one of these structures.  */
 struct tspec
   {
     enum output_format fmt;
     enum size_spec size; /* Type of input object.  */
-    /* FIELDS is the number of fields per line, BLANK is the number of
-       fields to leave blank.  WIDTH is width of one field, excluding
-       leading space, and PAD is total pad to divide among FIELDS.
-       PAD is at least as large as FIELDS.  */
-    void (*print_function) (idx_t fields, idx_t blank, void const *data,
-                            char const *fmt, int width, idx_t pad);
+    print_function_type print_function;
     char fmt_string[FMT_BYTES_ALLOCATED]; /* Of the style "%*d".  */
     bool hexl_mode_trailer;
     int field_width; /* Minimum width of a field, excluding leading space.  */
@@ -152,9 +155,13 @@ static const int width_bytes[] =
 #elif FLOAT16_SUPPORTED
   sizeof (float16),
 #endif
+#if FLT_MANT_DIG < DBL_MANT_DIG || FLT_MAX_EXP < DBL_MAX_EXP
   sizeof (float),
+#endif
   sizeof (double),
-  sizeof (long double)
+#if DBL_MANT_DIG < LDBL_MANT_DIG || DBL_MAX_EXP < LDBL_MAX_EXP
+  sizeof (long double),
+#endif
 };
 
 /* Ensure that for each member of 'enum size_spec' there is an
@@ -709,8 +716,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
   enum size_spec size_spec;
   int size;
   enum output_format fmt;
-  void (*print_function) (idx_t, idx_t, void const *, char const *,
-                          int, idx_t);
+  print_function_type print_function;
   char const *p;
   char c;
   int field_width;
@@ -822,7 +828,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
            ? print_intmax
            : LONG < LONG_LONG && LONG_LONG < INTMAX && size_spec == LONG_LONG
            ? print_long_long
-           : (affirm (false), nullptr));
+           : (affirm (false), (print_function_type) nullptr));
       break;
 
     case 'f':
