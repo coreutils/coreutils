@@ -24,8 +24,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   Instead, it either outputs correctly or diagnoses a too-large width.
   [This bug was present in "the beginning".]
 
-  od +N. (where N is a decimal number) works again as per POSIX.
-  [bug introduced on 1995-01-25]
+  od '+N.' (where N is a decimal number) works again as per POSIX.
+  [bug introduced in textutils-2.0]
 
   sort with key character offsets of SIZE_MAX, could induce
   a read of 1 byte before an allocated heap buffer. For example:
