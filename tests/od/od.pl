@@ -64,6 +64,24 @@ my @Tests =
      ['trad-dot1', '+1.', {IN_PIPE=>'a'}, {OUT=>"0000001\n"}],
      ['trad-dot512', '+1.b', {IN_PIPE => 'a' x 512}, {OUT=>"0001000\n"}],
 
+     # Invalid traditional offsets should be treated as file names.
+     ['invalid-off-1', '++0', {IN_PIPE=>""}, {EXIT=>1},
+      {ERR=>"$prog: ++0: No such file or directory\n"}],
+     ['invalid-off-2', '+-0', {IN_PIPE=>""}, {EXIT=>1},
+      {ERR=>"$prog: +-0: No such file or directory\n"}],
+     ['invalid-off-3', '"+ 0"', {IN_PIPE=>""}, {EXIT=>1},
+      {ERR=>"$prog: '+ 0': No such file or directory\n"}],
+     ['invalid-off-4', '-- -0', {IN_PIPE=>""}, {EXIT=>1},
+      {ERR=>"$prog: -0: No such file or directory\n"}],
+
+     # Overflowing traditional offsets should be diagnosed.
+     ['overflow-off-1', '-', '7' x 255, {IN_PIPE=>""}, {EXIT=>1},
+      {ERR=>"od: ".('7' x 255).": Numerical result out of range\n"}],
+     ['overflow-off-2', '-', ('9' x 254).'.', {IN_PIPE=>""}, {EXIT=>1},
+      {ERR=>"od: ".('9' x 254).".: Numerical result out of range\n"}],
+     ['overflow-off-3', '-', '0x'.('f' x 253), {IN_PIPE=>""}, {EXIT=>1},
+      {ERR=>"od: 0x".('f' x 253).": Numerical result out of range\n"}],
+
      # Ensure that a large width does not cause trouble.
      # From coreutils-7.0 through coreutils-8.21, these would print
      # approximately 128KiB of padding.

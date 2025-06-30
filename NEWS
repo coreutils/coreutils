@@ -27,6 +27,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   od '+N.' (where N is a decimal number) works again as per POSIX.
   [bug introduced in textutils-2.0]
 
+  'od /dev/null ++0' no longer mistakenly treats the ++0 as an offset.
+  [This bug was present in "the beginning".]
+
   sort with key character offsets of SIZE_MAX, could induce
   a read of 1 byte before an allocated heap buffer. For example:
   'sort +0.18446744073709551615R input' on 64 bit systems.
