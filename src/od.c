@@ -1450,7 +1450,7 @@ parse_old_offset (char *str, intmax_t *offset)
     }
 
   if (s_err == LONGINT_OVERFLOW)
-    error (EXIT_FAILURE, ERANGE, "%s", quotearg_colon (str));
+    error (EXIT_FAILURE, ERANGE, "%s", quotef (str));
   return s_err == LONGINT_OK;
 }
 
