@@ -871,7 +871,9 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           else
             {
               if (ARRAY_CARDINALITY (fp_type_size) <= size
-                  || fp_type_size[size] == NO_SIZE)
+                  || fp_type_size[size] == NO_SIZE
+                  || (! FLOAT16_SUPPORTED && BF16_SUPPORTED
+                      && size == sizeof (bfloat16)))
                 {
                   error (0, 0,
                          _("invalid type string %s;\n"
