@@ -403,12 +403,24 @@ static void factor_up (struct factors *, mp_limb_t, mp_limb_t,
   } while (0)
 
 /* (ah,hl) >= (bh,bl)?  */
-#define ge2(ah, al, bh, bl)                                             \
-  ((ah) > (bh) || ((ah) == (bh) && (al) >= (bl)))
+static bool
+ge2 (mp_limb_t ah, mp_limb_t al, mp_limb_t bh, mp_limb_t bl)
+{
+  mp_limb_t dh, dl;
+  bool vh = ckd_sub (&dh, ah, bh);
+  mp_limb_t vl = ckd_sub (&dl, al, bl);
+  return ! (vh | ckd_sub (&dh, dh, vl));
+}
 
 /* (ah,hl) > (bh,bl)?  */
-#define gt2(ah, al, bh, bl)                                             \
-  ((ah) > (bh) || ((ah) == (bh) && (al) > (bl)))
+static bool
+gt2 (mp_limb_t ah, mp_limb_t al, mp_limb_t bh, mp_limb_t bl)
+{
+  mp_limb_t dh, dl;
+  bool vh = ckd_sub (&dh, bh, ah);
+  mp_limb_t vl = ckd_sub (&dl, bl, al);
+  return vh | ckd_sub (&dh, dh, vl);
+}
 
 /* Set (rh,rl) = (ah,al) - (bh,bl).  Overflow wraps around.  */
 #ifndef sub_ddmmss
