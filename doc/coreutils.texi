@@ -12490,10 +12490,10 @@ and available space of all listed devices.  If no arguments are specified
 df will try harder to elide file systems insignificant to the total
 available space, by suppressing duplicate remote file systems.
 
-For the grand total line, @command{df} prints @samp{"total"} into the
-@var{source} column, and @samp{"-"} into the @var{target} column.
+For the grand total line, @command{df} prints @samp{total} into the
+@var{source} column, and @samp{-} into the @var{target} column.
 If there is no @var{source} column (see @option{--output}), then
-@command{df} prints @samp{"total"} into the @var{target} column,
+@command{df} prints @samp{total} into the @var{target} column,
 if present.
 
 @item -t @var{fstype}
