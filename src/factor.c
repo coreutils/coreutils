@@ -380,11 +380,7 @@ static void factor_up (struct factors *, mp_limb_t, mp_limb_t,
 /* Set (sh,sl) = (ah,al) + (bh,bl).  Overflow wraps around.  */
 #if !defined add_ssaaaa
 # define add_ssaaaa(sh, sl, ah, al, bh, bl)                             \
-  do {                                                                  \
-    mp_limb_t _add_x;							\
-    (sh) = (ah) + (bh) + ckd_add (&_add_x, al, bl);			\
-    (sl) = _add_x;                                                      \
-  } while (0)
+   ((sh) = (ah) + (bh) + ckd_add (&(sl), al, bl))
 #endif
 
 /* Set (rh,rl) = (ah,al) >> cnt, where 0 < cnt < W_TYPE_SIZE.  */
