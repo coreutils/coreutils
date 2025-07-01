@@ -3540,7 +3540,7 @@ $ seq -w 6 10 > k; split -n3 k; head xa?
 10
 @end example
 
-Use the "l/" modifier to suppress that:
+Use the ``l/'' modifier to suppress that:
 
 @example
 $ seq -w 6 10 > k; split -nl/3 k; head xa?
@@ -3556,7 +3556,7 @@ $ seq -w 6 10 > k; split -nl/3 k; head xa?
 10
 @end example
 
-Use the "r/" modifier to distribute lines in a round-robin fashion:
+Use the ``r/'' modifier to distribute lines in a round-robin fashion:
 
 @example
 $ seq -w 6 10 > k; split -nr/3 k; head xa?
@@ -3573,7 +3573,7 @@ $ seq -w 6 10 > k; split -nr/3 k; head xa?
 @end example
 
 You can also extract just the Kth chunk.
-This extracts and prints just the 7th "chunk" of 33:
+This extracts and prints just the 7th ``chunk'' of 33:
 
 @example
 $ seq 100 > k; split -nl/7/33 k
@@ -4219,9 +4219,9 @@ checksum-generating run of the command.  However the
 with the legacy output format from the @samp{sysv}, @samp{bsd},
 @samp{crc} or @samp{crc32b} algorithms.
 
-Three input formats are supported.  Either the "untagged" output format,
-the "tagged" output format, or the BSD reversed mode format
-which is similar to the "untagged" output format
+Three input formats are supported.  Either the ``untagged'' output format,
+the ``tagged'' output format, or the BSD reversed mode format
+which is similar to the ``untagged'' output format
 but doesn't use a character to distinguish binary and text modes.
 @xref{cksum output modes} for details of these formats.
 
@@ -15332,7 +15332,7 @@ Set odd parity (even if negated).  May be negated.
 @cindex stick parity
 @cindex mark parity
 @cindex space parity
-Use "stick" (mark/space) parity.  If parodd is set, the parity bit is
+Use ``stick'' (mark/space) parity.  If parodd is set, the parity bit is
 always 1; if parodd is not set, the parity bit is always zero.
 Non-POSIX@.  May be negated.
 
