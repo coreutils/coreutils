@@ -1337,7 +1337,8 @@ static bool mp_prime_p (mpz_t);
    Baillie-PSW for single- and/or double-word args.  */
 enum { USE_BAILLIE_PSW = true };
 
-/* Is N prime?  */
+/* Is N prime?  N cannot be even or be a composite number less than
+   SQUARE_OF_FIRST_OMITTED_PRIME.  */
 static bool
 prime_p (mp_limb_t n)
 {
@@ -1425,7 +1426,8 @@ prime_p (mp_limb_t n)
     }
 }
 
-/* Is (n1,n0) prime, where n1 != 0?  */
+/* Is (n1,n0) prime?  (n1,n0) cannot be even or be a composite number
+   less than SQUARE_OF_FIRST_OMITTED_PRIME.  */
 static bool
 prime2_p (mp_limb_t n1, mp_limb_t n0)
 {
@@ -1529,7 +1531,8 @@ prime2_p (mp_limb_t n1, mp_limb_t n0)
     }
 }
 
-/* Is N prime, where B^2 / 2 <= N?  */
+/* Is N prime?  N cannot be even or be a composite number less than
+   SQUARE_OF_FIRST_OMITTED_PRIME.  */
 static bool
 mp_prime_p (mpz_t n)
 {
