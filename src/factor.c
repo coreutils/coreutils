@@ -1348,7 +1348,7 @@ prime_p (mp_limb_t n)
     return false;
 
   /* We have already cast out small primes.  */
-  if (n < (mp_limb_t) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME)
+  if (n < SQUARE_OF_FIRST_OMITTED_PRIME)
     return true;
 
   if (USE_BAILLIE_PSW)
@@ -1540,7 +1540,7 @@ mp_prime_p (mpz_t n)
     return false;
 
   /* We have already cast out small primes.  */
-  if (mpz_cmp_ui (n, (long) FIRST_OMITTED_PRIME * FIRST_OMITTED_PRIME) < 0)
+  if (mpz_cmp_ui (n, SQUARE_OF_FIRST_OMITTED_PRIME) < 0)
     return true;
 
   int probab_prime = mpz_probab_prime_p (n, MR_REPS);

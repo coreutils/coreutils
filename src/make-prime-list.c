@@ -150,8 +150,6 @@ output_primes (const struct prime *primes, unsigned nprimes)
       p = primes[i].p;
     }
 
-  printf ("\n#undef FIRST_OMITTED_PRIME\n");
-
   /* Find next prime */
   do
     {
@@ -169,7 +167,7 @@ output_primes (const struct prime *primes, unsigned nprimes)
     }
   while (!is_prime);
 
-  printf ("#define FIRST_OMITTED_PRIME %u\n", p);
+  printf ("#define SQUARE_OF_FIRST_OMITTED_PRIME %u\n", p * p);
 }
 
 ATTRIBUTE_MALLOC
