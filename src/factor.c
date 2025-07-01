@@ -253,6 +253,11 @@ make_uuint (mp_limb_t hi, mp_limb_t lo)
 {
   return (uuint) {{lo, hi}};
 }
+static uuint
+make_uuint2 (mp_limb_t const limbs[2])
+{
+  return make_uuint (limbs[1], limbs[0]);
+}
 
 /* BIG_POWER_OF_10 is a positive power of 10 that fits in a word.
    The larger it is, the more efficient the code will likely be.
@@ -1205,22 +1210,16 @@ powm (mp_limb_t b, mp_limb_t e, mp_limb_t n, mp_limb_t ni, mp_limb_t one)
 }
 
 ATTRIBUTE_PURE static uuint
-powm2 (const mp_limb_t *bp, const mp_limb_t *ep, const mp_limb_t *np,
-       mp_limb_t ni, const mp_limb_t *one)
+powm2 (uuint b, uuint eu, uuint n, mp_limb_t ni, uuint one)
 {
   mp_limb_t r1, r0, b1, b0, n1, n0;
-  int i;
-  mp_limb_t e;
 
-  b0 = bp[0];
-  b1 = bp[1];
-  n0 = np[0];
-  n1 = np[1];
+  uuset (&b1, &b0, b);
+  uuset (&n1, &n0, n);
+  uuset (&r1, &r0, one);
 
-  r0 = one[0];
-  r1 = one[1];
-
-  for (e = ep[0], i = W_TYPE_SIZE; i > 0; i--, e >>= 1)
+  int i = W_TYPE_SIZE;
+  for (mp_limb_t e = lo (eu); i > 0; i--, e >>= 1)
     {
       if (e & 1)
         {
@@ -1232,7 +1231,7 @@ powm2 (const mp_limb_t *bp, const mp_limb_t *ep, const mp_limb_t *np,
       b0 = mulredc2 (&r1m, b1, b0, b1, b0, n1, n0, ni);
       b1 = r1m;
     }
-  for (e = ep[1]; e > 0; e >>= 1)
+  for (mp_limb_t e = hi (eu); e > 0; e >>= 1)
     {
       if (e & 1)
         {
@@ -1272,29 +1271,28 @@ millerrabin (mp_limb_t n, mp_limb_t ni, mp_limb_t b, mp_limb_t q,
 }
 
 ATTRIBUTE_PURE static bool
-millerrabin2 (const mp_limb_t *np, mp_limb_t ni, const mp_limb_t *bp,
-              const mp_limb_t *qp, int k, const mp_limb_t *one)
+millerrabin2 (uuint n, mp_limb_t ni, uuint b, uuint q, int k, uuint one)
 {
   mp_limb_t y1, y0, nm1_1, nm1_0, r1m;
 
-  uuset (&y1, &y0, powm2 (bp, qp, np, ni, one));
+  uuset (&y1, &y0, powm2 (b, q, n, ni, one));
 
-  if (y0 == one[0] && y1 == one[1])
+  if (y0 == lo (one) && y1 == hi (one))
     return true;
 
-  sub_ddmmss (nm1_1, nm1_0, np[1], np[0], one[1], one[0]);
+  sub_ddmmss (nm1_1, nm1_0, hi (n), lo (n), hi (one), lo (one));
 
   if (y0 == nm1_0 && y1 == nm1_1)
     return true;
 
   for (int i = 1; i < k; i++)
     {
-      y0 = mulredc2 (&r1m, y1, y0, y1, y0, np[1], np[0], ni);
+      y0 = mulredc2 (&r1m, y1, y0, y1, y0, hi (n), lo (n), ni);
       y1 = r1m;
 
       if (y0 == nm1_0 && y1 == nm1_1)
         return true;
-      if (y0 == one[0] && y1 == one[1])
+      if (y0 == lo (one) && y1 == hi (one))
         return false;
     }
   return false;
@@ -1423,57 +1421,53 @@ prime_p (mp_limb_t n)
 static bool
 prime2_p (mp_limb_t n1, mp_limb_t n0)
 {
-  mp_limb_t q[2], nm1[2];
-  mp_limb_t a_prim[2];
-  mp_limb_t one[2];
-  mp_limb_t na[2];
-  mp_limb_t ni;
-  int k;
-  struct factors factors;
-
   if (n1 == 0)
     return prime_p (n0);
 
+  uuint n = make_uuint (n1, n0);
+
   if (USE_BAILLIE_PSW)
     {
-      uuint un = make_uuint (n1, n0);
-      mpz_t mn = MPZ_ROINIT_N (un.uu, 2);
+      mpz_t mn = MPZ_ROINIT_N (n.uu, 2);
       return mp_prime_p (mn);
     }
 
-  nm1[1] = n1 - (n0 == 0);
-  nm1[0] = n0 - 1;
-  if (nm1[0] == 0)
+  uuint nm1 = make_uuint (n1 - (n0 == 0), n0 - 1);
+  int k;
+  uuint q;
+  if (lo (nm1) == 0)
     {
-      assume (nm1[1]);
-      k = stdc_trailing_zeros (nm1[1]);
+      assume (hi (nm1));
+      k = stdc_trailing_zeros (hi (nm1));
 
-      q[0] = nm1[1] >> k;
-      q[1] = 0;
+      q = make_uuint (0, hi (nm1) >> k);
       k += W_TYPE_SIZE;
     }
   else
     {
-      k = stdc_trailing_zeros (nm1[0]);
-      rsh2 (q[1], q[0], nm1[1], nm1[0], k);
+      k = stdc_trailing_zeros (lo (nm1));
+      mp_limb_t qlimbs[2];
+      rsh2 (qlimbs[1], qlimbs[0], hi (nm1), lo (nm1), k);
+      q = make_uuint2 (qlimbs);
     }
 
   mp_limb_t a = 2;
-  ni = binv_limb (n0);
-  redcify2 (one[1], one[0], 1, n1, n0);
-  addmod2 (a_prim[1], a_prim[0], one[1], one[0], one[1], one[0], n1, n0);
+  mp_limb_t ni = binv_limb (n0);
+  mp_limb_t onelimbs[2];
+  redcify2 (onelimbs[1], onelimbs[0], 1, n1, n0);
+  uuint one = make_uuint2 (onelimbs);
+  mp_limb_t a_prim[2];
+  addmod2 (a_prim[1], a_prim[0], hi (one), lo (one), hi (one), lo (one),
+           n1, n0);
 
-  /* FIXME: Use scalars or pointers in arguments?  Some consistency needed.  */
-  na[0] = n0;
-  na[1] = n1;
-
-  if (!millerrabin2 (na, ni, a_prim, q, k, one))
+  if (!millerrabin2 (n, ni, make_uuint2 (a_prim), q, k, one))
     return false;
 
+  struct factors factors;
   if (flag_prove_primality)
     {
       /* Factor n-1 for Lucas.  */
-      factor (&factors, nm1[1], nm1[0]);
+      factor (&factors, hi (nm1), lo (nm1));
     }
 
   /* Loop until Lucas proves our number prime, or Miller-Rabin proves our
@@ -1489,10 +1483,10 @@ prime2_p (mp_limb_t n1, mp_limb_t n0)
           is_prime = true;
           if (hi_is_set (&factors.plarge))
             {
-              e[0] = binv_limb (lo (factors.plarge)) * nm1[0];
+              e[0] = binv_limb (lo (factors.plarge)) * lo (nm1);
               e[1] = 0;
-              y = powm2 (a_prim, e, na, ni, one);
-              is_prime = (lo (y) != one[0] || hi (y) != one[1]);
+              y = powm2 (make_uuint2 (a_prim), make_uuint2 (e), n, ni, one);
+              is_prime = lo (y) != lo (one) || hi (y) != hi (one);
             }
           for (int i = 0; i < factors.nfactors && is_prime; i++)
             {
@@ -1500,11 +1494,11 @@ prime2_p (mp_limb_t n1, mp_limb_t n0)
                  handle it here?  We have done the same powering as part
                  of millerrabin.  */
               if (factors.p[i] == 2)
-                rsh2 (e[1], e[0], nm1[1], nm1[0], 1);
+                rsh2 (e[1], e[0], hi (nm1), lo (nm1), 1);
               else
-                divexact_21 (e[1], e[0], nm1[1], nm1[0], factors.p[i]);
-              y = powm2 (a_prim, e, na, ni, one);
-              is_prime = (lo (y) != one[0] || hi (y) != one[1]);
+                divexact_21 (e[1], e[0], hi (nm1), lo (nm1), factors.p[i]);
+              y = powm2 (make_uuint2 (a_prim), make_uuint2 (e), n, ni, one);
+              is_prime = lo (y) != lo (one) || hi (y) != hi (one);
             }
         }
       else
@@ -1522,7 +1516,7 @@ prime2_p (mp_limb_t n1, mp_limb_t n0)
       a += primes_diff[r];      /* Establish new base.  */
       redcify2 (a_prim[1], a_prim[0], a, n1, n0);
 
-      if (!millerrabin2 (na, ni, a_prim, q, k, one))
+      if (!millerrabin2 (n, ni, make_uuint2 (a_prim), q, k, one))
         return false;
     }
 }
