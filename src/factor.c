@@ -19,6 +19,7 @@
    Arbitrary-precision code adapted by James Youngman from Torbjörn
    Granlund's factorize.c, from GNU MP version 4.2.2.
    In 2012, the core was rewritten by Torbjörn Granlund and Niels Möller.
+   In 2025, Torbjörn Granlund and Paul Eggert sped up primality checking.
    Contains code from GNU MP.  */
 
 /* Efficiently factor numbers that fit in one or two words (word = mp_limb_t),
@@ -41,16 +42,14 @@
         division since the primes table store inverses modulo the word base.
         (The GMP variant of this code doesn't make use of the precomputed
         inverses, but instead relies on GMP for fast divisibility testing.)
-    (2) Check the nature of any non-factored part using Miller-Rabin for
-        detecting composites, and Lucas for detecting primes.
+    (2) Check the nature of any non-factored part using Baillie-PSW.
     (3) Factor any remaining composite part using Pollard-Brent rho.
-        Status of found factors are checked again using Miller-Rabin and Lucas.
+        Status of found factors are checked again using Baillie-PSW.
 
-    We prefer using Hensel norm in the divisions, not the more familiar
+    Prefer using Hensel norm in the divisions, not the more familiar
     Euclidean norm, since the former leads to much faster code.  In the
-    Pollard-Brent rho code and the prime testing code, we use Montgomery's
-    trick of multiplying all n-residues by the word base, allowing cheap Hensel
-    reductions mod n.
+    Pollard-Brent rho code, use Montgomery's trick of multiplying
+    all n-residues by the word base, allowing cheap Hensel reductions mod n.
 
     The GMP code uses an algorithm that can be considerably slower;
     for example, on a circa-2017 Intel Xeon Silver 4116, factoring
@@ -59,16 +58,13 @@
 
   Improvements:
 
-    * Use modular inverses also for exact division in the Lucas code, and
-      elsewhere.  A problem is to locate the inverses not from an index, but
-      from a prime.  We might instead compute the inverse on-the-fly.
+    * Use modular inverses also for exact division.  A problem is to
+      locate the inverses not from an index, but from a prime.
+      We might instead compute the inverse on-the-fly.
 
     * Tune trial division table size (not forgetting that this is a standalone
       program where the table will be read from secondary storage for
       each invocation).
-
-    * Implement less naive powm, using k-ary exponentiation for k = 3 or
-      perhaps k = 4.
 
     * Try to speed trial division code for single word numbers, i.e., the
       code using DIVBLOCK.  It currently runs at 2 cycles per prime (Intel SBR,
@@ -79,17 +75,8 @@
     * The redcify function could be vastly improved by using (plain Euclidean)
       pre-inversion (such as GMP's invert_limb) and udiv_qrnnd_preinv (from
       GMP's gmp-impl.h).  The redcify2 function could be vastly improved using
-      similar methods.  These functions currently dominate run time when
-      PROVE_PRIMALITY is true (which is not the default).
+      similar methods.
 */
-
-/* Whether to recursively factor to prove primality,
-   or run faster probabilistic tests.
-   FIXME: Simplify the code by assuming PROVE_PRIMALITY is false,
-   and remove PROVE_PRIMALITY.  */
-#ifndef PROVE_PRIMALITY
-# define PROVE_PRIMALITY false
-#endif
 
 
 #include <config.h>
@@ -775,12 +762,7 @@ static_assert (W_TYPE_SIZE <= WIDE_UINT_BITS);
    This flag is used only in the GMP code.  */
 static bool dev_debug = false;
 
-/* Prove primality or run probabilistic tests.  */
-static bool flag_prove_primality = PROVE_PRIMALITY;
-
-/* Number of Miller-Rabin tests to run when not proving primality.
-
-   For more, see:
+/* Number of Miller-Rabin tests to run.  For more, see:
 
      Ishmukhametov ST, Mubarakov BG, Rubtsova RG.
      On the Number of Witnesses in the Miller-Rabin Primality Test.
@@ -1191,26 +1173,6 @@ mulredc2 (mp_limb_t *r1p,
   return r0;
 }
 
-static bool
-mp_millerrabin (mpz_srcptr n, mpz_srcptr nm1, mpz_ptr x, mpz_ptr y,
-                mpz_srcptr q, mp_bitcnt_t k)
-{
-  mpz_powm (y, x, q, n);
-
-  if (mpz_cmp_ui (y, 1) == 0 || mpz_cmp (y, nm1) == 0)
-    return true;
-
-  for (mp_bitcnt_t i = 1; i < k; i++)
-    {
-      mpz_powm_ui (y, y, 2, n);
-      if (mpz_cmp (y, nm1) == 0)
-        return true;
-      if (mpz_cmp_ui (y, 1) == 0)
-        return false;
-    }
-  return false;
-}
-
 static bool mp_prime_p (mpz_t);
 
 /* Is N prime?  N cannot be even or be a composite number less than
@@ -1247,9 +1209,6 @@ prime2_p (mp_limb_t n1, mp_limb_t n0)
 static bool
 mp_prime_p (mpz_t n)
 {
-  bool is_prime;
-  mpz_t q, a, nm1, tmp;
-
   if (mpz_cmp_ui (n, 1) <= 0)
     return false;
 
@@ -1257,58 +1216,7 @@ mp_prime_p (mpz_t n)
   if (mpz_cmp_ui (n, SQUARE_OF_FIRST_OMITTED_PRIME) < 0)
     return true;
 
-  int probab_prime = mpz_probab_prime_p (n, MR_REPS);
-  assume (0 <= probab_prime);
-  if (probab_prime == 0)
-    return false;
-  if (flag_prove_primality < probab_prime)
-    return true;
-
-  mpz_inits (q, a, nm1, tmp, nullptr);
-
-  /* Precomputation for Miller-Rabin.  */
-  mpz_sub_ui (nm1, n, 1);
-
-  /* Find q and k, where q is odd and n = 1 + 2**k * q.  */
-  mp_bitcnt_t k = mpz_scan1 (nm1, 0);
-  mpz_tdiv_q_2exp (q, nm1, k);
-
-  mpz_set_ui (a, 2);
-
-  /* Factor n-1 for Lucas.  */
-  mpz_set (tmp, nm1);
-  struct mp_factors factors = mp_factor (tmp);
-
-  /* Loop until Lucas proves our number prime, or Miller-Rabin proves our
-     number composite.  */
-  for (idx_t r = 0; ; r++)
-    {
-      is_prime = true;
-      for (idx_t i = 0; i < factors.nfactors && is_prime; i++)
-        {
-          mpz_divexact (tmp, nm1, factors.f[i].p);
-          mpz_powm (tmp, a, tmp, n);
-          is_prime = mpz_cmp_ui (tmp, 1) != 0;
-        }
-
-      if (is_prime)
-        break;
-
-      /* A Lucas prime test failure should not happen.  */
-      affirm (r < PRIMES_PTAB_ENTRIES);
-
-      mpz_add_ui (a, a, primes_diff[r]);        /* Establish new base.  */
-
-      if (!mp_millerrabin (n, nm1, a, tmp, q, k))
-        {
-          is_prime = false;
-          break;
-        }
-    }
-
-  mp_factor_clear (&factors);
-  mpz_clears (q, a, nm1, tmp, nullptr);
-  return is_prime;
+  return !!mpz_probab_prime_p (n, MR_REPS);
 }
 
 /* Insert into FACTORS the result of factoring N,
