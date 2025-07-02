@@ -253,11 +253,6 @@ make_uuint (mp_limb_t hi, mp_limb_t lo)
 {
   return (uuint) {{lo, hi}};
 }
-static uuint
-make_uuint2 (mp_limb_t const limbs[2])
-{
-  return make_uuint (limbs[1], limbs[0]);
-}
 
 /* BIG_POWER_OF_10 is a positive power of 10 that fits in a word.
    The larger it is, the more efficient the code will likely be.
@@ -1196,116 +1191,6 @@ mulredc2 (mp_limb_t *r1p,
   return r0;
 }
 
-ATTRIBUTE_CONST
-static mp_limb_t
-powm (mp_limb_t b, mp_limb_t e, mp_limb_t n, mp_limb_t ni, mp_limb_t one)
-{
-  mp_limb_t y = one;
-
-  if (e & 1)
-    y = b;
-
-  while (e != 0)
-    {
-      b = mulredc (b, b, n, ni);
-      e >>= 1;
-
-      if (e & 1)
-        y = mulredc (y, b, n, ni);
-    }
-
-  return y;
-}
-
-ATTRIBUTE_PURE static uuint
-powm2 (uuint b, uuint eu, uuint n, mp_limb_t ni, uuint one)
-{
-  mp_limb_t r1, r0, b1, b0, n1, n0;
-
-  uuset (&b1, &b0, b);
-  uuset (&n1, &n0, n);
-  uuset (&r1, &r0, one);
-
-  int i = W_TYPE_SIZE;
-  for (mp_limb_t e = lo (eu); i > 0; i--, e >>= 1)
-    {
-      if (e & 1)
-        {
-          mp_limb_t r1m1;
-          r0 = mulredc2 (&r1m1, r1, r0, b1, b0, n1, n0, ni);
-          r1 = r1m1;
-        }
-      mp_limb_t r1m;
-      b0 = mulredc2 (&r1m, b1, b0, b1, b0, n1, n0, ni);
-      b1 = r1m;
-    }
-  for (mp_limb_t e = hi (eu); e > 0; e >>= 1)
-    {
-      if (e & 1)
-        {
-          mp_limb_t r1m1;
-          r0 = mulredc2 (&r1m1, r1, r0, b1, b0, n1, n0, ni);
-          r1 = r1m1;
-        }
-      mp_limb_t r1m;
-      b0 = mulredc2 (&r1m, b1, b0, b1, b0, n1, n0, ni);
-      b1 = r1m;
-    }
-  return make_uuint (r1, r0);
-}
-
-ATTRIBUTE_CONST
-static bool
-millerrabin (mp_limb_t n, mp_limb_t ni, mp_limb_t b, mp_limb_t q,
-             int k, mp_limb_t one)
-{
-  mp_limb_t y = powm (b, q, n, ni, one);
-
-  mp_limb_t nm1 = n - one;      /* -1, but in redc representation.  */
-
-  if (y == one || y == nm1)
-    return true;
-
-  for (int i = 1; i < k; i++)
-    {
-      y = mulredc (y, y, n, ni);
-
-      if (y == nm1)
-        return true;
-      if (y == one)
-        return false;
-    }
-  return false;
-}
-
-ATTRIBUTE_PURE static bool
-millerrabin2 (uuint n, mp_limb_t ni, uuint b, uuint q, int k, uuint one)
-{
-  mp_limb_t y1, y0, nm1_1, nm1_0, r1m;
-
-  uuset (&y1, &y0, powm2 (b, q, n, ni, one));
-
-  if (y0 == lo (one) && y1 == hi (one))
-    return true;
-
-  sub_ddmmss (nm1_1, nm1_0, hi (n), lo (n), hi (one), lo (one));
-
-  if (y0 == nm1_0 && y1 == nm1_1)
-    return true;
-
-  for (int i = 1; i < k; i++)
-    {
-      y0 = mulredc2 (&r1m, y1, y0, y1, y0, hi (n), lo (n), ni);
-      y1 = r1m;
-
-      if (y0 == nm1_0 && y1 == nm1_1)
-        return true;
-      if (y0 == lo (one) && y1 == hi (one))
-        return false;
-    }
-  return false;
-}
-
 static bool
 mp_millerrabin (mpz_srcptr n, mpz_srcptr nm1, mpz_ptr x, mpz_ptr y,
                 mpz_srcptr q, mp_bitcnt_t k)
@@ -1328,23 +1213,11 @@ mp_millerrabin (mpz_srcptr n, mpz_srcptr nm1, mpz_ptr x, mpz_ptr y,
 
 static bool mp_prime_p (mpz_t);
 
-/* Use the Baillie-PSW primality test for all integers.
-   Code that is currently never executed because it is protected by
-   the equivalent of "if (!USE_BAILLIE_PSW)" dates back to when
-   factor.c used an inferior primality test.
-   FIXME: Either remove the !USE_BAILLIE_PSW code, or fix it to be
-   more efficient than the USE_BAILLIE_PSW code, by special casing
-   Baillie-PSW for single- and/or double-word args.  */
-enum { USE_BAILLIE_PSW = true };
-
 /* Is N prime?  N cannot be even or be a composite number less than
    SQUARE_OF_FIRST_OMITTED_PRIME.  */
 static bool
 prime_p (mp_limb_t n)
 {
-  mp_limb_t a_prim, one, ni;
-  struct factors factors;
-
   if (n <= 1)
     return false;
 
@@ -1352,78 +1225,8 @@ prime_p (mp_limb_t n)
   if (n < SQUARE_OF_FIRST_OMITTED_PRIME)
     return true;
 
-  if (USE_BAILLIE_PSW)
-    {
-      mpz_t mn = MPZ_ROINIT_N (&n, 1);
-      return mp_prime_p (mn);
-    }
-
-  /* Precomputation for Miller-Rabin.  */
-  int k = stdc_trailing_zeros (n - 1);
-  mp_limb_t q = (n - 1) >> k;
-
-  mp_limb_t a = 2;
-  ni = binv_limb (n);		/* ni <- 1/n mod B */
-  redcify (one, 1, n);
-  addmod (a_prim, one, one, n); /* i.e., redcify a = 2 */
-
-  /* Perform a Miller-Rabin test, finds most composites quickly.  */
-  if (!millerrabin (n, ni, a_prim, q, k, one))
-    return false;
-
-  if (flag_prove_primality)
-    {
-      /* Factor n-1 for Lucas.  */
-      factor (&factors, 0, n - 1);
-    }
-
-  /* Loop until Lucas proves our number prime, or Miller-Rabin proves our
-     number composite.  */
-  for (idx_t r = 0; ; r++)
-    {
-      bool is_prime;
-
-      if (flag_prove_primality)
-        {
-          is_prime = true;
-          for (int i = 0; i < factors.nfactors && is_prime; i++)
-            {
-              is_prime
-                = powm (a_prim, (n - 1) / factors.p[i], n, ni, one) != one;
-            }
-        }
-      else
-        {
-          /* After enough Miller-Rabin runs, be content.  */
-          is_prime = (r == MR_REPS - 1);
-        }
-
-      if (is_prime)
-        return true;
-
-      /* A Lucas prime test failure should not happen.  */
-      affirm (r < PRIMES_PTAB_ENTRIES);
-
-      a += primes_diff[r];      /* Establish new base.  */
-
-      /* The following is equivalent to redcify (a_prim, a, n).  It runs faster
-         on most processors, since it avoids udiv_qrnnd.  If we go down the
-         udiv_qrnnd_preinv path, this code should be replaced.  */
-      {
-        mp_limb_t s1, s0;
-        umul_ppmm (s1, s0, one, a);
-        if (LIKELY (s1 == 0))
-          a_prim = s0 % n;
-        else
-          {
-            MAYBE_UNUSED mp_limb_t dummy;
-            udiv_qrnnd (dummy, a_prim, s1, s0, n);
-          }
-      }
-
-      if (!millerrabin (n, ni, a_prim, q, k, one))
-        return false;
-    }
+  mpz_t mn = MPZ_ROINIT_N (&n, 1);
+  return mp_prime_p (mn);
 }
 
 /* Is (n1,n0) prime?  (n1,n0) cannot be even or be a composite number
@@ -1435,100 +1238,8 @@ prime2_p (mp_limb_t n1, mp_limb_t n0)
     return prime_p (n0);
 
   uuint n = make_uuint (n1, n0);
-
-  if (USE_BAILLIE_PSW)
-    {
-      mpz_t mn = MPZ_ROINIT_N (n.uu, 2);
-      return mp_prime_p (mn);
-    }
-
-  uuint nm1 = make_uuint (n1 - (n0 == 0), n0 - 1);
-  int k;
-  uuint q;
-  if (lo (nm1) == 0)
-    {
-      assume (hi (nm1));
-      k = stdc_trailing_zeros (hi (nm1));
-
-      q = make_uuint (0, hi (nm1) >> k);
-      k += W_TYPE_SIZE;
-    }
-  else
-    {
-      k = stdc_trailing_zeros (lo (nm1));
-      mp_limb_t qlimbs[2];
-      rsh2 (qlimbs[1], qlimbs[0], hi (nm1), lo (nm1), k);
-      q = make_uuint2 (qlimbs);
-    }
-
-  mp_limb_t a = 2;
-  mp_limb_t ni = binv_limb (n0);
-  mp_limb_t onelimbs[2];
-  redcify2 (onelimbs[1], onelimbs[0], 1, n1, n0);
-  uuint one = make_uuint2 (onelimbs);
-  mp_limb_t a_prim[2];
-  addmod2 (a_prim[1], a_prim[0], hi (one), lo (one), hi (one), lo (one),
-           n1, n0);
-
-  if (!millerrabin2 (n, ni, make_uuint2 (a_prim), q, k, one))
-    return false;
-
-  struct factors factors;
-  if (flag_prove_primality)
-    {
-      /* Factor n-1 for Lucas.  */
-      factor (&factors, hi (nm1), lo (nm1));
-    }
-
-  /* Loop until Lucas proves our number prime, or Miller-Rabin proves our
-     number composite.  */
-  for (idx_t r = 0; ; r++)
-    {
-      bool is_prime;
-      mp_limb_t e[2];
-      uuint y;
-
-      if (flag_prove_primality)
-        {
-          is_prime = true;
-          if (hi_is_set (&factors.plarge))
-            {
-              e[0] = binv_limb (lo (factors.plarge)) * lo (nm1);
-              e[1] = 0;
-              y = powm2 (make_uuint2 (a_prim), make_uuint2 (e), n, ni, one);
-              is_prime = lo (y) != lo (one) || hi (y) != hi (one);
-            }
-          for (int i = 0; i < factors.nfactors && is_prime; i++)
-            {
-              /* FIXME: We always have the factor 2.  Do we really need to
-                 handle it here?  We have done the same powering as part
-                 of millerrabin.  */
-              if (factors.p[i] == 2)
-                rsh2 (e[1], e[0], hi (nm1), lo (nm1), 1);
-              else
-                divexact_21 (e[1], e[0], hi (nm1), lo (nm1), factors.p[i]);
-              y = powm2 (make_uuint2 (a_prim), make_uuint2 (e), n, ni, one);
-              is_prime = lo (y) != lo (one) || hi (y) != hi (one);
-            }
-        }
-      else
-        {
-          /* After enough Miller-Rabin runs, be content.  */
-          is_prime = (r == MR_REPS - 1);
-        }
-
-      if (is_prime)
-        return true;
-
-      /* A Lucas prime test failure should not happen.  */
-      affirm (r < PRIMES_PTAB_ENTRIES);
-
-      a += primes_diff[r];      /* Establish new base.  */
-      redcify2 (a_prim[1], a_prim[0], a, n1, n0);
-
-      if (!millerrabin2 (n, ni, make_uuint2 (a_prim), q, k, one))
-        return false;
-    }
+  mpz_t mn = MPZ_ROINIT_N (n.uu, 2);
+  return mp_prime_p (mn);
 }
 
 /* Is N prime?  N cannot be even or be a composite number less than
@@ -2317,8 +2028,7 @@ print_factors (char const *input)
          as <https://bugs.gnu.org/78476> suggests that it fails when
          W_TYPE_SIZE is 128 and the code has not been well tested with
          other values.  FIXME: Either remove the single-precision
-         code, or fix its assumptions about W_TYPE_SIZE, perhaps by
-         using Baille-PSW as suggested in a FIXME above.  */
+         code, or fix its assumptions about W_TYPE_SIZE.  */
       enum { SINGLE_WORKS = W_TYPE_SIZE == 32 || W_TYPE_SIZE == 64 };
 
       if (SINGLE_WORKS && hi (u) >> (W_TYPE_SIZE - 1) == 0)
