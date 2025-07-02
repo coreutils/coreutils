@@ -67,7 +67,7 @@
       each invocation).
 
     * Try to speed trial division code for single word numbers, i.e., the
-      code using DIVBLOCK.  It currently runs at 2 cycles per prime (Intel SBR,
+      code using divblock.  It currently runs at 2 cycles per prime (Intel SBR,
       IBR), 3 cycles per prime (AMD Stars) and 5 cycles per prime (AMD BD) when
       using gcc 4.6 and 4.7.  Some software pipelining should help; 1, 2, and 4
       respectively cycles ought to be possible.
@@ -102,7 +102,7 @@
   proper_name_lite ("Niels Moller", "Niels M\303\266ller")
 
 /* Token delimiters when reading from a file.  */
-#define DELIM "\n\t "
+static char const DELIM[] = "\n\t ";
 
 /* GMP uses the unsigned integer type mp_limb_t as its word in
    multiprecision arithmetic.  This code uses the same word for single
@@ -825,6 +825,22 @@ factor_insert_refind (struct factors *factors, mp_limb_t p, idx_t i, idx_t off)
    order, and the non-multiples of p onto the range lim < q < B.
  */
 
+/* The kernel of factor_using_division.  This function is called in a
+   loop unrolled by hand.  */
+static inline mp_limb_t
+divblock (struct factors *factors, mp_limb_t t0, struct primes_dtab const *pd,
+          mp_limb_t p, idx_t i, int ioff)
+{
+  for (;;)
+    {
+      mp_limb_t q = t0 * pd[ioff].binv;
+      if (LIKELY (pd[ioff].lim < q))
+        return t0;
+      t0 = q;
+      factor_insert_refind (factors, p, i + 1, ioff);
+    }
+}
+
 /* Insert into FACTORS the factors of (T1,T0) found via trial division.
    The candidate factors are 2 and the primes in the primes table.
    However, primes less than prime I with value P have
@@ -876,30 +892,17 @@ factor_using_division (struct factors *factors, mp_limb_t t1, mp_limb_t t0,
       p += primes_diff[i + 1];
     }
 
-#define DIVBLOCK(I)                                                     \
-  do {                                                                  \
-    for (;;)                                                            \
-      {                                                                 \
-        q = t0 * pd[I].binv;                                            \
-        if (LIKELY (q > pd[I].lim))                                     \
-          break;                                                        \
-        t0 = q;                                                         \
-        factor_insert_refind (factors, p, i + 1, I);                    \
-      }                                                                 \
-  } while (0)
-
   for (; i < PRIMES_PTAB_ENTRIES; i += 8)
     {
-      mp_limb_t q;
       const struct primes_dtab *pd = &primes_dtab[i];
-      DIVBLOCK (0);
-      DIVBLOCK (1);
-      DIVBLOCK (2);
-      DIVBLOCK (3);
-      DIVBLOCK (4);
-      DIVBLOCK (5);
-      DIVBLOCK (6);
-      DIVBLOCK (7);
+      t0 = divblock (factors, t0, pd, p, i, 0);
+      t0 = divblock (factors, t0, pd, p, i, 1);
+      t0 = divblock (factors, t0, pd, p, i, 2);
+      t0 = divblock (factors, t0, pd, p, i, 3);
+      t0 = divblock (factors, t0, pd, p, i, 4);
+      t0 = divblock (factors, t0, pd, p, i, 5);
+      t0 = divblock (factors, t0, pd, p, i, 6);
+      t0 = divblock (factors, t0, pd, p, i, 7);
 
       p += primes_diff8[i];
       if (p * p > t0)
