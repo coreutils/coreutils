@@ -428,8 +428,9 @@ gt2 (mp_limb_t ah, mp_limb_t al, mp_limb_t bh, mp_limb_t bl)
   } while (0)
 #define submod2(r1, r0, a1, a0, b1, b0, n1, n0)                         \
   do {                                                                  \
-    sub_ddmmss (r1, r0, a1, a0, b1, b0);				\
-    if ((r1) >> (W_TYPE_SIZE - 1) != 0)					\
+    bool _v1 = ckd_sub (&(r1), a1, b1);					\
+    mp_limb_t _v0 = ckd_sub (&(r0), a0, b0);				\
+    if (_v1 | ckd_sub (&(r1), r1, _v0))					\
       add_ssaaaa (r1, r0, r1, r0, n1, n0);				\
   } while (0)
 
