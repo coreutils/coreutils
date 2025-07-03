@@ -32,10 +32,6 @@
 * Date input formats: (coreutils)Date input formats.
 @end direntry
 
-@c FIXME: the following need documentation
-@c * [: (coreutils)[ invocation.                   File/string tests.
-@c * pinky: (coreutils)pinky invocation.           FIXME.
-
 @dircategory Individual utilities
 @direntry
 * arch: (coreutils)arch invocation.             Print machine hardware name.

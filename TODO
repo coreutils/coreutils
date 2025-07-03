@@ -11,10 +11,6 @@ Modify chmod so that it does not change an inode's st_ctime
     https://lists.gnu.org/r/bug-coreutils/2004-09/msg00145.html
   Discussed more recently on <https://bugs.debian.org/497514>.
 
-document the following in coreutils.texi:
-  [
-  pinky
-
 Suggestion from Paul Eggert:
   More generally, there's not that much use for imaxtostr nowadays,
   since the inttypes module and newer versions of gettext allow things
