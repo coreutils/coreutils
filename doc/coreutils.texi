@@ -19158,7 +19158,7 @@ $ factor --exponents 3000
 
 If the number to be factored is small (less than @math{2^{127}} on
 typical machines), @command{factor} uses a faster algorithm.
-For example, on a circa-2017 Intel Xeon Silver 4116, factoring the
+For example, on a circa-2021 Intel Xeon W-1350, factoring the
 product of the eighth and ninth Mersenne primes (approximately
 @math{2^{92}}) takes about 4 ms of CPU time:
 
@@ -19169,16 +19169,16 @@ $ n=$(echo "$M8 * $M9" | bc)
 $ bash -c "time factor $n"
 4951760154835678088235319297: 2147483647 2305843009213693951
 
-real	0m0.004s
+real	0m0.006s
 user	0m0.004s
-sys	0m0.000s
+sys	0m0.002s
 @end example
 
 For larger numbers, @command{factor} uses a slower algorithm.  On the
 same platform, factoring the eighth Fermat number @math{2^{256} + 1}
-takes about 14 seconds, and the slower algorithm would have taken
-about 750 ms to factor @math{2^{127} - 3} instead of the 50 ms needed by
-the faster algorithm.
+takes about 6400 ms.  However, large primes are identified quickly:
+it takes just 420 ms to factor the Mersenne prime @math{2^{11213} - 1}
+into itself and 1.
 
 Factoring large numbers is, in general, hard.  The Pollard--Brent rho
 algorithm used by @command{factor} is particularly effective for

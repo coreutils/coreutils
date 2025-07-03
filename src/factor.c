@@ -51,10 +51,7 @@
     Pollard-Brent rho code, use Montgomery's trick of multiplying
     all n-residues by the word base, allowing cheap Hensel reductions mod n.
 
-    The GMP code uses an algorithm that can be considerably slower;
-    for example, on a circa-2017 Intel Xeon Silver 4116, factoring
-    2^{127}-3 takes about 50 ms with the two-word algorithm but would
-    take about 750 ms with the GMP code.
+    The GMP code uses an algorithm that can be considerably slower.
 
   Improvements:
 
