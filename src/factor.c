@@ -987,7 +987,7 @@ mp_factor_using_division (mpz_t t)
     {
       for (m = 0; mpz_divisible_ui_p (t, d); m++)
         {
-          mpz_tdiv_q_ui (t, t, d);
+          mpz_divexact_ui (t, t, d);
           if (mp_finish_up_in_single (&factors, t, i, d))
             {
               mp_factor_insert_ui (&factors, d, m + 1);
@@ -1568,9 +1568,9 @@ mp_factor_using_pollard_rho (struct mp_factors *factors,
         mp_factor_using_pollard_rho (factors, gp, gn, a + 1);
     }
 
-  mpn_tdiv_qr (qp, tp, 0, mp, n, gp, gn);	/* could use divexact */
-  mp_size_t qn = n - gn + (qp[n - 1] != 0);
-  mpz_t q = MPZ_ROINIT_N (qp, qn);
+  mpz_t m = MPZ_ROINIT_N ((mp_limb_t *) mp, n), q;
+  mpz_init (q);
+  mpz_divexact (q, m, g);
 
   if (!mp_finish_in_single (factors, q))
     {
@@ -1579,9 +1579,12 @@ mp_factor_using_pollard_rho (struct mp_factors *factors,
       else
         {
           devmsg ("[composite factor--restarting pollard-rho] ");
-          mp_factor_using_pollard_rho (factors, qp, qn, a + 1);
+          mp_factor_using_pollard_rho (factors, mpz_limbs_read (q),
+                                       mp_size (q), a + 1);
         }
     }
+
+  mpz_clear (q);
 
  finish:
   free (scratch);
