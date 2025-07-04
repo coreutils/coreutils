@@ -615,6 +615,30 @@ mpz_va_init (void (*mpz_single_init)(mpz_t), ...)
 }
 #endif
 
+#ifndef mpn_tdiv_qr
+
+static void
+copy_mpn_from_mpz (mp_limb_t *p, mp_size_t n, mpz_t z)
+{
+  mp_size_t zsize = mpz_size (z);
+  mpn_copyi (p, mpz_limbs_read (z), zsize);
+  mpn_zero (p + zsize, n - zsize);
+}
+
+static void
+mpn_tdiv_qr (mp_limb_t *qp, mp_limb_t *rp, MAYBE_UNUSED mp_size_t qxn,
+             mp_limb_t const *np, mp_size_t nn,
+             mp_limb_t const *dp, mp_size_t dn)
+{
+  mpz_t q, r, n, d;
+  mpz_inits (q, r, nullptr);
+  mpz_tdiv_qr (q, r, mpz_roinit_n (n, np, nn), mpz_roinit_n (d, dp, dn));
+  copy_mpn_from_mpz (qp, nn - dn + 1, q);
+  copy_mpn_from_mpz (rp, dn, r);
+  mpz_clears (q, r, nullptr);
+}
+#endif
+
 static struct mp_factors mp_factor (mpz_t);
 
 static struct mp_factors
