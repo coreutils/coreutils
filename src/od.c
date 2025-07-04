@@ -19,6 +19,7 @@
 #include <config.h>
 
 #include <ctype.h>
+#include <endian.h>
 #include <float.h>
 #include <stdio.h>
 #include <getopt.h>
@@ -300,10 +301,6 @@ static enum size_spec const fp_type_size[] =
     [sizeof (long double)] = FLOAT_LONG_DOUBLE,
 #endif
   };
-
-#ifndef WORDS_BIGENDIAN
-# define WORDS_BIGENDIAN 0
-#endif
 
 /* Use native endianness by default.  */
 static bool input_swap;
@@ -1756,12 +1753,12 @@ main (int argc, char **argv)
         case ENDIAN_OPTION:
           switch (XARGMATCH ("--endian", optarg, endian_args, endian_types))
             {
-              case endian_big:
-                  input_swap = ! WORDS_BIGENDIAN;
-                  break;
-              case endian_little:
-                  input_swap = WORDS_BIGENDIAN;
-                  break;
+            case endian_big:
+              input_swap = BYTE_ORDER != BIG_ENDIAN;
+              break;
+            case endian_little:
+              input_swap = BYTE_ORDER != LITTLE_ENDIAN;
+              break;
             }
           break;
 
