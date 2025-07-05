@@ -15,7 +15,8 @@
 #ifndef BLAKE2_IMPL_H
 #define BLAKE2_IMPL_H
 
-#ifndef WORDS_BIGENDIAN
+#include <endian.h>
+#if BYTE_ORDER == LITTLE_ENDIAN
 # define NATIVE_LITTLE_ENDIAN 1
 #endif
 
