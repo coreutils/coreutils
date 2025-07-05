@@ -371,6 +371,9 @@ src___SOURCES = src/lbracket.c
 nodist_src_coreutils_SOURCES = src/coreutils.h
 src_coreutils_SOURCES = src/coreutils.c
 
+nodist_src_stty_SOURCES = src/speedlist.h
+src_stty_SOURCES = src/stty.c
+
 src_cp_SOURCES = src/cp.c $(copy_sources) $(selinux_sources)
 src_date_SOURCES = src/date.c src/show-date.c
 src_dir_SOURCES = src/ls.c src/ls-dir.c
@@ -709,6 +712,7 @@ src/version.h: Makefile
 getmacopts = -dM -xdumpmacros -qshowmacros -PD
 
 BUILT_SOURCES += src/speedlist.h
+DISTCLEANFILES += src/speedlist.h
 src/speedlist.h: src/termios.c lib/config.h src/speedgen
 	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)${MKDIR_P} src
