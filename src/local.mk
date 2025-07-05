@@ -708,7 +708,7 @@ src/version.h: Makefile
 # -PD: MSVC (usable with a wrapper such as cccl from the SWIG project)
 getmacopts = -dM -xdumpmacros -qshowmacros -PD
 
-CLEANFILES += src/speedlist.h
+BUILT_SOURCES += src/speedlist.h
 src/speedlist.h: src/termios.c lib/config.h src/speedgen
 	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)${MKDIR_P} src
@@ -717,8 +717,6 @@ src/speedlist.h: src/termios.c lib/config.h src/speedgen
 		    done ) | $(SHELL) $(srcdir)/src/speedgen $@t
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
-
-src/stty.c: src/speedlist.h
 
 # Generates a list of macro invocations like:
 #   SINGLE_BINARY_PROGRAM(program_name_str, main_name)
