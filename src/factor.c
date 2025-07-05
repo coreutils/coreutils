@@ -179,13 +179,6 @@ typedef uint64_t UDItype;
 #  define HAVE_HOST_CPU_FAMILY_powerpc 1
 # endif
 # include "longlong.h"
-
-#else /* not USE_LONGLONG_H */
-
-static mp_limb_t const __ll_B = (mp_limb_t) 1 << (W_TYPE_SIZE / 2);
-static mp_limb_t __ll_lowpart (mp_limb_t t) { return t & (__ll_B - 1); }
-static mp_limb_t __ll_highpart (mp_limb_t t) { return t >> (W_TYPE_SIZE / 2); }
-
 #endif
 
 /* 2*3*5*7*11...*101 fits in 128 bits, and has 26 prime factors.
@@ -307,6 +300,26 @@ static void factor_up (struct factors *, mp_limb_t, mp_limb_t,
 
 /* Set (w1,w0) = u * v.  */
 #ifndef umul_ppmm
+/* Speed things up if there is an unsigned type uuroom_t that is wide
+   enough to hold two words.  */
+# if W_TYPE_SIZE <= UINTMAX_WIDTH / 2
+#  define uuroom_t uintmax_t
+# elif W_TYPE_SIZE <= 64 && defined __SIZEOF_INT128__
+#  define uuroom_t unsigned __int128
+# endif
+# ifdef uuroom_t
+#  define umul_ppmm(w1, w0, u, v)		\
+    do {					\
+      uuroom_t _u = u, _w = _u * (v);		\
+      (w1) = _w >> W_TYPE_SIZE;			\
+      (w0) = _w;				\
+    } while (0)
+# endif
+#endif
+#ifndef umul_ppmm
+static mp_limb_t const __ll_B = (mp_limb_t) 1 << (W_TYPE_SIZE / 2);
+static mp_limb_t __ll_lowpart (mp_limb_t t) { return t & (__ll_B - 1); }
+static mp_limb_t __ll_highpart (mp_limb_t t) { return t >> (W_TYPE_SIZE / 2); }
 # define umul_ppmm(w1, w0, u, v)                                        \
   do {                                                                  \
     mp_limb_t __u = u, __v = v,						\
