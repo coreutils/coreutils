@@ -465,17 +465,11 @@ mod2 (mp_limb_t a1, mp_limb_t a0, mp_limb_t d1, mp_limb_t d0)
 }
 
 /* Return the greatest common divisor of a and b,
-   where at least one is odd.  */
+   where b is odd.  */
 ATTRIBUTE_CONST
 static mp_limb_t
 gcd_odd (mp_limb_t a, mp_limb_t b)
 {
-  if ((b & 1) == 0)
-    {
-      mp_limb_t t = b;
-      b = a;
-      a = t;
-    }
   if (a == 0)
     return b;
 
@@ -488,12 +482,11 @@ gcd_odd (mp_limb_t a, mp_limb_t b)
       mp_limb_t bgta;
 
       assume (a);
-      a >>= stdc_trailing_zeros (a);
-      a >>= 1;
+      mp_limb_t ao = a >> stdc_trailing_zeros (a);
 
-      t = a - b;
+      t = (ao >> 1) - b;
       if (t == 0)
-        return (a << 1) + 1;
+        return ao;
 
       bgta = highbit_to_mask (t);
 
@@ -506,17 +499,18 @@ gcd_odd (mp_limb_t a, mp_limb_t b)
 }
 
 /* Return the greatest common divisor of (a1,a0) and (b1,b0),
-   where at least one is odd.  */
+   where (b1,b0) is odd.  */
 ATTRIBUTE_PURE static uuint
 gcd2_odd (mp_limb_t a1, mp_limb_t a0, mp_limb_t b1, mp_limb_t b0)
 {
   affirm (b0 & 1);
 
-  if ((a0 | a1) == 0)
-    return make_uuint (b1, b0);
   if (!a0)
-    a0 = a1, a1 = 0;
-  assume (a0);
+    {
+      a0 = a1, a1 = 0;
+      if (!a0)
+        return make_uuint (b1, b0);
+    }
   int ctz = stdc_trailing_zeros (a0);
   if (ctz)
     rsh2 (a1, a0, a1, a0, ctz);
@@ -1221,7 +1215,7 @@ mp_prime_p (mpz_t n)
 }
 
 /* Insert into FACTORS the result of factoring N,
-   using Pollard-rho with starting value A.  */
+   using Pollard-rho with starting value A.  N must be odd.  */
 static void
 factor_using_pollard_rho (struct factors *factors,
                           mp_limb_t n, unsigned long int a)
@@ -1484,7 +1478,7 @@ mp_mulredc (mp_limb_t *rp, mp_limb_t const *ap, mp_limb_t const *bp,
   ((MIN (IDX_MAX, TYPE_MAXIMUM (mp_size_t)) - 3) / 10)
 
 /* Insert into FACTORS the result of factoring MP, of size N,
-   using Pollard-rho with starting value A.  */
+   using Pollard-rho with starting value A.  MP must be odd. */
 static void
 mp_factor_using_pollard_rho (struct mp_factors *factors,
                              mp_limb_t const *mp, mp_size_t n,
