@@ -511,9 +511,7 @@ gcd2_odd (mp_limb_t a1, mp_limb_t a0, mp_limb_t b1, mp_limb_t b0)
       if (!a0)
         return make_uuint (b1, b0);
     }
-  int ctz = stdc_trailing_zeros (a0);
-  if (ctz)
-    rsh2 (a1, a0, a1, a0, ctz);
+  goto make_A_odd;
 
   for (;;)
     {
@@ -525,23 +523,25 @@ gcd2_odd (mp_limb_t a1, mp_limb_t a0, mp_limb_t b1, mp_limb_t b0)
           sub_ddmmss (a1, a0, a1, a0, b1, b0);
           if (!a0)
             a0 = a1, a1 = 0;
+        make_A_odd:
           assume (a0);
-          ctz = stdc_trailing_zeros (a0);
+          int ctz = stdc_trailing_zeros (a0);
           if (ctz)
             rsh2 (a1, a0, a1, a0, ctz);
         }
-      else if (gt2 (b1, b0, a1, a0))
+      else
         {
           sub_ddmmss (b1, b0, b1, b0, a1, a0);
           if (!b0)
-            b0 = b1, b1 = 0;
-          assume (b0);
-          ctz = stdc_trailing_zeros (b0);
+            {
+              b0 = b1, b1 = 0;
+              if (!b0)
+                break;
+            }
+          int ctz = stdc_trailing_zeros (b0);
           if (ctz)
             rsh2 (b1, b0, b1, b0, ctz);
         }
-      else
-        break;
     }
 
   return make_uuint (a1, a0);
