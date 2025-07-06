@@ -705,14 +705,10 @@ mp_factor_insert (struct mp_factors *factors, mpz_t prime, mp_bitcnt_t m)
 
 /* Store into FACTORS a prime factor PRIME with multiplicity M.  */
 static void
-mp_factor_insert_ui (struct mp_factors *factors, unsigned long int prime,
-                     mp_bitcnt_t m)
+mp_factor_insert1 (struct mp_factors *factors, mp_limb_t prime, mp_bitcnt_t m)
 {
-  mpz_t pz;
-
-  mpz_init_set_ui (pz, prime);
+  mpz_t pz = MPZ_ROINIT_N (&prime, 1);
   mp_factor_insert (factors, pz, m);
-  mpz_clear (pz);
 }
 
 
@@ -978,12 +974,12 @@ mp_factor_using_division (mpz_t t)
   if (m)
     {
       mpz_fdiv_q_2exp (t, t, m);
-      mp_factor_insert_ui (&factors, 2, m);
+      mp_factor_insert1 (&factors, 2, m);
       if (mp_finish_in_single (&factors, t))
         return factors;
     }
 
-  unsigned long int d = 3;
+  mp_limb_t d = 3;
   for (idx_t i = 0; i < PRIMES_PTAB_ENTRIES; i++)
     {
       for (m = 0; mpz_divisible_ui_p (t, d); m++)
@@ -991,13 +987,15 @@ mp_factor_using_division (mpz_t t)
           mpz_divexact_ui (t, t, d);
           if (mp_finish_up_in_single (&factors, t, i, d))
             {
-              mp_factor_insert_ui (&factors, d, m + 1);
+              mp_factor_insert1 (&factors, d, m + 1);
               return factors;
             }
         }
       if (m)
-        mp_factor_insert_ui (&factors, d, m);
+        mp_factor_insert1 (&factors, d, m);
       d += primes_diff[i + 1];
+      static_assert (SQUARE_OF_FIRST_OMITTED_PRIME
+                     <= MIN (MP_LIMB_MAX, ULONG_MAX));
       if (mpz_cmp_ui (t, d * d) < 0)
         break;
     }
