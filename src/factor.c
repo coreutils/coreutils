@@ -390,24 +390,21 @@ static mp_limb_t __ll_highpart (mp_limb_t t) { return t >> (W_TYPE_SIZE / 2); }
     (rl) = (al) << (cnt);                                               \
   } while (0)
 
-/* (ah,hl) >= (bh,bl)?  */
+/* (ah,hl) < (bh,bl)?  */
 static bool
-ge2 (mp_limb_t ah, mp_limb_t al, mp_limb_t bh, mp_limb_t bl)
+lt2 (mp_limb_t ah, mp_limb_t al, mp_limb_t bh, mp_limb_t bl)
 {
   mp_limb_t dh, dl;
   bool vh = ckd_sub (&dh, ah, bh);
   mp_limb_t vl = ckd_sub (&dl, al, bl);
-  return ! (vh | ckd_sub (&dh, dh, vl));
+  return vh | ckd_sub (&dh, dh, vl);
 }
 
-/* (ah,hl) > (bh,bl)?  */
+/* (ah,hl) >= (bh,bl)?  */
 static bool
-gt2 (mp_limb_t ah, mp_limb_t al, mp_limb_t bh, mp_limb_t bl)
+ge2 (mp_limb_t ah, mp_limb_t al, mp_limb_t bh, mp_limb_t bl)
 {
-  mp_limb_t dh, dl;
-  bool vh = ckd_sub (&dh, bh, ah);
-  mp_limb_t vl = ckd_sub (&dl, bl, al);
-  return vh | ckd_sub (&dh, dh, vl);
+  return !lt2 (ah, al, bh, bl);
 }
 
 /* Set (rh,rl) = (ah,al) - (bh,bl).  Overflow wraps around.  */
@@ -531,7 +528,7 @@ gcd2_odd (mp_limb_t a1, mp_limb_t a0, mp_limb_t b1, mp_limb_t b0)
       if ((b1 | a1) == 0)
         return make_uuint (0, gcd_odd (b0, a0));
 
-      if (gt2 (a1, a0, b1, b0))
+      if (lt2 (b1, b0, a1, a0))
         {
           sub_ddmmss (a1, a0, a1, a0, b1, b0);
           if (!a0)
