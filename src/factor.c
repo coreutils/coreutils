@@ -1227,8 +1227,7 @@ mp_prime_p (mpz_t n)
 /* Insert into FACTORS the result of factoring N,
    using Pollard-rho with starting value A.  N must be odd.  */
 static void
-factor_using_pollard_rho (struct factors *factors,
-                          mp_limb_t n, unsigned long int a)
+factor_using_pollard_rho (struct factors *factors, mp_limb_t n, mp_limb_t a)
 {
   mp_limb_t x, z, y, P, t, ni, g;
 
@@ -1314,7 +1313,7 @@ factor_using_pollard_rho (struct factors *factors,
 
 static void
 factor_using_pollard_rho2 (struct factors *factors,
-                           mp_limb_t n1, mp_limb_t n0, unsigned long int a)
+                           mp_limb_t n1, mp_limb_t n0, mp_limb_t a)
 {
   mp_limb_t x1, x0, z1, z0, y1, y0, P1, P0, t1, t0, g1, g0, r1m;
 
@@ -1336,7 +1335,7 @@ factor_using_pollard_rho2 (struct factors *factors,
             {
               x0 = mulredc2 (&r1m, x1, x0, x1, x0, n1, n0, ni);
               x1 = r1m;
-              addmod2 (x1, x0, x1, x0, 0, (mp_limb_t) a, n1, n0);
+              addmod2 (x1, x0, x1, x0, 0, a, n1, n0);
 
               submod2 (t1, t0, z1, z0, x1, x0, n1, n0);
               P0 = mulredc2 (&r1m, P1, P0, t1, t0, n1, n0, ni);
@@ -1359,7 +1358,7 @@ factor_using_pollard_rho2 (struct factors *factors,
             {
               x0 = mulredc2 (&r1m, x1, x0, x1, x0, n1, n0, ni);
               x1 = r1m;
-              addmod2 (x1, x0, x1, x0, 0, (mp_limb_t) a, n1, n0);
+              addmod2 (x1, x0, x1, x0, 0, a, n1, n0);
             }
           y1 = x1; y0 = x0;
         }
@@ -1369,7 +1368,7 @@ factor_using_pollard_rho2 (struct factors *factors,
         {
           y0 = mulredc2 (&r1m, y1, y0, y1, y0, n1, n0, ni);
           y1 = r1m;
-          addmod2 (y1, y0, y1, y0, 0, (mp_limb_t) a, n1, n0);
+          addmod2 (y1, y0, y1, y0, 0, a, n1, n0);
 
           submod2 (t1, t0, z1, z0, y1, y0, n1, n0);
           uuset (&g1, &g0, gcd2_odd (t1, t0, n1, n0));
