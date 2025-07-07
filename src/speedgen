@@ -11,7 +11,7 @@ fi
 s='[[:space:]]'			# For brevity's sake
 
 trap "rm -f '$tmp'" EXIT
-trap "rm -f '$tmp' '$out'" ERR HUP INT QUIT TERM
+trap "rm -f '$tmp' '$out'" HUP INT QUIT TERM
 
 # Fallback list of speeds that are always tested for.
 #
