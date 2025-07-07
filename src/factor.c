@@ -1229,8 +1229,8 @@ factor_using_pollard_rho (struct factors *factors, mp_limb_t n, mp_limb_t a)
 {
   mp_limb_t x, z, y, P, t, ni, g;
 
-  unsigned long int k = 1;
-  unsigned long int l = 1;
+  int k = 1;
+  int l = 1;
 
   redcify (P, 1, n);
   addmod (x, P, P, n);          /* i.e., redcify(2) */
@@ -1252,7 +1252,7 @@ factor_using_pollard_rho (struct factors *factors, mp_limb_t n, mp_limb_t a)
               submod (t, z, x, n);
               P = mulredc (P, t, n, ni);
 
-              if (k % 32 == 1)
+              if ((k & 31) == 1)
                 {
                   if (gcd_odd (P, n) != 1)
                     goto factor_found;
@@ -1264,7 +1264,7 @@ factor_using_pollard_rho (struct factors *factors, mp_limb_t n, mp_limb_t a)
           z = x;
           k = l;
           l = 2 * l;
-          for (unsigned long int i = 0; i < k; i++)
+          for (int i = 0; i < k; i++)
             {
               x = mulredc (x, x, n, ni);
               addmod (x, x, a, n);
@@ -1315,8 +1315,8 @@ factor_using_pollard_rho2 (struct factors *factors,
 {
   mp_limb_t x1, x0, z1, z0, y1, y0, P1, P0, t1, t0, g1, g0, r1m;
 
-  unsigned long int k = 1;
-  unsigned long int l = 1;
+  int k = 1;
+  int l = 1;
 
   redcify2 (P1, P0, 1, n1, n0);
   addmod2 (x1, x0, P1, P0, P1, P0, n1, n0); /* i.e., redcify(2) */
@@ -1339,7 +1339,7 @@ factor_using_pollard_rho2 (struct factors *factors,
               P0 = mulredc2 (&r1m, P1, P0, t1, t0, n1, n0, ni);
               P1 = r1m;
 
-              if (k % 32 == 1)
+              if ((k & 31) == 1)
                 {
                   uuset (&g1, &g0, gcd2_odd (P1, P0, n1, n0));
                   if (g1 != 0 || g0 != 1)
@@ -1352,7 +1352,7 @@ factor_using_pollard_rho2 (struct factors *factors,
           z1 = x1; z0 = x0;
           k = l;
           l = 2 * l;
-          for (unsigned long int i = 0; i < k; i++)
+          for (int i = 0; i < k; i++)
             {
               x0 = mulredc2 (&r1m, x1, x0, x1, x0, n1, n0, ni);
               x1 = r1m;
@@ -1511,9 +1511,9 @@ mp_factor_using_pollard_rho (struct mp_factors *factors,
 
   mp_limb_t m0inv = binv_limb (-mp[0]);
 
-  for (unsigned long int k = 1; ; k *= 2)
+  for (int k = 1; ; k *= 2)
     {
-      for (unsigned long int i = k; i != 0; i--)
+      for (int i = k; 0 < i; i--)
         {
           mp_mulredc (tp, xp, xp, mp, n, m0inv, scratch);
           mp_modadd_1 (xp, tp, a, mp, n);
@@ -1538,7 +1538,7 @@ mp_factor_using_pollard_rho (struct mp_factors *factors,
         }
 
       mpn_copyi (zp, xp, n);
-      for (unsigned long int i = 2 * k; i != 0; i--)
+      for (int i = 2 * k; 0 < i; i--)
         {
           mp_mulredc (tp, xp, xp, mp, n, m0inv, scratch);
           mp_modadd_1 (xp, tp, a, mp, n);
