@@ -166,7 +166,7 @@ typedef uint64_t UDItype;
 #  if defined __GNUC__ && defined __GNUC_MINOR__
 #   define __GMP_GNUC_PREREQ(a, b) ((a) < __GNUC__ + ((b) <= __GNUC_MINOR__))
 #  else
-#   define __GMP_GNUC_PREREQ(a, b) 0
+#   define __GMP_GNUC_PREREQ(a, b) false
 #  endif
 # endif
 
@@ -313,7 +313,7 @@ static void factor_up (struct factors *, mp_limb_t, mp_limb_t,
       uuroom_t _u = u, _w = _u * (v);		\
       (w1) = _w >> W_TYPE_SIZE;			\
       (w0) = _w;				\
-    } while (0)
+    } while (false)
 # endif
 #endif
 #ifndef umul_ppmm
@@ -340,7 +340,7 @@ static mp_limb_t __ll_highpart (mp_limb_t t) { return t >> (W_TYPE_SIZE / 2); }
                                                                         \
     (w1) = __x3 + __ll_highpart (__x1);                                 \
     (w0) = (__x1 << W_TYPE_SIZE / 2) + __ll_lowpart (__x0);             \
-  } while (0)
+  } while (false)
 #endif
 
 /* Set (q,r) to the quotient and remainder of dividing (n1,n0) by d.  */
@@ -366,7 +366,7 @@ static mp_limb_t __ll_highpart (mp_limb_t t) { return t >> (W_TYPE_SIZE / 2); }
       }                                                                 \
     (r) = __r0;                                                         \
     (q) = __q;                                                          \
-  } while (0)
+  } while (false)
 #endif
 
 /* Set (sh,sl) = (ah,al) + (bh,bl).  Overflow wraps around.  */
@@ -380,7 +380,7 @@ static mp_limb_t __ll_highpart (mp_limb_t t) { return t >> (W_TYPE_SIZE / 2); }
   do {                                                                  \
     (rl) = ((ah) << (W_TYPE_SIZE - (cnt))) | ((al) >> (cnt));           \
     (rh) = (ah) >> (cnt);                                               \
-  } while (0)
+  } while (false)
 
 /* Set (rh,rl) = (ah,al) << cnt, where 0 < cnt < W_TYPE_SIZE.
    Overflow wraps around.  */
@@ -388,7 +388,7 @@ static mp_limb_t __ll_highpart (mp_limb_t t) { return t >> (W_TYPE_SIZE / 2); }
   do {                                                                  \
     (rh) = ((ah) << cnt) | ((al) >> (W_TYPE_SIZE - (cnt)));             \
     (rl) = (al) << (cnt);                                               \
-  } while (0)
+  } while (false)
 
 /* (ah,hl) < (bh,bl)?  */
 static bool
@@ -418,7 +418,7 @@ ge2 (mp_limb_t ah, mp_limb_t al, mp_limb_t bh, mp_limb_t bl)
   do {                                                                  \
     mp_limb_t _s, _t = -ckd_sub (&_s, a, b);				\
     (r) = ((n) & _t) + _s;						\
-  } while (0)
+  } while (false)
 
 /* Set r = (a + b) mod n, where a < n & b <= n.  */
 #define addmod(r,a,b,n)                                                 \
@@ -432,14 +432,14 @@ ge2 (mp_limb_t ah, mp_limb_t al, mp_limb_t bh, mp_limb_t bl)
     add_ssaaaa (r1, r0, a1, a0, b1, b0);				\
     if (ge2 (r1, r0, n1, n0))						\
       sub_ddmmss (r1, r0, r1, r0, n1, n0);				\
-  } while (0)
+  } while (false)
 #define submod2(r1, r0, a1, a0, b1, b0, n1, n0)                         \
   do {                                                                  \
     bool _v1 = ckd_sub (&(r1), a1, b1);					\
     mp_limb_t _v0 = ckd_sub (&(r0), a0, b0);				\
     if (_v1 | ckd_sub (&(r1), r1, _v0))					\
       add_ssaaaa (r1, r0, r1, r0, n1, n0);				\
-  } while (0)
+  } while (false)
 
 /* Return 0 if x < B/2, MP_LIMB_MAX otherwise.  */
 static mp_limb_t
@@ -1056,14 +1056,14 @@ binv_limb (mp_limb_t n)
         (q0) = _q0;                                                     \
         (q1) = 0;                                                       \
       }                                                                 \
-  } while (0)
+  } while (false)
 
 /* x B (mod n).  */
 #define redcify(r_prim, r, n)                                           \
   do {                                                                  \
     MAYBE_UNUSED mp_limb_t _redcify_q;					\
     udiv_qrnnd (_redcify_q, r_prim, r, 0, n);                           \
-  } while (0)
+  } while (false)
 
 /* x B^2 (mod n).  Requires x > 0, n1 < B/2.  */
 #define redcify2(r1, r0, x, n1, n0)                                     \
@@ -1087,7 +1087,7 @@ binv_limb (mp_limb_t n)
       }                                                                 \
     (r1) = _r1;                                                         \
     (r0) = _r0;                                                         \
-  } while (0)
+  } while (false)
 
 /* Modular two-word multiplication, r = a * b mod m, with mi = m^(-1) mod B.
    Both a and b must be in redc form, the result will be in redc form too.  */
