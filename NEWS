@@ -204,7 +204,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   for time reductions of up to 40%, 60%, and 80% respectively.
 
   'head -c NUM', 'head -n NUM', 'nl -l NUM', 'nproc --ignore NUM',
-  'tail -c NUM', 'tail -n NUM', and 'tail --max-unchanged-stats NUM’
+  'tail -c NUM', 'tail -n NUM', and 'tail --max-unchanged-stats NUM'
   no longer fail merely because NUM stands for 2**64 or more.
 
   sort operates more efficiently when used on pseudo files with
