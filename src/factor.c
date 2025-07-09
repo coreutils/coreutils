@@ -84,7 +84,6 @@
 
 #include "system.h"
 #include "assure.h"
-#include "c-ctype.h"
 #include "full-write.h"
 #include "quote.h"
 #include "readtokens.h"
@@ -1626,61 +1625,35 @@ mp_factor (mpz_t t)
   return factors;
 }
 
-/* Convert to *U the value represnted by S.
-   Return an error indicator.  */
+/* Convert to *U the value represented by S, and return LONGINT_OK.
+   However, on error simply return a value other than LONGINT_OK.  */
 static strtol_error
 strtouuint (uuint *u, char const *s)
 {
-  int lo_carry;
-  mp_limb_t hi = 0, lo = 0;
+  mp_limb_t hi = 0, lo = *s++ - '0';
 
-  strtol_error err = LONGINT_INVALID;
+  if (UNLIKELY (9 < lo))
+    return LONGINT_INVALID;
 
-  /* Initial scan for invalid digits.  */
-  char const *p = s;
-  for (;;)
+  for (; LIKELY (0 <= *s - '0' && *s - '0' <= 9); s++)
     {
-      unsigned char c = *p++;
-      if (c == 0)
-        break;
-
-      if (UNLIKELY (!c_isdigit (c)))
-        {
-          err = LONGINT_INVALID;
-          break;
-        }
-
-      err = LONGINT_OK;           /* we've seen at least one valid digit */
-    }
-
-  while (err == LONGINT_OK)
-    {
-      unsigned char c = *s++;
-      if (c == 0)
-        break;
-
-      c -= '0';
-
       if (UNLIKELY (ckd_mul (&hi, hi, 10)))
-        {
-          err = LONGINT_OVERFLOW;
-          break;
-        }
+        return LONGINT_OVERFLOW;
 
-      lo_carry = (lo >> (W_TYPE_SIZE - 3)) + (lo >> (W_TYPE_SIZE - 1));
+      int lo_carry = (lo >> (W_TYPE_SIZE - 3)) + (lo >> (W_TYPE_SIZE - 1));
       lo_carry += 10 * lo < 2 * lo;
 
       lo = 10 * lo;
-      lo_carry += ckd_add (&lo, lo, c);
+      lo_carry += ckd_add (&lo, lo, *s - '0');
       if (UNLIKELY (ckd_add (&hi, hi, lo_carry)))
-        {
-          err = LONGINT_OVERFLOW;
-          break;
-        }
+        return LONGINT_OVERFLOW;
     }
 
+  if (UNLIKELY (*s))
+    return LONGINT_INVALID;
+
   *u = make_uuint (hi, lo);
-  return err;
+  return LONGINT_OK;
 }
 
 /* FACTOR_PIPE_BUF is chosen to give good performance,
