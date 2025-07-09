@@ -139,18 +139,21 @@ output_primes (const struct prime *primes, unsigned nprimes)
   puts ("/* Generated file -- DO NOT EDIT */\n");
   printf ("#define WIDE_UINT_BITS %u\n", wide_uint_bits);
 
-  for (i = 0, p = 2; i < nprimes; i++)
+  for (i = 0; i < nprimes; i++)
     {
-      unsigned int d8 = i + 8 < nprimes ? primes[i + 8].p - primes[i].p : 0xff;
-      if (255 < d8) /* this happens at 668221 */
+      /* Check that primes[i].p fits in int_least16_t on all platforms,
+         and that its square fits in int_least32_t on all platforms,
+         as factor.c relies on this.  */
+      if ((1 << (16 - 1)) <= primes[i].p)
         abort ();
-      printf ("P (%u, %u,\n   (", primes[i].p - p, d8);
+
+      printf ("P (%u,\n   (", primes[i].p);
       print_wide_uint (primes[i].pinv, 0, wide_uint_bits);
       printf ("),\n   (mp_limb_t) -1 / %u)\n", primes[i].p);
-      p = primes[i].p;
     }
 
   /* Find next prime */
+  p = primes[nprimes - 1].p;
   do
     {
       p += 2;

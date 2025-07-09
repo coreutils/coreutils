@@ -295,8 +295,7 @@ struct mp_factors
 };
 
 static void factor (struct factors *, mp_limb_t, mp_limb_t);
-static void factor_up (struct factors *, mp_limb_t, mp_limb_t,
-                       idx_t, mp_limb_t);
+static void factor_up (struct factors *, mp_limb_t, mp_limb_t, idx_t);
 
 /* Set (w1,w0) = u * v.  */
 #ifndef umul_ppmm
@@ -712,27 +711,16 @@ mp_factor_insert1 (struct mp_factors *factors, mp_limb_t prime, mp_bitcnt_t m)
 }
 
 
-/* primes_diff[i] is the difference between prime i and prime i-1,
-   where the zeroth prime is 3.
+/* primes_ptab[i] is prime i, where the zeroth prime is 3.
    However, the last 7 entries are sentinels.  */
-#define P(a,b,c,d) a,
-static const unsigned char primes_diff[] = {
+#define P(a,b,c) a,
+static int_least16_t const primes_ptab[] = {
 #include "primes.h"
 0,0,0,0,0,0,0                           /* 7 sentinels for 8-way loop */
 };
 #undef P
 
-enum { PRIMES_PTAB_ENTRIES = ARRAY_CARDINALITY (primes_diff) - 8 + 1 };
-
-/* primes_diff8[i] is the difference between prime i+8 and prime i,
-   where the zeroth prime is 3.
-   However, the last 7 entries are sentinels.  */
-#define P(a,b,c,d) b,
-static const unsigned char primes_diff8[] = {
-#include "primes.h"
-0,0,0,0,0,0,0                           /* 7 sentinels for 8-way loop */
-};
-#undef P
+enum { PRIMES_PTAB_ENTRIES = ARRAY_CARDINALITY (primes_ptab) - 8 + 1 };
 
 struct primes_dtab
 {
@@ -745,7 +733,7 @@ struct primes_dtab
    primes_dtab[i].lim is the maximum value that won't overflow in
    mp_limb_t arithmetic when multiplied by the ith prime.
    However, the last 7 entries of primes_dtab are sentinels.  */
-#define P(a,b,c,d) {c,d},
+#define P(a,b,c) {b,c},
 static const struct primes_dtab primes_dtab[] = {
 #include "primes.h"
 {1,0},{1,0},{1,0},{1,0},{1,0},{1,0},{1,0} /* 7 sentinels for 8-way loop */
@@ -779,16 +767,6 @@ static bool dev_debug = false;
 #ifndef MR_REPS
 # define MR_REPS 24
 #endif
-
-/* Insert a prime into FACTORS.  P is prime I, and the prime to be
-   inserted is prime I+OFF.  */
-static void
-factor_insert_refind (struct factors *factors, mp_limb_t p, idx_t i, idx_t off)
-{
-  for (idx_t j = 0; j < off; j++)
-    p += primes_diff[i + j];
-  factor_insert (factors, p);
-}
 
 /* Trial division with odd primes uses the following trick.
 
@@ -827,7 +805,7 @@ factor_insert_refind (struct factors *factors, mp_limb_t p, idx_t i, idx_t off)
    loop unrolled by hand.  */
 static inline mp_limb_t
 divblock (struct factors *factors, mp_limb_t t0, struct primes_dtab const *pd,
-          mp_limb_t p, idx_t i, int ioff)
+          idx_t i, int ioff)
 {
   for (;;)
     {
@@ -835,18 +813,18 @@ divblock (struct factors *factors, mp_limb_t t0, struct primes_dtab const *pd,
       if (LIKELY (pd[ioff].lim < q))
         return t0;
       t0 = q;
-      factor_insert_refind (factors, p, i + 1, ioff);
+      factor_insert (factors, primes_ptab[i + ioff]);
     }
 }
 
 /* Insert into FACTORS the factors of (T1,T0) found via trial division.
    The candidate factors are 2 and the primes in the primes table.
-   However, primes less than prime I with value P have
+   However, primes less than prime I have
    already been considered, and need not be looked at again.
    Return (T1,T0) divided by the factors found.  */
 static uuint
 factor_using_division (struct factors *factors, mp_limb_t t1, mp_limb_t t0,
-                       idx_t i, mp_limb_t p)
+                       idx_t i)
 {
   if (t0 % 2 == 0)
     {
@@ -871,6 +849,7 @@ factor_using_division (struct factors *factors, mp_limb_t t1, mp_limb_t t0,
 
   for (; t1 > 0 && i < PRIMES_PTAB_ENTRIES; i++)
     {
+      mp_limb_t p = primes_ptab[i];
       for (;;)
         {
           mp_limb_t q1, q0, hi;
@@ -887,22 +866,21 @@ factor_using_division (struct factors *factors, mp_limb_t t1, mp_limb_t t0,
           t1 = q1; t0 = q0;
           factor_insert (factors, p);
         }
-      p += primes_diff[i + 1];
     }
 
   for (; i < PRIMES_PTAB_ENTRIES; i += 8)
     {
       const struct primes_dtab *pd = &primes_dtab[i];
-      t0 = divblock (factors, t0, pd, p, i, 0);
-      t0 = divblock (factors, t0, pd, p, i, 1);
-      t0 = divblock (factors, t0, pd, p, i, 2);
-      t0 = divblock (factors, t0, pd, p, i, 3);
-      t0 = divblock (factors, t0, pd, p, i, 4);
-      t0 = divblock (factors, t0, pd, p, i, 5);
-      t0 = divblock (factors, t0, pd, p, i, 6);
-      t0 = divblock (factors, t0, pd, p, i, 7);
+      t0 = divblock (factors, t0, pd, i, 0);
+      t0 = divblock (factors, t0, pd, i, 1);
+      t0 = divblock (factors, t0, pd, i, 2);
+      t0 = divblock (factors, t0, pd, i, 3);
+      t0 = divblock (factors, t0, pd, i, 4);
+      t0 = divblock (factors, t0, pd, i, 5);
+      t0 = divblock (factors, t0, pd, i, 6);
+      t0 = divblock (factors, t0, pd, i, 7);
 
-      p += primes_diff8[i];
+      int_least32_t p = primes_ptab[i + 8];
       if (p * p > t0)
         break;
     }
@@ -922,11 +900,11 @@ mp_size (mpz_t n)
 
 /* Insert into MP_FACTORS the factors of N if N < B^2 / 2,
    and return true.  Otherwise, return false.
-   Primes less than prime PRIME_IDX with value PRIME have
+   Primes less than prime PRIME_IDX have
    already been considered, and need not be looked at again.  */
 static bool
 mp_finish_up_in_single (struct mp_factors *mp_factors, mpz_t n,
-                        idx_t prime_idx, mp_limb_t prime)
+                        idx_t prime_idx)
 {
   if (2 < mp_size (n))
     return false;
@@ -937,7 +915,7 @@ mp_finish_up_in_single (struct mp_factors *mp_factors, mpz_t n,
   mpz_set_ui (n, 1);
 
   struct factors factors;
-  factor_up (&factors, n1, n0, prime_idx, prime);
+  factor_up (&factors, n1, n0, prime_idx);
 
   if (hi_is_set (&factors.plarge))
     {
@@ -959,7 +937,7 @@ mp_finish_up_in_single (struct mp_factors *mp_factors, mpz_t n,
 static bool
 mp_finish_in_single (struct mp_factors *mp_factors, mpz_t n)
 {
-  return mp_finish_up_in_single (mp_factors, n, 0, 3);
+  return mp_finish_up_in_single (mp_factors, n, 0);
 }
 
 /* Return some or all factors of T, where B^2 / 2 <= T.
@@ -979,13 +957,13 @@ mp_factor_using_division (mpz_t t)
         return factors;
     }
 
-  mp_limb_t d = 3;
   for (idx_t i = 0; i < PRIMES_PTAB_ENTRIES; i++)
     {
+      mp_limb_t d = primes_ptab[i];
       for (m = 0; mpz_divisible_ui_p (t, d); m++)
         {
           mpz_divexact_ui (t, t, d);
-          if (mp_finish_up_in_single (&factors, t, i, d))
+          if (mp_finish_up_in_single (&factors, t, i))
             {
               mp_factor_insert1 (&factors, d, m + 1);
               return factors;
@@ -993,7 +971,6 @@ mp_factor_using_division (mpz_t t)
         }
       if (m)
         mp_factor_insert1 (&factors, d, m);
-      d += primes_diff[i + 1];
       static_assert (SQUARE_OF_FIRST_OMITTED_PRIME
                      <= MIN (MP_LIMB_MAX, ULONG_MAX));
       if (mpz_cmp_ui (t, d * d) < 0)
@@ -1589,11 +1566,11 @@ mp_factor_using_pollard_rho (struct mp_factors *factors,
 }
 
 /* Insert into FACTORS the prime factors of the two-word number (T1,T0).
-   Primes less than the prime with index PRIME_IDX and value PRIME
+   Primes less than the prime with index PRIME_IDX
    have already been considered, and need not be looked at again.  */
 static void
 factor_up (struct factors *factors, mp_limb_t t1, mp_limb_t t0,
-           idx_t prime_idx, mp_limb_t prime)
+           idx_t prime_idx)
 {
   factors->nfactors = 0;
   hiset (&factors->plarge, 0);
@@ -1601,7 +1578,7 @@ factor_up (struct factors *factors, mp_limb_t t1, mp_limb_t t0,
   if (t1 == 0 && t0 < 2)
     return;
 
-  uuset (&t1, &t0, factor_using_division (factors, t1, t0, prime_idx, prime));
+  uuset (&t1, &t0, factor_using_division (factors, t1, t0, prime_idx));
 
   if (t1 == 0 && t0 < 2)
     return;
@@ -1622,7 +1599,7 @@ factor_up (struct factors *factors, mp_limb_t t1, mp_limb_t t0,
 static void
 factor (struct factors *factors, mp_limb_t t1, mp_limb_t t0)
 {
-  return factor_up (factors, t1, t0, 0, 3);
+  return factor_up (factors, t1, t0, 0);
 }
 
 /* Return the prime factors of T, where B^2 / 2 <= T.  */
