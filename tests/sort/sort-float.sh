@@ -46,7 +46,8 @@ dbl_minima_order()
   test "$ldbl_exp"   -lt "$dbl_exp"    && return 1
   test "$ldbl_whole" -lt "$dbl_whole"  && return 0
   test "$dbl_whole"  -lt "$ldbl_whole" && return 1
-  test "$ldbl_frac"  -le "$dbl_frac"   && return 0
+  # Use 'expr' not 'test', as these integers may be large.
+  expr "$ldbl_frac" '<=' "$dbl_frac" >/dev/null && return 0
   return 1
 }
 
