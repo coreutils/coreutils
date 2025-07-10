@@ -939,7 +939,7 @@ mp_finish_in_single (struct mp_factors *mp_factors, mpz_t n)
   return mp_finish_up_in_single (mp_factors, n, 0);
 }
 
-/* Return some or all factors of T, where B^2 / 2 <= T.
+/* Return some or all factors of T.
    Divide T by the factors found.  */
 static struct mp_factors
 mp_factor_using_division (mpz_t t)
@@ -1534,6 +1534,10 @@ mp_factor_using_pollard_rho (struct mp_factors *factors,
   while (gn == 1 && gp[0] == 1);
 
   mpz_t g = MPZ_ROINIT_N (gp, gn);
+  mpz_t m = MPZ_ROINIT_N ((mp_limb_t *) mp, n), q;
+  mpz_init (q);
+  mpz_divexact (q, m, g);
+
   if (!mp_finish_in_single (factors, g))
     {
       if (mp_prime_p (g))
@@ -1541,10 +1545,6 @@ mp_factor_using_pollard_rho (struct mp_factors *factors,
       else
         mp_factor_using_pollard_rho (factors, gp, gn, a + 1);
     }
-
-  mpz_t m = MPZ_ROINIT_N ((mp_limb_t *) mp, n), q;
-  mpz_init (q);
-  mpz_divexact (q, m, g);
 
   if (!mp_finish_in_single (factors, q))
     {
@@ -1601,7 +1601,7 @@ factor (struct factors *factors, mp_limb_t t1, mp_limb_t t0)
   return factor_up (factors, t1, t0, 0);
 }
 
-/* Return the prime factors of T, where B^2 / 2 <= T.  */
+/* Return the prime factors of T.  */
 static struct mp_factors
 mp_factor (mpz_t t)
 {
