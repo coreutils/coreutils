@@ -1886,15 +1886,8 @@ print_factors (char const *input)
 
   switch (err)
     {
-    case LONGINT_OK:;
-      /* Use single-precision code only when W_TYPE_SIZE is 32 or 64,
-         as <https://bugs.gnu.org/78476> suggests that it fails when
-         W_TYPE_SIZE is 128 and the code has not been well tested with
-         other values.  FIXME: Either remove the single-precision
-         code, or fix its assumptions about W_TYPE_SIZE.  */
-      enum { SINGLE_WORKS = W_TYPE_SIZE == 32 || W_TYPE_SIZE == 64 };
-
-      if (SINGLE_WORKS && hi (u) >> (W_TYPE_SIZE - 1) == 0)
+    case LONGINT_OK:
+      if (hi (u) >> (W_TYPE_SIZE - 1) == 0)
         {
           devmsg ("[using single-precision arithmetic] ");
           print_factors_single (u);
