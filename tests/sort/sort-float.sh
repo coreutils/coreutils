@@ -35,7 +35,7 @@ print_ver_ sort
 
 dbl_minima_order()
 {
-  LC_ALL=C getlimits_
+  getlimits_
   set -- $(echo $LDBL_MIN | tr .e- '   ')
   local ldbl_whole=$1 ldbl_frac=$2 ldbl_exp=$3
 
@@ -46,17 +46,23 @@ dbl_minima_order()
   test "$ldbl_exp"   -lt "$dbl_exp"    && return 1
   test "$ldbl_whole" -lt "$dbl_whole"  && return 0
   test "$dbl_whole"  -lt "$ldbl_whole" && return 1
-  # Use 'expr' not 'test', as these integers may be large.
-  expr "$ldbl_frac" '<=' "$dbl_frac" >/dev/null && return 0
-  return 1
+
+  # Use string comparison with leading '.', not 'test',
+  # as the fractions may be large integers or may differ in length.
+  test ".$dbl_frac"  '<' ".$ldbl_frac" && return 0
+  test ".$ldbl_frac" '<' ".$dbl_frac"  && return 1
+
+  return 0
 }
 
 # On some systems, DBL_MIN < LDBL_MIN.  Detect that.
+export LC_ALL=C
 dbl_minima_order; reversed=$?
 
 for LOC in C $LOCALE_FR; do
 
-  LC_ALL=$LOC getlimits_
+  export LC_ALL=$LOC
+  getlimits_
 
   # If DBL_MIN happens to be smaller than LDBL_MIN, swap them,
   # so that out expected output is sorted.
@@ -83,7 +89,7 @@ $LDBL_MAX
 " |
   grep '^[0-9.,e+-]*$' > exp # restrict to numeric just in case
 
-  tac exp | LC_ALL=$LOC sort -sg > out || fail=1
+  tac exp | sort -sg > out || fail=1
 
   compare exp out || fail=1
 done
