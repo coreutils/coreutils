@@ -94,4 +94,7 @@ $LDBL_MAX
   compare exp out || fail=1
 done
 
+# Ensure equal floats are treated as such
+test $(printf '%s\n' 10 1e1  | sort -gu | wc -l) = 1 || fail=1
+
 Exit $fail
