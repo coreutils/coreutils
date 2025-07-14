@@ -296,10 +296,9 @@ wc_lines (int fd)
 
 /* Count words.  FILE_X is the name of the file (or null for standard
    input) that is open on descriptor FD.  *FSTATUS is its status.
-   CURRENT_POS is the current file offset if known, negative if unknown.
    Return true if successful.  */
 static bool
-wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
+wc (int fd, char const *file_x, struct fstatus *fstatus)
 {
   int err = 0;
   char buf[IO_BUFSIZE + 1];
@@ -351,10 +350,10 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
           && 0 <= fstatus->st.st_size)
         {
           off_t end_pos = fstatus->st.st_size;
+          off_t current_pos = lseek (fd, 0, SEEK_CUR);
           if (current_pos < 0)
-            current_pos = lseek (fd, 0, SEEK_CUR);
-
-          if (end_pos % page_size)
+            ;
+          else if (end_pos % page_size)
             {
               /* We only need special handling of /proc and /sys files etc.
                  when they're a multiple of PAGE_SIZE.  In the common case
@@ -629,7 +628,7 @@ wc_file (char const *file, struct fstatus *fstatus)
     {
       have_read_stdin = true;
       xset_binary_mode (STDIN_FILENO, O_BINARY);
-      return wc (STDIN_FILENO, file, fstatus, -1);
+      return wc (STDIN_FILENO, file, fstatus);
     }
   else
     {
@@ -641,7 +640,7 @@ wc_file (char const *file, struct fstatus *fstatus)
         }
       else
         {
-          bool ok = wc (fd, file, fstatus, 0);
+          bool ok = wc (fd, file, fstatus);
           if (close (fd) != 0)
             {
               error (0, errno, "%s", quotef (file));
