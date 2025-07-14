@@ -1109,8 +1109,6 @@ skip (intmax_t n_skip)
 
       if (fstat (fileno (in_stream), &file_stats) == 0)
         {
-          bool usable_size = usable_st_size (&file_stats);
-
           /* The st_size field is valid for regular files.
              If the number of bytes left to skip is larger than
              the size of the current file, we can decrement n_skip
@@ -1118,7 +1116,8 @@ skip (intmax_t n_skip)
              when st_size is no greater than the block size, because
              some kernels report nonsense small file sizes for
              proc-like file systems.  */
-          if (usable_size && STP_BLKSIZE (&file_stats) < file_stats.st_size)
+          if (S_ISREG (file_stats.st_mode)
+              && STP_BLKSIZE (&file_stats) < file_stats.st_size)
             {
               if (file_stats.st_size < n_skip)
                 n_skip -= file_stats.st_size;
@@ -1133,11 +1132,14 @@ skip (intmax_t n_skip)
                 }
             }
 
-          else if (!usable_size && fseeko (in_stream, n_skip, SEEK_CUR) == 0)
+          else if (! (S_ISREG (file_stats.st_mode)
+                      || S_TYPEISSHM (&file_stats)
+                      || S_TYPEISTMO (&file_stats))
+                   && fseeko (in_stream, n_skip, SEEK_CUR) == 0)
             n_skip = 0;
 
-          /* If it's not a regular file with nonnegative size,
-             or if it's so small that it might be in a proc-like file system,
+          /* If it's neither a seekable file with unusable size, nor a
+             regular file so large it can't be in a proc-like file system,
              position the file pointer by reading.  */
 
           else

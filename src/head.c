@@ -452,8 +452,8 @@ elide_tail_bytes_pipe (char const *filename, int fd, uintmax_t n_elide,
 }
 
 /* For the file FILENAME with descriptor FD, output all but the last N_ELIDE
-   bytes.  If SIZE is nonnegative, this is a regular file positioned
-   at CURRENT_POS with SIZE bytes.  Return true on success.
+   bytes.  If CURRENT_POS is nonnegative, this is a regular file positioned
+   at CURRENT_POS.  The file's status is ST.  Return true on success.
    Give a diagnostic and return false upon error.  */
 
 /* NOTE: if the input file shrinks by more than N_ELIDE bytes between
@@ -464,7 +464,7 @@ elide_tail_bytes_file (char const *filename, int fd, uintmax_t n_elide,
                        struct stat const *st, off_t current_pos)
 {
   off_t size = st->st_size;
-  if (presume_input_pipe || current_pos < 0 || size <= STP_BLKSIZE (st))
+  if (current_pos < 0 || size <= STP_BLKSIZE (st))
     return elide_tail_bytes_pipe (filename, fd, n_elide, current_pos);
   else
     {
@@ -745,16 +745,16 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
 }
 
 /* For the file FILENAME with descriptor FD, output all but the last N_ELIDE
-   lines.  If SIZE is nonnegative, this is a regular file positioned
-   at START_POS with SIZE bytes.  Return true on success.
-   Give a diagnostic and return nonzero upon error.  */
+   lines.  If CURRENT_POS is nonnegative, this is a regular file positioned
+   at CURRENT_POS.  The file's status is ST.  Return true on success.
+   Give a diagnostic and return false upon error.  */
 
 static bool
 elide_tail_lines_file (char const *filename, int fd, uintmax_t n_elide,
                        struct stat const *st, off_t current_pos)
 {
   off_t size = st->st_size;
-  if (presume_input_pipe || current_pos < 0 || size <= STP_BLKSIZE (st))
+  if (current_pos < 0 || size <= STP_BLKSIZE (st))
     return elide_tail_lines_pipe (filename, fd, n_elide, current_pos);
   else
     {
@@ -838,7 +838,7 @@ head (char const *filename, int fd, uintmax_t n_units, bool count_lines,
                  quoteaf (filename));
           return false;
         }
-      if (! presume_input_pipe && usable_st_size (&st))
+      if (! presume_input_pipe && S_ISREG (st.st_mode))
         {
           current_pos = elseek (fd, 0, SEEK_CUR, filename);
           if (current_pos < 0)
