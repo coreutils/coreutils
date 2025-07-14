@@ -148,12 +148,18 @@ Binary prefixes can be used, too: KiB=K, MiB=M, and so on.\n\
 }
 
 static void
+diagnose_read_failure (char const *filename)
+{
+  error (0, errno, _("error reading %s"), quoteaf (filename));
+}
+
+static void
 diagnose_copy_fd_failure (enum Copy_fd_status err, char const *filename)
 {
   switch (err)
     {
     case COPY_FD_READ_ERROR:
-      error (0, errno, _("error reading %s"), quoteaf (filename));
+      diagnose_read_failure (filename);
       break;
     case COPY_FD_UNEXPECTED_EOF:
       error (0, errno, _("%s: file has shrunk too much"), quotef (filename));
@@ -305,7 +311,7 @@ elide_tail_bytes_pipe (char const *filename, int fd, uintmax_t n_elide,
             {
               if (errno != 0)
                 {
-                  error (0, errno, _("error reading %s"), quoteaf (filename));
+                  diagnose_read_failure (filename);
                   ok = false;
                   break;
                 }
@@ -380,7 +386,7 @@ elide_tail_bytes_pipe (char const *filename, int fd, uintmax_t n_elide,
             {
               if (errno != 0)
                 {
-                  error (0, errno, _("error reading %s"), quoteaf (filename));
+                  diagnose_read_failure (filename);
                   ok = false;
                   goto free_mem;
                 }
@@ -576,7 +582,7 @@ elide_tail_lines_pipe (char const *filename, int fd, uintmax_t n_elide,
 
   if (n_read < 0)
     {
-      error (0, errno, _("error reading %s"), quoteaf (filename));
+      diagnose_read_failure (filename);
       ok = false;
       goto free_lbuffers;
     }
@@ -658,7 +664,7 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
   bytes_read = safe_read (fd, buffer, bytes_read);
   if (bytes_read < 0)
     {
-      error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
+      diagnose_read_failure (pretty_filename);
       return false;
     }
 
@@ -727,7 +733,7 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
       bytes_read = safe_read (fd, buffer, BUFSIZ);
       if (bytes_read < 0)
         {
-          error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
+          diagnose_read_failure (pretty_filename);
           return false;
         }
 
@@ -766,23 +772,10 @@ elide_tail_lines_file (char const *filename, int fd, uintmax_t n_elide,
 static bool
 head_bytes (char const *filename, int fd, uintmax_t bytes_to_write)
 {
-  char buffer[BUFSIZ];
-  size_t bytes_to_read = BUFSIZ;
-
-  while (bytes_to_write)
+  if (copy_fd (fd, bytes_to_write) == COPY_FD_READ_ERROR)
     {
-      if (bytes_to_write < bytes_to_read)
-        bytes_to_read = bytes_to_write;
-      ptrdiff_t bytes_read = safe_read (fd, buffer, bytes_to_read);
-      if (bytes_read < 0)
-        {
-          error (0, errno, _("error reading %s"), quoteaf (filename));
-          return false;
-        }
-      if (bytes_read == 0)
-        break;
-      xwrite_stdout (buffer, bytes_read);
-      bytes_to_write -= bytes_read;
+      diagnose_read_failure (filename);
+      return false;
     }
   return true;
 }
@@ -799,7 +792,7 @@ head_lines (char const *filename, int fd, uintmax_t lines_to_write)
 
       if (bytes_read < 0)
         {
-          error (0, errno, _("error reading %s"), quoteaf (filename));
+          diagnose_read_failure (filename);
           return false;
         }
       if (bytes_read == 0)
