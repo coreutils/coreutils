@@ -214,6 +214,18 @@ copy_fd (int src_fd, uintmax_t n_bytes)
   return COPY_FD_OK;
 }
 
+/* Report an lseek failure at OFFSET compared to WHENCE, for FILENAME.  */
+static void
+elseek_diagnostic (off_t offset, int whence, char const *filename)
+{
+  intmax_t off = offset;
+  error (0, errno,
+         _(whence == SEEK_SET
+           ? N_("%s: cannot seek to offset %jd")
+           : N_("%s: cannot seek to relative offset %jd")),
+         quotef (filename), off);
+}
+
 /* Call lseek (FD, OFFSET, WHENCE), where file descriptor FD
    corresponds to the file FILENAME.  WHENCE must be SEEK_SET or
    SEEK_CUR.  Return the resulting offset.  Give a diagnostic and
@@ -225,12 +237,7 @@ elseek (int fd, off_t offset, int whence, char const *filename)
   off_t new_offset = lseek (fd, offset, whence);
 
   if (new_offset < 0)
-    error (0, errno,
-           _(whence == SEEK_SET
-             ? N_("%s: cannot seek to offset %jd")
-             : N_("%s: cannot seek to relative offset %jd")),
-           quotef (filename),
-           (intmax_t) offset);
+    elseek_diagnostic (offset, whence, filename);
 
   return new_offset;
 }
@@ -808,7 +815,7 @@ head_lines (char const *filename, int fd, uintmax_t lines_to_write)
               {
                 struct stat st;
                 if (fstat (fd, &st) != 0 || S_ISREG (st.st_mode))
-                  elseek (fd, -n_bytes_past_EOL, SEEK_CUR, filename);
+                  elseek_diagnostic (-n_bytes_past_EOL, SEEK_CUR, filename);
               }
             break;
           }
