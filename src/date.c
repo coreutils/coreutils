@@ -37,7 +37,7 @@
 
 #define AUTHORS proper_name ("David MacKenzie")
 
-static bool show_date_helper (char const *, struct timespec, timezone_t);
+static bool show_date_helper (char const *, bool, struct timespec, timezone_t);
 
 enum Time_spec
 {
@@ -336,7 +336,8 @@ adjust_resolution (char const *format)
    Return true if successful.  */
 
 static bool
-batch_convert (char const *input_filename, char const *format,
+batch_convert (char const *input_filename,
+               char const *format, bool format_in_c_locale,
                timezone_t tz, char const *tzstring)
 {
   bool ok;
@@ -381,7 +382,7 @@ batch_convert (char const *input_filename, char const *format,
         }
       else
         {
-          ok &= show_date_helper (format, when, tz);
+          ok &= show_date_helper (format, format_in_c_locale, when, tz);
         }
     }
 
@@ -402,6 +403,7 @@ main (int argc, char **argv)
   struct timespec when;
   bool set_date = false;
   char const *format = nullptr;
+  bool format_in_c_locale = false;
   bool get_resolution = false;
   char *batch_file = nullptr;
   char *reference = nullptr;
@@ -451,6 +453,7 @@ main (int argc, char **argv)
               XARGMATCH ("--rfc-3339", optarg,
                          time_spec_string + 2, time_spec + 2);
             new_format = rfc_3339_format[i];
+            format_in_c_locale = true;
             break;
           }
         case 'I':
@@ -468,6 +471,7 @@ main (int argc, char **argv)
                ? XARGMATCH ("--iso-8601", optarg, time_spec_string, time_spec)
                : TIME_SPEC_DATE);
             new_format = iso_8601_format[i];
+            format_in_c_locale = true;
             break;
           }
         case 'r':
@@ -475,6 +479,7 @@ main (int argc, char **argv)
           break;
         case 'R':
           new_format = rfc_email_format;
+          format_in_c_locale = true;
           break;
         case 's':
           if (set_datestr)
@@ -578,7 +583,8 @@ main (int argc, char **argv)
   timezone_t tz = tzalloc (tzstring);
 
   if (batch_file != nullptr)
-    ok = batch_convert (batch_file, format_res, tz, tzstring);
+    ok = batch_convert (batch_file, format_res, format_in_c_locale,
+                        tz, tzstring);
   else
     {
       bool valid_date = true;
@@ -643,24 +649,25 @@ main (int argc, char **argv)
             }
         }
 
-      ok &= show_date_helper (format_res, when, tz);
+      ok &= show_date_helper (format_res, format_in_c_locale, when, tz);
     }
 
   main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 static bool
-show_date_helper (char const *format, struct timespec when, timezone_t tz)
+show_date_helper (char const *format, bool use_c_locale,
+                  struct timespec when, timezone_t tz)
 {
   if (parse_datetime_flags & PARSE_DATETIME_DEBUG)
     error (0, 0, _("output format: %s"), quote (format));
 
-  if (format == rfc_email_format)
+  if (use_c_locale)
     setlocale (LC_TIME, "C");
 
   bool ok = show_date (format, when, tz);
 
-  if (format == rfc_email_format)
+  if (use_c_locale)
     setlocale (LC_TIME, "");
 
   putchar ('\n');
