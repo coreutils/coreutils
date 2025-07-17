@@ -16517,6 +16517,7 @@ is not set.  @xref{TZ Variable,, Specifying the Time Zone with
 
 @menu
 * Date format specifiers::         Used in @samp{date '+...'}
+* Calendars::                      Different concepts of year and month.
 * Setting the time::               Changing the system clock.
 * Options for date::               Instead of the current time.
 @detailmenu
@@ -16837,6 +16838,91 @@ POSIX specifies the behavior of flags and field widths only for
 modifiers), and requires a flag to be present if and only if a field
 width is also present.  Other combinations of flags, field widths and
 modifiers are GNU extensions.
+
+
+@node Calendars
+@subsection Calendars
+
+@cindex calendar
+A calendar is a system that groups some sequences of days into ``months'',
+and some sequences of months into ``years''.
+In most countries, the calendar in use is the Gregorian calendar,
+with months ranging from January (the first month) to December (the 12th month).
+
+@cindex calendars, non-Gregorian
+In some specific countries, other calendars are in effect, and
+GNU @command{date} supports them in its output.
+The calendar depends on the @code{LC_TIME} category of the current locale:
+@itemize
+@item
+In the locale of Thailand (@code{th_TH.UTF-8}),
+the Thai solar calendar is used.
+@item
+In the locale of Iran (@code{fa_IR}),
+the Persian solar Hijri calendar is used.
+@item
+In the locale of Ethiopia (@code{am_ET}),
+the Ethiopian / Ge'ez calendar is used.
+@end itemize
+
+The dates in these calendars look different.
+For example, the day the GNU project was announced:
+@example
+$ LC_ALL=en_US.UTF-8 date +%Y-%m-%d -d 1983-09-27
+1983-09-27
+$ LC_ALL=th_TH.UTF-8 date +%Y-%m-%d -d 1983-09-27
+2526-09-27
+$ LC_ALL=fa_IR date +%Y-%m-%d -d 1983-09-27
+1362-07-05
+$ LC_ALL=am_ET date +%Y-%m-%d -d 1983-09-27
+1976-01-16
+@end example
+
+In these locales, when a non-Gregorian calendar is in use,
+a few date conversion specifiers should not be used,
+because they don't apply in the expected way:
+@itemize
+@item
+@samp{%C} for the century,
+@item
+@samp{%y} for a two-digit year,
+@item
+@samp{%G} and @samp{%g} for a week-based year,
+@item
+@samp{%U}, @samp{%W}, and @samp{%V} for the week in the year,
+@item
+@samp{%j} for the day in the year,
+@item
+and @samp{%D} for the date in U.S.@: formatting convention.
+@end itemize
+
+If you are using one of these locales
+and want to see Gregorian dates nevertheless,
+you can achieve that by
+@enumerate
+@item
+making sure that you use the @code{LANG} environment variable,
+not the @code{LC_ALL} environment variable,
+for specifying your general locale, and
+@item
+setting the @code{LC_TIME} environment variable to a locale
+that uses the Gregorian calendar.
+@end enumerate
+@noindent
+For example:
+@example
+$ unset LC_ALL
+$ LANG=fa_IR LC_TIME=en_US.UTF-8 date +%Y-%m-%d -d 1983-09-27
+1983-09-27
+@end example
+
+For more information on how to set your locale, see the GNU gettext manual at
+@ifinfo
+@ref{Users,,The User's View,gettext}.
+@end ifinfo
+@ifnotinfo
+@uref{https://www.gnu.org/software/gettext/manual/html_node/Users.html}.
+@end ifnotinfo
 
 
 @node Setting the time
