@@ -3,7 +3,7 @@
 
 # Bootstrap this package from checked-out sources.
 
-scriptversion=2024-07-04.10; # UTC
+scriptversion=2025-06-10.02; # UTC
 
 # Copyright (C) 2003-2025 Free Software Foundation, Inc.
 #
@@ -37,7 +37,7 @@ medir=`dirname "$me"`
 
 # A library of shell functions for autopull.sh, autogen.sh, and bootstrap.
 
-scriptlibversion=2025-02-16.12; # UTC
+scriptlibversion=2025-06-10.02; # UTC
 
 # Copyright (C) 2003-2025 Free Software Foundation, Inc.
 #
@@ -1337,7 +1337,7 @@ autogen()
 
   # Invoke autoreconf with --force --install to ensure upgrades of tools
   # such as ylwrap.
-  AUTORECONFFLAGS="--verbose --install --force -I $m4_base $ACLOCAL_FLAGS"
+  AUTORECONFFLAGS="--verbose --install --force $ACLOCAL_FLAGS"
   AUTORECONFFLAGS="$AUTORECONFFLAGS --no-recursive"
 
   # Tell autoreconf not to invoke autopoint or libtoolize; they were run above.
@@ -1413,7 +1413,7 @@ autogen()
 # Local Variables:
 # eval: (add-hook 'before-save-hook 'time-stamp nil t)
 # time-stamp-start: "scriptlibversion="
-# time-stamp-format: "%:y-%02m-%02d.%02H"
+# time-stamp-format: "%Y-%02m-%02d.%02H"
 # time-stamp-time-zone: "UTC0"
 # time-stamp-end: "; # UTC"
 # End:
@@ -1624,7 +1624,7 @@ fi
 # Local Variables:
 # eval: (add-hook 'before-save-hook 'time-stamp nil t)
 # time-stamp-start: "scriptversion="
-# time-stamp-format: "%:y-%02m-%02d.%02H"
+# time-stamp-format: "%Y-%02m-%02d.%02H"
 # time-stamp-time-zone: "UTC0"
 # time-stamp-end: "; # UTC"
 # End:
