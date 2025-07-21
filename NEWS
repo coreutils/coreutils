@@ -54,6 +54,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Also on other systems the full set of supported baud rates
   is determined at build time if possible.
 
+  'date' now outputs dates in the country's native calendar for the
+  Iranian locale (fa_IR) and for the Ethiopian locale (am_ET), and also
+  does so more consistently for the Thailand locale (th_TH.UTF-8).
+
 
 * Noteworthy changes in release 9.7 (2025-04-09) [stable]
 
