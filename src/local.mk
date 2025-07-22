@@ -286,6 +286,7 @@ src_sort_LDADD += $(NANOSLEEP_LIB)
 src_tail_LDADD += $(NANOSLEEP_LIB)
 
 # for various GMP functions
+src_basenc_LDADD += $(LIBGMP)
 src_expr_LDADD += $(LIBGMP)
 src_factor_LDADD += $(LIBGMP)
 

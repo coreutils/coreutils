@@ -2370,6 +2370,15 @@ base64 form (using @samp{_} and @samp{-} instead of @samp{+} and @samp{/}).
 The format conforms to
 @uref{https://datatracker.ietf.org/doc/html/rfc4648#section-5, RFC 4648#5}.
 
+@item --base58
+@opindex --base58
+Encode into (or decode from with @option{-d/--decode}) base58 form.
+The format conforms to
+@uref{https://datatracker.ietf.org/doc/html/draft-msporny-base58-03,
+Base58 draft}.
+This encoding is useful for transcription as the output avoids
+visually similar characters.  It's best suited to smaller amounts of data.
+
 @item --base32
 @opindex --base32
 Encode into (or decode from with @option{-d/--decode}) base32 form.

@@ -77,6 +77,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   pretended that standard input was not a tty.
   [This bug was present in "the beginning".]
 
+** New Features
+
+  basenc supports the --base58 option to encode and decode
+  the visually unambiguous Base58 encoding.
+
 ** Improvements
 
   cp, install and mv now avoid possible data corruption on

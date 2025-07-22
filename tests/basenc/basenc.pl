@@ -72,6 +72,25 @@ my $base2msbf_ab = "0110000101100010";
 my $base2msbf_ab_nl = $base2msbf_ab;
 $base2msbf_ab_nl =~ s/(...)/$1\n/g; # Add newline every 3 characters
 
+# Base58 test vectors
+my $base58_in = "Hello World!";
+my $base58_out = "2NEpo7TZRRrLZSi2U";
+my $base58_in2 = "\x00\x00\x28\x7f\xb4\xcd";
+my $base58_out2 = "11233QC4";
+my $base58_in3 = "\x00";
+my $base58_out3 = "1";
+my $base58_in4 = "1\x00";
+my $base58_out4 = "4jH";
+my $base58_large_ones = "1" x 32768;
+my $base58_large_NULs = "\x00" x 32768;
+my $base58_all_chars  = "213456789"."ABCDEFGHJKLMNPQRSTUVWXYZ".
+                        "abcdefghijkmnopqrstuvwxyz";
+my $base58_all_dchars = "\x3b\xf4\x5c\x25\x32\x95\xa0\xca".
+                        "\x62\xc9\x86\x1c\x4e\x11\xe8\x46".
+                        "\x0d\xbb\x98\x97\x44\x72\x1f\xe9".
+                        "\x0b\x57\x30\x38\xff\xfd\xac\xcd".
+                        "\xdf\x5d\x6d\x3d\xc6\x2a\x64\x11\x55\xa5";
+
 my $try_help = "Try '$prog --help' for more information.\n";
 
 my @Tests =
@@ -100,6 +119,17 @@ my @Tests =
  ['empty6', '--base2msbf', {IN=>''}, {OUT=>""}],
  ['empty7', '--base2lsbf', {IN=>''}, {OUT=>""}],
  ['empty8', '--z85',       {IN=>''}, {OUT=>""}],
+ ['empty9', '--base58',    {IN=>''}, {OUT=>""}],
+
+ ['empty1d', '--base64 -d',    {IN=>''}, {OUT=>""}],
+ ['empty2d', '--base64url -d', {IN=>''}, {OUT=>""}],
+ ['empty3d', '--base32 -d',    {IN=>''}, {OUT=>""}],
+ ['empty4d', '--base32hex -d', {IN=>''}, {OUT=>""}],
+ ['empty5d', '--base16 -d',    {IN=>''}, {OUT=>""}],
+ ['empty6d', '--base2msbf -d', {IN=>''}, {OUT=>""}],
+ ['empty7d', '--base2lsbf -d', {IN=>''}, {OUT=>""}],
+ ['empty8d', '--z85 -d',       {IN=>''}, {OUT=>""}],
+ ['empty9d', '--base58 -d',    {IN=>''}, {OUT=>""}],
 
 
 
@@ -266,6 +296,45 @@ my @Tests =
  ['z85_46', '--z85 -d', {IN=>'$nSc0'}, {EXIT=>1},
   {ERR=>"$prog: invalid input\n"}],
  ['z85_47', '--z85 -d', {IN=>'#0000'}, {EXIT=>1},
+  {ERR=>"$prog: invalid input\n"}],
+
+
+
+
+ ['b58_1', '--base58',        {IN=>$base58_in},       {OUT=>$base58_out}],
+ ['b58_2', '--base58 -d',     {IN=>$base58_out},      {OUT=>$base58_in}],
+ ['b58_3', '--base58 -d -i',  {IN=>'&'. $base58_out}, {OUT=>$base58_in}],
+ ['b58_4', '--base58',        {IN=>$base58_in2},      {OUT=>$base58_out2}],
+ ['b58_5', '--base58 -d',     {IN=>$base58_out2},     {OUT=>$base58_in2}],
+ ['b58_6', '--base58',        {IN=>$base58_in3},      {OUT=>$base58_out3}],
+ ['b58_7', '--base58 -d',     {IN=>$base58_out3},     {OUT=>$base58_in3}],
+ ['b58_8', '--base58 -d',     {IN=>$base58_out."\n"}, {OUT=>$base58_in}],
+ ['b58_9', '--base58 -d -i',  {IN=>$base58_out."\n"}, {OUT=>$base58_in}],
+ ['b58_10', '--base58',       {IN=>$base58_in4},      {OUT=>$base58_out4}],
+ ['b58_11', '--base58 -d',    {IN=>$base58_out4},     {OUT=>$base58_in4}],
+ ['b58_buf1', '--base58',     {IN=>$base58_large_NULs},
+                              {OUT=>$base58_large_ones}],
+ ['b58_buf2', '--base58 -d',  {IN=>$base58_large_ones},
+                              {OUT=>$base58_large_NULs}],
+ ['b58_chars1', '--base58',   {IN=>$base58_all_dchars},
+                              {OUT=>$base58_all_chars}],
+ ['b58_chars2', '--base58 -d',{IN=>$base58_all_chars},
+                              {OUT=>$base58_all_dchars}],
+
+ # Invalid base58 characters (0, O, I, l)
+ ['b58_inval_1', '--base58 -d',    {IN=>'0'}, {EXIT=>1},
+  {ERR=>"$prog: invalid input\n"}],
+ ['b58_inval_2', '--base58 -d',    {IN=>'O'}, {EXIT=>1},
+  {ERR=>"$prog: invalid input\n"}],
+ ['b58_inval_3', '--base58 -d',    {IN=>'I'}, {EXIT=>1},
+  {ERR=>"$prog: invalid input\n"}],
+ ['b58_inval_4', '--base58 -d',    {IN=>'l'}, {EXIT=>1},
+  {ERR=>"$prog: invalid input\n"}],
+ # Disallow NULs
+ ['b58_inval_5', '--base58 -d',    {IN=>$base58_out."\0"}, {EXIT=>1},
+  {ERR=>"$prog: invalid input\n"}],
+ # Disallow arbitrary whitespace
+ ['b58_inval_6', '--base58 -d',    {IN=>$base58_out." "}, {EXIT=>1},
   {ERR=>"$prog: invalid input\n"}],
 );
 
