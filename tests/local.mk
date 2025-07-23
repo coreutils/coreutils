@@ -309,6 +309,7 @@ all_tests =					\
   tests/csplit/csplit-io-err.sh			\
   tests/csplit/csplit-suppress-matched.pl	\
   tests/date/date-debug.sh			\
+  tests/date/date-ethiopia.sh			\
   tests/date/date-iran.sh			\
   tests/date/date-sec.sh			\
   tests/date/date-thailand.sh			\
