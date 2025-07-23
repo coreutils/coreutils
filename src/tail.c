@@ -1858,9 +1858,7 @@ tail_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
   if (from_start)
     {
       if (! presume_input_pipe && n_bytes <= OFF_T_MAX
-          && ((S_ISREG (stats.st_mode)
-               && xlseek (fd, n_bytes, SEEK_CUR, pretty_filename) >= 0)
-              || lseek (fd, n_bytes, SEEK_CUR) != -1))
+          && 0 <= lseek (fd, n_bytes, SEEK_CUR))
         *read_pos += n_bytes;
       else
         {
