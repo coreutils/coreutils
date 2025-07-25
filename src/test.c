@@ -353,8 +353,7 @@ binary_operator (bool l_is_l)
           break;
         }
 
-      /* FIXME: is this dead code? */
-      test_syntax_error (_("%s: unknown binary operator"), quote (argv[op]));
+      /* Dead code removed: unrecognised binary operators are filtered before binary_operator() is called, see line 636*/
     }
 
   if (argv[op][0] == '='
