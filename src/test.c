@@ -54,6 +54,17 @@
 /* Exit status for syntax errors, etc.  */
 enum { TEST_TRUE, TEST_FALSE, TEST_FAILURE };
 
+/* Binary operators.  */
+enum binop
+  {
+    /* String comparisons, e.g., EQ_STRING_BINOP for = or ==.  */
+    EQ_STRING_BINOP, GT_STRING_BINOP, LT_STRING_BINOP, NE_STRING_BINOP,
+
+    /* Two-letter binary operators, e.g, EF_BINOP for -ef.  */
+    EQ_BINOP, GE_BINOP, GT_BINOP, LE_BINOP, LT_BINOP, NE_BINOP,
+    EF_BINOP, NT_BINOP, OT_BINOP
+  };
+
 #if defined TEST_STANDALONE
 # define test_exit(val) exit (val)
 # define test_main_return(val) return val
@@ -69,7 +80,7 @@ static int argc;	/* The number of arguments present in ARGV. */
 static char **argv;	/* The argument list. */
 
 static bool unary_operator (void);
-static bool binary_operator (bool);
+static bool binary_operator (bool, enum binop);
 static bool two_arguments (void);
 static bool three_arguments (void);
 static bool posixtest (int);
@@ -157,27 +168,38 @@ find_int (char const *string)
   test_syntax_error (_("invalid integer %s"), quote (string));
 }
 
-/* Find the modification time of FILE, and stuff it into *MTIME.
-   Return true if successful.  */
-static bool
-get_mtime (char const *filename, struct timespec *mtime)
+/* Return the modification time of FILENAME.
+   If unsuccessful, return an invalid timestamp that is less
+   than all valid timestamps.  */
+static struct timespec
+get_mtime (char const *filename)
 {
   struct stat finfo;
-  bool ok = (stat (filename, &finfo) == 0);
-  if (ok)
-    *mtime = get_stat_mtime (&finfo);
-  return ok;
+  return (stat (filename, &finfo) < 0
+          ? make_timespec (TYPE_MINIMUM (time_t), -1)
+          : get_stat_mtime (&finfo));
 }
 
-/* Return true if S is one of the test command's binary operators.  */
-static bool
+/* Return the type of S, one of the test command's binary operators.
+   If S is not a binary operator, return -1.  */
+static int
 binop (char const *s)
 {
-  return ((STREQ (s,   "=")) || (STREQ (s,  "!=")) || (STREQ (s, "==")) ||
-          (STREQ (s,   "-nt")) || (STREQ (s, ">")) || (STREQ (s, "<")) ||
-          (STREQ (s, "-ot")) || (STREQ (s, "-ef")) || (STREQ (s, "-eq")) ||
-          (STREQ (s, "-ne")) || (STREQ (s, "-lt")) || (STREQ (s, "-le")) ||
-          (STREQ (s, "-gt")) || (STREQ (s, "-ge")));
+  return (  STREQ (s, "="  ) ? EQ_STRING_BINOP
+          : STREQ (s, "==" ) ? EQ_STRING_BINOP /* an alias for = */
+          : STREQ (s, "!=" ) ? NE_STRING_BINOP
+          : STREQ (s, ">"  ) ? GT_STRING_BINOP
+          : STREQ (s, "<"  ) ? LT_STRING_BINOP
+          : STREQ (s, "-eq") ? EQ_BINOP
+          : STREQ (s, "-ne") ? NE_BINOP
+          : STREQ (s, "-lt") ? LT_BINOP
+          : STREQ (s, "-le") ? LE_BINOP
+          : STREQ (s, "-gt") ? GT_BINOP
+          : STREQ (s, "-ge") ? GE_BINOP
+          : STREQ (s, "-ot") ? OT_BINOP
+          : STREQ (s, "-nt") ? NT_BINOP
+          : STREQ (s, "-ef") ? EF_BINOP
+          : -1);
 }
 
 /*
@@ -203,6 +225,7 @@ term (void)
 {
   bool value;
   bool negated = false;
+  int bop;
 
   /* Deal with leading 'not's.  */
   while (pos < argc && argv[pos][0] == '!' && argv[pos][1] == '\0')
@@ -241,10 +264,12 @@ term (void)
     }
 
   /* Are there enough arguments left that this could be dyadic?  */
-  else if (4 <= argc - pos && STREQ (argv[pos], "-l") && binop (argv[pos + 2]))
-    value = binary_operator (true);
-  else if (3 <= argc - pos && binop (argv[pos + 1]))
-    value = binary_operator (false);
+  else if (4 <= argc - pos && STREQ (argv[pos], "-l")
+           && 0 <= (bop = binop (argv[pos + 2])))
+    value = binary_operator (true, bop);
+  else if (3 <= argc - pos
+           && 0 <= (bop = binop (argv[pos + 1])))
+    value = binary_operator (false, bop);
 
   /* It might be a switch type argument.  */
   else if (argv[pos][0] == '-' && argv[pos][1] && argv[pos][2] == '\0')
@@ -259,130 +284,74 @@ term (void)
 }
 
 static bool
-binary_operator (bool l_is_l)
+binary_operator (bool l_is_l, enum binop bop)
 {
   int op;
   struct stat stat_buf, stat_spare;
-  /* Is the right integer expression of the form '-l string'? */
-  bool r_is_l;
 
   if (l_is_l)
     advance (false);
   op = pos + 1;
 
-  if ((op < argc - 2) && STREQ (argv[op + 1], "-l"))
+  /* Is the right integer expression of the form '-l string'? */
+  bool r_is_l = op < argc - 2 && STREQ (argv[op + 1], "-l");
+  if (r_is_l)
+    advance (false);
+
+  pos += 3;
+
+  switch (bop)
     {
-      r_is_l = true;
-      advance (false);
-    }
-  else
-    r_is_l = false;
+    case EQ_BINOP: case GE_BINOP: case GT_BINOP:
+    case LE_BINOP: case LT_BINOP: case NE_BINOP:
+      {
+        char lbuf[INT_BUFSIZE_BOUND (uintmax_t)];
+        char rbuf[INT_BUFSIZE_BOUND (uintmax_t)];
+        char const *l = (l_is_l
+                         ? umaxtostr (strlen (argv[op - 1]), lbuf)
+                         : find_int (argv[op - 1]));
+        char const *r = (r_is_l
+                         ? umaxtostr (strlen (argv[op + 2]), rbuf)
+                         : find_int (argv[op + 1]));
+        int cmp = strintcmp (l, r);
+        switch (+bop)
+          {
+          case EQ_BINOP: return cmp == 0;
+          case GE_BINOP: return cmp >= 0;
+          case GT_BINOP: return cmp >  0;
+          case LE_BINOP: return cmp <= 0;
+          case LT_BINOP: return cmp <  0;
+          case NE_BINOP: return cmp != 0;
+          }
+        unreachable ();
+      }
 
-  if (argv[op][0] == '-')
-    {
-      /* check for eq, nt, and stuff */
-      if ((((argv[op][1] == 'l' || argv[op][1] == 'g')
-            && (argv[op][2] == 'e' || argv[op][2] == 't'))
-           || (argv[op][1] == 'e' && argv[op][2] == 'q')
-           || (argv[op][1] == 'n' && argv[op][2] == 'e'))
-          && !argv[op][3])
-        {
-          char lbuf[INT_BUFSIZE_BOUND (uintmax_t)];
-          char rbuf[INT_BUFSIZE_BOUND (uintmax_t)];
-          char const *l = (l_is_l
-                           ? umaxtostr (strlen (argv[op - 1]), lbuf)
-                           : find_int (argv[op - 1]));
-          char const *r = (r_is_l
-                           ? umaxtostr (strlen (argv[op + 2]), rbuf)
-                           : find_int (argv[op + 1]));
-          int cmp = strintcmp (l, r);
-          bool xe_operator = (argv[op][2] == 'e');
-          pos += 3;
-          return (argv[op][1] == 'l' ? cmp < xe_operator
-                  : argv[op][1] == 'g' ? cmp > - xe_operator
-                  : (cmp != 0) == xe_operator);
-        }
+    case NT_BINOP: case OT_BINOP:
+      {
+        if (l_is_l | r_is_l)
+          test_syntax_error (_("%s does not accept -l"), argv[op]);
+        int cmp = timespec_cmp (get_mtime (argv[op - 1]),
+                                get_mtime (argv[op + 1]));
+        return bop == OT_BINOP ? cmp < 0 : cmp > 0;
+      }
 
-      switch (argv[op][1])
-        {
-        default:
-          break;
+    case EF_BINOP:
+      if (l_is_l | r_is_l)
+        test_syntax_error (_("-ef does not accept -l"));
+      return (stat (argv[op - 1], &stat_buf) == 0
+              && stat (argv[op + 1], &stat_spare) == 0
+              && SAME_INODE (stat_buf, stat_spare));
 
-        case 'n':
-          if (argv[op][2] == 't' && !argv[op][3])
-            {
-              /* nt - newer than */
-              struct timespec lt, rt;
-              bool le, re;
-              pos += 3;
-              if (l_is_l || r_is_l)
-                test_syntax_error (_("-nt does not accept -l"));
-              le = get_mtime (argv[op - 1], &lt);
-              re = get_mtime (argv[op + 1], &rt);
-              return le && (!re || timespec_cmp (lt, rt) > 0);
-            }
-          break;
+    case EQ_STRING_BINOP:
+    case NE_STRING_BINOP:
+      return STREQ (argv[op - 1], argv[op + 1]) == (bop == EQ_STRING_BINOP);
 
-        case 'e':
-          if (argv[op][2] == 'f' && !argv[op][3])
-            {
-              /* ef - hard link? */
-              pos += 3;
-              if (l_is_l || r_is_l)
-                test_syntax_error (_("-ef does not accept -l"));
-              return (stat (argv[op - 1], &stat_buf) == 0
-                      && stat (argv[op + 1], &stat_spare) == 0
-                      && stat_buf.st_dev == stat_spare.st_dev
-                      && stat_buf.st_ino == stat_spare.st_ino);
-            }
-          break;
-
-        case 'o':
-          if ('t' == argv[op][2] && '\000' == argv[op][3])
-            {
-              /* ot - older than */
-              struct timespec lt, rt;
-              bool le, re;
-              pos += 3;
-              if (l_is_l || r_is_l)
-                test_syntax_error (_("-ot does not accept -l"));
-              le = get_mtime (argv[op - 1], &lt);
-              re = get_mtime (argv[op + 1], &rt);
-              return re && (!le || timespec_cmp (lt, rt) < 0);
-            }
-          break;
-        }
-
-      /* Dead code removed: unrecognised binary operators are filtered before binary_operator() is called, see line 636*/
-    }
-
-  if (argv[op][0] == '='
-      && (!argv[op][1] || ((argv[op][1] == '=') && !argv[op][2])))
-    {
-      bool value = STREQ (argv[pos], argv[pos + 2]);
-      pos += 3;
-      return value;
-    }
-
-  if (STREQ (argv[op], "!="))
-    {
-      bool value = !STREQ (argv[pos], argv[pos + 2]);
-      pos += 3;
-      return value;
-    }
-
-  if (STREQ (argv[op], ">"))
-    {
-      bool value = strcoll (argv[pos], argv[pos + 2]) > 0;
-      pos += 3;
-      return value;
-    }
-
-  if (STREQ (argv[op], "<"))
-    {
-      bool value = strcoll (argv[pos], argv[pos + 2]) < 0;
-      pos += 3;
-      return value;
+    case GT_STRING_BINOP:
+    case LT_STRING_BINOP:
+      {
+        int cmp = strcoll (argv[op - 1], argv[op + 1]);
+        return bop == LT_STRING_BINOP ? cmp < 0 : cmp > 0;
+      }
     }
 
   /* Not reached.  */
@@ -615,9 +584,10 @@ static bool
 three_arguments (void)
 {
   bool value;
+  int bop = binop (argv[pos + 1]);
 
-  if (binop (argv[pos + 1]))
-    value = binary_operator (false);
+  if (0 <= bop)
+    value = binary_operator (false, bop);
   else if (STREQ (argv[pos], "!"))
     {
       advance (true);
