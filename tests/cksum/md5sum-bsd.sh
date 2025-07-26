@@ -70,7 +70,7 @@ for i in 'a' ' b' '*c' 'dd' ' '; do
 done
 md5sum --strict -c check.md5 || fail=1
 
-if : > 'backslash\is\not\dir\sep'; then
+if echo '' > 'backslash\is\not\dir\sep'; then
   # Ensure we can --check BSD traditional format we produce
   # with the GNU extension of escaped newlines
   nl='
