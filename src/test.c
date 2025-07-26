@@ -329,7 +329,8 @@ binary_operator (bool l_is_l, enum binop bop)
     case NT_BINOP: case OT_BINOP:
       {
         if (l_is_l | r_is_l)
-          test_syntax_error (_("%s does not accept -l"), argv[op]);
+          test_syntax_error (_("%s does not accept -l"),
+                             argv[op]);
         int cmp = timespec_cmp (get_mtime (argv[op - 1]),
                                 get_mtime (argv[op + 1]));
         return bop == OT_BINOP ? cmp < 0 : cmp > 0;
