@@ -25,22 +25,33 @@ export TZ=UTC0
 # 2**63 - 1
 bignum=9223372036854775807
 
-touch -d @$bignum future 2>/dev/null &&
-future_time=$(ls -l future) &&
-case "$future_time" in
-*" $bignum "*)
-  : ;;
-*' Dec  4  300627798676 '*)
-  skip_ "file system and localtime both handle big timestamps" ;;
-*)
-  skip_ "file system or localtime mishandles big timestamps:" \
-      "$future_time" ;;
-esac || skip_ "file system cannot represent big timestamps"
+good=0
+future=
+cleanup_() { rm -rf "$future"; }
 
-printf "0\t$bignum\tfuture\n" > exp || framework_failure_
+for fs in ./ /tmp /dev/shm; do
+  future=$(mktemp -p "$fs" future.XXXXXX) || continue
+  touch -d @$bignum "$future" 2>/dev/null &&
+  future_time=$(ls -l "$future") &&
+  case "$future_time" in
+  *" $bignum "*)
+    echo "file system at $fs handles big timestamps"
+    good=1; break ;;
+  *' Dec  4  300627798676 '*)
+    warn_ "file system at $fs and localtime both handle big timestamps" ;;
+  *)
+    warn_ "file system at $fs or localtime mishandles big timestamps:" \
+        "$future_time" ;;
+  esac || warn_ "file system at $fs cannot represent big timestamps"
+  rm -f "$future" || framework_failure_
+done
+
+test "$good" = 1 || skip_ "Cannot find required big timestamp support"
+
+printf "0\t$bignum\t$future\n" > exp || framework_failure_
 printf "du: time '$bignum' is out of range\n" > err_ok || framework_failure_
 
-du --time future >out 2>err || fail=1
+du --time "$future" >out 2>err || fail=1
 
 # On some systems an empty file occupies 4 blocks.
 # Map the number of blocks to 0.
