@@ -144,9 +144,10 @@ sc_ensure_gl_diffs_apply_cleanly:
 	done
 
 # Avoid :>file which doesn't propagate errors
+# Also  :>file was seen to trigger EXIT trap on cygwin
 sc_prohibit_colon_redirection:
-	@cd $(srcdir)/tests && GIT_PAGER= git grep -En ': *>.*\|\|'	\
-	  && { echo '$(ME): '"The leading colon in :> will hide errors" >&2; \
+	@cd $(srcdir)/tests && GIT_PAGER= git grep -En ': *>[^>]'	\
+	  && { echo '$(ME): '":> will hide errors or may trigger EXIT" >&2; \
 	       exit 1; }  \
 	  || :
 

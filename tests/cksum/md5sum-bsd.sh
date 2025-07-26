@@ -78,7 +78,7 @@ if echo '' > 'backslash\is\not\dir\sep'; then
   t='	'
   rm check.md5
   for i in 'a\b' 'a\' '\a' "a${nl}b" "a${t}b"; do
-    : > "$i"
+    rm -f "$i" && touch "$i"
     md5sum --tag "$i" >> check.md5 || fail=1
   done
   md5sum --strict -c check.md5 > out || fail=1
