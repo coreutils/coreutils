@@ -6,7 +6,7 @@ Prerequisites
 You will need the "git" version control tools.  On Fedora-based
 systems, do "yum install git".  On Debian-based ones install the
 "git-core" package.  Then run "git --version".  If that says it's
-older than version 1.4.4, then you'd do well to get a newer version.
+older than version 1.6.4, then you'd do well to get a newer version.
 At worst, just download the latest stable release from
 https://git-scm.com/ and build from source.
 
