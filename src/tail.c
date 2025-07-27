@@ -81,6 +81,7 @@
 /* Special values for dump_remainder's N_BYTES parameter.  */
 #define COPY_TO_EOF UINTMAX_MAX
 #define COPY_A_BUFFER (UINTMAX_MAX - 1)
+static_assert (OFF_T_MAX < COPY_A_BUFFER);
 
 /* FIXME: make Follow_name the default?  */
 #define DEFAULT_FOLLOW_MODE Follow_descriptor
