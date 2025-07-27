@@ -4,7 +4,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
-  'factor' is now much faster at identifying large prime numbers.
+  'factor' is now much faster at identifying large prime numbers,
+  and significantly faster on composite numbers greater than 2^128.
 
 ** Bug fixes
 

@@ -19,7 +19,8 @@
    Arbitrary-precision code adapted by James Youngman from Torbjörn
    Granlund's factorize.c, from GNU MP version 4.2.2.
    In 2012, the core was rewritten by Torbjörn Granlund and Niels Möller.
-   In 2025, Torbjörn Granlund and Paul Eggert sped up primality checking.
+   In 2025, Torbjörn Granlund and Paul Eggert sped up primality checking,
+   and improved performance on composite numbers greater than 2^128.
    Contains code from GNU MP.  */
 
 /* Efficiently factor numbers that fit in one or two words (word = mp_limb_t),
