@@ -794,3 +794,41 @@ is_ENOTSUP (int err)
   quotearg_style (shell_escape_always_quoting_style, arg)
 #define quoteaf_n(n, arg) \
   quotearg_n_style (n, shell_escape_always_quoting_style, arg)
+
+/* Used instead of XARGMATCH() to provide a custom error message.  */
+#ifdef XARGMATCH
+static inline ptrdiff_t
+x_timestyle_match (char const * style, bool allow_posix,
+                   char const *const * timestyle_args,
+                   char const * timestyle_types,
+                   size_t timestyle_types_size,
+                   int fail_status)
+{
+  ptrdiff_t res = argmatch (style, timestyle_args,
+                            (char const *) timestyle_types,
+                            timestyle_types_size);
+  if (res < 0)
+    {
+      /* This whole block used to be a simple use of XARGMATCH.
+         but that didn't print the "posix-"-prefixed variants or
+         the "+"-prefixed format string option upon failure.  */
+      argmatch_invalid ("time style", style, res);
+
+      /* The following is a manual expansion of argmatch_valid,
+         but with the added "+ ..." description and the [posix-]
+         prefixes prepended.  Note that this simplification works
+         only because all four existing time_style_types values
+         are distinct.  */
+      fputs (_("Valid arguments are:\n"), stderr);
+      char const *const *p = timestyle_args;
+      char const *posix_prefix = allow_posix ? "[posix-]" : "";
+      while (*p)
+        fprintf (stderr, "  - %s%s\n", posix_prefix, *p++);
+      fputs (_("  - +FORMAT (e.g., +%H:%M) for a 'date'-style"
+               " format\n"), stderr);
+      usage (fail_status);
+    }
+
+  return res;
+}
+#endif

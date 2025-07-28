@@ -80,11 +80,11 @@
 # define SA_RESTART 0
 #endif
 
-#include "system.h"
 #include <fnmatch.h>
 
 #include "acl.h"
 #include "argmatch.h"
+#include "system.h"
 #include "assure.h"
 #include "c-strcase.h"
 #include "dev-ino.h"
@@ -2464,30 +2464,10 @@ decode_switches (int argc, char **argv)
         }
       else
         {
-          ptrdiff_t res = argmatch (style, time_style_args,
-                                    (char const *) time_style_types,
-                                    sizeof (*time_style_types));
-          if (res < 0)
-            {
-              /* This whole block used to be a simple use of XARGMATCH.
-                 but that didn't print the "posix-"-prefixed variants or
-                 the "+"-prefixed format string option upon failure.  */
-              argmatch_invalid ("time style", style, res);
-
-              /* The following is a manual expansion of argmatch_valid,
-                 but with the added "+ ..." description and the [posix-]
-                 prefixes prepended.  Note that this simplification works
-                 only because all four existing time_style_types values
-                 are distinct.  */
-              fputs (_("Valid arguments are:\n"), stderr);
-              char const *const *p = time_style_args;
-              while (*p)
-                fprintf (stderr, "  - [posix-]%s\n", *p++);
-              fputs (_("  - +FORMAT (e.g., +%H:%M) for a 'date'-style"
-                       " format\n"), stderr);
-              usage (LS_FAILURE);
-            }
-          switch (res)
+          switch (x_timestyle_match (style, /*allow_posix=*/ true,
+                                     time_style_args,
+                                     (char const *) time_style_types,
+                                     sizeof (*time_style_types), LS_FAILURE))
             {
             case full_iso_time_style:
               long_time_format[0] = long_time_format[1] =

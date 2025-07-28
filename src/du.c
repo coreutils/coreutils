@@ -26,8 +26,8 @@
 #include <config.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include "system.h"
 #include "argmatch.h"
+#include "system.h"
 #include "argv-iter.h"
 #include "assure.h"
 #include "di-set.h"
@@ -974,8 +974,10 @@ main (int argc, char **argv)
         time_format = time_style + 1;
       else
         {
-          switch (XARGMATCH ("time style", time_style,
-                             time_style_args, time_style_types))
+          switch (x_timestyle_match (time_style, /*allow_posix=*/ false,
+                                     time_style_args,
+                                     (char const *) time_style_types,
+                                     sizeof (*time_style_types), EXIT_FAILURE))
             {
             case full_iso_time_style:
               time_format = "%Y-%m-%d %H:%M:%S.%N %z";
