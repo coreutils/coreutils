@@ -477,8 +477,8 @@ Other options:\n\
                               decompress them with PROG -d\n\
 "), stdout);
       fputs (_("\
-      --debug               annotate the part of the line used to sort,\n\
-                              and warn about questionable usage to stderr\n\
+      --debug               annotate the part of the line used to sort, and\n\
+                              warn about questionable usage to standard error\n\
       --files0-from=F       read input from the files specified by\n\
                             NUL-terminated names in file F;\n\
                             If F is - then read names from standard input\n\

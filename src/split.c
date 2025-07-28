@@ -262,11 +262,11 @@ default size is 1000 lines, and default PREFIX is 'x'.\n\
       fputs (_("\n\
 CHUNKS may be:\n\
   N       split into N files based on size of input\n\
-  K/N     output Kth of N to stdout\n\
+  K/N     output Kth of N to standard output\n\
   l/N     split into N files without splitting lines/records\n\
-  l/K/N   output Kth of N to stdout without splitting lines/records\n\
+  l/K/N   output Kth of N to standard output without splitting lines/records\n\
   r/N     like 'l' but use round robin distribution\n\
-  r/K/N   likewise but only output Kth of N to stdout\n\
+  r/K/N   likewise but only output Kth of N to standard output\n\
 "), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }

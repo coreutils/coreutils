@@ -285,7 +285,7 @@ Start COMMAND, and kill it if still running after DURATION.\n\
                    see 'kill -l' for a list of signals\n\
 "), stdout);
       fputs (_("\
-  -v, --verbose  diagnose to stderr any signal sent upon timeout\n\
+  -v, --verbose  diagnose to standard error any signal sent upon timeout\n\
 "), stdout);
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);

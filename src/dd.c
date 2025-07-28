@@ -550,14 +550,14 @@ Copy a file, converting and formatting according to the operands.\n\
   ibs=BYTES       read up to BYTES bytes at a time (default: 512)\n\
 "), stdout);
       fputs (_("\
-  if=FILE         read from FILE instead of stdin\n\
+  if=FILE         read from FILE instead of standard input\n\
   iflag=FLAGS     read as per the comma separated symbol list\n\
   obs=BYTES       write BYTES bytes at a time (default: 512)\n\
-  of=FILE         write to FILE instead of stdout\n\
+  of=FILE         write to FILE instead of standard output\n\
   oflag=FLAGS     write as per the comma separated symbol list\n\
   seek=N          (or oseek=N) skip N obs-sized output blocks\n\
   skip=N          (or iseek=N) skip N ibs-sized input blocks\n\
-  status=LEVEL    The LEVEL of information to print to stderr;\n\
+  status=LEVEL    The LEVEL of information to print to standard error;\n\
                   'none' suppresses everything but error messages,\n\
                   'noxfer' suppresses the final transfer statistics,\n\
                   'progress' shows periodic transfer statistics\n\

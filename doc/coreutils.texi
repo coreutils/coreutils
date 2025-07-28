@@ -3415,13 +3415,17 @@ with names @file{big-aa.xz}, @file{big-ab.xz}, @file{big-ac.xz}, etc.
 
 Split @var{input} to @var{chunks} output files where @var{chunks} may be:
 
+@macro Stdout
+standard output
+@end macro
+
 @example
 @var{n}      generate @var{n} files based on current size of @var{input}
 @var{k}/@var{n}    output only @var{k}th of @var{n} to standard output
 l/@var{n}    generate @var{n} files without splitting lines or records
-l/@var{k}/@var{n}  likewise but output only @var{k}th of @var{n} to stdout
+l/@var{k}/@var{n}  likewise but output only @var{k}th of @var{n} to @Stdout
 r/@var{n}    like @samp{l} but use round robin distribution
-r/@var{k}/@var{n}  likewise but output only @var{k}th of @var{n} to stdout
+r/@var{k}/@var{n}  likewise but output only @var{k}th of @var{n} to @Stdout
 @end example
 
 If the input size is not a multiple of @var{n}, early output files are
@@ -4147,7 +4151,8 @@ input digest string as what is output.  I.e., removing or adding any
 
 @item --debug
 @opindex --debug
-Output extra information to stderr, like the checksum implementation being used.
+Output extra information to standard error,
+like the checksum implementation being used.
 
 @macro cksumLengthOption
 @item -l
@@ -9056,7 +9061,7 @@ Equivalent to @option{--no-dereference --preserve=links}.
 @item --debug
 @opindex --debug
 @cindex debugging, copying
-Print extra information to stdout, explaining how files are copied.
+Print extra information to standard output, explaining how files are copied.
 This option implies the @option{--verbose} option.
 @end macro
 @optDebugCopy

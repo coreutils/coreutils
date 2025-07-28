@@ -144,7 +144,8 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
       --ignore-signal[=SIG]   set handling of SIG signal(s) to do nothing\n\
 "), stdout);
       fputs (_("\
-      --list-signal-handling  list non default signal handling to stderr\n\
+      --list-signal-handling  list non default signal handling to \
+standard error\n\
 "), stdout);
       fputs (_("\
   -v, --debug          print verbose information for each processing step\n\

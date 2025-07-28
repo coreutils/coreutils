@@ -19,7 +19,7 @@
    Options:
    -a, --all    Write all current settings to stdout in human-readable form.
    -g, --save   Write all current settings to stdout in stty-readable form.
-   -F, --file   Open and use the specified device instead of stdin
+   -F, --file   Open and use the specified device instead of standard input.
 
    If no args are given, write to stdout the baud rate and settings that
    have been changed from their defaults.  Mode reading and changes
@@ -557,7 +557,7 @@ Print or change terminal characteristics.\n\
       fputs (_("\
   -a, --all          print all current settings in human-readable form\n\
   -g, --save         print all current settings in a stty-readable form\n\
-  -F, --file=DEVICE  open and use the specified DEVICE instead of stdin\n\
+  -F, --file=DEVICE  open and use DEVICE instead of standard input\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

@@ -648,7 +648,7 @@ Print information about users who are currently logged in.\n\
 "), stdout);
       fputs (_("\
       --lookup      attempt to canonicalize hostnames via DNS\n\
-  -m                only hostname and user associated with stdin\n\
+  -m                only hostname and user associated with standard input\n\
   -p, --process     print active processes spawned by init\n\
 "), stdout);
       fputs (_("\

@@ -336,6 +336,12 @@ sc_long_lines:
 	  sed -e "s|^|$$file:|" -e '$(FILTER_LONG_LINES)';		\
 	done | grep . && { msg="$$halt" $(_sc_say_and_exit) } || :
 
+sc_standard_outputs: $(ALL_MANS)
+	@grep -E 'std(in|out|err)' man/*.1 doc/*.texi			 \
+	  && { echo 1>&2 '$@: use "standard ....." in user docs'; exit 1; } || :
+	@grep -E '[Ss]tandard (in|out|err)([^op]|$$)' man/*.1 doc/*.texi \
+	  && { echo 1>&2 '$@: use "standard ..put" in user docs'; exit 1; } || :
+
 # Option descriptions should not start with a capital letter.
 # One could grep source directly as follows:
 # grep -E " {2,6}-.*[^.]  [A-Z][a-z]" $$($(VC_LIST_EXCEPT) | grep '\.c$$')

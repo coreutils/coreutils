@@ -143,8 +143,8 @@ With -s, or with [MMDDhhmm[[CC]YY][.ss]], set the date and time.\n\
   -d, --date=STRING          display time described by STRING, not 'now'\n\
 "), stdout);
       fputs (_("\
-      --debug                annotate the parsed date,\n\
-                              and warn about questionable usage to stderr\n\
+      --debug                annotate the parsed date, and\n\
+                              warn about questionable usage to standard error\n\
 "), stdout);
       fputs (_("\
   -f, --file=DATEFILE        like --date; once for each line of DATEFILE\n\
