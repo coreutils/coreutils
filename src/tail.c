@@ -47,7 +47,6 @@
 #include "xbinary-io.h"
 #include "xdectoint.h"
 #include "xnanosleep.h"
-#include "xstrtol.h"
 
 #if HAVE_INOTIFY
 # include "hash.h"
@@ -2114,10 +2113,6 @@ tail_file (struct File_spec *f, uintmax_t n_files, uintmax_t n_units)
 static bool
 parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
 {
-  char const *p;
-  char const *n_string;
-  char const *n_string_end;
-  int default_count = DEFAULT_N_LINES;
   bool t_from_start;
   bool t_count_lines = true;
   bool t_forever = false;
@@ -2132,7 +2127,7 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
   int posix_ver = posix2_version ();
   bool obsolete_usage = posix_ver < 200112;
   bool traditional_usage = obsolete_usage || 200809 <= posix_ver;
-  p = argv[1];
+  char const *p = argv[1];
 
   switch (*p++)
     {
@@ -2159,14 +2154,16 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
       break;
     }
 
-  n_string = p;
-  while (c_isdigit (*p))
-    p++;
-  n_string_end = p;
+  uintmax_t n;
+  if (!c_isdigit (*p))
+    n = DEFAULT_N_LINES;
+  else
+    for (n = 0; c_isdigit (*p); p++)
+      n = ckd_mul (&n, n, 10) || ckd_add (&n, n, *p - '0') ? UINTMAX_MAX : n;
 
   switch (*p)
     {
-    case 'b': default_count *= 512; FALLTHROUGH;
+    case 'b': n = ckd_mul (&n, n, 512) ? UINTMAX_MAX : n; FALLTHROUGH;
     case 'c': t_count_lines = false; FALLTHROUGH;
     case 'l': p++; break;
     }
@@ -2180,13 +2177,7 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
   if (*p)
     return false;
 
-  if (n_string == n_string_end)
-    *n_units = default_count;
-  else if ((xstrtoumax (n_string, nullptr, 10, n_units, "b")
-            & ~LONGINT_INVALID_SUFFIX_CHAR)
-           != LONGINT_OK)
-    error (EXIT_FAILURE, errno, "%s: %s", _("invalid number"),
-           quote (argv[1]));
+  *n_units = n;
 
   /* Set globals.  */
   from_start = t_from_start;
