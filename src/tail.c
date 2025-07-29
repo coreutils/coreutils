@@ -481,24 +481,14 @@ xlseek (int fd, off_t offset, int whence, char const *prettyname)
   if (0 <= new_offset)
     return new_offset;
 
-  switch (whence)
-    {
-    case SEEK_SET:
-      error (EXIT_FAILURE, errno, _("%s: cannot seek to offset %jd"),
-             quotef (prettyname), (intmax_t) offset);
-      break;
-    case SEEK_CUR:
-      error (EXIT_FAILURE, errno, _("%s: cannot seek to relative offset %jd"),
-             quotef (prettyname), (intmax_t) offset);
-      break;
-    case SEEK_END:
-      error (EXIT_FAILURE, errno,
-             _("%s: cannot seek to end-relative offset %jd"),
-             quotef (prettyname), (intmax_t) offset);
-      break;
-    default:
-      unreachable ();
-    }
+  static char const *whence_msgid[] = {
+    [SEEK_SET] = N_("%s: cannot seek to offset %jd"),
+    [SEEK_CUR] = N_("%s: cannot seek to relative offset %jd"),
+    [SEEK_END] = N_("%s: cannot seek to end-relative offset %jd")
+  };
+  intmax_t joffset = offset;
+  error (EXIT_FAILURE, errno, gettext (whence_msgid[whence]),
+         quotef (prettyname), joffset);
 }
 
 /* Print the last N_LINES lines from the end of file FD.
