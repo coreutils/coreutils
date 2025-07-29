@@ -117,6 +117,9 @@ struct File_spec
   /* The actual file name, or "-" for stdin.  */
   char *name;
 
+  /* The prettified name; the same as NAME unless NAME is "-".  */
+  char const *prettyname;
+
   /* Attributes of the file the last time we checked.  */
   off_t size;
   struct timespec mtime;
@@ -369,12 +372,6 @@ valid_file_spec (struct File_spec const *f)
   return ((f->fd == -1) ^ (f->errnum == 0));
 }
 
-static char const *
-pretty_name (struct File_spec const *f)
-{
-  return (STREQ (f->name, "-") ? _("standard input") : f->name);
-}
-
 /* Record a file F with descriptor FD, size SIZE, status ST, and
    blocking status BLOCKING.  */
 
@@ -394,23 +391,21 @@ record_open_fd (struct File_spec *f, int fd,
   f->ignore = false;
 }
 
-/* Close the file with descriptor FD and name FILENAME.  */
+/* Close the file with descriptor FD and spec F.  */
 
 static void
-close_fd (int fd, char const *filename)
+close_fd (int fd, struct File_spec const *f)
 {
-  if (fd != -1 && fd != STDIN_FILENO && close (fd))
-    {
-      error (0, errno, _("closing %s (fd=%d)"), quoteaf (filename), fd);
-    }
+  if (STDIN_FILENO < fd && close (fd) < 0)
+    error (0, errno, _("closing %s (fd=%d)"), quoteaf (f->prettyname), fd);
 }
 
 static void
-write_header (char const *pretty_filename)
+write_header (char const *prettyname)
 {
   static bool first_file = true;
 
-  printf ("%s==> %s <==\n", (first_file ? "" : "\n"), pretty_filename);
+  printf ("%s==> %s <==\n", first_file ? "" : "\n", prettyname);
   first_file = false;
 }
 
@@ -428,13 +423,13 @@ xwrite_stdout (char const *buffer, size_t n_bytes)
     }
 }
 
-/* Read and output N_BYTES of file PRETTY_FILENAME starting at the current
+/* Read and output N_BYTES of file PRETTYNAME starting at the current
    position in FD.  If N_BYTES is COPY_TO_EOF, then copy until end of file.
    If N_BYTES is COPY_A_BUFFER, then copy at most one buffer's worth.
    Return the number of bytes read from the file.  */
 
 static uintmax_t
-dump_remainder (bool want_header, char const *pretty_filename, int fd,
+dump_remainder (bool want_header, char const *prettyname, int fd,
                 uintmax_t n_bytes)
 {
   uintmax_t n_written;
@@ -450,14 +445,14 @@ dump_remainder (bool want_header, char const *pretty_filename, int fd,
         {
           if (errno != EAGAIN)
             error (EXIT_FAILURE, errno, _("error reading %s"),
-                   quoteaf (pretty_filename));
+                   quoteaf (prettyname));
           break;
         }
       if (bytes_read == 0)
         break;
       if (want_header)
         {
-          write_header (pretty_filename);
+          write_header (prettyname);
           want_header = false;
         }
       xwrite_stdout (buffer, bytes_read);
@@ -473,13 +468,13 @@ dump_remainder (bool want_header, char const *pretty_filename, int fd,
   return n_written;
 }
 
-/* Call lseek with the specified arguments, where file descriptor FD
-   corresponds to the file, FILENAME.
+/* Call lseek with the specified arguments FD, OFFSET, WHENCE.
+   FD corresponds to PRETTYNAME.
    Give a diagnostic and exit nonzero if lseek fails.
    Otherwise, return the resulting offset.  */
 
 static off_t
-xlseek (int fd, off_t offset, int whence, char const *filename)
+xlseek (int fd, off_t offset, int whence, char const *prettyname)
 {
   off_t new_offset = lseek (fd, offset, whence);
 
@@ -490,16 +485,16 @@ xlseek (int fd, off_t offset, int whence, char const *filename)
     {
     case SEEK_SET:
       error (EXIT_FAILURE, errno, _("%s: cannot seek to offset %jd"),
-             quotef (filename), (intmax_t) offset);
+             quotef (prettyname), (intmax_t) offset);
       break;
     case SEEK_CUR:
       error (EXIT_FAILURE, errno, _("%s: cannot seek to relative offset %jd"),
-             quotef (filename), (intmax_t) offset);
+             quotef (prettyname), (intmax_t) offset);
       break;
     case SEEK_END:
       error (EXIT_FAILURE, errno,
              _("%s: cannot seek to end-relative offset %jd"),
-             quotef (filename), (intmax_t) offset);
+             quotef (prettyname), (intmax_t) offset);
       break;
     default:
       unreachable ();
@@ -516,7 +511,7 @@ xlseek (int fd, off_t offset, int whence, char const *filename)
    Return true if successful.  */
 
 static bool
-file_lines (char const *pretty_filename, int fd, struct stat const *sb,
+file_lines (char const *prettyname, int fd, struct stat const *sb,
             uintmax_t n_lines, off_t start_pos, off_t end_pos,
             uintmax_t *read_pos)
 {
@@ -551,11 +546,11 @@ file_lines (char const *pretty_filename, int fd, struct stat const *sb,
   /* Make 'pos' a multiple of 'bufsize' (0 if the file is short), so that all
      reads will be on block boundaries, which might increase efficiency.  */
   pos -= bytes_read;
-  xlseek (fd, pos, SEEK_SET, pretty_filename);
+  xlseek (fd, pos, SEEK_SET, prettyname);
   bytes_read = safe_read (fd, buffer, bytes_read);
   if (bytes_read < 0)
     {
-      error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
+      error (0, errno, _("error reading %s"), quoteaf (prettyname));
       ok = false;
       goto free_buffer;
     }
@@ -582,7 +577,7 @@ file_lines (char const *pretty_filename, int fd, struct stat const *sb,
               /* If this newline isn't the last character in the buffer,
                  output the part that is after it.  */
               xwrite_stdout (nl + 1, bytes_read - (n + 1));
-              *read_pos += dump_remainder (false, pretty_filename, fd,
+              *read_pos += dump_remainder (false, prettyname, fd,
                                            end_pos - (pos + bytes_read));
               goto free_buffer;
             }
@@ -593,18 +588,18 @@ file_lines (char const *pretty_filename, int fd, struct stat const *sb,
         {
           /* Not enough lines in the file; print everything from
              start_pos to the end.  */
-          xlseek (fd, start_pos, SEEK_SET, pretty_filename);
-          *read_pos = start_pos + dump_remainder (false, pretty_filename, fd,
+          xlseek (fd, start_pos, SEEK_SET, prettyname);
+          *read_pos = start_pos + dump_remainder (false, prettyname, fd,
                                                   end_pos);
           goto free_buffer;
         }
       pos -= bufsize;
-      xlseek (fd, pos, SEEK_SET, pretty_filename);
+      xlseek (fd, pos, SEEK_SET, prettyname);
 
       bytes_read = safe_read (fd, buffer, bufsize);
       if (bytes_read < 0)
         {
-          error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
+          error (0, errno, _("error reading %s"), quoteaf (prettyname));
           ok = false;
           goto free_buffer;
         }
@@ -624,7 +619,7 @@ free_buffer:
    Return true if successful.  */
 
 static bool
-pipe_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
+pipe_lines (char const *prettyname, int fd, uintmax_t n_lines,
             uintmax_t *read_pos)
 {
   struct linebuffer
@@ -700,7 +695,7 @@ pipe_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
 
   if (n_read < 0 && errno != EAGAIN)
     {
-      error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
+      error (0, errno, _("error reading %s"), quoteaf (prettyname));
       ok = false;
       goto free_lbuffers;
     }
@@ -763,7 +758,7 @@ free_lbuffers:
    Return true if successful.  */
 
 static bool
-pipe_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
+pipe_bytes (char const *prettyname, int fd, uintmax_t n_bytes,
             uintmax_t *read_pos)
 {
   struct charbuffer
@@ -828,7 +823,7 @@ pipe_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
 
   if (n_read < 0 && errno != EAGAIN)
     {
-      error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
+      error (0, errno, _("error reading %s"), quoteaf (prettyname));
       ok = false;
       goto free_cbuffers;
     }
@@ -864,7 +859,7 @@ free_cbuffers:
    Return 1 on error, 0 if ok, -1 if EOF.  */
 
 static int
-start_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
+start_bytes (char const *prettyname, int fd, uintmax_t n_bytes,
              uintmax_t *read_pos)
 {
   char buffer[BUFSIZ];
@@ -876,7 +871,7 @@ start_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
         return -1;
       if (bytes_read < 0)
         {
-          error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
+          error (0, errno, _("error reading %s"), quoteaf (prettyname));
           return 1;
         }
       *read_pos += bytes_read;
@@ -899,7 +894,7 @@ start_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
    Return 1 on error, 0 if ok, -1 if EOF.  */
 
 static int
-start_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
+start_lines (char const *prettyname, int fd, uintmax_t n_lines,
              uintmax_t *read_pos)
 {
   if (n_lines == 0)
@@ -913,7 +908,7 @@ start_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
         return -1;
       if (bytes_read < 0) /* error */
         {
-          error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
+          error (0, errno, _("error reading %s"), quoteaf (prettyname));
           return 1;
         }
 
@@ -935,11 +930,12 @@ start_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
     }
 }
 
-/* Return false when FD is open on a file residing on a local file system.
+/* Return true if FD might be open on a file residing on a remote file system,
+   false if FD is known to be local.  F is the file's spec.
    If fstatfs fails, give a diagnostic and return true.
    If fstatfs cannot be called, return true.  */
 static bool
-fremote (int fd, char const *name)
+fremote (int fd, struct File_spec const *f)
 {
   bool remote = true;           /* be conservative (poll by default).  */
 
@@ -953,7 +949,7 @@ fremote (int fd, char const *name)
          is open on a pipe.  Treat that like a remote file.  */
       if (errno != ENOSYS)
         error (0, errno, _("cannot determine location of %s. "
-                           "reverting to polling"), quoteaf (name));
+                           "reverting to polling"), quoteaf (f->prettyname));
     }
   else
     {
@@ -998,7 +994,7 @@ recheck (struct File_spec *f, bool blocking)
       f->ignore = true;
 
       error (0, 0, _("%s has been replaced with an untailable symbolic link"),
-             quoteaf (pretty_name (f)));
+             quoteaf (f->prettyname));
     }
   else if (fd == -1 || fstat (fd, &new_stats) < 0)
     {
@@ -1013,7 +1009,7 @@ recheck (struct File_spec *f, bool blocking)
                  be seen to be the same file (dev/ino).  Otherwise, tail prints
                  the entire contents of the file when it becomes readable.  */
               error (0, f->errnum, _("%s has become inaccessible"),
-                     quoteaf (pretty_name (f)));
+                     quoteaf (f->prettyname));
             }
           else
             {
@@ -1021,7 +1017,7 @@ recheck (struct File_spec *f, bool blocking)
             }
         }
       else if (prev_errnum != errno)
-        error (0, errno, "%s", quotef (pretty_name (f)));
+        error (0, errno, "%s", quotef (f->prettyname));
     }
   else if (!IS_TAILABLE_FILE_TYPE (new_stats.st_mode))
     {
@@ -1031,15 +1027,15 @@ recheck (struct File_spec *f, bool blocking)
       f->ignore = ! (reopen_inaccessible_files && follow_mode == Follow_name);
       if (was_tailable || prev_errnum != f->errnum)
         error (0, 0, _("%s has been replaced with an untailable file%s"),
-               quoteaf (pretty_name (f)),
+               quoteaf (f->prettyname),
                f->ignore ? _("; giving up on this name") : "");
     }
-  else if ((f->remote = fremote (fd, pretty_name (f))) && ! disable_inotify)
+  else if ((f->remote = fremote (fd, f)) && ! disable_inotify)
     {
       ok = false;
       f->errnum = -1;
       error (0, 0, _("%s has been replaced with an untailable remote file"),
-             quoteaf (pretty_name (f)));
+             quoteaf (f->prettyname));
       f->ignore = true;
       f->remote = true;
     }
@@ -1051,15 +1047,15 @@ recheck (struct File_spec *f, bool blocking)
   new_file = false;
   if (!ok)
     {
-      close_fd (fd, pretty_name (f));
-      close_fd (f->fd, pretty_name (f));
+      close_fd (fd, f);
+      close_fd (f->fd, f);
       f->fd = -1;
     }
   else if (prev_errnum && prev_errnum != ENOENT)
     {
       new_file = true;
       affirm (f->fd == -1);
-      error (0, 0, _("%s has become accessible"), quoteaf (pretty_name (f)));
+      error (0, 0, _("%s has become accessible"), quoteaf (f->prettyname));
     }
   else if (f->fd == -1)
     {
@@ -1072,7 +1068,7 @@ recheck (struct File_spec *f, bool blocking)
 
       error (0, 0,
              _("%s has appeared;  following new file"),
-             quoteaf (pretty_name (f)));
+             quoteaf (f->prettyname));
     }
   else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
     {
@@ -1082,16 +1078,15 @@ recheck (struct File_spec *f, bool blocking)
 
       error (0, 0,
              _("%s has been replaced;  following new file"),
-             quoteaf (pretty_name (f)));
+             quoteaf (f->prettyname));
 
       /* Close the old one.  */
-      close_fd (f->fd, pretty_name (f));
-
+      close_fd (f->fd, f);
     }
   else
     {
       /* No changes detected, so close new fd.  */
-      close_fd (fd, pretty_name (f));
+      close_fd (fd, f);
     }
 
   /* FIXME: When a log is rotated, daemons tend to log to the
@@ -1105,7 +1100,7 @@ recheck (struct File_spec *f, bool blocking)
       /* Start at the beginning of the file.  */
       record_open_fd (f, fd, 0, &new_stats, (is_stdin ? -1 : blocking));
       if (S_ISREG (new_stats.st_mode))
-        xlseek (fd, 0, SEEK_SET, pretty_name (f));
+        xlseek (fd, 0, SEEK_SET, f->prettyname);
     }
 }
 
@@ -1181,24 +1176,20 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
 
       for (i = 0; i < n_files; i++)
         {
-          int fd;
-          char const *name;
-          mode_t mode;
           struct stat stats;
-          uintmax_t bytes_read;
 
           if (f[i].ignore)
             continue;
 
-          if (f[i].fd < 0)
+          int fd = f[i].fd;
+          if (fd < 0)
             {
               recheck (&f[i], blocking);
               continue;
             }
 
-          fd = f[i].fd;
-          name = pretty_name (&f[i]);
-          mode = f[i].mode;
+          char const *prettyname = f[i].prettyname;
+          mode_t mode = f[i].mode;
 
           if (f[i].blocking != blocking)
             {
@@ -1217,7 +1208,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                   else
                     error (EXIT_FAILURE, errno,
                            _("%s: cannot change nonblocking mode"),
-                           quotef (name));
+                           quotef (prettyname));
                 }
               else
                 f[i].blocking = blocking;
@@ -1230,7 +1221,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                 {
                   f[i].fd = -1;
                   f[i].errnum = errno;
-                  error (0, errno, "%s", quotef (name));
+                  error (0, errno, "%s", quotef (prettyname));
                   close (fd); /* ignore failure */
                   continue;
                 }
@@ -1269,17 +1260,18 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                  (in which case we ignore new data <= size).  */
               if (S_ISREG (mode) && stats.st_size < f[i].size)
                 {
-                  error (0, 0, _("%s: file truncated"), quotef (name));
+                  error (0, 0, _("%s: file truncated"),
+                         quotef (prettyname));
                   /* Assume the file was truncated to 0,
                      and therefore output all "new" data.  */
-                  xlseek (fd, 0, SEEK_SET, name);
+                  xlseek (fd, 0, SEEK_SET, prettyname);
                   f[i].size = 0;
                 }
 
               if (i != last)
                 {
                   if (print_headers)
-                    write_header (name);
+                    write_header (prettyname);
                   last = i;
                 }
             }
@@ -1295,8 +1287,8 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
           else
             bytes_to_read = COPY_TO_EOF;
 
-          bytes_read = dump_remainder (false, name, fd, bytes_to_read);
-
+          uintmax_t bytes_read = dump_remainder (false, prettyname,
+                                                 fd, bytes_to_read);
           if (read_unchanged && bytes_read)
             f[i].n_unchanged_stats = 0;
 
@@ -1419,21 +1411,19 @@ wd_comparator (const void *e1, const void *e2)
 static void
 check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
 {
-  struct stat stats;
-  char const *name;
-
-  if (fspec->fd == -1)
+  if (fspec->fd < 0)
     return;
 
-  name = pretty_name (fspec);
-
+  struct stat stats;
   if (fstat (fspec->fd, &stats) != 0)
     {
       fspec->errnum = errno;
-      close_fd (fspec->fd, name);
+      close_fd (fspec->fd, fspec);
       fspec->fd = -1;
       return;
     }
+
+  char const *prettyname = fspec->prettyname;
 
   /* XXX: This is only a heuristic, as the file may have also
      been truncated and written to if st_size >= size
@@ -1442,8 +1432,8 @@ check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
      separate events for truncate() and write().  */
   if (S_ISREG (fspec->mode) && stats.st_size < fspec->size)
     {
-      error (0, 0, _("%s: file truncated"), quotef (name));
-      xlseek (fspec->fd, 0, SEEK_SET, name);
+      error (0, 0, _("%s: file truncated"), quotef (prettyname));
+      xlseek (fspec->fd, 0, SEEK_SET, prettyname);
       fspec->size = 0;
     }
   else if (S_ISREG (fspec->mode) && stats.st_size == fspec->size
@@ -1452,8 +1442,8 @@ check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
 
   bool want_header = print_headers && (fspec != *prev_fspec);
 
-  uintmax_t bytes_read = dump_remainder (want_header, name, fspec->fd,
-                                         COPY_TO_EOF);
+  uintmax_t bytes_read = dump_remainder (want_header, prettyname,
+                                         fspec->fd, COPY_TO_EOF);
   fspec->size += bytes_read;
 
   if (bytes_read)
@@ -1607,7 +1597,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
                   && (f[i].dev != stats.st_dev || f[i].ino != stats.st_ino))
                 {
                   error (0, errno, _("%s was replaced"),
-                         quoteaf (pretty_name (&(f[i]))));
+                         quoteaf (f[i].prettyname));
                   return;
                 }
             }
@@ -1790,7 +1780,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
                   if (follow_mode == Follow_name)
                     recheck (prev, false);
                   prev->wd = -1;
-                  close_fd (prev->fd, pretty_name (prev));
+                  close_fd (prev->fd, prev);
                 }
 
               if (hash_insert (wd_to_name, fspec) == nullptr)
@@ -1849,19 +1839,19 @@ get_file_status (struct File_spec *f, int fd, struct stat *st)
   if (fstat (fd, st) < 0)
     {
       f->errnum = errno;
-      error (0, f->errnum, _("cannot fstat %s"), quoteaf (pretty_name (f)));
+      error (0, f->errnum, _("cannot fstat %s"), quoteaf (f->prettyname));
       return false;
     }
   return true;
 }
 
-/* Output the last bytes of the file PRETTY_FILENAME open for reading
+/* Output the last bytes of the file PRETTYNAME open for reading
    in FD and with status ST.  Output the last N_BYTES bytes, and set *READ_POS
    to the resulting read position if the file is a regular file, and
    to an unspecified value otherwise.  Return true if and only if successful.  */
 
 static bool
-tail_bytes (char const *pretty_filename, int fd, struct stat const *st,
+tail_bytes (char const *prettyname, int fd, struct stat const *st,
             uintmax_t n_bytes, uintmax_t *read_pos)
 {
   if (from_start)
@@ -1873,7 +1863,7 @@ tail_bytes (char const *pretty_filename, int fd, struct stat const *st,
         *read_pos = pos;
       else
         {
-          int t = start_bytes (pretty_filename, fd, n_bytes, read_pos);
+          int t = start_bytes (prettyname, fd, n_bytes, read_pos);
           if (t)
             return t < 0;
         }
@@ -1932,23 +1922,23 @@ tail_bytes (char const *pretty_filename, int fd, struct stat const *st,
                    ? end_pos - n_bytes
                    : initial_pos);
       if (*read_pos != current_pos)
-        xlseek (fd, *read_pos, SEEK_SET, pretty_filename);
+        xlseek (fd, *read_pos, SEEK_SET, prettyname);
 
       if (end_pos < 0)
-        return pipe_bytes (pretty_filename, fd, n_bytes, read_pos);
+        return pipe_bytes (prettyname, fd, n_bytes, read_pos);
     }
 
-  *read_pos += dump_remainder (false, pretty_filename, fd, n_bytes);
+  *read_pos += dump_remainder (false, prettyname, fd, n_bytes);
   return true;
 }
 
-/* Output the last lines of the file PRETTY_FILENAME open for reading
+/* Output the last lines of the file PRETTYNAME open for reading
    in FD and with status ST.  Output the last N_LINES lines, and set *READ_POS
    to the resulting read position if the file is a regular file, and
    to an unspecified value otherwise.  Return true if and only if successful.  */
 
 static bool
-tail_lines (char const *pretty_filename, int fd, struct stat const *st,
+tail_lines (char const *prettyname, int fd, struct stat const *st,
             uintmax_t n_lines, uintmax_t *read_pos)
 {
   if (from_start)
@@ -1959,10 +1949,10 @@ tail_lines (char const *pretty_filename, int fd, struct stat const *st,
         *read_pos = pos;
       else
         {
-          int t = start_lines (pretty_filename, fd, n_lines, read_pos);
+          int t = start_lines (prettyname, fd, n_lines, read_pos);
           if (t)
             return t < 0;
-          *read_pos += dump_remainder (false, pretty_filename, fd, COPY_TO_EOF);
+          *read_pos += dump_remainder (false, prettyname, fd, COPY_TO_EOF);
         }
       return true;
     }
@@ -1977,16 +1967,16 @@ tail_lines (char const *pretty_filename, int fd, struct stat const *st,
       if (0 <= end_pos)
         {
           if (start_pos < end_pos)
-            return file_lines (pretty_filename, fd, st, n_lines,
+            return file_lines (prettyname, fd, st, n_lines,
                                start_pos, end_pos, read_pos);
 
           /* Do not read from before the start offset, even if the
              input file shrank.  */
           if (end_pos < start_pos)
-            xlseek (fd, start_pos, SEEK_SET, pretty_filename);
+            xlseek (fd, start_pos, SEEK_SET, prettyname);
         }
 
-      return pipe_lines (pretty_filename, fd, n_lines, read_pos);
+      return pipe_lines (prettyname, fd, n_lines, read_pos);
     }
 }
 
@@ -2046,7 +2036,7 @@ tail_file (struct File_spec *f, uintmax_t n_files, uintmax_t n_units)
           f->dev = 0;
         }
       error (0, errno, _("cannot open %s for reading"),
-             quoteaf (pretty_name (f)));
+             quoteaf (f->prettyname));
       ok = false;
     }
   else
@@ -2054,11 +2044,11 @@ tail_file (struct File_spec *f, uintmax_t n_files, uintmax_t n_units)
       uintmax_t read_pos;
 
       if (print_headers)
-        write_header (pretty_name (f));
+        write_header (f->prettyname);
 
       struct stat stats;
       bool stat_ok = get_file_status (f, fd, &stats);
-      ok = stat_ok && tail (pretty_name (f), fd, &stats, n_units, &read_pos);
+      ok = stat_ok && tail (f->prettyname, fd, &stats, n_units, &read_pos);
 
       if (forever)
         {
@@ -2074,7 +2064,7 @@ tail_file (struct File_spec *f, uintmax_t n_files, uintmax_t n_units)
               f->tailable = false;
               f->ignore = ! reopen_inaccessible_files;
               error (0, 0, _("%s: cannot follow end of this type of file%s"),
-                     quotef (pretty_name (f)),
+                     quotef (f->prettyname),
                      f->ignore ? _("; giving up on this name") : "");
             }
 
@@ -2086,7 +2076,7 @@ tail_file (struct File_spec *f, uintmax_t n_files, uintmax_t n_units)
           if (!ok)
             {
               f->ignore = ! reopen_inaccessible_files;
-              close_fd (fd, pretty_name (f));
+              close_fd (fd, f);
               f->fd = -1;
             }
           else
@@ -2095,7 +2085,7 @@ tail_file (struct File_spec *f, uintmax_t n_files, uintmax_t n_units)
                  to avoid a race condition described by Ken Raeburn:
        https://lists.gnu.org/r/bug-textutils/2003-05/msg00007.html */
               record_open_fd (f, fd, read_pos, &stats, (is_stdin ? -1 : 1));
-              f->remote = fremote (fd, pretty_name (f));
+              f->remote = fremote (fd, f);
             }
         }
       else
@@ -2103,7 +2093,7 @@ tail_file (struct File_spec *f, uintmax_t n_files, uintmax_t n_units)
           if (!is_stdin && close (fd))
             {
               error (0, errno, _("error reading %s"),
-                     quoteaf (pretty_name (f)));
+                     quoteaf (f->prettyname));
               ok = false;
             }
         }
@@ -2453,7 +2443,10 @@ main (int argc, char **argv)
 
   F = xnmalloc (n_files, sizeof *F);
   for (i = 0; i < n_files; i++)
-    F[i].name = file[i];
+    {
+      F[i].name = file[i];
+      F[i].prettyname = STREQ (file[i], "-") ? _("standard input") : file[i];
+    }
 
   if (header_mode == always
       || (header_mode == multiple_files && n_files > 1))
