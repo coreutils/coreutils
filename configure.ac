@@ -886,13 +886,13 @@ AC_SUBST([EXTRA_MANS])          AM_SUBST_NOTMAKE([EXTRA_MANS])
 AC_SUBST([built_programs], [$optional_bin_progs])
 
 AM_CONDITIONAL([CROSS_COMPILING], [test "$cross_compiling" = yes])
-
 ############################################################################
 
 # As long as "grep 'PRI[diouxX]' po/*.pot" reports matches in
 # translatable strings, we must use need-formatstring-macros here.
 AM_GNU_GETTEXT([external], [need-formatstring-macros])
 AM_GNU_GETTEXT_VERSION([0.19.2])
+AM_CONDITIONAL([USE_NLS], [test "$USE_NLS" = yes])
 
 # For a test of uniq: it uses the $LOCALE_FR envvar.
 gt_LOCALE_FR
