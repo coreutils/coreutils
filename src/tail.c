@@ -1840,21 +1840,30 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 }
 #endif
 
-/* Output the last N_BYTES bytes of file FILENAME open for reading in FD.
-   Return true if successful.  */
+/* Get the status for file F, which has descriptor FD, into *ST.
+   Return true on success, false (diagnosing the failure) otherwise.  */
 
 static bool
-tail_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
-            uintmax_t *read_pos)
+get_file_status (struct File_spec *f, int fd, struct stat *st)
 {
-  struct stat stats;
-
-  if (fstat (fd, &stats))
+  if (fstat (fd, st) < 0)
     {
-      error (0, errno, _("cannot fstat %s"), quoteaf (pretty_filename));
+      f->errnum = errno;
+      error (0, f->errnum, _("cannot fstat %s"), quoteaf (pretty_name (f)));
       return false;
     }
+  return true;
+}
 
+/* Output the last bytes of the file PRETTY_FILENAME open for reading
+   in FD and with status ST.  Output the last N_BYTES bytes, and set *READ_POS
+   to the resulting read position if the file is a regular file, and
+   to an unspecified value otherwise.  Return true if and only if successful.  */
+
+static bool
+tail_bytes (char const *pretty_filename, int fd, struct stat const *st,
+            uintmax_t n_bytes, uintmax_t *read_pos)
+{
   if (from_start)
     {
       off_t pos = (presume_input_pipe
@@ -1878,14 +1887,14 @@ tail_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
 
       if (0 <= current_pos)
         {
-          if (usable_st_size (&stats))
+          if (usable_st_size (st))
             {
               /* Use st_size only if it's so large that this is
                  probably not a /proc or similar file, where st_size
                  is notional.  */
-              off_t smallish_size = STP_BLKSIZE (&stats);
-              if (smallish_size < stats.st_size)
-                end_pos = stats.st_size;
+              off_t smallish_size = STP_BLKSIZE (st);
+              if (smallish_size < st->st_size)
+                end_pos = st->st_size;
             }
           else
             {
@@ -1933,21 +1942,15 @@ tail_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
   return true;
 }
 
-/* Output the last N_LINES lines of file FILENAME open for reading in FD.
-   Return true if successful.  */
+/* Output the last lines of the file PRETTY_FILENAME open for reading
+   in FD and with status ST.  Output the last N_LINES lines, and set *READ_POS
+   to the resulting read position if the file is a regular file, and
+   to an unspecified value otherwise.  Return true if and only if successful.  */
 
 static bool
-tail_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
-            uintmax_t *read_pos)
+tail_lines (char const *pretty_filename, int fd, struct stat const *st,
+            uintmax_t n_lines, uintmax_t *read_pos)
 {
-  struct stat stats;
-
-  if (fstat (fd, &stats))
-    {
-      error (0, errno, _("cannot fstat %s"), quoteaf (pretty_filename));
-      return false;
-    }
-
   if (from_start)
     {
       /* If skipping all input use lseek if possible, for speed.  */
@@ -1970,13 +1973,13 @@ tail_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
       /* Use file_lines only if FD refers to a regular file for
          which lseek (... SEEK_END) works.  */
       if ( ! presume_input_pipe
-           && S_ISREG (stats.st_mode)
+           && S_ISREG (st->st_mode)
            && (start_pos = lseek (fd, 0, SEEK_CUR)) != -1
            && start_pos < (end_pos = lseek (fd, 0, SEEK_END)))
         {
           *read_pos = end_pos;
           if (end_pos != 0
-              && ! file_lines (pretty_filename, fd, &stats, n_lines,
+              && ! file_lines (pretty_filename, fd, st, n_lines,
                                start_pos, end_pos, read_pos))
             return false;
         }
@@ -1995,8 +1998,9 @@ tail_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
   return true;
 }
 
-/* Display the last N_UNITS units of file FILENAME, open for reading
-   via FD.  Set *READ_POS to the position of the input stream pointer.
+/* Display the last N_UNITS units of file FILENAME,
+   open for reading via FD and with status *ST.
+   Set *READ_POS to the position of the input stream pointer.
    *READ_POS is usually the number of bytes read and corresponds to an
    offset from the beginning of a file.  However, it may be larger than
    OFF_T_MAX (as for an input pipe), and may also be larger than the
@@ -2006,14 +2010,12 @@ tail_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
    Return true if successful.  */
 
 static bool
-tail (char const *filename, int fd, uintmax_t n_units,
-      uintmax_t *read_pos)
+tail (char const *filename, int fd, struct stat const *st,
+      uintmax_t n_units, uintmax_t *read_pos)
 {
   *read_pos = 0;
-  if (count_lines)
-    return tail_lines (filename, fd, n_units, read_pos);
-  else
-    return tail_bytes (filename, fd, n_units, read_pos);
+  return ((count_lines ? tail_lines : tail_bytes)
+          (filename, fd, st, n_units, read_pos));
 }
 
 /* Display the last N_UNITS units of the file described by F.
@@ -2061,35 +2063,33 @@ tail_file (struct File_spec *f, uintmax_t n_files, uintmax_t n_units)
 
       if (print_headers)
         write_header (pretty_name (f));
-      ok = tail (pretty_name (f), fd, n_units, &read_pos);
+
+      struct stat stats;
+      bool stat_ok = get_file_status (f, fd, &stats);
+      ok = stat_ok && tail (pretty_name (f), fd, &stats, n_units, &read_pos);
+
       if (forever)
         {
-          struct stat stats;
-
 #if TAIL_TEST_SLEEP
           /* Before the tail function provided 'read_pos', there was
              a race condition described in the URL below.  This sleep
              call made the window big enough to exercise the problem.  */
           xnanosleep (1);
 #endif
-          f->errnum = ok - 1;
-          if (fstat (fd, &stats) < 0)
+          if (stat_ok && !IS_TAILABLE_FILE_TYPE (stats.st_mode))
             {
               ok = false;
-              f->errnum = errno;
-              error (0, errno, _("error reading %s"),
-                     quoteaf (pretty_name (f)));
-            }
-          else if (!IS_TAILABLE_FILE_TYPE (stats.st_mode))
-            {
-              ok = false;
-              f->errnum = -1;
               f->tailable = false;
               f->ignore = ! reopen_inaccessible_files;
               error (0, 0, _("%s: cannot follow end of this type of file%s"),
                      quotef (pretty_name (f)),
                      f->ignore ? _("; giving up on this name") : "");
             }
+
+          if (ok && !get_file_status (f, fd, &stats))
+            ok = false;
+          else if (stat_ok)
+            f->errnum = ok - 1;
 
           if (!ok)
             {

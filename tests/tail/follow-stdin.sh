@@ -59,7 +59,6 @@ done
 returns_ 1 timeout 10 tail -f - <&- 2>errt || fail=1
 cat <<\EOF >exp || framework_failure_
 tail: cannot fstat 'standard input'
-tail: error reading 'standard input'
 tail: no files remaining
 EOF
 sed 's/\(tail:.*\):.*/\1/' errt > err || framework_failure_
