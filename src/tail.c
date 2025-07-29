@@ -1964,38 +1964,30 @@ tail_lines (char const *pretty_filename, int fd, struct stat const *st,
             return t < 0;
           *read_pos += dump_remainder (false, pretty_filename, fd, COPY_TO_EOF);
         }
+      return true;
     }
   else
     {
-      off_t start_pos = -1;
-      off_t end_pos;
+      /* Use file_lines only if FD is a regular file and SEEK_END
+         reports more data.  */
+      off_t start_pos = (!presume_input_pipe && S_ISREG (st->st_mode)
+                         ? lseek (fd, 0, SEEK_CUR)
+                         : -1);
+      off_t end_pos = start_pos < 0 ? -1 : lseek (fd, 0, SEEK_END);
+      if (0 <= end_pos)
+        {
+          if (start_pos < end_pos)
+            return file_lines (pretty_filename, fd, st, n_lines,
+                               start_pos, end_pos, read_pos);
 
-      /* Use file_lines only if FD refers to a regular file for
-         which lseek (... SEEK_END) works.  */
-      if ( ! presume_input_pipe
-           && S_ISREG (st->st_mode)
-           && (start_pos = lseek (fd, 0, SEEK_CUR)) != -1
-           && start_pos < (end_pos = lseek (fd, 0, SEEK_END)))
-        {
-          *read_pos = end_pos;
-          if (end_pos != 0
-              && ! file_lines (pretty_filename, fd, st, n_lines,
-                               start_pos, end_pos, read_pos))
-            return false;
-        }
-      else
-        {
-          /* Under very unlikely circumstances, it is possible to reach
-             this point after positioning the file pointer to end of file
-             via the 'lseek (...SEEK_END)' above.  In that case, reposition
-             the file pointer back to start_pos before calling pipe_lines.  */
-          if (start_pos != -1)
+          /* Do not read from before the start offset, even if the
+             input file shrank.  */
+          if (end_pos < start_pos)
             xlseek (fd, start_pos, SEEK_SET, pretty_filename);
-
-          return pipe_lines (pretty_filename, fd, n_lines, read_pos);
         }
+
+      return pipe_lines (pretty_filename, fd, n_lines, read_pos);
     }
-  return true;
 }
 
 /* Display the last N_UNITS units of file FILENAME,
