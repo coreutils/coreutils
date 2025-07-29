@@ -1955,7 +1955,7 @@ tail_lines (char const *pretty_filename, int fd, struct stat const *st,
     {
       /* If skipping all input use lseek if possible, for speed.  */
       off_t pos;
-      if (n_lines == UINTMAX_MAX && 0 <= (pos = lseek (fd, 0, SEEK_END)))
+      if (OFF_T_MAX <= n_lines && 0 <= (pos = lseek (fd, 0, SEEK_END)))
         *read_pos = pos;
       else
         {
