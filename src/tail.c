@@ -1857,9 +1857,11 @@ tail_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
 
   if (from_start)
     {
-      if (! presume_input_pipe && n_bytes <= OFF_T_MAX
-          && 0 <= lseek (fd, n_bytes, SEEK_CUR))
-        *read_pos += n_bytes;
+      off_t pos = (presume_input_pipe
+                   ? -1
+                   : lseek (fd, MIN (n_bytes, OFF_T_MAX), SEEK_CUR));
+      if (0 <= pos)
+        *read_pos = pos;
       else
         {
           int t = start_bytes (pretty_filename, fd, n_bytes, read_pos);
@@ -1870,44 +1872,61 @@ tail_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
     }
   else
     {
+      off_t initial_pos = presume_input_pipe ? -1 : lseek (fd, 0, SEEK_CUR);
+      off_t current_pos = initial_pos;
       off_t end_pos = -1;
-      off_t current_pos = -1;
-      bool copy_from_current_pos = false;
 
-      if (! presume_input_pipe && n_bytes <= OFF_T_MAX)
+      if (0 <= current_pos)
         {
           if (usable_st_size (&stats))
             {
               /* Use st_size only if it's so large that this is
                  probably not a /proc or similar file, where st_size
                  is notional.  */
-              end_pos = stats.st_size;
               off_t smallish_size = STP_BLKSIZE (&stats);
-              copy_from_current_pos = smallish_size < end_pos;
+              if (smallish_size < stats.st_size)
+                end_pos = stats.st_size;
             }
           else
             {
-              current_pos = lseek (fd, -n_bytes, SEEK_END);
-              copy_from_current_pos = current_pos != -1;
-              if (copy_from_current_pos)
-                end_pos = current_pos + n_bytes;
+              off_t minus_n;
+              if (ckd_sub (&minus_n, 0, n_bytes))
+                end_pos = 0;
+              else
+                {
+                  off_t e_n_pos = lseek (fd, minus_n, SEEK_END);
+                  if (0 <= e_n_pos)
+                    {
+                      current_pos = e_n_pos;
+                      end_pos = e_n_pos + n_bytes;
+                    }
+                  else
+                    {
+                      /* POSIX says errno is unreliable here.
+                         Perhaps the file is smaller than N_BYTES.
+                         Try again at file end.  */
+                      off_t e_pos = lseek (fd, 0, SEEK_END);
+                      if (0 <= e_pos)
+                        current_pos = end_pos = e_pos;
+                    }
+               }
             }
         }
-      if (! copy_from_current_pos)
-        return pipe_bytes (pretty_filename, fd, n_bytes, read_pos);
-      if (current_pos == -1)
-        current_pos = xlseek (fd, 0, SEEK_CUR, pretty_filename);
-      if (current_pos < end_pos)
-        {
-          off_t bytes_remaining = end_pos - current_pos;
 
-          if (n_bytes < bytes_remaining)
-            {
-              current_pos = end_pos - n_bytes;
-              xlseek (fd, current_pos, SEEK_SET, pretty_filename);
-            }
-        }
-      *read_pos = current_pos;
+      /* If the end is known and more than N_BYTES after the initial
+         position, go to N_BYTES before the end; otherwise go back to
+         the initial position.  Set *READ_POS to the desired position,
+         and do not lseek if we cannot seek or are already at *READ_POS.
+         If the file is not seekable set *READ_POS = -1, which is OK
+         since callers use *READ_POS only for regular files.  */
+      *read_pos = (initial_pos < end_pos && n_bytes < end_pos - initial_pos
+                   ? end_pos - n_bytes
+                   : initial_pos);
+      if (*read_pos != current_pos)
+        xlseek (fd, *read_pos, SEEK_SET, pretty_filename);
+
+      if (end_pos < 0)
+        return pipe_bytes (pretty_filename, fd, n_bytes, read_pos);
     }
 
   *read_pos += dump_remainder (false, pretty_filename, fd, n_bytes);
