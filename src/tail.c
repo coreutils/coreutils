@@ -78,9 +78,12 @@
 #define DEFAULT_N_LINES 10
 
 /* Special values for dump_remainder's N_BYTES parameter.  */
-#define COPY_TO_EOF UINTMAX_MAX
-#define COPY_A_BUFFER (UINTMAX_MAX - 1)
-static_assert (OFF_T_MAX < COPY_A_BUFFER);
+enum { COPY_TO_EOF = -1, COPY_A_BUFFER = -2 };
+
+/* The type of a large counter.  Although it is always nonnegative,
+   it is signed to help signed overflow checking catch any bugs.  */
+typedef intmax_t count_t;
+#define COUNT_MAX INTMAX_MAX
 
 /* FIXME: make Follow_name the default?  */
 #define DEFAULT_FOLLOW_MODE Follow_descriptor
@@ -161,7 +164,7 @@ struct File_spec
 #endif
 
   /* See description of DEFAULT_MAX_N_... below.  */
-  uintmax_t n_unchanged_stats;
+  count_t n_unchanged_stats;
 };
 
 /* Keep trying to open a file even if it is inaccessible when tail starts
@@ -202,8 +205,8 @@ enum header_mode
    the file to determine if that file name is still associated with the
    same device/inode-number pair as before.  This option is meaningful only
    when following by name.  --max-unchanged-stats=N  */
-#define DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS 5
-static uintmax_t max_n_unchanged_stats_between_opens =
+enum { DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS = 5 };
+static count_t max_n_unchanged_stats_between_opens =
   DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS;
 
 /* The process IDs of the processes to watch (those writing the followed
@@ -423,23 +426,25 @@ xwrite_stdout (char const *buffer, size_t n_bytes)
     }
 }
 
-/* Read and output N_BYTES of file PRETTYNAME starting at the current
-   position in FD.  If N_BYTES is COPY_TO_EOF, then copy until end of file.
-   If N_BYTES is COPY_A_BUFFER, then copy at most one buffer's worth.
+/* Read and output bytes from a file, starting at its current position.
+   If WANT_HEADER, if there is output then output a header before it.
+   The file's name is PRETTYNAME and its file descriptor is FD.
+   If N_BYTES is nonnegative, read and output at most N_BYTES.
+   If N_BYTES is COPY_TO_EOF, copy until end of file.
+   If N_BYTES is COPY_A_BUFFER, copy at most one buffer's worth.
    Return the number of bytes read from the file.  */
 
-static uintmax_t
+static count_t
 dump_remainder (bool want_header, char const *prettyname, int fd,
-                uintmax_t n_bytes)
+                count_t n_bytes)
 {
-  uintmax_t n_written;
-  uintmax_t n_remaining = n_bytes;
+  count_t n_read = 0;
+  count_t n_remaining = n_bytes;
 
-  n_written = 0;
-  while (true)
+  do
     {
       char buffer[BUFSIZ];
-      idx_t n = MIN (n_remaining, BUFSIZ);
+      idx_t n = n_bytes < 0 || BUFSIZ < n_remaining ? BUFSIZ : n_remaining;
       ptrdiff_t bytes_read = safe_read (fd, buffer, n);
       if (bytes_read < 0)
         {
@@ -450,22 +455,23 @@ dump_remainder (bool want_header, char const *prettyname, int fd,
         }
       if (bytes_read == 0)
         break;
+      n_read += bytes_read;
+
       if (want_header)
         {
           write_header (prettyname);
           want_header = false;
         }
       xwrite_stdout (buffer, bytes_read);
-      n_written += bytes_read;
-      if (n_bytes != COPY_TO_EOF)
-        {
-          n_remaining -= bytes_read;
-          if (n_remaining == 0 || n_bytes == COPY_A_BUFFER)
-            break;
-        }
-    }
+      if (n_bytes == COPY_A_BUFFER)
+        break;
 
-  return n_written;
+      n_remaining -= bytes_read;
+      /* n_remaining < 0 if n_bytes == COPY_TO_EOF.  */
+    }
+  while (n_remaining != 0);
+
+  return n_read;
 }
 
 /* Call lseek with the specified arguments FD, OFFSET, WHENCE.
@@ -502,8 +508,8 @@ xlseek (int fd, off_t offset, int whence, char const *prettyname)
 
 static bool
 file_lines (char const *prettyname, int fd, struct stat const *sb,
-            uintmax_t n_lines, off_t start_pos, off_t end_pos,
-            uintmax_t *read_pos)
+            count_t n_lines, off_t start_pos, off_t end_pos,
+            count_t *read_pos)
 {
   char *buffer;
   blksize_t bufsize = BUFSIZ;
@@ -609,8 +615,8 @@ free_buffer:
    Return true if successful.  */
 
 static bool
-pipe_lines (char const *prettyname, int fd, uintmax_t n_lines,
-            uintmax_t *read_pos)
+pipe_lines (char const *prettyname, int fd, count_t n_lines,
+            count_t *read_pos)
 {
   struct linebuffer
   {
@@ -748,8 +754,8 @@ free_lbuffers:
    Return true if successful.  */
 
 static bool
-pipe_bytes (char const *prettyname, int fd, uintmax_t n_bytes,
-            uintmax_t *read_pos)
+pipe_bytes (char const *prettyname, int fd, count_t n_bytes,
+            count_t *read_pos)
 {
   struct charbuffer
   {
@@ -849,8 +855,8 @@ free_cbuffers:
    Return 1 on error, 0 if ok, -1 if EOF.  */
 
 static int
-start_bytes (char const *prettyname, int fd, uintmax_t n_bytes,
-             uintmax_t *read_pos)
+start_bytes (char const *prettyname, int fd, count_t n_bytes,
+             count_t *read_pos)
 {
   char buffer[BUFSIZ];
 
@@ -884,8 +890,8 @@ start_bytes (char const *prettyname, int fd, uintmax_t n_bytes,
    Return 1 on error, 0 if ok, -1 if EOF.  */
 
 static int
-start_lines (char const *prettyname, int fd, uintmax_t n_lines,
-             uintmax_t *read_pos)
+start_lines (char const *prettyname, int fd, count_t n_lines,
+             count_t *read_pos)
 {
   if (n_lines == 0)
     return 0;
@@ -1269,7 +1275,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
           /* Don't read more than st_size on networked file systems
              because it was seen on glusterfs at least, that st_size
              may be smaller than the data read on a _subsequent_ stat call.  */
-          uintmax_t bytes_to_read;
+          count_t bytes_to_read;
           if (f[i].blocking)
             bytes_to_read = COPY_A_BUFFER;
           else if (S_ISREG (mode) && f[i].remote)
@@ -1277,8 +1283,8 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
           else
             bytes_to_read = COPY_TO_EOF;
 
-          uintmax_t bytes_read = dump_remainder (false, prettyname,
-                                                 fd, bytes_to_read);
+          count_t bytes_read = dump_remainder (false, prettyname,
+                                                fd, bytes_to_read);
           if (read_unchanged && bytes_read)
             f[i].n_unchanged_stats = 0;
 
@@ -1432,8 +1438,8 @@ check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
 
   bool want_header = print_headers && (fspec != *prev_fspec);
 
-  uintmax_t bytes_read = dump_remainder (want_header, prettyname,
-                                         fspec->fd, COPY_TO_EOF);
+  count_t bytes_read = dump_remainder (want_header, prettyname,
+                                        fspec->fd, COPY_TO_EOF);
   fspec->size += bytes_read;
 
   if (bytes_read)
@@ -1456,7 +1462,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
      to help trigger different cases.  */
   xnanosleep (1000000);
 # endif
-  unsigned int max_realloc = 3;
+  int max_realloc = 3;
 
   /* Map an inotify watch descriptor to the name of the file it's watching.  */
   Hash_table *wd_to_name;
@@ -1842,7 +1848,7 @@ get_file_status (struct File_spec *f, int fd, struct stat *st)
 
 static bool
 tail_bytes (char const *prettyname, int fd, struct stat const *st,
-            uintmax_t n_bytes, uintmax_t *read_pos)
+            count_t n_bytes, count_t *read_pos)
 {
   if (from_start)
     {
@@ -1929,7 +1935,7 @@ tail_bytes (char const *prettyname, int fd, struct stat const *st,
 
 static bool
 tail_lines (char const *prettyname, int fd, struct stat const *st,
-            uintmax_t n_lines, uintmax_t *read_pos)
+            count_t n_lines, count_t *read_pos)
 {
   if (from_start)
     {
@@ -1983,7 +1989,7 @@ tail_lines (char const *prettyname, int fd, struct stat const *st,
 
 static bool
 tail (char const *filename, int fd, struct stat const *st,
-      uintmax_t n_units, uintmax_t *read_pos)
+      count_t n_units, count_t *read_pos)
 {
   *read_pos = 0;
   return ((count_lines ? tail_lines : tail_bytes)
@@ -1994,7 +2000,7 @@ tail (char const *filename, int fd, struct stat const *st,
    Return true if successful.  */
 
 static bool
-tail_file (struct File_spec *f, uintmax_t n_files, uintmax_t n_units)
+tail_file (struct File_spec *f, count_t n_files, count_t n_units)
 {
   int fd;
   bool ok;
@@ -2031,7 +2037,7 @@ tail_file (struct File_spec *f, uintmax_t n_files, uintmax_t n_units)
     }
   else
     {
-      uintmax_t read_pos;
+      count_t read_pos;
 
       if (print_headers)
         write_header (f->prettyname);
@@ -2102,7 +2108,7 @@ tail_file (struct File_spec *f, uintmax_t n_files, uintmax_t n_units)
    variable.  */
 
 static bool
-parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
+parse_obsolete_option (int argc, char * const *argv, count_t *n_units)
 {
   bool t_from_start;
   bool t_count_lines = true;
@@ -2145,16 +2151,16 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
       break;
     }
 
-  uintmax_t n;
+  count_t n;
   if (!c_isdigit (*p))
     n = DEFAULT_N_LINES;
   else
     for (n = 0; c_isdigit (*p); p++)
-      n = ckd_mul (&n, n, 10) || ckd_add (&n, n, *p - '0') ? UINTMAX_MAX : n;
+      n = ckd_mul (&n, n, 10) || ckd_add (&n, n, *p - '0') ? COUNT_MAX : n;
 
   switch (*p)
     {
-    case 'b': n = ckd_mul (&n, n, 512) ? UINTMAX_MAX : n; FALLTHROUGH;
+    case 'b': n = ckd_mul (&n, n, 512) ? COUNT_MAX : n; FALLTHROUGH;
     case 'c': t_count_lines = false; FALLTHROUGH;
     case 'l': p++; break;
     }
@@ -2180,7 +2186,7 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
 
 static void
 parse_options (int argc, char **argv,
-               uintmax_t *n_units, enum header_mode *header_mode,
+               count_t *n_units, enum header_mode *header_mode,
                double *sleep_interval)
 {
   int c;
@@ -2205,7 +2211,7 @@ parse_options (int argc, char **argv,
           else if (*optarg == '-')
             ++optarg;
 
-          *n_units = xnumtoumax (optarg, 10, 0, UINTMAX_MAX, "bkKmMGTPEZYRQ0",
+          *n_units = xnumtoimax (optarg, 10, 0, COUNT_MAX, "bkKmMGTPEZYRQ0",
                                  (count_lines
                                   ? _("invalid number of lines")
                                   : _("invalid number of bytes"))
@@ -2229,7 +2235,7 @@ parse_options (int argc, char **argv,
         case MAX_UNCHANGED_STATS_OPTION:
           /* --max-unchanged-stats=N */
           max_n_unchanged_stats_between_opens =
-            xnumtoumax (optarg, 10, 0, UINTMAX_MAX, "",
+            xnumtoimax (optarg, 10, 0, COUNT_MAX, "",
                         _("invalid maximum number of unchanged stats"
                           " between opens"),
                         0, XTOINT_MAX_QUIET);
@@ -2349,7 +2355,7 @@ main (int argc, char **argv)
   bool ok = true;
   /* If from_start, the number of items to skip before printing; otherwise,
      the number of items at the end of the file to print.  */
-  uintmax_t n_units = DEFAULT_N_LINES;
+  count_t n_units = DEFAULT_N_LINES;
   size_t n_files;
   char **file;
   struct File_spec *F;
@@ -2384,7 +2390,7 @@ main (int argc, char **argv)
   /* To start printing with item N_UNITS from the start of the file, skip
      N_UNITS - 1 items.  'tail -n +0' is actually meaningless, but for Unix
      compatibility it's treated the same as 'tail -n +1'.  */
-  n_units -= from_start && 0 < n_units && n_units < UINTMAX_MAX;
+  n_units -= from_start && 0 < n_units && n_units < COUNT_MAX;
 
   if (optind < argc)
     {
@@ -2428,7 +2434,7 @@ main (int argc, char **argv)
   }
 
   /* Don't read anything if we'll never output anything.  */
-  if (! forever && n_units == (from_start ? UINTMAX_MAX : 0))
+  if (! forever && n_units == (from_start ? COUNT_MAX : 0))
     return EXIT_SUCCESS;
 
   F = xnmalloc (n_files, sizeof *F);
