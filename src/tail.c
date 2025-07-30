@@ -580,7 +580,7 @@ file_lines (char const *prettyname, int fd, struct stat const *sb,
              start_pos to the end.  */
           xlseek (fd, start_pos, SEEK_SET, prettyname);
           *read_pos = start_pos + dump_remainder (false, prettyname, fd,
-                                                  end_pos);
+                                                  end_pos - start_pos);
           goto free_buffer;
         }
       pos -= bufsize;

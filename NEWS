@@ -51,6 +51,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   stdbuf now works on AIX.  Previously it would have been ineffective.
   [bug introduced with the stdbuf program in coreutils-7.5]
 
+  'tail -n NUM' no longer can output more than NUM lines if stdin
+  is a largish regular file with a nonzero initial offset, and grows
+  while 'tail' is reading it.
+  [This bug was present in "the beginning".]
+
   'tail -f -n +NUM' no longer mishandles NUM values >= UINTMAX_MAX
   when the input is seekable.
   [bug introduced in coreutils-9.6]
