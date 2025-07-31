@@ -34,7 +34,6 @@
 #include "assure.h"
 #include "c-ctype.h"
 #include "full-read.h"
-#include "safe-read.h"
 #include "stat-size.h"
 #include "xbinary-io.h"
 #include "xdectoint.h"
@@ -205,7 +204,7 @@ copy_fd (int src_fd, uintmax_t n_bytes)
   while (0 < n_bytes)
     {
       idx_t n_to_read = MIN (n_bytes, sizeof buf);
-      ptrdiff_t n_read = safe_read (src_fd, buf, n_to_read);
+      ssize_t n_read = read (src_fd, buf, n_to_read);
       if (n_read < 0)
         return COPY_FD_READ_ERROR;
 
@@ -508,7 +507,7 @@ elide_tail_lines_pipe (char const *filename, int fd, uintmax_t n_elide,
   LBUFFER *first, *last, *tmp;
   size_t total_lines = 0;	/* Total number of newlines in all buffers.  */
   bool ok = true;
-  ptrdiff_t n_read;		/* Size in bytes of most recent read */
+  ssize_t n_read;		/* Size in bytes of most recent read */
 
   first = last = xmalloc (sizeof (LBUFFER));
   first->nbytes = first->nlines = 0;
@@ -520,7 +519,7 @@ elide_tail_lines_pipe (char const *filename, int fd, uintmax_t n_elide,
      n_elide newlines, or until EOF, whichever comes first.  */
   while (true)
     {
-      n_read = safe_read (fd, tmp->buffer, BUFSIZ);
+      n_read = read (fd, tmp->buffer, BUFSIZ);
       if (n_read <= 0)
         break;
 
@@ -648,7 +647,7 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
                            off_t start_pos, off_t size)
 {
   char buffer[BUFSIZ];
-  ptrdiff_t bytes_read;
+  ssize_t bytes_read;
   off_t pos = size;
 
   /* Set 'bytes_read' to the size of the last, probably partial, buffer;
@@ -661,7 +660,7 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
   pos -= bytes_read;
   if (elseek (fd, pos, SEEK_SET, pretty_filename) < 0)
     return false;
-  bytes_read = safe_read (fd, buffer, bytes_read);
+  bytes_read = read (fd, buffer, bytes_read);
   if (bytes_read < 0)
     {
       diagnose_read_failure (pretty_filename);
@@ -730,7 +729,7 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
       if (elseek (fd, pos, SEEK_SET, pretty_filename) < 0)
         return false;
 
-      bytes_read = safe_read (fd, buffer, BUFSIZ);
+      bytes_read = read (fd, buffer, BUFSIZ);
       if (bytes_read < 0)
         {
           diagnose_read_failure (pretty_filename);
@@ -787,7 +786,7 @@ head_lines (char const *filename, int fd, uintmax_t lines_to_write)
 
   while (lines_to_write)
     {
-      ptrdiff_t bytes_read = safe_read (fd, buffer, BUFSIZ);
+      ssize_t bytes_read = read (fd, buffer, BUFSIZ);
       idx_t bytes_to_write = 0;
 
       if (bytes_read < 0)

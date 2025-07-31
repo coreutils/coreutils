@@ -445,7 +445,7 @@ dump_remainder (bool want_header, char const *prettyname, int fd,
     {
       char buffer[BUFSIZ];
       idx_t n = n_bytes < 0 || BUFSIZ < n_remaining ? BUFSIZ : n_remaining;
-      ptrdiff_t bytes_read = safe_read (fd, buffer, n);
+      ssize_t bytes_read = read (fd, buffer, n);
       if (bytes_read < 0)
         {
           if (errno != EAGAIN)
@@ -536,14 +536,14 @@ file_lines (char const *prettyname, int fd, struct stat const *sb,
 
   /* Set 'bytes_read' to the size of the last, probably partial, buffer;
      0 < 'bytes_read' <= 'bufsize'.  */
-  ptrdiff_t bytes_read = (pos - start_pos) % bufsize;
-  if (bytes_read == 0)
-    bytes_read = bufsize;
+  idx_t bytes_to_read = (pos - start_pos) % bufsize;
+  if (bytes_to_read == 0)
+    bytes_to_read = bufsize;
   /* Make 'pos' a multiple of 'bufsize' (0 if the file is short), so that all
      reads will be on block boundaries, which might increase efficiency.  */
-  pos -= bytes_read;
+  pos -= bytes_to_read;
   xlseek (fd, pos, SEEK_SET, prettyname);
-  bytes_read = safe_read (fd, buffer, bytes_read);
+  ssize_t bytes_read = read (fd, buffer, bytes_to_read);
   if (bytes_read < 0)
     {
       error (0, errno, _("error reading %s"), quoteaf (prettyname));
@@ -592,7 +592,7 @@ file_lines (char const *prettyname, int fd, struct stat const *sb,
       pos -= bufsize;
       xlseek (fd, pos, SEEK_SET, prettyname);
 
-      bytes_read = safe_read (fd, buffer, bufsize);
+      bytes_read = read (fd, buffer, bufsize);
       if (bytes_read < 0)
         {
           error (0, errno, _("error reading %s"), quoteaf (prettyname));
@@ -629,7 +629,7 @@ pipe_lines (char const *prettyname, int fd, count_t n_lines,
   LBUFFER *first, *last, *tmp;
   idx_t total_lines = 0;	/* Total number of newlines in all buffers.  */
   bool ok = true;
-  ptrdiff_t n_read;		/* Size in bytes of most recent read */
+  ssize_t n_read;		/* Size in bytes of most recent read */
 
   first = last = xmalloc (sizeof (LBUFFER));
   first->nbytes = first->nlines = 0;
@@ -639,7 +639,7 @@ pipe_lines (char const *prettyname, int fd, count_t n_lines,
   /* Input is always read into a fresh buffer.  */
   while (true)
     {
-      n_read = safe_read (fd, tmp->buffer, BUFSIZ);
+      n_read = read (fd, tmp->buffer, BUFSIZ);
       if (n_read <= 0)
         break;
       tmp->nbytes = n_read;
@@ -768,7 +768,7 @@ pipe_bytes (char const *prettyname, int fd, count_t n_bytes,
   idx_t i;			/* Index into buffers.  */
   intmax_t total_bytes = 0;	/* Total characters in all buffers.  */
   bool ok = true;
-  ptrdiff_t n_read;
+  ssize_t n_read;
 
   first = last = xmalloc (sizeof (CBUFFER));
   first->nbytes = 0;
@@ -778,7 +778,7 @@ pipe_bytes (char const *prettyname, int fd, count_t n_bytes,
   /* Input is always read into a fresh buffer.  */
   while (true)
     {
-      n_read = safe_read (fd, tmp->buffer, BUFSIZ);
+      n_read = read (fd, tmp->buffer, BUFSIZ);
       if (n_read <= 0)
         break;
       *read_pos += n_read;
@@ -862,7 +862,7 @@ start_bytes (char const *prettyname, int fd, count_t n_bytes,
 
   while (0 < n_bytes)
     {
-      ptrdiff_t bytes_read = safe_read (fd, buffer, BUFSIZ);
+      ssize_t bytes_read = read (fd, buffer, BUFSIZ);
       if (bytes_read == 0)
         return -1;
       if (bytes_read < 0)
@@ -897,7 +897,7 @@ start_lines (char const *prettyname, int fd, count_t n_lines,
   while (true)
     {
       char buffer[BUFSIZ];
-      ptrdiff_t bytes_read = safe_read (fd, buffer, BUFSIZ);
+      ssize_t bytes_read = read (fd, buffer, BUFSIZ);
       if (bytes_read == 0) /* EOF */
         return -1;
       if (bytes_read < 0) /* error */
@@ -1602,7 +1602,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
 
   /* Wait for inotify events and handle them.  Events on directories
      ensure that watched files can be re-added when following by name.
-     This loop blocks on the 'safe_read' call until a new event is notified.
+     This loop blocks on the 'read' call until a new event is notified.
      But when --pid=P is specified, tail usually waits via poll.  */
   ptrdiff_t len = 0;
   while (true)
@@ -1663,7 +1663,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
           if (pfd[1].revents)
             die_pipe ();
 
-          len = safe_read (wd, evbuf, evlen);
+          len = read (wd, evbuf, evlen);
           evbuf_off = 0;
 
           /* For kernels prior to 2.6.21, read returns 0 when the buffer

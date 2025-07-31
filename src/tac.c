@@ -45,7 +45,6 @@ tac -r -s '.\|
 
 #include "filenamecat.h"
 #include "full-read.h"
-#include "safe-read.h"
 #include "temp-stream.h"
 #include "xbinary-io.h"
 
@@ -212,7 +211,7 @@ tac_seekable (int input_fd, char const *file, off_t file_pos)
 
   /* Scan backward, looking for end of file.  This caters to proc-like
      file systems where the file size is just an estimate.  */
-  while ((saved_record_size = safe_read (input_fd, G_buffer, read_size)) == 0
+  while ((saved_record_size = read (input_fd, G_buffer, read_size)) == 0
          && file_pos != 0)
     {
       off_t rsize = read_size;
@@ -224,7 +223,7 @@ tac_seekable (int input_fd, char const *file, off_t file_pos)
   /* Now scan forward, looking for end of file.  */
   while (saved_record_size == read_size)
     {
-      ptrdiff_t nread = safe_read (input_fd, G_buffer, read_size);
+      ssize_t nread = read (input_fd, G_buffer, read_size);
       if (nread == 0)
         break;
       saved_record_size = nread;
@@ -385,7 +384,7 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
 
   while (true)
     {
-      ptrdiff_t bytes_read = safe_read (input_fd, G_buffer, read_size);
+      ssize_t bytes_read = read (input_fd, G_buffer, read_size);
       if (bytes_read == 0)
         break;
       if (bytes_read < 0)

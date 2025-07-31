@@ -37,7 +37,6 @@
 #include "ioblksize.h"
 #include "fadvise.h"
 #include "full-write.h"
-#include "safe-read.h"
 #include "xbinary-io.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -161,7 +160,7 @@ simple_cat (char *buf, idx_t bufsize)
     {
       /* Read a block of input.  */
 
-      ptrdiff_t n_read = safe_read (input_desc, buf, bufsize);
+      ssize_t n_read = read (input_desc, buf, bufsize);
       if (n_read < 0)
         {
           error (0, errno, "%s", quotef (infile));
@@ -310,7 +309,7 @@ cat (char *inbuf, idx_t insize, char *outbuf, idx_t outsize,
 
               /* Read more input into INBUF.  */
 
-              ptrdiff_t n_read = safe_read (input_desc, inbuf, insize);
+              ssize_t n_read = read (input_desc, inbuf, insize);
               if (n_read < 0)
                 {
                   error (0, errno, "%s", quotef (infile));

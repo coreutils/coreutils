@@ -28,7 +28,6 @@
 #include "c-ctype.h"
 #include "fadvise.h"
 #include "quote.h"
-#include "safe-read.h"
 #include "xbinary-io.h"
 #include "xstrtol.h"
 
@@ -1593,7 +1592,7 @@ squeeze_filter (char *buf, size_t size, size_t (*reader) (char *, size_t))
 static size_t
 plain_read (char *buf, size_t size)
 {
-  ptrdiff_t nr = safe_read (STDIN_FILENO, buf, size);
+  ssize_t nr = read (STDIN_FILENO, buf, size);
   if (nr < 0)
     error (EXIT_FAILURE, errno, _("read error"));
   return nr;

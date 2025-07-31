@@ -19,6 +19,7 @@
 /* sys/stat.h and minmax.h will already have been included by system.h. */
 #include <stdbit.h>
 #include "stat-size.h"
+#include "sys-limits.h"
 
 
 /* As of Feb 2024, 256KiB is determined to be the best blksize
@@ -103,8 +104,8 @@ io_blksize (struct stat const *st)
         }
     }
 
-  /* Don’t go above the largest power of two that fits in idx_t and size_t,
+  /* Don’t go above the maximum number of bytes
+     to read or write in a single system call,
      as that is asking for trouble.  */
-  return MIN (MIN (IDX_MAX, SIZE_MAX) / 2 + 1,
-              blocksize);
+  return MIN (SYS_BUFSIZE_MAX, blocksize);
 }
