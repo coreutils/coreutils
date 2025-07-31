@@ -31,6 +31,7 @@
 #include "quote.h"
 #include "show-date.h"
 #include "stat-time.h"
+#include "xsetenv.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "date"
@@ -328,6 +329,48 @@ adjust_resolution (char const *format)
       }
 
   return copy;
+}
+
+/* Set the LC_TIME category of the current locale.
+   Return the previous value of the LC_TIME category, as a freshly allocated
+   string or null.  */
+
+static char *
+set_LC_TIME (char const *locale)
+{
+  /* It is not sufficient to do
+       setlocale (LC_TIME, locale);
+     because show_date relies on fprintftime, that uses the Gnulib module
+     'localename-unsafe', that looks at the values of the environment variables
+     (in order to distinguish the default locale from the C locale on platforms
+     like macOS).  */
+  char const *all = getenv ("LC_ALL");
+  if (all != nullptr && *all != '\0')
+    {
+      /* Setting LC_TIME when LC_ALL is set would have no effect.  Therefore we
+         have to unset LC_ALL and sets its value to all locale categories that
+         are relevant for this program.  */
+      xsetenv ("LC_CTYPE", all, 1);          /* definitely needed */
+      xsetenv ("LC_TIME", all, 1);           /* definitely needed */
+      xsetenv ("LC_MESSAGES", all, 1);       /* definitely needed */
+      xsetenv ("LC_NUMERIC", all, 1);        /* possibly needed */
+      /* xsetenv ("LC_COLLATE", all, 1); */  /* not needed */
+      /* xsetenv ("LC_MONETARY", all, 1); */ /* not needed */
+      unsetenv ("LC_ALL");
+    }
+
+  /* Set LC_TIME as an environment variable.  */
+  char const *value = getenv ("LC_TIME");
+  char *ret = (value == nullptr || *value == '\0' ? nullptr : xstrdup (value));
+  if (locale != nullptr)
+    xsetenv ("LC_TIME", locale, 1);
+  else
+    unsetenv ("LC_TIME");
+
+  /* Update the current locale accordingly.  */
+  setlocale (LC_TIME, "");
+
+  return ret;
 }
 
 /* Parse each line in INPUT_FILENAME as with --date and display each
@@ -662,13 +705,17 @@ show_date_helper (char const *format, bool use_c_locale,
   if (parse_datetime_flags & PARSE_DATETIME_DEBUG)
     error (0, 0, _("output format: %s"), quote (format));
 
+  bool ok;
   if (use_c_locale)
-    setlocale (LC_TIME, "C");
-
-  bool ok = show_date (format, when, tz);
-
-  if (use_c_locale)
-    setlocale (LC_TIME, "");
+    {
+      char *old_locale_category = set_LC_TIME ("C");
+      ok = show_date (format, when, tz);
+      char *new_locale_category = set_LC_TIME (old_locale_category);
+      free (new_locale_category);
+      free (old_locale_category);
+    }
+  else
+    ok = show_date (format, when, tz);
 
   putchar ('\n');
   return ok;
