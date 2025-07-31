@@ -38,8 +38,6 @@
 
 #define AUTHORS proper_name ("David MacKenzie")
 
-static bool show_date_helper (char const *, bool, struct timespec, timezone_t);
-
 enum Time_spec
 {
   /* Display only the date.  */
@@ -373,6 +371,29 @@ set_LC_TIME (char const *locale)
   return ret;
 }
 
+static bool
+show_date_helper (char const *format, bool use_c_locale,
+                  struct timespec when, timezone_t tz)
+{
+  if (parse_datetime_flags & PARSE_DATETIME_DEBUG)
+    error (0, 0, _("output format: %s"), quote (format));
+
+  bool ok;
+  if (use_c_locale)
+    {
+      char *old_locale_category = set_LC_TIME ("C");
+      ok = show_date (format, when, tz);
+      char *new_locale_category = set_LC_TIME (old_locale_category);
+      free (new_locale_category);
+      free (old_locale_category);
+    }
+  else
+    ok = show_date (format, when, tz);
+
+  putchar ('\n');
+  return ok;
+}
+
 /* Parse each line in INPUT_FILENAME as with --date and display each
    resulting time and date.  If the file cannot be opened, tell why
    then exit.  Issue a diagnostic for any lines that cannot be parsed.
@@ -696,27 +717,4 @@ main (int argc, char **argv)
     }
 
   main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
-}
-
-static bool
-show_date_helper (char const *format, bool use_c_locale,
-                  struct timespec when, timezone_t tz)
-{
-  if (parse_datetime_flags & PARSE_DATETIME_DEBUG)
-    error (0, 0, _("output format: %s"), quote (format));
-
-  bool ok;
-  if (use_c_locale)
-    {
-      char *old_locale_category = set_LC_TIME ("C");
-      ok = show_date (format, when, tz);
-      char *new_locale_category = set_LC_TIME (old_locale_category);
-      free (new_locale_category);
-      free (old_locale_category);
-    }
-  else
-    ok = show_date (format, when, tz);
-
-  putchar ('\n');
-  return ok;
 }
