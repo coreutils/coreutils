@@ -1,0 +1,28 @@
+import random
+
+print("🌟 GAME PENJUMLAHAN MUDAH 🌟")
+print("----------------------------")
+print("Ketik jawaban, lalu tekan ENTER.")
+print("Ketik 'stop' untuk berhenti.")
+print("----------------------------")
+
+skor = 0
+
+while True:
+    a = random.randint(1, 100)  # Angka kecil biar gampang
+    b = random.randint(1, 100)
+    jawaban = a + b
+
+    print(f"\n{a} + {b} = ?")
+    tebakan = input("Jawab: ")
+
+    if tebakan == "stop":
+        print(f"\nSkor akhir: {skor}")
+        break
+    elif tebakan.isdigit() and int(tebakan) == jawaban:
+        skor += 1
+        print("✅ Benar!")
+    else:
+        print(f"❌ Salah! Jawabannya: {jawaban}")
+
+print("Terima kasih main!")
