@@ -375,7 +375,7 @@ MAYBE_UNUSED static bool
 valid_file_spec (struct File_spec const *f)
 {
   /* Exactly one of the following subexpressions must be true. */
-  return ((f->fd == -1) ^ (f->errnum == 0));
+  return (f->fd < 0) ^ (f->errnum == 0);
 }
 
 /* Call lseek with the specified arguments FD, OFFSET, WHENCE.
@@ -973,7 +973,7 @@ recheck (struct File_spec *f, bool blocking)
 
   /* If the open fails because the file doesn't exist,
      then mark the file as not tailable.  */
-  f->tailable = !(reopen_inaccessible_files && fd == -1);
+  f->tailable = !(reopen_inaccessible_files && fd < 0);
 
   if (! disable_inotify && ! lstat (f->name, &new_stats)
       && S_ISLNK (new_stats.st_mode))
@@ -988,7 +988,7 @@ recheck (struct File_spec *f, bool blocking)
       error (0, 0, _("%s has been replaced with an untailable symbolic link"),
              quoteaf (f->prettyname));
     }
-  else if (fd == -1 || fstat (fd, &new_stats) < 0)
+  else if (fd < 0 || fstat (fd, &new_stats) < 0)
     {
       ok = false;
       f->errnum = errno;
@@ -1046,10 +1046,10 @@ recheck (struct File_spec *f, bool blocking)
   else if (prev_errnum && prev_errnum != ENOENT)
     {
       new_file = true;
-      affirm (f->fd == -1);
+      affirm (f->fd < 0);
       error (0, 0, _("%s has become accessible"), quoteaf (f->prettyname));
     }
-  else if (f->fd == -1)
+  else if (f->fd < 0)
     {
       /* A new file even when inodes haven't changed as <dev,inode>
          pairs can be reused, and we know the file was missing
@@ -1134,7 +1134,7 @@ writers_are_dead (void)
 
   for (int i = 0; i < nbpids; i++)
     {
-      if (kill (pids[i], 0) == 0 || errno == EPERM)
+      if (! (kill (pids[i], 0) < 0 && errno != EPERM))
         return false;
     }
 
@@ -1153,7 +1153,7 @@ tail_forever (struct File_spec *f, int n_files, double sleep_interval)
 {
   /* Use blocking I/O as an optimization, when it's easy.  */
   bool blocking = (!nbpids && follow_mode == Follow_descriptor
-                   && n_files == 1 && f[0].fd != -1 && ! S_ISREG (f[0].mode));
+                   && n_files == 1 && 0 <= f[0].fd && ! S_ISREG (f[0].mode));
   bool writers_dead = false;
   int last = n_files - 1;
 
@@ -1184,7 +1184,7 @@ tail_forever (struct File_spec *f, int n_files, double sleep_interval)
               int new_flags = old_flags | (blocking ? 0 : O_NONBLOCK);
               if (old_flags < 0
                   || (new_flags != old_flags
-                      && fcntl (fd, F_SETFL, new_flags) == -1))
+                      && fcntl (fd, F_SETFL, new_flags) < 0))
                 {
                   /* Don't update f[i].blocking if fcntl fails.  */
                   if (S_ISREG (f[i].mode) && errno == EPERM)
@@ -1204,7 +1204,7 @@ tail_forever (struct File_spec *f, int n_files, double sleep_interval)
           bool read_unchanged = false;
           if (!f[i].blocking)
             {
-              if (fstat (fd, &stats) != 0)
+              if (fstat (fd, &stats) < 0)
                 {
                   f[i].fd = -1;
                   f[i].errnum = errno;
@@ -1291,7 +1291,7 @@ tail_forever (struct File_spec *f, int n_files, double sleep_interval)
           break;
         }
 
-      if ((!any_input || blocking) && fflush (stdout) != 0)
+      if ((!any_input || blocking) && fflush (stdout) < 0)
         write_error ();
 
       check_output_alive ();
@@ -1404,7 +1404,7 @@ check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
     return;
 
   struct stat stats;
-  if (fstat (fspec->fd, &stats) != 0)
+  if (fstat (fspec->fd, &stats) < 0)
     {
       fspec->errnum = errno;
       close_fd (fspec->fd, fspec);
@@ -1436,7 +1436,7 @@ check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
       if (S_ISREG (fspec->mode))
         fspec->read_pos += nr;
       *prev_fspec = fspec;
-      if (fflush (stdout) != 0)
+      if (fflush (stdout) < 0)
         write_error ();
     }
 }
@@ -1529,7 +1529,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
 
           if (f[i].wd < 0)
             {
-              if (f[i].fd != -1)  /* already tailed.  */
+              if (0 <= f[i].fd)  /* already tailed.  */
                 tailed_but_unwatchable = true;
               if (errno == ENOSPC || errno == ENOMEM)
                 {
@@ -1571,7 +1571,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
           /* check for new files.  */
           if (follow_mode == Follow_name)
             recheck (&(f[i]), false);
-          else if (f[i].fd != -1)
+          else if (0 <= f[i].fd)
             {
               /* If the file was replaced in the small window since we tailed,
                  then assume the watch is on the wrong item (different to
@@ -1579,8 +1579,8 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
                  polling the original descriptor.  */
               struct stat stats;
 
-              if (stat (f[i].name, &stats) == 0
-                  && (f[i].dev != stats.st_dev || f[i].ino != stats.st_ino))
+              if (! (stat (f[i].name, &stats) < 0
+                     || (f[i].dev == stats.st_dev && f[i].ino == stats.st_ino)))
                 {
                   error (0, errno, _("%s was replaced"),
                          quoteaf (f[i].prettyname));
@@ -1754,7 +1754,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
 
               fspec->wd = new_wd;
 
-              if (new_wd == -1)
+              if (new_wd < 0)
                 continue;
 
               /* If the file was moved then inotify will use the source file wd
@@ -1993,9 +1993,9 @@ tail_file (struct File_spec *f, count_t n_files, count_t n_units)
   else
     fd = open (f->name, O_RDONLY | O_BINARY | (nonblocking ? O_NONBLOCK : 0));
 
-  f->tailable = !(reopen_inaccessible_files && fd == -1);
+  f->tailable = !(reopen_inaccessible_files && fd < 0);
 
-  if (fd == -1)
+  if (fd < 0)
     {
       if (forever)
         {
@@ -2050,7 +2050,7 @@ tail_file (struct File_spec *f, count_t n_files, count_t n_units)
         }
       else
         {
-          if (!is_stdin && close (fd))
+          if (!is_stdin && close (fd) < 0)
             {
               error (0, errno, _("error reading %s"),
                      quoteaf (f->prettyname));
@@ -2273,7 +2273,7 @@ parse_options (int argc, char **argv,
   if (nbpids && !forever)
     error (0, 0,
            _("warning: PID ignored; --pid=PID is useful only when following"));
-  else if (nbpids && kill (pids[0], 0) != 0 && errno == ENOSYS)
+  else if (nbpids && kill (pids[0], 0) < 0 && errno == ENOSYS)
     {
       error (0, 0, _("warning: --pid=PID is not supported on this system"));
       nbpids = 0;
@@ -2487,7 +2487,7 @@ main (int argc, char **argv)
               /* Flush any output from tail_file, now, since
                  tail_forever_inotify flushes only after writing,
                  not before reading.  */
-              if (fflush (stdout) != 0)
+              if (fflush (stdout) < 0)
                 write_error ();
 
               Hash_table *ht;
