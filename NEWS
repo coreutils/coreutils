@@ -60,6 +60,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   when the input is seekable.
   [bug introduced in coreutils-9.6]
 
+  'tail --pid' avoids some unlikely races if the kernel reuses PIDs.
+  [bug introduced in coreutils-9.5]
+
   tty now exits with status 4 with a special diagnostic if ttyname
   fails even though standard input is a tty.  Formerly it quietly
   pretended that standard input was not a tty.

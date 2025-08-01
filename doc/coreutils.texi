@@ -3216,8 +3216,8 @@ Size multiplier suffixes are the same as with the @option{-c} option.
 @opindex --pid
 When following by name or by descriptor, you may specify the process ID,
 @var{pid}, of one or more (by repeating @option{--pid}) writers of the
-@var{file} arguments.  Then, shortly after all the identified
-processes terminate, tail will also terminate.  This will
+@var{file} arguments.  Then, @command{tail} will exit shortly
+after all the identified processes no longer exist.  This will
 work properly only if the writers and the tailing process are running on
 the same machine.  For example, to save the output of a build in a file
 and to watch the file grow, if you invoke @command{make} and @command{tail}

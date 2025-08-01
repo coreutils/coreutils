@@ -313,7 +313,7 @@ With more than one FILE, precede each with a header giving the file name.\n\
              DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS
              );
      fputs (_("\
-      --pid=PID            with -f, terminate after process ID, PID dies;\n\
+      --pid=PID            with -f, exit after PID no longer exists;\n\
                              can be repeated to watch multiple processes\n\
   -q, --quiet, --silent    never output headers giving file names\n\
       --retry              keep trying to open a file if it is inaccessible\n\
@@ -1122,23 +1122,26 @@ any_live_files (const struct File_spec *f, int n_files)
   return false;
 }
 
-/* Determine whether all watched writers are dead.
-   Returns true only if all processes' states can be determined,
-   and all processes no longer exist.  */
+/* Return true if any writers exist, even as zombies.  */
 
 static bool
-writers_are_dead (void)
+some_writers_exist (void)
 {
-  if (!nbpids)
-    return false;
-
-  for (int i = 0; i < nbpids; i++)
+  /* To avoid some (though not all) races if the kernel reuses PIDs,
+     check all PIDs instead of returning merely because one PID exists.  */
+  for (idx_t i = 0; i < nbpids; )
     {
-      if (! (kill (pids[i], 0) < 0 && errno != EPERM))
-        return false;
+      if (kill (pids[i], 0) < 0 && errno == ESRCH)
+        {
+          nbpids--;
+          memmove (&pids[i], &pids[i + 1], (nbpids - i) * sizeof pids[i]);
+        }
+      else
+        i++;
     }
 
-  return true;
+
+  return 0 < nbpids;
 }
 
 /* Tail N_FILES files forever, or until killed.
@@ -1151,14 +1154,14 @@ writers_are_dead (void)
 static void
 tail_forever (struct File_spec *f, int n_files, double sleep_interval)
 {
-  /* Use blocking I/O as an optimization, when it's easy.  */
-  bool blocking = (!nbpids && follow_mode == Follow_descriptor
-                   && n_files == 1 && 0 <= f[0].fd && ! S_ISREG (f[0].mode));
-  bool writers_dead = false;
   int last = n_files - 1;
 
   while (true)
     {
+      /* Use blocking I/O as an optimization, when it's easy.  */
+      bool blocking = (!nbpids && follow_mode == Follow_descriptor
+                       && n_files == 1 && 0 <= f[0].fd && !S_ISREG (f[0].mode));
+
       bool any_input = false;
 
       for (int i = 0; i < n_files; i++)
@@ -1296,19 +1299,21 @@ tail_forever (struct File_spec *f, int n_files, double sleep_interval)
 
       check_output_alive ();
 
-      /* If nothing was read, sleep and/or check for dead writers.  */
       if (!any_input)
         {
-          if (writers_dead)
-            break;
+          if (pids)
+            {
+              /* Exit loop if it was already known that no writers exist.
+                 Otherwise, to avoid a race, loop one more time
+                 without sleeping if no writers exist now.  */
+              if (!nbpids)
+                break;
+              if (!some_writers_exist ())
+                continue;
+            }
 
-          /* Once the writer is dead, read the files once more to
-             avoid a race condition.  */
-          writers_dead = writers_are_dead ();
-
-          if (!writers_dead && xnanosleep (sleep_interval))
+          if (xnanosleep (sleep_interval))
             error (EXIT_FAILURE, errno, _("cannot read realtime clock"));
-
         }
     }
 }
@@ -1462,7 +1467,6 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
   bool tailed_but_unwatchable = false;
   bool found_unwatchable_dir = false;
   bool no_inotify_resources = false;
-  bool writers_dead = false;
   struct File_spec *prev_fspec;
   idx_t evlen = 0;
   char *evbuf;
@@ -1627,14 +1631,12 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
               /* How many ms to wait for changes.  -1 means wait forever.  */
               int delay = -1;
 
-              if (nbpids)
+              if (pids)
                 {
-                  if (writers_dead)
+                  if (!nbpids)
                     exit (EXIT_SUCCESS);
 
-                  writers_dead = writers_are_dead ();
-
-                  if (writers_dead || sleep_interval <= 0)
+                  if (!some_writers_exist () || sleep_interval <= 0)
                     delay = 0;
                   else if (sleep_interval < INT_MAX / 1000 - 1)
                     {
@@ -2270,14 +2272,15 @@ parse_options (int argc, char **argv,
         error (0, 0, _("warning: --retry only effective for the initial open"));
     }
 
-  if (nbpids && !forever)
-    error (0, 0,
-           _("warning: PID ignored; --pid=PID is useful only when following"));
-  else if (nbpids && kill (pids[0], 0) < 0 && errno == ENOSYS)
+  if (pids && (!forever || (kill (pids[0], 0) < 0 && errno == ENOSYS)))
     {
-      error (0, 0, _("warning: --pid=PID is not supported on this system"));
-      nbpids = 0;
+      error (0, 0,
+             _(forever
+               ? "warning: --pid=PID is not supported on this system"
+               : ("warning: PID ignored;"
+                  " --pid=PID is useful only when following")));
       free (pids);
+      pids = nullptr;
     }
 }
 
