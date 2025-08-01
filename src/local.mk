@@ -717,8 +717,8 @@ src/speedlist.h: src/termios.c lib/config.h src/speedgen
 	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)${MKDIR_P} src
 	$(AM_V_at)( for opt in $(getmacopts); do \
-			$(COMPILE) -E $(srcdir)/src/termios.c src 2>&1 \
-                          && break; \
+			$(COMPILE) -E $$opt $(srcdir)/src/termios.c 2>&1 \
+			  && break; \
 		    done ) | $(SHELL) $(srcdir)/src/speedgen $@t
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
