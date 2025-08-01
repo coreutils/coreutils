@@ -124,11 +124,14 @@ struct File_spec
   char const *prettyname;
 
   /* Attributes of the file the last time we checked.  */
-  off_t size;
   struct timespec mtime;
   dev_t dev;
   ino_t ino;
   mode_t mode;
+
+  /* If a regular file, the file's read position the last time we
+     checked.  For non-regular files, the value is unspecified.  */
+  off_t read_pos;
 
   /* The specified name initially referred to a directory or some other
      type for which tail isn't meaningful.  Unlike for a permission problem
@@ -375,20 +378,47 @@ valid_file_spec (struct File_spec const *f)
   return ((f->fd == -1) ^ (f->errnum == 0));
 }
 
-/* Record a file F with descriptor FD, size SIZE, status ST, and
-   blocking status BLOCKING.  */
+/* Call lseek with the specified arguments FD, OFFSET, WHENCE.
+   FD corresponds to PRETTYNAME.
+   Give a diagnostic and exit nonzero if lseek fails.
+   Otherwise, return the resulting offset.  */
+
+static off_t
+xlseek (int fd, off_t offset, int whence, char const *prettyname)
+{
+  off_t new_offset = lseek (fd, offset, whence);
+
+  if (0 <= new_offset)
+    return new_offset;
+
+  static char const *whence_msgid[] = {
+    [SEEK_SET] = N_("%s: cannot seek to offset %jd"),
+    [SEEK_CUR] = N_("%s: cannot seek to relative offset %jd"),
+    [SEEK_END] = N_("%s: cannot seek to end-relative offset %jd")
+  };
+  intmax_t joffset = offset;
+  error (EXIT_FAILURE, errno, gettext (whence_msgid[whence]),
+         quotef (prettyname), joffset);
+}
+
+/* Record a file F with descriptor FD, read position READ_POS, status ST,
+   and blocking status BLOCKING.  READ_POS matters only for regular files,
+   and READ_POS < 0 means the position is unknown.  */
 
 static void
 record_open_fd (struct File_spec *f, int fd,
-                off_t size, struct stat const *st,
+                off_t read_pos, struct stat const *st,
                 int blocking)
 {
   f->fd = fd;
-  f->size = size;
   f->mtime = get_stat_mtime (st);
   f->dev = st->st_dev;
   f->ino = st->st_ino;
   f->mode = st->st_mode;
+  if (S_ISREG (st->st_mode))
+    f->read_pos = (read_pos < 0
+                   ? xlseek (fd, 0, SEEK_CUR, f->prettyname)
+                   : read_pos);
   f->blocking = blocking;
   f->n_unchanged_stats = 0;
   f->ignore = false;
@@ -474,29 +504,6 @@ dump_remainder (bool want_header, char const *prettyname, int fd,
   return n_read;
 }
 
-/* Call lseek with the specified arguments FD, OFFSET, WHENCE.
-   FD corresponds to PRETTYNAME.
-   Give a diagnostic and exit nonzero if lseek fails.
-   Otherwise, return the resulting offset.  */
-
-static off_t
-xlseek (int fd, off_t offset, int whence, char const *prettyname)
-{
-  off_t new_offset = lseek (fd, offset, whence);
-
-  if (0 <= new_offset)
-    return new_offset;
-
-  static char const *whence_msgid[] = {
-    [SEEK_SET] = N_("%s: cannot seek to offset %jd"),
-    [SEEK_CUR] = N_("%s: cannot seek to relative offset %jd"),
-    [SEEK_END] = N_("%s: cannot seek to end-relative offset %jd")
-  };
-  intmax_t joffset = offset;
-  error (EXIT_FAILURE, errno, gettext (whence_msgid[whence]),
-         quotef (prettyname), joffset);
-}
-
 /* Print the last N_LINES lines from the end of file FD.
    Go backward through the file, reading 'BUFSIZ' bytes at a time (except
    probably the first), until we hit the start of the file or have
@@ -504,20 +511,20 @@ xlseek (int fd, off_t offset, int whence, char const *prettyname)
    START_POS is the starting position of the read pointer for the file
    associated with FD (may be nonzero).
    END_POS is the file offset of EOF (one larger than offset of last byte).
-   Return true if successful.  */
+   The file is a regular file positioned at END_POS.
+   Return -1 if unsuccessful, otherwise the resulting file position,
+   which can be less than READ_POS if the file shrank.  */
 
-static bool
+static off_t
 file_lines (char const *prettyname, int fd, struct stat const *sb,
-            count_t n_lines, off_t start_pos, off_t end_pos,
-            count_t *read_pos)
+            count_t n_lines, off_t start_pos, off_t end_pos)
 {
   char *buffer;
   idx_t bufsize = BUFSIZ;
   off_t pos = end_pos;
-  bool ok = true;
 
   if (n_lines == 0)
-    return true;
+    return pos;
 
   /* Be careful with files with sizes that are a multiple of the page size,
      as on /proc or /sys file systems these files accept seeking to within
@@ -541,16 +548,14 @@ file_lines (char const *prettyname, int fd, struct stat const *sb,
     bytes_to_read = bufsize;
   /* Make 'pos' a multiple of 'bufsize' (0 if the file is short), so that all
      reads will be on block boundaries, which might increase efficiency.  */
-  pos -= bytes_to_read;
-  xlseek (fd, pos, SEEK_SET, prettyname);
+  pos = xlseek (fd, -bytes_to_read, SEEK_CUR, prettyname);
   ssize_t bytes_read = read (fd, buffer, bytes_to_read);
   if (bytes_read < 0)
     {
       error (0, errno, _("error reading %s"), quoteaf (prettyname));
-      ok = false;
+      pos = -1;
       goto free_buffer;
     }
-  *read_pos = pos + bytes_read;
 
   /* Count the incomplete line on files that don't end with a newline.  */
   if (bytes_read && buffer[bytes_read - 1] != line_end)
@@ -558,6 +563,8 @@ file_lines (char const *prettyname, int fd, struct stat const *sb,
 
   do
     {
+      pos += bytes_read;
+
       /* Scan backward, counting the newlines in this bufferfull.  */
 
       idx_t n = bytes_read;
@@ -573,50 +580,44 @@ file_lines (char const *prettyname, int fd, struct stat const *sb,
               /* If this newline isn't the last character in the buffer,
                  output the part that is after it.  */
               xwrite_stdout (nl + 1, bytes_read - (n + 1));
-              *read_pos += dump_remainder (false, prettyname, fd,
-                                           end_pos - (pos + bytes_read));
+              pos += dump_remainder (false, prettyname, fd, end_pos - pos);
               goto free_buffer;
             }
         }
 
       /* Not enough newlines in that bufferfull.  */
-      if (pos == start_pos)
+      if (pos - bytes_read == start_pos)
         {
           /* Not enough lines in the file; print everything from
              start_pos to the end.  */
-          xlseek (fd, start_pos, SEEK_SET, prettyname);
-          *read_pos = start_pos + dump_remainder (false, prettyname, fd,
-                                                  end_pos - start_pos);
+          xwrite_stdout (buffer, bytes_read);
+          dump_remainder (false, prettyname, fd, end_pos - pos);
           goto free_buffer;
         }
-      pos -= bufsize;
-      xlseek (fd, pos, SEEK_SET, prettyname);
 
+      pos = xlseek (fd, -bufsize, SEEK_CUR, prettyname);
       bytes_read = read (fd, buffer, bufsize);
       if (bytes_read < 0)
         {
           error (0, errno, _("error reading %s"), quoteaf (prettyname));
-          ok = false;
+          pos = -1;
           goto free_buffer;
         }
-
-      *read_pos = pos + bytes_read;
     }
   while (bytes_read > 0);
 
 free_buffer:
   free (buffer);
-  return ok;
+  return pos;
 }
 
 /* Print the last N_LINES lines from the end of the standard input,
    open for reading as pipe FD.
    Buffer the text as a linked list of LBUFFERs, adding them as needed.
-   Return true if successful.  */
+   Return -2 if successful, -1 otherwise.  */
 
-static bool
-pipe_lines (char const *prettyname, int fd, count_t n_lines,
-            count_t *read_pos)
+static int
+pipe_lines (char const *prettyname, int fd, count_t n_lines)
 {
   struct linebuffer
   {
@@ -628,7 +629,7 @@ pipe_lines (char const *prettyname, int fd, count_t n_lines,
   typedef struct linebuffer LBUFFER;
   LBUFFER *first, *last, *tmp;
   idx_t total_lines = 0;	/* Total number of newlines in all buffers.  */
-  bool ok = true;
+  int ok = -2;
   ssize_t n_read;		/* Size in bytes of most recent read */
 
   first = last = xmalloc (sizeof (LBUFFER));
@@ -643,7 +644,6 @@ pipe_lines (char const *prettyname, int fd, count_t n_lines,
       if (n_read <= 0)
         break;
       tmp->nbytes = n_read;
-      *read_pos += n_read;
       tmp->nlines = 0;
       tmp->next = nullptr;
 
@@ -692,7 +692,7 @@ pipe_lines (char const *prettyname, int fd, count_t n_lines,
   if (n_read < 0 && errno != EAGAIN)
     {
       error (0, errno, _("error reading %s"), quoteaf (prettyname));
-      ok = false;
+      ok = -1;
       goto free_lbuffers;
     }
 
@@ -751,11 +751,13 @@ free_lbuffers:
 /* Print the last N_BYTES characters from the end of FD.
    Work even if the input is a pipe.
    This is a stripped down version of pipe_lines.
-   Return true if successful.  */
+   The initial file offset is READ_POS if nonnegative, otherwise unknown.
+   Return -1 if unsuccessful, otherwise the resulting file offset if known,
+   otherwise a value less than -1.  */
 
-static bool
+static off_t
 pipe_bytes (char const *prettyname, int fd, count_t n_bytes,
-            count_t *read_pos)
+            off_t read_pos)
 {
   struct charbuffer
   {
@@ -767,8 +769,10 @@ pipe_bytes (char const *prettyname, int fd, count_t n_bytes,
   CBUFFER *first, *last, *tmp;
   idx_t i;			/* Index into buffers.  */
   intmax_t total_bytes = 0;	/* Total characters in all buffers.  */
-  bool ok = true;
   ssize_t n_read;
+
+  if (read_pos < 0)
+    read_pos = TYPE_MINIMUM (off_t);
 
   first = last = xmalloc (sizeof (CBUFFER));
   first->nbytes = 0;
@@ -781,7 +785,7 @@ pipe_bytes (char const *prettyname, int fd, count_t n_bytes,
       n_read = read (fd, tmp->buffer, BUFSIZ);
       if (n_read <= 0)
         break;
-      *read_pos += n_read;
+      read_pos += n_read;
       tmp->nbytes = n_read;
       tmp->next = nullptr;
 
@@ -820,7 +824,7 @@ pipe_bytes (char const *prettyname, int fd, count_t n_bytes,
   if (n_read < 0 && errno != EAGAIN)
     {
       error (0, errno, _("error reading %s"), quoteaf (prettyname));
-      ok = false;
+      read_pos = -1;
       goto free_cbuffers;
     }
 
@@ -847,16 +851,15 @@ free_cbuffers:
       free (first);
       first = tmp;
     }
-  return ok;
+  return read_pos;
 }
 
 /* Skip N_BYTES characters from the start of pipe FD, and print
    any extra characters that were read beyond that.
-   Return 1 on error, 0 if ok, -1 if EOF.  */
+   Return -1 on error, 0 if ok, -2 if EOF.  */
 
 static int
-start_bytes (char const *prettyname, int fd, count_t n_bytes,
-             count_t *read_pos)
+start_bytes (char const *prettyname, int fd, count_t n_bytes)
 {
   char buffer[BUFSIZ];
 
@@ -864,13 +867,12 @@ start_bytes (char const *prettyname, int fd, count_t n_bytes,
     {
       ssize_t bytes_read = read (fd, buffer, BUFSIZ);
       if (bytes_read == 0)
-        return -1;
+        return -2;
       if (bytes_read < 0)
         {
           error (0, errno, _("error reading %s"), quoteaf (prettyname));
-          return 1;
+          return -1;
         }
-      *read_pos += bytes_read;
       if (bytes_read <= n_bytes)
         n_bytes -= bytes_read;
       else
@@ -884,12 +886,11 @@ start_bytes (char const *prettyname, int fd, count_t n_bytes,
 }
 
 /* Skip N_LINES lines at the start of file or pipe FD, and print
-   any extra characters that were read beyond that.
-   Return 1 on error, 0 if ok, -1 if EOF.  */
+   any extra bytes that were read beyond that.
+   Return -1 on error, 0 if ok, -2 if EOF.  */
 
 static int
-start_lines (char const *prettyname, int fd, count_t n_lines,
-             count_t *read_pos)
+start_lines (char const *prettyname, int fd, count_t n_lines)
 {
   if (n_lines == 0)
     return 0;
@@ -899,17 +900,14 @@ start_lines (char const *prettyname, int fd, count_t n_lines,
       char buffer[BUFSIZ];
       ssize_t bytes_read = read (fd, buffer, BUFSIZ);
       if (bytes_read == 0) /* EOF */
-        return -1;
+        return -2;
       if (bytes_read < 0) /* error */
         {
           error (0, errno, _("error reading %s"), quoteaf (prettyname));
-          return 1;
+          return -1;
         }
 
       char *buffer_end = buffer + bytes_read;
-
-      *read_pos += bytes_read;
-
       char *p = buffer;
       while ((p = memchr (p, line_end, buffer_end - p)))
         {
@@ -1091,10 +1089,8 @@ recheck (struct File_spec *f, bool blocking)
      data is written to a new file.  */
   if (new_file)
     {
-      /* Start at the beginning of the file.  */
-      record_open_fd (f, fd, 0, &new_stats, (is_stdin ? -1 : blocking));
-      if (S_ISREG (new_stats.st_mode))
-        xlseek (fd, 0, SEEK_SET, f->prettyname);
+      /* Start at the file's current position, normally the beginning.  */
+      record_open_fd (f, fd, -1, &new_stats, is_stdin ? -1 : blocking);
     }
 }
 
@@ -1218,7 +1214,8 @@ tail_forever (struct File_spec *f, int n_files, double sleep_interval)
                 }
 
               if (f[i].mode == stats.st_mode
-                  && (! S_ISREG (stats.st_mode) || f[i].size == stats.st_size)
+                  && (! S_ISREG (stats.st_mode)
+                      || f[i].read_pos == stats.st_size)
                   && timespec_cmp (f[i].mtime, get_stat_mtime (&stats)) == 0)
                 {
                   if ((max_n_unchanged_stats_between_opens
@@ -1249,14 +1246,13 @@ tail_forever (struct File_spec *f, int n_files, double sleep_interval)
               /* XXX: This is only a heuristic, as the file may have also
                  been truncated and written to if st_size >= size
                  (in which case we ignore new data <= size).  */
-              if (S_ISREG (mode) && stats.st_size < f[i].size)
+              if (S_ISREG (mode) && stats.st_size < f[i].read_pos)
                 {
                   error (0, 0, _("%s: file truncated"),
                          quotef (prettyname));
                   /* Assume the file was truncated to 0,
                      and therefore output all "new" data.  */
-                  xlseek (fd, 0, SEEK_SET, prettyname);
-                  f[i].size = 0;
+                  f[i].read_pos = xlseek (fd, 0, SEEK_SET, prettyname);
                 }
 
               if (i != last)
@@ -1274,17 +1270,19 @@ tail_forever (struct File_spec *f, int n_files, double sleep_interval)
           if (f[i].blocking)
             bytes_to_read = COPY_A_BUFFER;
           else if (S_ISREG (mode) && f[i].remote)
-            bytes_to_read = stats.st_size - f[i].size;
+            bytes_to_read = stats.st_size - f[i].read_pos;
           else
             bytes_to_read = COPY_TO_EOF;
 
-          count_t bytes_read = dump_remainder (false, prettyname,
-                                                fd, bytes_to_read);
-          if (read_unchanged && bytes_read)
-            f[i].n_unchanged_stats = 0;
-
-          any_input |= (bytes_read != 0);
-          f[i].size += bytes_read;
+          count_t nr = dump_remainder (false, prettyname, fd, bytes_to_read);
+          if (0 < nr)
+            {
+              if (S_ISREG (mode))
+                f[i].read_pos += nr;
+              if (read_unchanged)
+                f[i].n_unchanged_stats = 0;
+              any_input = true;
+            }
         }
 
       if (! any_live_files (f, n_files))
@@ -1421,24 +1419,22 @@ check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
      (in which case we ignore new data <= size).
      Though in the inotify case it's more likely we'll get
      separate events for truncate() and write().  */
-  if (S_ISREG (fspec->mode) && stats.st_size < fspec->size)
+  if (S_ISREG (fspec->mode) && stats.st_size < fspec->read_pos)
     {
       error (0, 0, _("%s: file truncated"), quotef (prettyname));
-      xlseek (fspec->fd, 0, SEEK_SET, prettyname);
-      fspec->size = 0;
+      fspec->read_pos = xlseek (fspec->fd, 0, SEEK_SET, prettyname);
     }
-  else if (S_ISREG (fspec->mode) && stats.st_size == fspec->size
+  else if (S_ISREG (fspec->mode) && stats.st_size == fspec->read_pos
            && timespec_cmp (fspec->mtime, get_stat_mtime (&stats)) == 0)
     return;
 
   bool want_header = print_headers && (fspec != *prev_fspec);
 
-  count_t bytes_read = dump_remainder (want_header, prettyname,
-                                        fspec->fd, COPY_TO_EOF);
-  fspec->size += bytes_read;
-
-  if (bytes_read)
+  count_t nr = dump_remainder (want_header, prettyname, fspec->fd, COPY_TO_EOF);
+  if (0 < nr)
     {
+      if (S_ISREG (fspec->mode))
+        fspec->read_pos += nr;
       *prev_fspec = fspec;
       if (fflush (stdout) != 0)
         write_error ();
@@ -1836,33 +1832,32 @@ get_file_status (struct File_spec *f, int fd, struct stat *st)
 }
 
 /* Output the last bytes of the file PRETTYNAME open for reading
-   in FD and with status ST.  Output the last N_BYTES bytes, and set *READ_POS
-   to the resulting read position if the file is a regular file, and
-   to an unspecified value otherwise.  Return true if and only if successful.  */
+   in FD and with status ST.  Output the last N_BYTES bytes.
+   Return -1 if unsuccessful, otherwise the resulting file offset if known,
+   otherwise a value less than -1.  */
 
-static bool
+static off_t
 tail_bytes (char const *prettyname, int fd, struct stat const *st,
-            count_t n_bytes, count_t *read_pos)
+            count_t n_bytes)
 {
+  off_t current_pos
+    = (presume_input_pipe
+       ? -1
+       : lseek (fd, from_start ? MIN (n_bytes, OFF_T_MAX) : 0, SEEK_CUR));
+
   if (from_start)
     {
-      off_t pos = (presume_input_pipe
-                   ? -1
-                   : lseek (fd, MIN (n_bytes, OFF_T_MAX), SEEK_CUR));
-      if (0 <= pos)
-        *read_pos = pos;
-      else
+      if (current_pos < 0)
         {
-          int t = start_bytes (prettyname, fd, n_bytes, read_pos);
-          if (t)
-            return t < 0;
+          int t = start_bytes (prettyname, fd, n_bytes);
+          if (t < 0)
+            return t;
         }
       n_bytes = COPY_TO_EOF;
     }
   else
     {
-      off_t initial_pos = presume_input_pipe ? -1 : lseek (fd, 0, SEEK_CUR);
-      off_t current_pos = initial_pos;
+      off_t initial_pos = current_pos;
       off_t end_pos = -1;
 
       if (0 <= current_pos)
@@ -1904,47 +1899,45 @@ tail_bytes (char const *prettyname, int fd, struct stat const *st,
 
       /* If the end is known and more than N_BYTES after the initial
          position, go to N_BYTES before the end; otherwise go back to
-         the initial position.  Set *READ_POS to the desired position,
-         and do not lseek if we cannot seek or are already at *READ_POS.
-         If the file is not seekable set *READ_POS = -1, which is OK
-         since callers use *READ_POS only for regular files.  */
-      *read_pos = (initial_pos < end_pos && n_bytes < end_pos - initial_pos
+         the initial position.  But do not lseek if lseek already failed.  */
+      off_t pos = (initial_pos < end_pos && n_bytes < end_pos - initial_pos
                    ? end_pos - n_bytes
                    : initial_pos);
-      if (*read_pos != current_pos)
-        xlseek (fd, *read_pos, SEEK_SET, prettyname);
+      if (pos != current_pos)
+        current_pos = xlseek (fd, pos, SEEK_SET, prettyname);
 
       if (end_pos < 0)
-        return pipe_bytes (prettyname, fd, n_bytes, read_pos);
+        return pipe_bytes (prettyname, fd, n_bytes, current_pos);
     }
 
-  *read_pos += dump_remainder (false, prettyname, fd, n_bytes);
-  return true;
+  count_t nr = dump_remainder (false, prettyname, fd, n_bytes);
+  return current_pos < 0 ? -2 : current_pos + nr;
 }
 
 /* Output the last lines of the file PRETTYNAME open for reading
-   in FD and with status ST.  Output the last N_LINES lines, and set *READ_POS
-   to the resulting read position if the file is a regular file, and
-   to an unspecified value otherwise.  Return true if and only if successful.  */
+   in FD and with status ST.  Output the last N_LINES lines.
+   Return -1 if unsuccessful, otherwise the resulting file offset if known,
+   otherwise -2.  */
 
-static bool
+static off_t
 tail_lines (char const *prettyname, int fd, struct stat const *st,
-            count_t n_lines, count_t *read_pos)
+            count_t n_lines)
 {
   if (from_start)
     {
       /* If skipping all input use lseek if possible, for speed.  */
-      off_t pos;
-      if (OFF_T_MAX <= n_lines && 0 <= (pos = lseek (fd, 0, SEEK_END)))
-        *read_pos = pos;
-      else
+      if (OFF_T_MAX <= n_lines)
         {
-          int t = start_lines (prettyname, fd, n_lines, read_pos);
-          if (t)
-            return t < 0;
-          *read_pos += dump_remainder (false, prettyname, fd, COPY_TO_EOF);
+          off_t e = lseek (fd, 0, SEEK_END);
+          if (0 <= e)
+            return e;
         }
-      return true;
+
+      int t = start_lines (prettyname, fd, n_lines);
+      if (t)
+        return t;
+      dump_remainder (false, prettyname, fd, COPY_TO_EOF);
+      return -2;
     }
   else
     {
@@ -1954,40 +1947,27 @@ tail_lines (char const *prettyname, int fd, struct stat const *st,
                          ? lseek (fd, 0, SEEK_CUR)
                          : -1);
       off_t end_pos = start_pos < 0 ? -1 : lseek (fd, 0, SEEK_END);
-      if (0 <= end_pos)
-        {
-          if (start_pos < end_pos)
-            return file_lines (prettyname, fd, st, n_lines,
-                               start_pos, end_pos, read_pos);
-
-          /* Do not read from before the start offset, even if the
-             input file shrank.  */
-          if (end_pos < start_pos)
-            xlseek (fd, start_pos, SEEK_SET, prettyname);
-        }
-
-      return pipe_lines (prettyname, fd, n_lines, read_pos);
+      return (end_pos < 0
+              ? pipe_lines (prettyname, fd, n_lines)
+              : start_pos < end_pos
+              ? file_lines (prettyname, fd, st, n_lines, start_pos, end_pos)
+              : start_pos != end_pos
+              ? (/* Do not read from before the start offset,
+                    even if the input file shrank.  */
+                 xlseek (fd, start_pos, SEEK_SET, prettyname))
+              : start_pos);
     }
 }
 
-/* Display the last N_UNITS units of file FILENAME,
+/* Display the last part of file FILENAME,
    open for reading via FD and with status *ST.
-   Set *READ_POS to the position of the input stream pointer.
-   *READ_POS is usually the number of bytes read and corresponds to an
-   offset from the beginning of a file.  However, it may be larger than
-   OFF_T_MAX (as for an input pipe), and may also be larger than the
-   number of bytes read (when an input pointer is initially not at
-   beginning of file), and may be far greater than the number of bytes
-   actually read for an input file that is seekable.
-   Return true if successful.  */
+   Return -1 if unsuccessful, otherwise the resulting file offset if known,
+   otherwise a value less than -1.  */
 
-static bool
-tail (char const *filename, int fd, struct stat const *st,
-      count_t n_units, count_t *read_pos)
+static off_t
+tail (char const *filename, int fd, struct stat const *st, count_t n_units)
 {
-  *read_pos = 0;
-  return ((count_lines ? tail_lines : tail_bytes)
-          (filename, fd, st, n_units, read_pos));
+  return (count_lines ? tail_lines : tail_bytes) (filename, fd, st, n_units);
 }
 
 /* Display the last N_UNITS units of the file described by F.
@@ -2031,23 +2011,16 @@ tail_file (struct File_spec *f, count_t n_files, count_t n_units)
     }
   else
     {
-      count_t read_pos;
-
       if (print_headers)
         write_header (f->prettyname);
 
       struct stat stats;
       bool stat_ok = get_file_status (f, fd, &stats);
-      ok = stat_ok && tail (f->prettyname, fd, &stats, n_units, &read_pos);
+      off_t read_pos = stat_ok ? tail (f->prettyname, fd, &stats, n_units) : -1;
+      ok = read_pos != -1;
 
       if (forever)
         {
-#if TAIL_TEST_SLEEP
-          /* Before the tail function provided 'read_pos', there was
-             a race condition described in the URL below.  This sleep
-             call made the window big enough to exercise the problem.  */
-          xnanosleep (1);
-#endif
           if (stat_ok && !IS_TAILABLE_FILE_TYPE (stats.st_mode))
             {
               ok = false;
@@ -2071,9 +2044,6 @@ tail_file (struct File_spec *f, count_t n_files, count_t n_units)
             }
           else
             {
-              /* Note: we must use read_pos here, not stats.st_size,
-                 to avoid a race condition described by Ken Raeburn:
-       https://lists.gnu.org/r/bug-textutils/2003-05/msg00007.html */
               record_open_fd (f, fd, read_pos, &stats, (is_stdin ? -1 : 1));
               f->remote = fremote (fd, f);
             }
