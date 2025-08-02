@@ -1029,7 +1029,6 @@ recheck (struct File_spec *f, bool blocking)
       error (0, 0, _("%s has been replaced with an untailable remote file"),
              quoteaf (f->prettyname));
       f->ignore = true;
-      f->remote = true;
     }
   else
     {
