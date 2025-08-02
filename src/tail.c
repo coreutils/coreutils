@@ -148,7 +148,8 @@ struct File_spec
   /* File descriptor on which the file is open; -1 if it's not open.  */
   int fd;
 
-  /* The value of errno seen last time we checked this file.  */
+  /* 0 if the file's last op succeeded, otherwise the op's errno if
+     applicable, otherwise -1.  */
   int errnum;
 
   /* 1 if O_NONBLOCK is clear, 0 if set, -1 if not known.  */
@@ -512,7 +513,7 @@ dump_remainder (bool want_header, char const *prettyname, int fd,
    associated with FD (may be nonzero).
    END_POS is the file offset of EOF (one larger than offset of last byte).
    The file is a regular file positioned at END_POS.
-   Return -1 if unsuccessful, otherwise the resulting file position,
+   Return (-1 - errno) on failure, otherwise the resulting file offset,
    which can be less than READ_POS if the file shrank.  */
 
 static off_t
@@ -552,8 +553,8 @@ file_lines (char const *prettyname, int fd, struct stat const *sb,
   ssize_t bytes_read = read (fd, buffer, bytes_to_read);
   if (bytes_read < 0)
     {
+      pos = -1 - errno;
       error (0, errno, _("error reading %s"), quoteaf (prettyname));
-      pos = -1;
       goto free_buffer;
     }
 
@@ -599,8 +600,8 @@ file_lines (char const *prettyname, int fd, struct stat const *sb,
       bytes_read = read (fd, buffer, bufsize);
       if (bytes_read < 0)
         {
+          pos = -1 - errno;
           error (0, errno, _("error reading %s"), quoteaf (prettyname));
-          pos = -1;
           goto free_buffer;
         }
     }
@@ -614,7 +615,7 @@ free_buffer:
 /* Print the last N_LINES lines from the end of the standard input,
    open for reading as pipe FD.
    Buffer the text as a linked list of LBUFFERs, adding them as needed.
-   Return -2 if successful, -1 otherwise.  */
+   Return -1 if successful, (-1 - errno) otherwise.  */
 
 static int
 pipe_lines (char const *prettyname, int fd, count_t n_lines)
@@ -629,7 +630,7 @@ pipe_lines (char const *prettyname, int fd, count_t n_lines)
   typedef struct linebuffer LBUFFER;
   LBUFFER *first, *last, *tmp;
   idx_t total_lines = 0;	/* Total number of newlines in all buffers.  */
-  int ok = -2;
+  int ret = -1;
   ssize_t n_read;		/* Size in bytes of most recent read */
 
   first = last = xmalloc (sizeof (LBUFFER));
@@ -691,8 +692,8 @@ pipe_lines (char const *prettyname, int fd, count_t n_lines)
 
   if (n_read < 0 && errno != EAGAIN)
     {
+      ret = -1 - errno;
       error (0, errno, _("error reading %s"), quoteaf (prettyname));
-      ok = -1;
       goto free_lbuffers;
     }
 
@@ -745,15 +746,15 @@ free_lbuffers:
       free (first);
       first = tmp;
     }
-  return ok;
+  return ret;
 }
 
 /* Print the last N_BYTES characters from the end of FD.
    Work even if the input is a pipe.
    This is a stripped down version of pipe_lines.
    The initial file offset is READ_POS if nonnegative, otherwise unknown.
-   Return -1 if unsuccessful, otherwise the resulting file offset if known,
-   otherwise a value less than -1.  */
+   Return (-1 - errno) on failure, otherwise the resulting file offset
+   if known, otherwise -1.  */
 
 static off_t
 pipe_bytes (char const *prettyname, int fd, count_t n_bytes,
@@ -823,8 +824,8 @@ pipe_bytes (char const *prettyname, int fd, count_t n_bytes,
 
   if (n_read < 0 && errno != EAGAIN)
     {
+      read_pos = -1 - errno;
       error (0, errno, _("error reading %s"), quoteaf (prettyname));
-      read_pos = -1;
       goto free_cbuffers;
     }
 
@@ -844,6 +845,9 @@ pipe_bytes (char const *prettyname, int fd, count_t n_bytes,
   for (tmp = tmp->next; tmp; tmp = tmp->next)
     xwrite_stdout (tmp->buffer, tmp->nbytes);
 
+  if (read_pos < 0)
+    read_pos = -1;
+
 free_cbuffers:
   while (first)
     {
@@ -856,7 +860,7 @@ free_cbuffers:
 
 /* Skip N_BYTES characters from the start of pipe FD, and print
    any extra characters that were read beyond that.
-   Return -1 on error, 0 if ok, -2 if EOF.  */
+   Return (-1 - errno) on failure, -1 if EOF, 0 otherwise.  */
 
 static int
 start_bytes (char const *prettyname, int fd, count_t n_bytes)
@@ -867,11 +871,12 @@ start_bytes (char const *prettyname, int fd, count_t n_bytes)
     {
       ssize_t bytes_read = read (fd, buffer, BUFSIZ);
       if (bytes_read == 0)
-        return -2;
+        return -1;
       if (bytes_read < 0)
         {
+          int ret = -1 - errno;
           error (0, errno, _("error reading %s"), quoteaf (prettyname));
-          return -1;
+          return ret;
         }
       if (bytes_read <= n_bytes)
         n_bytes -= bytes_read;
@@ -887,7 +892,7 @@ start_bytes (char const *prettyname, int fd, count_t n_bytes)
 
 /* Skip N_LINES lines at the start of file or pipe FD, and print
    any extra bytes that were read beyond that.
-   Return -1 on error, 0 if ok, -2 if EOF.  */
+   Return (-1 - errno) on failure, -1 if EOF, 0 otherwise.  */
 
 static int
 start_lines (char const *prettyname, int fd, count_t n_lines)
@@ -900,11 +905,12 @@ start_lines (char const *prettyname, int fd, count_t n_lines)
       char buffer[BUFSIZ];
       ssize_t bytes_read = read (fd, buffer, BUFSIZ);
       if (bytes_read == 0) /* EOF */
-        return -2;
+        return -1;
       if (bytes_read < 0) /* error */
         {
+          int ret = -1 - errno;
           error (0, errno, _("error reading %s"), quoteaf (prettyname));
-          return -1;
+          return ret;
         }
 
       char *buffer_end = buffer + bytes_read;
@@ -968,6 +974,7 @@ recheck (struct File_spec *f, bool blocking)
   int fd = (is_stdin
             ? STDIN_FILENO
             : open (f->name, O_RDONLY | (blocking ? 0 : O_NONBLOCK)));
+  int open_errno = fd < 0 ? errno : 0;
 
   affirm (valid_file_spec (f));
 
@@ -991,7 +998,7 @@ recheck (struct File_spec *f, bool blocking)
   else if (fd < 0 || fstat (fd, &new_stats) < 0)
     {
       ok = false;
-      f->errnum = errno;
+      f->errnum = fd < 0 ? open_errno : errno;
       if (!f->tailable)
         {
           if (was_tailable)
@@ -1008,8 +1015,8 @@ recheck (struct File_spec *f, bool blocking)
               /* say nothing... it's still not tailable */
             }
         }
-      else if (prev_errnum != errno)
-        error (0, errno, "%s", quotef (f->prettyname));
+      else if (prev_errnum != f->errnum)
+        error (0, f->errnum, "%s", quotef (f->prettyname));
     }
   else if (!IS_TAILABLE_FILE_TYPE (new_stats.st_mode))
     {
@@ -1829,13 +1836,14 @@ get_file_status (struct File_spec *f, int fd, struct stat *st)
       error (0, f->errnum, _("cannot fstat %s"), quoteaf (f->prettyname));
       return false;
     }
+  f->errnum = 0;
   return true;
 }
 
 /* Output the last bytes of the file PRETTYNAME open for reading
    in FD and with status ST.  Output the last N_BYTES bytes.
-   Return -1 if unsuccessful, otherwise the resulting file offset if known,
-   otherwise a value less than -1.  */
+   Return (-1 - errno) on failure, otherwise the resulting file offset
+   if known, otherwise -1.  */
 
 static off_t
 tail_bytes (char const *prettyname, int fd, struct stat const *st,
@@ -1912,13 +1920,13 @@ tail_bytes (char const *prettyname, int fd, struct stat const *st,
     }
 
   count_t nr = dump_remainder (false, prettyname, fd, n_bytes);
-  return current_pos < 0 ? -2 : current_pos + nr;
+  return current_pos < 0 ? -1 : current_pos + nr;
 }
 
 /* Output the last lines of the file PRETTYNAME open for reading
    in FD and with status ST.  Output the last N_LINES lines.
-   Return -1 if unsuccessful, otherwise the resulting file offset if known,
-   otherwise -2.  */
+   Return (-1 - errno) on failure, otherwise the resulting file offset
+   if known, otherwise -1.  */
 
 static off_t
 tail_lines (char const *prettyname, int fd, struct stat const *st,
@@ -1935,10 +1943,10 @@ tail_lines (char const *prettyname, int fd, struct stat const *st,
         }
 
       int t = start_lines (prettyname, fd, n_lines);
-      if (t)
+      if (t < 0)
         return t;
       dump_remainder (false, prettyname, fd, COPY_TO_EOF);
-      return -2;
+      return -1;
     }
   else
     {
@@ -1962,8 +1970,8 @@ tail_lines (char const *prettyname, int fd, struct stat const *st,
 
 /* Display the last part of file FILENAME,
    open for reading via FD and with status *ST.
-   Return -1 if unsuccessful, otherwise the resulting file offset if known,
-   otherwise a value less than -1.  */
+   Return (-1 - errno) on failure, otherwise the resulting file offset
+   if known, otherwise -1.  */
 
 static off_t
 tail (char const *filename, int fd, struct stat const *st, count_t n_units)
@@ -2018,13 +2026,20 @@ tail_file (struct File_spec *f, count_t n_files, count_t n_units)
       struct stat stats;
       bool stat_ok = get_file_status (f, fd, &stats);
       off_t read_pos = stat_ok ? tail (f->prettyname, fd, &stats, n_units) : -1;
-      ok = read_pos != -1;
+      if (read_pos < -1)
+        {
+          f->errnum = -1 - read_pos;
+          ok = false;
+        }
+      else
+        ok = stat_ok;
 
       if (forever)
         {
           if (stat_ok && !IS_TAILABLE_FILE_TYPE (stats.st_mode))
             {
               ok = false;
+              f->errnum = -1;
               f->tailable = false;
               f->ignore = ! reopen_inaccessible_files;
               error (0, 0, _("%s: cannot follow end of this type of file%s"),
@@ -2034,8 +2049,6 @@ tail_file (struct File_spec *f, count_t n_files, count_t n_units)
 
           if (ok && !get_file_status (f, fd, &stats))
             ok = false;
-          else if (stat_ok)
-            f->errnum = ok - 1;
 
           if (!ok)
             {
@@ -2305,6 +2318,7 @@ ignore_fifo_and_pipe (struct File_spec *f, int n_files)
       if (is_a_fifo_or_pipe)
         {
           f[i].fd = -1;
+          f[i].errnum = -1;
           f[i].ignore = true;
         }
       else
