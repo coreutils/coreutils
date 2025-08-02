@@ -55,6 +55,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  cp, install and mv now avoid possible data corruption on
+  glibc 2.41 and 2.42 systems when copy_file_range is used with ranges > 2GiB,
+  avoiding https://sourceware.org/bugzilla/show_bug.cgi?id=33245
+
   stty supports setting arbitrary baud rates on supported systems,
   like Hurd, Linux with glibc >= 2.42, and some BSDs.
   Also on other systems the full set of supported baud rates
