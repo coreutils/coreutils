@@ -464,8 +464,8 @@ unary_operator (void)
 
     case 'h':			/* File is a symbolic link? */
       unary_advance ();
-      return (lstat (argv[pos - 1], &stat_buf) == 0
-              && S_ISLNK (stat_buf.st_mode));
+      char linkbuf[1];
+      return 0 <= readlink (argv[pos - 1], linkbuf, 1);
 
     case 'u':			/* File is setuid? */
       unary_advance ();

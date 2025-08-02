@@ -975,8 +975,8 @@ recheck (struct File_spec *f, bool blocking)
      then mark the file as not tailable.  */
   f->tailable = !(reopen_inaccessible_files && fd < 0);
 
-  if (! disable_inotify && ! lstat (f->name, &new_stats)
-      && S_ISLNK (new_stats.st_mode))
+  char linkbuf[1];
+  if (! disable_inotify && 0 <= readlink (f->name, linkbuf, 1))
     {
       /* Diagnose the edge case where a regular file is changed
          to a symlink.  We avoid inotify with symlinks since
@@ -1352,9 +1352,9 @@ any_non_remote_file (const struct File_spec *f, int n_files)
 static bool
 any_symlinks (const struct File_spec *f, int n_files)
 {
-  struct stat st;
+  char linkbuf[1];
   for (int i = 0; i < n_files; i++)
-    if (lstat (f[i].name, &st) == 0 && S_ISLNK (st.st_mode))
+    if (0 <= readlink (f[i].name, linkbuf, 1))
       return true;
   return false;
 }

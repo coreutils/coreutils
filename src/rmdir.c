@@ -269,8 +269,8 @@ main (int argc, char **argv)
                       /* Ensure the last component was a symlink.  */
                       char *dir_arg = xstrdup (dir);
                       strip_trailing_slashes (dir);
-                      ret = lstat (dir, &st);
-                      if (ret == 0 && S_ISLNK (st.st_mode))
+                      char linkbuf[1];
+                      if (0 <= readlink (dir, linkbuf, 1))
                         {
                           error (0, 0,
                                  _("failed to remove %s:"
