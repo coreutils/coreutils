@@ -966,9 +966,8 @@ static void
 recheck (struct File_spec *f, bool blocking)
 {
   struct stat new_stats;
-  bool ok = true;
+  bool ok = false;
   bool is_stdin = (STREQ (f->name, "-"));
-  bool was_tailable = f->tailable;
   int prev_errnum = f->errnum;
   bool new_file;
   int fd = (is_stdin
@@ -978,17 +977,12 @@ recheck (struct File_spec *f, bool blocking)
 
   affirm (valid_file_spec (f));
 
-  /* If the open fails because the file doesn't exist,
-     then mark the file as not tailable.  */
-  f->tailable = !(reopen_inaccessible_files && fd < 0);
-
   char linkbuf[1];
   if (! disable_inotify && 0 <= readlink (f->name, linkbuf, 1))
     {
       /* Diagnose the edge case where a regular file is changed
          to a symlink.  We avoid inotify with symlinks since
          it's awkward to match between symlink name and target.  */
-      ok = false;
       f->errnum = -1;
       f->ignore = true;
 
@@ -997,11 +991,10 @@ recheck (struct File_spec *f, bool blocking)
     }
   else if (fd < 0 || fstat (fd, &new_stats) < 0)
     {
-      ok = false;
       f->errnum = fd < 0 ? open_errno : errno;
-      if (!f->tailable)
+      if (fd < 0)
         {
-          if (was_tailable)
+          if (f->tailable)
             {
               /* FIXME-maybe: detect the case in which the file first becomes
                  unreadable (perms), and later becomes readable again and can
@@ -1020,18 +1013,15 @@ recheck (struct File_spec *f, bool blocking)
     }
   else if (!IS_TAILABLE_FILE_TYPE (new_stats.st_mode))
     {
-      ok = false;
       f->errnum = -1;
-      f->tailable = false;
       f->ignore = ! (reopen_inaccessible_files && follow_mode == Follow_name);
-      if (was_tailable || prev_errnum != f->errnum)
+      if (f->tailable || ! (prev_errnum < 0 || prev_errnum == EISDIR))
         error (0, 0, _("%s has been replaced with an untailable file%s"),
                quoteaf (f->prettyname),
                f->ignore ? _("; giving up on this name") : "");
     }
   else if ((f->remote = fremote (fd, f)) && ! disable_inotify)
     {
-      ok = false;
       f->errnum = -1;
       error (0, 0, _("%s has been replaced with an untailable remote file"),
              quoteaf (f->prettyname));
@@ -1039,8 +1029,11 @@ recheck (struct File_spec *f, bool blocking)
     }
   else
     {
+      ok = true;
       f->errnum = 0;
     }
+
+  f->tailable = ok;
 
   new_file = false;
   if (!ok)
@@ -1380,7 +1373,7 @@ any_non_regular_fifo (const struct File_spec *f, int n_files)
 }
 
 /* Return true if any of the N_FILES files in F represents
-   stdin and is tailable.  */
+   stdin and is not ignored.  */
 
 static bool
 tailable_stdin (const struct File_spec *f, int n_files)
@@ -1986,7 +1979,7 @@ tail_file (struct File_spec *f, count_t n_files, count_t n_units)
   else
     fd = open (f->name, O_RDONLY | O_BINARY | (nonblocking ? O_NONBLOCK : 0));
 
-  f->tailable = !(reopen_inaccessible_files && fd < 0);
+  f->tailable = false;
 
   if (fd < 0)
     {
@@ -2009,33 +2002,33 @@ tail_file (struct File_spec *f, count_t n_files, count_t n_units)
 
       off_t read_pos;
       struct stat stats;
-      bool stat_ok = 0 <= fstat (fd, &stats);
-      if (!stat_ok)
+      ok = 0 <= fstat (fd, &stats);
+      if (!ok)
         {
           f->errnum = errno;
           error (0, f->errnum, _("cannot fstat %s"), quoteaf (f->prettyname));
-          ok = false;
         }
       else
         {
           read_pos = tail (f->prettyname, fd, &stats, n_units);
           ok = -1 <= read_pos;
           f->errnum = ok ? 0 : -1 - read_pos;
+
+          if (IS_TAILABLE_FILE_TYPE (stats.st_mode))
+            f->tailable = true;
+          else if (forever)
+            {
+              ok = false;
+              f->errnum = -1;
+              error (0, 0, _("%s: cannot follow end of this type of file%s"),
+                     quotef (f->prettyname),
+                     (reopen_inaccessible_files ? ""
+                      : _("; giving up on this name")));
+            }
         }
 
       if (forever)
         {
-          if (stat_ok && !IS_TAILABLE_FILE_TYPE (stats.st_mode))
-            {
-              ok = false;
-              f->errnum = -1;
-              f->tailable = false;
-              f->ignore = ! reopen_inaccessible_files;
-              error (0, 0, _("%s: cannot follow end of this type of file%s"),
-                     quotef (f->prettyname),
-                     f->ignore ? _("; giving up on this name") : "");
-            }
-
           if (!ok)
             {
               f->ignore = ! reopen_inaccessible_files;
