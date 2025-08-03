@@ -1824,22 +1824,6 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
 }
 #endif
 
-/* Get the status for file F, which has descriptor FD, into *ST.
-   Return true on success, false (diagnosing the failure) otherwise.  */
-
-static bool
-get_file_status (struct File_spec *f, int fd, struct stat *st)
-{
-  if (fstat (fd, st) < 0)
-    {
-      f->errnum = errno;
-      error (0, f->errnum, _("cannot fstat %s"), quoteaf (f->prettyname));
-      return false;
-    }
-  f->errnum = 0;
-  return true;
-}
-
 /* Output the last bytes of the file PRETTYNAME open for reading
    in FD and with status ST.  Output the last N_BYTES bytes.
    Return (-1 - errno) on failure, otherwise the resulting file offset
@@ -2023,16 +2007,21 @@ tail_file (struct File_spec *f, count_t n_files, count_t n_units)
       if (print_headers)
         write_header (f->prettyname);
 
+      off_t read_pos;
       struct stat stats;
-      bool stat_ok = get_file_status (f, fd, &stats);
-      off_t read_pos = stat_ok ? tail (f->prettyname, fd, &stats, n_units) : -1;
-      if (read_pos < -1)
+      bool stat_ok = 0 <= fstat (fd, &stats);
+      if (!stat_ok)
         {
-          f->errnum = -1 - read_pos;
+          f->errnum = errno;
+          error (0, f->errnum, _("cannot fstat %s"), quoteaf (f->prettyname));
           ok = false;
         }
       else
-        ok = stat_ok;
+        {
+          read_pos = tail (f->prettyname, fd, &stats, n_units);
+          ok = -1 <= read_pos;
+          f->errnum = ok ? 0 : -1 - read_pos;
+        }
 
       if (forever)
         {
@@ -2046,9 +2035,6 @@ tail_file (struct File_spec *f, count_t n_files, count_t n_units)
                      quotef (f->prettyname),
                      f->ignore ? _("; giving up on this name") : "");
             }
-
-          if (ok && !get_file_status (f, fd, &stats))
-            ok = false;
 
           if (!ok)
             {
