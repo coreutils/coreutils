@@ -11470,6 +11470,10 @@ Suppress most error messages.  On by default.
 @opindex --verbose
 Report error messages.
 
+@vindex POSIXLY_CORRECT
+This option is on by default if the @env{POSIXLY_CORRECT} environment
+variable is set.
+
 @optZero
 
 @end table

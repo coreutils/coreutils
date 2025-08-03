@@ -365,6 +365,7 @@ all_tests =					\
   tests/printf/printf-quote.sh			\
   tests/pwd/pwd-long.sh				\
   tests/readlink/readlink-fp-loop.sh		\
+  tests/readlink/readlink-posix.sh		\
   tests/readlink/readlink-root.sh		\
   tests/misc/realpath.sh			\
   tests/runcon/runcon-compute.sh		\

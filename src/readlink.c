@@ -152,12 +152,18 @@ main (int argc, char **argv)
       no_newline = false;
     }
 
+  /* POSIX requires a diagnostic message written to standard error and a
+     non-zero exit status when given a file that is not a symbolic link.  */
+  if (getenv ("POSIXLY_CORRECT") != nullptr)
+    verbose = true;
+
   for (; optind < argc; ++optind)
     {
       char const *fname = argv[optind];
       char *value = (can_mode != -1
                      ? canonicalize_filename_mode (fname, can_mode)
                      : areadlink_with_size (fname, 63));
+
       if (value)
         {
           fputs (value, stdout);
