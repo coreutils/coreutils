@@ -287,7 +287,6 @@ static bool
 binary_operator (bool l_is_l, enum binop bop)
 {
   int op;
-  struct stat stat_buf, stat_spare;
 
   if (l_is_l)
     advance (false);
@@ -339,9 +338,13 @@ binary_operator (bool l_is_l, enum binop bop)
     case EF_BINOP:
       if (l_is_l | r_is_l)
         test_syntax_error (_("-ef does not accept -l"));
-      return (stat (argv[op - 1], &stat_buf) == 0
-              && stat (argv[op + 1], &stat_spare) == 0
-              && SAME_INODE (stat_buf, stat_spare));
+      else
+        {
+          struct stat st[2];
+          return (stat (argv[op - 1], &st[0]) == 0
+                  && stat (argv[op + 1], &st[1]) == 0
+                  && psame_inode (&st[0], &st[1]));
+        }
 
     case EQ_STRING_BINOP:
     case NE_STRING_BINOP:

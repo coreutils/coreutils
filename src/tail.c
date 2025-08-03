@@ -125,8 +125,8 @@ struct File_spec
 
   /* Attributes of the file the last time we checked.  */
   struct timespec mtime;
-  dev_t dev;
-  ino_t ino;
+  dev_t st_dev;
+  ino_t st_ino;
   mode_t mode;
 
   /* If a regular file, the file's read position the last time we
@@ -413,8 +413,8 @@ record_open_fd (struct File_spec *f, int fd,
 {
   f->fd = fd;
   f->mtime = get_stat_mtime (st);
-  f->dev = st->st_dev;
-  f->ino = st->st_ino;
+  f->st_dev = st->st_dev;
+  f->st_ino = st->st_ino;
   f->mode = st->st_mode;
   if (S_ISREG (st->st_mode))
     f->read_pos = (read_pos < 0
@@ -1061,7 +1061,7 @@ recheck (struct File_spec *f, bool blocking)
              _("%s has appeared;  following new file"),
              quoteaf (f->prettyname));
     }
-  else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
+  else if (!SAME_INODE (*f, new_stats))
     {
       /* File has been replaced (e.g., via log rotation) --
         tail the new one.  */
@@ -1583,7 +1583,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
               struct stat stats;
 
               if (! (stat (f[i].name, &stats) < 0
-                     || (f[i].dev == stats.st_dev && f[i].ino == stats.st_ino)))
+                     || SAME_INODE (f[i], stats)))
                 {
                   error (0, errno, _("%s was replaced"),
                          quoteaf (f[i].prettyname));
@@ -1988,8 +1988,8 @@ tail_file (struct File_spec *f, count_t n_files, count_t n_units)
           f->fd = -1;
           f->errnum = errno;
           f->ignore = ! reopen_inaccessible_files;
-          f->ino = 0;
-          f->dev = 0;
+          f->st_dev = 0;
+          f->st_ino = 0;
         }
       error (0, errno, _("cannot open %s for reading"),
              quoteaf (f->prettyname));

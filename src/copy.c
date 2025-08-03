@@ -109,8 +109,8 @@
 struct dir_list
 {
   struct dir_list *parent;
-  ino_t ino;
-  dev_t dev;
+  ino_t st_ino;
+  dev_t st_dev;
 };
 
 /* Initial size of the cp.dest_info hash table.  */
@@ -690,7 +690,7 @@ is_ancestor (const struct stat *sb, const struct dir_list *ancestors)
 {
   while (ancestors != 0)
     {
-      if (ancestors->ino == sb->st_ino && ancestors->dev == sb->st_dev)
+      if (PSAME_INODE (ancestors, sb))
         return true;
       ancestors = ancestors->parent;
     }
@@ -2903,8 +2903,8 @@ skip:
 
       dir = alloca (sizeof *dir);
       dir->parent = ancestors;
-      dir->ino = src_sb.st_ino;
-      dir->dev = src_sb.st_dev;
+      dir->st_ino = src_sb.st_ino;
+      dir->st_dev = src_sb.st_dev;
 
       if (new_dst || !S_ISDIR (dst_sb.st_mode))
         {

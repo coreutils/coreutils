@@ -645,14 +645,17 @@ main (int argc, char **argv)
   idx_t outsize = io_blksize (&stat_buf);
 
   /* Device, I-node number and lazily-acquired flags of the output.  */
-  dev_t out_dev;
-  ino_t out_ino;
+  struct
+  {
+    dev_t st_dev;
+    ino_t st_ino;
+  } out_id;
   int out_flags = -2;
   bool have_out_dev = ! (S_TYPEISSHM (&stat_buf) || S_TYPEISTMO (&stat_buf));
   if (have_out_dev)
     {
-      out_dev = stat_buf.st_dev;
-      out_ino = stat_buf.st_ino;
+      out_id.st_dev = stat_buf.st_dev;
+      out_id.st_ino = stat_buf.st_ino;
    }
 
   /* True if the output is a regular file.  */
@@ -714,7 +717,7 @@ main (int argc, char **argv)
       if (! (S_ISFIFO (stat_buf.st_mode) || S_ISSOCK (stat_buf.st_mode)
              || S_TYPEISSHM (&stat_buf) || S_TYPEISTMO (&stat_buf))
           && have_out_dev
-          && stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino)
+          && SAME_INODE (stat_buf, out_id))
         {
           off_t in_pos = lseek (input_desc, 0, SEEK_CUR);
           if (0 <= in_pos)
