@@ -11462,7 +11462,11 @@ Print a warning if specified along with multiple @var{file}s.
 @opindex -q
 @opindex --silent
 @opindex --quiet
-Suppress most error messages.  On by default.
+Suppress most error messages.
+
+@vindex POSIXLY_CORRECT
+This option is on by default if the @env{POSIXLY_CORRECT} environment
+variable is not set.
 
 @item -v
 @itemx --verbose

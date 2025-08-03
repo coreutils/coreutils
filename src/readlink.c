@@ -78,8 +78,10 @@ usage (int status)
                                 without requirements on components existence\n\
   -n, --no-newline              do not output the trailing delimiter\n\
   -q, --quiet\n\
-  -s, --silent                  suppress most error messages (on by default)\n\
-  -v, --verbose                 report error messages\n\
+  -s, --silent                  suppress most error messages (on by default\n\
+                                if POSIXLY_CORRECT is not set)\n\
+  -v, --verbose                 report error messages (on by default if\n\
+                                POSIXLY_CORRECT is set)\n\
   -z, --zero                    end each output line with NUL, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -163,7 +165,6 @@ main (int argc, char **argv)
       char *value = (can_mode != -1
                      ? canonicalize_filename_mode (fname, can_mode)
                      : areadlink_with_size (fname, 63));
-
       if (value)
         {
           fputs (value, stdout);

@@ -7,8 +7,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   'factor' is now much faster at identifying large prime numbers,
   and significantly faster on composite numbers greater than 2^128.
 
-  readlink will behave as if the -v option is used if the
-  POSIXLY_CORRECT environment variable is defined.
+  readlink now defaults to being verbose if the POSIXLY_CORRECT
+  environment variable is set.
 
 ** Bug fixes
 
