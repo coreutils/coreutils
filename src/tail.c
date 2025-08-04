@@ -41,7 +41,6 @@
 #include "isapipe.h"
 #include "posixver.h"
 #include "quote.h"
-#include "safe-read.h"
 #include "stat-size.h"
 #include "stat-time.h"
 #include "xbinary-io.h"
