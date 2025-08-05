@@ -1048,7 +1048,7 @@ copy_reg (char const *src_name, char const *dst_name,
     {
       return_val = copy_file_data (source_desc, &src_open_sb, 0, src_name,
                                    dest_desc, &sb, 0, dst_name,
-                                   OFF_T_MAX, x, &copy_debug);
+                                   COUNT_MAX, x, &copy_debug);
       if (!return_val)
         goto close_src_and_dst_desc;
     }

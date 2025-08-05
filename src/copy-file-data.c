@@ -493,13 +493,13 @@ infer_scantype (int fd, struct stat const *sb, off_t pos,
 /* Copy data from input file (descriptor IFD, status IST, initial file
    offset IPOS, and name INAME) to output file (OFD, OST, OPOS, ONAME).
    Copy until IBYTES have been copied or until end of file;
-   if IBYTES is OFF_T_MAX that suffices to copy to end of file.
+   if IBYTES is COUNT_MAX that suffices to copy to end of file.
    Respect copy options X's sparse_mode and reflink_mode settings.
    Read and update *DEBUG as needed.  */
 bool
 copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
                 int ofd, struct stat const *ost, off_t opos, char const *oname,
-                off_t ibytes, struct cp_options const *x, struct copy_debug *debug)
+                count_t ibytes, struct cp_options const *x, struct copy_debug *debug)
 {
   /* Choose a suitable buffer size; it may be adjusted later.  */
   size_t buf_size = io_blksize (ost);
@@ -518,7 +518,11 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
            || (x->sparse_mode == SPARSE_AUTO
                && scantype != PLAIN_SCANTYPE)));
 
-  fdadvise (ifd, ipos, ibytes, FADVISE_SEQUENTIAL);
+  /* Don't bother calling fadvise for small copies, as it is not
+     likely to help performance and might even hurt it.  */
+  if (IO_BUFSIZE < ibytes)
+    fdadvise (ifd, ipos, ibytes <= OFF_T_MAX - ipos ? ibytes : 0,
+              FADVISE_SEQUENTIAL);
 
   /* If not making a sparse file, try to use a more-efficient
      buffer size.  */

@@ -321,6 +321,11 @@ struct copy_debug
   enum copy_debug_val sparse_detection;
 };
 
+/* The type of a large counter.  Although it is always nonnegative,
+   it is signed to help signed overflow checking catch any bugs.  */
+typedef intmax_t count_t;
+#define COUNT_MAX INTMAX_MAX
+
 bool copy (char const *src_name, char const *dst_name,
            int dst_dirfd, char const *dst_relname,
            int nonexistent_dst, const struct cp_options *options,
@@ -331,7 +336,7 @@ bool copy_file_data (int ifd, struct stat const *ist, off_t ipos,
                      char const *iname,
                      int ofd, struct stat const *ost, off_t opos,
                      char const *oname,
-                     off_t ibytes, struct cp_options const *x,
+                     count_t ibytes, struct cp_options const *x,
                      struct copy_debug *copy_debug)
   _GL_ATTRIBUTE_NONNULL ((2, 4, 6, 8, 10, 11));
 
