@@ -113,7 +113,7 @@ static bool
 sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
              bool allow_reflink,
              char const *src_name, char const *dst_name,
-             uintmax_t max_n_read, off_t *hole_size, off_t *total_n_read,
+             count_t max_n_read, off_t *hole_size, off_t *total_n_read,
              struct copy_debug *debug)
 {
   *total_n_read = 0;
@@ -126,7 +126,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
   /* If not looking for holes, use copy_file_range if functional,
      but don't use if reflink disallowed as that may be implicit.  */
   if (!hole_size && allow_reflink)
-    while (max_n_read)
+    while (0 < max_n_read)
       {
         /* Copy at most COPY_MAX bytes at a time; this is min
            (SSIZE_MAX, SIZE_MAX) truncated to a value that is
@@ -183,7 +183,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
   off_t psize = hole_size ? *hole_size : 0;
   bool make_hole = !!psize;
 
-  while (max_n_read)
+  while (0 < max_n_read)
     {
       if (!*abuf)
         *abuf = xalignalloc (getpagesize (), buf_size);
@@ -568,7 +568,7 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
   if (scantype != LSEEK_SCANTYPE)
     copy_ok = sparse_copy (ifd, ofd, &buf, buf_size,
                            x->reflink_mode != REFLINK_NEVER,
-                           iname, oname, UINTMAX_MAX,
+                           iname, oname, COUNT_MAX,
                            make_holes ? &hole_size : nullptr,
                            &n_read, debug);
 
