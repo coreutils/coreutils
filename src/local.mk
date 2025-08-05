@@ -347,6 +347,7 @@ selinux_sources = \
 
 copy_sources = \
   src/copy.c \
+  src/copy-file-data.c \
   src/cp-hash.c \
   src/force-link.c \
   src/force-link.h
