@@ -343,7 +343,7 @@ main (int argc, char **argv)
               /* -oL will be by far the most common use of this utility,
                  but one could easily think -iL might have the same affect,
                  so disallow it as it could be confusing.  */
-              error (0, 0, _("line buffering stdin is meaningless"));
+              error (0, 0, _("line buffering standard input is meaningless"));
               usage (EXIT_CANCELED);
             }
 

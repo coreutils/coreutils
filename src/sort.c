@@ -4760,7 +4760,8 @@ main (int argc, char **argv)
           for (size_t i = 0; i < nfiles; i++)
             {
               if (STREQ (files[i], "-"))
-                error (SORT_FAILURE, 0, _("when reading file names from stdin, "
+                error (SORT_FAILURE, 0, _("when reading file names from "
+                                          "standard input, "
                                           "no file name of %s allowed"),
                        quoteaf (files[i]));
               else if (files[i][0] == '\0')

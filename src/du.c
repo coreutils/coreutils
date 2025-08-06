@@ -1070,7 +1070,7 @@ main (int argc, char **argv)
         {
           /* Give a better diagnostic in an unusual case:
              printf - | du --files0-from=- */
-          error (0, 0, _("when reading file names from stdin, "
+          error (0, 0, _("when reading file names from standard input, "
                          "no file name of %s allowed"),
                  quoteaf (file_name));
           skip_file = true;

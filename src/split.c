@@ -1558,7 +1558,8 @@ main (int argc, char **argv)
 
   if (k_units != 0 && filter_command)
     {
-      error (0, 0, _("--filter does not process a chunk extracted to stdout"));
+      error (0, 0, _("--filter does not process a chunk extracted to "
+                     "standard output"));
       usage (EXIT_FAILURE);
     }
 

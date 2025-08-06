@@ -191,8 +191,9 @@ main (int argc, char **argv)
       if (!redirecting_stdout)
         error (0, 0,
                _(ignoring_input
-                 ? N_("ignoring input and redirecting stderr to stdout")
-                 : N_("redirecting stderr to stdout")));
+                 ? N_("ignoring input and redirecting standard error "
+                      "to standard output")
+                 : N_("redirecting standard error to standard output")));
 
       if (dup2 (out_fd, STDERR_FILENO) < 0)
         error (exit_internal_failure, errno,

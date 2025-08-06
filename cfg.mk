@@ -341,6 +341,8 @@ sc_standard_outputs: $(ALL_MANS)
 	  && { echo 1>&2 '$@: use "standard ....." in user docs'; exit 1; } || :
 	@grep -E '[Ss]tandard (in|out|err)([^op]|$$)' man/*.1 doc/*.texi \
 	  && { echo 1>&2 '$@: use "standard ..put" in user docs'; exit 1; } || :
+	@grep -E '_\("[^"]*std(in|out|err)' src/*.c \
+	  && { echo 1>&2 '$@: use "standard ..put" in messages'; exit 1; } || :
 
 # Option descriptions should not start with a capital letter.
 # One could grep source directly as follows:
