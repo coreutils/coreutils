@@ -20,6 +20,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   copying to non-NFS files from NFSv4 files with trivial ACLs.
   [bug introduced in coreutils-9.6]
 
+  cp --sparse=always missed some opportunities to create holes.
+  That is, although the copies had the correct data, sometimes
+  data zeros used extents rather than holes.
+  [This bug was present in "the beginning".]
+
   install -d now produces the correct diagnostic upon failure
   to create a directory.  Previously it would have produced
   a confusing error about changing permissions.

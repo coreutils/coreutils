@@ -308,6 +308,8 @@ is_CLONENOTSUP (int err)
 /* Copy the regular file open on SRC_FD/SRC_NAME to DST_FD/DST_NAME,
    honoring the MAKE_HOLES setting and using the BUF_SIZE-byte buffer
    *ABUF for temporary storage, allocating it lazily if *ABUF is null.
+   If SCAN_HOLES, look for holes in the input.
+   If PUNCH_HOLES, punch holes in the output.
    Copy no more than MAX_N_READ bytes.
    Return true upon successful completion;
    print a diagnostic and return false upon error.
@@ -317,7 +319,7 @@ is_CLONENOTSUP (int err)
    bytes read.  */
 static bool
 sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
-             size_t hole_size, bool punch_holes, bool allow_reflink,
+             bool scan_holes, bool punch_holes, bool allow_reflink,
              char const *src_name, char const *dst_name,
              uintmax_t max_n_read, off_t *total_n_read,
              bool *last_write_made_hole)
@@ -326,13 +328,13 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
   *total_n_read = 0;
 
   if (copy_debug.sparse_detection == COPY_DEBUG_UNKNOWN)
-    copy_debug.sparse_detection = hole_size ? COPY_DEBUG_YES : COPY_DEBUG_NO;
-  else if (hole_size && copy_debug.sparse_detection == COPY_DEBUG_EXTERNAL)
+    copy_debug.sparse_detection = scan_holes ? COPY_DEBUG_YES : COPY_DEBUG_NO;
+  else if (scan_holes && copy_debug.sparse_detection == COPY_DEBUG_EXTERNAL)
     copy_debug.sparse_detection = COPY_DEBUG_EXTERNAL_INTERNAL;
 
   /* If not looking for holes, use copy_file_range if functional,
      but don't use if reflink disallowed as that may be implicit.  */
-  if (!hole_size && allow_reflink)
+  if (!scan_holes && allow_reflink)
     while (max_n_read)
       {
         /* Copy at most COPY_MAX bytes at a time; this is min
@@ -408,8 +410,12 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
       max_n_read -= n_read;
       *total_n_read += n_read;
 
-      /* Loop over the input buffer in chunks of hole_size.  */
-      size_t csize = hole_size ? hole_size : buf_size;
+      /* If looking for holes, loop over the input buffer in chunks
+         corresponding to the minimum hole size.  Otherwise, scan the
+         whole buffer.  struct stat does not report the minimum hole
+         size for a file, so use ST_NBLOCKSIZE which should be the
+         minimum for all file systems on this platform.  */
+      size_t csize = scan_holes ? ST_NBLOCKSIZE : buf_size;
       char *cbuf = buf;
       char *pbuf = buf;
 
@@ -418,7 +424,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
           bool prev_hole = make_hole;
           csize = MIN (csize, n_read);
 
-          if (hole_size && csize)
+          if (scan_holes && csize)
             make_hole = is_nul (cbuf, csize);
 
           bool transition = (make_hole != prev_hole) && psize;
@@ -541,7 +547,6 @@ write_zeros (int fd, off_t n_bytes)
    copy, and thus makes copying sparse files much more efficient.
    Copy from SRC_FD to DEST_FD, using *ABUF (of size BUF_SIZE) for a buffer.
    Allocate *ABUF lazily if *ABUF is null.
-   Look for holes of size HOLE_SIZE in the input.
    The input file is of size SRC_TOTAL_SIZE.
    Use SPARSE_MODE to determine whether to create holes in the output.
    SRC_NAME and DST_NAME are the input and output file names.
@@ -549,7 +554,7 @@ write_zeros (int fd, off_t n_bytes)
 
 static bool
 lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
-            size_t hole_size, off_t ext_start, off_t src_total_size,
+            off_t ext_start, off_t src_total_size,
             enum Sparse_type sparse_mode,
             bool allow_reflink,
             char const *src_name, char const *dst_name)
@@ -627,7 +632,7 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
       off_t n_read;
       bool read_hole;
       if ( ! sparse_copy (src_fd, dest_fd, abuf, buf_size,
-                          sparse_mode != SPARSE_ALWAYS ? 0 : hole_size,
+                          sparse_mode == SPARSE_ALWAYS,
                           true, allow_reflink, src_name, dst_name,
                           ext_len, &n_read, &read_hole))
         return false;
@@ -1551,7 +1556,6 @@ copy_reg (char const *src_name, char const *dst_name,
     {
       /* Choose a suitable buffer size; it may be adjusted later.  */
       size_t buf_size = io_blksize (&sb);
-      size_t hole_size = STP_BLKSIZE (&sb);
 
       /* Deal with sparse files.  */
       enum scantype scantype = infer_scantype (source_desc, &src_open_sb,
@@ -1601,7 +1605,7 @@ copy_reg (char const *src_name, char const *dst_name,
       if (! (
 #ifdef SEEK_HOLE
              scantype == LSEEK_SCANTYPE
-             ? lseek_copy (source_desc, dest_desc, &buf, buf_size, hole_size,
+             ? lseek_copy (source_desc, dest_desc, &buf, buf_size,
                            scan_inference.ext_start, src_open_sb.st_size,
                            make_holes ? x->sparse_mode : SPARSE_NEVER,
                            x->reflink_mode != REFLINK_NEVER,
@@ -1609,7 +1613,7 @@ copy_reg (char const *src_name, char const *dst_name,
              :
 #endif
                sparse_copy (source_desc, dest_desc, &buf, buf_size,
-                            make_holes ? hole_size : 0,
+                            make_holes,
                             x->sparse_mode == SPARSE_ALWAYS,
                             x->reflink_mode != REFLINK_NEVER,
                             src_name, dst_name, UINTMAX_MAX, &n_read,
