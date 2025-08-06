@@ -271,29 +271,19 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
 /* Write N_BYTES zero bytes to file descriptor FD.  Return true if successful.
    Upon write failure, set errno and return false.  */
 static bool
-write_zeros (int fd, off_t n_bytes)
+write_zeros (int fd, off_t n_bytes, char **abuf, idx_t buf_size)
 {
-  static char *zeros;
-  static size_t nz = IO_BUFSIZE;
-
-  /* Attempt to use a relatively large calloc'd source buffer for
-     efficiency, but if that allocation fails, resort to a smaller
-     statically allocated one.  */
-  if (zeros == nullptr)
-    {
-      static char fallback[1024];
-      zeros = calloc (nz, 1);
-      if (zeros == nullptr)
-        {
-          zeros = fallback;
-          nz = sizeof fallback;
-        }
-    }
-
+  char *zeros = nullptr;
   while (n_bytes)
     {
-      size_t n = MIN (nz, n_bytes);
-      if ((full_write (fd, zeros, n)) != n)
+      idx_t n = MIN (buf_size, n_bytes);
+      if (!zeros)
+        {
+          if (!*abuf)
+            *abuf = xalignalloc (getpagesize (), buf_size);
+          zeros = memset (*abuf, 0, n);
+        }
+      if (full_write (fd, zeros, n) != n)
         return false;
       n_bytes -= n;
     }
@@ -397,7 +387,7 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
               /* When not inducing holes and when there is a hole between
                  the end of the previous extent and the beginning of the
                  current one, write zeros to the destination file.  */
-              if (! write_zeros (dest_fd, ext_hole_size))
+              if (! write_zeros (dest_fd, ext_hole_size, abuf, buf_size))
                 {
                   error (0, errno, _("%s: write failed"),
                          quotef (dst_name));
@@ -601,7 +591,7 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
           ? (errno = EOVERFLOW, true)
           : make_holes
           ? ftruncate (ofd, oend) < 0
-          : !write_zeros (ofd, hole_size))
+          : !write_zeros (ofd, hole_size, &buf, buf_size))
         {
           error (0, errno, _("failed to extend %s"), quoteaf (oname));
           result = -1;
