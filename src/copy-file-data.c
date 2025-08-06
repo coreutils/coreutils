@@ -110,7 +110,7 @@ is_CLONENOTSUP (int err)
    If successful, return the number of bytes copied,
    otherwise diagnose the failure and return -1.  */
 static intmax_t
-sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
+sparse_copy (int src_fd, int dest_fd, char **abuf, idx_t buf_size,
              bool allow_reflink,
              char const *src_name, char const *dst_name,
              count_t max_n_read, off_t *hole_size,
@@ -206,7 +206,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
          whole buffer.  struct stat does not report the minimum hole
          size for a file, so use ST_NBLOCKSIZE which should be the
          minimum for all file systems on this platform.  */
-      size_t csize = hole_size ? ST_NBLOCKSIZE : buf_size;
+      idx_t csize = hole_size ? ST_NBLOCKSIZE : buf_size;
       char *cbuf = buf;
       char *pbuf = buf;
 
@@ -315,7 +315,7 @@ write_zeros (int fd, off_t n_bytes, char **abuf, idx_t buf_size)
    otherwise diagnose the failure and return -1.  */
 
 static off_t
-lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
+lseek_copy (int src_fd, int dest_fd, char **abuf, idx_t buf_size,
             off_t src_pos, count_t ibytes,
             struct scan_inference const *scan_inference, off_t src_total_size,
             enum Sparse_type sparse_mode,
@@ -501,6 +501,8 @@ infer_scantype (int fd, struct stat const *sb, off_t pos,
 
 /* Copy data from input file (descriptor IFD, status IST, initial file
    offset IPOS, and name INAME) to output file (OFD, OST, OPOS, ONAME).
+   If IPOS and OPOS are negative, their values are not known, perhaps
+   because the files are not seekable so their positions are irrelevant.
    Copy until IBYTES have been copied or until end of file;
    if IBYTES is COUNT_MAX that suffices to copy to end of file.
    Respect copy options X's sparse_mode and reflink_mode settings.
@@ -514,7 +516,7 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
                 count_t ibytes, struct cp_options const *x, struct copy_debug *debug)
 {
   /* Choose a suitable buffer size; it may be adjusted later.  */
-  size_t buf_size = io_blksize (ost);
+  idx_t buf_size = io_blksize (ost);
 
   /* Deal with sparse files.  */
   struct scan_inference scan_inference;
@@ -542,24 +544,24 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
     {
       /* Compute the least common multiple of the input and output
          buffer sizes, adjusting for outlandish values.
+         blcm is at most IDX_MAX - 1 so that buf_size cannot become 0 below.
          Note we read in multiples of the reported block size
          to support (unusual) devices that have this constraint.  */
-      size_t blcm_max = MIN (SIZE_MAX, SSIZE_MAX);
-      size_t blcm = buffer_lcm (io_blksize (ist), buf_size,
-                                blcm_max);
+      idx_t blcm_max = MIN (MIN (IDX_MAX - 1, SSIZE_MAX), SIZE_MAX);
+      idx_t blcm = buffer_lcm (io_blksize (ist), buf_size,
+                               blcm_max);
 
       /* Do not bother with a buffer larger than the input file, plus one
          byte to make sure the file has not grown while reading it.  */
-      if (S_ISREG (ist->st_mode) && ist->st_size < buf_size)
+      if (S_ISREG (ist->st_mode) && 0 <= ist->st_size
+          && ist->st_size < buf_size)
         buf_size = ist->st_size + 1;
 
       /* However, stick with a block size that is a positive multiple of
          blcm, overriding the above adjustments.  Watch out for
          overflow.  */
-      buf_size += blcm - 1;
+      buf_size = ckd_add (&buf_size, buf_size, blcm - 1) ? IDX_MAX : buf_size;
       buf_size -= buf_size % blcm;
-      if (buf_size == 0 || blcm_max < buf_size)
-        buf_size = blcm;
     }
 
   char *buf = nullptr;
