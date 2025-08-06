@@ -332,12 +332,12 @@ bool copy (char const *src_name, char const *dst_name,
            bool *copy_into_self, bool *rename_succeeded)
   _GL_ATTRIBUTE_NONNULL ((1, 2, 4, 6, 7));
 
-bool copy_file_data (int ifd, struct stat const *ist, off_t ipos,
-                     char const *iname,
-                     int ofd, struct stat const *ost, off_t opos,
-                     char const *oname,
-                     count_t ibytes, struct cp_options const *x,
-                     struct copy_debug *copy_debug)
+intmax_t copy_file_data (int ifd, struct stat const *ist, off_t ipos,
+                         char const *iname,
+                         int ofd, struct stat const *ost, off_t opos,
+                         char const *oname,
+                         count_t ibytes, struct cp_options const *x,
+                         struct copy_debug *copy_debug)
   _GL_ATTRIBUTE_NONNULL ((2, 4, 6, 8, 10, 11));
 
 extern bool set_process_security_ctx (char const *src_name,

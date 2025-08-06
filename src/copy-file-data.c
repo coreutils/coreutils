@@ -107,16 +107,16 @@ is_CLONENOTSUP (int err)
    Set *TOTAL_N_READ to the number of bytes read; this counts
    the trailing hole, which has not yet been output.
    Read and update *DEBUG as needed.
-   Return true upon successful completion;
-   print a diagnostic and return false upon error.  */
-static bool
+   If successful, return the number of bytes copied,
+   otherwise diagnose the failure and return -1.  */
+static intmax_t
 sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
              bool allow_reflink,
              char const *src_name, char const *dst_name,
-             count_t max_n_read, off_t *hole_size, off_t *total_n_read,
+             count_t max_n_read, off_t *hole_size,
              struct copy_debug *debug)
 {
-  *total_n_read = 0;
+  count_t total_n_read = 0;
 
   if (debug->sparse_detection == COPY_DEBUG_UNKNOWN)
     debug->sparse_detection = hole_size ? COPY_DEBUG_YES : COPY_DEBUG_NO;
@@ -140,10 +140,10 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
                the proc file system on the Linux kernel through at
                least 5.6.19 (2020), so fall back on 'read' if the
                input file seems empty.  */
-            if (*total_n_read == 0)
+            if (total_n_read == 0)
               break;
             debug->offload = COPY_DEBUG_YES;
-            return true;
+            return total_n_read;
           }
         if (n_copied < 0)
           {
@@ -155,12 +155,12 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
                also occur for immutable files, but that would only be in the
                edge case where the file is made immutable after creating,
                in which case the (more accurate) error is still shown.  */
-            if (*total_n_read == 0 && is_CLONENOTSUP (errno))
+            if (total_n_read == 0 && is_CLONENOTSUP (errno))
               break;
 
             /* ENOENT was seen sometimes across CIFS shares, resulting in
                no data being copied, but subsequent standard copies succeed.  */
-            if (*total_n_read == 0 && errno == ENOENT)
+            if (total_n_read == 0 && errno == ENOENT)
               break;
 
             if (errno == EINTR)
@@ -169,12 +169,12 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
               {
                 error (0, errno, _("error copying %s to %s"),
                        quoteaf_n (0, src_name), quoteaf_n (1, dst_name));
-                return false;
+                return -1;
               }
           }
         debug->offload = COPY_DEBUG_YES;
         max_n_read -= n_copied;
-        *total_n_read += n_copied;
+        total_n_read += n_copied;
       }
   else
     debug->offload = COPY_DEBUG_AVOIDED;
@@ -194,12 +194,12 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
           if (errno == EINTR)
             continue;
           error (0, errno, _("error reading %s"), quoteaf (src_name));
-          return false;
+          return -1;
         }
       if (n_read == 0)
         break;
       max_n_read -= n_read;
-      *total_n_read += n_read;
+      total_n_read += n_read;
 
       /* If looking for holes, loop over the input buffer in chunks
          corresponding to the minimum hole size.  Otherwise, scan the
@@ -239,7 +239,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
                     {
                       error (0, errno, _("error writing %s"),
                              quoteaf (dst_name));
-                      return false;
+                      return -1;
                     }
                   psize = !prev_hole && transition ? csize : 0;
                 }
@@ -249,7 +249,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
               if (ckd_add (&psize, psize, csize))
                 {
                   error (0, 0, _("overflow reading %s"), quoteaf (src_name));
-                  return false;
+                  return -1;
                 }
             }
 
@@ -265,7 +265,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
 
   if (hole_size)
     *hole_size = make_hole ? psize : 0;
-  return true;
+  return total_n_read;
 }
 
 /* Write N_BYTES zero bytes to file descriptor FD.  Return true if successful.
@@ -321,16 +321,17 @@ write_zeros (int fd, off_t n_bytes)
    Set *TOTAL_N_READ to the number of bytes read; this counts
    the trailing hole, which has not yet been output.
    Read and update *DEBUG as needed.
-   Return true if successful, false (with a diagnostic) otherwise.  */
-static bool
+   If successful, return the number of bytes copied,
+   otherwise diagnose the failure and return -1.  */
+
+static off_t
 lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
             off_t src_pos, count_t ibytes,
             struct scan_inference const *scan_inference, off_t src_total_size,
             enum Sparse_type sparse_mode,
             bool allow_reflink,
             char const *src_name, char const *dst_name,
-            off_t *hole_size, off_t *total_n_read,
-            struct copy_debug *debug)
+            off_t *hole_size, struct copy_debug *debug)
 {
   off_t last_ext_start = src_pos;
   off_t last_ext_len = 0;
@@ -389,7 +390,7 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
           else if (sparse_mode != SPARSE_NEVER)
             {
               if (! create_hole (dest_fd, dst_name, ext_hole_size))
-                return false;
+                return -1;
             }
           else
             {
@@ -400,7 +401,7 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
                 {
                   error (0, errno, _("%s: write failed"),
                          quotef (dst_name));
-                  return false;
+                  return -1;
                 }
             }
         }
@@ -412,13 +413,14 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
       /* Copy this extent, looking for further opportunities to not
          bother to write zeros if --sparse=always, since SEEK_HOLE
          is conservative and may miss some holes.  */
-      off_t n_read;
-      if ( ! sparse_copy (src_fd, dest_fd, abuf, buf_size,
-                          allow_reflink, src_name, dst_name,
-                          ext_len,
-                          sparse_mode == SPARSE_ALWAYS ? hole_size : nullptr,
-                          &n_read, debug))
-        return false;
+      off_t n_read
+        = sparse_copy (src_fd, dest_fd, abuf, buf_size,
+                       allow_reflink, src_name, dst_name,
+                       ext_len,
+                       sparse_mode == SPARSE_ALWAYS ? hole_size : nullptr,
+                       debug);
+      if (n_read < 0)
+        return -1;
 
       ipos = ext_start + n_read;
       if (n_read < ext_len)
@@ -434,12 +436,11 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
     }
 
   *hole_size += src_total_size - (last_ext_start + last_ext_len);
-  *total_n_read = src_total_size;
-  return true;
+  return src_total_size - src_pos;
 
  cannot_lseek:
   error (0, errno, _("cannot lseek %s"), quoteaf (src_name));
-  return false;
+  return -1;
 }
 #endif
 
@@ -513,8 +514,11 @@ infer_scantype (int fd, struct stat const *sb, off_t pos,
    Copy until IBYTES have been copied or until end of file;
    if IBYTES is COUNT_MAX that suffices to copy to end of file.
    Respect copy options X's sparse_mode and reflink_mode settings.
-   Read and update *DEBUG as needed.  */
-bool
+   Read and update *DEBUG as needed.
+   If successful, return the number of bytes copied;
+   otherwise, diagnose the error and return -1.  */
+
+intmax_t
 copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
                 int ofd, struct stat const *ost, off_t opos, char const *oname,
                 count_t ibytes, struct cp_options const *x, struct copy_debug *debug)
@@ -528,7 +532,7 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
   if (scantype == ERROR_SCANTYPE)
     {
       error (0, errno, _("cannot lseek %s"), quoteaf (iname));
-      return false;
+      return -1;
     }
   bool make_holes
     = (S_ISREG (ost->st_mode)
@@ -569,47 +573,47 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
     }
 
   char *buf = nullptr;
-  bool copy_ok;
-  off_t hole_size = 0, n_read;
+  intmax_t result;
+  off_t hole_size = 0;
 
 #ifdef SEEK_HOLE
   if (scantype == LSEEK_SCANTYPE)
-    copy_ok = lseek_copy (ifd, ofd, &buf, buf_size,
-                          ipos, ibytes, &scan_inference, ist->st_size,
-                          make_holes ? x->sparse_mode : SPARSE_NEVER,
-                          x->reflink_mode != REFLINK_NEVER,
-                          iname, oname, &hole_size, &n_read, debug);
+    result = lseek_copy (ifd, ofd, &buf, buf_size,
+                         ipos, ibytes, &scan_inference, ist->st_size,
+                         make_holes ? x->sparse_mode : SPARSE_NEVER,
+                         x->reflink_mode != REFLINK_NEVER,
+                         iname, oname, &hole_size, debug);
 #else
   assume (scantype != LSEEK_SCANTYPE);
 #endif
 
   if (scantype != LSEEK_SCANTYPE)
-    copy_ok = sparse_copy (ifd, ofd, &buf, buf_size,
-                           x->reflink_mode != REFLINK_NEVER,
-                           iname, oname, ibytes,
-                           make_holes ? &hole_size : nullptr,
-                           &n_read, debug);
+    result = sparse_copy (ifd, ofd, &buf, buf_size,
+                          x->reflink_mode != REFLINK_NEVER,
+                          iname, oname, ibytes,
+                          make_holes ? &hole_size : nullptr,
+                          debug);
 
-  if (copy_ok && 0 < hole_size)
+  if (0 <= result && 0 < hole_size)
     {
       off_t oend;
-      if (ckd_add (&oend, opos, n_read)
+      if (ckd_add (&oend, opos, result)
           ? (errno = EOVERFLOW, true)
           : make_holes
           ? ftruncate (ofd, oend) < 0
           : !write_zeros (ofd, hole_size))
         {
           error (0, errno, _("failed to extend %s"), quoteaf (oname));
-          copy_ok = false;
+          result = -1;
         }
       else if (make_holes
                && punch_hole (ofd, oend - hole_size, hole_size) < 0)
         {
           error (0, errno, _("error deallocating %s"), quoteaf (oname));
-          copy_ok = false;
+          result = -1;
         }
     }
 
   alignfree (buf);
-  return copy_ok;
+  return result;
 }

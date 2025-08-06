@@ -1044,13 +1044,14 @@ copy_reg (char const *src_name, char const *dst_name,
           != 0))
     extra_permissions = 0;
 
-  if (data_copy_required)
+  if (data_copy_required
+      && (copy_file_data (source_desc, &src_open_sb, 0, src_name,
+                          dest_desc, &sb, 0, dst_name,
+                          COUNT_MAX, x, &copy_debug)
+          < 0))
     {
-      return_val = copy_file_data (source_desc, &src_open_sb, 0, src_name,
-                                   dest_desc, &sb, 0, dst_name,
-                                   COUNT_MAX, x, &copy_debug);
-      if (!return_val)
-        goto close_src_and_dst_desc;
+      return_val = false;
+      goto close_src_and_dst_desc;
     }
 
   if (x->preserve_timestamps)
