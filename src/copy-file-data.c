@@ -307,7 +307,14 @@ write_zeros (int fd, off_t n_bytes)
    copy, and thus makes copying sparse files much more efficient.
    Copy from SRC_FD to DEST_FD, using *ABUF (of size BUF_SIZE) for a buffer.
    Allocate *ABUF lazily if *ABUF is null.
-   The input file is of size SRC_TOTAL_SIZE.
+   The input file was originally positioned at SRC_POS
+   and the output file is positioned at OPOS.
+   Copy at most IBYTES.
+   If EXT_START is nonnegative the file is now positioned at EXT_START,
+   the start of its first data extent on or after SRC_POS;
+   otherwise the file has no data extents and the file is now
+   positioned at SRC_POS.
+   The file is of size SRC_TOTAL_SIZE.
    Use SPARSE_MODE to determine whether to create holes in the output.
    SRC_NAME and DST_NAME are the input and output file names.
    Set *HOLE_SIZE to be the size of the hole at the end of the input.
@@ -317,8 +324,8 @@ write_zeros (int fd, off_t n_bytes)
    Return true if successful, false (with a diagnostic) otherwise.  */
 static bool
 lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
-            off_t src_pos, struct scan_inference const *scan_inference,
-            off_t src_total_size,
+            off_t src_pos, count_t ibytes,
+            struct scan_inference const *scan_inference, off_t src_total_size,
             enum Sparse_type sparse_mode,
             bool allow_reflink,
             char const *src_name, char const *dst_name,
@@ -327,16 +334,26 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
 {
   off_t last_ext_start = src_pos;
   off_t last_ext_len = 0;
-  off_t dest_pos = 0;
+  off_t max_ipos = ckd_add (&max_ipos, src_pos, ibytes) ? OFF_T_MAX : max_ipos;
+
+  /* From here on, SRC_TOTAL_SIZE is bounded above by MAX_IPOS.  */
+  src_total_size = MIN (src_total_size, max_ipos);
+
+  /* The input position after the most recent read of data,
+     or SRC_POS if no data have been read.  */
+  off_t ipos = src_pos;
 
   debug->sparse_detection = COPY_DEBUG_EXTERNAL;
 
-  for (off_t ext_start = scan_inference->ext_start; 0 <= ext_start; )
+  for (off_t ext_start = scan_inference->ext_start;
+       0 <= ext_start && ext_start < max_ipos; )
     {
       off_t ext_end = (ext_start == 0
                        ? scan_inference->hole_start
                        : lseek (src_fd, ext_start, SEEK_HOLE));
-      if (ext_end < 0)
+      if (0 <= ext_end)
+        ext_end = MIN (ext_end, max_ipos);
+      else
         {
           if (errno != ENXIO)
             goto cannot_lseek;
@@ -347,6 +364,7 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
               src_total_size = lseek (src_fd, 0, SEEK_END);
               if (src_total_size < 0)
                 goto cannot_lseek;
+              src_total_size = MIN (src_total_size, max_ipos);
 
               /* If the input file shrank after growing, stop copying.  */
               if (src_total_size <= ext_start)
@@ -402,15 +420,15 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
                           &n_read, debug))
         return false;
 
-      dest_pos = ext_start + n_read;
+      ipos = ext_start + n_read;
       if (n_read < ext_len)
         {
           /* The input file shrank.  */
-          src_total_size = dest_pos;
+          src_total_size = ipos;
           break;
         }
 
-      ext_start = lseek (src_fd, dest_pos, SEEK_DATA);
+      ext_start = lseek (src_fd, ipos, SEEK_DATA);
       if (ext_start < 0 && errno != ENXIO)
         goto cannot_lseek;
     }
@@ -557,7 +575,7 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
 #ifdef SEEK_HOLE
   if (scantype == LSEEK_SCANTYPE)
     copy_ok = lseek_copy (ifd, ofd, &buf, buf_size,
-                          ipos, &scan_inference, ist->st_size,
+                          ipos, ibytes, &scan_inference, ist->st_size,
                           make_holes ? x->sparse_mode : SPARSE_NEVER,
                           x->reflink_mode != REFLINK_NEVER,
                           iname, oname, &hole_size, &n_read, debug);
@@ -568,7 +586,7 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
   if (scantype != LSEEK_SCANTYPE)
     copy_ok = sparse_copy (ifd, ofd, &buf, buf_size,
                            x->reflink_mode != REFLINK_NEVER,
-                           iname, oname, COUNT_MAX,
+                           iname, oname, ibytes,
                            make_holes ? &hole_size : nullptr,
                            &n_read, debug);
 
