@@ -168,6 +168,7 @@ my @Tests =
  ['b2m_2', '--base2m -d',     {IN=>'11000001'},   {OUT=>"\xC1"}],
  ['b2m_3', '--base2m -d',     {IN=>"110\n00001"}, {OUT=>"\xC1"}],
  ['b2m_4', '--base2m -di',    {IN=>"110x00001"},  {OUT=>"\xC1"}],
+ ['b2m_4p', '--base2m -di',   {IN=>"=11000001="}, {OUT=>"\xC1"}],
  ['b2m_5', '--base2m -d',     {IN=>"110x00001"},  {EXIT=>1},
   {ERR=>"$prog: invalid input\n"}],
  ['b2m_6', '--base2m -d',     {IN=>"11000001x"},  {OUT=>"\xC1"}, {EXIT=>1},

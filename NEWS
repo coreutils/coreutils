@@ -12,6 +12,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  'basenc -d -i' will now strip '=' characters from the input
+  in encodings where padding characters are not valid.
+  [bug introduced with the basenc program in coreutils-8.31]
+
   cksum was not compilable by Apple LLVM 10.0.0 x86-64, which
   lacks support for checking for the VPCLMULQDQ instruction.
   [bug introduced in coreutils-9.6]

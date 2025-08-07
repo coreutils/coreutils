@@ -1159,7 +1159,8 @@ do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
             {
               for (idx_t i = 0; n > 0 && i < n;)
                 {
-                  if (isubase (inbuf[sum + i]) || inbuf[sum + i] == '=')
+                  if (isubase (inbuf[sum + i])
+                      || (REQUIRED_PADDING (1) && inbuf[sum + i] == '='))
                     i++;
                   else
                     memmove (inbuf + sum + i, inbuf + sum + i + 1, --n - i);
