@@ -59,8 +59,9 @@ punch_hole (int fd, off_t offset, off_t length)
 
 /* Create a hole at the end of the file with descriptor FD and name NAME.
    The hole is of size SIZE.  Assume FD is already at file end,
-   and advance FD past the newly-created hole.  */
-static bool
+   and advance FD past the newly-created hole.
+   Return the resulting position, or -1 on failure.  */
+static off_t
 create_hole (int fd, char const *name, off_t size)
 {
   off_t file_end = lseek (fd, size, SEEK_CUR);
@@ -68,7 +69,7 @@ create_hole (int fd, char const *name, off_t size)
   if (file_end < 0)
     {
       error (0, errno, _("cannot lseek %s"), quoteaf (name));
-      return false;
+      return -1;
     }
 
   /* Some file systems (like XFS) preallocate when write extending a file.
@@ -78,10 +79,10 @@ create_hole (int fd, char const *name, off_t size)
   if (punch_hole (fd, file_end - size, size) < 0)
     {
       error (0, errno, _("error deallocating %s"), quoteaf (name));
-      return false;
+      return -1;
     }
 
-  return true;
+  return file_end;
 }
 
 /* Similarly, whether ERR indicates that the copying operation is not
@@ -227,7 +228,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, idx_t buf_size,
                 psize += csize;
               else if (prev_hole)
                 {
-                  if (! create_hole (dest_fd, dst_name, psize))
+                  if (create_hole (dest_fd, dst_name, psize) < 0)
                     return false;
                   pbuf = cbuf;
                   psize = csize;
@@ -379,8 +380,9 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, idx_t buf_size,
             *hole_size += ext_hole_size;
           else if (sparse_mode != SPARSE_NEVER)
             {
-              if (! create_hole (dest_fd, dst_name, ext_hole_size))
-                return -1;
+              off_t epos = create_hole (dest_fd, dst_name, ext_hole_size);
+              if (epos < 0)
+                return epos;
             }
           else
             {
