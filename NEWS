@@ -2,39 +2,32 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
-** Changes in behavior
-
-  'factor' is now much faster at identifying large prime numbers,
-  and significantly faster on composite numbers greater than 2^128.
-
-  readlink now defaults to being verbose if the POSIXLY_CORRECT
-  environment variable is set.
-
 ** Bug fixes
 
   'basenc -d -i' will now strip '=' characters from the input
   in encodings where padding characters are not valid.
   [bug introduced with the basenc program in coreutils-8.31]
 
-  cksum was not compilable by Apple LLVM 10.0.0 x86-64, which
-  lacks support for checking for the VPCLMULQDQ instruction.
-  [bug introduced in coreutils-9.6]
-
   'cp -p' had spurious "Operation not supported" failures when
   copying to non-NFS files from NFSv4 files with trivial ACLs.
   [bug introduced in coreutils-9.6]
 
-  cp --sparse=always missed some opportunities to create holes.
+  'cp --sparse=always' missed some opportunities to create holes.
   That is, although the copies had the correct data, sometimes
   data zeros used extents rather than holes.
   [This bug was present in "the beginning".]
 
-  install -d now produces the correct diagnostic upon failure
+  cp, install, and mv now avoid possible data corruption on
+  glibc 2.41 and 2.42 systems when copy_file_range is used with ranges > 2GiB,
+  avoiding https://sourceware.org/bugzilla/show_bug.cgi?id=33245
+  [bug triggered since coreutils-9.0]
+
+  'install -d' now produces the correct diagnostic upon failure
   to create a directory.  Previously it would have produced
   a confusing error about changing permissions.
   [This bug was present in "the beginning".]
 
-  od --strings with -N now works correctly.  Previously od might
+  'od --strings' with '-N' now works correctly.  Previously od might
   write a NUL byte after a heap buffer, or output invalid addresses.
   [These bugs were present in "the beginning".]
 
@@ -42,17 +35,17 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously it would have aborted.
   [bug introduced in coreutils-9.3]
 
-  od -w no longer silently mishandles enormous widths like 3037000500.
+  'od -w' no longer silently mishandles enormous widths like 3037000500.
   Instead, it either outputs correctly or diagnoses a too-large width.
   [This bug was present in "the beginning".]
 
-  od '+N.' (where N is a decimal number) works again as per POSIX.
+  'od +N.' (where N is a decimal number) works again as per POSIX.
   [bug introduced in textutils-2.0]
 
   'od /dev/null ++0' no longer mistakenly treats the ++0 as an offset.
   [This bug was present in "the beginning".]
 
-  sort with key character offsets of SIZE_MAX, could induce
+  'sort' with key character offsets of SIZE_MAX, could induce
   a read of 1 byte before an allocated heap buffer. For example:
   'sort +0.18446744073709551615R input' on 64 bit systems.
   [bug introduced in coreutils-7.2]
@@ -72,10 +65,15 @@ GNU coreutils NEWS                                    -*- outline -*-
   'tail --pid' avoids some unlikely races if the kernel reuses PIDs.
   [bug introduced in coreutils-9.5]
 
-  tty now exits with status 4 with a special diagnostic if ttyname
+  'tty' now exits with status 4 with a special diagnostic if ttyname
   fails even though standard input is a tty.  Formerly it quietly
   pretended that standard input was not a tty.
   [This bug was present in "the beginning".]
+
+** Changes in behavior
+
+  readlink now defaults to being verbose if the POSIXLY_CORRECT
+  environment variable is set.
 
 ** New Features
 
@@ -84,9 +82,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
-  cp, install and mv now avoid possible data corruption on
-  glibc 2.41 and 2.42 systems when copy_file_range is used with ranges > 2GiB,
-  avoiding https://sourceware.org/bugzilla/show_bug.cgi?id=33245
+  'factor' is now much faster at identifying large prime numbers,
+  and significantly faster on composite numbers greater than 2^128.
 
   stty supports setting arbitrary baud rates on supported systems,
   like Hurd, Linux with glibc >= 2.42, and some BSDs.
@@ -96,6 +93,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   'date' now outputs dates in the country's native calendar for the
   Iranian locale (fa_IR) and for the Ethiopian locale (am_ET), and also
   does so more consistently for the Thailand locale (th_TH.UTF-8).
+
+** Build-related
+
+  cksum was not compilable by Apple LLVM 10.0.0 x86-64, which
+  lacks support for checking for the VPCLMULQDQ instruction.
+  [bug introduced in coreutils-9.6]
 
 
 * Noteworthy changes in release 9.7 (2025-04-09) [stable]
