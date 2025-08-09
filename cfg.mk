@@ -304,6 +304,13 @@ sc_prohibit-gl-attributes:
 	halt='Use _GL... attribute macros'			\
 	  $(_sc_search_regexp)
 
+# Ensure that <attributes.h> macros are used in .c files.
+sc_prohibit-_gl-attributes:
+	@prohibit='_GL_ATTRIBUTE'				\
+	in_vc_files='\.c$$'					\
+	halt='Use ATTRIBUTE_... instead of _GL_ATTRIBUTE_...'	\
+	  $(_sc_search_regexp)
+
 # Prefer the const declaration form, with const following the type
 sc_prohibit-const-char:
 	@prohibit='const char \*'				\
