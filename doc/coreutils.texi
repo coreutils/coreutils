@@ -2378,6 +2378,10 @@ The format conforms to
 Base58 draft}.
 This encoding is useful for transcription as the output avoids
 visually similar characters.  It's best suited to smaller amounts of data.
+For example this generates a unique 128 bit ID in 22 bytes:
+@example
+uuidgen | basenc --base16 -di | basenc --base58
+@end example
 
 @item --base32
 @opindex --base32
