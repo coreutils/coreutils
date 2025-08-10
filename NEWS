@@ -80,6 +80,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   basenc supports the --base58 option to encode and decode
   the visually unambiguous Base58 encoding.
 
+  realpath supports the -E option as required by POSIX.  The behavior is
+  the same as realpath with no options.  The corresponding long option
+  is --canonicalize.
+
 ** Improvements
 
   'factor' is now much faster at identifying large prime numbers,

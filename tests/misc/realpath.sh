@@ -50,6 +50,9 @@ returns_ 1 realpath --relative-base . || fail=1
 returns_ 1 realpath -e --relative-to=dir1/f --relative-base=. . || fail=1
 realpath -e --relative-to=dir1/  --relative-base=. . || fail=1
 
+# Check that using -E after -e uses -E as specified by POSIX.
+realpath -e -E --relative-to=dir1/f --relative-base=. . || fail=1
+
 # Note NUL params are unconditionally rejected by canonicalize_filename_mode
 returns_ 1 realpath -m '' || fail=1
 returns_ 1 realpath --relative-base= --relative-to=. . || fail=1

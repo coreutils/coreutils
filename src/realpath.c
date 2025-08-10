@@ -44,6 +44,7 @@ static char const *can_relative_base;
 
 static struct option const longopts[] =
 {
+  {"canonicalize", no_argument, nullptr, 'E'},
   {"canonicalize-existing", no_argument, nullptr, 'e'},
   {"canonicalize-missing", no_argument, nullptr, 'm'},
   {"relative-to", required_argument, nullptr, RELATIVE_TO_OPTION},
@@ -68,11 +69,11 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
       fputs (_("\
-Print the resolved absolute file name;\n\
-all but the last component must exist\n\
-\n\
+Print the resolved absolute file name.\n\
 "), stdout);
       fputs (_("\
+  -E, --canonicalize           all but the last component must exist (default)\
+\n\
   -e, --canonicalize-existing  all components of the path must exist\n\
   -m, --canonicalize-missing   no path components need exist or be a directory\
 \n\
@@ -186,11 +187,15 @@ main (int argc, char **argv)
 
   while (true)
     {
-      int c = getopt_long (argc, argv, "eLmPqsz", longopts, nullptr);
+      int c = getopt_long (argc, argv, "EeLmPqsz", longopts, nullptr);
       if (c == -1)
         break;
       switch (c)
         {
+        case 'E':
+          can_mode &= ~CAN_MODE_MASK;
+          can_mode |= CAN_ALL_BUT_LAST;
+          break;
         case 'e':
           can_mode &= ~CAN_MODE_MASK;
           can_mode |= CAN_EXISTING;

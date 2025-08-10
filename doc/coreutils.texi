@@ -15006,8 +15006,7 @@ Exit status:
 @findex realpath
 
 @command{realpath} expands all symbolic links and resolves references to
-@samp{/./}, @samp{/../} and extra @samp{/} characters.  By default,
-all but the last component of the specified files must exist.  Synopsis:
+@samp{/./}, @samp{/../} and extra @samp{/} characters.  Synopsis:
 
 @example
 realpath [@var{option}]@dots{} @var{file}@dots{}
@@ -15021,6 +15020,17 @@ this command supports relative file name processing functionality.
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
+
+@item -E
+@itemx --canonicalize
+@opindex -E
+@opindex --canonicalize
+
+Ensure all but the last component of the specified file name exist.
+Otherwise, @command{realpath} will output a diagnostic unless the
+@option{-q} option is specified, and exit with a nonzero exit code.  A
+trailing slash is ignored.  This option is the default behavior, but is
+included for POSIX compatibility.
 
 @item -e
 @itemx --canonicalize-existing
