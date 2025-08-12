@@ -19,7 +19,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   cp, install, and mv now avoid possible data corruption on
   glibc 2.41 and 2.42 systems when copy_file_range is used with ranges > 2GiB,
-  avoiding https://sourceware.org/bugzilla/show_bug.cgi?id=33245
+  avoiding https://sourceware.org/PR33245
   [bug triggered since coreutils-9.0]
 
   'install -d' now produces the correct diagnostic upon failure

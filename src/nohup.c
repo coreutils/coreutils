@@ -73,7 +73,7 @@ To save output to FILE, use '%s COMMAND > FILE'.\n"),
 }
 
 /* GCC 13 gets confused by the dup2 calls
-   <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109839>.  */
+   <https://gcc.gnu.org/PR109839>.  */
 #if 13 <= __GNUC__
 # pragma GCC diagnostic ignored "-Wanalyzer-fd-leak"
 #endif

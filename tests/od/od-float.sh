@@ -56,14 +56,14 @@ case $3,$4 in
 esac
 
 # Ensure od doesn't crash as it did on glibc <= 2.5:
-# https://sourceware.org/bugzilla/show_bug.cgi?id=4586
+# https://sourceware.org/PR4586
 set x $(printf 00000000ff000000 | tr 0f '\000\377' | od -t fL) || fail=1
 # With coreutils <= 8.7 we used to print "nan" for the above invalid value.
 # However since v8.7-22-ga71c22f we deferred to the system printf routines
 # through the use of the ftoastr module.  So the following check would only
 # be valid on x86_64 if we again handle the conversion internally or
 # if this glibc bug is resolved:
-# https://sourceware.org/bugzilla/show_bug.cgi?id=17661
+# https://sourceware.org/PR17661
 #case "$*" in
 #*nan*) ;;
 #*) fail=1;;

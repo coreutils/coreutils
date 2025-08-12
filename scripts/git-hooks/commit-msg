@@ -136,6 +136,12 @@ sub check_msg($$)
   $buf =~ m!https://lists\.gnu\.org/archive/html/!s
     and return "use '/r/' in place of '/archive/html/' in lists.gnu.org URLs";
 
+  $buf =~ m!https?://(?:.*\.)?sourceware\.org/bugzilla/show_bug\.cgi\?id=(\d+)!s
+    and return "use shorter https://sourceware.org/PR$1";
+
+  $buf =~ m!https?://gcc\.gnu\.org/bugzilla/show_bug\.cgi\?id=(\d+)!s
+    and return "use shorter https://gcc.gnu.org/PR$1";
+
   return '';
 }
 

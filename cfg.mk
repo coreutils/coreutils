@@ -863,6 +863,15 @@ sc_prohibit-form-feed:
 	halt='Form Feed (^L) detected' \
 	  $(_sc_search_regexp)
 
+# debbugs.gnu.org/cgi/bugreport.cgi?bug=... ->   bugs.gnu.org/...
+# bugzilla.redhat.com/show_bug.cgi?id=... ->     bugzilla.redhat.com/...
+# sourceware.org/bugzilla/show_bug.cgi?id=... -> sourceware.org/PR...
+# gcc.gnu.org/bugzilla/show_bug.cgi?id=... ->    gcc.gnu.org/PR...
+sc_prohibit-long-form-bug-urls:
+	@prohibit='http.*(bugreport|show_bug)\.cgi' \
+	halt='use short form bug url' \
+	  $(_sc_search_regexp)
+
 # Override the default Cc: used in generating an announcement.
 announcement_Cc_ = $(translation_project_), \
   coreutils@gnu.org, coreutils-announce@gnu.org

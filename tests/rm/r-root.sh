@@ -85,7 +85,7 @@ gcc_shared_ k.c k.so \
   || framework_failure_ 'failed to build shared library'
 
 # Note breakpoint commands don't work in batch mode
-# https://sourceware.org/bugzilla/show_bug.cgi?id=10079
+# https://sourceware.org/PR10079
 # So we use python to script behavior upon hitting the breakpoint
 cat > bp.py <<'EOF.py' || framework_failure_
 def breakpoint_handler (event):
