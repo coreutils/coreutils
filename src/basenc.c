@@ -1175,10 +1175,12 @@ base58_encode (char const* data, size_t data_len,
   /* Use GMP to convert from base 256 to base 58.  */
   mpz_t num;
   mpz_init (num);
-  mpz_import (num, data_len - zeros, 1, 1, 0, 0, data + zeros);
   if (data_len - zeros)
-    for (p = mpz_get_str (p, 58, num); *p; p++)
-      *p = gmp_to_base58[to_uchar (*p)];
+    {
+      mpz_import (num, data_len - zeros, 1, 1, 0, 0, data + zeros);
+      for (p = mpz_get_str (p, 58, num); *p; p++)
+        *p = gmp_to_base58[to_uchar (*p)];
+    }
   mpz_clear (num);
 
   *outlen = p - out;
