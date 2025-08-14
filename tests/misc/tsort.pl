@@ -31,6 +31,10 @@ my @Tests =
    ['cycle-2', {IN => {f => "t x\nt s\ns t\n"}}, {OUT => "s\nt\nx\n"},
     {EXIT => 1},
     {ERR => "tsort: f: input contains a loop:\ntsort: s\ntsort: t\n"} ],
+   ['cycle-3', '-w', {IN => {f => "a a\na b\na c\nc a\nb a"}},
+    {OUT => "a\nc\nb\n"}, {EXIT => 1},
+    {ERR => "tsort: f: input contains a loop:\ntsort: a\ntsort: b\n"
+     . "tsort: f: input contains a loop:\ntsort: a\ntsort: c\n"} ],
 
    ['posix-1', {IN => "a b c c d e\ng g\nf g e f\nh h\n"},
     {OUT => "a\nc\nd\nh\nb\ne\nf\ng\n"}],

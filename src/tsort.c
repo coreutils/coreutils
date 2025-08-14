@@ -22,6 +22,7 @@
 
 #include <config.h>
 
+#include <getopt.h>
 #include <sys/types.h>
 
 #include "system.h"
@@ -538,9 +539,32 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE_NAME,
-                                   Version, true, usage, AUTHORS,
-                                   (char const *) nullptr);
+  while (true)
+    {
+      static struct option const long_options[] =
+        {
+          {GETOPT_HELP_OPTION_DECL},
+          {GETOPT_VERSION_OPTION_DECL},
+          {nullptr, 0, nullptr, 0}
+        };
+      int c = getopt_long (argc, argv, "w", long_options, nullptr);
+
+      if (c == -1)
+        break;
+
+      switch (c)
+        {
+        case 'w':
+          break;
+
+        case_GETOPT_HELP_CHAR;
+
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
+        default:
+          usage (EXIT_FAILURE);
+        }
+    }
 
   if (1 < argc - optind)
     {

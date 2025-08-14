@@ -84,6 +84,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   the same as realpath with no options.  The corresponding long option
   is --canonicalize.
 
+  tsort now accepts and ignores -w, to conform to POSIX.1-2024.
+
 ** Improvements
 
   'factor' is now much faster at identifying large prime numbers,

@@ -6280,8 +6280,9 @@ total ordering.  In the context of the call graph above, the function
 @code{parse_options} may be placed anywhere in the list as long as it
 precedes @code{main}.
 
-The only options are @option{--help} and @option{--version}.  @xref{Common
-options}.
+To conform to POSIX.1-2024, @command{tsort} accepts and ignores the
+option @option{-w}.  The only other options are @option{--help} and
+@option{--version}.  @xref{Common options}.
 
 @exitstatus
 
