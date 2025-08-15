@@ -70,26 +70,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   pretended that standard input was not a tty.
   [This bug was present in "the beginning".]
 
-** Changes in behavior
-
-  readlink now defaults to being verbose if the POSIXLY_CORRECT
-  environment variable is set.
-
 ** New Features
 
   basenc supports the --base58 option to encode and decode
   the visually unambiguous Base58 encoding.
-
-  realpath supports the -E option as required by POSIX.  The behavior is
-  the same as realpath with no options.  The corresponding long option
-  is --canonicalize.
-
-  tsort now accepts and ignores -w, to conform to POSIX.1-2024.
-
-** Improvements
-
-  'factor' is now much faster at identifying large prime numbers,
-  and significantly faster on composite numbers greater than 2^128.
 
   stty supports setting arbitrary baud rates on supported systems,
   like Hurd, Linux with glibc >= 2.42, and some BSDs.
@@ -99,6 +83,21 @@ GNU coreutils NEWS                                    -*- outline -*-
   'date' now outputs dates in the country's native calendar for the
   Iranian locale (fa_IR) and for the Ethiopian locale (am_ET), and also
   does so more consistently for the Thailand locale (th_TH.UTF-8).
+
+** Changes to conform better to POSIX.1-2024
+
+  readlink now defaults to being verbose if the POSIXLY_CORRECT
+  environment variable is set.
+
+  realpath now supports -E, which specifies the default behavior.
+  The corresponding long option is --canonicalize.
+
+  tsort now accepts and ignores -w.
+
+** Performance improvements
+
+  'factor' is now much faster at identifying large prime numbers,
+  and significantly faster on composite numbers greater than 2^128.
 
 ** Build-related
 

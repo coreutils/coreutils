@@ -15006,12 +15006,19 @@ Exit status:
 @pindex realpath
 @findex realpath
 
-@command{realpath} expands all symbolic links and resolves references to
-@samp{/./}, @samp{/../} and extra @samp{/} characters.  Synopsis:
+The @command{realpath} command outputs a file's canonicalized name,
+which is an absolute file name that contains neither unnecessary
+@samp{/} nor components that are @samp{.}, @samp{..}, or a symbolic link.
+
+Synopsis:
 
 @example
 realpath [@var{option}]@dots{} @var{file}@dots{}
 @end example
+
+By default, @command{realpath} succeeds if every file name component
+but the last names an existing directory.  It ignores trailing slashes
+that are not also leading slashes.
 
 The file name canonicalization functionality overlaps with that of the
 @command{readlink} command.  This is the preferred command for
@@ -15027,21 +15034,17 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -E
 @opindex --canonicalize
 
-Ensure all but the last component of the specified file name exist.
-Otherwise, @command{realpath} will output a diagnostic unless the
-@option{-q} option is specified, and exit with a nonzero exit code.  A
-trailing slash is ignored.  This option is the default behavior, but is
-included for POSIX compatibility.
+Do not fail merely because the named file does not exist.
+Although this is the default behavior of GNU @code{realpath},
+POSIX does not require this default, so portable applications should
+use an explicit @option{-E}.
 
 @item -e
 @itemx --canonicalize-existing
 @opindex -e
 @opindex --canonicalize-existing
-Ensure that all components of the specified file names exist.
-If any component is missing or unavailable, @command{realpath} will output
-a diagnostic unless the @option{-q} option is specified, and exit with a
-nonzero exit code.  A trailing slash requires that the name resolve to a
-directory.
+Fail if the named file does not exist.
+A trailing slash requires that the name resolve to a directory.
 
 @item -m
 @itemx --canonicalize-missing
@@ -15128,8 +15131,8 @@ By default, @command{realpath} prints the absolute file name of given files
 @example
 @group
 cd /home/user
-realpath /usr/bin/sort /tmp/foo /usr/share/dict/words 1.txt
-@result{} /usr/bin/sort
+realpath /usr/bin/ ///tmp/.//foo /usr/share/dict/words 1.txt
+@result{} /usr/bin
 @result{} /tmp/foo
 @result{} /usr/share/dict/american-english
 @result{} /home/user/1.txt
@@ -15142,8 +15145,8 @@ the given directory:
 @example
 @group
 realpath --relative-to=/usr/bin \
-         /usr/bin/sort /tmp/foo /usr/share/dict/words 1.txt
-@result{} sort
+         /usr/bin/ ///tmp/.//foo /usr/share/dict/words 1.txt
+@result{} .
 @result{} ../../tmp/foo
 @result{} ../share/dict/american-english
 @result{} ../../home/user/1.txt
@@ -15157,8 +15160,8 @@ base directory absolute file names are printed:
 @example
 @group
 realpath --relative-base=/usr \
-         /usr/bin/sort /tmp/foo /usr/share/dict/words 1.txt
-@result{} bin/sort
+         /usr/bin/ ///tmp/.//foo /usr/share/dict/words 1.txt
+@result{} bin
 @result{} /tmp/foo
 @result{} share/dict/american-english
 @result{} /home/user/1.txt
@@ -15173,8 +15176,8 @@ printed as absolute file names:
 @example
 @group
 realpath --relative-to=/usr/bin --relative-base=/usr \
-         /usr/bin/sort /tmp/foo /usr/share/dict/words 1.txt
-@result{} sort
+         /usr/bin/ ///tmp/.//foo /usr/share/dict/words 1.txt
+@result{} .
 @result{} /tmp/foo
 @result{} ../share/dict/american-english
 @result{} /home/user/1.txt
