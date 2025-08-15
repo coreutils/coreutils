@@ -27,7 +27,6 @@
 
 #include "system.h"
 #include "assure.h"
-#include "long-options.h"
 #include "fadvise.h"
 #include "readtokens.h"
 #include "stdio--.h"
