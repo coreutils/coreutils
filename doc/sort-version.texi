@@ -858,7 +858,7 @@ NodeJS's @uref{https://www.npmjs.com/package/natural-sort,natural-sort package}.
 
 @item
 In zsh, the
-@uref{http://zsh.sourceforge.net/Doc/Release/Expansion.html#Glob-Qualifiers,
+@uref{https://zsh.sourceforge.net/Doc/Release/Expansion.html#Glob-Qualifiers,
 glob modifier} @samp{*(n)} will expand to files in natural sort order.
 
 @item
