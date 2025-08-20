@@ -126,6 +126,7 @@ all_root_tests =				\
   tests/ls/capability.sh			\
   tests/ls/no-cap.sh				\
   tests/ls/nameless-uid.sh			\
+  tests/nproc/nproc-quota.sh			\
   tests/chcon/chcon.sh				\
   tests/chroot/chroot-credentials.sh		\
   tests/misc/selinux.sh				\
