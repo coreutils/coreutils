@@ -253,12 +253,11 @@ punch_hole (int fd, off_t offset, off_t length)
 }
 
 /* Create a hole at the end of the file with descriptor FD and name NAME.
-   If PUNCH_HOLES, avoid preallocation if requested.
    The hole is of size SIZE.  Assume FD is already at file end,
    and advance FD past the newly-created hole.  */
 
 static bool
-create_hole (int fd, char const *name, bool punch_holes, off_t size)
+create_hole (int fd, char const *name, off_t size)
 {
   off_t file_end = lseek (fd, size, SEEK_CUR);
 
@@ -272,7 +271,7 @@ create_hole (int fd, char const *name, bool punch_holes, off_t size)
      I.e., a previous write() may have preallocated extra space
      that the seek above will not discard.  A subsequent write() could
      then make this allocation permanent.  */
-  if (punch_holes && punch_hole (fd, file_end - size, size) < 0)
+  if (punch_hole (fd, file_end - size, size) < 0)
     {
       error (0, errno, _("error deallocating %s"), quoteaf (name));
       return false;
@@ -311,7 +310,6 @@ is_CLONENOTSUP (int err)
    honoring the MAKE_HOLES setting and using the BUF_SIZE-byte buffer
    *ABUF for temporary storage, allocating it lazily if *ABUF is null.
    For best results, *ABUF should be well-aligned.
-   If PUNCH_HOLES, punch holes in the output.
    Copy no more than MAX_N_READ bytes.
    If HOLE_SIZE, look for holes in the input; *HOLE_SIZE contains
    the size of the current hole so far, and update *HOLE_SIZE
@@ -322,7 +320,7 @@ is_CLONENOTSUP (int err)
    print a diagnostic and return false upon error.  */
 static bool
 sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
-             bool punch_holes, bool allow_reflink,
+             bool allow_reflink,
              char const *src_name, char const *dst_name,
              uintmax_t max_n_read, off_t *hole_size, off_t *total_n_read)
 {
@@ -437,7 +435,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
                 psize += csize;
               else if (prev_hole)
                 {
-                  if (! create_hole (dest_fd, dst_name, punch_holes, psize))
+                  if (! create_hole (dest_fd, dst_name, psize))
                     return false;
                   pbuf = cbuf;
                   psize = csize;
@@ -591,9 +589,7 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
             *hole_size += ext_hole_size;
           else if (sparse_mode != SPARSE_NEVER)
             {
-              if (! create_hole (dest_fd, dst_name,
-                                 sparse_mode == SPARSE_ALWAYS,
-                                 ext_hole_size))
+              if (! create_hole (dest_fd, dst_name, ext_hole_size))
                 return false;
             }
           else
@@ -619,9 +615,9 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
          is conservative and may miss some holes.  */
       off_t n_read;
       if ( ! sparse_copy (src_fd, dest_fd, abuf, buf_size,
-                          true, allow_reflink, src_name, dst_name,
+                          allow_reflink, src_name, dst_name,
                           ext_len,
-                          sparse_mode == SPARSE_ALWAYS ? hole_size : nullptr,
+                          sparse_mode != SPARSE_NEVER ? hole_size : nullptr,
                           &n_read))
         return false;
 
@@ -1576,7 +1572,6 @@ copy_reg (char const *src_name, char const *dst_name,
              :
 #endif
                sparse_copy (source_desc, dest_desc, &buf, buf_size,
-                            x->sparse_mode == SPARSE_ALWAYS,
                             x->reflink_mode != REFLINK_NEVER,
                             src_name, dst_name, UINTMAX_MAX,
                             make_holes ? &hole_size : nullptr, &n_read)))
@@ -1594,7 +1589,7 @@ copy_reg (char const *src_name, char const *dst_name,
               return_val = false;
               goto close_src_and_dst_desc;
             }
-          if (x->sparse_mode == SPARSE_ALWAYS
+          if (make_holes
               && punch_hole (dest_desc, n_read - hole_size, hole_size) < 0)
             {
               error (0, errno, _("error deallocating %s"), quoteaf (dst_name));
