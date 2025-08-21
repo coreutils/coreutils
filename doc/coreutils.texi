@@ -2964,6 +2964,13 @@ Count bytes rather than columns, so that tabs, backspaces, and carriage
 returns are each counted as taking up one column, just like other
 characters.
 
+@item -c
+@itemx --characters
+@opindex -c
+@opindex --characters
+Count characters rather than columns, meaning that lines containing
+characters wider than one column will be visually longer.
+
 @item -s
 @itemx --spaces
 @opindex -s

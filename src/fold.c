@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "fadvise.h"
+#include "mcel.h"
 #include "xdectoint.h"
 
 #define TAB_WIDTH 8
@@ -37,17 +38,26 @@
 /* If nonzero, try to break on whitespace. */
 static bool break_spaces;
 
-/* If nonzero, count bytes, not column positions. */
-static bool count_bytes;
+/* Mode to operate in.  */
+static enum
+  {
+    COUNT_COLUMNS,
+    COUNT_BYTES,
+    COUNT_CHARACTERS
+  } counting_mode = COUNT_COLUMNS;
 
 /* If nonzero, at least one of the files we read was standard input. */
 static bool have_read_stdin;
 
-static char const shortopts[] = "bsw:0::1::2::3::4::5::6::7::8::9::";
+/* Width of last read character.  */
+static int last_character_width = 0;
+
+static char const shortopts[] = "bcsw:0::1::2::3::4::5::6::7::8::9::";
 
 static struct option const longopts[] =
 {
   {"bytes", no_argument, nullptr, 'b'},
+  {"characters", no_argument, nullptr, 'c'},
   {"spaces", no_argument, nullptr, 's'},
   {"width", required_argument, nullptr, 'w'},
   {GETOPT_HELP_OPTION_DECL},
@@ -75,6 +85,7 @@ Wrap input lines in each FILE, writing to standard output.\n\
 
       fputs (_("\
   -b, --bytes         count bytes rather than columns\n\
+  -c, --characters    count characters rather than columns\n\
   -s, --spaces        break at spaces\n\
   -w, --width=WIDTH   use WIDTH columns instead of 80\n\
 "), stdout);
@@ -90,24 +101,28 @@ Wrap input lines in each FILE, writing to standard output.\n\
    The first column is 0. */
 
 static size_t
-adjust_column (size_t column, char c)
+adjust_column (size_t column, mcel_t g)
 {
-  if (!count_bytes)
+  if (counting_mode != COUNT_BYTES)
     {
-      if (c == '\b')
+      if (g.ch == '\b')
         {
           if (column > 0)
-            column--;
+            column -= last_character_width;
         }
-      else if (c == '\r')
+      else if (g.ch == '\r')
         column = 0;
-      else if (c == '\t')
+      else if (g.ch == '\t')
         column += TAB_WIDTH - column % TAB_WIDTH;
-      else /* if (isprint (c)) */
-        column++;
+      else /* if (c32isprint (g.ch)) */
+        {
+          last_character_width = (counting_mode == COUNT_CHARACTERS
+                                  ? 1 : c32width (g.ch));
+          column += last_character_width;
+        }
     }
   else
-    column++;
+    column += g.len;
   return column;
 }
 
@@ -119,11 +134,13 @@ static bool
 fold_file (char const *filename, size_t width)
 {
   FILE *istream;
-  int c;
   size_t column = 0;		/* Screen column where next char will go. */
   idx_t offset_out = 0;		/* Index in 'line_out' for next char. */
   static char *line_out = nullptr;
   static idx_t allocated_out = 0;
+  static char *line_in = nullptr;
+  static size_t allocated_in = 0;
+  static ssize_t length_in = 0;
   int saved_errno;
 
   if (STREQ (filename, "-"))
@@ -142,74 +159,90 @@ fold_file (char const *filename, size_t width)
 
   fadvise (istream, FADVISE_SEQUENTIAL);
 
-  while ((c = getc (istream)) != EOF)
+  while (0 <= (length_in = getline (&line_in, &allocated_in, istream)))
     {
-      if (allocated_out - offset_out <= 1)
-        line_out = xpalloc (line_out, &allocated_out, 1, -1, sizeof *line_out);
-
-      if (c == '\n')
+      char *p = line_in;
+      char *lim = p + length_in;
+      mcel_t g;
+      for (; p < lim; p += g.len)
         {
-          line_out[offset_out++] = c;
-          fwrite (line_out, sizeof (char), offset_out, stdout);
-          column = offset_out = 0;
-          continue;
-        }
-
-    rescan:
-      column = adjust_column (column, c);
-
-      if (column > width)
-        {
-          /* This character would make the line too long.
-             Print the line plus a newline, and make this character
-             start the next line. */
-          if (break_spaces)
+          g = mcel_scan (p, lim);
+          if (allocated_out - offset_out <= g.len)
+            line_out = xpalloc (line_out, &allocated_out, g.len, -1,
+                                sizeof *line_out);
+          if (g.ch == '\n')
             {
-              bool found_blank = false;
-              idx_t logical_end = offset_out;
+              memcpy (line_out + offset_out, p, g.len);
+              offset_out += g.len;
+              fwrite (line_out, sizeof (char), offset_out, stdout);
+              column = offset_out = 0;
+              continue;
+            }
+        rescan:
+          column = adjust_column (column, g);
 
-              /* Look for the last blank. */
-              while (logical_end)
+          if (column > width)
+            {
+              /* This character would make the line too long.
+                 Print the line plus a newline, and make this character
+                 start the next line. */
+              if (break_spaces)
                 {
-                  --logical_end;
-                  if (isblank (to_uchar (line_out[logical_end])))
+                  int space_length = 0;
+                  idx_t logical_end = offset_out;
+                  char *logical_p = line_out;
+                  char *logical_lim = logical_p + logical_end;
+
+                  for (mcel_t g2; logical_p < logical_lim; logical_p += g2.len)
                     {
-                      found_blank = true;
-                      break;
+                      g2 = mcel_scan (logical_p, logical_lim);
+                      if (c32isblank (g2.ch))
+                        {
+                          space_length = g2.len;
+                          logical_end = logical_p - line_out;
+                        }
+                    }
+
+                  if (space_length)
+                    {
+                      logical_end += space_length;
+                      /* Found a blank.  Don't output the part after it. */
+                      fwrite (line_out, sizeof (char), logical_end, stdout);
+                      putchar ('\n');
+                      /* Move the remainder to the beginning of the next line.
+                         The areas being copied here might overlap. */
+                      memmove (line_out, line_out + logical_end,
+                               offset_out - logical_end);
+                      offset_out -= logical_end;
+                      column = 0;
+                      char *printed_p = line_out;
+                      char *printed_lim = printed_p + offset_out;
+                      for (mcel_t g2; printed_p < printed_lim;
+                           printed_p += g2.len)
+                        {
+                          g2 = mcel_scan (printed_p, printed_lim);
+                          column = adjust_column (column, g2);
+                        }
+                      goto rescan;
                     }
                 }
 
-              if (found_blank)
+              if (offset_out == 0)
                 {
-                  /* Found a blank.  Don't output the part after it. */
-                  logical_end++;
-                  fwrite (line_out, sizeof (char), logical_end, stdout);
-                  putchar ('\n');
-                  /* Move the remainder to the beginning of the next line.
-                     The areas being copied here might overlap. */
-                  memmove (line_out, line_out + logical_end,
-                           offset_out - logical_end);
-                  offset_out -= logical_end;
-                  column = 0;
-                  for (idx_t i = 0; i < offset_out; i++)
-                    column = adjust_column (column, line_out[i]);
-                  goto rescan;
+                  memcpy (line_out + offset_out, p, g.len);
+                  offset_out += g.len;
+                  continue;
                 }
+
+              line_out[offset_out++] = '\n';
+              fwrite (line_out, sizeof (char), offset_out, stdout);
+              column = offset_out = 0;
+              goto rescan;
             }
 
-          if (offset_out == 0)
-            {
-              line_out[offset_out++] = c;
-              continue;
-            }
-
-          line_out[offset_out++] = '\n';
-          fwrite (line_out, sizeof (char), offset_out, stdout);
-          column = offset_out = 0;
-          goto rescan;
+          memcpy (line_out + offset_out, p, g.len);
+          offset_out += g.len;
         }
-
-      line_out[offset_out++] = c;
     }
 
   saved_errno = errno;
@@ -249,7 +282,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  break_spaces = count_bytes = have_read_stdin = false;
+  break_spaces = have_read_stdin = false;
 
   while ((optc = getopt_long (argc, argv, shortopts, longopts, nullptr)) != -1)
     {
@@ -258,7 +291,11 @@ main (int argc, char **argv)
       switch (optc)
         {
         case 'b':		/* Count bytes rather than columns. */
-          count_bytes = true;
+          counting_mode = COUNT_BYTES;
+          break;
+
+        case 'c':               /* Count characters rather than columns. */
+          counting_mode = COUNT_CHARACTERS;
           break;
 
         case 's':		/* Break at word boundaries. */

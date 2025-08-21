@@ -83,6 +83,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   Iranian locale (fa_IR) and for the Ethiopian locale (am_ET), and also
   does so more consistently for the Thailand locale (th_TH.UTF-8).
 
+  fold now supports the --characters (-c) option to count multi-byte
+  characters instead of the number of columns.
+
   nproc now honors any cgroup v2 configured CPU quotas,
   which may reduce the effective number of processors available.
 

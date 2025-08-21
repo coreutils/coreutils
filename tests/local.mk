@@ -326,6 +326,9 @@ all_tests =					\
   tests/factor/factor.pl			\
   tests/factor/factor-parallel.sh		\
   tests/misc/false-status.sh			\
+  tests/fold/fold-characters.sh			\
+  tests/fold/fold-nbsp.sh			\
+  tests/fold/fold-spaces.sh			\
   tests/misc/fold.pl				\
   tests/groups/groups-dash.sh			\
   tests/groups/groups-process-all.sh		\

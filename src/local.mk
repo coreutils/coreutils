@@ -336,6 +336,9 @@ src_sort_LDADD += $(LIBPMULTITHREAD)
 # for pthread_sigmask
 src_sort_LDADD += $(PTHREAD_SIGMASK_LIB)
 
+# for mbrtowc, mbfile
+src_fold_LDADD += $(LIBC32CONV) $(LIBUNISTRING) $(MBRTOWC_LIB)
+
 # Get the release year from lib/version-etc.c.
 RELEASE_YEAR = \
   `sed -n '/.*COPYRIGHT_YEAR = \([0-9][0-9][0-9][0-9]\) };/s//\1/p' \
