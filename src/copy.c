@@ -617,7 +617,7 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
       if ( ! sparse_copy (src_fd, dest_fd, abuf, buf_size,
                           allow_reflink, src_name, dst_name,
                           ext_len,
-                          sparse_mode != SPARSE_NEVER ? hole_size : nullptr,
+                          sparse_mode == SPARSE_ALWAYS ? hole_size : nullptr,
                           &n_read))
         return false;
 
