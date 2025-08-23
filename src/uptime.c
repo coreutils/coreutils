@@ -37,7 +37,7 @@
   proper_name ("Kaveh Ghazi")
 
 static int
-print_uptime (idx_t n, struct gl_utmp const *utmp_buf)
+print_uptime (idx_t n, STRUCT_UTMP const *utmp_buf)
 {
   int status = EXIT_SUCCESS;
   time_t boot_time = 0;
@@ -47,7 +47,7 @@ print_uptime (idx_t n, struct gl_utmp const *utmp_buf)
   idx_t entries = 0;
   for (idx_t i = 0; i < n; i++)
     {
-      struct gl_utmp const *this = &utmp_buf[i];
+      STRUCT_UTMP const *this = &utmp_buf[i];
       entries += IS_USER_PROCESS (this);
       if (UT_TYPE_BOOT_TIME (this))
         boot_time = this->ut_ts.tv_sec;
@@ -125,7 +125,7 @@ static _Noreturn void
 uptime (char const *filename, int options)
 {
   idx_t n_users;
-  struct gl_utmp *utmp_buf;
+  STRUCT_UTMP *utmp_buf;
   int read_utmp_status = (read_utmp (filename, &n_users, &utmp_buf, options) < 0
                           ? EXIT_FAILURE : EXIT_SUCCESS);
   if (read_utmp_status != EXIT_SUCCESS)

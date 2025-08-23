@@ -311,6 +311,13 @@ sc_prohibit-_gl-attributes:
 	halt='Use ATTRIBUTE_... instead of _GL_ATTRIBUTE_...'	\
 	  $(_sc_search_regexp)
 
+# Prefer the STRUCT_UTMP typedef over struct gl_utmp.
+sc_prohibit-struct-gl_utmp:
+	@prohibit='struct gl_utmp'				\
+	in_vc_files='\.[ch]$$'					\
+	halt='Use STRUCT_UTMP, not struct gl_utmp'		\
+	  $(_sc_search_regexp)
+
 # Prefer the const declaration form, with const following the type
 sc_prohibit-const-char:
 	@prohibit='const char \*'				\
