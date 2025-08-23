@@ -106,6 +106,16 @@
 # define CAN_HARDLINK_SYMLINKS 0
 #endif
 
+/* Result of infer_scantype when it returns LSEEK_SCANTYPE.  */
+struct scan_inference
+{
+  /* The offset of the first data block, or -1 if the file has no data.  */
+  off_t ext_start;
+
+  /* The offset of the first hole.  */
+  off_t hole_start;
+};
+
 struct dir_list
 {
   struct dir_list *parent;
@@ -540,7 +550,7 @@ write_zeros (int fd, off_t n_bytes)
 
 static bool
 lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
-            off_t ext_start, off_t src_total_size,
+            struct scan_inference const *scan_inference, off_t src_total_size,
             enum Sparse_type sparse_mode,
             bool allow_reflink,
             char const *src_name, char const *dst_name,
@@ -552,9 +562,11 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
 
   copy_debug.sparse_detection = COPY_DEBUG_EXTERNAL;
 
-  while (0 <= ext_start)
+  for (off_t ext_start = scan_inference->ext_start; 0 <= ext_start; )
     {
-      off_t ext_end = lseek (src_fd, ext_start, SEEK_HOLE);
+      off_t ext_end = (ext_start == 0
+                       ? scan_inference->hole_start
+                       : lseek (src_fd, ext_start, SEEK_HOLE));
       if (ext_end < 0)
         {
           if (errno != ENXIO)
@@ -1085,23 +1097,13 @@ enum scantype
    LSEEK_SCANTYPE,
   };
 
-/* Result of infer_scantype.  */
-union scan_inference
-{
-  /* Used if infer_scantype returns LSEEK_SCANTYPE.  This is the
-     offset of the first data block, or -1 if the file has no data.  */
-  off_t ext_start;
-};
-
 /* Return how to scan a file with descriptor FD and stat buffer SB.
-   *SCAN_INFERENCE is set to a valid value if returning LSEEK_SCANTYPE.  */
+   Set *SCAN_INFERENCE if returning LSEEK_SCANTYPE.  */
 static enum scantype
 infer_scantype (int fd, struct stat const *sb,
-                union scan_inference *scan_inference)
+                struct scan_inference *scan_inference)
 {
-  scan_inference->ext_start = -1;  /* avoid -Wmaybe-uninitialized */
-
-  /* Only attempt SEEK_HOLE if this heuristic
+  /* Try SEEK_HOLE only if this heuristic
      suggests the file is sparse.  */
   if (! (HAVE_STRUCT_STAT_ST_BLOCKS
          && S_ISREG (sb->st_mode)
@@ -1109,10 +1111,26 @@ infer_scantype (int fd, struct stat const *sb,
     return PLAIN_SCANTYPE;
 
 #ifdef SEEK_HOLE
-  off_t ext_start = lseek (fd, 0, SEEK_DATA);
-  if (0 <= ext_start || errno == ENXIO)
+  scan_inference->ext_start = lseek (fd, 0, SEEK_DATA);
+  if (scan_inference->ext_start == 0)
     {
-      scan_inference->ext_start = ext_start;
+      scan_inference->hole_start = lseek (fd, 0, SEEK_HOLE);
+      if (0 <= scan_inference->hole_start)
+        {
+          if (scan_inference->hole_start < sb->st_size)
+            return LSEEK_SCANTYPE;
+
+          /* Though the file likely has holes, SEEK_DATA and SEEK_HOLE
+             didn't find any.  This can happen with file systems like
+             circa-2025 squashfs that support SEEK_HOLE only trivially.
+             Fall back on ZERO_SCANTYPE.  */
+          if (lseek (fd, 0, SEEK_SET) < 0)
+            return ERROR_SCANTYPE;
+        }
+    }
+  else if (0 < scan_inference->ext_start || errno == ENXIO)
+    {
+      scan_inference->hole_start = 0;  /* Pacify -Wmaybe-uninitialized.  */
       return LSEEK_SCANTYPE;
     }
   else if (errno != EINVAL && !is_ENOTSUP (errno))
@@ -1209,7 +1227,6 @@ copy_reg (char const *src_name, char const *dst_name,
   mode_t extra_permissions;
   struct stat sb;
   struct stat src_open_sb;
-  union scan_inference scan_inference;
   bool return_val = true;
   bool data_copy_required = x->data_copy_required;
   bool preserve_xattr = USE_XATTR & x->preserve_xattr;
@@ -1518,6 +1535,7 @@ copy_reg (char const *src_name, char const *dst_name,
       size_t buf_size = io_blksize (&sb);
 
       /* Deal with sparse files.  */
+      struct scan_inference scan_inference;
       enum scantype scantype = infer_scantype (source_desc, &src_open_sb,
                                                &scan_inference);
       if (scantype == ERROR_SCANTYPE)
@@ -1565,7 +1583,7 @@ copy_reg (char const *src_name, char const *dst_name,
 #ifdef SEEK_HOLE
              scantype == LSEEK_SCANTYPE
              ? lseek_copy (source_desc, dest_desc, &buf, buf_size,
-                           scan_inference.ext_start, src_open_sb.st_size,
+                           &scan_inference, src_open_sb.st_size,
                            make_holes ? x->sparse_mode : SPARSE_NEVER,
                            x->reflink_mode != REFLINK_NEVER,
                            src_name, dst_name, &hole_size, &n_read)
