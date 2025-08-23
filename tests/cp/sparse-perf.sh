@@ -18,8 +18,27 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
+cleanup_() { rm -rf "$other_partition_tmpdir"; }
+. "$abs_srcdir/tests/other-fs-tmpdir"
 
-# Create a large-but-sparse file.
+# Create a sparse file on another partition to avoid reflinking
+# thus exercising more copy logic
+
+other_partition_sparse=$other_partition_tmpdir/k
+printf x > $other_partition_sparse || framework_failure_
+truncate -s1M $other_partition_sparse || framework_failure_
+
+# cp should not disable anything by default, even for sparse files.  For e.g.
+# copy offload is an important performance improvement for sparse files on NFS.
+cp --debug $other_partition_sparse k2 >cp.out || fail=1
+cmp $other_partition_sparse k2 || fail=1
+grep ': avoided' cp.out && { cat cp.out; fail=1; }
+
+
+
+# Create a large-but-sparse file on the current partition.
+# We disable relinking below, thus verifying SEEK_HOLE support
+
 timeout 10 truncate -s1T f ||
   skip_ "unable to create a 1 TiB sparse file"
 
