@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "fadvise.h"
+#include "ioblksize.h"
 #include "mcel.h"
 #include "xdectoint.h"
 
@@ -136,11 +137,9 @@ fold_file (char const *filename, size_t width)
   FILE *istream;
   size_t column = 0;		/* Screen column where next char will go. */
   idx_t offset_out = 0;		/* Index in 'line_out' for next char. */
-  static char *line_out = nullptr;
-  static idx_t allocated_out = 0;
-  static char *line_in = nullptr;
-  static size_t allocated_in = 0;
-  static ssize_t length_in = 0;
+  static char line_out[IO_BUFSIZE];
+  static char line_in[IO_BUFSIZE];
+  static size_t length_in = 0;
   int saved_errno;
 
   if (STREQ (filename, "-"))
@@ -159,7 +158,7 @@ fold_file (char const *filename, size_t width)
 
   fadvise (istream, FADVISE_SEQUENTIAL);
 
-  while (0 <= (length_in = getline (&line_in, &allocated_in, istream)))
+  while (0 < (length_in = fread (line_in, 1, sizeof line_in, istream)))
     {
       char *p = line_in;
       char *lim = p + length_in;
@@ -167,9 +166,6 @@ fold_file (char const *filename, size_t width)
       for (; p < lim; p += g.len)
         {
           g = mcel_scan (p, lim);
-          if (allocated_out - offset_out <= g.len)
-            line_out = xpalloc (line_out, &allocated_out, g.len, -1,
-                                sizeof *line_out);
           if (g.ch == '\n')
             {
               memcpy (line_out + offset_out, p, g.len);
@@ -243,6 +239,8 @@ fold_file (char const *filename, size_t width)
           memcpy (line_out + offset_out, p, g.len);
           offset_out += g.len;
         }
+      if (feof (istream))
+        break;
     }
 
   saved_errno = errno;
