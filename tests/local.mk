@@ -329,7 +329,7 @@ all_tests =					\
   tests/fold/fold-characters.sh			\
   tests/fold/fold-nbsp.sh			\
   tests/fold/fold-spaces.sh			\
-  tests/misc/fold.pl				\
+  tests/fold/fold.pl				\
   tests/groups/groups-dash.sh			\
   tests/groups/groups-process-all.sh		\
   tests/groups/groups-version.sh		\

@@ -60,7 +60,7 @@ compare character-exp2 character-out2 || fail=1
 
 # Ensure bounded memory operation
 vm=$(get_min_ulimit_v_ fold /dev/null) && {
-  yes | tr -d '\n' | (ulimit -v $(($vm+8000)) && fold 2>err) | head -n10 || fail=1
+  yes | tr -d '\n' | (ulimit -v $(($vm+8000)) && fold 2>err) | head || fail=1
   compare /dev/null err || fail=1
 }
 
