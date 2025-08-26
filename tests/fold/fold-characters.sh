@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ fold printf
+getlimits_
 
 test "$LOCALE_FR_UTF8" != none || skip_ "French UTF-8 locale not available"
 
@@ -60,7 +61,9 @@ compare character-exp2 character-out2 || fail=1
 
 # Test a Unicode character on the edge of the input buffer.
 # Keep in sync with IO_BUFSIZE - 1.
-yes a | head -n 262143 | tr -d '\n' > input3 || framework_failure_
+IO_BUFSIZE_MINUS_1=$(($IO_BUFSIZE - 1))
+test $IO_BUFSIZE_MINUS_1 -gt 0 || framework_failure_
+yes a | head -n $IO_BUFSIZE_MINUS_1 | tr -d '\n' > input3 || framework_failure_
 env printf '\uB250' >> input3 || framework_failure_
 yes a | head -n 100 | tr -d '\n' >> input3 || framework_failure_
 env printf '\n' >> input3 || framework_failure_

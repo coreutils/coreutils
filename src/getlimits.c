@@ -23,6 +23,7 @@
 
 #include "ftoastr.h"
 #include "system.h"
+#include "ioblksize.h"
 #include "long-options.h"
 
 #define PROGRAM_NAME "getlimits"
@@ -167,6 +168,9 @@ main (int argc, char **argv)
   print_float (FLT);
   print_float (DBL);
   print_float (LDBL);
+
+  /* Other useful constants */
+  printf ("IO_BUFSIZE=%ju\n", (uintmax_t) IO_BUFSIZE);
 
   return EXIT_SUCCESS;
 }
