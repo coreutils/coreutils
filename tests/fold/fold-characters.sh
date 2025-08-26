@@ -58,6 +58,25 @@ compare column-exp2 column-out2 || fail=1
 fold --characters -w 10 input2 > character-out2 || fail=1
 compare character-exp2 character-out2 || fail=1
 
+# Test a Unicode character on the edge of the input buffer.
+# Keep in sync with IO_BUFSIZE - 1.
+yes a | head -n 262143 | tr -d '\n' > input3 || framework_failure_
+env printf '\uB250' >> input3 || framework_failure_
+yes a | head -n 100 | tr -d '\n' >> input3 || framework_failure_
+env printf '\n' >> input3 || framework_failure_
+
+yes a | head -n 80 | tr -d '\n' > exp3 || framework_failure_
+env printf '\n' >> exp3 || framework_failure_
+yes a | head -n 63 | tr -d '\n' >> exp3 || framework_failure_
+env printf '\uB250' >> exp3 || framework_failure_
+yes a | head -n 16 | tr -d '\n' >> exp3 || framework_failure_
+env printf '\n' >> exp3 || framework_failure_
+yes a | head -n 80 | tr -d '\n' >> exp3 || framework_failure_
+env printf '\naaaa\n' >> exp3 || framework_failure_
+
+fold --characters input3 | tail -n 4 > out3 || fail=1
+compare exp3 out3 || fail=1
+
 # Ensure bounded memory operation
 vm=$(get_min_ulimit_v_ fold /dev/null) && {
   yes | tr -d '\n' | (ulimit -v $(($vm+8000)) && fold 2>err) | head || fail=1

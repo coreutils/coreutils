@@ -139,6 +139,7 @@ fold_file (char const *filename, size_t width)
   idx_t offset_out = 0;		/* Index in 'line_out' for next char. */
   static char line_out[IO_BUFSIZE];
   static char line_in[IO_BUFSIZE];
+  static size_t offset_in = 0;
   static size_t length_in = 0;
   int saved_errno;
 
@@ -158,14 +159,30 @@ fold_file (char const *filename, size_t width)
 
   fadvise (istream, FADVISE_SEQUENTIAL);
 
-  while (0 < (length_in = fread (line_in, 1, sizeof line_in, istream)))
+  while (0 < (length_in = fread (line_in + offset_in, 1,
+                                 sizeof line_in - offset_in, istream)))
     {
       char *p = line_in;
-      char *lim = p + length_in;
+      char *lim = p + length_in + offset_in;
       mcel_t g;
       for (; p < lim; p += g.len)
         {
           g = mcel_scan (p, lim);
+          if (g.err)
+            {
+              /* Replace the character with the byte if it cannot be a
+                 truncated multibyte sequence.  */
+              if (!(lim - p <= MCEL_LEN_MAX))
+                g.ch = p[0];
+              else
+                {
+                  /* It may be a truncated multibyte sequence.  Move it to the
+                     front of the input buffer.  */
+                  memmove (line_in, p, lim - p);
+                  offset_in = lim - p;
+                  goto next_line;
+                }
+            }
           if (g.ch == '\n')
             {
               memcpy (line_out + offset_out, p, g.len);
@@ -241,6 +258,9 @@ fold_file (char const *filename, size_t width)
         }
       if (feof (istream))
         break;
+      /* We read a full buffer of complete characters.  */
+      offset_in = 0;
+    next_line:
     }
 
   saved_errno = errno;
