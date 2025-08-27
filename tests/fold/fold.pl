@@ -20,9 +20,15 @@ use strict;
 
 (my $program_name = $0) =~ s|.*/||;
 
+my $prog = 'fold';
+
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
-my $prog = 'fold';
+
+# uncommented to enable multibyte paths
+my $mb_locale = $ENV{LOCALE_FR_UTF8};
+! defined $mb_locale || $mb_locale eq 'none'
+ and $mb_locale = 'C';
 
 my @Tests =
   (
@@ -43,6 +49,32 @@ my @Tests =
    ['bw2', '-b -w 6', {IN=>"1234567890\nabcdefghij\n1234567890"},
      {OUT=>"123456\n7890\nabcdef\nghij\n123456\n7890"}],
   );
+
+if ($mb_locale ne 'C')
+  {
+    # Duplicate each test vector, appending "-mb" to the test name and
+    # inserting {ENV => "LC_ALL=$mb_locale"} in the copy, so that we
+    # provide coverage for multi-byte code paths.
+    my @new;
+    foreach my $t (@Tests)
+      {
+        my @new_t = @$t;
+        my $test_name = shift @new_t;
+
+        push @new, ["$test_name-mb", @new_t, {ENV => "LC_ALL=$mb_locale"}];
+      }
+    push @Tests, @new;
+  }
+
+@Tests = triple_test \@Tests;
+
+# Remember that triple_test creates from each test with exactly one "IN"
+# file two more tests (.p and .r suffix on name) corresponding to reading
+# input from a file and from a pipe.  The pipe-reading test would fail
+# due to a race condition about 1 in 20 times.
+# Remove the IN_PIPE version of the "output-is-input" test above.
+# The others aren't susceptible because they have three inputs each.
+@Tests = grep {$_->[0] ne 'output-is-input.p'} @Tests;
 
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
