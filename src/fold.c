@@ -260,7 +260,8 @@ fold_file (char const *filename, size_t width)
         break;
       /* We read a full buffer of complete characters.  */
       offset_in = 0;
-    next_line:
+
+    next_line:;
     }
 
   saved_errno = errno;
