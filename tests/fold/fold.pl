@@ -50,18 +50,40 @@ my @Tests =
      {OUT=>"123456\n7890\nabcdef\nghij\n123456\n7890"}],
   );
 
+# define UTF-8 encoded multi-byte characters for tests
+my $eaC = "\xC3\xA9";      # e acute NFC form
+my $eaD = "\x65\xCC\x81";  # e acute NFD form (zero width combining)
+my $eFW = "\xEF\xBD\x85";  # e fullwidth
+
+my @mbTests =
+  (
+     ['smb1', '-w2', {IN=>$eaC x 3}, {OUT=>$eaC x 2 . "\n" . $eaC}],
+     ['smb2', '-w2', {IN=>$eaD x 3}, {OUT=>$eaD x 2 . "\n" . $eaD}],
+     ['smb3', '-w2', {IN=>$eFW x 2}, {OUT=>$eFW . "\n" . $eFW}],
+  );
+
 if ($mb_locale ne 'C')
   {
     # Duplicate each test vector, appending "-mb" to the test name and
     # inserting {ENV => "LC_ALL=$mb_locale"} in the copy, so that we
     # provide coverage for multi-byte code paths.
     my @new;
+
     foreach my $t (@Tests)
       {
         my @new_t = @$t;
         my $test_name = shift @new_t;
 
         push @new, ["$test_name-mb", @new_t, {ENV => "LC_ALL=$mb_locale"}];
+      }
+    push @Tests, @new;
+
+    @new = ();
+    foreach my $t (@mbTests)
+      {
+        my @new_t = @$t;
+
+        push @new, [@new_t, {ENV => "LC_ALL=$mb_locale"}];
       }
     push @Tests, @new;
   }
