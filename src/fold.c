@@ -115,10 +115,16 @@ adjust_column (size_t column, mcel_t g)
         column = 0;
       else if (g.ch == '\t')
         column += TAB_WIDTH - column % TAB_WIDTH;
-      else /* if (c32isprint (g.ch)) */
+      else
         {
-          last_character_width = (counting_mode == COUNT_CHARACTERS
-                                  ? 1 : c32width (g.ch));
+          if (counting_mode == COUNT_CHARACTERS)
+            last_character_width = 1;
+          else
+            {
+              int width = c32width (g.ch);
+              /* Default to a width of 1 if there is an invalid character.  */
+              last_character_width = width < 0 ? 1 : width;
+            }
           column += last_character_width;
         }
     }
@@ -160,7 +166,8 @@ fold_file (char const *filename, size_t width)
   fadvise (istream, FADVISE_SEQUENTIAL);
 
   while (0 < (length_in = fread (line_in + offset_in, 1,
-                                 sizeof line_in - offset_in, istream)))
+                                 sizeof line_in - offset_in, istream))
+         || 0 < offset_in)
     {
       char *p = line_in;
       char *lim = p + length_in + offset_in;
@@ -172,7 +179,7 @@ fold_file (char const *filename, size_t width)
             {
               /* Replace the character with the byte if it cannot be a
                  truncated multibyte sequence.  */
-              if (!(lim - p <= MCEL_LEN_MAX))
+              if (!(lim - p <= MCEL_LEN_MAX) || length_in == 0)
                 g.ch = p[0];
               else
                 {
