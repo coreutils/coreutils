@@ -2202,8 +2202,8 @@ copy_internal (char const *src_name, char const *dst_name,
 {
   struct stat src_sb;
   struct stat dst_sb;
-  mode_t src_mode IF_LINT ( = 0);
-  mode_t dst_mode IF_LINT ( = 0);
+  mode_t src_mode = 0;
+  mode_t dst_mode = 0;
   mode_t dst_mode_bits;
   mode_t omitted_permissions;
   bool restore_dst_mode = false;
