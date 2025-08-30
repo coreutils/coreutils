@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cksum
+getlimits_
 
 for prog in 'b2sum' 'cksum -a blake2b'; do
 # Also check b2sum if built
@@ -68,6 +69,17 @@ returns_ 1 $prog -c overflow.check || fail=1
 # This would fail before coreutil-9.4
 # Only validate the last specified, used length
 $prog -l 123 -l 128 /dev/null || fail=1
+
+# This would not flag an error in coreutils 9.6 and 9.7
+for len in 513 1024 $UINTMAX_OFLOW; do
+  returns_ 1 $prog -l $len /dev/null 2>err || fail=1
+  progname=$(echo "$prog" | cut -f1 -d' ')
+  cat <<EOF > exp || framework_failure_
+$progname: invalid length: '$len'
+$progname: maximum digest length for 'BLAKE2b' is 512 bits
+EOF
+  compare exp err || fail=1
+done
 
 done
 

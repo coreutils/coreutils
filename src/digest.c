@@ -1402,7 +1402,7 @@ main (int argc, char **argv)
 #endif
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
       case 'l':
-        digest_length = xnumtoumax (optarg, 10, 0, BLAKE2B_MAX_LEN * 8, "",
+        digest_length = xnumtoumax (optarg, 10, 0, UINTMAX_MAX, "",
                                     _("invalid length"), 0,
                                     XTOINT_MAX_QUIET);
         digest_length_str = optarg;

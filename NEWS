@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  'b2sum' will diagnose --length values that are too big.
+  Previously it would have silently assumed 512 for any larger values.
+  [bug introduced in coreutils-9.6]
+
   'basenc -d -i' will now strip '=' characters from the input
   in encodings where padding characters are not valid.
   [bug introduced with the basenc program in coreutils-8.31]
