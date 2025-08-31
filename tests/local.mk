@@ -380,6 +380,7 @@ all_tests =					\
   tests/cksum/sha256sum.pl			\
   tests/cksum/sha384sum.pl			\
   tests/cksum/sha512sum.pl			\
+  tests/cksum/cksum-sha3.sh			\
   tests/shred/shred-exact.sh			\
   tests/shred/shred-passes.sh			\
   tests/shred/shred-remove.sh			\

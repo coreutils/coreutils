@@ -4151,6 +4151,7 @@ Supported more modern digest algorithms are:
 @samp{sha256}    equivalent to @command{sha256sum}
 @samp{sha384}    equivalent to @command{sha384sum}
 @samp{sha512}    equivalent to @command{sha512sum}
+@samp{sha3}      only available through @command{cksum}
 @samp{blake2b}   equivalent to @command{b2sum}
 @samp{sm3}       only available through @command{cksum}
 @end example
@@ -4174,18 +4175,19 @@ input digest string as what is output.  I.e., removing or adding any
 Output extra information to standard error,
 like the checksum implementation being used.
 
-@macro cksumLengthOption
 @item -l
 @itemx --length
 @opindex -l
 @opindex --length
 @cindex BLAKE2 hash length
-Change (shorten) the default digest length.
-This is specified in bits and thus must be a multiple of 8.
+@cindex SHA-3 hash length
+Specify the digest size used with @option{-a sha3} or @option{-a blake2b}.
+For @samp{blake2b} this is optional, with 512 being the default.  If the
+option is given it must be a multiple of 8.  For @samp{sha3} this option
+is required, and the @var{length} must be one of 224, 256, 384, or 512.
+
 This option is ignored when @option{--check} is specified,
 as the length is automatically determined when checking.
-@end macro
-@cksumLengthOption
 
 @item --raw
 @opindex --raw
@@ -4368,7 +4370,7 @@ against malicious tampering: although finding a file with a given \hash\
 fingerprint is considered infeasible at the moment, it is known how
 to modify certain files, including digital certificates, so that they
 appear valid when signed with an \hash\ digest.  For more secure hashes,
-consider using SHA-2 or @command{b2sum}.
+consider using SHA-2, SHA-3, or @command{b2sum}.
 @xref{sha2 utilities}. @xref{b2sum invocation}.
 @end macro
 @weakHash{MD5}
@@ -4411,7 +4413,19 @@ The program accepts @ref{cksum common options}.  Also see @ref{Common options}.
 In addition @command{b2sum} supports the following options.
 
 @table @samp
-@cksumLengthOption
+
+@item -l
+@itemx --length
+@opindex -l
+@opindex --length
+@cindex BLAKE2 hash length
+Specify the digest size used by the algorithm.  This option is optional.
+By default a 512 bit digest will be used.  If the option is given it
+must be a multiple of 8.
+
+This option is ignored when @option{--check} is specified,
+as the length is automatically determined when checking.
+
 @end table
 
 

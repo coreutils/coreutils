@@ -36,6 +36,7 @@ my @pairs =
    ['sha256', "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU="],
    ['sha384', "OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb"],
    ['sha512', "z4PhNX7vuL3xVChQ1m2AB9Yg5AULVxXcg/SpIdNs6c5H0NE8XYXysP+DGNKHfuwvY7kxvUdBeoGlODJ6+SfaPg=="],
+   ['sha3', "pp9zzKI6msXItWfcGFp1bpfJghZP4lhZ4NHcwUdcgKYVshI68fX5TBHj6UAsOsVY9QAZnZW20+MBdYWGKB3NJg=="],
    ['blake2b', "eGoC90IBWQPGxv2FJVLScpEvR0DhWEdhiobiF/cfVBnSXhAxr+5YUxOJZESTTrBLkDpoWxRIt1XVb3Aa/pvizg=="],
    ['sm3', "GrIdg1XPoX+OYRlIMegajyK+yMco/vt0ftA161CCqis="],
   );
@@ -47,6 +48,8 @@ sub fmt ($$) {
   $h !~ m{^(sysv|bsd|crc|crc32b)$} and $v = uc($h). " (f) = $v";
   # BLAKE2b is inconsistent:
   $v =~ s{BLAKE2B}{BLAKE2b};
+  # Our tests use 'cksum -a sha3 --length=512'.
+  $v =~ s/^SHA3\b/SHA3-512/;
   return "$v"
 }
 
@@ -54,7 +57,8 @@ my @Tests =
   (
    # Ensure that each of the above works with --base64:
    (map {my ($h,$v)= @$_; my $o=fmt $h,$v;
-         [$h, "--base64 -a $h", {IN=>{f=>''}}, {OUT=>"$o\n"}]} @pairs),
+         (my $opts = $h) =~ s/^sha3$/sha3 --length=512/;
+         [$h, "--base64 -a $opts", {IN=>{f=>''}}, {OUT=>"$o\n"}]} @pairs),
 
    # For each that accepts --check, ensure that works with base64 digests:
    (map {my ($h,$v)= @$_; my $o=fmt $h,$v;
