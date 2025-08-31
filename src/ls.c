@@ -4869,10 +4869,18 @@ print_file_name_and_frills (const struct fileinfo *f, size_t start_col)
             format_inode (buf, f));
 
   if (print_block_size)
-    printf ("%*s ", format == with_commas ? 0 : block_size_width,
-            ! f->stat_ok ? "?"
-            : human_readable (STP_NBLOCKS (&f->stat), buf, human_output_opts,
-                              ST_NBLOCKSIZE, output_block_size));
+    {
+      char const *blocks =
+        (! f->stat_ok
+         ? "?"
+         : human_readable (STP_NBLOCKS (&f->stat), buf, human_output_opts,
+                           ST_NBLOCKSIZE, output_block_size));
+      int blocks_width = mbswidth (blocks, MBSWIDTH_FLAGS);
+      int pad = 0;
+      if (0 <= blocks_width && block_size_width && format != with_commas)
+        pad = block_size_width - blocks_width;
+      printf ("%*s%s ", pad, "", blocks);
+    }
 
   if (print_scontext)
     printf ("%*s ", format == with_commas ? 0 : scontext_width, f->scontext);

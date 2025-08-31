@@ -35,6 +35,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   a confusing error about changing permissions.
   [This bug was present in "the beginning".]
 
+  "ls --size --block-size=\'k" could misalign output in locales
+  with multi-byte thousands grouping characters.
+  [This bug was present in "the beginning".]
+
   'od --strings' with '-N' now works correctly.  Previously od might
   write a NUL byte after a heap buffer, or output invalid addresses.
   [These bugs were present in "the beginning".]

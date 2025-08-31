@@ -26,9 +26,9 @@ mkdir sub
 cd sub
 
 for size in 1024 4096 262144; do
-  echo foo | dd conv=sync bs=$size >file$size || fail=1
+  echo foo | dd conv=sync bs=$size >file$size || framework_failure_
 done
-touch -d '2001-01-01 00:00' file* || fail=1
+touch -d '2001-01-01 00:00' file* || framework_failure_
 
 size_etc='s/[^ ]* *[^ ]* *//'
 
@@ -182,5 +182,22 @@ cat >exp <<'EOF'
 EOF
 
 compare exp out || fail=1
+
+# Ensure --size alignment with multi-byte grouping chars
+# which wasn't the case before coreutils v9.8
+cd sub
+for sizem in 1 10; do
+  echo foo |
+    dd conv=sync bs=$((sizem*1024*1024)) >file${sizem}M || framework_failure_
+done
+
+# If any of these unavailable, the C fallback should also be aligned
+for loc in sv_SE.UTF-8 $LOCALE_FR_UTF8; do
+  test $(LC_ALL=$loc ls -s1 --block-size=\'k |
+         tail -n+2 | cut -dK -f1 |
+         while IFS= read size; do
+           printf '%s\n' "$size" | LC_ALL=$loc wc -L
+         done | uniq | wc -l) = 1 || fail=1
+done
 
 Exit $fail
