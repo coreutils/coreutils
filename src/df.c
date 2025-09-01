@@ -988,15 +988,15 @@ add_to_grand_total (struct field_values_t *bv, struct field_values_t *iv)
 }
 
 /* Obtain a space listing for the device with absolute file name DEVICE.
-   If MOUNT_POINT is non-null, it is the name of the root of the
-   file system on DEVICE.
+   MOUNT_POINT names the root of the file system on DEVICE.
+   FILE is the name to list; if null, it defaults to "-".
    If STAT_FILE is non-null, it is the name of a file within the file
    system that the user originally asked for; this provides better
    diagnostics, and sometimes it provides better results on networked
    file systems that give different free-space results depending on
    where in the file system you probe.
    If FSTYPE is non-null, it is the type of the file system on DEVICE.
-   If MOUNT_POINT is non-null, then DEVICE may be null -- certain systems may
+   DEVICE may be null -- certain systems may
    not be able to produce statistics in this case.
    ME_DUMMY and ME_REMOTE are the mount entry flags.
    Caller must set PROCESS_ALL to true when iterating over all entries, as
@@ -1020,15 +1020,11 @@ get_dev (char const *device, char const *mount_point, char const *file,
 
   /* Ignore relative MOUNT_POINTs, which are present for example
      in /proc/mounts on Linux with network namespaces.  */
-  if (!force_fsu && mount_point && ! IS_ABSOLUTE_FILE_NAME (mount_point))
+  if (!force_fsu && ! IS_ABSOLUTE_FILE_NAME (mount_point))
     return;
 
-  /* If MOUNT_POINT is null, then the file system is not mounted, and this
-     program reports on the file system that the special file is on.
-     It would be better to report on the unmounted file system,
-     but statfs doesn't do that on most systems.  */
   if (!stat_file)
-    stat_file = mount_point ? mount_point : device;
+    stat_file = mount_point;
 
   struct fs_usage fsu;
   if (force_fsu)
