@@ -41,6 +41,15 @@ while read algo prog mode; do
     cksum --untagged $cmode --algorithm=$algo /dev/null > out-c || fail=1
 
     case "$algo" in
+      sha224|sha256|sha384|sha512)
+        bits=$(echo "$algo" | cut -c4-)
+        cksum --algorithm=$algo /dev/null > out-t1 || fail=1
+        cksum --algorithm=sha2 --length=$bits /dev/null > out-t2 || fail=1
+        compare out-t1 out-t2 || fail=1 ;;
+      *) ;;
+    esac
+
+    case "$algo" in
       bsd) ;;
       sysv) ;;
       crc) ;;

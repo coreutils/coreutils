@@ -21,10 +21,15 @@ print_ver_ cksum shuf
 
 shuf -i 1-10 > input || framework_failure_
 
-for args in '-a sha384' '-a blake2b' '-a blake2b -l 384' '-a sm3'; do
+for args in '-a sha2 -l 384' '-a blake2b' '-a blake2b -l 384' '-a sm3'; do
   cksum $args 'input' >> CHECKSUMS || fail=1
 done
 cksum --strict --check CHECKSUMS || fail=1
+
+# We don't output but do support SHA2-### tagged format
+cksum -a sha2 -l 384 input |
+  sed 's/^SHA/SHA2-/' > sha2-tag.sum || framework_failure_
+cksum --check sha2-tag.sum || fail=1
 
 # Ensure leading whitespace and \ ignored
 sed 's/^/ \\/' CHECKSUMS | cksum --strict -c || fail=1

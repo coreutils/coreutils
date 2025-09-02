@@ -32,10 +32,7 @@ my @pairs =
    ['crc32b', "0 0 f"],
    ['md5', "1B2M2Y8AsgTpgAmY7PhCfg=="],
    ['sha1', "2jmj7l5rSw0yVb/vlWAYkK/YBwk="],
-   ['sha224', "0UoCjCo6K8lHYQK7KII0xBWisB+CjqYqxbPkLw=="],
-   ['sha256', "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU="],
-   ['sha384', "OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb"],
-   ['sha512', "z4PhNX7vuL3xVChQ1m2AB9Yg5AULVxXcg/SpIdNs6c5H0NE8XYXysP+DGNKHfuwvY7kxvUdBeoGlODJ6+SfaPg=="],
+   ['sha2', "z4PhNX7vuL3xVChQ1m2AB9Yg5AULVxXcg/SpIdNs6c5H0NE8XYXysP+DGNKHfuwvY7kxvUdBeoGlODJ6+SfaPg=="],
    ['sha3', "pp9zzKI6msXItWfcGFp1bpfJghZP4lhZ4NHcwUdcgKYVshI68fX5TBHj6UAsOsVY9QAZnZW20+MBdYWGKB3NJg=="],
    ['blake2b', "eGoC90IBWQPGxv2FJVLScpEvR0DhWEdhiobiF/cfVBnSXhAxr+5YUxOJZESTTrBLkDpoWxRIt1XVb3Aa/pvizg=="],
    ['sm3', "GrIdg1XPoX+OYRlIMegajyK+yMco/vt0ftA161CCqis="],
@@ -48,8 +45,9 @@ sub fmt ($$) {
   $h !~ m{^(sysv|bsd|crc|crc32b)$} and $v = uc($h). " (f) = $v";
   # BLAKE2b is inconsistent:
   $v =~ s{BLAKE2B}{BLAKE2b};
-  # Our tests use 'cksum -a sha3 --length=512'.
+  # Our tests use 'cksum -a sha{2,3} --length=512'.
   $v =~ s/^SHA3\b/SHA3-512/;
+  $v =~ s/^SHA2\b/SHA512/;
   return "$v"
 }
 
@@ -58,6 +56,7 @@ my @Tests =
    # Ensure that each of the above works with --base64:
    (map {my ($h,$v)= @$_; my $o=fmt $h,$v;
          (my $opts = $h) =~ s/^sha3$/sha3 --length=512/;
+         $opts =~ s/^sha2$/sha512/;
          [$h, "--base64 -a $opts", {IN=>{f=>''}}, {OUT=>"$o\n"}]} @pairs),
 
    # For each that accepts --check, ensure that works with base64 digests:

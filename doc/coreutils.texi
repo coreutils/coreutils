@@ -4147,10 +4147,7 @@ Supported more modern digest algorithms are:
 @example
 @samp{md5}       equivalent to @command{md5sum}
 @samp{sha1}      equivalent to @command{sha1sum}
-@samp{sha224}    equivalent to @command{sha224sum}
-@samp{sha256}    equivalent to @command{sha256sum}
-@samp{sha384}    equivalent to @command{sha384sum}
-@samp{sha512}    equivalent to @command{sha512sum}
+@samp{sha2}      equivalent to @command{sha@{224,256,384,512@}sum}
 @samp{sha3}      only available through @command{cksum}
 @samp{blake2b}   equivalent to @command{b2sum}
 @samp{sm3}       only available through @command{cksum}
@@ -4181,10 +4178,10 @@ like the checksum implementation being used.
 @opindex --length
 @cindex BLAKE2 hash length
 @cindex SHA-3 hash length
-Specify the digest size used with @option{-a sha3} or @option{-a blake2b}.
+Specify the digest size used with @option{-a sha2, sha3, or blake2b}.
 For @samp{blake2b} this is optional, with 512 being the default.  If the
-option is given it must be a multiple of 8.  For @samp{sha3} this option
-is required, and the @var{length} must be one of 224, 256, 384, or 512.
+option is given it must be a multiple of 8.  For @samp{sha2} or @samp{sha3} this
+option is required, and the @var{length} must be one of 224, 256, 384, or 512.
 
 This option is ignored when @option{--check} is specified,
 as the length is automatically determined when checking.

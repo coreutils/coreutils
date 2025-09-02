@@ -91,6 +91,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   SHA3-256, SHA3-384, SHA3-512 message digest algorithms depending on
   the argument passed to the required --length (-l) option.
 
+  'cksum -a' now supports the 'sha2' argument, as a more consistent
+  interface than the existing 'sha224', 'sha256', 'sha384', 'sha512'
+  arguments, which are now selected with the --length (-l) option.
+
   'date' now outputs dates in the country's native calendar for the
   Iranian locale (fa_IR) and for the Ethiopian locale (am_ET), and also
   does so more consistently for the Thailand locale (th_TH.UTF-8).
