@@ -628,6 +628,8 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  char const *user_start = n_args == 1 ? "1" : argv[optind];
+
   /* If the following hold:
      - no format string, [FIXME: relax this, eventually]
      - integer start (or no start)
@@ -648,7 +650,7 @@ main (int argc, char **argv)
                          && all_digits_p (argv[optind + 2])))
       && !equal_width && !format_str && strlen (separator) == 1)
     {
-      char const *s1 = n_args == 1 ? "1" : argv[optind];
+      char const *s1 = user_start;
       char const *s2 = argv[optind + (n_args - 1)];
       seq_fast (s1, s2, step.value);
     }
@@ -683,7 +685,9 @@ main (int argc, char **argv)
     {
       char *s1;
       char *s2;
-      if (asprintf (&s1, "%0.Lf", first.value) < 0)
+      if (all_digits_p (user_start))
+        s1 = xstrdup (user_start);
+      else if (asprintf (&s1, "%0.Lf", first.value) < 0)
         xalloc_die ();
       if (! isfinite (last.value))
         s2 = xstrdup ("inf"); /* Ensure "inf" is used.  */

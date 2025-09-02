@@ -40,7 +40,14 @@ a=$INTMAX_MAX
 b=$INTMAX_OFLOW
 
 seq $a $b > out || fail=1
-printf "$a\n$b\n" > exp || fail=1
+printf "$a\n$b\n" > exp || framework_failure_
+compare exp out || fail=1
+
+# Test case fixed in v9.8
+# I.e. All digit start, with non digits end
+a=18446744073709551617
+seq $a inf | head -n1 > out || fail=1
+printf "$a\n" > exp || framework_failure_
 compare exp out || fail=1
 
 Exit $fail

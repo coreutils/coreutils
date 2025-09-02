@@ -112,10 +112,14 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   tsort now accepts and ignores -w.
 
-** Performance improvements
+** Improvements
 
   'factor' is now much faster at identifying large prime numbers,
   and significantly faster on composite numbers greater than 2^128.
+
+  'seq' is more accurate with large integer start values.
+  Previously 'seq 18446744073709551617 inf | head -n1' would
+  output the number before the user specified start value.
 
 ** Build-related
 
