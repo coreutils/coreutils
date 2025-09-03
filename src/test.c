@@ -41,6 +41,7 @@
 #include "system.h"
 #include "assure.h"
 #include "c-ctype.h"
+#include "issymlink.h"
 #include "quote.h"
 #include "stat-time.h"
 #include "strnumcmp.h"
@@ -467,8 +468,7 @@ unary_operator (void)
 
     case 'h':			/* File is a symbolic link? */
       unary_advance ();
-      char linkbuf[1];
-      return 0 <= readlink (argv[pos - 1], linkbuf, 1);
+      return issymlink (argv[pos - 1]) == 1;
 
     case 'u':			/* File is setuid? */
       unary_advance ();

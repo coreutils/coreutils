@@ -49,6 +49,7 @@
 #include "hashcode-file.h"
 #include "ignore-value.h"
 #include "ioblksize.h"
+#include "issymlink.h"
 #include "quote.h"
 #include "renameatu.h"
 #include "root-uid.h"
@@ -1444,7 +1445,7 @@ copy_reg (char const *src_name, char const *dst_name,
 
       /* When trying to copy through a dangling destination symlink,
          the above open fails with EEXIST.  If that happens, and
-         readlinkat shows that it is a symlink, then we
+         issymlinkat shows that it is a symlink, then we
          have a problem: trying to resolve this dangling symlink to
          a directory/destination-entry pair is fundamentally racy,
          so punt.  If x->open_dangling_dest_symlink is set (cp sets
@@ -1454,8 +1455,7 @@ copy_reg (char const *src_name, char const *dst_name,
          only when copying, i.e., not in move_mode.  */
       if (dest_desc < 0 && dest_errno == EEXIST && ! x->move_mode)
         {
-          char dummy[1];
-          if (0 <= readlinkat (dst_dirfd, dst_relname, dummy, sizeof dummy))
+          if (issymlinkat (dst_dirfd, dst_relname) == 1)
             {
               if (x->open_dangling_dest_symlink)
                 {

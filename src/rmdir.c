@@ -28,6 +28,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "issymlink.h"
 #include "prog-fprintf.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -269,8 +270,7 @@ main (int argc, char **argv)
                       /* Ensure the last component was a symlink.  */
                       char *dir_arg = xstrdup (dir);
                       strip_trailing_slashes (dir);
-                      char linkbuf[1];
-                      if (0 <= readlink (dir, linkbuf, 1))
+                      if (issymlink (dir) == 1)
                         {
                           error (0, 0,
                                  _("failed to remove %s:"
