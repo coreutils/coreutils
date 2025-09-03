@@ -191,14 +191,13 @@ the following order: newline, word, character, byte, maximum line length.\n\
   exit (status);
 }
 
-/* Return non zero if a non breaking space.  */
+/* Return non zero if POSIXLY_CORRECT is not set and WC is a non breaking
+   space.  */
 ATTRIBUTE_PURE
 static int
-iswnbspace (wint_t wc)
+maybe_c32isnbspace (char32_t wc)
 {
-  return ! posixly_correct
-         && (wc == 0x00A0 || wc == 0x2007
-             || wc == 0x202F || wc == 0x2060);
+  return ! posixly_correct && c32isnbspace (wc);
 }
 
 /* FILE is the name of the file (or null for standard input)
@@ -525,8 +524,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
                           if (width > 0)
                             linepos += width;
                         }
-                      in_word2 = ! iswspace (wide_char)
-                                 && ! iswnbspace (wide_char);
+                      in_word2 = (! iswspace (wide_char)
+                                  && ! maybe_c32isnbspace (wide_char));
                     }
 
                   /* Count words by counting word starts, i.e., each
@@ -798,7 +797,7 @@ main (int argc, char **argv)
       wc_isprint[i] = !!isprint (i);
   if (print_words)
     for (int i = 0; i <= UCHAR_MAX; i++)
-      wc_isspace[i] = isspace (i) || iswnbspace (btoc32 (i));
+      wc_isspace[i] = isspace (i) || maybe_c32isnbspace (btoc32 (i));
 
   bool read_tokens = false;
   struct argv_iterator *ai;

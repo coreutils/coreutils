@@ -70,6 +70,7 @@
 #include <stdckdint.h>
 #include <stddef.h>
 #include <string.h>
+#include <uchar.h>
 #include <errno.h>
 
 /* Some systems don't define this; POSIX mentions it but says it is
@@ -147,6 +148,14 @@ enum
    a bit safer than casting to unsigned char, since it catches some type
    errors that the cast doesn't.  */
 static inline unsigned char to_uchar (char ch) { return ch; }
+
+/* Return non zero if a non breaking space.  */
+ATTRIBUTE_PURE
+static inline int
+c32isnbspace (char32_t wc)
+{
+  return wc == 0x00A0 || wc == 0x2007 || wc == 0x202F || wc == 0x2060;
+}
 
 #include <locale.h>
 

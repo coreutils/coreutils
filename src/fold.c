@@ -216,7 +216,7 @@ fold_file (char const *filename, size_t width)
                   for (mcel_t g2; logical_p < logical_lim; logical_p += g2.len)
                     {
                       g2 = mcel_scan (logical_p, logical_lim);
-                      if (c32isblank (g2.ch))
+                      if (c32isblank (g2.ch) && ! c32isnbspace (g2.ch))
                         {
                           space_length = g2.len;
                           logical_end = logical_p - line_out;
