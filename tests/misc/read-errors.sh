@@ -30,10 +30,14 @@ cksum -a crc .
 cksum -a crc32b .
 cksum -a md5 .
 cksum -a sha1 .
-cksum -a sha224 .
-cksum -a sha256 .
-cksum -a sha384 .
-cksum -a sha512 .
+cksum -a sha2 -l 224 .
+cksum -a sha2 -l 256 .
+cksum -a sha2 -l 384 .
+cksum -a sha2 -l 512 .
+cksum -a sha3 -l 224 .
+cksum -a sha3 -l 256 .
+cksum -a sha3 -l 384 .
+cksum -a sha3 -l 512 .
 cksum -a sm3 .
 cksum -a sysv .
 comm . .

@@ -25,30 +25,31 @@ sysv    u2
 crc     u4
 md5     x1
 sha1    x1
-sha224  x1
-sha256  x1
-sha384  x1
-sha512  x1
-blake2b x1
+sha2    x1  -l224 -l256 -l384 -l512
+sha3    x1  -l224 -l256 -l384 -l512
+blake2b x1  -l8 -l256 -l512
 sm3     x1
 EOF
 
 date > file.in || framework_failure_
 
-while read algo type; do
-  # Binary converted back to text
-  cksum --raw --algorithm $algo file.in > digest.bin || fail=1
-  d='digest.bin.txt'
-  od --endian=big -An -w1024 -t$type < digest.bin | tr -d ' ' \
-    > "$d" || framework_failure_
-  # Pad the bsd checksum with leading 0's, if needed.
-  case $algo in bsd) n=$(cat "$d"); printf '%05d\n' "$n" > "$d" ;; esac
+while read algo type lengths; do
+  : "${lengths:=-l0}"
+  for len in $lengths; do
+    # Binary converted back to text
+    cksum --raw -a $algo $len file.in > digest.bin || fail=1
+    d='digest.bin.txt'
+    od --endian=big -An -w1024 -t$type < digest.bin | tr -d ' ' \
+      > "$d" || framework_failure_
+    # Pad the bsd checksum with leading 0's, if needed.
+    case $algo in bsd) n=$(cat "$d"); printf '%05d\n' "$n" > "$d" ;; esac
 
-  # Standard text output
-  cksum --untagged --algorithm $algo < file.in | cut -d ' ' -f1 \
-    > digest.txt || fail=1
+    # Standard text output
+    cksum --untagged -a $algo $len < file.in | cut -d ' ' -f1 \
+      > digest.txt || fail=1
 
-  compare digest.txt "$d" || fail=1
+    compare digest.txt "$d" || fail=1
+  done
 done < digest_types
 
 # Ensure --base64 and --raw not used together
