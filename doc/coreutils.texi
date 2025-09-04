@@ -4367,8 +4367,9 @@ against malicious tampering: although finding a file with a given \hash\
 fingerprint is considered infeasible at the moment, it is known how
 to modify certain files, including digital certificates, so that they
 appear valid when signed with an \hash\ digest.  For more secure hashes,
-consider using SHA-2, SHA-3, or @command{b2sum}.
-@xref{sha2 utilities}. @xref{b2sum invocation}.
+consider using @samp{sha2}, @samp{sha3}, or @samp{blake2b},
+available through the @command{cksum} @option{--algorithm} option.
+@xref{cksum invocation}.
 @end macro
 @weakHash{MD5}
 
