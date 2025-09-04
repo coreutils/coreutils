@@ -23,7 +23,6 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include <c-ctype.h>
-#include <uchar.h>
 
 #include "system.h"
 #include "assure.h"

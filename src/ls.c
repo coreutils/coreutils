@@ -55,7 +55,6 @@
 #include <pwd.h>
 #include <getopt.h>
 #include <signal.h>
-#include <uchar.h>
 
 #if HAVE_LANGINFO_CODESET
 # include <langinfo.h>

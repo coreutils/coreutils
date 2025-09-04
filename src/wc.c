@@ -23,7 +23,6 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include <uchar.h>
 
 #include <argmatch.h>
 #include <argv-iter.h>
