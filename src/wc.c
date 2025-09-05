@@ -523,7 +523,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
                           if (width > 0)
                             linepos += width;
                         }
-                      in_word2 = (! iswspace (wide_char)
+                      in_word2 = (! c32isspace (wide_char)
                                   && ! maybe_c32isnbspace (wide_char));
                     }
 
