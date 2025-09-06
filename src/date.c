@@ -487,8 +487,6 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, short_options, long_options, nullptr))
          != -1)
     {
-      char const *new_format = nullptr;
-
       switch (optc)
         {
         case 'd':
@@ -516,7 +514,7 @@ main (int argc, char **argv)
             enum Time_spec i =
               XARGMATCH ("--rfc-3339", optarg,
                          time_spec_string + 2, time_spec + 2);
-            new_format = rfc_3339_format[i];
+            format = rfc_3339_format[i];
             format_in_c_locale = true;
             break;
           }
@@ -534,7 +532,7 @@ main (int argc, char **argv)
               (optarg
                ? XARGMATCH ("--iso-8601", optarg, time_spec_string, time_spec)
                : TIME_SPEC_DATE);
-            new_format = iso_8601_format[i];
+            format = iso_8601_format[i];
             format_in_c_locale = true;
             break;
           }
@@ -542,7 +540,7 @@ main (int argc, char **argv)
           reference = optarg;
           break;
         case 'R':
-          new_format = rfc_email_format;
+          format = rfc_email_format;
           format_in_c_locale = true;
           break;
         case 's':
@@ -563,13 +561,6 @@ main (int argc, char **argv)
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
         default:
           usage (EXIT_FAILURE);
-        }
-
-      if (new_format)
-        {
-          if (format)
-            error (EXIT_FAILURE, 0, _("multiple output formats specified"));
-          format = new_format;
         }
     }
 
