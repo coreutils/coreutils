@@ -353,6 +353,7 @@ all_tests =					\
   tests/nproc/nproc-positive.sh			\
   tests/nproc/nproc-override.sh			\
   tests/misc/numfmt.pl				\
+  tests/misc/option-aliases.sh			\
   tests/od/od-N.sh				\
   tests/od/od-j.sh				\
   tests/od/od-multiple-t.sh			\
