@@ -222,6 +222,7 @@ static_assert (DEC_BLOCKSIZE % 40 == 0); /* Complete encoded blocks are used. */
 # define base_decode_context base32_decode_context
 # define base_decode_ctx_init base32_decode_ctx_init
 # define base_decode_ctx base32_decode_ctx
+# define base_decode_ctx_finalize decode_ctx_finalize
 # define isubase isubase32
 #elif BASE_TYPE == 64
 # define BASE_LENGTH BASE64_LENGTH
@@ -238,6 +239,7 @@ static_assert (DEC_BLOCKSIZE % 12 == 0); /* Complete encoded blocks are used. */
 # define base_decode_context base64_decode_context
 # define base_decode_ctx_init base64_decode_ctx_init
 # define base_decode_ctx base64_decode_ctx
+# define base_decode_ctx_finalize decode_ctx_finalize
 # define isubase isubase64
 #elif BASE_TYPE == 42
 
@@ -316,10 +318,68 @@ static bool (*base_encode_ctx) (struct base_encode_context *ctx,
 static bool (*base_encode_ctx_finalize) (struct base_encode_context *ctx,
                                          char *restrict *out, idx_t *outlen);
 
+static bool
+no_padding (MAYBE_UNUSED struct base_decode_context *ctx)
+{
+  return false;
+}
+#endif
+
+#if BASE_TYPE == 42
+static bool (*has_padding) (struct base_decode_context *ctx);
+
+static bool
+base64_ctx_has_padding (struct base_decode_context *ctx)
+{
+  return ctx->i && ctx->ctx.base64.buf[ctx->i - 1] == '=';
+}
+
+static bool
+base32_ctx_has_padding (struct base_decode_context *ctx)
+{
+  return ctx->i && ctx->ctx.base32.buf[ctx->i - 1] == '=';
+}
+#else
+static bool
+has_padding (struct base_decode_context *ctx)
+{
+  return ctx->i && ctx->buf[ctx->i - 1] == '=';
+}
 #endif
 
 
+/* Process any pending data in CTX, while auto padding if appropriate.
+   Return TRUE on success, FALSE on failure.  */
 
+static bool
+decode_ctx_finalize (struct base_decode_context *ctx,
+                     char *restrict *out, idx_t *outlen)
+{
+  if (ctx->i == 0)
+    {
+      *outlen = 0;
+      return true;
+    }
+
+  /* Auto-pad input and flush the context */
+  char padbuf[8] ATTRIBUTE_NONSTRING = "========";
+  idx_t auto_padding = REQUIRED_PADDING (ctx->i);
+  idx_t n = *outlen;
+  bool result;
+
+  if (auto_padding && ! has_padding (ctx))
+    {
+      affirm (auto_padding <= sizeof (padbuf));
+      result = base_decode_ctx (ctx, padbuf, auto_padding, *out, &n);
+    }
+  else
+    {
+      result = base_decode_ctx (ctx, "", 0, *out, &n);
+    }
+
+  *outlen = n;
+  return result;
+}
 
 #if BASE_TYPE == 42
 
@@ -1446,22 +1506,6 @@ do_encode (FILE *in, char const *infile, FILE *out, idx_t wrap_column)
   finish_and_exit (in, infile);
 }
 
-/* Returns TRUE if BUF of length LEN
-   ends with a '=' character.
-   Trailing '\n' characters are ignored.  */
-ATTRIBUTE_PURE
-static bool
-has_padding (char const *buf, size_t len)
-{
-  while (len--)
-    {
-      if (buf[len] == '\n')
-        continue;
-      return buf[len] == '=';
-    }
-  return false;
-}
-
 static _Noreturn void
 do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
 {
@@ -1469,7 +1513,6 @@ do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
   idx_t sum;
   struct base_decode_context ctx;
 
-  char padbuf[8] ATTRIBUTE_NONSTRING = "========";
   inbuf = xmalloc (BASE_LENGTH (DEC_BLOCKSIZE));
   outbuf = xmalloc (DEC_BLOCKSIZE);
 
@@ -1507,54 +1550,26 @@ do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
         }
       while (sum < BASE_LENGTH (DEC_BLOCKSIZE) && !feof (in));
 
-      /* The following "loop" is usually iterated just once.
-         However, when it processes the final input buffer, we want
-         to iterate it one additional time, but with an indicator
-         telling it to flush what is in CTX.  */
-      for (int k = 0; k < 1 + !!feof (in); k++)
+      while (sum || feof (in))
         {
-          if (k == 1)
-            {
-              if (ctx.i == 0)
-                break;
-
-              /* auto pad input (at eof).  */
-              idx_t auto_padding = REQUIRED_PADDING (ctx.i);
-              if (auto_padding && ! has_padding (inbuf, sum))
-                {
-                  affirm (auto_padding <= sizeof (padbuf));
-                  IF_LINT (free (inbuf));
-                  sum = auto_padding;
-                  inbuf = padbuf;
-                }
-              else
-                sum = 0;  /* process ctx buffer only */
-            }
           idx_t n = DEC_BLOCKSIZE;
-          ok = base_decode_ctx (&ctx, inbuf, sum, outbuf, &n);
+          if (sum)
+            ok = base_decode_ctx (&ctx, inbuf, sum, outbuf, &n);
+          else
+            ok = base_decode_ctx_finalize (&ctx, &outbuf, &n);
 
           if (fwrite (outbuf, 1, n, out) < n)
             write_error ();
 
-          if (!ok)
+          if (! ok)
             error (EXIT_FAILURE, 0, _("invalid input"));
+
+          if (sum == 0)
+            break;
+          sum = 0;
         }
     }
   while (!feof (in));
-
-#if BASE_TYPE == 42
-  if (base_decode_ctx_finalize)
-    {
-      idx_t outlen = DEC_BLOCKSIZE;
-      bool ok = base_decode_ctx_finalize (&ctx, &outbuf, &outlen);
-
-      if (fwrite (outbuf, 1, outlen, out) < outlen)
-        write_error ();
-
-      if (!ok)
-        error (EXIT_FAILURE, 0, _("invalid input"));
-    }
-#endif
 
   finish_and_exit (in, infile);
 }
@@ -1631,11 +1646,16 @@ main (int argc, char **argv)
       }
 
 #if BASE_TYPE == 42
+  required_padding = no_required_padding;
+  has_padding = no_padding;
+  base_decode_ctx_finalize = decode_ctx_finalize;
+
   switch (base_type)
     {
     case BASE64_OPTION:
       base_length = base64_length_wrapper;
       required_padding = base64_required_padding;
+      has_padding = base64_ctx_has_padding;
       isubase = isubase64;
       base_encode = base64_encode;
       base_decode_ctx_init = base64_decode_ctx_init_wrapper;
@@ -1645,6 +1665,7 @@ main (int argc, char **argv)
     case BASE64URL_OPTION:
       base_length = base64_length_wrapper;
       required_padding = base64_required_padding;
+      has_padding = base64_ctx_has_padding;
       isubase = isubase64url;
       base_encode = base64url_encode;
       base_decode_ctx_init = base64url_decode_ctx_init_wrapper;
@@ -1654,6 +1675,7 @@ main (int argc, char **argv)
     case BASE32_OPTION:
       base_length = base32_length_wrapper;
       required_padding = base32_required_padding;
+      has_padding = base32_ctx_has_padding;
       isubase = isubase32;
       base_encode = base32_encode;
       base_decode_ctx_init = base32_decode_ctx_init_wrapper;
@@ -1663,6 +1685,7 @@ main (int argc, char **argv)
     case BASE32HEX_OPTION:
       base_length = base32_length_wrapper;
       required_padding = base32_required_padding;
+      has_padding = base32_ctx_has_padding;
       isubase = isubase32hex;
       base_encode = base32hex_encode;
       base_decode_ctx_init = base32hex_decode_ctx_init_wrapper;
@@ -1671,7 +1694,6 @@ main (int argc, char **argv)
 
     case BASE16_OPTION:
       base_length = base16_length;
-      required_padding = no_required_padding;
       isubase = isubase16;
       base_encode = base16_encode;
       base_decode_ctx_init = base16_decode_ctx_init;
@@ -1680,7 +1702,6 @@ main (int argc, char **argv)
 
     case BASE2MSBF_OPTION:
       base_length = base2_length;
-      required_padding = no_required_padding;
       isubase = isubase2;
       base_encode = base2msbf_encode;
       base_decode_ctx_init = base2_decode_ctx_init;
@@ -1689,7 +1710,6 @@ main (int argc, char **argv)
 
     case BASE2LSBF_OPTION:
       base_length = base2_length;
-      required_padding = no_required_padding;
       isubase = isubase2;
       base_encode = base2lsbf_encode;
       base_decode_ctx_init = base2_decode_ctx_init;
@@ -1698,7 +1718,6 @@ main (int argc, char **argv)
 
     case Z85_OPTION:
       base_length = z85_length;
-      required_padding = no_required_padding;
       isubase = isuz85;
       base_encode = z85_encode;
       base_decode_ctx_init = z85_decode_ctx_init;
@@ -1707,7 +1726,6 @@ main (int argc, char **argv)
 
     case BASE58_OPTION:
       base_length = base58_length;
-      required_padding = no_required_padding;
       isubase = isubase58;
       base_encode_ctx_init = base58_encode_ctx_init;
       base_encode_ctx = base58_encode_ctx;

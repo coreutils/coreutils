@@ -336,6 +336,35 @@ my @Tests =
  # Disallow arbitrary whitespace
  ['b58_inval_6', '--base58 -d',    {IN=>$base58_out." "}, {EXIT=>1},
   {ERR=>"$prog: invalid input\n"}],
+
+ # Base32 partial padding with newlines tests
+ ['b32_paddec1', '--base32 --decode', {IN=>'MFRGG'}, {OUT=>"abc"}],
+ ['b32_paddec2', '--base32 --decode', {IN=>'MFRGG==='}, {OUT=>"abc"}],
+ ['b32_paddec3', '--base32 --decode', {IN=>'MFRGGZDFMFRGG'}, {OUT=>"abcdeabc"}],
+ ['b32_paddec4', '--base32 -d', {IN=>"MFRGGZDF\nMFRGG"}, {OUT=>"abcdeabc"}],
+
+ # Base32 bad decode tests - partial padding with newlines
+ ['b32_baddecode1', '--base32 --decode', {IN=>'MFRGGZDF='}, {OUT=>"abcde"},
+  {ERR_SUBST => 's/.*: invalid input//'}, {ERR => "\n"}, {EXIT => 1}],
+ ['b32_baddecode2', '--base32 --decode', {IN=>"MFRGGZDF=\n"}, {OUT=>"abcde"},
+  {ERR_SUBST => 's/.*: invalid input//'}, {ERR => "\n"}, {EXIT => 1}],
+
+ # Base32hex partial padding
+ ['b32h_paddec1', '--base32hex --decode', {IN=>'C5H66'}, {OUT=>"abc"}],
+ ['b32h_paddec2', '--base32hex --decode', {IN=>'C5H66==='}, {OUT=>"abc"}],
+
+ # Test auto-padding boundary conditions
+ ['ctx_auto_pad1', '--base64 --decode', {IN=>'QQ'}, {OUT=>"A"}],
+ ['ctx_auto_pad2', '--base64 --decode', {IN=>'QWI'}, {OUT=>"Ab"}],
+ ['ctx_auto_pad3', '--base32 --decode', {IN=>'IE'}, {OUT=>"A"}],
+ ['ctx_auto_pad4', '--base32 --decode', {IN=>'IFBA'}, {OUT=>"AB"}],
+ ['ctx_auto_pad5', '--base32 --decode', {IN=>'IFBEG'}, {OUT=>"ABC"}],
+
+ # Mixed padding scenarios with newlines at various positions
+ ['ctx_mixed_pad1', '--base64 --decode', {IN=>"QWI=\nQQ"}, {OUT=>"AbA"}],
+ ['ctx_mixed_pad2', '--base64 --decode', {IN=>"QWI=\nQWI="}, {OUT=>"AbAb"}],
+ ['ctx_mixed_pad3', '--base32 --decode', {IN=>"IFBA====\nIE"}, {OUT=>"ABA"}],
+ ['ctx_mixed_pad4', '--base32 -d', {IN=>"IFBA====\nIFBA===="}, {OUT=>"ABAB"}],
 );
 
 # Prepend the command line argument and append a newline to end
