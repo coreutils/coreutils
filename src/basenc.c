@@ -1446,6 +1446,22 @@ do_encode (FILE *in, char const *infile, FILE *out, idx_t wrap_column)
   finish_and_exit (in, infile);
 }
 
+/* Returns TRUE if BUF of length LEN
+   ends with a '=' character.
+   Trailing '\n' characters are ignored.  */
+ATTRIBUTE_PURE
+static bool
+has_padding (char const *buf, size_t len)
+{
+  while (len--)
+    {
+      if (buf[len] == '\n')
+        continue;
+      return buf[len] == '=';
+    }
+  return false;
+}
+
 static _Noreturn void
 do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
 {
@@ -1504,7 +1520,7 @@ do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
 
               /* auto pad input (at eof).  */
               idx_t auto_padding = REQUIRED_PADDING (ctx.i);
-              if (auto_padding && (sum == 0 || inbuf[sum - 1] != '='))
+              if (auto_padding && ! has_padding (inbuf, sum))
                 {
                   affirm (auto_padding <= sizeof (padbuf));
                   IF_LINT (free (inbuf));
