@@ -122,4 +122,24 @@ export POSIXLY_CORRECT=1
 returns_ 127 nohup >/dev/null 2>&1 || fail=1
 unset POSIXLY_CORRECT
 
+# Make sure we create nohup.out with u+rw permissions
+(
+  rm -f nohup.out
+
+  # POSIX shells immediately exit the subshell on exec error.
+  # So check we can write to /dev/tty before the exec, which
+  # isn't possible if we've no controlling tty for example.
+  test -c /dev/tty && >/dev/tty || exit 0
+  exec >/dev/tty
+  test -t 1 || exit 0
+
+  umask 600 # Ensure nohup undoes this
+
+  nohup echo hi || fail=1
+  test "$(stat -c %a nohup.out)" = 600 || fail=1
+
+  rm -f nohup.out
+  exit $fail
+) || fail=1
+
 Exit $fail

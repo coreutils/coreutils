@@ -141,7 +141,7 @@ main (int argc, char **argv)
       char const *file = "nohup.out";
       int flags = O_CREAT | O_WRONLY | O_APPEND;
       mode_t mode = S_IRUSR | S_IWUSR;
-      mode_t umask_value = umask (~mode);
+      mode_t umask_value = umask (0);
       out_fd = (redirecting_stdout
                 ? fd_reopen (STDOUT_FILENO, file, flags, mode)
                 : open (file, flags, mode));

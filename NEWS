@@ -47,6 +47,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   with multi-byte thousands grouping characters.
   [This bug was present in "the beginning".]
 
+  'nohup' avoids implementation defined behavior setting umask,
+  avoiding a FORTIFY runtime failure on Bionic libc.
+  [This bug was present in "the beginning".]
+
   'od --strings' with '-N' now works correctly.  Previously od might
   write a NUL byte after a heap buffer, or output invalid addresses.
   [These bugs were present in "the beginning".]
