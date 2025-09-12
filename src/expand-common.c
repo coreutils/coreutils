@@ -380,7 +380,7 @@ next_file (FILE *fp)
   return nullptr;
 }
 
-/* */
+/* Close standard input if we have read from it.  */
 extern void
 cleanup_file_list_stdin (void)
 {
@@ -388,7 +388,8 @@ cleanup_file_list_stdin (void)
       error (EXIT_FAILURE, errno, "-");
 }
 
-
+/* Emit the --help output for --tabs=LIST option accepted by expand and
+   unexpand.  */
 extern void
 emit_tab_list_info (void)
 {

@@ -38,7 +38,10 @@ add_tab_stop (colno tabval);
 extern void
 parse_tab_stops (char const *stops) _GL_ATTRIBUTE_NONNULL ();
 
-/* TODO: Document */
+/* Return number of first tab stop after COLUMN.  TAB_INDEX specifies
+   many multiple tab-sizes.  Set *LAST_TAB depending on whether we are
+   returning COLUMN + 1 merely because we're past the last tab.
+   If the number would overflow, diagnose this and exit.  */
 extern colno
 get_next_tab_column (const colno column, idx_t *tab_index,
                      bool *last_tab)
@@ -63,10 +66,11 @@ set_file_list (char **file_list);
 extern FILE *
 next_file (FILE *fp);
 
-/* */
+/* Close standard input if we have read from it.  */
 extern void
 cleanup_file_list_stdin (void);
 
-
+/* Emit the --help output for --tabs=LIST option accepted by expand and
+   unexpand.  */
 extern void
 emit_tab_list_info (void);
