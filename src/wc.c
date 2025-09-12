@@ -33,6 +33,7 @@
 #include <xbinary-io.h>
 
 #include "system.h"
+#include "cpu-supports.h"
 #include "ioblksize.h"
 #include "wc.h"
 
@@ -133,7 +134,7 @@ static enum total_type total_mode = total_auto;
 static bool
 avx2_supported (void)
 {
-  bool avx_enabled = 0 < __builtin_cpu_supports ("avx2");
+  bool avx_enabled = cpu_supports ("avx2");
 
   if (debug)
     error (0, 0, (avx_enabled

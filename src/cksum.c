@@ -134,6 +134,7 @@ main (void)
 # endif
 
 # include "crc.h"
+# include "cpu-supports.h"
 
 /* Number of bytes to read at once.  */
 # define BUFLEN (1 << 16)
@@ -144,8 +145,8 @@ static cksum_fp_t
 pclmul_supported (void)
 {
 # if USE_PCLMUL_CRC32 || GL_CRC_X86_64_PCLMUL
-  bool pclmul_enabled = (0 < __builtin_cpu_supports ("pclmul")
-                         && 0 < __builtin_cpu_supports ("avx"));
+  bool pclmul_enabled = (cpu_supports ("avx")
+                         && cpu_supports ("pclmul"));
   if (cksum_debug)
     error (0, 0, "%s",
            (pclmul_enabled
@@ -165,8 +166,8 @@ avx2_supported (void)
      the avx512 version, but it implies that the avx2 version
      is supported  */
 # if USE_AVX2_CRC32
-  bool avx2_enabled = (0 < __builtin_cpu_supports ("vpclmulqdq")
-                       && 0 < __builtin_cpu_supports ("avx2"));
+  bool avx2_enabled = (cpu_supports ("avx2")
+                       && cpu_supports ("vpclmulqdq"));
   if (cksum_debug)
     error (0, 0, "%s",
            (avx2_enabled
@@ -186,9 +187,10 @@ avx512_supported (void)
      mavx512f for most of the avx512 functions we're using
      mavx512bw for byte swapping  */
 # if USE_AVX512_CRC32
-  bool avx512_enabled = (0 < __builtin_cpu_supports ("vpclmulqdq")
-                         && 0 < __builtin_cpu_supports ("avx512bw")
-                         && 0 < __builtin_cpu_supports ("avx512f"));
+  bool avx512_enabled = (cpu_supports ("avx512f")
+                         && cpu_supports ("avx512bw")
+                         && cpu_supports ("vpclmulqdq"));
+
   if (cksum_debug)
     error (0, 0, "%s",
            (avx512_enabled
@@ -206,7 +208,8 @@ vmull_supported (void)
 {
   /* vmull for multiplication  */
 # if USE_VMULL_CRC32
-  bool vmull_enabled = (getauxval (AT_HWCAP) & HWCAP_PMULL) > 0;
+  bool vmull_enabled = (cpu_may_support ("pmull")
+                        && (getauxval (AT_HWCAP) & HWCAP_PMULL) > 0);
   if (cksum_debug)
     error (0, 0, "%s",
            (vmull_enabled

@@ -283,6 +283,7 @@ all_tests =					\
   tests/cut/cut.pl				\
   tests/cut/cut-huge-range.sh			\
   tests/wc/wc.pl				\
+  tests/wc/wc-cpu.sh				\
   tests/wc/wc-files0-from.pl			\
   tests/wc/wc-files0.sh				\
   tests/wc/wc-nbsp.sh				\

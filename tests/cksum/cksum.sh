@@ -22,15 +22,26 @@ print_ver_ cksum printf
 
 returns_ 1 cksum missing 2> /dev/null || fail=1
 
+GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX512F,-AVX2,-AVX,-PMULL' \
+ cksum --debug /dev/null 2>debug || fail=1
+grep 'using.*hardware support' debug && fail=1
+
 # Pass in expected crc and crc32b for file "in"
 # Sets fail=1 upon failure
 crc_check() {
-  for crct in crc crc32b; do
-    cksum -a $crct in > out || fail=1
-    case "$crct" in crc) crce="$1";; crc32b) crce="$2";; esac
-    size=$(stat -c %s in) || framework_failure_
-    printf '%s\n' "$crce $size in" > exp || framework_failure_
-    compare exp out || fail=1
+  TUNABLE_DISABLE='glibc.cpu.hwcaps='
+  for DHW in NONE AVX512F AVX2 AVX PMULL; do
+    TUNABLE_DISABLE="$TUNABLE_DISABLE-$DHW,"
+    for crct in crc crc32b; do
+      GLIBC_TUNABLES="$TUNABLE_DISABLE" \
+       cksum -a $crct in || fail=1
+      GLIBC_TUNABLES="$TUNABLE_DISABLE" \
+       cksum -a $crct in > out || fail=1
+      case "$crct" in crc) crce="$1";; crc32b) crce="$2";; esac
+      size=$(stat -c %s in) || framework_failure_
+      printf '%s\n' "$crce $size in" > exp || framework_failure_
+      compare exp out || fail=1
+    done
   done
 }
 
