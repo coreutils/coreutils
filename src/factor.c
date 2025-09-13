@@ -1599,7 +1599,7 @@ factor_up (struct factors *factors, mp_limb_t t1, mp_limb_t t0,
 static void
 factor (struct factors *factors, mp_limb_t t1, mp_limb_t t0)
 {
-  return factor_up (factors, t1, t0, 0);
+  factor_up (factors, t1, t0, 0);
 }
 
 /* Return the prime factors of T.  */
