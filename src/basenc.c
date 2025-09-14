@@ -393,6 +393,7 @@ static void
 base64_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 {
   base64_decode_ctx_init (&ctx->ctx.base64);
+  ctx->i = 0;
 }
 
 static bool
@@ -449,6 +450,7 @@ static void
 base64url_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 {
   base64_decode_ctx_init (&ctx->ctx.base64);
+  ctx->i = 0;
   init_inbuf (ctx);
 }
 
@@ -497,6 +499,7 @@ static void
 base32_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 {
   base32_decode_ctx_init (&ctx->ctx.base32);
+  ctx->i = 0;
 }
 
 static bool
@@ -576,6 +579,7 @@ static void
 base32hex_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 {
   base32_decode_ctx_init (&ctx->ctx.base32);
+  ctx->i = 0;
   init_inbuf (ctx);
 }
 
