@@ -281,11 +281,11 @@ struct base58_context
 struct base2_decode_context
 {
   unsigned char octet;
+  int bit_pos;
 };
 
 struct base_decode_context
 {
-  int i; /* will be updated manually */
   union {
     struct base64_decode_context base64;
     struct base32_decode_context base32;
@@ -323,27 +323,70 @@ no_padding (MAYBE_UNUSED struct base_decode_context *ctx)
 {
   return false;
 }
+
+static int
+no_pending_length (MAYBE_UNUSED struct base_decode_context *ctx)
+{
+  return 0;
+}
 #endif
 
 #if BASE_TYPE == 42
 static bool (*has_padding) (struct base_decode_context *ctx);
+static int (*get_pending_length) (struct base_decode_context *ctx);
 
 static bool
 base64_ctx_has_padding (struct base_decode_context *ctx)
 {
-  return ctx->i && ctx->ctx.base64.buf[ctx->i - 1] == '=';
+  return ctx->ctx.base64.i && ctx->ctx.base64.buf[ctx->ctx.base64.i - 1] == '=';
 }
 
 static bool
 base32_ctx_has_padding (struct base_decode_context *ctx)
 {
-  return ctx->i && ctx->ctx.base32.buf[ctx->i - 1] == '=';
+  return ctx->ctx.base32.i && ctx->ctx.base32.buf[ctx->ctx.base32.i - 1] == '=';
+}
+
+static int
+base64_ctx_get_pending_length (struct base_decode_context *ctx)
+{
+  return ctx->ctx.base64.i;
+}
+
+static int
+base32_ctx_get_pending_length (struct base_decode_context *ctx)
+{
+  return ctx->ctx.base32.i;
+}
+
+static int
+base16_ctx_get_pending_length (MAYBE_UNUSED struct base_decode_context *ctx)
+{
+  return 1; /* Always check nibble state.  */
+}
+
+static int
+z85_ctx_get_pending_length (struct base_decode_context *ctx)
+{
+  return ctx->ctx.z85.i;
+}
+
+static int
+base2_ctx_get_pending_length (struct base_decode_context *ctx)
+{
+  return ctx->ctx.base2.bit_pos;
 }
 #else
 static bool
 has_padding (struct base_decode_context *ctx)
 {
   return ctx->i && ctx->buf[ctx->i - 1] == '=';
+}
+
+static int
+get_pending_length (struct base_decode_context *ctx)
+{
+  return ctx->i;
 }
 #endif
 
@@ -355,7 +398,7 @@ static bool
 decode_ctx_finalize (struct base_decode_context *ctx,
                      char *restrict *out, idx_t *outlen)
 {
-  if (ctx->i == 0)
+  if (get_pending_length (ctx) == 0)
     {
       *outlen = 0;
       return true;
@@ -363,7 +406,8 @@ decode_ctx_finalize (struct base_decode_context *ctx,
 
   /* Auto-pad input and flush the context */
   char padbuf[8] ATTRIBUTE_NONSTRING = "========";
-  idx_t auto_padding = REQUIRED_PADDING (ctx->i);
+  idx_t pending_len = get_pending_length (ctx);
+  idx_t auto_padding = REQUIRED_PADDING (pending_len);
   idx_t n = *outlen;
   bool result;
 
@@ -393,7 +437,6 @@ static void
 base64_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 {
   base64_decode_ctx_init (&ctx->ctx.base64);
-  ctx->i = 0;
 }
 
 static bool
@@ -401,9 +444,7 @@ base64_decode_ctx_wrapper (struct base_decode_context *ctx,
                            char const *restrict in, idx_t inlen,
                            char *restrict out, idx_t *outlen)
 {
-  bool b = base64_decode_ctx (&ctx->ctx.base64, in, inlen, out, outlen);
-  ctx->i = ctx->ctx.base64.i;
-  return b;
+  return base64_decode_ctx (&ctx->ctx.base64, in, inlen, out, outlen);
 }
 
 static void
@@ -450,7 +491,6 @@ static void
 base64url_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 {
   base64_decode_ctx_init (&ctx->ctx.base64);
-  ctx->i = 0;
   init_inbuf (ctx);
 }
 
@@ -480,11 +520,8 @@ base64url_decode_ctx_wrapper (struct base_decode_context *ctx,
       ++p;
     }
 
-  bool b = base64_decode_ctx (&ctx->ctx.base64, ctx->inbuf, inlen,
-                              out, outlen);
-  ctx->i = ctx->ctx.base64.i;
-
-  return b;
+  return base64_decode_ctx (&ctx->ctx.base64, ctx->inbuf, inlen,
+                            out, outlen);
 }
 
 
@@ -499,7 +536,6 @@ static void
 base32_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 {
   base32_decode_ctx_init (&ctx->ctx.base32);
-  ctx->i = 0;
 }
 
 static bool
@@ -507,9 +543,7 @@ base32_decode_ctx_wrapper (struct base_decode_context *ctx,
                            char const *restrict in, idx_t inlen,
                            char *restrict out, idx_t *outlen)
 {
-  bool b = base32_decode_ctx (&ctx->ctx.base32, in, inlen, out, outlen);
-  ctx->i = ctx->ctx.base32.i;
-  return b;
+  return base32_decode_ctx (&ctx->ctx.base32, in, inlen, out, outlen);
 }
 
 /* ABCDEFGHIJKLMNOPQRSTUVWXYZ234567
@@ -579,7 +613,6 @@ static void
 base32hex_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 {
   base32_decode_ctx_init (&ctx->ctx.base32);
-  ctx->i = 0;
   init_inbuf (ctx);
 }
 
@@ -603,11 +636,8 @@ base32hex_decode_ctx_wrapper (struct base_decode_context *ctx,
       ++in;
     }
 
-  bool b = base32_decode_ctx (&ctx->ctx.base32, ctx->inbuf, inlen,
-                              out, outlen);
-  ctx->i = ctx->ctx.base32.i;
-
-  return b;
+  return base32_decode_ctx (&ctx->ctx.base32, ctx->inbuf, inlen,
+                            out, outlen);
 }
 /* With this approach this file works independent of the charset used
    (think EBCDIC).  However, it does assume that the characters in the
@@ -740,7 +770,6 @@ base16_decode_ctx_init (struct base_decode_context *ctx)
 {
   init_inbuf (ctx);
   ctx->ctx.base16.nibble = -1;
-  ctx->i = 1;
 }
 
 
@@ -868,7 +897,6 @@ z85_decode_ctx_init (struct base_decode_context *ctx)
 {
   init_inbuf (ctx);
   ctx->ctx.z85.i = 0;
-  ctx->i = 1;
 }
 
 
@@ -977,7 +1005,6 @@ z85_decode_ctx (struct base_decode_context *ctx,
           ctx->ctx.z85.i = 0;
         }
     }
-  ctx->i = ctx->ctx.z85.i;
   return true;
 }
 
@@ -1037,7 +1064,7 @@ base2_decode_ctx_init (struct base_decode_context *ctx)
 {
   init_inbuf (ctx);
   ctx->ctx.base2.octet = 0;
-  ctx->i = 0;
+  ctx->ctx.base2.bit_pos = 0;
 }
 
 
@@ -1054,7 +1081,7 @@ base2lsbf_decode_ctx (struct base_decode_context *ctx,
      if there is a dangling bit - we are missing some bits,
      so return false - indicating an invalid input.  */
   if (inlen == 0)
-    return ctx->i == 0;
+    return ctx->ctx.base2.bit_pos == 0;
 
   while (inlen--)
     {
@@ -1068,15 +1095,15 @@ base2lsbf_decode_ctx (struct base_decode_context *ctx,
         return false;
 
       bool bit = (*in == '1');
-      ctx->ctx.base2.octet |= bit << ctx->i;
-      ++ctx->i;
+      ctx->ctx.base2.octet |= bit << ctx->ctx.base2.bit_pos;
+      ++ctx->ctx.base2.bit_pos;
 
-      if (ctx->i == 8)
+      if (ctx->ctx.base2.bit_pos == 8)
         {
           *out++ = ctx->ctx.base2.octet;
           ctx->ctx.base2.octet = 0;
           ++*outlen;
-          ctx->i = 0;
+          ctx->ctx.base2.bit_pos = 0;
         }
 
       ++in;
@@ -1098,7 +1125,7 @@ base2msbf_decode_ctx (struct base_decode_context *ctx,
      if there is a dangling bit - we are missing some bits,
      so return false - indicating an invalid input.  */
   if (inlen == 0)
-    return ctx->i == 0;
+    return ctx->ctx.base2.bit_pos == 0;
 
   while (inlen--)
     {
@@ -1112,17 +1139,16 @@ base2msbf_decode_ctx (struct base_decode_context *ctx,
         return false;
 
       bool bit = (*in == '1');
-      if (ctx->i == 0)
-        ctx->i = 8;
-      --ctx->i;
-      ctx->ctx.base2.octet |= bit << ctx->i;
+      if (ctx->ctx.base2.bit_pos == 0)
+        ctx->ctx.base2.bit_pos = 8;
+      --ctx->ctx.base2.bit_pos;
+      ctx->ctx.base2.octet |= bit << ctx->ctx.base2.bit_pos;
 
-      if (ctx->i == 0)
+      if (ctx->ctx.base2.bit_pos == 0)
         {
           *out++ = ctx->ctx.base2.octet;
           ctx->ctx.base2.octet = 0;
           ++*outlen;
-          ctx->i = 0;
         }
 
       ++in;
@@ -1279,7 +1305,6 @@ base58_decode_ctx_init (struct base_decode_context *ctx)
   ctx->ctx.base58.size = 0;
   ctx->ctx.base58.capacity = 0;
   ctx->ctx.base58.buf = nullptr;
-  ctx->i = 0;
 }
 
 static bool
@@ -1652,6 +1677,7 @@ main (int argc, char **argv)
 #if BASE_TYPE == 42
   required_padding = no_required_padding;
   has_padding = no_padding;
+  get_pending_length = no_pending_length;
   base_decode_ctx_finalize = decode_ctx_finalize;
 
   switch (base_type)
@@ -1660,6 +1686,7 @@ main (int argc, char **argv)
       base_length = base64_length_wrapper;
       required_padding = base64_required_padding;
       has_padding = base64_ctx_has_padding;
+      get_pending_length = base64_ctx_get_pending_length;
       isubase = isubase64;
       base_encode = base64_encode;
       base_decode_ctx_init = base64_decode_ctx_init_wrapper;
@@ -1670,6 +1697,7 @@ main (int argc, char **argv)
       base_length = base64_length_wrapper;
       required_padding = base64_required_padding;
       has_padding = base64_ctx_has_padding;
+      get_pending_length = base64_ctx_get_pending_length;
       isubase = isubase64url;
       base_encode = base64url_encode;
       base_decode_ctx_init = base64url_decode_ctx_init_wrapper;
@@ -1680,6 +1708,7 @@ main (int argc, char **argv)
       base_length = base32_length_wrapper;
       required_padding = base32_required_padding;
       has_padding = base32_ctx_has_padding;
+      get_pending_length = base32_ctx_get_pending_length;
       isubase = isubase32;
       base_encode = base32_encode;
       base_decode_ctx_init = base32_decode_ctx_init_wrapper;
@@ -1690,6 +1719,7 @@ main (int argc, char **argv)
       base_length = base32_length_wrapper;
       required_padding = base32_required_padding;
       has_padding = base32_ctx_has_padding;
+      get_pending_length = base32_ctx_get_pending_length;
       isubase = isubase32hex;
       base_encode = base32hex_encode;
       base_decode_ctx_init = base32hex_decode_ctx_init_wrapper;
@@ -1698,6 +1728,7 @@ main (int argc, char **argv)
 
     case BASE16_OPTION:
       base_length = base16_length;
+      get_pending_length = base16_ctx_get_pending_length;
       isubase = isubase16;
       base_encode = base16_encode;
       base_decode_ctx_init = base16_decode_ctx_init;
@@ -1706,6 +1737,7 @@ main (int argc, char **argv)
 
     case BASE2MSBF_OPTION:
       base_length = base2_length;
+      get_pending_length = base2_ctx_get_pending_length;
       isubase = isubase2;
       base_encode = base2msbf_encode;
       base_decode_ctx_init = base2_decode_ctx_init;
@@ -1714,6 +1746,7 @@ main (int argc, char **argv)
 
     case BASE2LSBF_OPTION:
       base_length = base2_length;
+      get_pending_length = base2_ctx_get_pending_length;
       isubase = isubase2;
       base_encode = base2lsbf_encode;
       base_decode_ctx_init = base2_decode_ctx_init;
@@ -1722,6 +1755,7 @@ main (int argc, char **argv)
 
     case Z85_OPTION:
       base_length = z85_length;
+      get_pending_length = z85_ctx_get_pending_length;
       isubase = isuz85;
       base_encode = z85_encode;
       base_decode_ctx_init = z85_decode_ctx_init;
