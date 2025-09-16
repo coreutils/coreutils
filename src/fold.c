@@ -192,9 +192,8 @@ fold_file (char const *filename, size_t width)
             }
           if (g.ch == '\n')
             {
-              memcpy (line_out + offset_out, p, g.len);
-              offset_out += g.len;
               fwrite (line_out, sizeof (char), offset_out, stdout);
+              putchar ('\n');
               column = offset_out = 0;
               continue;
             }
@@ -249,15 +248,23 @@ fold_file (char const *filename, size_t width)
 
               if (offset_out == 0)
                 {
-                  memcpy (line_out + offset_out, p, g.len);
+                  memcpy (line_out, p, g.len);
                   offset_out += g.len;
                   continue;
                 }
 
-              line_out[offset_out++] = '\n';
               fwrite (line_out, sizeof (char), offset_out, stdout);
+              putchar ('\n');
               column = offset_out = 0;
               goto rescan;
+            }
+
+          /* This can occur if we have read characters with a width of
+             zero.  */
+          if (sizeof line_out <= offset_out + g.len)
+            {
+              fwrite (line_out, sizeof (char), offset_out, stdout);
+              offset_out = 0;
             }
 
           memcpy (line_out + offset_out, p, g.len);
