@@ -133,6 +133,14 @@ adjust_column (size_t column, mcel_t g)
   return column;
 }
 
+static void
+write_out (char const *line, size_t line_len, bool newline)
+{
+  if (fwrite (line, sizeof (char), line_len, stdout) != line_len
+      || (newline && putchar ('\n') < 0))
+    write_error ();
+}
+
 /* Fold file FILENAME, or standard input if FILENAME is "-",
    to stdout, with maximum line length WIDTH.
    Return true if successful.  */
@@ -192,8 +200,7 @@ fold_file (char const *filename, size_t width)
             }
           if (g.ch == '\n')
             {
-              fwrite (line_out, sizeof (char), offset_out, stdout);
-              putchar ('\n');
+              write_out (line_out, offset_out, /*newline=*/ true);
               column = offset_out = 0;
               continue;
             }
@@ -226,8 +233,7 @@ fold_file (char const *filename, size_t width)
                     {
                       logical_end += space_length;
                       /* Found a blank.  Don't output the part after it. */
-                      fwrite (line_out, sizeof (char), logical_end, stdout);
-                      putchar ('\n');
+                      write_out (line_out, logical_end, /*newline=*/ true);
                       /* Move the remainder to the beginning of the next line.
                          The areas being copied here might overlap. */
                       memmove (line_out, line_out + logical_end,
@@ -253,8 +259,7 @@ fold_file (char const *filename, size_t width)
                   continue;
                 }
 
-              fwrite (line_out, sizeof (char), offset_out, stdout);
-              putchar ('\n');
+              write_out (line_out, offset_out, /*newline=*/ true);
               column = offset_out = 0;
               goto rescan;
             }
@@ -263,7 +268,7 @@ fold_file (char const *filename, size_t width)
              zero.  */
           if (sizeof line_out <= offset_out + g.len)
             {
-              fwrite (line_out, sizeof (char), offset_out, stdout);
+              write_out (line_out, offset_out, /*newline=*/ false);
               offset_out = 0;
             }
 
@@ -272,9 +277,6 @@ fold_file (char const *filename, size_t width)
         }
       if (feof (istream))
         break;
-
-      if (ferror (stdout))
-        write_error ();
 
       /* We read a full buffer of complete characters.  */
       offset_in = 0;
@@ -287,7 +289,7 @@ fold_file (char const *filename, size_t width)
     saved_errno = 0;
 
   if (offset_out)
-    fwrite (line_out, sizeof (char), offset_out, stdout);
+    write_out (line_out, offset_out, /*newline=*/ false);
 
   if (STREQ (filename, "-"))
     clearerr (istream);

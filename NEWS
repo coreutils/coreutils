@@ -142,7 +142,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   'factor' is now much faster at identifying large prime numbers,
   and significantly faster on composite numbers greater than 2^128.
 
-  fold now exits promptly upon receiving a write error,
+  fold now exits immediately upon receiving a write error,
   which is significant when reading large / unbounded inputs.
 
   'seq' is more accurate with large integer start values.
