@@ -127,6 +127,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   Also on other systems the full set of supported baud rates
   is determined at build time if possible.
 
+  Commands that support hardware acceleration like cksum and wc
+  can now disable this acceleration at runtime through the
+  commonly used GLIBC_TUNABLES environment variable.  For example
+  to disable the use of AVX512 instructions in cksum, you can:
+    export GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX512F'
+
 ** Changes to conform better to POSIX.1-2024
 
   readlink now defaults to being verbose if the POSIXLY_CORRECT

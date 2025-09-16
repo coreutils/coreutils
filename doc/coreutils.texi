@@ -225,6 +225,7 @@ Common Options
 * Backup options::               Backup options
 * Block size::                   Block size
 * Floating point::               Floating point number representation
+* Hardware Acceleration::        Hardware acceleration configuration
 * Signal specifications::        Specifying signals
 * Disambiguating names and IDs:: chgrp, chown, chroot, id: user and group syntax
 * Random sources::               Sources of random data
@@ -809,6 +810,7 @@ Items applicable to all programs:
 
 * Exit status::                  Indicating program success or failure.
 * Floating point::               Floating point number representation.
+* Hardware Acceleration::        Hardware acceleration configuration
 * Standards conformance::        Conformance to the POSIX standard.
 * Multi-call invocation::        Multi-call program invocation.
 @end menu
@@ -1575,6 +1577,69 @@ accept numbers in either the current or the C locale; for example,
 they treat @samp{3.14} like @samp{3,14} if the current locale uses
 comma as a decimal point.
 
+
+@node Hardware Acceleration
+@section Hardware Acceleration Configuration
+@cindex hardware acceleration
+
+The @command{cksum} and @command{wc} utilities can use non-generic hardware
+acceleration when available, which can significantly speed up processing.  This
+acceleration can be implemented internally within the coreutils themselves,
+delegated to libraries like OpenSSL, or handled by the Linux kernel.
+
+@subsection Build Configuration
+
+By default, the build enables hardware acceleration detection for all supported
+features.  This applies to both the accelerated code used internally within
+coreutils and the accelerated code used in external libraries.
+
+The detection performed internally within coreutils can be overridden at build
+time using various configure variables, which currently include:
+
+@table @samp
+@item utils_cv_vmull_intrinsic_exists
+@item utils_cv_pclmul_intrinsic_exists
+@item utils_cv_avx2_pclmul_intrinsic_exists
+@item utils_cv_avx512_pclmul_intrinsic_exists
+@item utils_cv_avx2_intrinsic_exists
+@end table
+
+External library detection is automatic for OpenSSL, so you must use the
+@samp{--with-openssl=no} configure option to disable this if desired.
+Conversely, the Linux kernel cryptographic API is not used automatically and
+must be explicitly enabled with the @samp{--with-linux-crypto} configure
+option.
+
+@subsection Runtime Configuration
+
+The usual method for runtime configuration of hardware detection is through
+environment variables, since you typically want to configure hardware
+interactions quite broadly.  Note that these environment variables are not
+specific to coreutils, but coreutils will honor them when set.
+
+For example, the following environment settings would disable hardware
+acceleration both within coreutils and in libcrypto (if used) on x86_64,
+ARM, and AArch64 platforms:
+
+@example
+export OPENSSL_ia32cap='0x0'
+export OPENSSL_armcap='0x0'
+export GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX512F,-AVX2,-AVX,-PMULL'
+@end example
+
+The @option{--debug} option is available on all utilities supporting
+hardware acceleration and will report the current acceleration mode in use.
+For example:
+
+@example
+$ wc -l --debug /dev/null >/dev/null
+wc: using avx2 hardware support
+
+$ cksum --debug /dev/null >/dev/null
+cksum: avx512 support not detected
+cksum: avx2 support not detected
+cksum: using pclmul hardware support
+@end example
 
 @node Standards conformance
 @section Standards conformance
