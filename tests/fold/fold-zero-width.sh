@@ -25,11 +25,11 @@ IO_BUFSIZE_TIMES2=$(($IO_BUFSIZE * 2))
 
 # Fold counts by columns by default.
 head -c $IO_BUFSIZE_TIMES2 /dev/zero | fold > out || fail=1
-test $(cat out | wc -l) -eq 0 || fail=1
+test $(wc -l < out) -eq 0 || fail=1
 
 # Check that zero width characters are counted with --characters.
 head -c $IO_BUFSIZE_TIMES2 /dev/zero | fold --characters > out || fail=1
-test $(cat out | wc -l) -eq $(($IO_BUFSIZE_TIMES2 / 80)) || fail=1
+test $(wc -l < out) -eq $(($IO_BUFSIZE_TIMES2 / 80)) || fail=1
 
 test "$LOCALE_FR_UTF8" != none || skip_ "French UTF-8 locale not available"
 
@@ -37,13 +37,14 @@ LC_ALL=$LOCALE_FR_UTF8
 export LC_ALL
 
 # Same thing, but using U+200B ZERO WIDTH SPACE.
-yes $(env printf '\u200B') | head -n $IO_BUFSIZE_TIMES2 | tr -d '\n' > inp
+yes $(env printf '\u200B') |
+  head -n $IO_BUFSIZE_TIMES2 | tr -d '\n' > inp || framework_failure_
 
 fold inp > out || fail=1
-test $(cat out | wc -l) -eq 0 || fail=1
+test $(wc -l < out) -eq 0 || fail=1
 
 fold --characters inp > out || fail=1
-test $(cat out | wc -l) -eq $(($IO_BUFSIZE_TIMES2 / 80)) || fail=1
+test $(wc -l < out) -eq $(($IO_BUFSIZE_TIMES2 / 80)) || fail=1
 
 # Ensure bounded memory operation.
 vm=$(get_min_ulimit_v_ fold /dev/null) && {
