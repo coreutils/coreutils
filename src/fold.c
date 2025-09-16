@@ -272,6 +272,10 @@ fold_file (char const *filename, size_t width)
         }
       if (feof (istream))
         break;
+
+      if (ferror (stdout))
+        write_error ();
+
       /* We read a full buffer of complete characters.  */
       offset_in = 0;
 

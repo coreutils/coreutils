@@ -34,7 +34,9 @@ dd if=/dev/zero
 expand /dev/zero
 factor --version; yes 1 | factor
 # TODO: fmt /dev/zero
-# TODO: fold -b /dev/zero
+fold /dev/zero
+fold -b /dev/zero
+fold -c /dev/zero
 head -z -n-1 /dev/zero
 join -a 1 -z /dev/zero /dev/null
 # TODO: nl --version; yes | nl
