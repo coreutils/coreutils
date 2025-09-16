@@ -994,7 +994,7 @@ _gl_TS_dir = .
 _gl_TS_obj_files = src/*.$(OBJEXT)
 # Settings for running codespell.
 csiwl_1 = debbugs,clen,te,bu,shs,linke,fo,souch,inout,outin
-csiwl_2 = kno,ois,afile,whats,hda,indx,ot,nam
+csiwl_2 = kno,ois,afile,whats,hda,indx,ot,nam,ist
 codespell_ignore_words_list = $(csiwl_1),$(csiwl_2)
 exclude_file_name_regexp--sc_codespell = \
   ^(THANKS\.in|tests/pr/.*(F|tn?|l(o|m|i)|bl))$$

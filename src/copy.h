@@ -324,7 +324,7 @@ struct copy_debug
 /* The type of a large counter.  Although it is always nonnegative,
    it is signed to help signed overflow checking catch any bugs.  */
 typedef intmax_t count_t;
-#define COUNT_MAX INTMAX_MAX
+# define COUNT_MAX INTMAX_MAX
 
 bool copy (char const *src_name, char const *dst_name,
            int dst_dirfd, char const *dst_relname,

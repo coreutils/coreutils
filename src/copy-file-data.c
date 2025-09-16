@@ -512,10 +512,11 @@ infer_scantype (int fd, struct stat const *sb, off_t pos,
    If successful, return the number of bytes copied;
    otherwise, diagnose the error and return -1.  */
 
-intmax_t
+extern intmax_t
 copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
                 int ofd, struct stat const *ost, off_t opos, char const *oname,
-                count_t ibytes, struct cp_options const *x, struct copy_debug *debug)
+                count_t ibytes, struct cp_options const *x,
+                struct copy_debug *debug)
 {
   /* Choose a suitable buffer size; it may be adjusted later.  */
   idx_t buf_size = io_blksize (ost);
