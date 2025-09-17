@@ -388,23 +388,20 @@ compare_files (char **infiles)
   if (total_option)
     {
       /* Print the summary, minding the column and line delimiters.  */
-      char buf1[INT_BUFSIZE_BOUND (uintmax_t)];
-      char buf2[INT_BUFSIZE_BOUND (uintmax_t)];
-      char buf3[INT_BUFSIZE_BOUND (uintmax_t)];
       if (col_sep_len == 1)
         { /* Separate to handle NUL char.  */
-          printf ("%s%c%s%c%s%c%s%c",
-                  umaxtostr (total[0], buf1), *col_sep,
-                  umaxtostr (total[1], buf2), *col_sep,
-                  umaxtostr (total[2], buf3), *col_sep,
+          printf ("%ju%c%ju%c%ju%c%s%c",
+                  total[0], *col_sep,
+                  total[1], *col_sep,
+                  total[2], *col_sep,
                   _("total"), delim);
         }
       else
         {
-          printf ("%s%s%s%s%s%s%s%c",
-                  umaxtostr (total[0], buf1), col_sep,
-                  umaxtostr (total[1], buf2), col_sep,
-                  umaxtostr (total[2], buf3), col_sep,
+          printf ("%ju%s%ju%s%ju%s%s%c",
+                  total[0], col_sep,
+                  total[1], col_sep,
+                  total[2], col_sep,
                   _("total"), delim);
         }
     }

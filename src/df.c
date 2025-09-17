@@ -617,11 +617,8 @@ get_header (void)
         }
       else if (header_mode == POSIX_MODE && columns[col]->field == SIZE_FIELD)
         {
-          char buf[INT_BUFSIZE_BOUND (uintmax_t)];
-          char *num = umaxtostr (output_block_size, buf);
-
           /* TRANSLATORS: this is the "1024-blocks" header in "df -P".  */
-          cell = xasprintf (_("%s-%s"), num, header);
+          cell = xasprintf (_("%ju-%s"), output_block_size, header);
         }
       else
         cell = xstrdup (header);

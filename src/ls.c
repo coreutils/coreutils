@@ -4397,16 +4397,14 @@ print_long_format (const struct fileinfo *f)
   if (f->stat_ok
       && (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode)))
     {
-      char majorbuf[INT_BUFSIZE_BOUND (uintmax_t)];
-      char minorbuf[INT_BUFSIZE_BOUND (uintmax_t)];
       int blanks_width = (file_size_width
                           - (major_device_number_width + 2
                              + minor_device_number_width));
-      p += sprintf (p, "%*s, %*s ",
+      p += sprintf (p, "%*ju, %*ju ",
                     major_device_number_width + MAX (0, blanks_width),
-                    umaxtostr (major (f->stat.st_rdev), majorbuf),
+                    (uintmax_t) major (f->stat.st_rdev),
                     minor_device_number_width,
-                    umaxtostr (minor (f->stat.st_rdev), minorbuf));
+                    (uintmax_t) minor (f->stat.st_rdev));
     }
   else
     {

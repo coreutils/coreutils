@@ -2997,10 +2997,8 @@ check (char const *file_name, char checkonly)
                 struct line const *disorder_line = line - 1;
                 uintmax_t disorder_line_number =
                   buffer_linelim (&buf) - disorder_line + line_number;
-                char hr_buf[INT_BUFSIZE_BOUND (disorder_line_number)];
-                fprintf (stderr, _("%s: %s:%s: disorder: "),
-                         program_name, file_name,
-                         umaxtostr (disorder_line_number, hr_buf));
+                fprintf (stderr, _("%s: %s:%ju: disorder: "),
+                         program_name, file_name, disorder_line_number);
                 write_line (disorder_line, stderr, _("standard error"));
               }
 
