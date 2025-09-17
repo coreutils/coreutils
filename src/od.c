@@ -1273,11 +1273,9 @@ write_block (intmax_t current_offset, idx_t n_bytes,
   static bool first = true;
   static bool prev_pair_equal = false;
 
-#define EQUAL_BLOCKS(b1, b2) (memcmp (b1, b2, bytes_per_block) == 0)
-
   if (abbreviate_duplicate_blocks
       && !first && n_bytes == bytes_per_block
-      && EQUAL_BLOCKS (prev_block, curr_block))
+      && memeq (prev_block, curr_block, bytes_per_block))
     {
       if (prev_pair_equal)
         {

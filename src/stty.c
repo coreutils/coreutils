@@ -1286,7 +1286,7 @@ apply_settings (bool checking, char const *device_name,
 int
 main (int argc, char **argv)
 {
-  /* Initialize to all zeroes so there is no risk memcmp will report a
+  /* Initialize to all zeroes so there is no risk memeq will report a
      spurious difference in an uninitialized portion of the structure.  */
   static struct termios mode;
 
@@ -1424,7 +1424,7 @@ main (int argc, char **argv)
 
   if (require_set_attr)
     {
-      /* Initialize to all zeroes so there is no risk memcmp will report a
+      /* Initialize to all zeroes so there is no risk memeq will report a
          spurious difference in an uninitialized portion of the structure.  */
       static struct termios new_mode;
 
@@ -1476,7 +1476,7 @@ eq_mode (struct termios *mode1, struct termios *mode2)
 #ifdef HAVE_C_LINE
       && mode1->c_line == mode2->c_line
 #endif
-      && memcmp (mode1->c_cc, mode2->c_cc, sizeof (mode1->c_cc)) == 0
+      && memeq (mode1->c_cc, mode2->c_cc, sizeof (mode1->c_cc))
       && cfgetispeed (mode1) == cfgetispeed (mode2)
       && cfgetospeed (mode1) == cfgetospeed (mode2);
 }

@@ -576,7 +576,7 @@ main (int argc, char **argv)
   for (i = 0; i < sizeof expected / sizeof expected[0]; i++)
     {
       isaac_refill (&s, r);
-      ASSERT (memcmp (r, expected[i], sizeof r) == 0);
+      ASSERT (memeq (r, expected[i], sizeof r));
     }
 
   /* If invoked with a positive argument, run a benchmark;

@@ -1870,7 +1870,7 @@ main (int argc, char **argv)
       /* Skip the restore when it would be a no-op, i.e.,
          when left is "\033[" and right is "m".  */
       if (!(color_indicator[C_LEFT].len == 2
-            && memcmp (color_indicator[C_LEFT].string, "\033[", 2) == 0
+            && memeq (color_indicator[C_LEFT].string, "\033[", 2)
             && color_indicator[C_RIGHT].len == 1
             && color_indicator[C_RIGHT].string[0] == 'm'))
         restore_default_color ();
@@ -2894,7 +2894,7 @@ parse_ls_color (void)
             {
               if (e2->ext.len < SIZE_MAX && e1->ext.len == e2->ext.len)
                 {
-                  if (memcmp (e1->ext.string, e2->ext.string, e1->ext.len) == 0)
+                  if (memeq (e1->ext.string, e2->ext.string, e1->ext.len))
                     e2->ext.len = SIZE_MAX; /* Ignore */
                   else if (c_strncasecmp (e1->ext.string, e2->ext.string,
                                           e1->ext.len) == 0)
@@ -2904,8 +2904,8 @@ parse_ls_color (void)
                           e2->ext.len = SIZE_MAX; /* Ignore */
                         }
                       else if (e1->seq.len == e2->seq.len
-                               && memcmp (e1->seq.string, e2->seq.string,
-                                          e1->seq.len) == 0)
+                               && memeq (e1->seq.string, e2->seq.string,
+                                         e1->seq.len))
                         {
                           e2->ext.len = SIZE_MAX; /* Ignore */
                           case_ignored = true;    /* Ignore all subsequent */

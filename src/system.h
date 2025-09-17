@@ -496,7 +496,7 @@ is_nul (void const *buf, size_t length)
 #endif
 
   if (! length)
-      return true;
+    return true;
 
   /* Check len bytes not aligned on a word.  */
   while (UNLIKELY (length & (sizeof word - 1)))
@@ -523,8 +523,8 @@ is_nul (void const *buf, size_t length)
         break;
    }
 
-   /* Now we know first 16 bytes are NUL, memcmp with self.  */
-   return memcmp (buf, p, length) == 0;
+  /* Now we know first 16 bytes are NUL, memeq with self.  */
+  return memeq (buf, p, length);
 }
 
 /* Set Accum = 10*Accum + Digit_val and return true, where Accum is an

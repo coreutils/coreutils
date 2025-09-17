@@ -147,7 +147,7 @@ have_same_content (int a_fd, int b_fd)
     if (size != full_read (b_fd, b_buff, sizeof b_buff))
       return false;
 
-    if (memcmp (a_buff, b_buff, size) != 0)
+    if (!memeq (a_buff, b_buff, size))
       return false;
   }
 

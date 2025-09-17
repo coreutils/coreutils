@@ -3,6 +3,7 @@ tests/test-rand-isaac.c
 tests/macros.h
 
 Depends-on:
+stringeq
 
 configure.ac:
 

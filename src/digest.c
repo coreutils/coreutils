@@ -1191,7 +1191,7 @@ b64_equal (unsigned char const *b64_digest, unsigned char const *bin_buffer)
   size_t b64_n_bytes = BASE64_LENGTH (digest_length / 8);
   char b64[BASE64_LENGTH (DIGEST_BIN_BYTES) + 1];
   base64_encode ((char const *) bin_buffer, digest_length / 8, b64, sizeof b64);
-  return memcmp (b64_digest, b64, b64_n_bytes + 1) == 0;
+  return memeq (b64_digest, b64, b64_n_bytes + 1);
 }
 #endif
 

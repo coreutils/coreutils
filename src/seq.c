@@ -465,7 +465,7 @@ seq_fast (char const *a, char const *b, uintmax_t step)
 
   idx_t p_len = strlen (a);
   idx_t b_len = strlen (b);
-  bool inf = b_len == 3 && memcmp (b, "inf", 4) == 0;
+  bool inf = b_len == 3 && memeq (b, "inf", 4);
 
   /* Allow for at least 31 digits without realloc.
      1 more than p_len is needed for the inf case.  */

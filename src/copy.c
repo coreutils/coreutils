@@ -1597,7 +1597,7 @@ source_is_dst_backup (char const *srcbase, struct stat const *src_st,
   size_t dstbaselen = strlen (dstbase);
   size_t suffixlen = strlen (simple_backup_suffix);
   if (! (srcbaselen == dstbaselen + suffixlen
-         && memcmp (srcbase, dstbase, dstbaselen) == 0
+         && memeq (srcbase, dstbase, dstbaselen)
          && streq (srcbase + dstbaselen, simple_backup_suffix)))
     return false;
   char *dst_back = subst_suffix (dst_relname,
