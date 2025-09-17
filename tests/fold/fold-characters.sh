@@ -91,10 +91,4 @@ test $({ bad_unicode | fold; bad_unicode; } | uniq | wc -l) = 1 || fail=1
 # Check bad character at EOF
 test $(env printf '\xC3' | fold | wc -c) = 1 || fail=1
 
-# Ensure bounded memory operation
-vm=$(get_min_ulimit_v_ fold /dev/null) && {
-  yes | tr -d '\n' | (ulimit -v $(($vm+8000)) && fold 2>err) | head || fail=1
-  compare /dev/null err || fail=1
-}
-
 Exit $fail

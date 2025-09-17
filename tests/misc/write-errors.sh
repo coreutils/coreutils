@@ -37,6 +37,7 @@ factor --version; yes 1 | factor
 fold /dev/zero
 fold -b /dev/zero
 fold -c /dev/zero
+fold --version; yes | tr -d '\\n' | fold
 head -z -n-1 /dev/zero
 join -a 1 -z /dev/zero /dev/null
 # TODO: nl --version; yes | nl
