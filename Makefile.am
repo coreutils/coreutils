@@ -92,7 +92,8 @@ dist-hook: gen-ChangeLog
 	$(AM_V_at)touch $(distdir)/doc/constants.texi \
 	  $(distdir)/doc/coreutils.info
 
-gen_start_ver = 8.31
+# Keep about 5 years of changelogs
+gen_start_ver = 8.32
 .PHONY: gen-ChangeLog
 gen-ChangeLog:
 	$(AM_V_GEN)if test -d .git; then				\
