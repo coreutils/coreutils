@@ -265,7 +265,7 @@ record_relation (struct item *j, struct item *k)
 {
   struct successor *p;
 
-  if (!STREQ (j->str, k->str))
+  if (!streq (j->str, k->str))
     {
       k->count++;
       p = xmalloc (sizeof *p);
@@ -432,7 +432,7 @@ tsort (char const *file)
   struct item *j = nullptr;
   struct item *k = nullptr;
   token_buffer tokenbuffer;
-  bool is_stdin = STREQ (file, "-");
+  bool is_stdin = streq (file, "-");
 
   /* Initialize the head of the tree holding the strings we're sorting.  */
   struct item *root = new_item (nullptr);

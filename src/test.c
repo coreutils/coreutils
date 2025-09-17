@@ -186,20 +186,20 @@ get_mtime (char const *filename)
 static int
 binop (char const *s)
 {
-  return (  STREQ (s, "="  ) ? EQ_STRING_BINOP
-          : STREQ (s, "==" ) ? EQ_STRING_BINOP /* an alias for = */
-          : STREQ (s, "!=" ) ? NE_STRING_BINOP
-          : STREQ (s, ">"  ) ? GT_STRING_BINOP
-          : STREQ (s, "<"  ) ? LT_STRING_BINOP
-          : STREQ (s, "-eq") ? EQ_BINOP
-          : STREQ (s, "-ne") ? NE_BINOP
-          : STREQ (s, "-lt") ? LT_BINOP
-          : STREQ (s, "-le") ? LE_BINOP
-          : STREQ (s, "-gt") ? GT_BINOP
-          : STREQ (s, "-ge") ? GE_BINOP
-          : STREQ (s, "-ot") ? OT_BINOP
-          : STREQ (s, "-nt") ? NT_BINOP
-          : STREQ (s, "-ef") ? EF_BINOP
+  return (  streq (s, "="  ) ? EQ_STRING_BINOP
+          : streq (s, "==" ) ? EQ_STRING_BINOP /* an alias for = */
+          : streq (s, "!=" ) ? NE_STRING_BINOP
+          : streq (s, ">"  ) ? GT_STRING_BINOP
+          : streq (s, "<"  ) ? LT_STRING_BINOP
+          : streq (s, "-eq") ? EQ_BINOP
+          : streq (s, "-ne") ? NE_BINOP
+          : streq (s, "-lt") ? LT_BINOP
+          : streq (s, "-le") ? LE_BINOP
+          : streq (s, "-gt") ? GT_BINOP
+          : streq (s, "-ge") ? GE_BINOP
+          : streq (s, "-ot") ? OT_BINOP
+          : streq (s, "-nt") ? NT_BINOP
+          : streq (s, "-ef") ? EF_BINOP
           : -1);
 }
 
@@ -246,7 +246,7 @@ term (void)
       advance (true);
 
       for (nargs = 1;
-           pos + nargs < argc && ! STREQ (argv[pos + nargs], ")");
+           pos + nargs < argc && ! streq (argv[pos + nargs], ")");
            nargs++)
         if (nargs == 4)
           {
@@ -265,7 +265,7 @@ term (void)
     }
 
   /* Are there enough arguments left that this could be dyadic?  */
-  else if (4 <= argc - pos && STREQ (argv[pos], "-l")
+  else if (4 <= argc - pos && streq (argv[pos], "-l")
            && 0 <= (bop = binop (argv[pos + 2])))
     value = binary_operator (true, bop);
   else if (3 <= argc - pos
@@ -294,7 +294,7 @@ binary_operator (bool l_is_l, enum binop bop)
   op = pos + 1;
 
   /* Is the right integer expression of the form '-l string'? */
-  bool r_is_l = op < argc - 2 && STREQ (argv[op + 1], "-l");
+  bool r_is_l = op < argc - 2 && streq (argv[op + 1], "-l");
   if (r_is_l)
     advance (false);
 
@@ -349,7 +349,7 @@ binary_operator (bool l_is_l, enum binop bop)
 
     case EQ_STRING_BINOP:
     case NE_STRING_BINOP:
-      return STREQ (argv[op - 1], argv[op + 1]) == (bop == EQ_STRING_BINOP);
+      return streq (argv[op - 1], argv[op + 1]) == (bop == EQ_STRING_BINOP);
 
     case GT_STRING_BINOP:
     case LT_STRING_BINOP:
@@ -519,7 +519,7 @@ and (void)
   while (true)
     {
       value &= term ();
-      if (! (pos < argc && STREQ (argv[pos], "-a")))
+      if (! (pos < argc && streq (argv[pos], "-a")))
         return value;
       advance (false);
     }
@@ -538,7 +538,7 @@ or (void)
   while (true)
     {
       value |= and ();
-      if (! (pos < argc && STREQ (argv[pos], "-o")))
+      if (! (pos < argc && streq (argv[pos], "-o")))
         return value;
       advance (false);
     }
@@ -568,7 +568,7 @@ two_arguments (void)
 {
   bool value;
 
-  if (STREQ (argv[pos], "!"))
+  if (streq (argv[pos], "!"))
     {
       advance (false);
       value = ! one_argument ();
@@ -592,19 +592,19 @@ three_arguments (void)
 
   if (0 <= bop)
     value = binary_operator (false, bop);
-  else if (STREQ (argv[pos], "!"))
+  else if (streq (argv[pos], "!"))
     {
       advance (true);
       value = !two_arguments ();
     }
-  else if (STREQ (argv[pos], "(") && STREQ (argv[pos + 2], ")"))
+  else if (streq (argv[pos], "(") && streq (argv[pos + 2], ")"))
     {
       advance (false);
       value = one_argument ();
       advance (false);
     }
-  else if (STREQ (argv[pos + 1], "-a") || STREQ (argv[pos + 1], "-o")
-           || STREQ (argv[pos + 1], ">") || STREQ (argv[pos + 1], "<"))
+  else if (streq (argv[pos + 1], "-a") || streq (argv[pos + 1], "-o")
+           || streq (argv[pos + 1], ">") || streq (argv[pos + 1], "<"))
     value = expr ();
   else
     test_syntax_error (_("%s: binary operator expected"),
@@ -633,13 +633,13 @@ posixtest (int nargs)
         break;
 
       case 4:
-        if (STREQ (argv[pos], "!"))
+        if (streq (argv[pos], "!"))
           {
             advance (true);
             value = !three_arguments ();
             break;
           }
-        if (STREQ (argv[pos], "(") && STREQ (argv[pos + 3], ")"))
+        if (streq (argv[pos], "(") && streq (argv[pos + 3], ")"))
           {
             advance (false);
             value = two_arguments ();
@@ -815,17 +815,17 @@ main (int margc, char **margv)
          and "test --version" to exit silently with status 0.  */
       if (margc == 2)
         {
-          if (STREQ (margv[1], "--help"))
+          if (streq (margv[1], "--help"))
             usage (EXIT_SUCCESS);
 
-          if (STREQ (margv[1], "--version"))
+          if (streq (margv[1], "--version"))
             {
               version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
                            (char *) nullptr);
               test_main_return (EXIT_SUCCESS);
             }
         }
-      if (margc < 2 || !STREQ (margv[margc - 1], "]"))
+      if (margc < 2 || !streq (margv[margc - 1], "]"))
         test_syntax_error (_("missing %s"), quote ("]"));
 
       --margc;

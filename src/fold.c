@@ -157,7 +157,7 @@ fold_file (char const *filename, size_t width)
   static size_t length_in = 0;
   int saved_errno;
 
-  if (STREQ (filename, "-"))
+  if (streq (filename, "-"))
     {
       istream = stdin;
       have_read_stdin = true;
@@ -291,7 +291,7 @@ fold_file (char const *filename, size_t width)
   if (offset_out)
     write_out (line_out, offset_out, /*newline=*/ false);
 
-  if (STREQ (filename, "-"))
+  if (streq (filename, "-"))
     clearerr (istream);
   else if (fclose (istream) != 0 && !saved_errno)
     saved_errno = errno;

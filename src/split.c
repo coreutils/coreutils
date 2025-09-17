@@ -1452,7 +1452,7 @@ main (int argc, char **argv)
               error (EXIT_FAILURE, 0, _("empty record separator"));
             if (optarg[1])
               {
-                if (STREQ (optarg, "\\0"))
+                if (streq (optarg, "\\0"))
                   neweol = '\0';
                 else
                   {
@@ -1605,7 +1605,7 @@ main (int argc, char **argv)
     }
 
   /* Open the input file.  */
-  if (! STREQ (infile, "-")
+  if (! streq (infile, "-")
       && fd_reopen (STDIN_FILENO, infile, O_RDONLY, 0) < 0)
     error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
            quoteaf (infile));

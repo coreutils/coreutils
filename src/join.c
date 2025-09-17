@@ -1054,7 +1054,7 @@ main (int argc, char **argv)
           break;
 
         case 'e':
-          if (empty_filler && ! STREQ (empty_filler, optarg))
+          if (empty_filler && ! streq (empty_filler, optarg))
             error (EXIT_FAILURE, 0,
                    _("conflicting empty-field replacement strings"));
           empty_filler = optarg;
@@ -1089,7 +1089,7 @@ main (int argc, char **argv)
           break;
 
         case 'o':
-          if (STREQ (optarg, "auto"))
+          if (streq (optarg, "auto"))
             autoformat = true;
           else
             {
@@ -1107,7 +1107,7 @@ main (int argc, char **argv)
                 newtab = mcel_ch ('\n', 1);
                 /* output_separator does not matter.  */
               }
-            else if (STREQ (optarg, "\\0"))
+            else if (streq (optarg, "\\0"))
               {
                 newtab = mcel_ch ('\0', 1);
                 output_separator = "";
@@ -1188,10 +1188,10 @@ main (int argc, char **argv)
   if (join_field_2 < 0)
     join_field_2 = 0;
 
-  fp1 = STREQ (g_names[0], "-") ? stdin : fopen (g_names[0], "r");
+  fp1 = streq (g_names[0], "-") ? stdin : fopen (g_names[0], "r");
   if (!fp1)
     error (EXIT_FAILURE, errno, "%s", quotef (g_names[0]));
-  fp2 = STREQ (g_names[1], "-") ? stdin : fopen (g_names[1], "r");
+  fp2 = streq (g_names[1], "-") ? stdin : fopen (g_names[1], "r");
   if (!fp2)
     error (EXIT_FAILURE, errno, "%s", quotef (g_names[1]));
   if (fp1 == fp2)

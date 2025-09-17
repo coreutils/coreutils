@@ -183,7 +183,6 @@ select_plural (uintmax_t n)
   return (n <= ULONG_MAX ? n : n % PLURAL_REDUCER + PLURAL_REDUCER);
 }
 
-#define STREQ(a, b) (strcmp (a, b) == 0)
 #define STREQ_LEN(a, b, n) (strncmp (a, b, n) == 0) /* n==-1 means unbounded */
 #define STRPREFIX(a, b) (strncmp (a, b, strlen (b)) == 0)
 
@@ -652,7 +651,7 @@ emit_ancillary_info (char const *program)
   char const *node = program;
   struct infomap const *map_prog = infomap;
 
-  while (map_prog->program && ! STREQ (program, map_prog->program))
+  while (map_prog->program && ! streq (program, map_prog->program))
     map_prog++;
 
   if (map_prog->node)
@@ -675,7 +674,7 @@ emit_ancillary_info (char const *program)
   /* .htaccess on the coreutils web site maps programs to the appropriate page,
      however we explicitly handle "[" -> "test" here as the "[" is not
      recognized as part of a URL by default in terminals.  */
-  char const *url_program = STREQ (program, "[") ? "test" : program;
+  char const *url_program = streq (program, "[") ? "test" : program;
   printf (_("Full documentation <%s%s>\n"),
           PACKAGE_URL, url_program);
   printf (_("or available locally via: info '(coreutils) %s%s'\n"),

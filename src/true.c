@@ -68,10 +68,10 @@ main (int argc, char **argv)
          edge case where writes fail with GNU specific options.  */
       atexit (close_stdout);
 
-      if (STREQ (argv[1], "--help"))
+      if (streq (argv[1], "--help"))
         usage (EXIT_STATUS);
 
-      if (STREQ (argv[1], "--version"))
+      if (streq (argv[1], "--version"))
         version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
                      (char *) nullptr);
     }

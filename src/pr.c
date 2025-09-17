@@ -1483,7 +1483,7 @@ init_funcs (void)
 static bool
 open_file (char *name, COLUMN *p)
 {
-  if (STREQ (name, "-"))
+  if (streq (name, "-"))
     {
       p->name = _("standard input");
       p->fp = stdin;
@@ -1654,7 +1654,7 @@ init_header (char const *filename, int desc)
   struct tm tm;
 
   /* If parallel files or standard input, use current date. */
-  if (STREQ (filename, "-"))
+  if (streq (filename, "-"))
     desc = -1;
   if (0 <= desc && fstat (desc, &st) == 0)
     t = get_stat_mtime (&st);

@@ -295,7 +295,7 @@ main (int argc, char **argv)
           break;
 
         case NO_PRESERVE_ROOT:
-          if (! STREQ (argv[optind - 1], "--no-preserve-root"))
+          if (! streq (argv[optind - 1], "--no-preserve-root"))
             error (EXIT_FAILURE, 0,
                    _("you may not abbreviate the --no-preserve-root option"));
           preserve_root = false;
@@ -304,7 +304,7 @@ main (int argc, char **argv)
         case PRESERVE_ROOT:
           if (optarg)
             {
-              if STREQ (optarg, "all")
+              if (streq (optarg, "all"))
                 x.preserve_all_root = true;
               else
                 error (EXIT_FAILURE, 0,

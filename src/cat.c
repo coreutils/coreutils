@@ -679,7 +679,7 @@ main (int argc, char **argv)
       if (argind < argc)
         infile = argv[argind];
 
-      bool reading_stdin = STREQ (infile, "-");
+      bool reading_stdin = streq (infile, "-");
       if (reading_stdin)
         {
           have_read_stdin = true;

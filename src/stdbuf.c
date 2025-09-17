@@ -347,7 +347,7 @@ main (int argc, char **argv)
               usage (EXIT_CANCELED);
             }
 
-          if (!STREQ (optarg, "L")
+          if (!streq (optarg, "L")
               && parse_size (optarg, &stdbuf[opt_fileno].size) == -1)
             error (EXIT_CANCELED, errno, _("invalid mode %s"), quote (optarg));
 

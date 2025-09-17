@@ -424,7 +424,7 @@ main (int argc, char **argv)
       for (; optind < argc; optind++)
         {
           char *file = argv[optind];
-          if (STREQ (file, "-"))
+          if (streq (file, "-"))
             {
               ok &= fmt (stdin, file);
               have_read_stdin = true;

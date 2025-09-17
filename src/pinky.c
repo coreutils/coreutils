@@ -452,7 +452,7 @@ scan_entries (idx_t n, STRUCT_UTMP const *utmp_buf,
           if (argc_names)
             {
               for (int i = 0; i < argc_names; i++)
-                if (STREQ (utmp_buf->ut_user, argv_names[i]))
+                if (streq (utmp_buf->ut_user, argv_names[i]))
                   {
                     print_entry (utmp_buf);
                     break;

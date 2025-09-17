@@ -831,7 +831,7 @@ main (int argc, char **argv)
         }
     }
 
-  if (optind < argc && STREQ (argv[optind], "-"))
+  if (optind < argc && streq (argv[optind], "-"))
     {
       ignore_environment = true;
       ++optind;

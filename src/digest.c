@@ -868,7 +868,7 @@ split_3 (char *s, size_t s_len,
       bool length_specified = s[i] == '-';
       bool openssl_format = s[i] == '('; /* and no length_specified */
       s[i++] = '\0';
-      if (!STREQ (algo_name, DIGEST_TYPE_STRING))
+      if (!streq (algo_name, DIGEST_TYPE_STRING))
         return false;
       if (openssl_format)
         s[--i] = '(';
@@ -1049,7 +1049,7 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
 {
   FILE *fp;
   int err;
-  bool is_stdin = STREQ (filename, "-");
+  bool is_stdin = streq (filename, "-");
 
   *missing = false;
 
@@ -1235,7 +1235,7 @@ digest_check (char const *checkfile_name)
   uintmax_t line_number;
   char *line;
   size_t line_chars_allocated;
-  bool is_stdin = STREQ (checkfile_name, "-");
+  bool is_stdin = streq (checkfile_name, "-");
 
   if (is_stdin)
     {
@@ -1289,7 +1289,7 @@ digest_check (char const *checkfile_name)
 
       size_t d_len;
       if (! (split_3 (line, line_length, &digest, &d_len, &binary, &filename)
-             && ! (is_stdin && STREQ (filename, "-"))))
+             && ! (is_stdin && streq (filename, "-"))))
         {
           ++n_misformatted_lines;
 

@@ -967,7 +967,7 @@ find_bind_mount (char const * name)
   for (me = mount_list; me; me = me->me_next)
     {
       if (me->me_dummy && me->me_devname[0] == '/'
-          && STREQ (me->me_mountdir, name))
+          && streq (me->me_mountdir, name))
         {
           struct stat dev_stats;
 
@@ -1260,7 +1260,7 @@ do_statfs (char const *filename, char const *format)
 {
   STRUCT_STATVFS statfsbuf;
 
-  if (STREQ (filename, "-"))
+  if (streq (filename, "-"))
     {
       error (0, 0, _("using %s to denote standard input does not work"
                      " in file system mode"), quoteaf (filename));
@@ -1367,7 +1367,7 @@ NODISCARD
 static bool
 do_stat (char const *filename, char const *format, char const *format2)
 {
-  int fd = STREQ (filename, "-") ? 0 : AT_FDCWD;
+  int fd = streq (filename, "-") ? 0 : AT_FDCWD;
   int flags = 0;
   struct stat st;
   struct statx stx = {0};
@@ -1456,7 +1456,7 @@ static bool
 do_stat (char const *filename, char const *format,
          char const *format2)
 {
-  int fd = STREQ (filename, "-") ? 0 : -1;
+  int fd = streq (filename, "-") ? 0 : -1;
   struct stat statbuf;
   struct print_args pa;
   pa.st = &statbuf;

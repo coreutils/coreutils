@@ -442,7 +442,7 @@ tac_file (char const *filename)
   bool ok;
   off_t file_size;
   int fd;
-  bool is_stdin = STREQ (filename, "-");
+  bool is_stdin = streq (filename, "-");
 
   if (is_stdin)
     {

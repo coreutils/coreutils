@@ -1128,14 +1128,14 @@ apply_settings (bool checking, char const *device_name,
           ++arg;
           reversed = true;
         }
-      if (STREQ (arg, "drain"))
+      if (streq (arg, "drain"))
         {
           tcsetattr_options = reversed ? TCSANOW : TCSADRAIN;
           continue;
         }
       for (i = 0; mode_info[i].name != nullptr; ++i)
         {
-          if (STREQ (arg, mode_info[i].name))
+          if (streq (arg, mode_info[i].name))
             {
               if ((mode_info[i].flags & NO_SETATTR) == 0)
                 {
@@ -1156,7 +1156,7 @@ apply_settings (bool checking, char const *device_name,
         {
           for (i = 0; control_info[i].name != nullptr; ++i)
             {
-              if (STREQ (arg, control_info[i].name))
+              if (streq (arg, control_info[i].name))
                 {
                   check_argument (arg);
                   match_found = true;
@@ -1169,7 +1169,7 @@ apply_settings (bool checking, char const *device_name,
         }
       if (!match_found || not_set_attr)
         {
-          if (STREQ (arg, "ispeed"))
+          if (streq (arg, "ispeed"))
             {
               check_argument (arg);
               ++k;
@@ -1183,7 +1183,7 @@ apply_settings (bool checking, char const *device_name,
                 continue;
               *require_set_attr = true;
             }
-          else if (STREQ (arg, "ospeed"))
+          else if (streq (arg, "ospeed"))
             {
               check_argument (arg);
               ++k;
@@ -1200,7 +1200,7 @@ apply_settings (bool checking, char const *device_name,
 #ifdef TIOCEXT
           /* This is the BSD interface to "extproc".
             Even though it's an lflag, an ioctl is used to set it.  */
-          else if (STREQ (arg, "extproc"))
+          else if (streq (arg, "extproc"))
             {
               int val = ! reversed;
 
@@ -1213,7 +1213,7 @@ apply_settings (bool checking, char const *device_name,
             }
 #endif
 #ifdef TIOCGWINSZ
-          else if (STREQ (arg, "rows"))
+          else if (streq (arg, "rows"))
             {
               check_argument (arg);
               ++k;
@@ -1222,8 +1222,8 @@ apply_settings (bool checking, char const *device_name,
               set_window_size (integer_arg (settings[k], INT_MAX), -1,
                                device_name);
             }
-          else if (STREQ (arg, "cols")
-                   || STREQ (arg, "columns"))
+          else if (streq (arg, "cols")
+                   || streq (arg, "columns"))
             {
               check_argument (arg);
               ++k;
@@ -1232,7 +1232,7 @@ apply_settings (bool checking, char const *device_name,
               set_window_size (-1, integer_arg (settings[k], INT_MAX),
                                device_name);
             }
-          else if (STREQ (arg, "size"))
+          else if (streq (arg, "size"))
             {
               if (checking)
                 continue;
@@ -1242,7 +1242,7 @@ apply_settings (bool checking, char const *device_name,
             }
 #endif
 #ifdef HAVE_C_LINE
-          else if (STREQ (arg, "line"))
+          else if (streq (arg, "line"))
             {
               check_argument (arg);
               ++k;
@@ -1253,7 +1253,7 @@ apply_settings (bool checking, char const *device_name,
               *require_set_attr = true;
             }
 #endif
-          else if (STREQ (arg, "speed"))
+          else if (streq (arg, "speed"))
             {
               if (checking)
                 continue;
@@ -1356,8 +1356,8 @@ main (int argc, char **argv)
         default:
           /* Consider "drain" as an option rather than a setting,
              to support: alias stty='stty -drain'  etc.  */
-          if (! STREQ (argv[argi + opti], "-drain")
-              && ! STREQ (argv[argi + opti], "drain"))
+          if (! streq (argv[argi + opti], "-drain")
+              && ! streq (argv[argi + opti], "drain"))
             noargs = false;
 
           /* Skip the argument containing this unrecognized option;
@@ -1497,21 +1497,21 @@ set_mode (struct mode_info const *info, bool reversed, struct termios *mode)
   if (bitsp == nullptr)
     {
       /* Combination mode. */
-      if (STREQ (info->name, "evenp") || STREQ (info->name, "parity"))
+      if (streq (info->name, "evenp") || streq (info->name, "parity"))
         {
           if (reversed)
             mode->c_cflag = (mode->c_cflag & ~PARENB & ~CSIZE) | CS8;
           else
             mode->c_cflag = (mode->c_cflag & ~PARODD & ~CSIZE) | PARENB | CS7;
         }
-      else if (STREQ (info->name, "oddp"))
+      else if (streq (info->name, "oddp"))
         {
           if (reversed)
             mode->c_cflag = (mode->c_cflag & ~PARENB & ~CSIZE) | CS8;
           else
             mode->c_cflag = (mode->c_cflag & ~CSIZE) | CS7 | PARODD | PARENB;
         }
-      else if (STREQ (info->name, "nl"))
+      else if (streq (info->name, "nl"))
         {
           if (reversed)
             {
@@ -1537,21 +1537,21 @@ set_mode (struct mode_info const *info, bool reversed, struct termios *mode)
 #endif
             }
         }
-      else if (STREQ (info->name, "ek"))
+      else if (streq (info->name, "ek"))
         {
           mode->c_cc[VERASE] = CERASE;
           mode->c_cc[VKILL] = CKILL;
         }
-      else if (STREQ (info->name, "sane"))
+      else if (streq (info->name, "sane"))
         sane_mode (mode);
-      else if (STREQ (info->name, "cbreak"))
+      else if (streq (info->name, "cbreak"))
         {
           if (reversed)
             mode->c_lflag |= ICANON;
           else
             mode->c_lflag &= ~ICANON;
         }
-      else if (STREQ (info->name, "pass8"))
+      else if (streq (info->name, "pass8"))
         {
           if (reversed)
             {
@@ -1564,7 +1564,7 @@ set_mode (struct mode_info const *info, bool reversed, struct termios *mode)
               mode->c_iflag &= ~ISTRIP;
             }
         }
-      else if (STREQ (info->name, "litout"))
+      else if (streq (info->name, "litout"))
         {
           if (reversed)
             {
@@ -1579,7 +1579,7 @@ set_mode (struct mode_info const *info, bool reversed, struct termios *mode)
               mode->c_oflag &= ~OPOST;
             }
         }
-      else if (STREQ (info->name, "raw") || STREQ (info->name, "cooked"))
+      else if (streq (info->name, "raw") || streq (info->name, "cooked"))
         {
           if ((info->name[0] == 'r' && reversed)
               || (info->name[0] == 'c' && !reversed))
@@ -1610,7 +1610,7 @@ set_mode (struct mode_info const *info, bool reversed, struct termios *mode)
             }
         }
 #ifdef IXANY
-      else if (STREQ (info->name, "decctlq"))
+      else if (streq (info->name, "decctlq"))
         {
           if (reversed)
             mode->c_iflag |= IXANY;
@@ -1619,7 +1619,7 @@ set_mode (struct mode_info const *info, bool reversed, struct termios *mode)
         }
 #endif
 #ifdef TABDLY
-      else if (STREQ (info->name, "tabs"))
+      else if (streq (info->name, "tabs"))
         {
           if (reversed)
             mode->c_oflag = (mode->c_oflag & ~TABDLY) | TAB3;
@@ -1628,7 +1628,7 @@ set_mode (struct mode_info const *info, bool reversed, struct termios *mode)
         }
 #else
 # ifdef OXTABS
-      else if (STREQ (info->name, "tabs"))
+      else if (streq (info->name, "tabs"))
         {
           if (reversed)
             mode->c_oflag = mode->c_oflag | OXTABS;
@@ -1638,8 +1638,8 @@ set_mode (struct mode_info const *info, bool reversed, struct termios *mode)
 # endif
 #endif
 #if defined XCASE && defined IUCLC && defined OLCUC
-      else if (STREQ (info->name, "lcase")
-               || STREQ (info->name, "LCASE"))
+      else if (streq (info->name, "lcase")
+               || streq (info->name, "LCASE"))
         {
           if (reversed)
             {
@@ -1655,7 +1655,7 @@ set_mode (struct mode_info const *info, bool reversed, struct termios *mode)
             }
         }
 #endif
-      else if (STREQ (info->name, "crt"))
+      else if (streq (info->name, "crt"))
         mode->c_lflag |= ECHOE
 #ifdef ECHOCTL
           | ECHOCTL
@@ -1664,7 +1664,7 @@ set_mode (struct mode_info const *info, bool reversed, struct termios *mode)
           | ECHOKE
 #endif
           ;
-      else if (STREQ (info->name, "dec"))
+      else if (streq (info->name, "dec"))
         {
           mode->c_cc[VINTR] = 3;	/* ^C */
           mode->c_cc[VERASE] = 127;	/* DEL */
@@ -1696,11 +1696,11 @@ set_control_char (struct control_info const *info, char const *arg,
 {
   unsigned long int value;
 
-  if (STREQ (info->name, "min") || STREQ (info->name, "time"))
+  if (streq (info->name, "min") || streq (info->name, "time"))
     value = integer_arg (arg, TYPE_MAXIMUM (cc_t));
   else if (arg[0] == '\0' || arg[1] == '\0')
     value = to_uchar (arg[0]);
-  else if (STREQ (arg, "^-") || STREQ (arg, "undef"))
+  else if (streq (arg, "^-") || streq (arg, "undef"))
     value = _POSIX_VDISABLE;
   else if (arg[0] == '^' && arg[1] != '\0')	/* Ignore any trailing junk. */
     {
@@ -1924,26 +1924,26 @@ display_changed (struct termios *mode)
   current_col = 0;
 
   empty_line = true;
-  for (i = 0; !STREQ (control_info[i].name, "min"); ++i)
+  for (i = 0; !streq (control_info[i].name, "min"); ++i)
     {
       if (mode->c_cc[control_info[i].offset] == control_info[i].saneval)
         continue;
 
 #ifdef VFLUSHO
       /* 'flush' is the deprecated equivalent of 'discard'.  */
-      if (STREQ (control_info[i].name, "flush"))
+      if (streq (control_info[i].name, "flush"))
         continue;
 #endif
       /* If swtch is the same as susp, don't print both.  */
 #if VSWTCH == VSUSP
-      if (STREQ (control_info[i].name, "swtch"))
+      if (streq (control_info[i].name, "swtch"))
         continue;
 #endif
       /* If eof uses the same slot as min, only print whichever applies.  */
 #if VEOF == VMIN
       if ((mode->c_lflag & ICANON) == 0
-          && (STREQ (control_info[i].name, "eof")
-              || STREQ (control_info[i].name, "eol")))
+          && (streq (control_info[i].name, "eof")
+              || streq (control_info[i].name, "eol")))
         continue;
 #endif
 
@@ -2016,23 +2016,23 @@ display_all (struct termios *mode, char const *device_name)
   putchar ('\n');
   current_col = 0;
 
-  for (i = 0; ! STREQ (control_info[i].name, "min"); ++i)
+  for (i = 0; ! streq (control_info[i].name, "min"); ++i)
     {
 #ifdef VFLUSHO
       /* 'flush' is the deprecated equivalent of 'discard'.  */
-      if (STREQ (control_info[i].name, "flush"))
+      if (streq (control_info[i].name, "flush"))
         continue;
 #endif
       /* If swtch is the same as susp, don't print both.  */
 #if VSWTCH == VSUSP
-      if (STREQ (control_info[i].name, "swtch"))
+      if (streq (control_info[i].name, "swtch"))
         continue;
 #endif
       /* If eof uses the same slot as min, only print whichever applies.  */
 #if VEOF == VMIN
       if ((mode->c_lflag & ICANON) == 0
-          && (STREQ (control_info[i].name, "eof")
-              || STREQ (control_info[i].name, "eol")))
+          && (streq (control_info[i].name, "eof")
+              || streq (control_info[i].name, "eol")))
         continue;
 #endif
       wrapf ("%s = %s;", control_info[i].name,
@@ -2223,9 +2223,9 @@ string_to_baud (char const *arg)
   else if (c)
     {
       /* Not a valid number; check for legacy aliases "exta" and "extb" */
-      if (STREQ (arg, "exta"))
+      if (streq (arg, "exta"))
         return B19200;
-      else if (STREQ (arg, "extb"))
+      else if (streq (arg, "extb"))
         return B38400;
       else
         return (speed_t) -1;
@@ -2243,7 +2243,7 @@ sane_mode (struct termios *mode)
   for (i = 0; control_info[i].name; ++i)
     {
 #if VMIN == VEOF
-      if (STREQ (control_info[i].name, "min"))
+      if (streq (control_info[i].name, "min"))
         break;
 #endif
       mode->c_cc[control_info[i].offset] = control_info[i].saneval;

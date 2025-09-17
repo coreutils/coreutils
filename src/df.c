@@ -443,7 +443,7 @@ decode_output_arg (char const *arg)
       display_field_t field = INVALID_FIELD;
       for (idx_t i = 0; i < ARRAY_CARDINALITY (field_data); i++)
         {
-          if (STREQ (field_data[i].arg, s))
+          if (streq (field_data[i].arg, s))
             {
               field = i;
               break;
@@ -643,7 +643,7 @@ selected_fstype (char const *fstype)
   if (fs_select_list == nullptr || fstype == nullptr)
     return true;
   for (fsp = fs_select_list; fsp; fsp = fsp->fs_next)
-    if (STREQ (fstype, fsp->fs_name))
+    if (streq (fstype, fsp->fs_name))
       return true;
   return false;
 }
@@ -659,7 +659,7 @@ excluded_fstype (char const *fstype)
   if (fs_exclude_list == nullptr || fstype == nullptr)
     return false;
   for (fsp = fs_exclude_list; fsp; fsp = fsp->fs_next)
-    if (STREQ (fstype, fsp->fs_name))
+    if (streq (fstype, fsp->fs_name))
       return true;
   return false;
 }
@@ -754,7 +754,7 @@ filter_mount_list (bool devices_only)
                                            < strlen (me->me_mntroot));
               if (! print_grand_total
                   && me->me_remote && seen_dev->me->me_remote
-                  && ! STREQ (seen_dev->me->me_devname, me->me_devname))
+                  && ! streq (seen_dev->me->me_devname, me->me_devname))
                 {
                   /* Don't discard remote entries with different locations,
                      as these are more likely to be explicitly mounted.
@@ -767,12 +767,12 @@ filter_mount_list (bool devices_only)
                        /* let points towards the root of the device win.  */
                        || (target_nearer_root && ! source_below_root)
                        /* let an entry overmounted on a new device win...  */
-                       || (! STREQ (seen_dev->me->me_devname, me->me_devname)
+                       || (! streq (seen_dev->me->me_devname, me->me_devname)
                            /* ... but only when matching an existing mnt point,
                               to avoid problematic replacement when given
                               inaccurate mount lists, seen with some chroot
                               environments for example.  */
-                           && STREQ (me->me_mountdir,
+                           && streq (me->me_mountdir,
                                      seen_dev->me->me_mountdir)))
                 {
                   /* Discard mount entry for existing device.  */
@@ -1057,7 +1057,7 @@ get_dev (char const *device, char const *mount_point, char const *file,
       if (stat (stat_file, &sb) == 0)
         {
           struct mount_entry const * dev_me = me_for_dev (sb.st_dev);
-          if (dev_me && ! STREQ (dev_me->me_devname, device)
+          if (dev_me && ! streq (dev_me->me_devname, device)
               && (! dev_me->me_remote || ! me_remote))
             {
               fstype = "-";
@@ -1244,7 +1244,7 @@ last_device_for_mount (char const *mount)
 
   for (me = mount_list; me; me = me->me_next)
     {
-      if (STREQ (me->me_mountdir, mount))
+      if (streq (me->me_mountdir, mount))
         le = me;
     }
 
@@ -1285,10 +1285,10 @@ get_device (char const *device)
       if (canon_dev && IS_ABSOLUTE_FILE_NAME (canon_dev))
         devname = canon_dev;
 
-      if (STREQ (device, devname))
+      if (streq (device, devname))
         {
           char *last_device = last_device_for_mount (me->me_mountdir);
-          eclipsed_device = last_device && ! STREQ (last_device, devname);
+          eclipsed_device = last_device && ! streq (last_device, devname);
           size_t len = strlen (me->me_mountdir);
 
           if (! eclipsed_device
@@ -1362,7 +1362,7 @@ get_point (char const *point, const struct stat *statp)
 
       for (me = mount_list; me; me = me->me_next)
         {
-          if (!STREQ (me->me_type, "lofs")
+          if (!streq (me->me_type, "lofs")
               && (!best_match || best_match->me_dummy || !me->me_dummy))
             {
               size_t len = strlen (me->me_mountdir);
@@ -1407,7 +1407,7 @@ get_point (char const *point, const struct stat *statp)
           }
 
         if (statp->st_dev == me->me_dev
-            && !STREQ (me->me_type, "lofs")
+            && !streq (me->me_type, "lofs")
             && (!best_match || best_match->me_dummy || !me->me_dummy))
           {
             /* Skip bogus mtab entries.  */
@@ -1734,7 +1734,7 @@ main (int argc, char **argv)
         struct fs_type_list *fs_excl;
         for (fs_excl = fs_exclude_list; fs_excl; fs_excl = fs_excl->fs_next)
           {
-            if (STREQ (fs_incl->fs_name, fs_excl->fs_name))
+            if (streq (fs_incl->fs_name, fs_excl->fs_name))
               {
                 error (0, 0,
                        _("file system type %s both selected and excluded"),

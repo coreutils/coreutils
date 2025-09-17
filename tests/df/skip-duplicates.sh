@@ -49,8 +49,6 @@ cat > k.c <<EOF || framework_failure_
 #include <stdarg.h>
 #include <dlfcn.h>
 
-#define STREQ(a, b) (strcmp (a, b) == 0)
-
 int open(const char *path, int flags, ...)
 {
   static int (*open_func)(const char *, int, ...);
@@ -77,7 +75,7 @@ int open(const char *path, int flags, ...)
 
   /* Returning ENOENT here will get read_file_system_list()
      to fall back to using getmntent() below.  */
-  if (STREQ (path, "/proc/self/mountinfo"))
+  if (streq (path, "/proc/self/mountinfo"))
     {
       errno = ENOENT;
       return -1;
@@ -85,8 +83,6 @@ int open(const char *path, int flags, ...)
   else
     return open_func(path, flags, mode);
 }
-
-#define STREQ(a, b) (strcmp (a, b) == 0)
 
 struct mntent *getmntent (FILE *fp)
 {
@@ -132,9 +128,9 @@ struct mntent *getmntent (FILE *fp)
         mntents[done-2].mnt_type = "-";
       if (!mntents[done-2].mnt_opts)
         mntents[done-2].mnt_opts = "-";
-      if (STREQ (mntents[done-2].mnt_dir, "/NONROOT"))
+      if (streq (mntents[done-2].mnt_dir, "/NONROOT"))
         mntents[done-2].mnt_dir = nonroot_fs;
-      if (STREQ (mntents[done-2].mnt_dir, "/REMOTE"))
+      if (streq (mntents[done-2].mnt_dir, "/REMOTE"))
         {
           if (!remote_fs || !*remote_fs)
             continue;

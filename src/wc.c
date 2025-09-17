@@ -623,7 +623,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 static bool
 wc_file (char const *file, struct fstatus *fstatus)
 {
-  if (! file || STREQ (file, "-"))
+  if (! file || streq (file, "-"))
     {
       have_read_stdin = true;
       xset_binary_mode (STDIN_FILENO, O_BINARY);
@@ -670,7 +670,7 @@ get_input_fstatus (idx_t nfiles, char *const *file)
   else
     {
       for (idx_t i = 0; i < nfiles; i++)
-        fstatus[i].failed = (! file[i] || STREQ (file[i], "-")
+        fstatus[i].failed = (! file[i] || streq (file[i], "-")
                              ? fstat (STDIN_FILENO, &fstatus[i].st)
                              : stat (file[i], &fstatus[i].st));
     }
@@ -815,7 +815,7 @@ main (int argc, char **argv)
           usage (EXIT_FAILURE);
         }
 
-      if (STREQ (files_from, "-"))
+      if (streq (files_from, "-"))
         stream = stdin;
       else
         {
@@ -871,7 +871,7 @@ main (int argc, char **argv)
   for (int i = 0; (file_name = argv_iter (ai, &ai_err)); i++)
     {
       bool skip_file = false;
-      if (files_from && STREQ (files_from, "-") && STREQ (file_name, "-"))
+      if (files_from && streq (files_from, "-") && streq (file_name, "-"))
         {
           /* Give a better diagnostic in an unusual case:
              printf - | wc --files0-from=- */

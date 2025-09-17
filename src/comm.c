@@ -285,7 +285,7 @@ compare_files (char **infiles)
       alt[i][0] = 0;
       alt[i][1] = 0;
       alt[i][2] = 0;
-      streams[i] = (STREQ (infiles[i], "-") ? stdin : fopen (infiles[i], "r"));
+      streams[i] = (streq (infiles[i], "-") ? stdin : fopen (infiles[i], "r"));
       if (!streams[i])
         error (EXIT_FAILURE, errno, "%s", quotef (infiles[i]));
 
@@ -464,7 +464,7 @@ main (int argc, char **argv)
         break;
 
       case OUTPUT_DELIMITER_OPTION:
-        if (col_sep_len && !STREQ (col_sep, optarg))
+        if (col_sep_len && !streq (col_sep, optarg))
           error (EXIT_FAILURE, 0, _("multiple output delimiters specified"));
         col_sep = optarg;
         col_sep_len = *optarg ? strlen (optarg) : 1;

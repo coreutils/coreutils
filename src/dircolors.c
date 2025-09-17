@@ -137,7 +137,7 @@ guess_shell_syntax (void)
 
   shell = last_component (shell);
 
-  if (STREQ (shell, "csh") || STREQ (shell, "tcsh"))
+  if (streq (shell, "csh") || streq (shell, "tcsh"))
     return SHELL_SYNTAX_C;
 
   return SHELL_SYNTAX_BOURNE;
@@ -396,7 +396,7 @@ dc_parse_file (char const *filename)
 {
   bool ok;
 
-  if (! STREQ (filename, "-") && freopen (filename, "r", stdin) == nullptr)
+  if (! streq (filename, "-") && freopen (filename, "r", stdin) == nullptr)
     {
       error (0, errno, "%s", quotef (filename));
       return false;

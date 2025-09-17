@@ -954,7 +954,7 @@ stream_open (char const *file, char const *how)
 
   if (*how == 'r')
     {
-      if (STREQ (file, "-"))
+      if (streq (file, "-"))
         {
           have_read_stdin = true;
           fp = stdin;
@@ -1534,7 +1534,7 @@ sort_buffer_size (FILE *const *fps, size_t nfps,
       size_t worst_case;
 
       if ((i < nfps ? fstat (fileno (fps[i]), &st)
-           : STREQ (files[i], "-") ? fstat (STDIN_FILENO, &st)
+           : streq (files[i], "-") ? fstat (STDIN_FILENO, &st)
            : stat (files[i], &st))
           != 0)
         sort_die (_("stat failed"), files[i]);
@@ -3859,11 +3859,11 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
 
   for (size_t i = ntemps; i < nfiles; i++)
     {
-      bool is_stdin = STREQ (files[i].name, "-");
+      bool is_stdin = streq (files[i].name, "-");
       bool same;
       struct stat instat;
 
-      if (outfile && STREQ (outfile, files[i].name) && !is_stdin)
+      if (outfile && streq (outfile, files[i].name) && !is_stdin)
         same = true;
       else
         {
@@ -3907,7 +3907,7 @@ check_inputs (char *const *files, size_t nfiles)
 {
   for (size_t i = 0; i < nfiles; i++)
     {
-      if (STREQ (files[i], "-"))
+      if (streq (files[i], "-"))
         continue;
 
       if (euidaccess (files[i], R_OK) != 0)
@@ -4567,7 +4567,7 @@ main (int argc, char **argv)
           break;
 
         case COMPRESS_PROGRAM_OPTION:
-          if (compress_program && !STREQ (compress_program, optarg))
+          if (compress_program && !streq (compress_program, optarg))
             error (SORT_FAILURE, 0, _("multiple compress programs specified"));
           compress_program = optarg;
           break;
@@ -4640,13 +4640,13 @@ main (int argc, char **argv)
           break;
 
         case 'o':
-          if (outfile && !STREQ (outfile, optarg))
+          if (outfile && !streq (outfile, optarg))
             error (SORT_FAILURE, 0, _("multiple output files specified"));
           outfile = optarg;
           break;
 
         case RANDOM_SOURCE_OPTION:
-          if (random_source && !STREQ (random_source, optarg))
+          if (random_source && !streq (random_source, optarg))
             error (SORT_FAILURE, 0, _("multiple random sources specified"));
           random_source = optarg;
           break;
@@ -4666,7 +4666,7 @@ main (int argc, char **argv)
               error (SORT_FAILURE, 0, _("empty tab"));
             if (optarg[1])
               {
-                if (STREQ (optarg, "\\0"))
+                if (streq (optarg, "\\0"))
                   newtab = '\0';
                 else
                   {
@@ -4757,7 +4757,7 @@ main (int argc, char **argv)
           nfiles = tok.n_tok;
           for (size_t i = 0; i < nfiles; i++)
             {
-              if (STREQ (files[i], "-"))
+              if (streq (files[i], "-"))
                 error (SORT_FAILURE, 0, _("when reading file names from "
                                           "standard input, "
                                           "no file name of %s allowed"),

@@ -191,7 +191,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
 
   for (files_open = 0; files_open < nfiles; ++files_open)
     {
-      if (STREQ (fnamptr[files_open], "-"))
+      if (streq (fnamptr[files_open], "-"))
         {
           have_read_stdin = true;
           fileptr[files_open] = stdin;
@@ -343,7 +343,7 @@ paste_serial (size_t nfiles, char **fnamptr)
   for (; nfiles; nfiles--, fnamptr++)
     {
       int saved_errno;
-      bool is_stdin = STREQ (*fnamptr, "-");
+      bool is_stdin = streq (*fnamptr, "-");
       if (is_stdin)
         {
           have_read_stdin = true;

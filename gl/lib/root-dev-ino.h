@@ -33,7 +33,7 @@ get_root_dev_ino (struct dev_ino *root_d_i) _GL_ATTRIBUTE_NONNULL ();
 # define ROOT_DEV_INO_WARN(Dirname)					\
   do									\
     {									\
-      if (STREQ (Dirname, "/"))						\
+      if (streq (Dirname, "/"))						\
         error (0, 0, _("it is dangerous to operate recursively on %s"),	\
                quoteaf (Dirname));					\
       else								\

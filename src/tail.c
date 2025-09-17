@@ -967,7 +967,7 @@ recheck (struct File_spec *f, bool blocking)
 {
   struct stat new_stats;
   bool ok = false;
-  bool is_stdin = (STREQ (f->name, "-"));
+  bool is_stdin = (streq (f->name, "-"));
   int prev_errnum = f->errnum;
   bool new_file;
   int fd = (is_stdin
@@ -1377,7 +1377,7 @@ static bool
 tailable_stdin (const struct File_spec *f, int n_files)
 {
   for (int i = 0; i < n_files; i++)
-    if (!f[i].ignore && STREQ (f[i].name, "-"))
+    if (!f[i].ignore && streq (f[i].name, "-"))
       return true;
   return false;
 }
@@ -1705,7 +1705,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
               /* With N=hundreds of frequently-changing files, this O(N^2)
                  process might be a problem.  FIXME: use a hash table?  */
               if (f[j].parent_wd == ev->wd
-                  && STREQ (ev->name, f[j].name + f[j].basename_start))
+                  && streq (ev->name, f[j].name + f[j].basename_start))
                 break;
             }
 
@@ -1966,7 +1966,7 @@ tail_file (struct File_spec *f, count_t n_files, count_t n_units)
   /* Avoid blocking if we may need to process asynchronously.  */
   bool nonblocking = forever && (nbpids || n_files > 1);
 
-  bool is_stdin = (STREQ (f->name, "-"));
+  bool is_stdin = (streq (f->name, "-"));
 
   if (is_stdin)
     {
@@ -2073,7 +2073,7 @@ parse_obsolete_option (int argc, char * const *argv, count_t *n_units)
      one file argument.  Watch out for "-" and "--", though.  */
   if (! (argc == 2
          || (argc == 3 && ! (argv[2][0] == '-' && argv[2][1]))
-         || (3 <= argc && argc <= 4 && STREQ (argv[2], "--"))))
+         || (3 <= argc && argc <= 4 && streq (argv[2], "--"))))
     return false;
 
   int posix_ver = posix2_version ();
@@ -2287,7 +2287,7 @@ ignore_fifo_and_pipe (struct File_spec *f, int n_files)
   for (int i = 0; i < n_files; i++)
     {
       bool is_a_fifo_or_pipe =
-        (STREQ (f[i].name, "-")
+        (streq (f[i].name, "-")
          && !f[i].ignore
          && 0 <= f[i].fd
          && (S_ISFIFO (f[i].mode)
@@ -2369,7 +2369,7 @@ main (int argc, char **argv)
     bool found_hyphen = false;
 
     for (int i = 0; i < n_files; i++)
-      if (STREQ (file[i], "-"))
+      if (streq (file[i], "-"))
         found_hyphen = true;
 
     /* When following by name, there must be a name.  */
@@ -2404,7 +2404,7 @@ main (int argc, char **argv)
   for (int i = 0; i < n_files; i++)
     {
       F[i].name = file[i];
-      F[i].prettyname = STREQ (file[i], "-") ? _("standard input") : file[i];
+      F[i].prettyname = streq (file[i], "-") ? _("standard input") : file[i];
     }
 
   if (header_mode == always

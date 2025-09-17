@@ -171,7 +171,7 @@ static bool
 is_root (char const *dir)
 {
   char *resolved = canonicalize_file_name (dir);
-  bool is_res_root = resolved && STREQ ("/", resolved);
+  bool is_res_root = resolved && streq ("/", resolved);
   free (resolved);
   return is_res_root;
 }

@@ -124,7 +124,7 @@ touch (char const *file)
   int open_errno = 0;
   struct timespec const *t = newtime;
 
-  if (STREQ (file, "-"))
+  if (streq (file, "-"))
     fd = STDOUT_FILENO;
   else if (! (no_create || no_dereference))
     {

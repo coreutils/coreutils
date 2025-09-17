@@ -322,7 +322,7 @@ main (int argc, char **argv)
 
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle '--' here.  */
-  if (1 < argc && STREQ (argv[1], "--"))
+  if (1 < argc && streq (argv[1], "--"))
     {
       --argc;
       ++argv;
@@ -522,7 +522,7 @@ nextarg (char const *str)
     return false;
   else
     {
-      bool r = STREQ (*args, str);
+      bool r = streq (*args, str);
       args += r;
       return r;
     }

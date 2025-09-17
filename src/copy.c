@@ -1598,7 +1598,7 @@ source_is_dst_backup (char const *srcbase, struct stat const *src_st,
   size_t suffixlen = strlen (simple_backup_suffix);
   if (! (srcbaselen == dstbaselen + suffixlen
          && memcmp (srcbase, dstbase, dstbaselen) == 0
-         && STREQ (srcbase + dstbaselen, simple_backup_suffix)))
+         && streq (srcbase + dstbaselen, simple_backup_suffix)))
     return false;
   char *dst_back = subst_suffix (dst_relname,
                                  dst_relname + strlen (dst_relname),
@@ -2435,7 +2435,7 @@ skip:
 
           dst_parent = dir_name (dst_relname);
 
-          in_current_dir = ((dst_dirfd == AT_FDCWD && STREQ (".", dst_parent))
+          in_current_dir = ((dst_dirfd == AT_FDCWD && streq (".", dst_parent))
                             /* If either stat call fails, it's ok not to report
                                the failure and say dst_name is in the current
                                directory.  Other things will fail later.  */
@@ -2555,7 +2555,7 @@ skip:
             areadlinkat_with_size (dst_dirfd, dst_relname, dst_sb.st_size);
           if (dest_link_val)
             {
-              if (STREQ (dest_link_val, src_link_val))
+              if (streq (dest_link_val, src_link_val))
                 symlink_err = 0;
               free (dest_link_val);
             }

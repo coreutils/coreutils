@@ -552,7 +552,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
             = human_readable (offset, offset_buf,
                               human_floor | human_progress_opts, 1, 1);
 
-          if (done || !STREQ (previous_human_offset, human_offset))
+          if (done || !streq (previous_human_offset, human_offset))
             {
               if (! known (size))
                 error (0, 0, _("%s: pass %lu/%lu (%s)...%s"),
@@ -1195,7 +1195,7 @@ main (int argc, char **argv)
           break;
 
         case RANDOM_SOURCE_OPTION:
-          if (random_source && !STREQ (random_source, optarg))
+          if (random_source && !streq (random_source, optarg))
             error (EXIT_FAILURE, 0, _("multiple random sources specified"));
           random_source = optarg;
           break;
@@ -1252,7 +1252,7 @@ main (int argc, char **argv)
   for (i = 0; i < n_files; i++)
     {
       char *qname = xstrdup (quotef (file[i]));
-      if (STREQ (file[i], "-"))
+      if (streq (file[i], "-"))
         {
           ok &= wipefd (STDOUT_FILENO, qname, randint_source, &flags);
         }

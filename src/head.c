@@ -860,7 +860,7 @@ head_file (char const *filename, uintmax_t n_units, bool count_lines,
 {
   int fd;
   bool ok;
-  bool is_stdin = STREQ (filename, "-");
+  bool is_stdin = streq (filename, "-");
 
   if (is_stdin)
     {

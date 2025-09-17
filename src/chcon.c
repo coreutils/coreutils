@@ -177,7 +177,7 @@ change_file_context (int fd, char const *file)
       context_string = specified_context;
     }
 
-  if (file_context == nullptr || ! STREQ (context_string, file_context))
+  if (file_context == nullptr || ! streq (context_string, file_context))
     {
       int fail = (affect_symlink_referent
                   ?  setfileconat (fd, file, context_string)

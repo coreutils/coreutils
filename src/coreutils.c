@@ -103,7 +103,7 @@ launch_program (char const *prog_name, int prog_argc, char **prog_argv)
   if (false);
   /* Look up the right main program.  */
 # define SINGLE_BINARY_PROGRAM(prog_name_str, main_name) \
-  else if (STREQ (prog_name_str, prog_name)) \
+  else if (streq (prog_name_str, prog_name)) \
     prog_main = single_binary_main_##main_name;
 # include "coreutils.h"
 # undef SINGLE_BINARY_PROGRAM
@@ -134,7 +134,7 @@ main (int argc, char **argv)
 
   /* Map external name to internal name.  */
   char ginstall[] = "ginstall";
-  if (STREQ (prog_name, "install"))
+  if (streq (prog_name, "install"))
     prog_name = ginstall;
 
   /* If this program is called directly as "coreutils" or if the value of
@@ -198,7 +198,7 @@ main (int argc, char **argv)
 
   /* Only print the error message when no options have been passed
      to coreutils.  */
-  if (optind == 1 && prog_name && !STREQ (prog_name, "coreutils"))
+  if (optind == 1 && prog_name && !streq (prog_name, "coreutils"))
     error (0, 0, _("unknown program %s"),
            quote (prog_name));
 

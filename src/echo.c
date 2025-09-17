@@ -116,7 +116,7 @@ main (int argc, char **argv)
   bool posixly_correct = !!getenv ("POSIXLY_CORRECT");
   bool allow_options =
     (! posixly_correct
-     || (! DEFAULT_ECHO_TO_XPG && 1 < argc && STREQ (argv[1], "-n")));
+     || (! DEFAULT_ECHO_TO_XPG && 1 < argc && streq (argv[1], "-n")));
 
   /* System V machines already have a /bin/sh with a v9 behavior.
      Use the identical behavior for these machines so that the
@@ -135,10 +135,10 @@ main (int argc, char **argv)
      order to avoid accepting abbreviations.  */
   if (allow_options && argc == 2)
     {
-      if (STREQ (argv[1], "--help"))
+      if (streq (argv[1], "--help"))
         usage (EXIT_SUCCESS);
 
-      if (STREQ (argv[1], "--version"))
+      if (streq (argv[1], "--version"))
         {
           version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
                        (char *) nullptr);

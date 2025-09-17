@@ -987,7 +987,7 @@ open_next_file (void)
         return ok;
       ++file_list;
 
-      if (STREQ (input_filename, "-"))
+      if (streq (input_filename, "-"))
         {
           input_filename = _("standard input");
           in_stream = stdin;
@@ -1028,7 +1028,7 @@ check_and_close (int in_errno)
     {
       if (!ferror (in_stream))
         in_errno = 0;
-      if (STREQ (file_list[-1], "-"))
+      if (streq (file_list[-1], "-"))
         clearerr (in_stream);
       else if (fclose (in_stream) != 0 && !in_errno)
         in_errno = errno;

@@ -322,9 +322,9 @@ check_file (char const *infile, char const *outfile, char delimiter)
   struct linebuffer lb1, lb2;
   struct linebuffer *thisline, *prevline;
 
-  if (! (STREQ (infile, "-") || freopen (infile, "r", stdin)))
+  if (! (streq (infile, "-") || freopen (infile, "r", stdin)))
     error (EXIT_FAILURE, errno, "%s", quotef (infile));
-  if (! (STREQ (outfile, "-") || freopen (outfile, "w", stdout)))
+  if (! (streq (outfile, "-") || freopen (outfile, "w", stdout)))
     error (EXIT_FAILURE, errno, "%s", quotef (outfile));
 
   fadvise (stdin, FADVISE_SEQUENTIAL);

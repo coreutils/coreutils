@@ -1279,7 +1279,7 @@ process_suffixed_number (char *text, long double *result,
     {
       char *possible_suffix = text + strlen (text) - strlen (suffix);
 
-      if (STREQ (suffix, possible_suffix))
+      if (streq (suffix, possible_suffix))
         {
           /* trim suffix, ONLY if it's at the end of the text.  */
           *possible_suffix = '\0';

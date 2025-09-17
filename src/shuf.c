@@ -450,13 +450,13 @@ main (int argc, char **argv)
         break;
 
       case 'o':
-        if (outfile && !STREQ (outfile, optarg))
+        if (outfile && !streq (outfile, optarg))
           error (EXIT_FAILURE, 0, _("multiple output files specified"));
         outfile = optarg;
         break;
 
       case RANDOM_SOURCE_OPTION:
-        if (random_source && !STREQ (random_source, optarg))
+        if (random_source && !streq (random_source, optarg))
           error (EXIT_FAILURE, 0, _("multiple random sources specified"));
         random_source = optarg;
         break;
@@ -511,7 +511,7 @@ main (int argc, char **argv)
     {
       /* If an input file is specified, re-open it as stdin.  */
       if (n_operands == 1
-          && ! (STREQ (operand[0], "-")
+          && ! (streq (operand[0], "-")
                 || freopen (operand[0], "r", stdin)))
         error (EXIT_FAILURE, errno, "%s", quotef (operand[0]));
 

@@ -950,7 +950,7 @@ main (int argc, char **argv)
           time_style = getenv ("TIME_STYLE");
 
           /* Ignore TIMESTYLE="locale", for compatibility with ls.  */
-          if (! time_style || STREQ (time_style, "locale"))
+          if (! time_style || streq (time_style, "locale"))
             time_style = "long-iso";
           else if (*time_style == '+')
             {
@@ -1007,7 +1007,7 @@ main (int argc, char **argv)
           usage (EXIT_FAILURE);
         }
 
-      if (! (STREQ (files_from, "-") || freopen (files_from, "r", stdin)))
+      if (! (streq (files_from, "-") || freopen (files_from, "r", stdin)))
         error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
                quoteaf (files_from));
 
@@ -1066,7 +1066,7 @@ main (int argc, char **argv)
               affirm (!"unexpected error code from argv_iter");
             }
         }
-      if (files_from && STREQ (files_from, "-") && STREQ (file_name, "-"))
+      if (files_from && streq (files_from, "-") && streq (file_name, "-"))
         {
           /* Give a better diagnostic in an unusual case:
              printf - | du --files0-from=- */

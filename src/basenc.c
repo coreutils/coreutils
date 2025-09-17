@@ -1452,7 +1452,7 @@ finish_and_exit (FILE *in, char const *infile)
 {
   if (fclose (in) != 0)
     {
-      if (STREQ (infile, "-"))
+      if (streq (infile, "-"))
         error (EXIT_FAILURE, errno, _("closing standard input"));
       else
         error (EXIT_FAILURE, errno, "%s", quotef (infile));
@@ -1790,7 +1790,7 @@ main (int argc, char **argv)
   else
     infile = "-";
 
-  if (STREQ (infile, "-"))
+  if (streq (infile, "-"))
     {
       xset_binary_mode (STDIN_FILENO, O_BINARY);
       input_fh = stdin;

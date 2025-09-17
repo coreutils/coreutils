@@ -742,7 +742,7 @@ do_copy (int n_files, char **file, char const *target_directory,
               ASSIGN_STRDUPA (arg_base, last_component (arg));
               strip_trailing_slashes (arg_base);
               /* For 'cp -R source/.. dest', don't copy into 'dest/..'. */
-              arg_base += STREQ (arg_base, "..");
+              arg_base += streq (arg_base, "..");
               dst_name = file_name_concat (target_directory, arg_base,
                                            &arg_in_concat);
             }
@@ -802,7 +802,7 @@ do_copy (int n_files, char **file, char const *target_directory,
 
       if (x->unlink_dest_after_failed_open
           && x->backup_type != no_backups
-          && STREQ (source, dest)
+          && streq (source, dest)
           && !new_dst
           && (sb.st_mode != 0 || stat (dest, &sb) == 0) && S_ISREG (sb.st_mode))
         {

@@ -348,7 +348,7 @@ next_file (FILE *fp)
       int err = errno;
       if (!ferror (fp))
         err = 0;
-      if (STREQ (prev_file, "-"))
+      if (streq (prev_file, "-"))
         clearerr (fp);		/* Also clear EOF.  */
       else if (fclose (fp) != 0)
         err = errno;
@@ -361,7 +361,7 @@ next_file (FILE *fp)
 
   while ((file = *file_list++) != nullptr)
     {
-      if (STREQ (file, "-"))
+      if (streq (file, "-"))
         {
           have_read_stdin = true;
           fp = stdin;

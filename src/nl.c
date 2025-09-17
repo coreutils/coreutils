@@ -436,7 +436,7 @@ nl_file (char const *file)
 {
   FILE *stream;
 
-  if (STREQ (file, "-"))
+  if (streq (file, "-"))
     {
       have_read_stdin = true;
       stream = stdin;
@@ -459,7 +459,7 @@ nl_file (char const *file)
   int err = errno;
   if (!ferror (stream))
     err = 0;
-  if (STREQ (file, "-"))
+  if (streq (file, "-"))
     clearerr (stream);		/* Also clear EOF. */
   else if (fclose (stream) != 0 && !err)
     err = errno;
@@ -544,11 +544,11 @@ main (int argc, char **argv)
                                      0, XTOINT_MIN_RANGE);
           break;
         case 'n':
-          if (STREQ (optarg, "ln"))
+          if (streq (optarg, "ln"))
             lineno_format = FORMAT_LEFT;
-          else if (STREQ (optarg, "rn"))
+          else if (streq (optarg, "rn"))
             lineno_format = FORMAT_RIGHT_NOLZ;
-          else if (STREQ (optarg, "rz"))
+          else if (streq (optarg, "rz"))
             lineno_format = FORMAT_RIGHT_LZ;
           else
             {

@@ -227,7 +227,7 @@ need_copy (char const *src_name, char const *dest_name,
           return true;
         }
 
-      scontext_match = STREQ (file_scontext_raw, to_scontext_raw);
+      scontext_match = streq (file_scontext_raw, to_scontext_raw);
 
       freecon (file_scontext_raw);
       freecon (to_scontext_raw);

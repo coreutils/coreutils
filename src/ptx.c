@@ -505,7 +505,7 @@ swallow_file_in_memory (char const *file_name, BLOCK *block)
   /* As special cases, a file name which is null or "-" indicates standard
      input, which is already opened.  In all other cases, open the file from
      its name.  */
-  bool using_stdin = !file_name || !*file_name || STREQ (file_name, "-");
+  bool using_stdin = !file_name || !*file_name || streq (file_name, "-");
   if (using_stdin)
     block->start = fread_file (stdin, 0, &used_length);
   else
@@ -1915,7 +1915,7 @@ main (int argc, char **argv)
 
       for (file_index = 0; file_index < number_input_files; file_index++)
         {
-          if (!*argv[optind] || STREQ (argv[optind], "-"))
+          if (!*argv[optind] || streq (argv[optind], "-"))
             input_file_name[file_index] = nullptr;
           else
             input_file_name[file_index] = argv[optind];
@@ -1931,7 +1931,7 @@ main (int argc, char **argv)
       input_file_name = xmalloc (sizeof *input_file_name);
       file_line_count = xmalloc (sizeof *file_line_count);
       text_buffers    = xmalloc (sizeof *text_buffers);
-      if (!*argv[optind] || STREQ (argv[optind], "-"))
+      if (!*argv[optind] || streq (argv[optind], "-"))
         input_file_name[0] = nullptr;
       else
         input_file_name[0] = argv[optind];

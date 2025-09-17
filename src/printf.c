@@ -708,10 +708,10 @@ main (int argc, char **argv)
      order to avoid accepting abbreviations.  */
   if (argc == 2)
     {
-      if (STREQ (argv[1], "--help"))
+      if (streq (argv[1], "--help"))
         usage (EXIT_SUCCESS);
 
-      if (STREQ (argv[1], "--version"))
+      if (streq (argv[1], "--version"))
         {
           version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
                        (char *) nullptr);
@@ -721,7 +721,7 @@ main (int argc, char **argv)
 
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle '--' here.  */
-  if (1 < argc && STREQ (argv[1], "--"))
+  if (1 < argc && streq (argv[1], "--"))
     {
       --argc;
       ++argv;
