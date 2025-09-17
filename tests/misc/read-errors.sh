@@ -20,7 +20,7 @@
 
 ! cat . >/dev/null 2>&1 || skip_ "Need unreadable directories"
 
-echo "\
+printf '%s' "\
 basenc --base32 .
 basenc -d --base64 .
 cat .

@@ -25,7 +25,7 @@ fi
 
 # Writers that may output data indefinitely
 # First word in command line is checked against built programs
-echo "\
+printf '%s' "\
 cat /dev/zero
 comm -z /dev/zero /dev/zero
 cut -z -c1- /dev/zero
