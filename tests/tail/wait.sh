@@ -67,7 +67,7 @@ if test "$HAVE_INOTIFY" && test -z "$mode" && is_local_dir_ .; then
     local delay="$1"
 
     > k && > tail.out && > tail.err || framework_failure_
-    tail $fastpoll -F $mode k >tail.out 2>tail.err & pid=$!
+    timeout 60 tail $fastpoll -F $mode k >tail.out 2>tail.err & pid=$!
     sleep $delay
     mv k l
     sleep $delay
