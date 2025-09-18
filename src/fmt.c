@@ -493,12 +493,18 @@ fmt (FILE *f, char const *file)
     }
 
   int err = ferror (f) ? 0 : -1;
+  /* err < 0 means success.  */
   if (f == stdin)
     clearerr (f);
   else if (fclose (f) != 0 && err < 0)
     err = errno;
   if (0 <= err)
-    error (0, err, err ? "%s" : _("read error"), quotef (file));
+    {
+      if (f == stdin)
+        error (0, err, _("read error"));
+      else
+        error (0, err, _("error reading %s"), quoteaf (file));
+    }
   return err < 0;
 }
 
