@@ -369,18 +369,31 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
     }
   else
     {
-      error (0, link_errno,
-             (symbolic_link
-              ? (link_errno != ENAMETOOLONG && *source
-                 ? _("failed to create symbolic link %s")
-                 : _("failed to create symbolic link %s -> %s"))
-              : (link_errno == EMLINK
-                 ? _("failed to create hard link to %.0s%s")
-                 : (link_errno == EDQUOT || link_errno == EEXIST
-                    || link_errno == ENOSPC || link_errno == EROFS)
-                 ? _("failed to create hard link %s")
-                 : _("failed to create hard link %s => %s"))),
-             quoteaf_n (0, dest), quoteaf_n (1, source));
+      char *dest_quoted = quoteaf_n (0, dest);
+      char *source_quoted = quoteaf_n (1, source);
+
+      if (symbolic_link)
+        {
+          if (link_errno != ENAMETOOLONG && *source)
+            error (0, link_errno, _("failed to create symbolic link %s"),
+                   dest_quoted);
+          else
+            error (0, link_errno, _("failed to create symbolic link %s -> %s"),
+                   dest_quoted, source_quoted);
+        }
+      else
+        {
+          if (link_errno == EMLINK)
+            error (0, link_errno, _("failed to create hard link to %s"),
+                   source_quoted);
+          else if (link_errno == EDQUOT || link_errno == EEXIST
+                   || link_errno == ENOSPC || link_errno == EROFS)
+            error (0, link_errno, _("failed to create hard link %s"),
+                   dest_quoted);
+          else
+            error (0, link_errno, _("failed to create hard link %s => %s"),
+                   dest_quoted, source_quoted);
+        }
 
       if (backup_base)
         {
