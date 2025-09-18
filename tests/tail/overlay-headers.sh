@@ -50,9 +50,9 @@ echo start > file1 || framework_failure_
 echo start > file2 || framework_failure_
 
 # Use this as a way to gracefully terminate tail
-env sleep 20 & sleep=$!
+env sleep 60 & sleep=$!
 
-tail $fastpoll --pid=$sleep -f file1 file2 > out & pid=$!
+timeout 60 tail $fastpoll --pid=$sleep -f file1 file2 > out & pid=$!
 
 kill -0 $pid || fail=1
 
