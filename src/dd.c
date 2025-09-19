@@ -295,6 +295,7 @@ enum
           | O_DIRECT
           | O_DIRECTORY
           | O_DSYNC
+          | O_EXCL
           | O_NOATIME
           | O_NOCTTY
           | O_NOFOLLOW

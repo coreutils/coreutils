@@ -68,7 +68,8 @@ sc_dd_O_FLAGS:
 	@rm -f $@.1 $@.2
 	@{ echo O_FULLBLOCK; echo O_NOCACHE;				\
 	  perl -nle '/^ +\| (O_\w*)$$/ and print $$1' $(dd); } | sort > $@.1
-	@{ echo O_NOFOLLOW; perl -nle '/{"[a-z]+",\s*(O_\w+)},/ and print $$1' \
+	@{ echo O_NOFOLLOW; echo O_EXCL;				\
+	   perl -nle '/{"[a-z]+",\s*(O_\w+)},/ and print $$1'		\
 	  $(dd); } | sort > $@.2
 	@diff -u $@.1 $@.2; diff=$$?;					\
 	rm -f $@.1 $@.2;						\
