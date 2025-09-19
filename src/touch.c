@@ -180,11 +180,12 @@ touch (char const *file)
          would give a bogus diagnostic for e.g., 'touch /' (assuming we
          don't own / or have write access).  On Solaris 10 and probably
          other systems, opening a directory like "." fails with EINVAL.
-         (On SunOS 4 it was EPERM but that's obsolete.)  */
+         (On SunOS 4 it was EPERM but that's obsolete.)  On macOS 26
+         opening "/" fails with EEXIST.  */
       struct stat st;
       if (open_errno
           && ! (open_errno == EISDIR
-                || (open_errno == EINVAL
+                || ((open_errno == EINVAL || open_errno == EEXIST)
                     && stat (file, &st) == 0 && S_ISDIR (st.st_mode))))
         {
           /* The wording of this diagnostic should cover at least two cases:
