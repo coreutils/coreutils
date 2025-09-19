@@ -19,6 +19,16 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ env printenv
 
+# We may depend on a library found in LD_LIBRARY_PATH, or an equivalent
+# environment variable.  Skip the test if it is set since unsetting it may
+# prevent us from running commands.
+for var in LD_LIBRARY_PATH LD_32_LIBRARY_PATH DYLD_LIBRARY_PATH LIBPATH; do
+  eval val=\$$var
+  if test -n "$val"; then
+    skip_ "programs may depend on $var being set"
+  fi
+done
+
 # POSIX is clear that environ may, but need not be, sorted.
 # Environment variable values may contain newlines, which cannot be
 # observed by merely inspecting output from env.
