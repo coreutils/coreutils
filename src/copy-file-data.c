@@ -571,18 +571,19 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
   intmax_t result;
   off_t hole_size = 0;
 
-#ifdef SEEK_HOLE
   if (scantype == LSEEK_SCANTYPE)
-    result = lseek_copy (ifd, ofd, &buf, buf_size,
-                         ipos, ibytes, &scan_inference, ist->st_size,
-                         make_holes ? x->sparse_mode : SPARSE_NEVER,
-                         x->reflink_mode != REFLINK_NEVER,
-                         iname, oname, &hole_size, debug);
+    {
+#ifdef SEEK_HOLE
+      result = lseek_copy (ifd, ofd, &buf, buf_size,
+                           ipos, ibytes, &scan_inference, ist->st_size,
+                           make_holes ? x->sparse_mode : SPARSE_NEVER,
+                           x->reflink_mode != REFLINK_NEVER,
+                           iname, oname, &hole_size, debug);
 #else
-  assume (scantype != LSEEK_SCANTYPE);
+      unreachable ();
 #endif
-
-  if (scantype != LSEEK_SCANTYPE)
+    }
+  else
     result = sparse_copy (ifd, ofd, &buf, buf_size,
                           x->reflink_mode != REFLINK_NEVER,
                           iname, oname, ibytes,
