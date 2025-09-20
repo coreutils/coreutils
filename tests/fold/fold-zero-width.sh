@@ -36,6 +36,9 @@ test "$LOCALE_FR_UTF8" != none || skip_ "French UTF-8 locale not available"
 LC_ALL=$LOCALE_FR_UTF8
 export LC_ALL
 
+test $(env printf '\u200B' | wc -L) -eq 0 ||
+  skip_ "character width mismatch"
+
 # Same thing, but using U+200B ZERO WIDTH SPACE.
 yes $(env printf '\u200B') |
   head -n $IO_BUFSIZE_TIMES2 | tr -d '\n' > inp || framework_failure_

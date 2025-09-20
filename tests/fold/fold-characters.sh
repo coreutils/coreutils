@@ -25,6 +25,9 @@ test "$LOCALE_FR_UTF8" != none || skip_ "French UTF-8 locale not available"
 LC_ALL=$LOCALE_FR_UTF8
 export LC_ALL
 
+test $(env printf '\uB250\uFF1A' | wc -L) -eq 4 ||
+  skip_ "character width mismatch"
+
 # The string "뉐뉐뉐" is 3 characters, but occupies 6 columns.
 env printf '\uB250\uB250\uB250\n' > input1 || framework_failure_
 env printf '\uB250\uB250\n\uB250\n' > column-exp1 || framework_failure_

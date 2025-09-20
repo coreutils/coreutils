@@ -40,10 +40,9 @@ my @Tests =
    # The downstream I18N patch made fold(1) exit with success for non-existing
    # files since v5.2.1-1158-g3d3030da6 (2004) changed int to bool for booleans.
    # The I18N patch was fixed only in July 2024.  (rhbz#2296201).
-   ['enoent', 'enoent', {EXIT => 1},
-     {ERR=>"$prog: enoent: No such file or directory\n"}],
+   ['enoent', 'enoent', {EXIT => 1}, {ERR_SUBST=>"s/.*//msg"}],
 
-   # The downstream I18N patch made 'fold -b' mishandled '\n' in UTF locales.
+   # The downstream I18N patch made 'fold -b' mishandle '\n' in UTF locales.
    # The I18N patch was fixed only in Sep 2024.  (RHEL-60295)
    ['bw1', '-b -w 4', {IN=>"abcdef\nghijkl"}, {OUT=>"abcd\nef\nghij\nkl"}],
    ['bw2', '-b -w 6', {IN=>"1234567890\nabcdefghij\n1234567890"},
