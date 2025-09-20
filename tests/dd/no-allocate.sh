@@ -43,7 +43,7 @@ check_dd_seek_alloc() {
   timeout 10 dd count=1 if=/dev/zero of=tape&
 
   # Allocate buffer and read from the "tape"
-  (ulimit -v $vm \
+  (ulimit -v $(($vm+4000)) \
      && timeout 10 dd $dd_buf=30M $dd_op=1 count=0 $dd_file=tape)
   local ret=$?
 
