@@ -79,7 +79,7 @@ grep '1 line is improperly formatted' out || fail=1
 cksum --strict --check CHECKSUMS >out 2>&1 && fail=1
 grep '1 line is improperly formatted' out || fail=1
 echo "invalid line" >> CHECKSUMS
-# plurial checks
+# plurality checks
 cksum --strict --check CHECKSUMS >out 2>&1 && fail=1
 grep '2 lines are improperly formatted' out || fail=1
 

@@ -20,7 +20,7 @@
 
 # include <inttypes.h>
 
-/* Flags for xnumtoimax and xnumtoumax.  They can be ORed togethar.  */
+/* Flags for xnumtoimax and xnumtoumax.  They can be ORed together.  */
 enum
   {
     /* If the number is less than MIN, do not diagnose the problem;
