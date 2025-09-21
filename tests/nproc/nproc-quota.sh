@@ -93,7 +93,7 @@ NPROC() { LD_PRELOAD=$LD_PRELOAD:./k.so chroot $ROOT /nproc "$@"; }
 NPROC --version ||
   skip_ 'Failed to execute nproc in chroot'
 
-unset OMP_NUM_THEADS
+unset OMP_NUM_THREADS
 unset OMP_THREAD_LIMIT
 
 ncpus=$(nproc) || fail=1
