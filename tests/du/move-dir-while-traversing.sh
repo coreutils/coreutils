@@ -66,9 +66,8 @@ long=d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z
 # du sometimes completes its traversal before the above rename.
 # Five iterations was not enough in 2 of 7 "make -j20 check" runs on a
 # 6/12-core system.  However, using "10", I saw no failure in 20 trials.
-# Using 10 iterations was not enough, either.
-# Using 50, I saw no failure in 200 trials.
-for i in $(seq 50); do
+# 2011 this was set at 50, 2025 this was set at 99
+for i in $(seq 99); do
   mkdir -p $t/3/a/b/c/$i/$long || framework_failure_
 done
 
@@ -78,7 +77,7 @@ cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 # Prohibit suspension, which could otherwise cause a timeout-induced FP failure.
 trap '' TSTP
 
-timeout 6 ./inotify-watch-for-dir-access.py $t/3/a/b > start-msg & pid=$!
+timeout 10 ./inotify-watch-for-dir-access.py $t/3/a/b > start-msg & pid=$!
 
 # Wait for the watcher to start...
 nonempty() { sleep $1; test -s start-msg; }
