@@ -56,7 +56,9 @@ vm=$(get_min_ulimit_v_ fold /dev/null) && {
   for c in '\n' '\0' '\303'; do
     tr '\0' "$c" < /dev/zero | timeout 10 $SHELL -c \
      "(ulimit -v $(($vm+12000)) && fold 2>err >/dev/full)"
-    { test $? = 124 || ! grep 'space' err >/dev/null; } &&
+    ret=$?
+    test -f err || skip_ 'shell ulimit failure'
+    { test $ret = 124 || ! grep 'space' err >/dev/null; } &&
      { fail=1; cat err; echo "fold didn't diagnose ENOSPC" >&2; }
   done
 }
