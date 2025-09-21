@@ -367,8 +367,8 @@ if test $ac_cv_func_getattrat = yes; then
   AC_SUBST([LIB_NVPAIR])
 fi
 
-# glibc >= 2.28 and linux kernel >= 4.11
-AC_CHECK_FUNCS([statx])
+# glibc >= 2.28 and linux kernel >= 4.11, Android API level 30.
+gl_CHECK_FUNCS_ANDROID([statx], [[#include <sys/stat.h>]])
 
 # SCO-ODT-3.0 is reported to need -los to link programs using initgroups
 AC_CHECK_FUNCS([initgroups])

@@ -71,10 +71,12 @@ AC_DEFUN([coreutils_MACROS],
     sethostname
     siginterrupt
     sync
-    syncfs
     sysinfo
     tcgetpgrp
   ])
+
+  # Android API level 30.
+  gl_CHECK_FUNCS_ANDROID([syncfs], [[#include <unistd.h>]])
 
   # These checks are for Interix, to avoid its getgr* functions, in favor
   # of these replacements.  The replacement functions are much more efficient
