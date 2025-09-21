@@ -37,7 +37,7 @@ medir=`dirname "$me"`
 
 # A library of shell functions for autopull.sh, autogen.sh, and bootstrap.
 
-scriptlibversion=2025-06-10.02; # UTC
+scriptlibversion=2025-09-07.23; # UTC
 
 # Copyright (C) 2003-2025 Free Software Foundation, Inc.
 #
@@ -72,7 +72,7 @@ export LC_ALL
 # Honor $PERL, but work even if there is none.
 PERL="${PERL-perl}"
 
-default_gnulib_url=https://git.savannah.gnu.org/git/gnulib.git
+default_gnulib_url=https://https.git.savannah.gnu.org/git/gnulib.git
 
 # Copyright year, for the --version output.
 copyright_year=`echo "$scriptlibversion" | sed -e 's/[^0-9].*//'`
