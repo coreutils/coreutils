@@ -193,6 +193,12 @@ done
 
 # If any of these unavailable, the C fallback should also be aligned
 for loc in sv_SE.UTF-8 $LOCALE_FR_UTF8; do
+
+  # Ensure we have a printable thousands separator
+  # This is not the case on FreeBSD 11/12 at least with NBSP
+  test $(LC_ALL=$loc ls -s1 --block-size=\'k file1M |
+         cut -dK -f1 | LC_ALL=$loc wc -L) = 5 || continue
+
   test $(LC_ALL=$loc ls -s1 --block-size=\'k |
          tail -n+2 | cut -dK -f1 |
          while IFS= read size; do
