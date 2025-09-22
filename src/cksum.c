@@ -152,8 +152,10 @@ pclmul_supported (void)
            (pclmul_enabled
             ? _("using pclmul hardware support")
             : _("pclmul support not detected")));
+#  if USE_PCLMUL_CRC32
   if (pclmul_enabled)
     return cksum_pclmul;
+#  endif
 # endif
 
   return nullptr;
