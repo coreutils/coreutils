@@ -1597,11 +1597,12 @@ The detection performed internally within coreutils can be overridden at build
 time using various configure variables, which currently include:
 
 @table @samp
-@item utils_cv_vmull_intrinsic_exists
-@item utils_cv_pclmul_intrinsic_exists
+@item gl_cv_crc_pclmul
+@item utils_cv_avx2_intrinsic_exists
 @item utils_cv_avx2_pclmul_intrinsic_exists
 @item utils_cv_avx512_pclmul_intrinsic_exists
-@item utils_cv_avx2_intrinsic_exists
+@item utils_cv_pclmul_intrinsic_exists
+@item utils_cv_vmull_intrinsic_exists
 @end table
 
 External library detection is automatic for OpenSSL, so you must use the
