@@ -253,7 +253,7 @@ static_assert (DEC_BLOCKSIZE % 12 == 0); /* Complete encoded blocks are used. */
 static_assert (DEC_BLOCKSIZE % 40 == 0); /* complete encoded blocks for base32*/
 static_assert (DEC_BLOCKSIZE % 12 == 0); /* complete encoded blocks for base64*/
 
-static int (*base_length) (int i);
+static idx_t (*base_length) (idx_t len);
 static int (*required_padding) (int i);
 static bool (*isubase) (unsigned char ch);
 static void (*base_encode) (char const *restrict in, idx_t inlen,
@@ -427,8 +427,8 @@ decode_ctx_finalize (struct base_decode_context *ctx,
 
 #if BASE_TYPE == 42
 
-static int
-base64_length_wrapper (int len)
+static idx_t
+base64_length_wrapper (idx_t len)
 {
   return BASE64_LENGTH (len);
 }
@@ -526,8 +526,8 @@ base64url_decode_ctx_wrapper (struct base_decode_context *ctx,
 
 
 
-static int
-base32_length_wrapper (int len)
+static idx_t
+base32_length_wrapper (idx_t len)
 {
   return BASE32_LENGTH (len);
 }
@@ -740,8 +740,8 @@ isubase16 (unsigned char ch)
   return ch < sizeof base16_to_int && 0 <= base16_to_int[ch];
 }
 
-static int
-base16_length (int len)
+static idx_t
+base16_length (idx_t len)
 {
   return len * 2;
 }
@@ -820,13 +820,14 @@ base16_decode_ctx (struct base_decode_context *ctx,
 
 
 
-
-static int
-z85_length (int len)
+ATTRIBUTE_PURE
+static idx_t
+z85_length (idx_t len)
 {
   /* Z85 does not allow padding, so no need to round to highest integer.  */
-  int outlen = (len * 5) / 4;
-  return outlen;
+  idx_t z85_len = (len * 5) / 4;
+  affirm (0 <= z85_len);
+  return z85_len;
 }
 
 static bool
@@ -1015,8 +1016,8 @@ isubase2 (unsigned char ch)
   return ch == '0' || ch == '1';
 }
 
-static int
-base2_length (int len)
+static idx_t
+base2_length (idx_t len)
 {
   return len * 8;
 }
@@ -1206,12 +1207,17 @@ isubase58 (unsigned char ch)
 }
 
 
-static int
-base58_length (int len)
+ATTRIBUTE_PURE
+static idx_t
+base58_length (idx_t len)
 {
   /* Base58 output length is approximately log(256)/log(58),
-     so ensure we've enough place for that + NUL.  */
-  return (len * 138) / 100 + 1;
+     which is approximately len * 138 / 100,
+     which is at most ((len + 100 - 1) / 100) * 138
+     +1 to ensure we've enough place for NUL  */
+  idx_t base58_len = ((len + 99) / 100) * 138 + 1;
+  affirm (0 < base58_len);
+  return base58_len;
 }
 
 
@@ -1268,6 +1274,7 @@ base58_encode (char const* data, size_t data_len,
   if (data_len - zeros)
     {
       mpz_import (num, data_len - zeros, 1, 1, 0, 0, data + zeros);
+      affirm (mpz_sizeinbase (num, 58) + 1 <= *outlen);
       for (p = mpz_get_str (p, 58, num); *p; p++)
         *p = gmp_to_base58[to_uchar (*p)];
     }
