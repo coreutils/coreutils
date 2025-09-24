@@ -237,6 +237,7 @@ src_test_LDADD += $(EUIDACCESS_LIBGEN)
 
 # for selinux use
 copy_ldadd += $(LIB_SELINUX)
+copy_ldadd += $(LIB_SMACK)
 src_chcon_LDADD += $(LIB_SELINUX)
 src_ginstall_LDADD += $(LIB_SELINUX)
 src_id_LDADD += $(LIB_SELINUX)
