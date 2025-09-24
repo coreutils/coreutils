@@ -596,7 +596,7 @@ file_lines (char const *prettyname, int fd, struct stat const *sb,
           goto free_buffer;
         }
 
-      pos = xlseek (fd, -bufsize, SEEK_CUR, prettyname);
+      pos = xlseek (fd, -(bufsize + bytes_read), SEEK_CUR, prettyname);
       bytes_read = read (fd, buffer, bufsize);
       if (bytes_read < 0)
         {

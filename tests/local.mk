@@ -179,6 +179,7 @@ all_tests =					\
   tests/tty/tty-eof.pl				\
   tests/misc/read-errors.sh			\
   tests/misc/write-errors.sh			\
+  tests/tail/basic-seek.sh			\
   tests/tail/inotify-hash-abuse.sh		\
   tests/tail/inotify-hash-abuse2.sh		\
   tests/tail/F-vs-missing.sh			\
