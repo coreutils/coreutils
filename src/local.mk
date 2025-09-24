@@ -484,6 +484,13 @@ src_expand_SOURCES = src/expand.c src/expand-common.c
 src_unexpand_SOURCES = src/unexpand.c src/expand-common.c
 
 src_wc_SOURCES = src/wc.c
+if USE_AVX512_WC_LINECOUNT
+noinst_LIBRARIES += src/libwc_avx512.a
+src_libwc_avx512_a_SOURCES = src/wc_avx512.c
+wc_avx512_ldadd = src/libwc_avx512.a
+src_wc_LDADD += $(wc_avx512_ldadd)
+src_libwc_avx512_a_CFLAGS = -mavx512bw -mavx512f  $(AM_CFLAGS)
+endif
 if USE_AVX2_WC_LINECOUNT
 noinst_LIBRARIES += src/libwc_avx2.a
 src_libwc_avx2_a_SOURCES = src/wc_avx2.c

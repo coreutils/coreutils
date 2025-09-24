@@ -134,14 +134,29 @@ static enum total_type total_mode = total_auto;
 static bool
 avx2_supported (void)
 {
-  bool avx_enabled = cpu_supports ("avx2");
-
+  bool avx2_enabled = cpu_supports ("avx2");
   if (debug)
-    error (0, 0, (avx_enabled
+    error (0, 0, (avx2_enabled
                   ? _("using avx2 hardware support")
                   : _("avx2 support not detected")));
 
-  return avx_enabled;
+  return avx2_enabled;
+}
+#endif
+
+#ifdef USE_AVX512_WC_LINECOUNT
+static bool
+avx512_supported (void)
+{
+  bool avx512_enabled = (cpu_supports ("avx512f")
+                         && cpu_supports ("avx512bw"));
+
+  if (debug)
+    error (0, 0, (avx512_enabled
+                  ? _("using avx512 hardware support")
+                  : _("avx512 support not detected")));
+
+  return avx512_enabled;
 }
 #endif
 
@@ -246,6 +261,13 @@ write_counts (uintmax_t lines,
 static struct wc_lines
 wc_lines (int fd)
 {
+#ifdef USE_AVX512_WC_LINECOUNT
+  static signed char use_avx512;
+  if (!use_avx512)
+    use_avx512 = avx512_supported () ? 1 : -1;
+  if (0 < use_avx512)
+    return wc_lines_avx512 (fd);
+#endif
 #ifdef USE_AVX2_WC_LINECOUNT
   static signed char use_avx2;
   if (!use_avx2)

@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ wc
 
-GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX2' \
+GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX2,-AVX512F' \
  wc -l --debug /dev/null 2>debug || fail=1
 grep 'using.*hardware support' debug && fail=1
 
@@ -27,8 +27,16 @@ lines=$(shuf -i 0-1000 | head -n1)  || framework_failure_
 seq 1000 | head -n "$lines" > lines || framework_failure_
 
 wc_accelerated=$(wc -l < lines) || fail=1
-wc_base=$(GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX2' wc -l < lines) || fail=1
+wc_accelerated_no_avx512=$(
+          GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX512F' \
+          wc -l < lines
+         ) || fail=1
+wc_base=$(
+          GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX2,-AVX512F' \
+          wc -l < lines
+         ) || fail=1
 
 test "$wc_accelerated" = "$wc_base" || fail=1
+test "$wc_accelerated_no_avx512" = "$wc_base" || fail=1
 
 Exit $fail
