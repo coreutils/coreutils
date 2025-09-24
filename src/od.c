@@ -167,7 +167,7 @@ static const int width_bytes[] =
 
 /* Ensure that for each member of 'enum size_spec' there is an
    initializer in the width_bytes array.  */
-static_assert (ARRAY_CARDINALITY (width_bytes) == N_SIZE_SPECS);
+static_assert (countof (width_bytes) == N_SIZE_SPECS);
 
 /* Names for some non-printing characters.  */
 static char const charname[33][4] =
@@ -761,7 +761,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
             size = sizeof (unsigned int);
           else
             {
-              if (ARRAY_CARDINALITY (integral_type_size) <= size
+              if (countof (integral_type_size) <= size
                   || integral_type_size[size] == NO_SIZE)
                 {
                   error (0, 0, _("invalid type string %s;\nthis system"
@@ -873,7 +873,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
             size = sizeof (double);
           else
             {
-              if (ARRAY_CARDINALITY (fp_type_size) <= size
+              if (countof (fp_type_size) <= size
                   || fp_type_size[size] == NO_SIZE
                   || (! FLOAT16_SUPPORTED && BF16_SUPPORTED
                       && size == sizeof (bfloat16)))

@@ -180,7 +180,7 @@ enum { filetype_cardinality = arg_directory + 1 };
    Keep these in sync with enum filetype.  */
 static char const filetype_letter[] =
   {'?', 'p', 'c', 'd', 'b', '-', 'l', 's', 'w', 'd'};
-static_assert (ARRAY_CARDINALITY (filetype_letter) == filetype_cardinality);
+static_assert (countof (filetype_letter) == filetype_cardinality);
 
 /* Map enum filetype to <dirent.h> d_type values.  */
 static unsigned char const filetype_d_type[] =
@@ -188,7 +188,7 @@ static unsigned char const filetype_d_type[] =
     DT_UNKNOWN, DT_FIFO, DT_CHR, DT_DIR, DT_BLK, DT_REG, DT_LNK, DT_SOCK,
     DT_WHT, DT_DIR
   };
-static_assert (ARRAY_CARDINALITY (filetype_d_type) == filetype_cardinality);
+static_assert (countof (filetype_d_type) == filetype_cardinality);
 
 /* Map d_type values to enum filetype.  */
 static char const d_type_filetype[UCHAR_MAX + 1] =
@@ -1621,7 +1621,7 @@ signal_setup (bool init)
       SIGXFSZ,
 #endif
     };
-  enum { nsigs = ARRAY_CARDINALITY (sig) };
+  enum { nsigs = countof (sig) };
 
 #if ! SA_NOCLDSTOP
   static bool caught_sig[nsigs];
@@ -1705,8 +1705,7 @@ main (int argc, char **argv)
   initialize_exit_failure (LS_FAILURE);
   atexit (close_stdout);
 
-  static_assert (ARRAY_CARDINALITY (color_indicator)
-                 == ARRAY_CARDINALITY (indicator_name));
+  static_assert (countof (color_indicator) == countof (indicator_name));
 
   exit_status = EXIT_SUCCESS;
   print_dir_name = true;
@@ -2823,7 +2822,7 @@ parse_ls_color (void)
           state = PS_FAIL;	/* Assume failure...  */
           if (*(p++) == '=')/* It *should* be...  */
             {
-              for (int i = 0; i < ARRAY_CARDINALITY (indicator_name); i++)
+              for (int i = 0; i < countof (indicator_name); i++)
                 {
                   if ((label0 == indicator_name[i][0])
                       && (label1 == indicator_name[i][1]))
@@ -4036,8 +4035,7 @@ static qsortFunc const sort_functions[][2][2][2] =
 
    This line verifies at compile-time that the array of sort functions has been
    initialized for all possible sort keys. */
-static_assert (ARRAY_CARDINALITY (sort_functions)
-               == sort_numtypes - 2 + time_numtypes);
+static_assert (countof (sort_functions) == sort_numtypes - 2 + time_numtypes);
 
 /* Set up SORTED_FILE to point to the in-use entries in CWD_FILE, in order.  */
 
@@ -4986,8 +4984,7 @@ get_color_indicator (const struct fileinfo *f, bool symlink_target)
           C_ORPHAN, C_FIFO, C_CHR, C_DIR, C_BLK, C_FILE,
           C_LINK, C_SOCK, C_FILE, C_DIR
         };
-      static_assert (ARRAY_CARDINALITY (filetype_indicator)
-                     == filetype_cardinality);
+      static_assert (countof (filetype_indicator) == filetype_cardinality);
       type = filetype_indicator[f->filetype];
     }
   else

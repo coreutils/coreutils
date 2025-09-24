@@ -68,6 +68,7 @@
 #endif
 
 #include <stdckdint.h>
+#include <stdcountof.h>
 #include <stddef.h>
 #include <string.h>
 #include <uchar.h>
@@ -769,10 +770,6 @@ stzncpy (char *restrict dest, char const *restrict src, size_t len)
   *dest = 0;
   return dest;
 }
-
-#ifndef ARRAY_CARDINALITY
-# define ARRAY_CARDINALITY(Array) (sizeof (Array) / sizeof *(Array))
-#endif
 
 /* Return true if ERR is ENOTSUP or EOPNOTSUPP, otherwise false.
    This wrapper function avoids the redundant 'or'd comparison on

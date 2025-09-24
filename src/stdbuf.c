@@ -279,7 +279,7 @@ set_libstdbuf_options (void)
 {
   bool env_set = false;
 
-  for (size_t i = 0; i < ARRAY_CARDINALITY (stdbuf); i++)
+  for (size_t i = 0; i < countof (stdbuf); i++)
     {
       if (stdbuf[i].optarg)
         {
@@ -333,7 +333,7 @@ main (int argc, char **argv)
         case 'i':
         case 'o':
           opt_fileno = optc_to_fileno (c);
-          affirm (0 <= opt_fileno && opt_fileno < ARRAY_CARDINALITY (stdbuf));
+          affirm (0 <= opt_fileno && opt_fileno < countof (stdbuf));
           stdbuf[opt_fileno].optc = c;
           while (c_isspace (*optarg))
             optarg++;

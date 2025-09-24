@@ -4416,7 +4416,7 @@ main (int argc, char **argv)
         SIGXFSZ,
 #endif
       };
-    enum { nsigs = ARRAY_CARDINALITY (sig) };
+    enum { nsigs = countof (sig) };
 
 #if SA_NOCLDSTOP
     struct sigaction act;

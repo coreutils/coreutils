@@ -488,7 +488,7 @@ get_line (FILE *fp, struct line **linep, int which)
 static void
 free_spareline (void)
 {
-  for (idx_t i = 0; i < ARRAY_CARDINALITY (spareline); i++)
+  for (idx_t i = 0; i < countof (spareline); i++)
     {
       if (spareline[i])
         {

@@ -720,7 +720,7 @@ static int_least16_t const primes_ptab[] = {
 };
 #undef P
 
-enum { PRIMES_PTAB_ENTRIES = ARRAY_CARDINALITY (primes_ptab) - 8 + 1 };
+enum { PRIMES_PTAB_ENTRIES = countof (primes_ptab) - 8 + 1 };
 
 struct primes_dtab
 {

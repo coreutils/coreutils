@@ -109,6 +109,7 @@
 /lib/stdarg.h
 /lib/stdbool.h
 /lib/stdbit.h
+/lib/stdcountof.h
 /lib/stdckdint.h
 /lib/stddef.h
 /lib/stdint.h
