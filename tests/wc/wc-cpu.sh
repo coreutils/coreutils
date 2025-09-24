@@ -20,7 +20,7 @@
 print_ver_ wc
 
 GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX2' \
- wc --debug /dev/null 2>debug || fail=1
+ wc -l --debug /dev/null 2>debug || fail=1
 grep 'using.*hardware support' debug && fail=1
 
 lines=$(shuf -i 0-1000 | head -n1)  || framework_failure_
