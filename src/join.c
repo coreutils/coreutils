@@ -33,7 +33,6 @@
 #include "stdio--.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
-#include "argmatch.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "join"
