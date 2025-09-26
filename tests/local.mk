@@ -455,6 +455,7 @@ all_tests =					\
   tests/misc/tee.sh				\
   tests/test/test-N.sh				\
   tests/test/test-diag.pl			\
+  tests/test/test-file.sh			\
   tests/misc/time-style.sh			\
   tests/timeout/timeout.sh			\
   tests/timeout/timeout-blocked.pl		\
