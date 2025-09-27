@@ -17,23 +17,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-
-# Convert Makefile.am files:
-#  find tests -name check.mk | xargs grep -wl PATH |
-#    xargs perl -pi -e 's,src(\$\(PATH_SEPARATOR\)),src/vg$1,'
-# To restore:
-#  find tests -name check.mk | xargs grep -wl PATH |
-#    xargs perl -pi -e 's,src/vg,src,'
-#
-# Create this symlink for suppressions (this is no longer necessary,
-# with Linux kernel 2.6.9 and valgrind-2.2.0):
-# ln -s $PWD/.vg-suppressions /tmp/cu-vg
-
-
-# Create src/vg:
-
+# Step 1:
+# Run this file to create src/vg:
 coreutils=$(echo 'spy:;@echo $(all_programs) $(noinst_PROGRAMS)' |
-            (cd src; make -f Makefile -f - spy | tr -s '\n ' '  '))
+            (make -f Makefile -f - spy | sed 's,src/,,g'| tr -s '\n ' '  '))
 mkdir -p src/vg
 pwd=`pwd`
 srcdir=$pwd/src
@@ -52,3 +39,20 @@ done
 EOF
 cd src/vg
 . ./gen
+
+
+# Step 2
+# Convert make file to point to src/vg wrappers
+#   sed -i 's,src\(\$(PATH_SEPARATOR)\),src/vg\1,' tests/local.mk
+# To restore:
+#   sed -i 's,src/vg,src,' tests/local.mk
+
+# Step 2.5  Usually not needed
+# Create this symlink for suppressions (this is no longer necessary,
+# with Linux kernel 2.6.9 and valgrind-2.2.0):
+#   ln -s $PWD/.vg-suppressions /tmp/cu-vg
+
+
+# Step 3:
+# Run (probably a subset of tests due to speed) with fd 3 redirected:
+#   make TESTS=... SUBDIRS=. check 3>vg.log
