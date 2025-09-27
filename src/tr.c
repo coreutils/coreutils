@@ -1244,7 +1244,6 @@ get_spec_stats (struct Spec_list *s)
   for (p = s->head->next; p; p = p->next)
     {
       count len = 0;
-      count new_length;
 
       switch (p->type)
         {
@@ -1298,10 +1297,8 @@ get_spec_stats (struct Spec_list *s)
          any length greater than the maximum repeat count, in case the
          length is later used to compute the repeat count for an
          indefinite element.  */
-      new_length = length + len;
-      if (! (length <= new_length && new_length <= REPEAT_COUNT_MAXIMUM))
+      if (ckd_add (&length, length, len) || REPEAT_COUNT_MAXIMUM < length)
         error (EXIT_FAILURE, 0, _("too many characters in set"));
-      length = new_length;
     }
 
   s->length = length;

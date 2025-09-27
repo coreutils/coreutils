@@ -1389,13 +1389,8 @@ specify_sort_size (int oi, char c, char const *s)
   enum strtol_error e = xstrtoumax (s, &suffix, 10, &n, "EgGkKmMPQRtTYZ");
 
   /* The default unit is KiB.  */
-  if (e == LONGINT_OK && c_isdigit (suffix[-1]))
-    {
-      if (n <= UINTMAX_MAX / 1024)
-        n *= 1024;
-      else
-        e = LONGINT_OVERFLOW;
-    }
+  if (e == LONGINT_OK && c_isdigit (suffix[-1]) && ckd_mul (&n, n, 1024))
+    e = LONGINT_OVERFLOW;
 
   /* A 'b' suffix means bytes; a '%' suffix means percent of memory.  */
   if (e == LONGINT_INVALID_SUFFIX_CHAR && c_isdigit (suffix[-1]) && ! suffix[1])

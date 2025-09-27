@@ -535,10 +535,9 @@ get_ids (void)
         {
           uintmax_t tmp;
           if (xstrtoumax (owner_name, nullptr, 0, &tmp, "") != LONGINT_OK
-              || UID_T_MAX < tmp)
+              || ckd_add (&owner_id, tmp, 0))
             error (EXIT_FAILURE, 0, _("invalid user %s"),
                    quoteaf (owner_name));
-          owner_id = tmp;
         }
       else
         owner_id = pw->pw_uid;
@@ -554,10 +553,9 @@ get_ids (void)
         {
           uintmax_t tmp;
           if (xstrtoumax (group_name, nullptr, 0, &tmp, "") != LONGINT_OK
-              || GID_T_MAX < tmp)
+              || ckd_add (&group_id, tmp, 0))
             error (EXIT_FAILURE, 0, _("invalid group %s"),
                    quoteaf (group_name));
-          group_id = tmp;
         }
       else
         group_id = gr->gr_gid;

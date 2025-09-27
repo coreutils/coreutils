@@ -529,14 +529,12 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
 
       /* Okay, we have written "soff" bytes. */
 
-      if (OFF_T_MAX - offset < soff)
+      if (ckd_add (&offset, offset, soff))
         {
           error (0, 0, _("%s: file too large"), qname);
           other_error = true;
           goto free_pattern_mem;
         }
-
-      offset += soff;
 
       bool done = offset == size;
 

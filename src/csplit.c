@@ -1063,13 +1063,12 @@ parse_repeat_count (int argnum, struct control *p, char *str)
     {
       uintmax_t val;
       if (xstrtoumax (str + 1, nullptr, 10, &val, "") != LONGINT_OK
-          || INTMAX_MAX < val)
+          || ckd_add (&p->repeat, val, 0))
         {
           error (EXIT_FAILURE, 0,
                  _("%s}: integer required between '{' and '}'"),
                  quote (global_argv[argnum]));
         }
-      p->repeat = val;
     }
 
   *end = '}';
