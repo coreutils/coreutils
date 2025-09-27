@@ -51,6 +51,15 @@ export VERBOSE = yes
 # 4914152 9e
 export XZ_OPT = -8e
 
+# -T0 uses all CPUs,
+# -18 output is only 2% larger but compresses twice as fast as -19
+# Tested with:
+#   for t in '' '-T0'; do for l in $(seq 15 19); do
+#     echo == $t -$l ==; env time -f 'elapsed=%E CPU=%Us Mem=%MKB' \
+#      zstd -c $t -$l < coreutils-9.12.tar | wc -c
+#   done; done
+export ZSTD_OPT = -T0 -18
+
 old_NEWS_hash = 078ebe66312fe06ceac192cd5a8423ec
 
 # Add an exemption for sc_makefile_at_at_check.

@@ -9,7 +9,6 @@ as well as by 'make'.  They include:
 - Gettext    <https://www.gnu.org/software/gettext/>
 - Git        <https://git-scm.com/>
 - Gperf      <https://www.gnu.org/software/gperf/>
-- Gzip       <https://www.gnu.org/software/gzip/>
 - Help2man   <https://www.gnu.org/software/help2man/>
 - M4         <https://www.gnu.org/software/m4/>
 - Make       <https://www.gnu.org/software/make/>
@@ -18,6 +17,7 @@ as well as by 'make'.  They include:
 - Texinfo    <https://www.gnu.org/software/texinfo/>
 - Wget       <https://www.gnu.org/software/wget/>
 - XZ Utils   <https://tukaani.org/xz/>
+- Zstandard  <https://github.com/facebook/zstd>
 
 It is generally better to use official packages for your system.
 If a package is not officially available you can build it from source
