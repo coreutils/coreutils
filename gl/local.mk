@@ -30,6 +30,8 @@ gl/lib/fd-reopen.c \
 gl/lib/fd-reopen.h \
 gl/lib/heap.c \
 gl/lib/heap.h \
+gl/lib/mbbuf.c \
+gl/lib/mbbuf.h \
 gl/lib/rand-isaac.c \
 gl/lib/rand-isaac.h \
 gl/lib/randint.c \
@@ -65,6 +67,7 @@ gl/modules/fadvise-tests \
 gl/modules/fd-reopen \
 gl/modules/heap \
 gl/modules/link-tests.diff \
+gl/modules/mbbuf \
 gl/modules/randint \
 gl/modules/randperm \
 gl/modules/randread \

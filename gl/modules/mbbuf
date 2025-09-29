@@ -1,0 +1,27 @@
+Description:
+Buffering for multi-byte characters.
+
+Files:
+lib/mbbuf.c
+lib/mbbuf.h
+
+Depends-on:
+c99
+extern-inline
+idx
+mcel
+stddef-h
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += mbbuf.c mbbuf.h
+
+Include:
+"mbbuf.h"
+
+License:
+LGPLv2+
+
+Maintainer:
+all

@@ -27,6 +27,7 @@
 #include "fadvise.h"
 #include "ioblksize.h"
 #include "mcel.h"
+#include "mbbuf.h"
 #include "xdectoint.h"
 
 #define TAB_WIDTH 8
@@ -153,8 +154,7 @@ fold_file (char const *filename, size_t width)
   idx_t offset_out = 0;		/* Index in 'line_out' for next char. */
   static char line_out[IO_BUFSIZE];
   static char line_in[IO_BUFSIZE];
-  static size_t offset_in = 0;
-  static size_t length_in = 0;
+  mbbuf_t mbbuf;
   int saved_errno;
 
   if (streq (filename, "-"))
@@ -172,116 +172,87 @@ fold_file (char const *filename, size_t width)
     }
 
   fadvise (istream, FADVISE_SEQUENTIAL);
+  mbbuf_init (&mbbuf, line_in, sizeof line_in, istream);
 
-  while (0 < (length_in = fread (line_in + offset_in, 1,
-                                 sizeof line_in - offset_in, istream))
-         || 0 < offset_in)
+  mcel_t g;
+  while ((g = mbbuf_get_char (&mbbuf)).ch != MBBUF_EOF)
     {
-      char *p = line_in;
-      char *lim = p + length_in + offset_in;
-      mcel_t g;
-      for (; p < lim; p += g.len)
+      if (g.ch == '\n')
         {
-          g = mcel_scan (p, lim);
-          if (g.err)
+          write_out (line_out, offset_out, /*newline=*/ true);
+          column = offset_out = 0;
+          continue;
+        }
+    rescan:
+      column = adjust_column (column, g);
+
+      if (column > width)
+        {
+          /* This character would make the line too long.
+             Print the line plus a newline, and make this character
+             start the next line. */
+          if (break_spaces)
             {
-              /* Replace the character with the byte if it cannot be a
-                 truncated multibyte sequence.  */
-              if (!(lim - p <= MCEL_LEN_MAX) || length_in == 0)
-                g.ch = p[0];
-              else
+              int space_length = 0;
+              idx_t logical_end = offset_out;
+              char *logical_p = line_out;
+              char *logical_lim = logical_p + logical_end;
+
+              for (mcel_t g2; logical_p < logical_lim; logical_p += g2.len)
                 {
-                  /* It may be a truncated multibyte sequence.  Move it to the
-                     front of the input buffer.  */
-                  memmove (line_in, p, lim - p);
-                  offset_in = lim - p;
-                  goto next_line;
+                  g2 = mcel_scan (logical_p, logical_lim);
+                  if (c32isblank (g2.ch) && ! c32isnbspace (g2.ch))
+                    {
+                      space_length = g2.len;
+                      logical_end = logical_p - line_out;
+                    }
+                }
+
+              if (space_length)
+                {
+                  logical_end += space_length;
+                  /* Found a blank.  Don't output the part after it. */
+                  write_out (line_out, logical_end, /*newline=*/ true);
+                  /* Move the remainder to the beginning of the next line.
+                     The areas being copied here might overlap. */
+                  memmove (line_out, line_out + logical_end,
+                           offset_out - logical_end);
+                  offset_out -= logical_end;
+                  column = 0;
+                  char *printed_p = line_out;
+                  char *printed_lim = printed_p + offset_out;
+                  for (mcel_t g2; printed_p < printed_lim;
+                       printed_p += g2.len)
+                    {
+                      g2 = mcel_scan (printed_p, printed_lim);
+                      column = adjust_column (column, g2);
+                    }
+                  goto rescan;
                 }
             }
-          if (g.ch == '\n')
+
+          if (offset_out == 0)
             {
-              write_out (line_out, offset_out, /*newline=*/ true);
-              column = offset_out = 0;
+              memcpy (line_out, mbbuf_char_offset (&mbbuf, g), g.len);
+              offset_out += g.len;
               continue;
             }
-        rescan:
-          column = adjust_column (column, g);
 
-          if (column > width)
-            {
-              /* This character would make the line too long.
-                 Print the line plus a newline, and make this character
-                 start the next line. */
-              if (break_spaces)
-                {
-                  int space_length = 0;
-                  idx_t logical_end = offset_out;
-                  char *logical_p = line_out;
-                  char *logical_lim = logical_p + logical_end;
-
-                  for (mcel_t g2; logical_p < logical_lim; logical_p += g2.len)
-                    {
-                      g2 = mcel_scan (logical_p, logical_lim);
-                      if (c32isblank (g2.ch) && ! c32isnbspace (g2.ch))
-                        {
-                          space_length = g2.len;
-                          logical_end = logical_p - line_out;
-                        }
-                    }
-
-                  if (space_length)
-                    {
-                      logical_end += space_length;
-                      /* Found a blank.  Don't output the part after it. */
-                      write_out (line_out, logical_end, /*newline=*/ true);
-                      /* Move the remainder to the beginning of the next line.
-                         The areas being copied here might overlap. */
-                      memmove (line_out, line_out + logical_end,
-                               offset_out - logical_end);
-                      offset_out -= logical_end;
-                      column = 0;
-                      char *printed_p = line_out;
-                      char *printed_lim = printed_p + offset_out;
-                      for (mcel_t g2; printed_p < printed_lim;
-                           printed_p += g2.len)
-                        {
-                          g2 = mcel_scan (printed_p, printed_lim);
-                          column = adjust_column (column, g2);
-                        }
-                      goto rescan;
-                    }
-                }
-
-              if (offset_out == 0)
-                {
-                  memcpy (line_out, p, g.len);
-                  offset_out += g.len;
-                  continue;
-                }
-
-              write_out (line_out, offset_out, /*newline=*/ true);
-              column = offset_out = 0;
-              goto rescan;
-            }
-
-          /* This can occur if we have read characters with a width of
-             zero.  */
-          if (sizeof line_out <= offset_out + g.len)
-            {
-              write_out (line_out, offset_out, /*newline=*/ false);
-              offset_out = 0;
-            }
-
-          memcpy (line_out + offset_out, p, g.len);
-          offset_out += g.len;
+          write_out (line_out, offset_out, /*newline=*/ true);
+          column = offset_out = 0;
+          goto rescan;
         }
-      if (feof (istream))
-        break;
 
-      /* We read a full buffer of complete characters.  */
-      offset_in = 0;
+      /* This can occur if we have read characters with a width of
+         zero.  */
+      if (sizeof line_out <= offset_out + g.len)
+        {
+          write_out (line_out, offset_out, /*newline=*/ false);
+          offset_out = 0;
+        }
 
-    next_line:;
+      memcpy (line_out + offset_out, mbbuf_char_offset (&mbbuf, g), g.len);
+      offset_out += g.len;
     }
 
   saved_errno = errno;
