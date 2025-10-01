@@ -803,7 +803,9 @@ sub convert_option
     local $_ = '\fB' . shift;
 
     s/-/\x83/g;
-    unless (s/\[=(.*)\]$/\\fR[=\\fI$1\\fR]/)
+    unless (
+        s/\x83(\w)\[(.*)\]/\x83$1\\fR[\\fI$2\\fR]/ or  # short form [optional]
+        s/\[=(.*)\]$/\\fR[=\\fI$1\\fR]/)               # long form [optional]
     {
 	s/=(.)/\\fR=\\fI$1/;
 	s/ (.)/ \\fI$1/;
