@@ -73,6 +73,9 @@ struct rm_options
      restore cwd (e.g., mv) and some others do not (e.g., rm,
      in many cases).  */
   bool require_restore_cwd;
+
+  /* If true, skip confirmation prompt for -rf option.  */
+  bool no_confirmation;
 };
 
 enum RM_status

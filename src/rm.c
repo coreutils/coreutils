@@ -48,7 +48,8 @@ enum
   ONE_FILE_SYSTEM,
   NO_PRESERVE_ROOT,
   PRESERVE_ROOT,
-  PRESUME_INPUT_TTY_OPTION
+  PRESUME_INPUT_TTY_OPTION,
+  NO_CONFIRMATION
 };
 
 enum interactive_type
@@ -72,6 +73,8 @@ static struct option const long_opts[] =
      Since rm acts differently depending on that, without this option,
      it'd be harder to test the parts of rm that depend on that setting.  */
   {"-presume-input-tty", no_argument, nullptr, PRESUME_INPUT_TTY_OPTION},
+
+  {"no-confirmation", no_argument, nullptr, NO_CONFIRMATION},
 
   {"recursive", no_argument, nullptr, 'r'},
   {"dir", no_argument, nullptr, 'd'},
@@ -157,6 +160,7 @@ Remove (unlink) the FILE(s).\n\
   -r, -R, --recursive   remove directories and their contents recursively\n\
   -d, --dir             remove empty directories\n\
   -v, --verbose         explain what is being done\n\
+  -nc, --no-confirmation skip confirmation prompt for -rf option\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -202,6 +206,7 @@ rm_option_init (struct rm_options *x)
   x->preserve_all_root = false;
   x->stdin_tty = isatty (STDIN_FILENO);
   x->verbose = false;
+  x->no_confirmation = false;
 
   /* Since this program exits immediately after calling 'rm', rm need not
      expend unnecessary effort to preserve the initial working directory.  */
@@ -229,7 +234,7 @@ main (int argc, char **argv)
   /* Try to disable the ability to unlink a directory.  */
   priv_set_remove_linkdir ();
 
-  while ((c = getopt_long (argc, argv, "dfirvIR", long_opts, nullptr)) != -1)
+  while ((c = getopt_long (argc, argv, "dfirvIRnc", long_opts, nullptr)) != -1)
     {
       switch (c)
         {
@@ -322,6 +327,19 @@ main (int argc, char **argv)
           x.verbose = true;
           break;
 
+        case 'n':
+          if (optarg && optarg[0] == 'c' && optarg[1] == '\0')
+            {
+              x.no_confirmation = true;
+              break;
+            }
+          /* Fall through to default case for invalid option */
+          /* FALLTHROUGH */
+
+        case NO_CONFIRMATION:
+          x.no_confirmation = true;
+          break;
+
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
         default:
@@ -352,6 +370,20 @@ main (int argc, char **argv)
 
   uintmax_t n_files = argc - optind;
   char **file =  argv + optind;
+
+  /* Check for -rf combination and show confirmation if not disabled */
+  if (x.recursive && x.interactive == RMI_NEVER && !x.no_confirmation)
+    {
+      fprintf (stderr, "Are you sure? [Y/N] ");
+      fflush (stderr);
+      int c = getchar ();
+      if (c != 'Y' && c != 'y')
+        {
+          fprintf (stderr, "\n");
+          return EXIT_SUCCESS;
+        }
+      fprintf (stderr, "\n");
+    }
 
   if (prompt_once && (x.recursive || 3 < n_files))
     {
