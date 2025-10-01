@@ -600,7 +600,12 @@ while (length)
 	unless ($sect eq _('EXAMPLES'))
 	{
 	    # Convert options.
-	    s/(^|[ (])(-[][\w=-]+)/$1 . convert_option $2/mge;
+	    s/
+		(
+		  ^|[ (])(-[][\w-]+             # Base -o or --option match
+		  (?:=\S*[^\s,.])?              # =parameter portion match
+		)
+	    /$1 . convert_option $2/xmge;
 
 	    # Italicise filenames: /a/b, $VAR/c/d, ~/e/f
 	    s!
