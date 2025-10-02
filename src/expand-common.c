@@ -70,6 +70,15 @@ static bool have_read_stdin = false;
 int exit_status = EXIT_SUCCESS;
 
 
+static void
+set_max_column_width (colno width)
+{
+  if (max_column_width < width)
+    {
+      if (ckd_add (&max_column_width, width, 0))
+        error (EXIT_FAILURE, 0, _("tabs are too far apart"));
+    }
+}
 
 /* Add tab stop TABVAL to the end of 'tab_list'.  */
 extern void
@@ -82,11 +91,7 @@ add_tab_stop (colno tabval)
     tab_list = xpalloc (tab_list, &n_tabs_allocated, 1, -1, sizeof *tab_list);
   tab_list[first_free_tab++] = tabval;
 
-  if (max_column_width < column_width)
-    {
-      if (ckd_add (&max_column_width, column_width, 0))
-        error (EXIT_FAILURE, 0, _("tabs are too far apart"));
-    }
+  set_max_column_width (column_width);
 }
 
 static bool
@@ -102,6 +107,8 @@ set_extend_size (colno tabval)
       ok = false;
     }
   extend_size = tabval;
+
+  set_max_column_width (extend_size);
 
   return ok;
 }
@@ -119,6 +126,8 @@ set_increment_size (colno tabval)
       ok = false;
     }
   increment_size = tabval;
+
+  set_max_column_width (increment_size);
 
   return ok;
 }

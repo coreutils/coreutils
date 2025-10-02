@@ -76,6 +76,10 @@ my @Tests =
      ['blanks-12', '-t', '3,4', {IN=> "01  4\n"}, {OUT=> "01\t\t4\n"}],
      ['blanks-13', '-t', '3,4', {IN=> "0   4\n"}, {OUT=> "0\t\t4\n"}],
 
+     # These would overflow a heap buffer from v8.28 - v9.8 inclusive
+     ['blanks-ext1', '-t', '3,+6', {IN=> "\t      "}, {OUT=> "\t\t"}],
+     ['blanks-ext2', '-t', '3,/9', {IN=> "\t      "}, {OUT=> "\t\t"}],
+
      # POSIX says spaces should only follow tabs. Also a single
      # trailing space is not converted to a tab, when before
      # a field starting with non blanks

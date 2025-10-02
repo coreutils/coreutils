@@ -11,6 +11,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously it may have output too few lines.
   [bug introduced in coreutils-9.8]
 
+  'unexpand' no longer triggers a heap buffer overflow with --tabs arguments
+  that use the GNU extension /NUM or +NUM formats.
+  [bug introduced in coreutils-8.28]
+
 ** Improvements
 
   wc -l now operates 10% faster on hosts that support AVX512 instructions.
