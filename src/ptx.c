@@ -1780,10 +1780,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-#if HAVE_SETCHRCLASS
-  setchrclass (nullptr);
-#endif
-
   while (optchar = getopt_long (argc, argv, "AF:GM:ORS:TW:b:i:fg:o:trw:",
                                 long_options, nullptr),
          optchar != EOF)

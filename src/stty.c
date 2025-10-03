@@ -131,9 +131,6 @@
 #if defined VDSUSP && !defined CDSUSP
 # define CDSUSP Control ('y')
 #endif
-#if !defined VREPRINT && defined VRPRNT /* Irix 4.0.5 */
-# define VREPRINT VRPRNT
-#endif
 #if defined VREPRINT && !defined CRPRNT
 # define CRPRNT Control ('r')
 #endif
