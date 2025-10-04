@@ -226,7 +226,7 @@ if test $gl_gcc_warnings != no; then
    #if !defined _FORTIFY_SOURCE && defined __OPTIMIZE__ && __OPTIMIZE__
    # define _FORTIFY_SOURCE 2
    #endif
-  ])
+])
   AC_DEFINE([GNULIB_PORTCHECK], [1], [enable some gnulib portability checks])
 
   # We use a slightly smaller set of warning options for lib/.
