@@ -7,6 +7,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   `basenc --base58` would not operate correctly with input > 15561475 bytes.
   [bug introduced with --base58 in coreutils-9.8]
 
+  'cksum --check' now supports base64 encoded input in untagged format,
+  for all length adjustable algorithms (blake2b, sha2, sha3).
+  [bug introduced in coreutils-9.2]
+
   'tail' outputs the correct number of lines again for non-small -n values.
   Previously it may have output too few lines.
   [bug introduced in coreutils-9.8]

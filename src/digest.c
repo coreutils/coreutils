@@ -930,15 +930,51 @@ split_3 (char *s, size_t s_len,
 # endif
   unsigned char const *hp = *digest;
   digest_hex_bytes = 0;
-  while (c_isxdigit (*hp++))
-    digest_hex_bytes++;
+  for (; c_isxdigit (*hp); ++hp, ++digest_hex_bytes)
+    ;
 # if HASH_ALGO_CKSUM
+  /* Check the number of base64 characters.  This works because the hexadecimal
+     character set is a subset of the base64 character set.  */
+  size_t digest_base64_bytes = digest_hex_bytes;
+  size_t trailing_equals = 0;
+  for (; isubase64 (*hp); ++hp, ++digest_base64_bytes)
+    ;
+  for (; *hp == '='; ++hp, ++trailing_equals)
+    ;
   if ((cksum_algorithm == sha2 || cksum_algorithm == sha3)
       && digest_hex_bytes / 2 != SHA224_DIGEST_SIZE
       && digest_hex_bytes / 2 != SHA256_DIGEST_SIZE
       && digest_hex_bytes / 2 != SHA384_DIGEST_SIZE
       && digest_hex_bytes / 2 != SHA512_DIGEST_SIZE)
-    return false;
+    {
+      if (digest_base64_bytes + trailing_equals
+          == BASE64_LENGTH (SHA224_DIGEST_SIZE))
+        digest_hex_bytes = SHA224_DIGEST_SIZE * 2;
+      else if (digest_base64_bytes + trailing_equals
+               == BASE64_LENGTH (SHA256_DIGEST_SIZE))
+        digest_hex_bytes = SHA256_DIGEST_SIZE * 2;
+      else if (digest_base64_bytes + trailing_equals
+               == BASE64_LENGTH (SHA384_DIGEST_SIZE))
+        digest_hex_bytes = SHA384_DIGEST_SIZE * 2;
+      else if (digest_base64_bytes + trailing_equals
+               == BASE64_LENGTH (SHA512_DIGEST_SIZE))
+        digest_hex_bytes = SHA512_DIGEST_SIZE * 2;
+      else
+        return false;
+    }
+  else if (cksum_algorithm == blake2b
+           && digest_hex_bytes < digest_base64_bytes)
+    {
+      for (int j = 8; j <= DIGEST_MAX_LEN * 8; j += 8)
+        {
+          if (BASE64_LENGTH (j / 8) == digest_base64_bytes + trailing_equals
+              && j % 3 == trailing_equals)
+            {
+              digest_hex_bytes = j / 4;
+              break;
+            }
+        }
+    }
 # endif
   if (digest_hex_bytes < 2 || digest_hex_bytes % 2
       || DIGEST_MAX_LEN * 2 < digest_hex_bytes)
@@ -1332,7 +1368,7 @@ digest_check (char const *checkfile_name)
             {
               bool match = false;
 #if HASH_ALGO_CKSUM
-              if (d_len < digest_hex_bytes)
+              if (d_len == BASE64_LENGTH (digest_length / 8))
                 match = b64_equal (digest, bin_buffer);
               else
 #endif

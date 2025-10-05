@@ -305,6 +305,7 @@ all_tests =					\
   tests/cksum/cksum-a.sh			\
   tests/cksum/cksum-c.sh			\
   tests/cksum/cksum-base64.pl			\
+  tests/cksum/cksum-base64-untagged.sh		\
   tests/cksum/cksum-raw.sh			\
   tests/misc/comm.pl				\
   tests/csplit/csplit.sh			\
