@@ -454,7 +454,6 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
           if (x->remove_empty_directories)
             return RM_OK;
           error (0, EISDIR, _("cannot remove %s"), quoteaf (ent->fts_path));
-          mark_ancestor_dirs (ent);
           ignore_value (fts_read (fts));
           return RM_ERROR;
         }
