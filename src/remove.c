@@ -446,18 +446,16 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
   switch (ent->fts_info)
     {
     case FTS_D:			/* preorder directory */
-      if (! x->recursive
-          && !(x->remove_empty_directories
-               && get_dir_status (fts, ent, &dir_status) != 0))
+      if (!x->recursive)
         {
-          /* This is the first (pre-order) encounter with a directory
-             that we cannot delete.
-             Not recursive, and it's not an empty directory (if we're removing
-             them) so arrange to skip contents.  */
-          int err = x->remove_empty_directories ? ENOTEMPTY : EISDIR;
-          error (0, err, _("cannot remove %s"), quoteaf (ent->fts_path));
+          /* Not recursive, so skip contents, and fail now unless
+             removing empty directories.  */
+          fts_set (fts, ent, FTS_SKIP);
+          if (x->remove_empty_directories)
+            return RM_OK;
+          error (0, EISDIR, _("cannot remove %s"), quoteaf (ent->fts_path));
           mark_ancestor_dirs (ent);
-          fts_skip_tree (fts, ent);
+          ignore_value (fts_read (fts));
           return RM_ERROR;
         }
 
