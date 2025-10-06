@@ -847,43 +847,42 @@ split_3 (char *s, size_t s_len,
   if (! algorithm_specified || cksum_algorithm == sha2)
     {
       ptrdiff_t algo_tag = algorithm_from_tag (s + i);
-      if (algo_tag >= 0)
+      if (! algorithm_specified)
         {
-          if (algo_tag <= crc32b)
-            return false;  /* We don't support checking these older formats.  */
-          if (cksum_algorithm == sha2 && algo_tag != sha2
-              && algo_tag != sha224 && algo_tag != sha256
-              && algo_tag != sha384 && algo_tag != sha512)
-            return false;  /* Wrong tag for -a sha2.  */
-          cksum_algorithm = algo_tag;
+          if (algo_tag >= 0)
+            {
+              if (algo_tag <= crc32b)
+                return false;  /* We don't support checking these formats.  */
+              cksum_algorithm = algo_tag;
+            }
+          else
+            return false;      /* We only support tagged format without -a.  */
         }
-      else if (! algorithm_specified)
-        return false;  /* We only support tagged format without -a.  */
+      else
+        {
+          if (cksum_algorithm == sha2 && (algo_tag == sha2
+              || algo_tag == sha224 || algo_tag == sha256
+              || algo_tag == sha384 || algo_tag == sha512))
+            cksum_algorithm = algo_tag;
+        }
     }
 #endif
 
+  size_t parse_offset = i;
   algo_name_len = strlen (DIGEST_TYPE_STRING);
   if (STREQ_LEN (s + i, DIGEST_TYPE_STRING, algo_name_len))
     {
       i += algo_name_len;
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
-      /* Terminate and match algorithm name.  */
-      char const *algo_name = &s[i - algo_name_len];
-      bool length_specified = s[i] == '-';
-      bool openssl_format = s[i] == '('; /* and no length_specified */
-      s[i++] = '\0';
-      if (!streq (algo_name, DIGEST_TYPE_STRING))
-        return false;
-      if (openssl_format)
-        s[--i] = '(';
 
 # if HASH_ALGO_BLAKE2
       digest_length = DIGEST_MAX_LEN * 8;
 # else
       digest_length = algorithm_bits[cksum_algorithm];
 # endif
-      if (length_specified)
+      if (s[i] == '-')  /* length specified. Not base64 */
         {
+          ++i;
           uintmax_t length;
           char *siend;
           if (xstrtoumax (s + i, &siend, 0, &length, nullptr) != LONGINT_OK)
@@ -908,14 +907,18 @@ split_3 (char *s, size_t s_len,
 #endif
       if (s[i] == ' ')
         ++i;
-      if (s[i] == '(')
+      if (s[i] == '(')  /* not base64 */
         {
           ++i;
           *binary = 0;
           return bsd_split_3 (s + i, s_len - i,
                               digest, d_len, file_name, escaped_filename);
         }
-      return false;
+
+      /* Note with --base64 --untagged format, we may have matched a "tag".
+         Even very short digests with: cksum -a blake2b -l24 --untagged --base64
+         So fallback to checking untagged format if issues detecting tags.  */
+      i = parse_offset;
     }
 
   /* Ignore this line if it is too short.

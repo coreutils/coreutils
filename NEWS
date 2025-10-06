@@ -7,8 +7,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   `basenc --base58` would not operate correctly with input > 15561475 bytes.
   [bug introduced with --base58 in coreutils-9.8]
 
-  'cksum --check' now supports base64 encoded input in untagged format,
-  for all length adjustable algorithms (blake2b, sha2, sha3).
+  'cksum --check' now supports base64 encoded input in untagged format:
+    - for all length adjustable algorithms (blake2b, sha2, sha3),
+    - if that base64 input starts with a tag like "SHA1" etc.
+  Previously an error was given, about invalid input format.
   [bug introduced in coreutils-9.2]
 
   'cksum --check -a sha2' has better support for tagged format.  Previously

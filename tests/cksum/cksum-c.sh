@@ -45,6 +45,14 @@ echo 'cksum: sha2-bad-length.sum: no properly formatted checksum lines found' \
   > experr || framework_failure_
 compare experr err || fail=1
 
+# Ensure base64 in untagged format that matches tags is supported
+# From coreutils 9.2 - 9.8 inclusive this was not supported
+echo 'SHA1+++++++++++++++++++++++=  /dev/null' > tag-prefix.sum \
+  || framework_failure_
+returns_ 1 cksum --check -a sha1 tag-prefix.sum 2>err || fail=1
+echo 'cksum: WARNING: 1 computed checksum did NOT match' \
+  > experr || framework_failure_
+compare experr err || fail=1
 
 # Ensure leading whitespace and \ ignored
 sed 's/^/ \\/' CHECKSUMS | cksum --strict -c || fail=1
