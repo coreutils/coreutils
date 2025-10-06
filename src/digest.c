@@ -843,16 +843,20 @@ split_3 (char *s, size_t s_len,
   /* Check for BSD-style checksum line. */
 
 #if HASH_ALGO_CKSUM
-  if (! algorithm_specified)
+  if (! algorithm_specified || cksum_algorithm == sha2)
     {
       ptrdiff_t algo_tag = algorithm_from_tag (s + i);
       if (algo_tag >= 0)
         {
           if (algo_tag <= crc32b)
             return false;  /* We don't support checking these older formats.  */
+          if (cksum_algorithm == sha2 && algo_tag != sha2
+              && algo_tag != sha224 && algo_tag != sha256
+              && algo_tag != sha384 && algo_tag != sha512)
+            return false;  /* Wrong tag for -a sha2.  */
           cksum_algorithm = algo_tag;
         }
-      else
+      else if (! algorithm_specified)
         return false;  /* We only support tagged format without -a.  */
     }
 #endif

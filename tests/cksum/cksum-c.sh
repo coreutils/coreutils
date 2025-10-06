@@ -26,10 +26,15 @@ for args in '-a sha2 -l 384' '-a blake2b' '-a blake2b -l 384' '-a sm3'; do
 done
 cksum --strict --check CHECKSUMS || fail=1
 
-# We don't output but do support SHA2-### tagged format
-cksum -a sha2 -l 384 input |
-  sed 's/^SHA/SHA2-/' > sha2-tag.sum || framework_failure_
-cksum --check sha2-tag.sum || fail=1
+# We don't output but do support SHA2-### tagged format.
+# Also ensure we check both formats with and without -a specified.
+cksum -a sha2 -l 384 input > sha384-tag.sum || framework_failure_
+sed 's/^SHA/SHA2-/' sha384-tag.sum > sha2-tag.sum || framework_failure_
+for file in sha384-tag.sum sha2-tag.sum; do
+  for spec in '' '-a sha2'; do
+    cksum --check $spec $file || fail=1
+  done
+done
 
 # Ensure leading whitespace and \ ignored
 sed 's/^/ \\/' CHECKSUMS | cksum --strict -c || fail=1
