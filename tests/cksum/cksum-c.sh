@@ -36,6 +36,16 @@ for file in sha384-tag.sum sha2-tag.sum; do
   done
 done
 
+# Ensure invalid length is handled appropriately
+# coreutils-9.8 had undefined behavior with the following:
+printf '%s\n' 'SHA2-128 (/dev/null) = 38b060a751ac96384cd9327eb1b1e36a' \
+  > sha2-bad-length.sum || framework_failure_
+returns_ 1 cksum --check sha2-bad-length.sum 2>err || fail=1
+echo 'cksum: sha2-bad-length.sum: no properly formatted checksum lines found' \
+  > experr || framework_failure_
+compare experr err || fail=1
+
+
 # Ensure leading whitespace and \ ignored
 sed 's/^/ \\/' CHECKSUMS | cksum --strict -c || fail=1
 

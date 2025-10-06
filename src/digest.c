@@ -21,6 +21,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 
+#include "assure.h"
 #include "system.h"
 #include "argmatch.h"
 #include "c-ctype.h"
@@ -300,7 +301,7 @@ sha2_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
     case SHA512_DIGEST_SIZE:
       return sha512_stream (stream, resstream);
     default:
-      unreachable ();
+      affirm (false);
     }
 }
 static int
@@ -317,7 +318,7 @@ sha3_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
     case SHA3_512_DIGEST_SIZE:
       return sha3_512_stream (stream, resstream);
     default:
-      unreachable ();
+      affirm (false);
     }
 }
 static int
@@ -888,12 +889,12 @@ split_3 (char *s, size_t s_len,
           if (xstrtoumax (s + i, &siend, 0, &length, nullptr) != LONGINT_OK)
             return false;
 # if HASH_ALGO_CKSUM
-          else if (cksum_algorithm == sha3)
+          else if (cksum_algorithm == sha2 || cksum_algorithm == sha3)
             {
-              if (length != SHA3_224_DIGEST_SIZE * 8
-                  && length != SHA3_256_DIGEST_SIZE * 8
-                  && length != SHA3_384_DIGEST_SIZE * 8
-                  && length != SHA3_512_DIGEST_SIZE * 8)
+              if (length != SHA224_DIGEST_SIZE * 8
+                  && length != SHA256_DIGEST_SIZE * 8
+                  && length != SHA384_DIGEST_SIZE * 8
+                  && length != SHA512_DIGEST_SIZE * 8)
                 return false;
             }
 # endif
