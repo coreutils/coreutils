@@ -57,6 +57,12 @@ compare experr err || fail=1
 # Ensure leading whitespace and \ ignored
 sed 's/^/ \\/' CHECKSUMS | cksum --strict -c || fail=1
 
+# Ensure file names with " (=" supported.
+awkward_file='abc (f) = abc'
+touch "$awkward_file" || framework_failure_
+cksum -a sha1 "$awkward_file" > tag-awkward.sum || framework_failure_
+cksum --check tag-awkward.sum || fail=1
+
 # Check common signed checksums format works in non strict mode
 cat >> signed_CHECKSUMS <<\EOF
 -----BEGIN PGP SIGNED MESSAGE-----
