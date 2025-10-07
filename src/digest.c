@@ -868,6 +868,10 @@ split_3 (char *s, size_t s_len,
     }
 #endif
 
+  /* Try to parse BSD or OpenSSL tagged format.  I.e.:
+     openssl: MD5(f)= d41d8cd98f00b204e9800998ecf8427e
+     bsd:     MD5 (f) = d41d8cd98f00b204e9800998ecf8427e  */
+
   size_t parse_offset = i;
   algo_name_len = strlen (DIGEST_TYPE_STRING);
   if (STREQ_LEN (s + i, DIGEST_TYPE_STRING, algo_name_len))
@@ -942,7 +946,14 @@ split_3 (char *s, size_t s_len,
     ;
 # if HASH_ALGO_CKSUM
   /* Check the number of base64 characters.  This works because the hexadecimal
-     character set is a subset of the base64 character set.  */
+     character set is a subset of the base64 character set.
+     Note there is the ambiguity that all characters are hex when they
+     are actually base64 encoded, which could be ambiguous with:
+        cksum -a sha2 -l 384 --base64 --untagged
+        cksum -a sha2 -l 256 --untagged
+     Similarly for sha3 and blake2b.
+     However at this length the chances are exceedingly rare (1 in 480R),
+     and smaller blake2b lengths aren't practical for verification anyway.  */
   size_t digest_base64_bytes = digest_hex_bytes;
   size_t trailing_equals = 0;
   for (; isubase64 (*hp); ++hp, ++digest_base64_bytes)
