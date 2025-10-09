@@ -173,6 +173,77 @@ my @Tests =
      ['suf-24', "-d '' --from=auto '2  '", {OUT=>'2'}],
      ['suf-25', "-d '' --from=auto '2K '", {OUT=>'2000'}],
 
+     ## Unit Separator
+     # Output with space separator
+     ['unit-sep-1', '--to=si --unit-separator=" " 1000',  {OUT=>"1.0 k"}],
+     ['unit-sep-2', '--to=iec --unit-separator=" " 1024', {OUT=>"1.0 K"}],
+     ['unit-sep-3', '--to=iec-i --unit-separator=" " 2048', {OUT=>"2.0 Ki"}],
+
+     # Output with multi-character separator
+     ['unit-sep-4', '--to=si --unit-separator="__" 1000', {OUT=>"1.0__k"}],
+     ['unit-sep-5', '--to=iec --unit-separator="::" 2048', {OUT=>"2.0::K"}],
+
+     # Input with space separator
+     ['unit-sep-6', '-d "" --from=si --unit-sep=" " "1 K"', {OUT=>"1000"}],
+     ['unit-sep-7', '-d "" --from=iec --unit-sep=" " "2 M"', {OUT=>"2097152"}],
+
+     # Input with multi-character separator
+     ['unit-sep-8', '-d "" --from=si --unit-separator="  "',
+      {IN_PIPE=>"1  K\n2  M\n3  G\n"},
+      {OUT=>"1000\n2000000\n3000000000"}],
+     ['unit-sep-9', '--from=iec --unit-separator="'."\xC2\xA0".'"',
+      {IN_PIPE=>"4\xC2\xA0K\n"}, {OUT=>"4096"}],
+     ['unit-sep-10', '--from=iec --unit-separator="::"',
+      {IN_PIPE=>"4::K\n"}, {OUT=>"4096"}],
+
+     # input with empty separator
+     ['unit-sep-11', '-d "" --from=si --unit-separator=""',
+      {IN_PIPE=>"1K\n2M\n3G\n"},
+      {OUT=>"1000\n2000000\n3000000000"}],
+     ['unit-sep-12', '-d "" --from=si --unit-separator="" "1 K"',
+      {ERR=>"$prog: invalid suffix in input: '1 K'\n"},
+      {EXIT=>2}],
+
+     # Combined with suffix
+     ['unit-sep-13', '--to=si --unit-separator=" " --suffix=B 1000',
+      {OUT=>"1.0 kB"}],
+     ['unit-sep-14', '--to=si --unit-separator=" " --suffix=" B" 1000',
+      {OUT=>"1.0 k B"}],
+     ['unit-sep-15', '-d "" --from=si --unit-separator=" " --suffix=B',
+      {IN_PIPE=>"5 KB\n"}, {OUT=>"5000B"}],
+
+     # No separator when there's no unit (power=0)
+     ['unit-sep-16', '--to=si --unit-separator=" " 500', {OUT=>"500"}],
+
+     # Round-trip test
+     ['unit-sep-17', '--from=iec --to=iec --unit-separator="_"',
+      {IN_PIPE=>"1_K\n"}, {OUT=>"1.0_K"}],
+
+     # Currently field delimiters have higher precedence than unit separators.
+     # Even if this is changed in future, the following should hold.
+
+     # The space should act as a field delimiter here
+     ['unit-sep-18', '--from=si --unit-separator=" " "1 K_Field2"',
+      {OUT=>"1 K_Field2"}],
+     # Same as above but with 'i' suffix - should split at space with --from=si
+     ['unit-sep-19', '--from=si --unit-separator=" " "5 Ki_Field2"',
+      {OUT=>"5 Ki_Field2"}],
+     # With --from=auto, Ki followed by invalid char should also split
+     ['unit-sep-20', '--from=auto --unit-separator=" " "5 Ki_Field2"',
+      {OUT=>"5 Ki_Field2"}],
+     # With custom delimiter, space after K should not be treated as delimiter
+     ['unit-sep-21', '-d: --from=si --unit-separator=" " "5 K:Field2"',
+      {OUT=>"5000:Field2"}],
+     # Fail case: space after K with custom delimiter should error
+     ['unit-sep-22-fail', '-d: --from=si --unit-separator=" " "5 K Field2"',
+      {ERR=>"$prog: invalid suffix in input '5 K Field2': 'Field2'\n"},
+      {EXIT=>2}],
+
+     # If Unit separator consumed before delimiter char,
+     # this would change to outputting "5000 2"
+     ['unit-sep-23', '--from=si --field=1 --unit-separator=" " -d " " "5 K 2"',
+      {OUT=>"5 K 2"}],
+
      ## GROUPING
 
      # "C" locale - no grouping (locale-specific tests, below)

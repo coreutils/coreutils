@@ -60,7 +60,8 @@ enum
   DEV_DEBUG_OPTION,
   HEADER_OPTION,
   FORMAT_OPTION,
-  INVALID_OPTION
+  INVALID_OPTION,
+  UNIT_SEPARATOR_OPTION
 };
 
 enum scale_type
@@ -140,6 +141,7 @@ static struct option const longopts[] =
   {"round", required_argument, nullptr, ROUND_OPTION},
   {"padding", required_argument, nullptr, PADDING_OPTION},
   {"suffix", required_argument, nullptr, SUFFIX_OPTION},
+  {"unit-separator", required_argument, nullptr, UNIT_SEPARATOR_OPTION},
   {"grouping", no_argument, nullptr, GROUPING_OPTION},
   {"delimiter", required_argument, nullptr, 'd'},
   {"field", required_argument, nullptr, FIELD_OPTION},
@@ -172,6 +174,7 @@ static enum scale_type scale_to = scale_none;
 static enum round_type round_style = round_from_zero;
 static enum inval_type inval_style = inval_abort;
 static char const *suffix = nullptr;
+static char const *unit_separator = nullptr;
 static uintmax_t from_unit_size = 1;
 static uintmax_t to_unit_size = 1;
 static int grouping = 0;
@@ -658,10 +661,24 @@ simple_strtod_human (char const *input_str,
     {
       /* process suffix.  */
 
-      /* Skip a single blank or NBSP between the number and suffix.  */
-      mcel_t g = mcel_scanz (*endptr);
-      if (c32isblank (g.ch) || c32isnbspace (g.ch))
-        (*endptr) += g.len;
+      /* Skip a single blank, NBSP or specified unit separator.
+         Note an explicit empty --unit-sep should disable blank matching. */
+      bool matched_unit_sep = false;
+      if (unit_separator)
+        {
+          size_t sep_len = strlen (unit_separator);
+          if (STREQ_LEN (*endptr, unit_separator, sep_len))
+            {
+              matched_unit_sep = true;
+              (*endptr) += sep_len;
+            }
+        }
+      if (!matched_unit_sep)
+        {
+          mcel_t g = mcel_scanz (*endptr);
+          if (c32isblank (g.ch) || c32isnbspace (g.ch))
+            (*endptr) += g.len;
+        }
 
       if (**endptr == '\0')
         break;  /* Treat as no suffix.  */
@@ -768,7 +785,7 @@ double_to_human (long double val, int precision,
                  char *buf, idx_t buf_size,
                  enum scale_type scale, int group, enum round_type round)
 {
-  char fmt[sizeof "%'0.*Lfi%s%s%s" + INT_STRLEN_BOUND (zero_padding_width)];
+  char fmt[sizeof "%'0.*Lfi%s%s%s%s" + INT_STRLEN_BOUND (zero_padding_width)];
   char *pfmt = fmt;
   *pfmt++ = '%';
 
@@ -835,11 +852,12 @@ double_to_human (long double val, int precision,
 
   devmsg ("  after rounding, value=%Lf * %0.f ^ %d\n", val, scale_base, power);
 
-  strcpy (pfmt, ".*Lf%s%s%s");
+  strcpy (pfmt, ".*Lf%s%s%s%s");
 
   int prec = user_precision == -1 ? show_decimal_point : user_precision;
 
   return snprintf (buf, buf_size, fmt, prec, val,
+                   (power > 0 && unit_separator) ? unit_separator : "",
                    power == 1 && scale == scale_SI
                    ? "k" : suffix_power_char (power),
                    &"i"[! (scale == scale_IEC_I && 0 < power)],
@@ -954,6 +972,10 @@ Reformat NUMBER(s), or the numbers from standard input if none are specified.\n\
       fputs (_("\
       --suffix=SUFFIX  add SUFFIX to output numbers, and accept optional\n\
                          SUFFIX in input numbers\n\
+"), stdout);
+      fputs (_("\
+      --unit-separator=SEP  insert SEP between number and unit on output,\n\
+                         and accept optional SEP in input numbers\n\
 "), stdout);
       fputs (_("\
       --to=UNIT        auto-scale output numbers to UNITs; see UNIT below\n\
@@ -1556,6 +1578,10 @@ main (int argc, char **argv)
           suffix = optarg;
           break;
 
+        case UNIT_SEPARATOR_OPTION:
+          unit_separator = optarg;
+          break;
+
         case DEBUG_OPTION:
           debug = true;
           break;
@@ -1606,6 +1632,10 @@ main (int argc, char **argv)
   if (debug && scale_from == scale_none && scale_to == scale_none
       && !grouping && (padding_width == 0) && (format_str == nullptr))
     error (0, 0, _("no conversion option specified"));
+
+  if (debug && unit_separator && delimiter == DELIMITER_DEFAULT)
+    error (0, 0,
+           _("field delimiters have higher precedence than unit separators"));
 
   if (format_str)
     parse_format_string (format_str);

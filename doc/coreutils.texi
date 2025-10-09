@@ -19544,6 +19544,23 @@ the output numbers represent other units (e.g. to represent @samp{4,000,000}
 bytes in blocks of 1kB, use @samp{--to=si --to-unit=1000}).
 Suffixes are handled as with @samp{--from=auto}.
 
+@item --unit-separator=@var{sep}
+@opindex --unit-separator
+Support a separator @var{sep} between the number and unit,
+with @option{--from} or @option{--to} auto-scaled units.
+By default a blank or non-breaking space character is accepted on input,
+and no separator is printed on output.
+When parsing input, the specified unit separator has lower precedence
+than field delimiters.  See the @option{--delimiter} option above.
+
+Examples:
+@example
+Add a space on output: @option{--unit-separator=' '}
+Disable blanks on input: @option{--unit-separator=''}
+Support blanks on input: @option{--delimiter=''}
+Ditto and output non-breaking space: @option{-d '' --unit-separator=$'\u00A0'}
+@end example
+
 @optZeroTerminated
 @newlineFieldSeparator
 
