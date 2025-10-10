@@ -96,6 +96,14 @@ ln --no-dereference -fs "$af" $ld || fail=1
 test -f $ld || fail=1
 rm -rf $d $f $ld
 
+# -f on a existing file should not generate an error
+rm -rf $d $f
+touch $f || framework_failure_
+mkdir $d || framework_failure_
+ln $f $d
+ln -f $f $d || fail=1
+test -d $d || fail=1
+
 # Try to create a symlink with backup where the destination file exists
 # and the backup file name is a hard link to the destination file.
 touch a b || framework_failure_
