@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ basenc
 
-vm=$(get_min_ulimit_v_ basenc /dev/null)
+vm=$(get_min_ulimit_v_ basenc --base64 /dev/null)
 
 # Check all except for --base58.
 for algorithm in '--base64' '--base64url' '--base32' '--base32hex' '--base16' \
