@@ -163,6 +163,7 @@ my @Tests =
      ['suf-20',
       '--suffix=Foo' . 'x' x 122 . 'y 0',
       {OUT => '0Foo' . 'x' x 122 . 'y'}],
+     ['suf-21', "-d '' --from=si '4  '",         {OUT => "4"}],
 
      ## GROUPING
 

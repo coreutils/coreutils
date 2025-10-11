@@ -641,13 +641,16 @@ simple_strtod_human (char const *input_str,
   devmsg ("  parsed numeric value: %Lf\n"
           "  input precision = %d\n", *value, (int)*precision);
 
-  if (**endptr != '\0')
+  while (**endptr)
     {
       /* process suffix.  */
 
       /* Skip any blanks between the number and suffix.  */
       while (isblank (to_uchar (**endptr)))
         (*endptr)++;
+
+      if (**endptr == '\0')
+        break;  /* Treat as no suffix.  */
 
       if (!valid_suffix (**endptr))
         return SSE_INVALID_SUFFIX;
@@ -661,9 +664,9 @@ simple_strtod_human (char const *input_str,
       if (allowed_scaling == scale_auto && **endptr == 'i')
         {
           /* auto-scaling enabled, and the first suffix character
-              is followed by an 'i' (e.g. Ki, Mi, Gi).  */
+             is followed by an 'i' (e.g. Ki, Mi, Gi).  */
           scale_base = 1024;
-          (*endptr)++;              /* skip second  ('i') suffix character.  */
+          (*endptr)++;              /* skip 'i' in suffix.  */
           devmsg ("  Auto-scaling, found 'i', switching to base %d\n",
                   scale_base);
         }
@@ -676,6 +679,8 @@ simple_strtod_human (char const *input_str,
         }
 
       *precision = 0;  /* Reset, to select precision based on scale.  */
+
+      break;
     }
 
   long double multiplier = powerld (scale_base, power);
