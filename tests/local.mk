@@ -298,6 +298,7 @@ all_tests =					\
   tests/misc/basename.pl			\
   tests/basenc/base64.pl			\
   tests/basenc/basenc.pl			\
+  tests/basenc/basenc-bounded-memory.sh		\
   tests/basenc/basenc-large.sh			\
   tests/misc/close-stdout.sh			\
   tests/chroot/chroot-fail.sh			\
