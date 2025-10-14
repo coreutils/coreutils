@@ -1050,8 +1050,20 @@ my @Locale_Tests =
              {OUT=>"7${lg}000${lg}000"},
              {ENV=>"LC_ALL=$locale"}],
 
-     # Input with locale'd decimal-point
-     ['lcl-stdtod-1', '--from=si 12,2K', {OUT=>"12200"},
+     # Input with locale's grouping
+     ['lcl-strtod-1', '--from=si 1${lg}234K', {OUT=>"1234000"},
+             {ENV=>"LC_ALL=$locale"}],
+
+     # Input with locale's grouping.  Note position not validated.
+     ['lcl-strtod-2', '--from=si 12${lg}34K', {OUT=>"1234000"},
+             {ENV=>"LC_ALL=$locale"}],
+
+     # Input with locale's decimal-point
+     ['lcl-strtod-3', '--from=si 12,2K', {OUT=>"12200"},
+             {ENV=>"LC_ALL=$locale"}],
+
+     # Input with locale's grouping and decimal-point
+     ['lcl-strtod-4', '--from=si 1${lg}23,4K', {OUT=>"123400"},
              {ENV=>"LC_ALL=$locale"}],
 
      ['lcl-dbl-to-human-1', '--to=si 1100', {OUT=>"1,1k"},

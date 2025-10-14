@@ -207,6 +207,8 @@ static bool debug;
 /* will be set according to the current locale.  */
 static char const *decimal_point;
 static int decimal_point_length;
+static char const *thousands_sep;
+static int thousands_sep_length;
 
 /* debugging for developers.  Enables devmsg().  */
 static bool dev_debug = false;
@@ -520,6 +522,11 @@ simple_strtod_int (char const *input_str,
       val += digit;
 
       ++(*endptr);
+
+      if (thousands_sep_length > 0
+          && STREQ_LEN (*endptr, thousands_sep, thousands_sep_length)
+          && c_isdigit ((*endptr)[thousands_sep_length]))
+        (*endptr) += thousands_sep_length;
     }
   if (! found_digit
       && ! STREQ_LEN (*endptr, decimal_point, decimal_point_length))
@@ -1474,6 +1481,11 @@ main (int argc, char **argv)
     decimal_point = ".";
   decimal_point_length = strlen (decimal_point);
 
+  thousands_sep = nl_langinfo (THOUSEP);
+  if (thousands_sep == nullptr)
+    thousands_sep = "";
+  thousands_sep_length = strlen (thousands_sep);
+
   atexit (close_stdout);
 
   while (true)
@@ -1602,7 +1614,7 @@ main (int argc, char **argv)
     {
       if (scale_to != scale_none)
         error (EXIT_FAILURE, 0, _("grouping cannot be combined with --to"));
-      if (debug && (strlen (nl_langinfo (THOUSEP)) == 0))
+      if (debug && thousands_sep_length == 0)
         error (0, 0, _("grouping has no effect in this locale"));
     }
 
