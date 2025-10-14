@@ -19447,7 +19447,7 @@ Print (to standard error) warning messages about possible erroneous usage.
 @itemx --delimiter=@var{d}
 @opindex -d
 @opindex --delimiter
-Use the character @var{d} as input field separator (default: whitespace).
+Use the character @var{d} as input field separator (default: newline or blank).
 Using non-default delimiter turns off automatic padding.
 
 @item --field=@var{fields}

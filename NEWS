@@ -35,6 +35,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  numfmt now parses numbers with a non-breaking space character before a unit.
+
   wc -l now operates 10% faster on hosts that support AVX512 instructions.
 
 

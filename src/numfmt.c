@@ -25,6 +25,7 @@
 #include "argmatch.h"
 #include "c-ctype.h"
 #include "mbswidth.h"
+#include "mcel.h"
 #include "quote.h"
 #include "skipchars.h"
 #include "system.h"
@@ -210,6 +211,11 @@ static int decimal_point_length;
 /* debugging for developers.  Enables devmsg().  */
 static bool dev_debug = false;
 
+static bool
+newline_or_blank (mcel_t g)
+{
+  return g.ch == '\n' || c32isblank (g.ch);
+}
 
 static inline int
 default_scale_base (enum scale_type scale)
@@ -645,15 +651,23 @@ simple_strtod_human (char const *input_str,
     {
       /* process suffix.  */
 
-      /* Skip any blanks between the number and suffix.  */
-      while (isblank (to_uchar (**endptr)))
-        (*endptr)++;
+      /* Skip a single blank or NBSP between the number and suffix.  */
+      mcel_t g = mcel_scanz (*endptr);
+      if (c32isblank (g.ch) || c32isnbspace (g.ch))
+        (*endptr) += g.len;
 
       if (**endptr == '\0')
         break;  /* Treat as no suffix.  */
 
       if (!valid_suffix (**endptr))
-        return SSE_INVALID_SUFFIX;
+        {
+          /* Trailing blanks are allowed.  */
+          *endptr = skip_str_matching (*endptr, newline_or_blank, true);
+          if (**endptr == '\0')
+            break;
+
+          return SSE_INVALID_SUFFIX;
+        }
 
       if (allowed_scaling == scale_none)
         return SSE_VALID_BUT_FORBIDDEN_SUFFIX;
@@ -679,6 +693,9 @@ simple_strtod_human (char const *input_str,
         }
 
       *precision = 0;  /* Reset, to select precision based on scale.  */
+
+      /* Trailing blanks are allowed.  */
+      *endptr = skip_str_matching (*endptr, newline_or_blank, true);
 
       break;
     }
@@ -1318,12 +1335,6 @@ process_suffixed_number (char *text, long double *result,
   *result = val;
 
   return (e == SSE_OK || e == SSE_OK_PRECISION_LOSS);
-}
-
-static bool
-newline_or_blank (mcel_t g)
-{
-  return g.ch == '\n' || c32isblank (g.ch);
 }
 
 /* Return a pointer to the beginning of the next field in line.

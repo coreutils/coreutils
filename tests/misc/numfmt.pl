@@ -164,6 +164,14 @@ my @Tests =
       '--suffix=Foo' . 'x' x 122 . 'y 0',
       {OUT => '0Foo' . 'x' x 122 . 'y'}],
      ['suf-21', "-d '' --from=si '4  '",         {OUT => "4"}],
+     # Multiple spaces between number and suffix should be rejected
+     ['suf-22', "-d '' --from=auto '2  K'",
+             {ERR => "$prog: invalid suffix in input: '2  K'\n"},
+             {EXIT => 2}],
+     # Trailing spaces should be accepted
+     ['suf-23', "-d '' --from=auto '2 '",  {OUT=>'2'}],
+     ['suf-24', "-d '' --from=auto '2  '", {OUT=>'2'}],
+     ['suf-25', "-d '' --from=auto '2K '", {OUT=>'2000'}],
 
      ## GROUPING
 
@@ -1065,6 +1073,21 @@ my @Locale_Tests =
      ['lcl-fmt-6', '--format="%0\'6f" 1234',{OUT=>"01${lg}234"},
              {ENV=>"LC_ALL=$locale"}],
      ['lcl-fmt-7', '--format="%0\'\'6f" 1234',{OUT=>"01${lg}234"},
+             {ENV=>"LC_ALL=$locale"}],
+
+     # Single blank/NBSP acceptance between number and suffix
+     ['lcl-suf-1', "-d '' --from=auto '2 K'",      {OUT => "2000"},
+             {ENV=>"LC_ALL=$locale"}],
+     ['lcl-suf-2', "-d '' --from=auto '2\tK'",      {OUT => "2000"},
+             {ENV=>"LC_ALL=$locale"}],
+     # NBSP characters: U+00A0, U+2007, U+202F, U+2060
+     ['lcl-suf-3', "--from=auto '2\xc2\xa0K'", {OUT => "2000"},
+             {ENV=>"LC_ALL=$locale"}],
+     ['lcl-suf-4', "--from=auto '2\xe2\x80\x87Ki'", {OUT => "2048"},
+             {ENV=>"LC_ALL=$locale"}],
+     ['lcl-suf-5', "--from=auto '2\xe2\x80\xafK'", {OUT => "2000"},
+             {ENV=>"LC_ALL=$locale"}],
+     ['lcl-suf-6', "--from=auto '2\xe2\x81\xa0Ki'", {OUT => "2048"},
              {ENV=>"LC_ALL=$locale"}],
 
   );
