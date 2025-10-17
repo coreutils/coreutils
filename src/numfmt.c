@@ -1150,7 +1150,7 @@ parse_format_string (char const *fmt)
       errno = 0;
       user_precision = strtol (fmt + i, &endptr, 10);
       if (errno == ERANGE || user_precision < 0 || SIZE_MAX < user_precision
-          || isblank (fmt[i]) || fmt[i] == '+')
+          || c_isblank (fmt[i]) || fmt[i] == '+')
         {
           /* Note we disallow negative user_precision to be
              consistent with printf(1).  POSIX states that
@@ -1340,15 +1340,18 @@ process_suffixed_number (char *text, long double *result,
         devmsg ("no valid suffix found\n");
     }
 
-  /* Skip white space - always.  */
-  char *p = text;
-  while (*p && isblank (to_uchar (*p)))
-    ++p;
+  /* Skip blanks - always.  */
+  char *p = skip_str_matching (text, newline_or_blank, true);
 
   /* setup auto-padding.  */
   if (auto_padding)
     {
-      padding_width = text < p || 1 < field ? strlen (text) : 0;
+      padding_width = text < p || 1 < field
+                      ? mbswidth (text,
+                                  MBSW_REJECT_INVALID | MBSW_REJECT_UNPRINTABLE)
+                      : 0;
+      if (padding_width < 0)
+        padding_width = strlen (text);
       devmsg ("setting Auto-Padding to %jd characters\n", padding_width);
     }
 
@@ -1455,7 +1458,8 @@ process_line (char *line, bool newline)
 
     if (*line != '\0')
       {
-        /* nul terminate the current field string and process */
+        /* NUL terminate the current field string and process */
+        char end_field = *line;
         *line = '\0';
 
         if (! process_field (next, field))
@@ -1463,7 +1467,15 @@ process_line (char *line, bool newline)
 
         fputc ((delimiter == DELIMITER_DEFAULT) ?
                ' ' : delimiter, stdout);
-        ++line;
+
+        if (delimiter != DELIMITER_DEFAULT)
+          line++;
+        else
+          {
+            *line = end_field;
+            mcel_t g = mcel_scanz (line);
+            line += g.len;
+          }
       }
     else
       {

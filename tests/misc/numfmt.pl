@@ -1172,6 +1172,20 @@ my @Locale_Tests =
              {ENV=>"LC_ALL=$locale"}],
      ['lcl-suf-6', "--from=auto '2\xe2\x81\xa0Ki'", {OUT => "2048"},
              {ENV=>"LC_ALL=$locale"}],
+     # multi-byte blank char (em space, \u2003)
+     #   Ensure trailing multi-byte blanks skipped
+     ['lcl-suf-7', "'2\xe2\x80\x83 '", {OUT => "2  "},
+             {ENV=>"LC_ALL=$locale"}],
+     ['lcl-suf-8', "-d '' --from=auto '2Ki\xe2\x80\x83 '", {OUT => "2048"},
+             {ENV=>"LC_ALL=$locale"}],
+     #   Ensure multi-byte blank field separators not corrupted
+     ['lcl-suf-9',  "--field=1 '1\xe2\x80\x832'", {OUT => "1 2"},
+             {ENV=>"LC_ALL=$locale"}],
+     ['lcl-suf-10', "--field=2 '1\xe2\x80\x832'", {OUT => "1 2"},
+             {ENV=>"LC_ALL=$locale"}],
+     #   Ensure multi-byte blank field separators width determined correctly
+     ['lcl-suf-11', "--field=2 '1 \xe2\x80\x832'",
+             {OUT => "1  2"}, {ENV=>"LC_ALL=$locale"}],
 
   );
 if ($locale ne 'C')

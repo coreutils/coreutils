@@ -21,6 +21,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'numfmt' no longer reads out-of-bounds memory with trailing blanks in input.
   [bug introduced with numfmt in coreutils-8.21]
 
+  'numfmt' no longer outputs invalid characters with multi-byte blanks in input.
+  [bug introduced in coreutils-9.5]
+
   'rm -d DIR' no longer fails on Ceph snapshot directories.
   Although these directories are nonempty, 'rmdir DIR' succeeds on them.
   [bug introduced in coreutils-8.16]
