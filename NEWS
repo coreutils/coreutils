@@ -44,7 +44,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** Improvements
 
   numfmt now parses numbers with a non-breaking space character before a unit,
-  and numbers containing grouping characters from the current locale.
+  and parses numbers containing grouping characters from the current locale.
+  It also supports a multi-byte --delimiter character.
 
   wc -l now operates 10% faster on hosts that support AVX512 instructions.
 

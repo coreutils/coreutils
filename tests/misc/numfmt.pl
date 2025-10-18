@@ -283,6 +283,9 @@ my @Tests =
      ['delim-4', '--delimiter=: --from=auto 40M:60M',  {OUT=>'40000000:60M'}],
      ['delim-5', '-d: --field=2 --from=auto :40M:60M',  {OUT=>':40000000:60M'}],
      ['delim-6', '-d: --field 3 --from=auto 40M:60M', {OUT=>"40M:60M"}],
+     # Ensure we don't hit https://sourceware.org/PR29511
+     ['delim-7', "-d '\xc2' --field=2 --invalid=ignore '1\xc2\xb72K'",
+             {OUT => "1\xc2\xb72K"}],
      ['delim-err-1', '-d,, --to=si 1', {EXIT=>1},
              {ERR => "$prog: the delimiter must be a single character\n"}],
 
@@ -1186,6 +1189,10 @@ my @Locale_Tests =
      #   Ensure multi-byte blank field separators width determined correctly
      ['lcl-suf-11', "--field=2 '1 \xe2\x80\x832'",
              {OUT => "1  2"}, {ENV=>"LC_ALL=$locale"}],
+
+     # Support multi-byte delimiter
+     ['lcl-delim-1', "-d '\xc2\xb7' --field=2 --from=auto '1\xc2\xb72K'",
+             {OUT => "1\xc2\xb72000"}, {ENV=>"LC_ALL=$locale"}],
 
   );
 if ($locale ne 'C')

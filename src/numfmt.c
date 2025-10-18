@@ -156,9 +156,6 @@ static struct option const longopts[] =
   {nullptr, 0, nullptr, 0}
 };
 
-/* If delimiter has this value, blanks separate fields.  */
-enum { DELIMITER_DEFAULT = CHAR_MAX + 1 };
-
 /* Maximum number of digits we can safely handle
    without precision loss, if scaling is 'none'.  */
 enum { MAX_UNSCALED_DIGITS = LDBL_DIG };
@@ -194,8 +191,8 @@ static int conv_exit_code = EXIT_CONVERSION_WARNINGS;
 /* auto-pad each line based on skipped whitespace.  */
 static int auto_padding = 0;
 
-/* field delimiter */
-static int delimiter = DELIMITER_DEFAULT;
+/* field delimiter - if nullptr, blanks separate fields.  */
+static char const *delimiter = nullptr;
 
 /* line delimiter.  */
 static unsigned char line_delim = '\n';
@@ -1374,14 +1371,10 @@ next_field (char **line)
   char *field_start = *line;
   char *field_end   = field_start;
 
-  if (delimiter != DELIMITER_DEFAULT)
+  if (delimiter)
     {
-      if (*field_start != delimiter)
-        {
-          while (*field_end && *field_end != delimiter)
-            ++field_end;
-        }
-      /* else empty field */
+      if (! *delimiter || ! (field_end = mbsstr (field_start, delimiter)))
+        field_end = strchr (field_start, '\0');
     }
   else
     {
@@ -1462,11 +1455,13 @@ process_line (char *line, bool newline)
         if (! process_field (next, field))
           valid_number = false;
 
-        fputc ((delimiter == DELIMITER_DEFAULT) ?
-               ' ' : delimiter, stdout);
+        if (delimiter != nullptr)
+          fputs (delimiter, stdout);
+        else
+          fputc (' ', stdout);
 
-        if (delimiter != DELIMITER_DEFAULT)
-          line++;
+        if (delimiter)
+          line += MAX (strlen (delimiter), 1);
         else
           {
             *line = end_field;
@@ -1573,10 +1568,17 @@ main (int argc, char **argv)
 
         case 'd':
           /* Interpret -d '' to mean 'use the NUL byte as the delimiter.'  */
-          if (optarg[0] != '\0' && optarg[1] != '\0')
-            error (EXIT_FAILURE, 0,
-                   _("the delimiter must be a single character"));
-          delimiter = optarg[0];
+          if (optarg[0] != '\0')
+            {
+              mcel_t g = mcel_scanz (optarg);
+              /* Note we always allow single bytes, especially since mcel
+                 explicitly does not avoid https://sourceware.org/PR29511
+                 I.e., we ignore g.err, and rely on g.len==1 with g.err.  */
+              if (optarg[g.len] != '\0')
+                error (EXIT_FAILURE, 0,
+                       _("the delimiter must be a single character"));
+            }
+          delimiter = optarg;
           break;
 
         case 'z':
@@ -1642,7 +1644,7 @@ main (int argc, char **argv)
       && !grouping && (padding_width == 0) && (format_str == nullptr))
     error (0, 0, _("no conversion option specified"));
 
-  if (debug && unit_separator && delimiter == DELIMITER_DEFAULT)
+  if (debug && unit_separator && delimiter == nullptr)
     error (0, 0,
            _("field delimiters have higher precedence than unit separators"));
 
@@ -1657,7 +1659,7 @@ main (int argc, char **argv)
         error (0, 0, _("grouping has no effect in this locale"));
     }
 
-  auto_padding = (padding_width == 0 && delimiter == DELIMITER_DEFAULT);
+  auto_padding = (padding_width == 0 && delimiter == nullptr);
 
   if (inval_style != inval_abort)
     conv_exit_code = 0;
