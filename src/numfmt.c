@@ -1326,14 +1326,11 @@ static int
 process_suffixed_number (char *text, long double *result,
                          size_t *precision, long int field)
 {
-  if (suffix && strlen (text) > strlen (suffix))
+  if (suffix)
     {
-      char *possible_suffix = text + strlen (text) - strlen (suffix);
-
-      if (streq (suffix, possible_suffix))
+      if (mbs_endswith (text, suffix))
         {
-          /* trim suffix, ONLY if it's at the end of the text.  */
-          *possible_suffix = '\0';
+          *(text + strlen (text) - strlen (suffix)) = '\0';
           devmsg ("trimming suffix %s\n", quote (suffix));
         }
       else
