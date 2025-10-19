@@ -97,7 +97,6 @@ mbbuf_get_char (mbbuf_t *mbbuf)
     {
       /* Assume the program will emit the byte, but keep the error flag.  */
       g.ch = mbbuf->buffer[mbbuf->offset++];
-      g.len = 1;
     }
   return g;
 }
