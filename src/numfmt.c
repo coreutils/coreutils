@@ -1363,6 +1363,36 @@ process_suffixed_number (char *text, long double *result,
   return (e == SSE_OK || e == SSE_OK_PRECISION_LOSS);
 }
 
+/* Return true if the current charset is UTF-8.  */
+static bool
+is_utf8_charset (void)
+{
+  static int is_utf8 = -1;
+  if (is_utf8 == -1)
+    {
+      char32_t w;
+      mbstate_t mbs; mbszero (&mbs);
+      is_utf8 = mbrtoc32 (&w, "\xe2\x9f\xb8", 3, &mbs) == 3 && w == 0x27F8;
+    }
+  return is_utf8;
+}
+
+/* Search for multi-byte character C in multi-byte string S.
+   Return a pointer to the character, or nullptr if not found.  */
+ATTRIBUTE_PURE
+static char *
+mbsmbchr (char const* s, char const* c)
+{
+  unsigned char uc = *c;
+   /* GB18030 is the most restrictive for the 0x30 optimization below.  */
+  if (uc < 0x30 || MB_CUR_MAX == 1)
+    return strchr (s, uc);
+  else if (is_utf8_charset ())
+    return uc < 0x80 ? strchr (s, uc) : strstr (s, c);
+  else
+    return *(c + 1) == '\0' ? mbschr (s, uc) : (char *) mbsstr (s, c);
+}
+
 /* Return a pointer to the beginning of the next field in line.
    The line pointer is moved to the end of the next field. */
 static char*
@@ -1373,7 +1403,7 @@ next_field (char **line)
 
   if (delimiter)
     {
-      if (! *delimiter || ! (field_end = mbsstr (field_start, delimiter)))
+      if (! (field_end = mbsmbchr (field_start, delimiter)))
         field_end = strchr (field_start, '\0');
     }
   else
