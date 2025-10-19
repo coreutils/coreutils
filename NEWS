@@ -43,6 +43,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  'install' now uses posix_spawn() to invoke the strip program more efficiently.
+
   numfmt now parses numbers with a non-breaking space character before a unit,
   and parses numbers containing grouping characters from the current locale.
   It also supports a multi-byte --delimiter character.

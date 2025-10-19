@@ -24,6 +24,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <selinux/label.h>
+#include <spawn.h>
 #include <sys/wait.h>
 
 #include "system.h"
@@ -32,6 +33,7 @@
 #include "copy.h"
 #include "filenamecat.h"
 #include "full-read.h"
+#include "ignore-value.h"
 #include "mkancesdirs.h"
 #include "mkdir-p.h"
 #include "modechange.h"
@@ -490,33 +492,49 @@ change_timestamps (struct stat const *src_sb, char const *dest,
 static bool
 strip (char const *name)
 {
-  int status;
-  bool ok = false;
-  pid_t pid = fork ();
+  posix_spawnattr_t attr;
+  posix_spawnattr_t *attrp = nullptr;
 
-  switch (pid)
+  /* Try to use vfork for systems where it matters.  */
+  if (posix_spawnattr_init (&attr) == 0)
     {
-    case -1:
-      error (0, errno, _("fork system call failed"));
-      break;
-    case 0:			/* Child. */
-      {
-        char const *safe_name = name;
-        if (name && *name == '-')
-          safe_name = file_name_concat (".", name, nullptr);
-        execlp (strip_program, strip_program, safe_name, nullptr);
-        error (EXIT_FAILURE, errno, _("cannot run %s"),
-               quoteaf (strip_program));
-      }
-    default:			/* Parent. */
+      if (posix_spawnattr_setflags (&attr, POSIX_SPAWN_USEVFORK) == 0)
+        attrp = &attr;
+      else
+        ignore_value (posix_spawnattr_destroy (&attr));
+    }
+
+  /* Construct the arguments to 'strip'.  */
+  char *concat_name = nullptr;
+  char const *safe_name = name;
+  if (name && *name == '-')
+    safe_name = concat_name = file_name_concat (".", name, nullptr);
+  char const *const argv[] = { strip_program, safe_name, nullptr };
+
+  /* Run 'strip'.  */
+  pid_t pid;
+  int result = posix_spawnp (&pid, strip_program, nullptr, attrp,
+                             (char * const *) argv, environ);
+
+  bool ok = false;
+  if (result != 0)
+    error (0, result, _("cannot run %s"), quoteaf (strip_program));
+  else
+    {
+      /* Wait for 'strip' to complete, and emit a warning message on failure  */
+      int status;
       if (waitpid (pid, &status, 0) < 0)
         error (0, errno, _("waiting for strip"));
       else if (! WIFEXITED (status) || WEXITSTATUS (status))
         error (0, 0, _("strip process terminated abnormally"));
       else
-        ok = true;      /* strip succeeded */
-      break;
+        ok = true;
     }
+
+  free (concat_name);
+  if (attrp)
+    ignore_value (posix_spawnattr_destroy (&attr));
+
   return ok;
 }
 
