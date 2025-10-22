@@ -45,9 +45,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   'install' now uses posix_spawn() to invoke the strip program more efficiently.
 
-  numfmt now parses numbers with a non-breaking space character before a unit,
-  and parses numbers containing grouping characters from the current locale.
-  It also supports a multi-byte --delimiter character.
+  'numfmt':
+   - parses numbers with a non-breaking space character before a unit
+   - parses numbers containing grouping characters from the current locale
+   - supports a multi-byte --delimiter character
+   - no longer processes input indefinitely in the presence of write errors
 
   wc -l now operates 10% faster on hosts that support AVX512 instructions.
 

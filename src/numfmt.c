@@ -1512,6 +1512,9 @@ process_line (char *line, bool newline)
   if (newline)
     putchar (line_delim);
 
+ if (ferror (stdout))
+   write_error ();
+
   return valid_number;
 }
 
@@ -1710,7 +1713,10 @@ main (int argc, char **argv)
 
       while (header-- && getdelim (&line, &line_allocated,
                                    line_delim, stdin) > 0)
-        fputs (line, stdout);
+        {
+          if (fputs (line, stdout) == EOF)
+            write_error ();
+        }
 
       while ((len = getdelim (&line, &line_allocated,
                               line_delim, stdin)) > 0)

@@ -41,7 +41,7 @@ fold --version; yes | tr -d '\\n' | fold
 head -z -n-1 /dev/zero
 join -a 1 -z /dev/zero /dev/null
 # TODO: nl --version; yes | nl
-# TODO: numfmt --version; yes 1 | numfmt
+numfmt --version; yes 1 | numfmt
 od -v /dev/zero
 paste /dev/zero
 # TODO: pr /dev/zero
