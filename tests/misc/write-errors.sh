@@ -33,7 +33,8 @@ cut -z -f1- /dev/zero
 dd if=/dev/zero
 expand /dev/zero
 factor --version; yes 1 | factor
-# TODO: fmt /dev/zero
+fmt /dev/zero
+fmt --version; yes | fmt
 fold /dev/zero
 fold -b /dev/zero
 fold -c /dev/zero

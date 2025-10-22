@@ -810,7 +810,10 @@ flush_paragraph (void)
 
   if (word_limit == word)
     {
-      fwrite (parabuf, sizeof *parabuf, wptr - parabuf, stdout);
+      size_t to_write = wptr - parabuf;
+      if (fwrite (parabuf, 1, to_write, stdout) != to_write)
+        write_error ();
+
       wptr = parabuf;
       return;
     }
@@ -1010,6 +1013,9 @@ put_line (WORD *w, int indent)
   put_word (w);
   last_line_length = out_column;
   putchar ('\n');
+
+  if (ferror (stdout))
+    write_error ();
 }
 
 /* Output to stdout the word W.  */
