@@ -45,7 +45,8 @@ nl --version; yes | nl
 numfmt --version; yes 1 | numfmt
 od -v /dev/zero
 paste /dev/zero
-# TODO: pr /dev/zero
+pr /dev/zero
+pr --version; yes 1 | pr
 seq inf
 tail -n+1 -z /dev/zero
 tee < /dev/zero

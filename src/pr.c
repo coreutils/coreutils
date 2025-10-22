@@ -1886,6 +1886,9 @@ print_page (void)
       print_a_FF = false;
     }
 
+  if (ferror (stdout))
+    write_error ();
+
   if (last_page_number < ++page_number)
     return false;		/* Stop printing with LAST_PAGE */
 
@@ -2286,6 +2289,9 @@ print_clump (COLUMN *p, int n, char *clump)
 {
   while (n--)
     (p->char_func) (*clump++);
+
+  if (ferror (stdout))
+    write_error ();
 }
 
 /* Print a character.
