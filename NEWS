@@ -43,7 +43,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
-  'fmt' will now exit promptly upon receiving a write error,
+  'fmt' and 'nl' will now exit promptly upon receiving a write error,
   which is significant when reading large / unbounded inputs.
 
   'install' now uses posix_spawn() to invoke the strip program more efficiently.

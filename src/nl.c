@@ -425,6 +425,9 @@ process_file (FILE *fp)
           proc_text ();
           break;
         }
+
+      if (ferror (stdout))
+        write_error ();
     }
 }
 
