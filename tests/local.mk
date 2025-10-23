@@ -318,6 +318,7 @@ all_tests =					\
   tests/date/date-ethiopia.sh			\
   tests/date/date-iran.sh			\
   tests/date/date-locale-hour.sh		\
+  tests/date/reference.sh			\
   tests/date/date-sec.sh			\
   tests/date/date-thailand.sh			\
   tests/date/date-tz.sh				\
