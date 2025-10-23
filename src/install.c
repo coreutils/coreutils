@@ -33,7 +33,6 @@
 #include "copy.h"
 #include "filenamecat.h"
 #include "full-read.h"
-#include "ignore-value.h"
 #include "mkancesdirs.h"
 #include "mkdir-p.h"
 #include "modechange.h"
@@ -501,7 +500,7 @@ strip (char const *name)
       if (posix_spawnattr_setflags (&attr, POSIX_SPAWN_USEVFORK) == 0)
         attrp = &attr;
       else
-        ignore_value (posix_spawnattr_destroy (&attr));
+        posix_spawnattr_destroy (&attr);
     }
 
   /* Construct the arguments to 'strip'.  */
@@ -539,7 +538,7 @@ strip (char const *name)
 
   free (concat_name);
   if (attrp)
-    ignore_value (posix_spawnattr_destroy (&attr));
+    posix_spawnattr_destroy (attrp);
 
   return ok;
 }
