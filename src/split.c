@@ -561,6 +561,9 @@ create (char const *name)
         error (EXIT_FAILURE, errno, _("failed to run command: \"%s -c %s\""),
                shell_prog, filter_command);
 
+      posix_spawnattr_destroy (&attr);
+      posix_spawn_file_actions_destroy (&actions);
+
       if (close (fd_pair[0]) != 0)
         error (EXIT_FAILURE, errno, _("failed to close input pipe"));
       filter_pid = child_pid;
