@@ -518,7 +518,13 @@ strip (char const *name)
 
   bool ok = false;
   if (result != 0)
-    error (0, result, _("cannot run %s"), quoteaf (strip_program));
+    {
+      error (0, result,
+             streq (strip_program, "strip")
+               ? _("cannot run %s")
+               : _("cannot run strip program %s"),
+             quoteaf (strip_program));
+    }
   else
     {
       /* Wait for 'strip' to complete, and emit a warning message on failure  */
