@@ -4885,6 +4885,10 @@ standard input to standard output.
 
 Terminate with an error if @var{prog} exits with nonzero status.
 
+If @var{prog} cannot be invoked, @command{sort} will write a warning
+message to standard error and continue without compressing temporary
+files.
+
 White space and the backslash character should not appear in
 @var{prog}; they are reserved for future use.
 

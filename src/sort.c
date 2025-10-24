@@ -29,6 +29,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <spawn.h>
 #include "system.h"
 #include "argmatch.h"
 #include "assure.h"
@@ -129,16 +130,16 @@ enum
 
 enum
   {
-    /* The number of times we should try to fork a compression process
-       (we retry if the fork call fails).  We don't _need_ to compress
-       temp files, this is just to reduce file system access, so this number
-       can be small.  Each retry doubles in duration.  */
-    MAX_FORK_TRIES_COMPRESS = 4,
+    /* The number of times we should try to spawn a compression process
+       (we retry if the posix_spawnp call fails with EAGAIN).  We don't _need_
+       to compress temp files, this is just to reduce file system access, so
+       this number can be small.  Each retry doubles in duration.  */
+    MAX_TRIES_COMPRESS = 4,
 
-    /* The number of times we should try to fork a decompression process.
-       If we can't fork a decompression process, we can't sort, so this
+    /* The number of times we should try to spawn a decompression process.
+       If we can't spawn a decompression process, we can't sort, so this
        number should be big.  Each retry doubles in duration.  */
-    MAX_FORK_TRIES_DECOMPRESS = 9
+    MAX_TRIES_DECOMPRESS = 9
   };
 
 enum
@@ -369,33 +370,6 @@ static bool debug;
 /* Maximum number of files to merge in one go.  If more than this
    number are present, temp files will be used. */
 static unsigned int nmerge = NMERGE_DEFAULT;
-
-/* Output an error to stderr and exit using async-signal-safe routines.
-   This can be used safely from signal handlers,
-   and between fork and exec of multithreaded processes.  */
-
-static _Noreturn void
-async_safe_die (int errnum, char const *errstr)
-{
-  ignore_value (write (STDERR_FILENO, errstr, strlen (errstr)));
-
-  /* Even if defined HAVE_STRERROR_R, we can't use it,
-     as it may return a translated string etc. and even if not
-     may call malloc which is unsafe.  We might improve this
-     by testing for sys_errlist and using that if available.
-     For now just report the error number.  */
-  if (errnum)
-    {
-      char errbuf[INT_BUFSIZE_BOUND (errnum)];
-      char *p = inttostr (errnum, errbuf);
-      ignore_value (write (STDERR_FILENO, ": errno ", 8));
-      ignore_value (write (STDERR_FILENO, p, strlen (p)));
-    }
-
-  ignore_value (write (STDERR_FILENO, "\n", 1));
-
-  _exit (SORT_FAILURE);
-}
 
 /* Report MESSAGE for FILE, then clean up and exit.
    If FILE is null, it represents standard output.  */
@@ -1034,23 +1008,83 @@ move_fd (int oldfd, int newfd)
     }
 }
 
-/* Fork a child process for piping to and do common cleanup.  The
-   TRIES parameter specifies how many times to try to fork before
-   giving up.  Return the PID of the child, or -1 (setting errno)
-   on failure. */
+/* Setup ACTION to move OLDFD to NEWFD.  If OLDFD != NEWFD, NEWFD is not
+   close-on-exec.  Returns 0 if successful, or an error number otherwise.  */
 
-static pid_t
-pipe_fork (int pipefds[2], size_t tries)
+static int
+posix_spawn_file_actions_move_fd (posix_spawn_file_actions_t *actions,
+                                  int oldfd, int newfd)
 {
-#if HAVE_WORKING_FORK
+  int result = 0;
+  if (oldfd != newfd)
+    {
+      result = posix_spawn_file_actions_adddup2 (actions, oldfd, newfd);
+      if (result == 0)
+        result = posix_spawn_file_actions_addclose (actions, oldfd);
+    }
+  return result;
+}
+
+/* Execute COMPRESS_PROGRAM in a child process.  The child processes pid is
+   stored in PD.  The TRIES parameter specifies how many times to try to create
+   a child process before giving up.  Return 0 on success, or an error number
+   otherwise.  */
+
+static int
+pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
+            size_t tries)
+{
   struct tempnode *saved_temphead;
-  int saved_errno;
   double wait_retry = 0.25;
-  pid_t pid;
   struct cs_status cs;
+  int result;
+  posix_spawnattr_t attr;
+  posix_spawn_file_actions_t actions;
+
+  if ((result = posix_spawnattr_init (&attr)))
+    return result;
+  if ((result = posix_spawnattr_setflags (&attr, POSIX_SPAWN_USEVFORK))
+      || (result = posix_spawn_file_actions_init (&actions)))
+    {
+      posix_spawnattr_destroy (&attr);
+      return result;
+    }
 
   if (pipe2 (pipefds, O_CLOEXEC) < 0)
-    return -1;
+    {
+      int saved_errno = errno;
+      posix_spawnattr_destroy (&attr);
+      posix_spawn_file_actions_destroy (&actions);
+      return saved_errno;
+    }
+
+  if ((result = posix_spawn_file_actions_addclose (&actions, STDIN_FILENO))
+      || (result = posix_spawn_file_actions_addclose (&actions, STDOUT_FILENO))
+      || (decompress
+          ? ((result = posix_spawn_file_actions_addclose (&actions,
+                                                          pipefds[0]))
+             || (result = posix_spawn_file_actions_move_fd (&actions, tempfd,
+                                                            STDIN_FILENO))
+             || (result = posix_spawn_file_actions_move_fd (&actions,
+                                                            pipefds[1],
+                                                            STDOUT_FILENO)))
+          : ((result = posix_spawn_file_actions_addclose (&actions,
+                                                          pipefds[1]))
+             || (result = posix_spawn_file_actions_move_fd (&actions, tempfd,
+                                                            STDOUT_FILENO))
+             || (result = posix_spawn_file_actions_move_fd (&actions,
+                                                            pipefds[0],
+                                                            STDIN_FILENO)))))
+    {
+      close (pipefds[0]);
+      close (pipefds[1]);
+      posix_spawnattr_destroy (&attr);
+      posix_spawn_file_actions_destroy (&actions);
+      return result;
+    }
+
+  char const *const argv[] = { compress_program, decompress ? "-d" : nullptr,
+                               nullptr };
 
   /* At least NMERGE + 1 subprocesses are needed.  More could be created, but
      uncontrolled subprocess generation can hurt performance significantly.
@@ -1070,44 +1104,37 @@ pipe_fork (int pipefds[2], size_t tries)
       saved_temphead = temphead;
       temphead = nullptr;
 
-      pid = fork ();
-      saved_errno = errno;
-      if (pid)
-        temphead = saved_temphead;
+      result = posix_spawnp (pid, compress_program, &actions, &attr,
+                             (char * const *) argv, environ);
+
+      temphead = saved_temphead;
 
       cs_leave (&cs);
-      errno = saved_errno;
 
-      if (0 <= pid || errno != EAGAIN)
+      if (result != EAGAIN)
         break;
       else
         {
+          /* [v]fork/clone are indicating resource constraints,
+             so back-off for a while and retry.  */
           xnanosleep (wait_retry);
           wait_retry *= 2;
           reap_exited ();
         }
     }
 
-  if (pid < 0)
+  posix_spawnattr_destroy (&attr);
+  posix_spawn_file_actions_destroy (&actions);
+
+  if (result)
     {
-      saved_errno = errno;
       close (pipefds[0]);
       close (pipefds[1]);
-      errno = saved_errno;
-    }
-  else if (pid == 0)
-    {
-      close (STDIN_FILENO);
-      close (STDOUT_FILENO);
     }
   else
     ++nprocs;
 
-  return pid;
-
-#else  /* ! HAVE_WORKING_FORK */
-  return -1;
-#endif
+  return result;
 }
 
 /* Create a temporary file and, if asked for, start a compressor
@@ -1129,9 +1156,18 @@ maybe_create_temp (FILE **pfp, bool survive_fd_exhaustion)
   if (compress_program)
     {
       int pipefds[2];
+      static int last_result = 0;
 
-      node->pid = pipe_fork (pipefds, MAX_FORK_TRIES_COMPRESS);
-      if (0 < node->pid)
+      int result = pipe_child (&node->pid, pipefds, tempfd, false,
+                               MAX_TRIES_COMPRESS);
+
+      if (result)
+        {
+          if (result != last_result)
+            error (0, result, _("could not run compress program %s"),
+                   quoteaf (compress_program));
+        }
+      else
         {
           close (tempfd);
           close (pipefds[0]);
@@ -1139,18 +1175,8 @@ maybe_create_temp (FILE **pfp, bool survive_fd_exhaustion)
 
           register_proc (node);
         }
-      else if (node->pid == 0)
-        {
-          /* Being the child of a multithreaded program before exec,
-             we're restricted to calling async-signal-safe routines here.  */
-          close (pipefds[1]);
-          move_fd (tempfd, STDOUT_FILENO);
-          move_fd (pipefds[0], STDIN_FILENO);
 
-          execlp (compress_program, compress_program, (char *) nullptr);
-
-          async_safe_die (errno, "couldn't execute compress program");
-        }
+      last_result = result;
     }
 
   *pfp = fdopen (tempfd, "w");
@@ -1188,30 +1214,20 @@ open_temp (struct tempnode *temp)
   if (tempfd < 0)
     return nullptr;
 
-  pid_t child = pipe_fork (pipefds, MAX_FORK_TRIES_DECOMPRESS);
+  pid_t child;
+  int result = pipe_child (&child, pipefds, tempfd, true,
+                           MAX_TRIES_DECOMPRESS);
 
-  switch (child)
+  if (result)
     {
-    case -1:
-      if (errno != EMFILE)
-        error (SORT_FAILURE, errno, _("couldn't create process for %s -d"),
+      if (result != EMFILE)
+        error (SORT_FAILURE, result, _("could not run compress program %s -d"),
                quoteaf (compress_program));
       close (tempfd);
       errno = EMFILE;
-      break;
-
-    case 0:
-      /* Being the child of a multithreaded program before exec,
-         we're restricted to calling async-signal-safe routines here.  */
-      close (pipefds[0]);
-      move_fd (tempfd, STDIN_FILENO);
-      move_fd (pipefds[1], STDOUT_FILENO);
-
-      execlp (compress_program, compress_program, "-d", (char *) nullptr);
-
-      async_safe_die (errno, "couldn't execute compress program (with -d)");
-
-    default:
+    }
+  else
+    {
       temp->pid = child;
       register_proc (temp);
       close (tempfd);
@@ -1224,7 +1240,6 @@ open_temp (struct tempnode *temp)
           close (pipefds[0]);
           errno = saved_errno;
         }
-      break;
     }
 
   return fp;
