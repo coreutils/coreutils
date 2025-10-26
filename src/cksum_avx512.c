@@ -75,12 +75,11 @@ cksum_avx512 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
 
       __m512i *datap;
 
-      if (length + bytes_read < length)
+      if (ckd_add (&length, length, bytes_read))
         {
           errno = EOVERFLOW;
           return false;
         }
-      length += bytes_read;
 
       datap = (__m512i *)buf;
 

@@ -68,12 +68,11 @@ cksum_avx2 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
 
       __m256i *datap;
 
-      if (length + bytes_read < length)
+      if (ckd_add (&length, length, bytes_read))
         {
           errno = EOVERFLOW;
           return false;
         }
-      length += bytes_read;
 
       datap = (__m256i *)buf;
 

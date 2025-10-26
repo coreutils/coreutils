@@ -239,12 +239,11 @@ cksum_slice8 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
     {
       uint32_t *datap;
 
-      if (length + bytes_read < length)
+      if (ckd_add (&length, length, bytes_read))
         {
           errno = EOVERFLOW;
           return false;
         }
-      length += bytes_read;
 
       /* Process multiples of 8 bytes */
       datap = (uint32_t *)buf;
@@ -335,12 +334,11 @@ crc32b_sum_stream (FILE *stream, void *resstream, uintmax_t *reslen)
 
   while ((bytes_read = fread (buf, 1, BUFLEN, stream)) > 0)
     {
-      if (len + bytes_read < len)
+      if (ckd_add (&len, len, bytes_read))
         {
           errno = EOVERFLOW;
           return -1;
         }
-      len += bytes_read;
 
       crc = crc32_update (crc, (char const *)buf, bytes_read);
 

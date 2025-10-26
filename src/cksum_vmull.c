@@ -72,12 +72,11 @@ cksum_vmull (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
       uint64x2_t fold_data;
       uint64x2_t xor_crc;
 
-      if (length + bytes_read < length)
+      if (ckd_add (&length, length, bytes_read))
         {
           errno = EOVERFLOW;
           return false;
         }
-      length += bytes_read;
 
       datap = (uint64x2_t *) buf;
 
