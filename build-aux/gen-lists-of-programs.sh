@@ -24,12 +24,14 @@ disabled_by_default_progs='
 # Programs that can be built only when certain requisite system
 # features are detected at configure time.
 build_if_possible_progs='
+    chcon
     chroot
     df
     hostid
     libstdbuf.so
     nice
     pinky
+    runcon
     stdbuf
     stty
     timeout
@@ -47,7 +49,6 @@ normal_progs='
     basenc
     basename
     cat
-    chcon
     chgrp
     chmod
     chown
@@ -102,7 +103,6 @@ normal_progs='
     realpath
     rm
     rmdir
-    runcon
     seq
     sha1sum
     sha224sum

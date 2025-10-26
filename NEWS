@@ -67,6 +67,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   wc -l now operates 10% faster on hosts that support AVX512 instructions.
 
+** Build-related
+
+  chcon and runcon are not built by default if selinux headers are not present,
+  or if the --without-selinux configure option is specified.
+  This can be overridden with the --with-selinux configure option.
+
 
 * Noteworthy changes in release 9.8 (2025-09-22) [stable]
 

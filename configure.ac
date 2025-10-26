@@ -529,6 +529,16 @@ CFLAGS=$ac_save_CFLAGS
 LDFLAGS=$ac_save_LDFLAGS
 ac_c_werror_flag=$cu_save_c_werror_flag
 
+# Don't build chcon and runcon if only have gnulib stubs
+# Honor --without-selinux to force disable
+# and --with-selinux to force enable.
+if test "$with_selinux" != no &&
+   { test "$with_selinux" = yes ||
+     test "$ac_cv_header_selinux_selinux_h" = yes; }; then
+  gl_ADD_PROG([optional_bin_progs], [chcon])
+  gl_ADD_PROG([optional_bin_progs], [runcon])
+fi
+
 # Test compiler support for half precision floating point types (for od)
 AC_MSG_CHECKING([IEEE 16 bit floating point])
 AC_CACHE_VAL([utils_cv_ieee_16_bit_supported],[
