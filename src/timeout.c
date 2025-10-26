@@ -49,6 +49,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <signal.h>
+#include <spawn.h>
 #if HAVE_PRCTL
 # include <sys/prctl.h>
 #endif
@@ -547,30 +548,35 @@ main (int argc, char **argv)
   sigset_t orig_set;
   block_cleanup_and_chld (term_signal, &orig_set);
 
-  monitored_pid = fork ();
-  if (monitored_pid == -1)
+  /* posix_spawn doesn't reset SIG_IGN -> SIG_DFL.  */
+  sigset_t default_set;
+  sigemptyset (&default_set);
+  sigaddset (&default_set, SIGTTIN);
+  sigaddset (&default_set, SIGTTOU);
+
+  int result;
+  posix_spawnattr_t attr;
+
+  if ((result = posix_spawnattr_init (&attr))
+      || (result = posix_spawnattr_setflags (&attr,
+                                             (POSIX_SPAWN_USEVFORK
+                                              | POSIX_SPAWN_SETSIGDEF
+                                              | POSIX_SPAWN_SETSIGMASK)))
+      || (result = posix_spawnattr_setsigdefault (&attr, &default_set))
+      || (result = posix_spawnattr_setsigmask (&attr, &orig_set)))
     {
-      error (0, errno, _("fork system call failed"));
+      error (0, result, _("posix_spawn initialization failed"));
       return EXIT_CANCELED;
     }
-  else if (monitored_pid == 0)  /* child */
+
+  result = posix_spawnp (&monitored_pid, argv[0], nullptr, &attr, argv,
+                         environ);
+
+  if (result)
     {
-      /* Restore signal mask for child.  */
-      if (sigprocmask (SIG_SETMASK, &orig_set, nullptr) != 0)
-        {
-          error (0, errno, _("child failed to reset signal mask"));
-          return EXIT_CANCELED;
-        }
-
-      /* exec doesn't reset SIG_IGN -> SIG_DFL.  */
-      signal (SIGTTIN, SIG_DFL);
-      signal (SIGTTOU, SIG_DFL);
-
-      execvp (argv[0], argv);
-
       /* exit like sh, env, nohup, ...  */
-      int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
-      error (0, errno, _("failed to run command %s"), quote (command));
+      int exit_status = result == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
+      error (0, result, _("failed to run command %s"), quote (command));
       return exit_status;
     }
   else

@@ -51,19 +51,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   'fmt', 'nl', and 'pr' will now exit promptly upon receiving a write error,
   which is significant when reading large / unbounded inputs.
 
-  'install' now uses posix_spawn() to invoke the strip program more efficiently.
+  install, sort, split, and timeout now use posix_spawn() to invoke child
+  programs more efficiently and more independently from their own memory usage.
 
   'numfmt':
    - parses numbers with a non-breaking space character before a unit
    - parses numbers containing grouping characters from the current locale
    - supports a multi-byte --delimiter character
    - no longer processes input indefinitely in the presence of write errors
-
-  'sort' now uses posix_spawn() to invoke --compress-program more efficiently
-  and more independently from sort's memory usage.
-
-  'split' now uses posix_spawn() to invoke the shell command specified by
-  --filter more efficiently.
 
   wc -l now operates 10% faster on hosts that support AVX512 instructions.
 
