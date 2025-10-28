@@ -216,7 +216,8 @@ static bool dev_debug = false;
 static bool
 newline_or_blank (mcel_t g)
 {
-  return g.ch == '\n' || c32isblank (g.ch);
+  return g.ch == '\n'
+         || (c32isblank (g.ch) && ! c32isnbspace (g.ch));
 }
 
 static inline int
