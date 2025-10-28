@@ -19,11 +19,12 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ date
 
-# Ensure --resolution is supported
+# Ensure --resolution is supported (prints to full nano second resolution)
 res=$(date --resolution) || fail=1
 
-# Ensure %-N format is supported
-subsec1=$(printf "%s" "$res" | cut -d. -f2- | wc -c) || framework_failure_
+# Ensure %-N format is supported (prints to most concise resolution)
+subsec1=$(printf '%s\n' "$res" | sed 's/.*\.//; s/0*$//' | wc -c) ||
+  framework_failure_
 subsec2=$(date +%-N | wc -c) || framework_failure_
 test "$subsec1" = "$subsec2" || fail=1
 
