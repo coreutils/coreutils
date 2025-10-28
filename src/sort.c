@@ -371,12 +371,57 @@ static bool debug;
    number are present, temp files will be used. */
 static unsigned int nmerge = NMERGE_DEFAULT;
 
+/* Whether SIGPIPE had the default disposition at startup.  */
+static bool default_SIGPIPE;
+
+/* The list of temporary files. */
+struct tempnode
+{
+  struct tempnode *volatile next;
+  pid_t pid;     /* The subprocess PID; undefined if state == UNCOMPRESSED.  */
+  char state;
+  char name[FLEXIBLE_ARRAY_MEMBER];
+};
+static struct tempnode *volatile temphead;
+static struct tempnode *volatile *temptail = &temphead;
+
+/* Clean up any remaining temporary files.  */
+
+static void
+cleanup (void)
+{
+  struct tempnode const *node;
+
+  for (node = temphead; node; node = node->next)
+    unlink (node->name);
+  temphead = nullptr;
+}
+
+/* Handle interrupts and hangups. */
+
+static void
+sighandler (int sig)
+{
+  if (! SA_NOCLDSTOP)
+    signal (sig, SIG_IGN);
+
+  cleanup ();
+
+  signal (sig, SIG_DFL);
+  raise (sig);
+}
+
 /* Report MESSAGE for FILE, then clean up and exit.
    If FILE is null, it represents standard output.  */
 
 static void
 sort_die (char const *message, char const *file)
 {
+  /* If we got EPIPE writing to stdout (from a previous fwrite() or fclose()
+     and SIGPIPE was originally SIG_DFL, mimic standard SIGPIPE behavior.  */
+  if (errno == EPIPE && !file && default_SIGPIPE)
+    sighandler (SIGPIPE);
+
   error (SORT_FAILURE, errno, "%s: %s", message,
          quotef (file ? file : _("standard output")));
 }
@@ -631,17 +676,6 @@ cs_leave (struct cs_status const *status)
    the subprocess to finish.  */
 enum { UNCOMPRESSED, UNREAPED, REAPED };
 
-/* The list of temporary files. */
-struct tempnode
-{
-  struct tempnode *volatile next;
-  pid_t pid;     /* The subprocess PID; undefined if state == UNCOMPRESSED.  */
-  char state;
-  char name[FLEXIBLE_ARRAY_MEMBER];
-};
-static struct tempnode *volatile temphead;
-static struct tempnode *volatile *temptail = &temphead;
-
 /* A file to be sorted.  */
 struct sortfile
 {
@@ -778,18 +812,6 @@ reap_all (void)
 {
   while (0 < nprocs)
     reap (-1);
-}
-
-/* Clean up any remaining temporary files.  */
-
-static void
-cleanup (void)
-{
-  struct tempnode const *node;
-
-  for (node = temphead; node; node = node->next)
-    unlink (node->name);
-  temphead = nullptr;
 }
 
 /* Cleanup actions to take when exiting.  */
@@ -4262,20 +4284,6 @@ parse_field_count (char const *string, size_t *val, char const *msgid)
   return suffix;
 }
 
-/* Handle interrupts and hangups. */
-
-static void
-sighandler (int sig)
-{
-  if (! SA_NOCLDSTOP)
-    signal (sig, SIG_IGN);
-
-  cleanup ();
-
-  signal (sig, SIG_DFL);
-  raise (sig);
-}
-
 /* Set the ordering options for KEY specified in S.
    Return the address of the first character in S that
    is not a valid ordering option.
@@ -4409,7 +4417,7 @@ main (int argc, char **argv)
     static int const sig[] =
       {
         /* The usual suspects.  */
-        SIGALRM, SIGHUP, SIGINT, SIGPIPE, SIGQUIT, SIGTERM,
+        SIGALRM, SIGHUP, SIGINT, SIGQUIT, SIGTERM,
 #ifdef SIGPOLL
         SIGPOLL,
 #endif
@@ -4456,6 +4464,11 @@ main (int argc, char **argv)
 #endif
   }
   signal (SIGCHLD, SIG_DFL); /* Don't inherit CHLD handling from parent.  */
+
+  /* Ignore SIGPIPE so write failures are reported via EPIPE errno.
+     For stdout, sort_die() will reraise SIGPIPE if it was originally SIG_DFL.
+     For compression pipes, sort_die() will exit with SORT_FAILURE.  */
+  default_SIGPIPE = (signal (SIGPIPE, SIG_IGN) == SIG_DFL);
 
   /* The signal mask is known, so it is safe to invoke exit_cleanup.  */
   atexit (exit_cleanup);
