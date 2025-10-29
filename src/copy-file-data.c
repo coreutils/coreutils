@@ -536,9 +536,12 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
                && scantype != PLAIN_SCANTYPE)));
 
   /* Don't bother calling fadvise for small copies, as it is not
-     likely to help performance and might even hurt it.  */
+     likely to help performance and might even hurt it.
+     Note it's important to use a 0 length to indicate the whole file
+     as OpenZFS 2.2.2 at least will otherwise synchronously
+     (decompress and) populate the cache when given a specific length.  */
   if (IO_BUFSIZE < ibytes)
-    fdadvise (ifd, ipos, ibytes <= OFF_T_MAX - ipos ? ibytes : 0,
+    fdadvise (ifd, ipos, ibytes < OFF_T_MAX - ipos ? ibytes : 0,
               FADVISE_SEQUENTIAL);
 
   /* If not making a sparse file, try to use a more-efficient
