@@ -36,6 +36,7 @@
 #include "c-ctype.h"
 #include "fadvise.h"
 #include "filevercmp.h"
+#include "findprog.h"
 #include "flexmember.h"
 #include "hard-locale.h"
 #include "hash.h"
@@ -1056,6 +1057,8 @@ static int
 pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
             size_t tries)
 {
+  char const *resolved_compress_program;
+  char *compress_program_to_free;
   struct tempnode *saved_temphead;
   double wait_retry = 0.25;
   struct cs_status cs;
@@ -1063,12 +1066,25 @@ pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
   posix_spawnattr_t attr;
   posix_spawn_file_actions_t actions;
 
+  /* Lookup the program before we spawn, so that we consistently
+     handle access issues to COMPRESS_PROGRAM, because on some
+     implementations/emulations of posix_spawn we get only a
+     generic (fatal) error from the child in that case.  */
+  resolved_compress_program =
+    find_in_given_path (compress_program, getenv ("PATH"), NULL, false);
+  if (resolved_compress_program == NULL)
+    return errno;
+  compress_program_to_free = nullptr;
+  if (resolved_compress_program != compress_program)
+    compress_program_to_free = (char *) resolved_compress_program;
+
   if ((result = posix_spawnattr_init (&attr)))
     return result;
   if ((result = posix_spawnattr_setflags (&attr, POSIX_SPAWN_USEVFORK))
       || (result = posix_spawn_file_actions_init (&actions)))
     {
       posix_spawnattr_destroy (&attr);
+      free (compress_program_to_free);
       return result;
     }
 
@@ -1077,6 +1093,7 @@ pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
       int saved_errno = errno;
       posix_spawnattr_destroy (&attr);
       posix_spawn_file_actions_destroy (&actions);
+      free (compress_program_to_free);
       return saved_errno;
     }
 
@@ -1102,11 +1119,16 @@ pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
       close (pipefds[1]);
       posix_spawnattr_destroy (&attr);
       posix_spawn_file_actions_destroy (&actions);
+      free (compress_program_to_free);
       return result;
     }
 
-  char const *const argv[] = { compress_program, decompress ? "-d" : nullptr,
-                               nullptr };
+  char const *const argv[] =
+    {
+      resolved_compress_program,
+      decompress ? "-d" : nullptr,
+      nullptr
+    };
 
   /* At least NMERGE + 1 subprocesses are needed.  More could be created, but
      uncontrolled subprocess generation can hurt performance significantly.
@@ -1126,7 +1148,7 @@ pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
       saved_temphead = temphead;
       temphead = nullptr;
 
-      result = posix_spawnp (pid, compress_program, &actions, &attr,
+      result = posix_spawnp (pid, resolved_compress_program, &actions, &attr,
                              (char * const *) argv, environ);
 
       temphead = saved_temphead;
@@ -1147,6 +1169,7 @@ pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
 
   posix_spawnattr_destroy (&attr);
   posix_spawn_file_actions_destroy (&actions);
+  free (compress_program_to_free);
 
   if (result)
     {
