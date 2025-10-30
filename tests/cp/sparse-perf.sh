@@ -35,6 +35,16 @@ cmp $other_partition_sparse k2 || fail=1
 grep ': avoided' cp.out && { cat cp.out; fail=1; }
 
 
+# Create a large-non-sparse-but-compressible file
+# Ensure we don't avoid copy offload which we saw with
+# transparent compression on OpenZFS at least
+# (as that triggers our sparse heuristic).
+mls='might-look-sparse'
+yes | head -n1M > "$mls" || framework_failure_
+cp --debug "$mls" "$mls.cp" >cp.out || fail=1
+cmp "$mls" "$mls.cp" || fail=1
+grep ': avoided' cp.out && { cat cp.out; fail=1; }
+
 
 # Create a large-but-sparse file on the current partition.
 # We disable relinking below, thus verifying SEEK_HOLE support

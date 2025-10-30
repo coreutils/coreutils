@@ -481,12 +481,19 @@ infer_scantype (int fd, struct stat const *sb, off_t pos,
           if (scan_inference->hole_start < sb->st_size)
             return LSEEK_SCANTYPE;
 
-          /* Though the file likely has holes, SEEK_DATA and SEEK_HOLE
+          /* Though the file may have holes, SEEK_DATA and SEEK_HOLE
              didn't find any.  This can happen with file systems like
              circa-2025 squashfs that support SEEK_HOLE only trivially.
-             Fall back on ZERO_SCANTYPE.  */
+             This can also happen due to transparent file compression,
+             which can also indicate fewer than the usual number of blocks.  */
+
           if (lseek (fd, pos, SEEK_SET) < 0)
             return ERROR_SCANTYPE;
+
+          /* we prefer to return PLAIN_SCANTYPE here so that copy offload
+             continues to be used.  Falling through to ZERO_SCANTYPE would be
+             less performant in the compressed file case.  */
+          return PLAIN_SCANTYPE;
         }
     }
   else if (pos < scan_inference->ext_start || errno == ENXIO)
