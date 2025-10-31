@@ -56,8 +56,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   'fmt', 'nl', and 'pr' will now exit promptly upon receiving a write error,
   which is significant when reading large / unbounded inputs.
 
-  install, sort, split, and timeout now use posix_spawn() to invoke child
-  programs more efficiently and more independently from their own memory usage.
+  install, sort, and split now use posix_spawn() to invoke child programs more
+  efficiently and more independently from their own memory usage.
 
   'numfmt':
    - parses numbers with a non-breaking space character before a unit
