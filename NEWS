@@ -42,8 +42,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
-  'sort' will continue without compressing temporary files if the
-  program specified by --compress-program cannot be executed.
+  'sort --compress-program' will continue without compressing temporary files
+  if the specified program cannot be executed.  Also malformed shell scripts
+  without a "shebang line" will no longer be executed.
 
 ** New Features
 
