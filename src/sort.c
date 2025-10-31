@@ -1048,6 +1048,25 @@ posix_spawn_file_actions_move_fd (posix_spawn_file_actions_t *actions,
   return result;
 }
 
+/* Look up COMPRESS_PROGRAM in $PATH, and return the resolved program name.
+   Upon error, return nullptr with errno set.  */
+
+static char const *
+get_resolved_compress_program (void)
+{
+  /* Use a cache, to perform the search only once.  */
+  static char const *resolved_compress_program_cache /* = nullptr */;
+
+  if (resolved_compress_program_cache == nullptr)
+    {
+      resolved_compress_program_cache =
+        find_in_given_path (compress_program, getenv ("PATH"), nullptr, false);
+      /* If resolved_compress_program_cache == nullptr, errno is set here.  */
+    }
+
+  return resolved_compress_program_cache;
+}
+
 /* Execute COMPRESS_PROGRAM in a child process.  The child processes pid is
    stored in PD.  The TRIES parameter specifies how many times to try to create
    a child process before giving up.  Return 0 on success, or an error number
@@ -1058,7 +1077,6 @@ pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
             size_t tries)
 {
   char const *resolved_compress_program;
-  char *compress_program_to_free;
   struct tempnode *saved_temphead;
   double wait_retry = 0.25;
   struct cs_status cs;
@@ -1070,13 +1088,9 @@ pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
      handle access issues to COMPRESS_PROGRAM, because on some
      implementations/emulations of posix_spawn we get only a
      generic (fatal) error from the child in that case.  */
-  resolved_compress_program =
-    find_in_given_path (compress_program, getenv ("PATH"), nullptr, false);
+  resolved_compress_program = get_resolved_compress_program ();
   if (resolved_compress_program == nullptr)
     return errno;
-  compress_program_to_free = nullptr;
-  if (resolved_compress_program != compress_program)
-    compress_program_to_free = (char *) resolved_compress_program;
 
   if ((result = posix_spawnattr_init (&attr)))
     return result;
@@ -1084,7 +1098,6 @@ pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
       || (result = posix_spawn_file_actions_init (&actions)))
     {
       posix_spawnattr_destroy (&attr);
-      free (compress_program_to_free);
       return result;
     }
 
@@ -1093,7 +1106,6 @@ pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
       int saved_errno = errno;
       posix_spawnattr_destroy (&attr);
       posix_spawn_file_actions_destroy (&actions);
-      free (compress_program_to_free);
       return saved_errno;
     }
 
@@ -1119,7 +1131,6 @@ pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
       close (pipefds[1]);
       posix_spawnattr_destroy (&attr);
       posix_spawn_file_actions_destroy (&actions);
-      free (compress_program_to_free);
       return result;
     }
 
@@ -1169,7 +1180,6 @@ pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
 
   posix_spawnattr_destroy (&attr);
   posix_spawn_file_actions_destroy (&actions);
-  free (compress_program_to_free);
 
   if (result)
     {
