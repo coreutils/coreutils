@@ -1071,8 +1071,8 @@ pipe_child (pid_t *pid, int pipefds[2], int tempfd, bool decompress,
      implementations/emulations of posix_spawn we get only a
      generic (fatal) error from the child in that case.  */
   resolved_compress_program =
-    find_in_given_path (compress_program, getenv ("PATH"), NULL, false);
-  if (resolved_compress_program == NULL)
+    find_in_given_path (compress_program, getenv ("PATH"), nullptr, false);
+  if (resolved_compress_program == nullptr)
     return errno;
   compress_program_to_free = nullptr;
   if (resolved_compress_program != compress_program)
