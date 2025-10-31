@@ -105,8 +105,6 @@ is_CLONENOTSUP (int err)
    If HOLE_SIZE, look for holes in the input; *HOLE_SIZE contains
    the size of the current hole so far, and update *HOLE_SIZE
    at end to be the size of the hole at the end of the copy.
-   Set *TOTAL_N_READ to the number of bytes read; this counts
-   the trailing hole, which has not yet been output.
    Read and update *DEBUG as needed.
    If successful, return the number of bytes copied,
    otherwise diagnose the failure and return -1.  */
@@ -542,14 +540,17 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
            || (x->sparse_mode == SPARSE_AUTO
                && scantype != PLAIN_SCANTYPE)));
 
-  /* Don't bother calling fadvise for small copies, as it is not
-     likely to help performance and might even hurt it.
-     Note it's important to use a 0 length to indicate the whole file
+  /* If we _know_ we're going to read data sequentially into the process,
+     i.e., --reflink or --sparse are not in auto mode,
+     give that hint to the kernel so it can tune caching behavior.
+     Also we don't bother calling fadvise for small copies,
+     as it is not likely to help performance and might even hurt it.
+     Also we only apply this hint for the whole file (0 length)
      as OpenZFS 2.2.2 at least will otherwise synchronously
      (decompress and) populate the cache when given a specific length.  */
-  if (IO_BUFSIZE < ibytes)
-    fdadvise (ifd, ipos, ibytes < OFF_T_MAX - ipos ? ibytes : 0,
-              FADVISE_SEQUENTIAL);
+  if (ipos == 0 && ibytes == COUNT_MAX
+      && (x->reflink_mode != REFLINK_AUTO || x->sparse_mode != SPARSE_AUTO))
+    fdadvise (ifd, 0, 0, FADVISE_SEQUENTIAL);
 
   /* If not making a sparse file, try to use a more-efficient
      buffer size.  */
