@@ -21,6 +21,12 @@ print_ver_ date
 
 # coreutils-8.27 would overwrite the heap with large TZ values
 tz_long=$(printf '%2000s' | tr ' ' a)
-date -d "TZ=\"${tz_long}0\" 2017" || fail=1
+date -d "TZ=\"${tz_long}0\" 2017" 2> err
+
+# Gnulib's tzalloc handles arbitrarily long TZ values, but NetBSD's does not.
+case $? in
+  0) ;;
+  *) grep '^date: invalid date' err || fail=1 ;;
+esac
 
 Exit $fail
