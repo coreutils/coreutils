@@ -28,7 +28,8 @@ grep '^#define HAVE_GETMNTENT 1' $CONFIG_HEADER > /dev/null \
       || skip_ "getmntent is not used on this system"
 
 # Simulate "mtab" failure.
-cat > k.c <<EOF || framework_failure_
+# Replace gnulib streq as that is not available here.
+sed 's/streq/0==str''cmp/' > k.c <<EOF || framework_failure_
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
