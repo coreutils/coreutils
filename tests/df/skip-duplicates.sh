@@ -38,8 +38,8 @@ grep '^#define HAVE_GETMNTENT 1' $CONFIG_HEADER > /dev/null \
       || skip_ "getmntent is not used on this system"
 
 # Simulate an mtab file to test various cases.
-# Replace gnulib streq as that is not available here.
-sed 's/streq/0==str''cmp/' > k.c <<EOF || framework_failure_
+# Replace gnulib streq and C23 nullptr as that are not available here.
+sed 's/streq/0==str''cmp/; s/nullptr/NU''LL/' > k.c <<EOF || framework_failure_
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,6 +49,35 @@ sed 's/streq/0==str''cmp/' > k.c <<EOF || framework_failure_
 #include <string.h>
 #include <stdarg.h>
 #include <dlfcn.h>
+
+static FILE* (*fopen_func)(const char *, const char *);
+
+FILE* fopen(const char *path, const char *mode)
+{
+
+  /* get reference to original (libc provided) fopen */
+  if (!fopen_func)
+    {
+      fopen_func = (FILE*(*)(const char *, const char *))
+                   dlsym(RTLD_NEXT, "fopen");
+      if (!fopen_func)
+        {
+          fprintf (stderr, "Failed to find fopen()\n");
+          errno = ESRCH;
+          return nullptr;
+        }
+    }
+
+  /* Returning ENOENT here will get read_file_system_list()
+     to fall back to using getmntent() below.  */
+  if (streq (path, "/proc/self/mountinfo"))
+    {
+      errno = ENOENT;
+      return nullptr;
+    }
+
+  return fopen_func(path, mode);
+}
 
 int open(const char *path, int flags, ...)
 {
@@ -67,13 +96,6 @@ int open(const char *path, int flags, ...)
         }
     }
 
-  va_list ap;
-  va_start (ap, flags);
-  mode_t mode = (sizeof (mode_t) < sizeof (int)
-                 ? va_arg (ap, int)
-                 : va_arg (ap, mode_t));
-  va_end (ap);
-
   /* Returning ENOENT here will get read_file_system_list()
      to fall back to using getmntent() below.  */
   if (streq (path, "/proc/self/mountinfo"))
@@ -81,8 +103,15 @@ int open(const char *path, int flags, ...)
       errno = ENOENT;
       return -1;
     }
-  else
-    return open_func(path, flags, mode);
+
+  va_list ap;
+  va_start (ap, flags);
+  mode_t mode = (sizeof (mode_t) < sizeof (int)
+                 ? va_arg (ap, int)
+                 : va_arg (ap, mode_t));
+  va_end (ap);
+
+  return open_func(path, flags, mode);
 }
 
 struct mntent *getmntent (FILE *fp)
@@ -94,7 +123,7 @@ struct mntent *getmntent (FILE *fp)
   /* Prove that LD_PRELOAD works. */
   if (!done)
     {
-      fclose (fopen ("x", "w"));
+      fclose (fopen_func ("x", "w"));
       ++done;
     }
 
