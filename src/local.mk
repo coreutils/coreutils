@@ -100,7 +100,7 @@ remove_ldadd =
 # replacement functions defined in libcoreutils.a.
 # Similarly for $(MBRTOWC_LIB).
 LDADD = src/libver.a lib/libcoreutils.a $(LIBINTL) $(MBRTOWC_LIB) \
-  $(INTL_MACOSX_LIBS) lib/libcoreutils.a
+  lib/libcoreutils.a
 
 # First, list all programs, to make listing per-program libraries easier.
 # See [ below.
