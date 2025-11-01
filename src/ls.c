@@ -4422,8 +4422,7 @@ print_long_format (const struct fileinfo *f)
       p[-1] = ' ';
     }
 
-  s = 0;
-  *p = '\1';
+  s = -1;
 
   if (f->stat_ok && btime_ok
       && localtime_rz (localtz, &when_timespec.tv_sec, &when_local))
@@ -4451,11 +4450,9 @@ print_long_format (const struct fileinfo *f)
          whole number of seconds.  */
       s = align_nstrftime (p, TIME_STAMP_LEN_MAXIMUM + 1, recent,
                            &when_local, localtz, when_timespec.tv_nsec);
-      if (s < 0)
-        s = 0;
     }
 
-  if (s || !*p)
+  if (0 <= s)
     {
       p += s;
       *p++ = ' ';
