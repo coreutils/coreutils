@@ -21,16 +21,19 @@ show_date (char const *format, struct timespec when, timezone_t tz)
 {
   struct tm tm;
 
-  if (localtime_rz (tz, &when.tv_sec, &tm))
-    {
-      fprintftime (stdout, format, &tm, tz, when.tv_nsec);
-      return true;
-    }
-  else
+  if (!localtime_rz (tz, &when.tv_sec, &tm))
     {
       char buf[INT_BUFSIZE_BOUND (intmax_t)];
       error (0, 0, _("time %s is out of range"),
              quote (timetostr (when.tv_sec, buf)));
       return false;
     }
+
+  if (fprintftime (stdout, format, &tm, tz, when.tv_nsec) < 0)
+    {
+      error (0, errno, "fprintftime");
+      return false;
+    }
+
+  return true;
 }
