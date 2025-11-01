@@ -4153,7 +4153,7 @@ print_current_files (void)
    Note on glibc-2.7 at least, this speeds up the whole 'ls -lU'
    process by around 17%, compared to letting strftime() handle the %b.  */
 
-static size_t
+static ptrdiff_t
 align_nstrftime (char *buf, size_t size, bool recent, struct tm const *tm,
                  timezone_t tz, int ns)
 {
@@ -4186,9 +4186,9 @@ long_time_expected_width (void)
          their implementations limit the offset to 167:59 and 24:00, resp.  */
       if (localtime_rz (localtz, &epoch, &tm))
         {
-          size_t len = align_nstrftime (buf, sizeof buf, false,
-                                        &tm, localtz, 0);
-          if (len != 0)
+          ptrdiff_t len = align_nstrftime (buf, sizeof buf, false,
+                                           &tm, localtz, 0);
+          if (len > 0)
             width = mbsnwidth (buf, len, MBSWIDTH_FLAGS);
         }
 
@@ -4293,7 +4293,7 @@ print_long_format (const struct fileinfo *f)
      + LONGEST_HUMAN_READABLE + 1	/* minor device number */
      + TIME_STAMP_LEN_MAXIMUM + 1	/* max length of time/date */
      ];
-  size_t s;
+  ptrdiff_t s;
   char *p;
   struct timespec when_timespec;
   struct tm when_local;
@@ -4451,6 +4451,8 @@ print_long_format (const struct fileinfo *f)
          whole number of seconds.  */
       s = align_nstrftime (p, TIME_STAMP_LEN_MAXIMUM + 1, recent,
                            &when_local, localtz, when_timespec.tv_nsec);
+      if (s < 0)
+        s = 0;
     }
 
   if (s || !*p)
