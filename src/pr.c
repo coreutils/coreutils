@@ -1669,12 +1669,15 @@ init_header (char const *filename, int desc)
   ns = t.tv_nsec;
   if (localtime_rz (localtz, &t.tv_sec, &tm))
     {
-      size_t bufsize
-        = nstrftime (nullptr, SIZE_MAX, date_format, &tm, localtz, ns) + 1;
-      buf = xmalloc (bufsize);
-      nstrftime (buf, bufsize, date_format, &tm, localtz, ns);
+      ptrdiff_t len = nstrftime (nullptr, MIN (PTRDIFF_MAX, SIZE_MAX),
+                                 date_format, &tm, localtz, ns);
+      if (0 <= len)
+        {
+          buf = ximalloc (len + 1);
+          nstrftime (buf, len + 1, date_format, &tm, localtz, ns);
+        }
     }
-  else
+  if (!buf)
     {
       char secbuf[INT_BUFSIZE_BOUND (intmax_t)];
       buf = xmalloc (sizeof secbuf + MAX (10, INT_BUFSIZE_BOUND (int)));
