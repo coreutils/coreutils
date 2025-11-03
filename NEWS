@@ -66,8 +66,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
-  'fmt', 'nl', and 'pr' will now exit promptly upon receiving a write error,
-  which is significant when reading large / unbounded inputs.
+  'fmt', 'date', 'nl', and 'pr' will now exit promptly upon receiving a write
+  error, which is significant when reading large / unbounded inputs.
 
   install, sort, and split now use posix_spawn() to invoke child programs more
   efficiently and more independently from their own memory usage.

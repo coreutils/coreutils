@@ -46,6 +46,14 @@
 # define PID_T_MIN TYPE_MINIMUM (pid_t)
 #endif
 
+#ifndef OFF64_T_MAX
+# define OFF64_T_MAX TYPE_MAXIMUM (off64_t)
+#endif
+
+#ifndef OFF64_T_MIN
+# define OFF64_T_MIN TYPE_MINIMUM (off64_t)
+#endif
+
 /* These are not interesting to print.
  * Instead of these defines it would be nice to be able to do
  * #ifdef (TYPE##_MIN) in function macro below.  */
@@ -161,6 +169,7 @@ main (int argc, char **argv)
   print_int (GID_T);
   print_int (PID_T);
   print_int (OFF_T);
+  print_int (OFF64_T);
   print_int (INTMAX);
   print_int (UINTMAX);
 

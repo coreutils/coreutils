@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ timeout env
+getlimits_
 
 if ! test -w /dev/full || ! test -c /dev/full; then
   skip_ '/dev/full is required'
@@ -30,6 +31,7 @@ cat /dev/zero
 comm -z /dev/zero /dev/zero
 cut -z -c1- /dev/zero
 cut -z -f1- /dev/zero
+date +%${OFF64_T_MAX}c
 date --version; yes 0 | date -f-
 dd if=/dev/zero
 expand /dev/zero
