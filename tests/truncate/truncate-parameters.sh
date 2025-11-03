@@ -51,4 +51,8 @@ test $(stat --format %s file) = 3 || fail=1
 truncate -r file file2 || fail=1 #file2 now 3
 test $(stat --format %s file2) = 3 || fail=1
 
+# Ensure separated argument not parsed as option
+truncate -s -1 file || fail=1 #file now 2
+test $(stat --format %s file) = 2 || fail=1
+
 Exit $fail
