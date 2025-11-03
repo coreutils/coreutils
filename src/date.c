@@ -448,6 +448,9 @@ batch_convert (char const *input_filename,
         {
           ok &= show_date_helper (format, format_in_c_locale, when, tz);
         }
+
+      if (ferror (stdout))
+        write_error ();
     }
 
   if (fclose (in_stream) == EOF)

@@ -30,6 +30,7 @@ cat /dev/zero
 comm -z /dev/zero /dev/zero
 cut -z -c1- /dev/zero
 cut -z -f1- /dev/zero
+date --version; yes 0 | date -f-
 dd if=/dev/zero
 expand /dev/zero
 factor --version; yes 1 | factor
