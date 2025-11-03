@@ -31,7 +31,8 @@ show_date (char const *format, struct timespec when, timezone_t tz)
 
   if (fprintftime (stdout, format, &tm, tz, when.tv_nsec) < 0)
     {
-      error (0, errno, _("fprintftime error"));
+      if (! ferror (stdout))  /* otherwise it will be diagnosed later.  */
+        error (0, errno, _("fprintftime error"));
       return false;
     }
 
