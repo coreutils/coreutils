@@ -51,8 +51,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** Changes in behavior
 
   'cp' with default options may again, like with versions before v9.8,
-  miss opportunities to create holes with file systems like squashfs,
-  that support SEEK_HOLE only trivially.
+  miss opportunities to create holes with file systems that support
+  SEEK_HOLE only trivially.  This change is a consequence of the
+  abovementioned copy offload fix.
 
   'sort --compress-program' will continue without compressing temporary files
   if the specified program cannot be executed.  Also malformed shell scripts

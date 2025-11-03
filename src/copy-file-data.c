@@ -480,8 +480,9 @@ infer_scantype (int fd, struct stat const *sb, off_t pos,
             return LSEEK_SCANTYPE;
 
           /* Though the file may have holes, SEEK_DATA and SEEK_HOLE
-             didn't find any.  This can happen with file systems like
-             circa-2025 squashfs that support SEEK_HOLE only trivially.
+             didn't find any.  This can happen with file systems
+             that support SEEK_HOLE only trivially,
+             such as squashfs in Linux kernel 6.17 and earlier.
              This can also happen due to transparent file compression,
              which can also indicate fewer than the usual number of blocks.  */
 
