@@ -17181,6 +17181,11 @@ This is like the format @code{%Y-%m-%dT%H:%M:%S%:z}.
 @item ns
 Also print nanoseconds.
 This is like the format @code{%Y-%m-%dT%H:%M:%S,%N%:z}.
+
+GNU @command{date} uses a @samp{,} decimal point as preferred by ISO
+8601.  You can override it by expressing the full format with a @samp{.}
+decimal point explicitly, like @code{LC_ALL=C date
++'%Y-%m-%dT%H:%M:%S.%N%:z'}.
 @end table
 
 @macro dateParseNote
