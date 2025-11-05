@@ -86,6 +86,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   or if the --without-selinux configure option is specified.
   This can be overridden with the --with-selinux configure option.
 
+  nproc no longer fails to build with Android API level <= 20.
+  [build issue introduced in coreutils-9.8]
+
 
 * Noteworthy changes in release 9.8 (2025-09-22) [stable]
 
