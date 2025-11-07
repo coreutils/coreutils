@@ -4284,8 +4284,6 @@ This does not identify the digest algorithm used for the checksum.
 @opindex -b
 @opindex --binary
 @cindex binary input files
-This option is not supported by the @command{cksum} command,
-as it operates in binary mode exclusively.
 Treat each input file as binary, by reading it in binary mode and
 outputting a @samp{*} flag.  This is the inverse of @option{--text}.
 On systems like GNU that do not distinguish between binary
@@ -4293,6 +4291,12 @@ and text files, this option merely flags each input mode as binary:
 the checksum is unaffected.  This option is the default on systems
 like MS-DOS that distinguish between binary and text files, except
 for reading standard input when standard input is a terminal.
+@macro cksumTextMode
+This option is deprecated and not documented in @command{cksum --help}.
+It is only supported by the @command{cksum} command to support emulation
+of the legacy standalone checksumming utilities.
+@end macro
+@cksumTextMode
 
 @item -c
 @itemx --check
@@ -4383,13 +4387,13 @@ The @command{cksum} command, uses @option{--tag} as its default output format.
 @opindex -t
 @opindex --text
 @cindex text input files
-This option is not supported by the @command{cksum} command.
 Treat each input file as text, by reading it in text mode and
 outputting a @samp{ } flag.  This is the inverse of @option{--binary}.
 This option is the default on systems like GNU that do not
 distinguish between binary and text files.  On other systems, it is
 the default for reading standard input when standard input is a
 terminal.  This mode is never defaulted to if @option{--tag} is used.
+@cksumTextMode
 
 @item -w
 @itemx --warn
