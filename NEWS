@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  md5sum --text correctly translates CRLF line endings with the MSYS2 runtime.
+  This also applies to the sha*sum and b2sum utilities.
+  [This bug was present in "the beginning".]
+
 
 * Noteworthy changes in release 9.9 (2025-11-10) [stable]
 

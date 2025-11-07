@@ -1121,7 +1121,7 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
     }
   else
     {
-      fp = fopen (filename, (O_BINARY && *binary ? "rb" : "r"));
+      fp = fopen (filename, O_BINARY ? (*binary ? "rb" : "rt") : "r");
       if (fp == nullptr)
         {
           if (ignore_missing && errno == ENOENT)
