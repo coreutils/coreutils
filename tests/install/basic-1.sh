@@ -64,6 +64,11 @@ test -f $dd || fail=1
 mode=$(ls -l $dir/$dd|cut -b-10)
 test "$mode" = -r-xr-xr-x || fail=1
 
+# Ensure there are no issues with posix_spawnp() and large $PATHs
+# which we saw when initially changing from execvp() to posix_spawnp().
+PATH=$(printf '%4001s' '' | sed 's/\(.\{79\}\)./\1:/g'):$PATH \
+  ginstall $strip -c -m 555 $dd $dir || fail=1
+
 # These failed in coreutils CVS from 2004-06-25 to 2004-08-11.
 ginstall -d . || fail=1
 ginstall -d newdir || fail=1
