@@ -42,7 +42,8 @@ compare exp out || fail=1
 wc --total=always 2b > out || fail=1
 test "$(wc -l < out)" = 2 || fail=1
 
-if truncate -s 2E big; then
+# Skip this test on GNU/Hurd since it will exhaust memory there.
+if test "$(uname)" != GNU && truncate -s 2E big; then
   if test "$UINTMAX_MAX" = '18446744073709551615'; then
     # Ensure overflow is diagnosed
     returns_ 1 wc --total=only -c big big big big big big big big \
