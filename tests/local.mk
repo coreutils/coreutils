@@ -413,6 +413,7 @@ all_tests =					\
   tests/sort/sort-files0-from.pl		\
   tests/sort/sort-float.sh			\
   tests/sort/sort-h-thousands-sep.sh		\
+  tests/sort/sort-locale.sh			\
   tests/sort/sort-merge.pl			\
   tests/sort/sort-merge-fdlimit.sh		\
   tests/sort/sort-month.sh			\
