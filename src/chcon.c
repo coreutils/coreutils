@@ -168,7 +168,10 @@ change_file_context (int fd, char const *file)
         }
 
       if (compute_context_from_mask (file_context, &context))
-        return 1;
+        {
+          freecon (file_context);
+          return 1;
+        }
 
       context_string = context_str (context);
     }
