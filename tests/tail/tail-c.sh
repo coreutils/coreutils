@@ -55,7 +55,8 @@ if test -r /dev/urandom; then
               [12].*) ;;  # Older Linux versions timeout
               *) fail=1 ;;
             esac ;;
-          *) fail=1 ;;
+             # GNU/Hurd cannot seek on /dev/urandom.
+          *) test "$(uname)" = GNU || fail=1 ;;
         esac ;;
   esac
 fi
