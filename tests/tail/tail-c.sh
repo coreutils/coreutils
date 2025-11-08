@@ -43,7 +43,7 @@ compare exp out || fail=1
 # Any part of /dev/urandom, if it exists, should be valid for tail -c.
 if test -r /dev/urandom; then
   # Or at least it should not read it forever
-  timeout --verbose 1 tail -c 4096 /dev/urandom >/dev/null 2>err
+  timeout --verbose 10 tail -c 4096 /dev/urandom >/dev/null 2>err
   case $? in
       0) ;;
       # Solaris 11 allows negative seek but then gives EINVAL on read
