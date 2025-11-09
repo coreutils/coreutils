@@ -167,12 +167,46 @@ main (int argc, char **argv)
       /* If the requested adjustment is outside the valid range,
          silently bring it to just within range; this mimics what
          "setpriority" and "nice" do.  */
+#if (defined __gnu_hurd__                                               \
+     && (__GLIBC__ < 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ < 43)))
+      /* GNU/Hurd's nice(2) only supported 0 to (2 * NZERO - 2) niceness
+         until glibc 2.43.  */
+      enum { MIN_ADJUSTMENT = 0, MAX_ADJUSTMENT = 2 * NZERO - 2 };
+#else
       enum { MIN_ADJUSTMENT = 1 - 2 * NZERO, MAX_ADJUSTMENT = 2 * NZERO - 1 };
+#endif
       long int tmp;
       if (LONGINT_OVERFLOW < xstrtol (adjustment_given, nullptr, 10, &tmp, ""))
         error (EXIT_CANCELED, 0, _("invalid adjustment %s"),
                quote (adjustment_given));
+#if (defined __gnu_hurd__                                               \
+     && (__GLIBC__ < 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ < 43)))
+      /* GNU/Hurd's nice(2) also did not clamp the new niceness into the
+         supported range until glibc 2.43.
+         See <https://sourceware.org/PR33614>.  */
+      errno = 0;
+      current_niceness = GET_NICENESS ();
+      if (current_niceness == -1 && errno != 0)
+        error (EXIT_CANCELED, errno, _("cannot get niceness"));
+      if (tmp < 0)
+        {
+          int sum;
+          if (ckd_add (&sum, current_niceness, tmp) || sum < MIN_ADJUSTMENT)
+            adjustment = MIN_ADJUSTMENT - current_niceness;
+          else
+            adjustment = tmp;
+        }
+      else
+        {
+          int sum;
+          if (ckd_add (&sum, current_niceness, tmp) || MAX_ADJUSTMENT < sum)
+            adjustment = MAX_ADJUSTMENT - current_niceness;
+          else
+            adjustment = tmp;
+        }
+#else
       adjustment = MAX (MIN_ADJUSTMENT, MIN (tmp, MAX_ADJUSTMENT));
+#endif
     }
 
   if (i == argc)

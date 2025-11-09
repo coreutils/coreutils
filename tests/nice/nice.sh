@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ nice
+getlimits_
 
 tests='
 0 empty 10
@@ -71,16 +72,45 @@ done
 
 # Test negative niceness - command must be run whether or not change happens.
 if test x$(nice -n -1 nice 2> /dev/null) = x0 ; then
-  # unprivileged user - warn about failure to change
-  nice -n -1 true 2> err || fail=1
-  compare /dev/null err && fail=1
-  mv err exp || framework_failure_
-  nice --1 true 2> err || fail=1
-  compare exp err || fail=1
-  # Failure to write advisory message is fatal.  Buggy through coreutils 8.0.
-  if test -w /dev/full && test -c /dev/full; then
-    returns_ 125 nice -n -1 nice > out 2> /dev/full || fail=1
-    compare /dev/null out || fail=1
+  # GNU/Hurd does not allow negative niceness even if we are a privileged user.
+  if test "$(uname)" = GNU; then
+    max_nice=$(nice -n "$INT_MAX" nice) || framework_failure_
+    # Check that the lowest niceness is 0.
+    nice -n -1 nice > out || fail=1
+    echo '0' > exp || framework_failure_
+    compare exp out || fail=1
+    # Exceeding the max niceness would lead to the program not being executed on
+    # GNU/Hurd with coreutils 9.8 and earlier.
+    nice -n $(("$max_nice" + 1)) nice > out || fail=1
+    echo "$max_nice" > exp || framework_failure_
+    compare exp out || fail=1
+    # GNU/Hurd's nice(2) with glibc 2.42 and earlier does not clamp the
+    # niceness to the supported range.  Check that we workaround the bug.
+    # See <https://sourceware.org/PR33614>.
+    nice -n 1 nice -n $(("$max_nice" - 2)) nice > out|| fail=1
+    echo $(("$max_nice" - 1)) > exp || framework_failure_
+    compare exp out || fail=1
+    nice -n 1 nice -n $(("$max_nice" + 1)) nice > out || fail=1
+    echo "$max_nice" > exp || framework_failure_
+    compare exp out || fail=1
+    nice -n 2 nice -n -1 nice > out || fail=1
+    echo '1' > exp || framework_failure_
+    compare exp out || fail=1
+    nice -n 2 nice -n -3 nice > out || fail=1
+    echo '0' > exp || framework_failure_
+    compare exp out || fail=1
+  else
+    # unprivileged user - warn about failure to change
+    nice -n -1 true 2> err || fail=1
+    compare /dev/null err && fail=1
+    mv err exp || framework_failure_
+    nice --1 true 2> err || fail=1
+    compare exp err || fail=1
+    # Failure to write advisory message is fatal.  Buggy through coreutils 8.0.
+    if test "$(uname)" != GNU && test -w /dev/full && test -c /dev/full; then
+      returns_ 125 nice -n -1 nice > out 2> /dev/full || fail=1
+      compare /dev/null out || fail=1
+    fi
   fi
 else
   # superuser - change succeeds

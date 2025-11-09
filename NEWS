@@ -26,6 +26,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   will no longer always set a __CF_USER_TEXT_ENCODING environment variable.
   [bug introduced in coreutils-9.8]
 
+  'nice' now limits the adjusted niceness value to its supported range on
+  GNU/Hurd.
+  [This bug was present in "the beginning".]
+
   'numfmt' no longer reads out-of-bounds memory with trailing blanks in input.
   [bug introduced with numfmt in coreutils-8.21]
 
