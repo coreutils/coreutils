@@ -4189,16 +4189,26 @@ sort (char *const *files, size_t nfiles, char const *output_file,
             }
           if (1 < buf.nlines)
             {
-              struct merge_node_queue queue;
-              queue_init (&queue, nthreads);
-              struct merge_node *merge_tree =
-                merge_tree_init (nthreads, buf.nlines, line);
+              if (nthreads > 1)
+                {
+                  struct merge_node_queue queue;
+                  queue_init (&queue, nthreads);
+                  struct merge_node *merge_tree =
+                    merge_tree_init (nthreads, buf.nlines, line);
 
-              sortlines (line, nthreads, buf.nlines, merge_tree + 1,
-                         &queue, tfp, temp_output);
+                  sortlines (line, nthreads, buf.nlines, merge_tree + 1,
+                             &queue, tfp, temp_output);
 
-              merge_tree_destroy (nthreads, merge_tree);
-              queue_destroy (&queue);
+                  merge_tree_destroy (nthreads, merge_tree);
+                  queue_destroy (&queue);
+                }
+              else
+                {
+                  sequential_sort (line, buf.nlines,
+                                   line - buf.nlines, false);
+                  for (size_t i = 0; i < buf.nlines; i++)
+                    write_unique (line - i - 1, tfp, temp_output);
+                }
             }
           else
             write_unique (line - 1, tfp, temp_output);
