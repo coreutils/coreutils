@@ -114,8 +114,8 @@ EOF
 
   my $map_comment = <<EOF;
 /* Map each S_MAGIC_* value to 1, 0 or -1.
-   1 if it is known to be a remote file system type,
-   0 if it is known to be a local file system type, or -1 otherwise.  */
+   1 if it is known to be a local file system type,
+   0 if it is known to be a remote file system type, or -1 otherwise.  */
 EOF
   my $magic_comment = <<EOF;
 /* Define the magic numbers as given by statfs(2).
