@@ -27,7 +27,7 @@ export TZ
 t1='2025-10-23 03:00'
 t2='2025-10-23 04:00'
 
-# date(1) only considers modiication time
+# date(1) only considers modification time
 touch -m -d "$t1" a || framework_failure_
 touch -m -d "$t2" b || framework_failure_
 
