@@ -165,12 +165,14 @@ test "$exp" = "$got" || fail=1
 
 # Verify argv0 overriding
 for arg in 'argv0' ''; do
-env -v -a short --argv0=$arg true 2>err || fail=1
+env -v -a short --argv0=$arg true --coreutils-prog=true 2>err || fail=1
 cat <<EOF >err_exp || framework_failure_
 argv0:     '$arg'
 executing: true
    arg[0]= '$arg'
+   arg[1]= '--coreutils-prog=true'
 EOF
+compare err_exp err || fail=1
 done
 
 Exit $fail
