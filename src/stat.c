@@ -464,8 +464,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "pidfs";
     case S_MAGIC_PIPEFS: /* 0x50495045 remote */
       /* FIXME: change syntax or add an optional attribute like "inotify:no".
-         pipefs and prlfs are labeled as "remote" so that tail always polls,
-         but these aren't really remote file system types.  */
+         pipefs is labeled as "remote" so that tail always polls,
+         but it isn't really remote file system type.  */
       return "pipefs";
     case S_MAGIC_PPC_CMM: /* 0xC7571590 local */
       return "ppc-cmm-fs";
