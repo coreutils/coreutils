@@ -37,4 +37,28 @@ returns_ 1 env test -c file || fail=1
 returns_ 1 env test -b file || fail=1
 returns_ 1 env test -p file || fail=1
 
+# Check that 'test' returns true if the file name following "-nt" does not
+# resolve.
+env test file -nt missing || fail=1
+returns_ 1 env test missing -nt file || fail=1
+
+# Check that 'test' returns true if the file name preceding "-ot" does not
+# resolve.
+env test missing -ot file || fail=1
+returns_ 1 env test file -ot missing || fail=1
+
+# Create two files with modification times an hour apart.
+t1='2025-10-23 03:00'
+t2='2025-10-23 04:00'
+touch -m -d "$t1" file1 || framework_failure_
+touch -m -d "$t2" file2 || framework_failure_
+
+# Test "-nt" on two existing files.
+env test file2 -nt file1 || fail=1
+returns_ 1 env test file1 -nt file2 || fail=1
+
+# Test "-ot" on two existing files.
+env test file1 -ot file2 || fail=1
+returns_ 1 env test file2 -ot file1 || fail=1
+
 Exit $fail
