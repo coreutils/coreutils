@@ -61,4 +61,34 @@ returns_ 1 env test file1 -nt file2 || fail=1
 env test file1 -ot file2 || fail=1
 returns_ 1 env test file2 -ot file1 || fail=1
 
+# Test "-ef" on files that do not resolve.
+returns_ 1 env test missing1 -ef missing2 || fail=1
+returns_ 1 env test missing2 -ef missing1 || fail=1
+returns_ 1 env test file1 -ef missing1 || fail=1
+returns_ 1 env test missing1 -ef file1 || fail=1
+
+# Test "-ef" on normal files.
+env test file1 -ef file1 || fail=1
+returns_ 1 env test file1 -ef file2 || fail=1
+
+# Test "-ef" on symbolic links.
+ln -s file1 symlink1 || framework_failure_
+ln -s file2 symlink2 || framework_failure_
+env test file1 -ef symlink1 || fail=1
+env test symlink1 -ef file1 || fail=1
+returns_ 1 env test file1 -ef symlink2 || fail=1
+returns_ 1 env test symlink2 -ef file1 || fail=1
+returns_ 1 env test symlink1 -ef symlink2 || fail=1
+returns_ 1 env test symlink2 -ef symlink1 || fail=1
+
+# Test "-ef" on hard links.
+if ln file1 hardlink1 && ln file2 hardlink2; then
+  env test file1 -ef hardlink1 || fail=1
+  env test hardlink1 -ef file1 || fail=1
+  returns_ 1 env test file1 -ef hardlink2 || fail=1
+  returns_ 1 env test hardlink2 -ef file1 || fail=1
+  returns_ 1 env test hardlink1 -ef hardlink2 || fail=1
+  returns_ 1 env test hardlink2 -ef hardlink1 || fail=1
+fi
+
 Exit $fail
