@@ -573,6 +573,7 @@ all_tests =					\
   tests/df/skip-duplicates.sh			\
   tests/df/skip-rootfs.sh			\
   tests/dd/ascii.sh				\
+  tests/dd/conv-case.sh				\
   tests/dd/direct.sh				\
   tests/dd/misc.sh				\
   tests/dd/no-allocate.sh			\
