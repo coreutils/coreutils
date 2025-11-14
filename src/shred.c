@@ -187,9 +187,15 @@ If FILE is -, shred standard output.\n\
       fputs (_("\
   -u             deallocate and remove file after overwriting\n\
       --remove[=HOW]  like -u but give control on HOW to delete;  See below\n\
-  -v, --verbose  show progress\n\
+"), stdout);
+      fputs (_("\
+  -v, --verbose  show details of data and metadata operations performed\n\
+"), stdout);
+      fputs (_("\
   -x, --exact    do not round file sizes up to the next full block;\n\
                    this is the default for non-regular files\n\
+"), stdout);
+      fputs (_("\
   -z, --zero     add a final overwrite with zeros to hide shredding\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);

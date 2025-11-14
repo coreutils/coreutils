@@ -10883,6 +10883,7 @@ synchronous metadata updates.
 @opindex -v
 @opindex --verbose
 Display to standard error all status updates as sterilization proceeds.
+This details each data and metadata operation as it is performed.
 
 @item -x
 @itemx --exact
