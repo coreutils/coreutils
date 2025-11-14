@@ -19,8 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
 
-grep '^#define HAVE_INOTIFY 1' "$CONFIG_HEADER" >/dev/null \
-  || skip_ 'inotify support required'
+require_inotify_supported_
 
 require_strace_ 'inotify_add_watch'
 

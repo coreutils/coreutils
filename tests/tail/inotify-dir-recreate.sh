@@ -20,17 +20,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
-
-grep '^#define HAVE_INOTIFY 1' "$CONFIG_HEADER" >/dev/null && is_local_dir_ . \
-  || skip_ 'inotify is not supported'
-
-# There may be a mismatch between is_local_dir_ (gnulib's remoteness check),
-# and coreutils' is_local_fs_type(), so double check we're using inotify.
-touch file.strace
-require_strace_ 'inotify_add_watch'
-returns_ 124 timeout .1 strace -e inotify_add_watch -o strace.out \
-  tail -F file.strace || fail=1
-grep 'inotify' strace.out || skip_ 'inotify not detected'
+require_inotify_supported_
 
 # Terminate any background tail process
 cleanup_() { kill $pid 2>/dev/null && wait $pid; }

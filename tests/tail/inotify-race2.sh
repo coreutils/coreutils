@@ -21,9 +21,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail sleep
-
-grep '^#define HAVE_INOTIFY 1' "$CONFIG_HEADER" >/dev/null && is_local_dir_ . \
-  || skip_ 'inotify is not supported'
+require_inotify_supported_
 
 # Terminate any background gdb/tail process
 cleanup_() {
