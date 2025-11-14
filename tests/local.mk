@@ -483,6 +483,7 @@ all_tests =					\
   tests/misc/tsort.pl				\
   tests/tty/tty.sh				\
   tests/misc/usage_vs_getopt.sh			\
+  tests/misc/getopt_vs_usage.sh			\
   tests/misc/unexpand.pl			\
   tests/uniq/uniq.pl				\
   tests/uniq/uniq-perf.sh			\
