@@ -233,6 +233,9 @@ static bool presume_input_pipe;
 /* If nonzero then don't use inotify even if available.  */
 static bool disable_inotify;
 
+/* Annotate the output with extra info to aid the user.  */
+static bool debug;
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -242,12 +245,14 @@ enum
   PID_OPTION,
   PRESUME_INPUT_PIPE_OPTION,
   LONG_FOLLOW_OPTION,
-  DISABLE_INOTIFY_OPTION
+  DISABLE_INOTIFY_OPTION,
+  DEBUG_PROGRAM_OPTION,
 };
 
 static struct option const long_options[] =
 {
   {"bytes", required_argument, nullptr, 'c'},
+  {"debug", no_argument, nullptr, DEBUG_PROGRAM_OPTION},
   {"follow", optional_argument, nullptr, LONG_FOLLOW_OPTION},
   {"lines", required_argument, nullptr, 'n'},
   {"max-unchanged-stats", required_argument, nullptr,
@@ -290,6 +295,9 @@ With more than one FILE, precede each with a header giving the file name.\n\
      fputs (_("\
   -c, --bytes=[+]NUM       output the last NUM bytes; or use -c +NUM to\n\
                              output starting with byte NUM of each file\n\
+"), stdout);
+     fputs (_("\
+      --debug             indicate which --follow implementation is used\n\
 "), stdout);
      fputs (_("\
   -f, --follow[={name|descriptor}]\n\
@@ -1154,11 +1162,21 @@ tail_forever (struct File_spec *f, int n_files, double sleep_interval)
 {
   int last = n_files - 1;
 
+  static bool debugged;
+
   while (true)
     {
       /* Use blocking I/O as an optimization, when it's easy.  */
       bool blocking = (!nbpids && follow_mode == Follow_descriptor
                        && n_files == 1 && 0 <= f[0].fd && !S_ISREG (f[0].mode));
+
+      if (debug && !debugged)
+        {
+          debugged = true;
+          error (0, 0, "%s", blocking
+                             ? _("using blocking mode")
+                             : _("using polling mode"));
+        }
 
       bool any_input = false;
 
@@ -1593,6 +1611,9 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
           check_fspec (&f[i], &prev_fspec);
         }
     }
+
+  if (debug)
+    error (0, 0, "%s", _("using notification mode"));
 
   evlen += sizeof (struct inotify_event) + 1;
   evbuf = ximalloc (evlen);
@@ -2194,6 +2215,10 @@ parse_options (int argc, char **argv,
                         _("invalid maximum number of unchanged stats"
                           " between opens"),
                         0, XTOINT_MAX_QUIET);
+          break;
+
+        case DEBUG_PROGRAM_OPTION:
+          debug = true;
           break;
 
         case DISABLE_INOTIFY_OPTION:

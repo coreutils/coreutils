@@ -758,6 +758,7 @@ all_tests =					\
   tests/rmdir/t-slash.sh			\
   tests/tail/assert-2.sh			\
   tests/tail/big-4gb.sh				\
+  tests/tail/debug.sh				\
   tests/tail/flush-initial.sh			\
   tests/tail/follow-name.sh			\
   tests/tail/follow-stdin.sh			\

@@ -3209,6 +3209,11 @@ byte @var{num} from the start of each file. For example to skip the first byte
 use @code{tail -c +2}, while to skip all but the last byte use @code{tail -c 1}.
 @multiplierSuffixes{num}
 
+@item --debug
+@opindex --debug
+Output extra information to standard error,
+like the --follow implementation being used.
+
 @item -f
 @itemx --follow[=@var{how}]
 @opindex -f

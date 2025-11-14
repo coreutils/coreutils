@@ -12,6 +12,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   indicate the line count acceleration being used.
   [bug introduced in coreutils-9.0]
 
+** New Features
+
+  'tail' now accepts the --debug option, which is currently used to
+  detail the --follow implementation being used.
+
 
 * Noteworthy changes in release 9.9 (2025-11-10) [stable]
 
