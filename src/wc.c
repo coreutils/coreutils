@@ -189,6 +189,9 @@ the following order: newline, word, character, byte, maximum line length.\n\
   -l, --lines            print the newline counts\n\
 "), stdout);
       fputs (_("\
+      --debug            indicate what line count acceleration is used\n\
+"), stdout);
+      fputs (_("\
       --files0-from=F    read input from the files specified by\n\
                            NUL-terminated names in file F;\n\
                            If F is - then read names from standard input\n\

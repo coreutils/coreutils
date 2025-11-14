@@ -3992,6 +3992,11 @@ Print only the newline character counts.
 If a file ends in a non-newline character,
 its trailing partial line is not counted.
 
+@item --debug
+@opindex --debug
+Output extra information to standard error.
+Currently; print the line count acceleration implementation being used.
+
 @item -L
 @itemx --max-line-length
 @opindex -L
