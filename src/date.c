@@ -92,11 +92,11 @@ static struct option const long_options[] =
   {"reference", required_argument, nullptr, 'r'},
   {"resolution", no_argument, nullptr, RESOLUTION_OPTION},
   {"rfc-email", no_argument, nullptr, 'R'},
-  {"rfc-822", no_argument, nullptr, 'R'},
-  {"rfc-2822", no_argument, nullptr, 'R'},
+  {"rfc-822", no_argument, nullptr, 'R'},  /* Deprecated.  */
+  {"rfc-2822", no_argument, nullptr, 'R'},  /* Deprecated.  */
   {"rfc-3339", required_argument, nullptr, RFC_3339_OPTION},
   {"set", required_argument, nullptr, 's'},
-  {"uct", no_argument, nullptr, 'u'},
+  {"uct", no_argument, nullptr, 'u'},  /* Deprecated.  */
   {"utc", no_argument, nullptr, 'u'},
   {"universal", no_argument, nullptr, 'u'},
   {GETOPT_HELP_OPTION_DECL},

@@ -457,11 +457,11 @@ static struct option const long_options[] =
   { "raw", no_argument, nullptr, RAW_OPTION},
   { "untagged", no_argument, nullptr, UNTAG_OPTION },
 # endif
-  { "binary", no_argument, nullptr, 'b' },
-  { "text", no_argument, nullptr, 't' },
+  { "binary", no_argument, nullptr, 'b' }, /* Deprecated.  */
+  { "text", no_argument, nullptr, 't' }, /* Deprecated.  */
 
 #else
-  {"sysv", no_argument, nullptr, 's'},
+  {"sysv", no_argument, nullptr, 's'},  /* Not in cksum.  */
 #endif
 
   { GETOPT_HELP_OPTION_DECL },

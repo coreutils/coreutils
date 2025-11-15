@@ -187,7 +187,7 @@ enum
 static struct option const longopts[] =
 {
   {"digits", required_argument, nullptr, 'n'},
-  {"quiet", no_argument, nullptr, 'q'},
+  {"quiet", no_argument, nullptr, 'q'},  /* Deprecated.  */
   {"silent", no_argument, nullptr, 's'},
   {"keep-files", no_argument, nullptr, 'k'},
   {"elide-empty-files", no_argument, nullptr, 'z'},
