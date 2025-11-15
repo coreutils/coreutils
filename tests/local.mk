@@ -277,6 +277,7 @@ all_tests =					\
   tests/od/od-float.sh				\
   tests/misc/mktemp.pl				\
   tests/misc/arch.sh				\
+  tests/pr/bounded-memory.sh			\
   tests/pr/pr-tests.pl				\
   tests/pwd/pwd-option.sh			\
   tests/chcon/chcon-fail.sh			\
