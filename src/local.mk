@@ -429,55 +429,55 @@ src_tac_SOURCES = src/tac.c src/temp-stream.c
 src_tail_SOURCES = src/tail.c src/iopoll.c
 src_tee_SOURCES = src/tee.c src/iopoll.c
 
-src_sum_SOURCES = src/sum.c src/sum.h src/digest.c
+src_sum_SOURCES = src/sum.c src/sum.h src/cksum.c
 src_sum_CPPFLAGS = -DHASH_ALGO_SUM=1 $(AM_CPPFLAGS)
 
-src_md5sum_SOURCES = src/digest.c
+src_md5sum_SOURCES = src/cksum.c
 src_md5sum_CPPFLAGS = -DHASH_ALGO_MD5=1 $(AM_CPPFLAGS)
-src_sha1sum_SOURCES = src/digest.c
+src_sha1sum_SOURCES = src/cksum.c
 src_sha1sum_CPPFLAGS = -DHASH_ALGO_SHA1=1 $(AM_CPPFLAGS)
-src_sha224sum_SOURCES = src/digest.c
+src_sha224sum_SOURCES = src/cksum.c
 src_sha224sum_CPPFLAGS = -DHASH_ALGO_SHA224=1 $(AM_CPPFLAGS)
-src_sha256sum_SOURCES = src/digest.c
+src_sha256sum_SOURCES = src/cksum.c
 src_sha256sum_CPPFLAGS = -DHASH_ALGO_SHA256=1 $(AM_CPPFLAGS)
-src_sha384sum_SOURCES = src/digest.c
+src_sha384sum_SOURCES = src/cksum.c
 src_sha384sum_CPPFLAGS = -DHASH_ALGO_SHA384=1 $(AM_CPPFLAGS)
-src_sha512sum_SOURCES = src/digest.c
+src_sha512sum_SOURCES = src/cksum.c
 src_sha512sum_CPPFLAGS = -DHASH_ALGO_SHA512=1 $(AM_CPPFLAGS)
 src_b2sum_CPPFLAGS = -DHASH_ALGO_BLAKE2=1 -DHAVE_CONFIG_H $(AM_CPPFLAGS)
-src_b2sum_SOURCES = src/digest.c \
+src_b2sum_SOURCES = src/cksum.c \
 		    src/blake2/blake2.h src/blake2/blake2-impl.h \
 		    src/blake2/blake2b-ref.c \
 		    src/blake2/b2sum.c src/blake2/b2sum.h
 
 src_cksum_SOURCES = $(src_b2sum_SOURCES) src/sum.c src/sum.h \
-		    src/cksum.c src/cksum.h src/crctab.c
+		    src/cksum_crc.c src/crc.h src/crctab.c
 src_cksum_CPPFLAGS = -DHASH_ALGO_CKSUM=1 -DHAVE_CONFIG_H $(AM_CPPFLAGS)
 
 if USE_AVX512_CRC32
 noinst_LIBRARIES += src/libcksum_avx512.a
-src_libcksum_avx512_a_SOURCES = src/cksum_avx512.c src/cksum.h
+src_libcksum_avx512_a_SOURCES = src/cksum_avx512.c src/cksum_crc.h
 cksum_avx512_ldadd = src/libcksum_avx512.a
 src_cksum_LDADD += $(cksum_avx512_ldadd)
 src_libcksum_avx512_a_CFLAGS = -mavx512bw -mavx512f -mvpclmulqdq $(AM_CFLAGS)
 endif
 if USE_AVX2_CRC32
 noinst_LIBRARIES += src/libcksum_avx2.a
-src_libcksum_avx2_a_SOURCES = src/cksum_avx2.c src/cksum.h
+src_libcksum_avx2_a_SOURCES = src/cksum_avx2.c src/cksum_crc.h
 cksum_avx2_ldadd = src/libcksum_avx2.a
 src_cksum_LDADD += $(cksum_avx2_ldadd)
 src_libcksum_avx2_a_CFLAGS = -mpclmul -mavx -mavx2 -mvpclmulqdq $(AM_CFLAGS)
 endif
 if USE_PCLMUL_CRC32
 noinst_LIBRARIES += src/libcksum_pclmul.a
-src_libcksum_pclmul_a_SOURCES = src/cksum_pclmul.c src/cksum.h
+src_libcksum_pclmul_a_SOURCES = src/cksum_pclmul.c src/cksum_crc.h
 cksum_pclmul_ldadd = src/libcksum_pclmul.a
 src_cksum_LDADD += $(cksum_pclmul_ldadd)
 src_libcksum_pclmul_a_CFLAGS = -mavx -mpclmul $(AM_CFLAGS)
 endif
 if USE_VMULL_CRC32
 noinst_LIBRARIES += src/libcksum_vmull.a
-src_libcksum_vmull_a_SOURCES = src/cksum_vmull.c src/cksum.h
+src_libcksum_vmull_a_SOURCES = src/cksum_vmull.c src/cksum_crc.h
 cksum_vmull_ldadd = src/libcksum_vmull.a
 src_cksum_LDADD += $(cksum_vmull_ldadd)
 src_libcksum_vmull_a_CFLAGS = -march=armv8-a+crypto $(AM_CFLAGS)
@@ -598,13 +598,13 @@ $(top_srcdir)/src/primes.h: $(top_srcdir)/src/make-prime-list.c
 
 # We build crctab in a similar manner to primes.h.
 BUILT_SOURCES += $(top_srcdir)/src/crctab.c
-$(top_srcdir)/src/crctab.c: $(top_srcdir)/src/cksum.c
+$(top_srcdir)/src/crctab.c: $(top_srcdir)/src/cksum_crc.c
 	$(AM_V_GEN)if test -n '$(BUILD_CC)'; then \
 	  $(MKDIR_P) $(top_srcdir)/src/crctab-tmp \
 	  && (cd $(top_srcdir)/src/crctab-tmp \
 	      && $(BUILD_CC) $(BUILD_CPPFLAGS) $(BUILD_CFLAGS) \
 		$(BUILD_LDFLAGS) -DCRCTAB -o crctab$(EXEEXT) \
-		$(abs_top_srcdir)/src/cksum.c) \
+		$(abs_top_srcdir)/src/cksum_crc.c) \
 	  && rm -f $@ $@-t \
 	  && $(top_srcdir)/src/crctab-tmp/crctab$(EXEEXT) > $@-t \
 	  && chmod a-w $@-t \

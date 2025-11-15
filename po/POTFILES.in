@@ -43,6 +43,7 @@ src/chown-core.c
 src/chown.c
 src/chroot.c
 src/cksum.c
+src/cksum_crc.c
 src/comm.c
 src/copy.c
 src/copy-file-data.c
@@ -81,7 +82,6 @@ src/link.c
 src/ln.c
 src/logname.c
 src/ls.c
-src/digest.c
 src/mkdir.c
 src/mkfifo.c
 src/mknod.c

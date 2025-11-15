@@ -1,4 +1,4 @@
-/* cksum -- calculate and print POSIX checksums and sizes of files
+/* cksum_crc -- calculate and print POSIX checksums and sizes of files
    Copyright (C) 2021-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
 
 #include <config.h>
 
-#include "cksum.h"
+#include "cksum_crc.h"
 
 #include <stdio.h>
 #include <sys/types.h>
