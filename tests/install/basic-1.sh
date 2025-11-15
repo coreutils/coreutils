@@ -160,4 +160,12 @@ if ! mkdir sub-ro/d; then
   grep 'cannot create directory' err || { cat err; fail=1; }
 fi
 
+# Test install with --mode=+w (relative mode) ignores umask
+umask 0022 || framework_failure_
+touch file1 || framework_failure_
+ginstall file1 file2 --mode=+w || fail=1
+# Check that file2 has permissions --w--w--w-
+mode=$(ls -l file2|cut -b-10)
+test "$mode" = --w--w--w- || fail=1
+
 Exit $fail
