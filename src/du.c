@@ -336,9 +336,9 @@ Summarize device usage of the set of FILEs, recursively for directories.\n\
                           directory, or any of its subdirectories\n\
       --time=WORD       show time as WORD instead of modification time:\n\
                           atime, access, use, ctime or status\n\
-      --time-style=STYLE  show times using STYLE, which can be:\n\
-                            full-iso, long-iso, iso, or +FORMAT;\n\
-                            FORMAT is interpreted like in 'date'\n\
+"), stdout);
+      fputs (_("\
+      --time-style=STYLE   time/date format with --time; see TIME_STYLE below\n\
 "), stdout);
       fputs (_("\
   -X, --exclude-from=FILE  exclude files that match any pattern in FILE\n\
@@ -349,6 +349,12 @@ Summarize device usage of the set of FILEs, recursively for directories.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_blocksize_note ("DU");
       emit_size_note ();
+      fputs (_("\
+\n\
+The --time-style STYLE argument can be full-iso, long-iso, iso, or +FORMAT.\n\
+FORMAT is interpreted like in date(1).\n\
+Also the TIME_STYLE environment variable sets the default style to use.\n\
+"), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
