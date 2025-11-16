@@ -168,4 +168,17 @@ ginstall file1 file2 --mode=+w || fail=1
 mode=$(ls -l file2|cut -b-10)
 test "$mode" = --w--w--w- || fail=1
 
+# Test comma-separated mode strings (like chmod)
+touch file3 || framework_failure_
+ginstall file3 file4 --mode='ug+rw,o+r' || fail=1
+# Check that file4 has permissions -rw-rw-r--
+mode=$(ls -l file4|cut -b-10)
+test "$mode" = -rw-rw-r-- || fail=1
+
+# Test comma-separated mode with directory creation
+ginstall -d testdir --mode='u+rwx,g+rx,o+r' || fail=1
+# Check that testdir has permissions drwxr-xr--
+mode=$(ls -ld testdir|cut -b-10)
+test "$mode" = drwxr-xr-- || fail=1
+
 Exit $fail
