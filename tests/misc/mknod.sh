@@ -36,4 +36,16 @@ mkdir -m 734 f3   || fail=1
 mode=$(ls -dgo f3|cut -b-10)
 test $mode = drwx-wxr-- || test $mode = drwx-wsr-- || fail=1
 
+mknod --mode='ug+rw,o+r' f4 p || fail=1
+mode=$(ls -dgo f4 | cut -b-10)
+test "$mode" = prw-rw-rw- || fail=1
+
+mkfifo --mode='ug+rw,o+r' f5 || fail=1
+mode=$(ls -dgo f5 | cut -b-10)
+test "$mode" = prw-rw-rw- || fail=1
+
+mkdir --mode='ug+rw,o+r' f6 || fail=1
+mode=$(ls -dgo f6 | cut -b-10)
+test "$mode" = drwxrwxrwx || fail=1
+
 Exit $fail
