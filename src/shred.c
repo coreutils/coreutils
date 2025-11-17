@@ -818,7 +818,6 @@ static bool
 do_wipefd (int fd, char const *qname, struct randint_source *s,
            struct Options const *flags)
 {
-  size_t i;
   struct stat st;
   off_t size;		/* Size to write, size to read */
   off_t i_size = 0;	/* For small files, initial size to overwrite inode */
@@ -921,7 +920,7 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
       else
         break;
 
-      for (i = 0; i < flags->n_iterations + flags->zero_fill; i++)
+      for (size_t i = 0; i < flags->n_iterations + flags->zero_fill; i++)
         {
           int err = 0;
           int type = i < flags->n_iterations ? passarray[i] : 0;
@@ -1169,7 +1168,6 @@ main (int argc, char **argv)
   char **file;
   int n_files;
   int c;
-  int i;
   char const *random_source = nullptr;
 
   initialize_main (&argc, &argv);
@@ -1253,7 +1251,7 @@ main (int argc, char **argv)
            quotef (random_source ? random_source : "getrandom"));
   atexit (clear_random_data);
 
-  for (i = 0; i < n_files; i++)
+  for (int i = 0; i < n_files; i++)
     {
       char *qname = xstrdup (quotef (file[i]));
       if (streq (file[i], "-"))

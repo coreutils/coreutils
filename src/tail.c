@@ -733,8 +733,7 @@ pipe_lines (char const *prettyname, int fd, count_t n_lines)
       {
         /* Skip 'total_lines' - 'n_lines' newlines.  We made sure that
            'total_lines' - 'n_lines' <= 'tmp->nlines'.  */
-        idx_t j;
-        for (j = total_lines - n_lines; j; --j)
+        for (idx_t j = total_lines - n_lines; j; --j)
           {
             beg = rawmemchr (beg, line_end);
             ++beg;

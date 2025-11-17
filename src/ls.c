@@ -1627,15 +1627,13 @@ signal_setup (bool init)
   static bool caught_sig[nsigs];
 #endif
 
-  int j;
-
   if (init)
     {
 #if SA_NOCLDSTOP
       struct sigaction act;
 
       sigemptyset (&caught_signals);
-      for (j = 0; j < nsigs; j++)
+      for (int j = 0; j < nsigs; j++)
         {
           sigaction (sig[j], nullptr, &act);
           if (act.sa_handler != SIG_IGN)
@@ -1645,14 +1643,14 @@ signal_setup (bool init)
       act.sa_mask = caught_signals;
       act.sa_flags = SA_RESTART;
 
-      for (j = 0; j < nsigs; j++)
+      for (int j = 0; j < nsigs; j++)
         if (sigismember (&caught_signals, sig[j]))
           {
             act.sa_handler = sig[j] == SIGTSTP ? stophandler : sighandler;
             sigaction (sig[j], &act, nullptr);
           }
 #else
-      for (j = 0; j < nsigs; j++)
+      for (int j = 0; j < nsigs; j++)
         {
           caught_sig[j] = (signal (sig[j], SIG_IGN) != SIG_IGN);
           if (caught_sig[j])
@@ -1666,11 +1664,11 @@ signal_setup (bool init)
   else /* restore.  */
     {
 #if SA_NOCLDSTOP
-      for (j = 0; j < nsigs; j++)
+      for (int j = 0; j < nsigs; j++)
         if (sigismember (&caught_signals, sig[j]))
           signal (sig[j], SIG_DFL);
 #else
-      for (j = 0; j < nsigs; j++)
+      for (int j = 0; j < nsigs; j++)
         if (caught_sig[j])
           signal (sig[j], SIG_DFL);
 #endif
@@ -1864,7 +1862,6 @@ main (int argc, char **argv)
 
   if (print_with_color && used_color)
     {
-      int j;
 
       /* Skip the restore when it would be a no-op, i.e.,
          when left is "\033[" and right is "m".  */
@@ -1882,9 +1879,9 @@ main (int argc, char **argv)
          This can process signals out of order, but there doesn't seem to
          be an easy way to do them in order, and the order isn't that
          important anyway.  */
-      for (j = stop_signal_count; j; j--)
+      for (int j = stop_signal_count; j; j--)
         raise (SIGSTOP);
-      j = interrupt_signal;
+      int j = interrupt_signal;
       if (j)
         raise (j);
     }
@@ -2402,8 +2399,7 @@ decode_switches (int argc, char **argv)
     set_char_quoting (filename_quoting_options, ' ', 1);
   if (file_type <= indicator_style)
     {
-      char const *p;
-      for (p = &"*=>@|"[indicator_style - file_type]; *p; p++)
+      for (char const *p = &"*=>@|"[indicator_style - file_type]; *p; p++)
         set_char_quoting (filename_quoting_options, *p, 1);
     }
 
@@ -2862,15 +2858,13 @@ parse_ls_color (void)
 
   if (state == PS_FAIL)
     {
-      struct color_ext_type *e;
-      struct color_ext_type *e2;
-
       error (0, 0,
              _("unparsable value for LS_COLORS environment variable"));
       free (color_buf);
-      for (e = color_ext_list; e != nullptr; /* empty */)
+      for (struct color_ext_type *e = color_ext_list; e != nullptr;
+           /* empty */)
         {
-          e2 = e;
+          struct color_ext_type *e2 = e;
           e = e->next;
           free (e2);
         }
@@ -2882,14 +2876,13 @@ parse_ls_color (void)
          different cased extensions with separate sequences defined.
          Also set ext.len to SIZE_MAX on any entries that can't
          match due to precedence, to avoid redundant string compares.  */
-      struct color_ext_type *e1;
-
-      for (e1 = color_ext_list; e1 != nullptr; e1 = e1->next)
+      for (struct color_ext_type *e1 = color_ext_list; e1 != nullptr;
+           e1 = e1->next)
         {
-          struct color_ext_type *e2;
           bool case_ignored = false;
 
-          for (e2 = e1->next; e2 != nullptr; e2 = e2->next)
+          for (struct color_ext_type *e2 = e1->next; e2 != nullptr;
+               e2 = e2->next)
             {
               if (e2->ext.len < SIZE_MAX && e1->ext.len == e2->ext.len)
                 {
@@ -3179,8 +3172,7 @@ add_ignore_pattern (char const *pattern)
 static bool
 patterns_match (struct ignore_pattern const *patterns, char const *file)
 {
-  struct ignore_pattern const *p;
-  for (p = patterns; p; p = p->next)
+  for (struct ignore_pattern const *p = patterns; p; p = p->next)
     if (fnmatch (p->pattern, file, FNM_PERIOD) == 0)
       return true;
   return false;

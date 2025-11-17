@@ -425,12 +425,10 @@ compile_regex (struct regex_data *regex)
 static void
 initialize_regex (void)
 {
-  int character;		/* character value */
-
   /* Initialize the case folding table.  */
 
   if (ignore_case)
-    for (character = 0; character < CHAR_SET_SIZE; character++)
+    for (int character = 0; character < CHAR_SET_SIZE; character++)
       folded_chars[character] = toupper (character);
 
   /* Unless the user already provided a description of the end of line or
@@ -470,7 +468,7 @@ initialize_regex (void)
 
           /* Simulate \w+.  */
 
-          for (character = 0; character < CHAR_SET_SIZE; character++)
+          for (int character = 0; character < CHAR_SET_SIZE; character++)
             word_fastmap[character] = !! isalpha (character);
         }
       else
@@ -631,14 +629,14 @@ static void
 digest_break_file (char const *file_name)
 {
   BLOCK file_contents;		/* to receive a copy of the file */
-  char *cursor;			/* cursor in file copy */
 
   swallow_file_in_memory (file_name, &file_contents);
 
   /* Make the fastmap and record the file contents in it.  */
 
   memset (word_fastmap, 1, CHAR_SET_SIZE);
-  for (cursor = file_contents.start; cursor < file_contents.end; cursor++)
+  for (char *cursor = file_contents.start; cursor < file_contents.end;
+       cursor++)
     word_fastmap[to_uchar (*cursor)] = 0;
 
   if (!gnu_extensions)
@@ -724,8 +722,7 @@ digest_word_file (char const *file_name, WORD_TABLE *table)
 static void
 find_occurs_in_text (int file_index)
 {
-  char *cursor;			/* for scanning the source text */
-  char *scan;			/* for scanning the source text also */
+  char *scan;			/* for scanning the source text */
   char *line_start;		/* start of the current input line */
   char *line_scan;		/* newlines scanned until this point */
   idx_t reference_length;	/* length of reference in input mode */
@@ -766,7 +763,7 @@ find_occurs_in_text (int file_index)
 
   /* Process the whole buffer, one line or one sentence at a time.  */
 
-  for (cursor = text_buffer->start;
+  for (char *cursor = text_buffer->start;
        cursor < text_buffer->end;
        cursor = next_context_start)
     {
@@ -1011,12 +1008,10 @@ print_spaces (ptrdiff_t number)
 static void
 print_field (BLOCK field)
 {
-  char *cursor;			/* Cursor in field to print */
-
   /* Whitespace is not really compressed.  Instead, each white space
      character (tab, vt, ht etc.) is printed as one single space.  */
 
-  for (cursor = field.start; cursor < field.end; cursor++)
+  for (char *cursor = field.start; cursor < field.end; cursor++)
     {
       unsigned char character = *cursor;
       if (edited_flag[character])

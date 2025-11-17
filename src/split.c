@@ -587,8 +587,7 @@ closeout (FILE *fp, int fd, pid_t pid, char const *name)
     {
       if (fp == nullptr && close (fd) < 0)
         error (EXIT_FAILURE, errno, "%s", quotef (name));
-      int j;
-      for (j = 0; j < n_open_pipes; ++j)
+      for (int j = 0; j < n_open_pipes; ++j)
         {
           if (open_pipes[j] == fd)
             {

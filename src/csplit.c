@@ -423,8 +423,6 @@ get_new_buffer (idx_t min_size)
 static void
 save_buffer (struct buffer_record *buf)
 {
-  struct buffer_record *p;
-
   buf->next = nullptr;
   buf->curr_line = buf->line_start;
 
@@ -432,6 +430,7 @@ save_buffer (struct buffer_record *buf)
     head = buf;
   else
     {
+      struct buffer_record *p;
       for (p = head; p->next; p = p->next)
         /* Do nothing. */ ;
       p->next = buf;
@@ -563,15 +562,13 @@ remove_line (void)
 static struct cstring *
 find_line (intmax_t linenum)
 {
-  struct buffer_record *b;
-
   if (head == nullptr && !load_buffer ())
     return nullptr;
 
   if (linenum < head->start_line)
     return nullptr;
 
-  for (b = head;;)
+  for (struct buffer_record *b = head;;)
     {
       if (linenum < b->start_line + b->num_lines)
         {
@@ -624,7 +621,6 @@ write_to_file (intmax_t last_line, bool ignore, int argnum)
   struct cstring *line;
   intmax_t first_line;		/* First available input line. */
   intmax_t lines;		/* Number of lines to output. */
-  intmax_t i;
 
   first_line = get_first_line_in_buffer ();
 
@@ -637,7 +633,7 @@ write_to_file (intmax_t last_line, bool ignore, int argnum)
 
   lines = last_line - first_line;
 
-  for (i = 0; i < lines; i++)
+  for (intmax_t i = 0; i < lines; i++)
     {
       line = remove_line ();
       if (line == nullptr)
@@ -855,16 +851,15 @@ split_file (void)
 {
   for (idx_t i = 0; i < control_used; i++)
     {
-      intmax_t j;
       if (controls[i].regexpr)
         {
-          for (j = 0; (controls[i].repeat_forever
+          for (intmax_t j = 0; (controls[i].repeat_forever
                        || j <= controls[i].repeat); j++)
             process_regexp (&controls[i], j);
         }
       else
         {
-          for (j = 0; (controls[i].repeat_forever
+          for (intmax_t j = 0; (controls[i].repeat_forever
                        || j <= controls[i].repeat); j++)
             process_line_count (&controls[i], j);
         }
@@ -1370,7 +1365,6 @@ main (int argc, char **argv)
   parse_patterns (argc, optind, argv);
 
   {
-    int i;
     static int const sig[] =
       {
         /* The usual suspects.  */
@@ -1396,7 +1390,7 @@ main (int argc, char **argv)
     struct sigaction act;
 
     sigemptyset (&caught_signals);
-    for (i = 0; i < nsigs; i++)
+    for (int i = 0; i < nsigs; i++)
       {
         sigaction (sig[i], nullptr, &act);
         if (act.sa_handler != SIG_IGN)
@@ -1407,7 +1401,7 @@ main (int argc, char **argv)
     act.sa_mask = caught_signals;
     act.sa_flags = 0;
 
-    for (i = 0; i < nsigs; i++)
+    for (int i = 0; i < nsigs; i++)
       if (sigismember (&caught_signals, sig[i]))
         sigaction (sig[i], &act, nullptr);
   }

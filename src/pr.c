@@ -2649,7 +2649,6 @@ char_to_clump (char c)
 {
   unsigned char uc = c;
   char *s = clump_buff;
-  int i;
   char esc_buff[4];
   int width;
   int chars;
@@ -2664,7 +2663,7 @@ char_to_clump (char c)
 
       if (untabify_input)
         {
-          for (i = width; i; --i)
+          for (int i = width; i; --i)
             *s++ = ' ';
           chars = width;
         }
@@ -2683,7 +2682,7 @@ char_to_clump (char c)
           chars = 4;
           *s++ = '\\';
           sprintf (esc_buff, "%03o", uc);
-          for (i = 0; i <= 2; ++i)
+          for (int i = 0; i <= 2; ++i)
             *s++ = esc_buff[i];
         }
       else if (use_cntrl_prefix)
@@ -2701,7 +2700,7 @@ char_to_clump (char c)
               chars = 4;
               *s++ = '\\';
               sprintf (esc_buff, "%03o", uc);
-              for (i = 0; i <= 2; ++i)
+              for (int i = 0; i <= 2; ++i)
                 *s++ = esc_buff[i];
             }
         }

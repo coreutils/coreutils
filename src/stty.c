@@ -1115,7 +1115,6 @@ apply_settings (bool checking, char const *device_name,
       bool match_found = false;
       bool not_set_attr = false;
       bool reversed = false;
-      int i;
 
       if (! arg)
         continue;
@@ -1130,7 +1129,7 @@ apply_settings (bool checking, char const *device_name,
           tcsetattr_options = reversed ? TCSANOW : TCSADRAIN;
           continue;
         }
-      for (i = 0; mode_info[i].name != nullptr; ++i)
+      for (int i = 0; mode_info[i].name != nullptr; ++i)
         {
           if (streq (arg, mode_info[i].name))
             {
@@ -1151,7 +1150,7 @@ apply_settings (bool checking, char const *device_name,
         }
       if (!match_found)
         {
-          for (i = 0; control_info[i].name != nullptr; ++i)
+          for (int i = 0; control_info[i].name != nullptr; ++i)
             {
               if (streq (arg, control_info[i].name))
                 {
@@ -1907,7 +1906,6 @@ display_settings (enum output_type output_type, struct termios *mode,
 static void
 display_changed (struct termios *mode)
 {
-  int i;
   bool empty_line;
   tcflag_t *bitsp;
   unsigned long mask;
@@ -1921,7 +1919,7 @@ display_changed (struct termios *mode)
   current_col = 0;
 
   empty_line = true;
-  for (i = 0; !streq (control_info[i].name, "min"); ++i)
+  for (int i = 0; !streq (control_info[i].name, "min"); ++i)
     {
       if (mode->c_cc[control_info[i].offset] == control_info[i].saneval)
         continue;
@@ -1959,7 +1957,7 @@ display_changed (struct termios *mode)
   current_col = 0;
 
   empty_line = true;
-  for (i = 0; mode_info[i].name != nullptr; ++i)
+  for (int i = 0; mode_info[i].name != nullptr; ++i)
     {
       if (mode_info[i].flags & OMIT)
         continue;
@@ -1998,7 +1996,6 @@ display_changed (struct termios *mode)
 static void
 display_all (struct termios *mode, char const *device_name)
 {
-  int i;
   tcflag_t *bitsp;
   unsigned long mask;
   enum mode_type prev_type = control;
@@ -2013,7 +2010,7 @@ display_all (struct termios *mode, char const *device_name)
   putchar ('\n');
   current_col = 0;
 
-  for (i = 0; ! streq (control_info[i].name, "min"); ++i)
+  for (int i = 0; ! streq (control_info[i].name, "min"); ++i)
     {
 #ifdef VFLUSHO
       /* 'flush' is the deprecated equivalent of 'discard'.  */
@@ -2045,7 +2042,7 @@ display_all (struct termios *mode, char const *device_name)
     putchar ('\n');
   current_col = 0;
 
-  for (i = 0; mode_info[i].name != nullptr; ++i)
+  for (int i = 0; mode_info[i].name != nullptr; ++i)
     {
       if (mode_info[i].flags & OMIT)
         continue;
@@ -2145,8 +2142,7 @@ recover_mode (char const *arg, struct termios *mode)
 {
   tcflag_t flag[4];
   char const *s = arg;
-  size_t i;
-  for (i = 0; i < 4; i++)
+  for (size_t i = 0; i < 4; i++)
     {
       char *p;
       if (strtoul_tcflag_t (s, 16, &p, flag + i, ':') != 0)
@@ -2158,7 +2154,7 @@ recover_mode (char const *arg, struct termios *mode)
   mode->c_cflag = flag[2];
   mode->c_lflag = flag[3];
 
-  for (i = 0; i < NCCS; ++i)
+  for (size_t i = 0; i < NCCS; ++i)
     {
       char *p;
       char delim = i < NCCS - 1 ? ':' : '\0';
@@ -2234,10 +2230,9 @@ string_to_baud (char const *arg)
 static void
 sane_mode (struct termios *mode)
 {
-  int i;
   tcflag_t *bitsp;
 
-  for (i = 0; control_info[i].name; ++i)
+  for (int i = 0; control_info[i].name; ++i)
     {
 #if VMIN == VEOF
       if (streq (control_info[i].name, "min"))
@@ -2246,7 +2241,7 @@ sane_mode (struct termios *mode)
       mode->c_cc[control_info[i].offset] = control_info[i].saneval;
     }
 
-  for (i = 0; mode_info[i].name != nullptr; ++i)
+  for (int i = 0; mode_info[i].name != nullptr; ++i)
     {
       if (mode_info[i].flags & NO_SETATTR)
         continue;

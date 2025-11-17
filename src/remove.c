@@ -375,8 +375,8 @@ fts_skip_tree (FTS *fts, FTSENT *ent)
 static void
 mark_ancestor_dirs (FTSENT *ent)
 {
-  FTSENT *p;
-  for (p = ent->fts_parent; FTS_ROOTLEVEL <= p->fts_level; p = p->fts_parent)
+  for (FTSENT *p = ent->fts_parent; FTS_ROOTLEVEL <= p->fts_level;
+       p = p->fts_parent)
     {
       if (p->fts_number)
         break;

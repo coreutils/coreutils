@@ -107,7 +107,6 @@ print_table_row (int num_width, int signum,
 static int
 list_signals (bool table, char *const *argv)
 {
-  int signum;
   int status = EXIT_SUCCESS;
   char signame[SIG2STR_MAX];
 
@@ -117,11 +116,11 @@ list_signals (bool table, char *const *argv)
 
       /* Compute the maximum width of a signal number.  */
       int num_width = 1;
-      for (signum = 1; signum <= SIGNUM_BOUND / 10; signum *= 10)
+      for (int signum = 1; signum <= SIGNUM_BOUND / 10; signum *= 10)
         num_width++;
 
       /* Compute the maximum width of a signal name.  */
-      for (signum = 0; signum <= SIGNUM_BOUND; signum++)
+      for (int signum = 0; signum <= SIGNUM_BOUND; signum++)
         if (sig2str (signum, signame) == 0)
           {
             idx_t len = strlen (signame);
@@ -132,7 +131,7 @@ list_signals (bool table, char *const *argv)
       if (argv)
         for (; *argv; argv++)
           {
-            signum = operand2sig (*argv);
+            int signum = operand2sig (*argv);
             if (signum < 0)
               status = EXIT_FAILURE;
             else
@@ -143,7 +142,7 @@ list_signals (bool table, char *const *argv)
               }
           }
       else
-        for (signum = 0; signum <= SIGNUM_BOUND; signum++)
+        for (int signum = 0; signum <= SIGNUM_BOUND; signum++)
           if (sig2str (signum, signame) == 0)
             print_table_row (num_width, signum, name_width, signame);
     }
@@ -152,7 +151,7 @@ list_signals (bool table, char *const *argv)
       if (argv)
         for (; *argv; argv++)
           {
-            signum = operand2sig (*argv);
+            int signum = operand2sig (*argv);
             if (signum < 0)
               status = EXIT_FAILURE;
             else if (c_isdigit (**argv))
@@ -166,7 +165,7 @@ list_signals (bool table, char *const *argv)
               printf ("%d\n", signum);
           }
       else
-        for (signum = 0; signum <= SIGNUM_BOUND; signum++)
+        for (int signum = 0; signum <= SIGNUM_BOUND; signum++)
           if (sig2str (signum, signame) == 0)
             puts (signame);
     }

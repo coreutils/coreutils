@@ -230,7 +230,6 @@ tee_files (int nfiles, char **files, bool pipe_check)
   bool *out_pollable IF_LINT ( = nullptr);
   char buffer[BUFSIZ];
   ssize_t bytes_read = 0;
-  int i;
   int first_out = 0;  /* idx of first non-null output in descriptors */
   bool ok = true;
   char const *mode_string =
@@ -256,7 +255,7 @@ tee_files (int nfiles, char **files, bool pipe_check)
   setvbuf (stdout, nullptr, _IONBF, 0);
   n_outputs++;
 
-  for (i = 1; i <= nfiles; i++)
+  for (int i = 1; i <= nfiles; i++)
     {
       /* Do not treat "-" specially - as mandated by POSIX.  */
        descriptors[i] = fopen (files[i], mode_string);
@@ -311,7 +310,7 @@ tee_files (int nfiles, char **files, bool pipe_check)
 
       /* Write to all NFILES + 1 descriptors.
          Standard output is the first one.  */
-      for (i = 0; i <= nfiles; i++)
+      for (int i = 0; i <= nfiles; i++)
         if (descriptors[i]
             && ! fwrite_wait (buffer, bytes_read, descriptors[i]))
           {
@@ -330,7 +329,7 @@ tee_files (int nfiles, char **files, bool pipe_check)
     }
 
   /* Close the files, but not standard output.  */
-  for (i = 1; i <= nfiles; i++)
+  for (int i = 1; i <= nfiles; i++)
     if (descriptors[i] && ! fclose_wait (descriptors[i]))
       {
         error (0, errno, "%s", quotef (files[i]));

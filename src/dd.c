@@ -1691,20 +1691,18 @@ scanargs (int argc, char *const *argv)
 static void
 apply_translations (void)
 {
-  int i;
-
   if (conversions_mask & C_ASCII)
     translate_charset (ebcdic_to_ascii);
 
   if (conversions_mask & C_UCASE)
     {
-      for (i = 0; i < 256; i++)
+      for (int i = 0; i < 256; i++)
         trans_table[i] = toupper (trans_table[i]);
       translation_needed = true;
     }
   else if (conversions_mask & C_LCASE)
     {
-      for (i = 0; i < 256; i++)
+      for (int i = 0; i < 256; i++)
         trans_table[i] = tolower (trans_table[i]);
       translation_needed = true;
     }
@@ -1729,9 +1727,8 @@ apply_translations (void)
 static void
 translate_buffer (char *buf, idx_t nread)
 {
-  idx_t i;
-  char *cp;
-  for (i = nread, cp = buf; i; i--, cp++)
+  char *cp = buf;
+  for (idx_t i = nread; i; i--, cp++)
     *cp = trans_table[to_uchar (*cp)];
 }
 
@@ -1990,8 +1987,7 @@ copy_with_block (char const *buf, idx_t nread)
         {
           if (col < conversion_blocksize)
             {
-              idx_t j;
-              for (j = col; j < conversion_blocksize; j++)
+              for (idx_t j = col; j < conversion_blocksize; j++)
                 output_char (space_character);
             }
           col = 0;
@@ -2412,7 +2408,6 @@ synchronize_output (void)
 int
 main (int argc, char **argv)
 {
-  int i;
   int exit_status;
   off_t offset;
 
@@ -2435,7 +2430,7 @@ main (int argc, char **argv)
   close_stdout_required = false;
 
   /* Initialize translation table to identity translation. */
-  for (i = 0; i < 256; i++)
+  for (int i = 0; i < 256; i++)
     trans_table[i] = i;
 
   /* Decode arguments. */

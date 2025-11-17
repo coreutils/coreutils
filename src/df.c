@@ -638,11 +638,10 @@ ATTRIBUTE_PURE
 static bool
 selected_fstype (char const *fstype)
 {
-  const struct fs_type_list *fsp;
-
   if (fs_select_list == nullptr || fstype == nullptr)
     return true;
-  for (fsp = fs_select_list; fsp; fsp = fsp->fs_next)
+  for (const struct fs_type_list *fsp = fs_select_list; fsp;
+       fsp = fsp->fs_next)
     if (streq (fstype, fsp->fs_name))
       return true;
   return false;
@@ -654,11 +653,10 @@ ATTRIBUTE_PURE
 static bool
 excluded_fstype (char const *fstype)
 {
-  const struct fs_type_list *fsp;
-
   if (fs_exclude_list == nullptr || fstype == nullptr)
     return false;
-  for (fsp = fs_exclude_list; fsp; fsp = fsp->fs_next)
+  for (const struct fs_type_list *fsp = fs_exclude_list; fsp;
+       fsp = fsp->fs_next)
     if (streq (fstype, fsp->fs_name))
       return true;
   return false;
@@ -705,13 +703,11 @@ devlist_for_dev (dev_t dev)
 static void
 filter_mount_list (bool devices_only)
 {
-  struct mount_entry *me;
-
   /* Temporary list to keep entries ordered.  */
   struct devlist *device_list = nullptr;
   int mount_list_size = 0;
 
-  for (me = mount_list; me; me = me->me_next)
+  for (struct mount_entry *me = mount_list; me; me = me->me_next)
     mount_list_size++;
 
   devlist_table = hash_initialize (mount_list_size, nullptr,
@@ -720,7 +716,7 @@ filter_mount_list (bool devices_only)
     xalloc_die ();
 
   /* Sort all 'wanted' entries into the list device_list.  */
-  for (me = mount_list; me;)
+  for (struct mount_entry *me = mount_list; me;)
     {
       struct stat buf;
       struct mount_entry *discard_me = nullptr;
@@ -814,22 +810,22 @@ filter_mount_list (bool devices_only)
     }
 
   /* Finally rebuild the mount_list from the devlist.  */
-  if (! devices_only) {
-    mount_list = nullptr;
-    while (device_list)
-      {
-        /* Add the mount entry.  */
-        me = device_list->me;
-        me->me_next = mount_list;
-        mount_list = me;
-        struct devlist *next = device_list->next;
-        free (device_list);
-        device_list = next;
-      }
-
+  if (! devices_only)
+    {
+      mount_list = nullptr;
+      while (device_list)
+        {
+          /* Add the mount entry.  */
+          struct mount_entry *me = device_list->me;
+          me->me_next = mount_list;
+          mount_list = me;
+          struct devlist *next = device_list->next;
+          free (device_list);
+          device_list = next;
+        }
       hash_free (devlist_table);
       devlist_table = nullptr;
-  }
+    }
 }
 
 
@@ -1239,10 +1235,9 @@ get_dev (char const *device, char const *mount_point, char const *file,
 static char *
 last_device_for_mount (char const *mount)
 {
-  struct mount_entry const *me;
   struct mount_entry const *le = nullptr;
 
-  for (me = mount_list; me; me = me->me_next)
+  for (struct mount_entry const *me = mount_list; me; me = me->me_next)
     {
       if (streq (me->me_mountdir, mount))
         le = me;
@@ -1266,7 +1261,6 @@ last_device_for_mount (char const *mount)
 static bool
 get_device (char const *device)
 {
-  struct mount_entry const *me;
   struct mount_entry const *best_match = nullptr;
   bool best_match_accessible = false;
   bool eclipsed_device = false;
@@ -1277,7 +1271,7 @@ get_device (char const *device)
     device = resolved;
 
   size_t best_match_len = SIZE_MAX;
-  for (me = mount_list; me; me = me->me_next)
+  for (struct mount_entry const *me = mount_list; me; me = me->me_next)
     {
       /* TODO: Should cache canon_dev in the mount_entry struct.  */
       char *devname = me->me_devname;
@@ -1348,7 +1342,6 @@ static void
 get_point (char const *point, const struct stat *statp)
 {
   struct stat device_stats;
-  struct mount_entry *me;
   struct mount_entry const *best_match = nullptr;
 
   /* Calculate the real absolute file name for POINT, and use that to find
@@ -1360,7 +1353,7 @@ get_point (char const *point, const struct stat *statp)
       size_t resolved_len = strlen (resolved);
       size_t best_match_len = 0;
 
-      for (me = mount_list; me; me = me->me_next)
+      for (struct mount_entry *me = mount_list; me; me = me->me_next)
         {
           if (!streq (me->me_type, "lofs")
               && (!best_match || best_match->me_dummy || !me->me_dummy))
@@ -1384,7 +1377,7 @@ get_point (char const *point, const struct stat *statp)
     best_match = nullptr;
 
   if (! best_match)
-    for (me = mount_list; me; me = me->me_next)
+    for (struct mount_entry *me = mount_list; me; me = me->me_next)
       {
         if (me->me_dev == (dev_t) -1)
           {
@@ -1459,11 +1452,9 @@ get_entry (char const *name, struct stat const *statp)
 static void
 get_all_entries (void)
 {
-  struct mount_entry *me;
-
   filter_mount_list (show_all_fs);
 
-  for (me = mount_list; me; me = me->me_next)
+  for (struct mount_entry *me = mount_list; me; me = me->me_next)
     get_dev (me->me_devname, me->me_mountdir, nullptr, nullptr, me->me_type,
              me->me_dummy, me->me_remote, nullptr, true);
 }
@@ -1728,11 +1719,11 @@ main (int argc, char **argv)
   /* Fail if the same file system type was both selected and excluded.  */
   {
     bool match = false;
-    struct fs_type_list *fs_incl;
-    for (fs_incl = fs_select_list; fs_incl; fs_incl = fs_incl->fs_next)
+    for (struct fs_type_list *fs_incl = fs_select_list; fs_incl;
+         fs_incl = fs_incl->fs_next)
       {
-        struct fs_type_list *fs_excl;
-        for (fs_excl = fs_exclude_list; fs_excl; fs_excl = fs_excl->fs_next)
+        for (struct fs_type_list *fs_excl = fs_exclude_list; fs_excl;
+             fs_excl = fs_excl->fs_next)
           {
             if (streq (fs_incl->fs_name, fs_excl->fs_name))
               {

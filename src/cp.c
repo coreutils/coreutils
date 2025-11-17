@@ -309,7 +309,6 @@ re_protect (char const *const_dst_name, char const *dst_src_name,
             int dst_dirfd, char const *dst_relname,
             struct dir_attr *attr_list, const struct cp_options *x)
 {
-  struct dir_attr *p;
   char *dst_name;		/* A copy of CONST_DST_NAME we can change. */
 
   ASSIGN_STRDUPA (dst_name, const_dst_name);
@@ -321,7 +320,7 @@ re_protect (char const *const_dst_name, char const *dst_src_name,
   /* Likewise, but with any leading '/'s skipped.  */
   char const *relname = dst_name + (dst_relname - const_dst_name);
 
-  for (p = attr_list; p; p = p->next)
+  for (struct dir_attr *p = attr_list; p; p = p->next)
     {
       dst_name[p->slash_offset] = '\0';
 

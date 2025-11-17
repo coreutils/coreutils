@@ -280,7 +280,6 @@ int
 main (int argc, char **argv)
 {
   size_t width = 80;
-  int i;
   int optc;
   bool ok;
 
@@ -343,7 +342,7 @@ main (int argc, char **argv)
   else
     {
       ok = true;
-      for (i = optind; i < argc; i++)
+      for (int i = optind; i < argc; i++)
         ok &= fold_file (argv[i], width);
     }
 

@@ -146,9 +146,8 @@ set_program_path (char const *arg)
         program_path = dir_name (path);
       else if ((path = getenv ("PATH")))
         {
-          char *dir;
           path = xstrdup (path);
-          for (dir = strtok (path, ":"); dir != nullptr;
+          for (char *dir = strtok (path, ":"); dir != nullptr;
                dir = strtok (nullptr, ":"))
             {
               char *candidate = file_name_concat (dir, arg, nullptr);

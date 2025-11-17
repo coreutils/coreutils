@@ -272,12 +272,10 @@ compare_files (char **infiles)
   /* Counters for the summary.  */
   uintmax_t total[] = {0, 0, 0};
 
-  int i, j;
-
   /* Initialize the storage. */
-  for (i = 0; i < 2; i++)
+  for (int i = 0; i < 2; i++)
     {
-      for (j = 0; j < 4; j++)
+      for (int j = 0; j < 4; j++)
         {
           initbuffer (&lba[i][j]);
           all_line[i][j] = &lba[i][j];
@@ -353,7 +351,7 @@ compare_files (char **infiles)
       if (order <= 0)
         fill_up[0] = true;
 
-      for (i = 0; i < 2; i++)
+      for (int i = 0; i < 2; i++)
         if (fill_up[i])
           {
             /* Rotate the buffers for this file. */
@@ -381,7 +379,7 @@ compare_files (char **infiles)
           }
     }
 
-  for (i = 0; i < 2; i++)
+  for (int i = 0; i < 2; i++)
     if (fclose (streams[i]) != 0)
       error (EXIT_FAILURE, errno, "%s", quotef (infiles[i]));
 

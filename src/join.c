@@ -571,15 +571,14 @@ prfield (idx_t n, struct line const *line)
 static void
 prfields (struct line const *line, idx_t join_field, idx_t autocount)
 {
-  idx_t i;
   idx_t nfields = autoformat ? autocount : line->nfields;
 
-  for (i = 0; i < join_field && i < nfields; ++i)
+  for (idx_t i = 0; i < join_field && i < nfields; ++i)
     {
       fwrite (output_separator, 1, output_seplen, stdout);
       prfield (i, line);
     }
-  for (i = join_field + 1; i < nfields; ++i)
+  for (idx_t i = join_field + 1; i < nfields; ++i)
     {
       fwrite (output_separator, 1, output_seplen, stdout);
       prfield (i, line);
@@ -744,8 +743,7 @@ join (FILE *fp1, FILE *fp2)
         {
           for (idx_t i = 0; i < seq1.count - 1; ++i)
             {
-              idx_t j;
-              for (j = 0; j < seq2.count - 1; ++j)
+              for (idx_t j = 0; j < seq2.count - 1; ++j)
                 prjoin (seq1.lines[i], seq2.lines[j]);
             }
         }
@@ -1009,7 +1007,6 @@ main (int argc, char **argv)
   FILE *fp1, *fp2;
   int optc;
   int nfiles = 0;
-  int i;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -1175,7 +1172,7 @@ main (int argc, char **argv)
 
   /* If "-j1" was specified and it turns out not to have had an argument,
      treat it as "-j 1".  Likewise for -j2.  */
-  for (i = 0; i < 2; i++)
+  for (int i = 0; i < 2; i++)
     if (joption_count[i] != 0)
       {
         set_join_field (&join_field_1, i);

@@ -391,9 +391,7 @@ static struct tempnode *volatile *temptail = &temphead;
 static void
 cleanup (void)
 {
-  struct tempnode const *node;
-
-  for (node = temphead; node; node = node->next)
+  for (struct tempnode const *node = temphead; node; node = node->next)
     unlink (node->name);
   temphead = nullptr;
 }
@@ -1360,9 +1358,7 @@ struct_month_cmp (void const *m1, void const *m2)
 static void
 inittables (void)
 {
-  size_t i;
-
-  for (i = 0; i < UCHAR_LIM; ++i)
+  for (size_t i = 0; i < UCHAR_LIM; ++i)
     {
       blanks[i] = i == '\n' || isblank (i);
       nondictionary[i] = ! blanks[i] && ! isalnum (i);
@@ -1374,7 +1370,7 @@ inittables (void)
   /* If we're not in the "C" locale, read different names for months.  */
   if (hard_LC_TIME)
     {
-      for (i = 0; i < MONTHS_PER_YEAR; i++)
+      for (size_t i = 0; i < MONTHS_PER_YEAR; i++)
         {
           char const *s;
           size_t s_len;
@@ -2556,7 +2552,6 @@ key_to_opts (struct keyfield const *key, char *opts)
 static void
 key_warnings (struct keyfield const *gkey, bool gkey_only)
 {
-  struct keyfield const *key;
   struct keyfield ugkey = *gkey;
   unsigned long keynum = 1;
   bool basic_numeric_field = false;
@@ -2564,7 +2559,7 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
   bool basic_numeric_field_span = false;
   bool general_numeric_field_span = false;
 
-  for (key = keylist; key; key = key->next, keynum++)
+  for (struct keyfield *key = keylist; key; key = key->next, keynum++)
     {
       if (key_numeric (key))
         {
@@ -3161,14 +3156,12 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
                                 /* Table representing a permutation of fps,
                                    such that cur[ord[0]] is the smallest line
                                    and will be next output. */
-  size_t i;
-  size_t j;
   size_t t;
   struct keyfield const *key = keylist;
   saved.text = nullptr;
 
   /* Read initial lines from each input file. */
-  for (i = 0; i < nfiles; )
+  for (size_t i = 0; i < nfiles; )
     {
       initbuf (&buffer[i], sizeof (struct line),
                MAX (merge_buffer_size, sort_size / nfiles));
@@ -3190,7 +3183,7 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
             }
           free (buffer[i].buf);
           --nfiles;
-          for (j = i; j < nfiles; ++j)
+          for (size_t j = i; j < nfiles; ++j)
             {
               files[j] = files[j + 1];
               fps[j] = fps[j + 1];
@@ -3201,9 +3194,9 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
   /* Set up the ord table according to comparisons among input lines.
      Since this only reorders two items if one is strictly greater than
      the other, it is stable. */
-  for (i = 0; i < nfiles; ++i)
+  for (size_t i = 0; i < nfiles; ++i)
     ord[i] = i;
-  for (i = 1; i < nfiles; ++i)
+  for (size_t i = 1; i < nfiles; ++i)
     if (0 < compare (cur[ord[i - 1]], cur[ord[i]]))
       t = ord[i - 1], ord[i - 1] = ord[i], ord[i] = t, i = 0;
 
@@ -3265,7 +3258,7 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
           else
             {
               /* We reached EOF on fps[ord[0]].  */
-              for (i = 1; i < nfiles; ++i)
+              for (size_t i = 1; i < nfiles; ++i)
                 if (ord[i] > ord[0])
                   --ord[i];
               --nfiles;
@@ -3276,7 +3269,7 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
                   zaptemp (files[ord[0]].name);
                 }
               free (buffer[ord[0]].buf);
-              for (i = ord[0]; i < nfiles; ++i)
+              for (size_t i = ord[0]; i < nfiles; ++i)
                 {
                   fps[i] = fps[i + 1];
                   files[i] = files[i + 1];
@@ -3284,7 +3277,7 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
                   cur[i] = cur[i + 1];
                   base[i] = base[i + 1];
                 }
-              for (i = 0; i < nfiles; ++i)
+              for (size_t i = 0; i < nfiles; ++i)
                 ord[i] = ord[i + 1];
               continue;
             }
@@ -3312,7 +3305,7 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
           }
 
         count_of_smaller_lines = lo - 1;
-        for (j = 0; j < count_of_smaller_lines; j++)
+        for (size_t j = 0; j < count_of_smaller_lines; j++)
           ord[j] = ord[j + 1];
         ord[count_of_smaller_lines] = ord0;
       }
@@ -4277,9 +4270,7 @@ incompatible_options (char const *opts)
 static void
 check_ordering_compatibility (void)
 {
-  struct keyfield *key;
-
-  for (key = keylist; key; key = key->next)
+  for (struct keyfield *key = keylist; key; key = key->next)
     if (1 < (key->numeric + key->general_numeric + key->human_numeric
              + key->month + (key->version | key->random | !!key->ignore)))
       {
@@ -4456,7 +4447,6 @@ main (int argc, char **argv)
   inittables ();
 
   {
-    size_t i;
     static int const sig[] =
       {
         /* The usual suspects.  */
@@ -4483,7 +4473,7 @@ main (int argc, char **argv)
     struct sigaction act;
 
     sigemptyset (&caught_signals);
-    for (i = 0; i < nsigs; i++)
+    for (size_t i = 0; i < nsigs; i++)
       {
         sigaction (sig[i], nullptr, &act);
         if (act.sa_handler != SIG_IGN)
@@ -4494,11 +4484,11 @@ main (int argc, char **argv)
     act.sa_mask = caught_signals;
     act.sa_flags = 0;
 
-    for (i = 0; i < nsigs; i++)
+    for (size_t i = 0; i < nsigs; i++)
       if (sigismember (&caught_signals, sig[i]))
         sigaction (sig[i], &act, nullptr);
 #else
-    for (i = 0; i < nsigs; i++)
+    for (size_t i = 0; i < nsigs; i++)
       if (signal (sig[i], SIG_IGN) != SIG_IGN)
         {
           signal (sig[i], sighandler);

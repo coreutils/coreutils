@@ -1057,9 +1057,8 @@ main (int argc, char **argv)
         }
       else
         {
-          int i;
           dest_info_init (&x);
-          for (i = 0; i < n_files; i++)
+          for (int i = 0; i < n_files; i++)
             if (! install_file_in_dir (file[i], target_directory, &x,
                                        i == 0 && mkdir_and_install,
                                        &target_dirfd))

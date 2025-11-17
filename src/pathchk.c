@@ -160,9 +160,7 @@ main (int argc, char **argv)
 static bool
 no_leading_hyphen (char const *file)
 {
-  char const *p;
-
-  for (p = file;  (p = strchr (p, '-'));  p++)
+  for (char const *p = file;  (p = strchr (p, '-'));  p++)
     if (p == file || p[-1] == '/')
       {
         error (0, 0, _("leading '-' in a component of file name %s"),
@@ -250,9 +248,6 @@ validate_file_name (char *file, bool check_basic_portability,
 {
   idx_t filelen = strlen (file);
 
-  /* Start of file name component being checked.  */
-  char *start;
-
   /* True if component lengths need to be checked.  */
   bool check_component_lengths;
 
@@ -334,7 +329,7 @@ validate_file_name (char *file, bool check_basic_portability,
   check_component_lengths = check_basic_portability;
   if (! check_component_lengths && ! file_exists)
     {
-      for (start = file; *(start = component_start (start)); )
+      for (char *start = file; *(start = component_start (start)); )
         {
           size_t length = component_len (start);
 
@@ -359,7 +354,7 @@ validate_file_name (char *file, bool check_basic_portability,
       /* If nonzero, the known limit on file name components.  */
       idx_t known_name_max = check_basic_portability ? _POSIX_NAME_MAX : 0;
 
-      for (start = file; *(start = component_start (start)); )
+      for (char *start = file; *(start = component_start (start)); )
         {
           idx_t length;
 

@@ -45,7 +45,6 @@ static void
 list_entries_users (idx_t n, STRUCT_UTMP const *this)
 {
   char **u = xinmalloc (n, sizeof *u);
-  idx_t i;
   idx_t n_entries = 0;
 
   while (n--)
@@ -64,14 +63,14 @@ list_entries_users (idx_t n, STRUCT_UTMP const *this)
 
   qsort (u, n_entries, sizeof (u[0]), userid_compare);
 
-  for (i = 0; i < n_entries; i++)
+  for (idx_t i = 0; i < n_entries; i++)
     {
       char c = (i < n_entries - 1 ? ' ' : '\n');
       fputs (u[i], stdout);
       putchar (c);
     }
 
-  for (i = 0; i < n_entries; i++)
+  for (idx_t i = 0; i < n_entries; i++)
     free (u[i]);
   free (u);
 }

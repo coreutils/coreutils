@@ -297,12 +297,11 @@ elide_tail_bytes_pipe (char const *filename, int fd, uintmax_t n_elide,
       bool first = true;
       bool eof = false;
       idx_t n_to_read = READ_BUFSIZE + n_elide;
-      bool i;
       char *b[2];
       b[0] = xnmalloc (2, n_to_read);
       b[1] = b[0] + n_to_read;
 
-      for (i = false; ! eof ; i = !i)
+      for (bool i = false; ! eof ; i = !i)
         {
           idx_t n_read = full_read (fd, b[i], n_to_read);
           idx_t delta = 0;
@@ -911,7 +910,6 @@ main (int argc, char **argv)
   enum header_mode header_mode = multiple_files;
   bool ok = true;
   int c;
-  size_t i;
 
   /* Number of items to output, or to elide from the end.
      UINTMAX_MAX stands for an essentially unlimited number.  */
@@ -1071,7 +1069,7 @@ main (int argc, char **argv)
 
   xset_binary_mode (STDOUT_FILENO, O_BINARY);
 
-  for (i = 0; file_list[i]; ++i)
+  for (size_t i = 0; file_list[i]; ++i)
     ok &= head_file (file_list[i], n_units, count_lines, elide_from_end);
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)

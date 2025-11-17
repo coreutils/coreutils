@@ -80,9 +80,7 @@ If no VARIABLE is specified, print name and value pairs for them all.\n\
 int
 main (int argc, char **argv)
 {
-  char **env;
   char *ep, *ap;
-  int i;
   bool ok;
   int optc;
   bool opt_nul_terminate_output = false;
@@ -112,7 +110,7 @@ main (int argc, char **argv)
 
   if (optind >= argc)
     {
-      for (env = environ; *env != nullptr; ++env)
+      for (char **env = environ; *env != nullptr; ++env)
         printf ("%s%c", *env, opt_nul_terminate_output ? '\0' : '\n');
       ok = true;
     }
@@ -120,7 +118,7 @@ main (int argc, char **argv)
     {
       int matches = 0;
 
-      for (i = optind; i < argc; ++i)
+      for (int i = optind; i < argc; ++i)
         {
           bool matched = false;
 
@@ -128,7 +126,7 @@ main (int argc, char **argv)
           if (strchr (argv[i], '='))
             continue;
 
-          for (env = environ; *env; ++env)
+          for (char **env = environ; *env; ++env)
             {
               ep = *env;
               ap = argv[i];

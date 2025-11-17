@@ -68,8 +68,7 @@ operand2sig (char const *operand)
       /* Convert signal to upper case in the C locale, not in the
          current locale.  Don't assume ASCII; it might be EBCDIC.  */
       char *upcased = xstrdup (operand);
-      char *p;
-      for (p = upcased; *p; p++)
+      for (char *p = upcased; *p; p++)
         if (strchr ("abcdefghijklmnopqrstuvwxyz", *p))
           *p += 'A' - 'a';
 

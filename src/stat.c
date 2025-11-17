@@ -963,8 +963,7 @@ find_bind_mount (char const * name)
   if (stat (name, &name_stats) != 0)
     return nullptr;
 
-  struct mount_entry *me;
-  for (me = mount_list; me; me = me->me_next)
+  for (struct mount_entry *me = mount_list; me; me = me->me_next)
     {
       if (me->me_dummy && me->me_devname[0] == '/'
           && streq (me->me_mountdir, name))
@@ -1145,8 +1144,7 @@ print_it (char const *format, int fd, char const *filename,
     };
   size_t n_alloc = strlen (format) + MAX_ADDITIONAL_BYTES + 1;
   char *dest = xmalloc (n_alloc);
-  char const *b;
-  for (b = format; *b; b++)
+  for (char const *b = format; *b; b++)
     {
       switch (*b)
         {
@@ -1347,9 +1345,8 @@ static unsigned int
 format_to_mask (char const *format)
 {
   unsigned int mask = 0;
-  char const *b;
 
-  for (b = format; *b; b++)
+  for (char const *b = format; *b; b++)
     {
       if (*b != '%')
         continue;

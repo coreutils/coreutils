@@ -300,9 +300,8 @@ print_numbers (char const *fmt, struct layout layout,
   if (! out_of_range)
     {
       long double x = first;
-      long double i;
 
-      for (i = 1; ; i++)
+      for (long double i = 1; ; i++)
         {
           long double x0 = x;
           if (printf (fmt, x) < 0)

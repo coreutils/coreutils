@@ -636,13 +636,11 @@ get_paragraph (FILE *f)
 static int
 copy_rest (FILE *f, int c)
 {
-  char const *s;
-
   out_column = 0;
   if (in_column > next_prefix_indent || (c != '\n' && c != EOF))
     {
       put_space (next_prefix_indent);
-      for (s = prefix; out_column != in_column && *s; out_column++)
+      for (char const *s = prefix; out_column != in_column && *s; out_column++)
         putchar (*s++);
       if (c != EOF && c != '\n')
         put_space (in_column - out_column);
@@ -743,9 +741,8 @@ get_prefix (FILE *f)
       prefix_lead_space : in_column;
   else
     {
-      char const *p;
       next_prefix_indent = in_column;
-      for (p = prefix; *p != '\0'; p++)
+      for (char const *p = prefix; *p != '\0'; p++)
         {
           unsigned char pc = *p;
           if (c != pc)
@@ -868,7 +865,7 @@ flush_paragraph (void)
 static void
 fmt_paragraph (void)
 {
-  WORD *start, *w;
+  WORD *w;
   int len;
   COST wcost, best;
   int saved_length;
@@ -877,7 +874,7 @@ fmt_paragraph (void)
   saved_length = word_limit->length;
   word_limit->length = max_width;	/* sentinel */
 
-  for (start = word_limit - 1; start >= word; start--)
+  for (WORD *start = word_limit - 1; start >= word; start--)
     {
       best = MAXCOST;
       len = start == word ? first_indent : other_indent;
@@ -983,10 +980,8 @@ line_cost (WORD *next, int len)
 static void
 put_paragraph (WORD *finish)
 {
-  WORD *w;
-
   put_line (word, first_indent);
-  for (w = word->next_break; w != finish; w = w->next_break)
+  for (WORD *w = word->next_break; w != finish; w = w->next_break)
     put_line (w, other_indent);
 }
 
@@ -1023,11 +1018,8 @@ put_line (WORD *w, int indent)
 static void
 put_word (WORD *w)
 {
-  char const *s;
-  int n;
-
-  s = w->text;
-  for (n = w->length; n != 0; n--)
+  char const *s = w->text;
+  for (int n = w->length; n != 0; n--)
     putchar (*s++);
   out_column += w->length;
 }

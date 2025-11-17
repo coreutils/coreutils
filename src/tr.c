@@ -543,9 +543,7 @@ ATTRIBUTE_PURE
 static enum Char_class
 look_up_char_class (char const *class_str, size_t len)
 {
-  enum Char_class i;
-
-  for (i = 0; i < countof (char_class_name); i++)
+  for (enum Char_class i = 0; i < countof (char_class_name); i++)
     if (STREQ_LEN (class_str, char_class_name[i], len)
         && strlen (char_class_name[i]) == len)
       return i;
@@ -1234,14 +1232,13 @@ validate_case_classes (struct Spec_list *s1, struct Spec_list *s2)
 static void
 get_spec_stats (struct Spec_list *s)
 {
-  struct List_element *p;
   count length = 0;
 
   s->n_indefinite_repeats = 0;
   s->has_equiv_class = false;
   s->has_restricted_char_class = false;
   s->has_char_class = false;
-  for (p = s->head->next; p; p = p->next)
+  for (struct List_element *p = s->head->next; p; p = p->next)
     {
       count len = 0;
 

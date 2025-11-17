@@ -99,10 +99,10 @@ parse_additional_groups (char const *groups, GETGROUPS_T **pgids,
   idx_t n_gids_allocated = 0;
   idx_t n_gids = 0;
   char *buffer = xstrdup (groups);
-  char const *tmp;
   int ret = 0;
 
-  for (tmp = strtok (buffer, ","); tmp; tmp = strtok (nullptr, ","))
+  for (char const *tmp = strtok (buffer, ","); tmp;
+       tmp = strtok (nullptr, ","))
     {
       struct group *g;
       uintmax_t value;

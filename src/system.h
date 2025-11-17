@@ -764,8 +764,7 @@ write_error (void)
 static inline char *
 stzncpy (char *restrict dest, char const *restrict src, size_t len)
 {
-  size_t i;
-  for (i = 0; i < len && *src; i++)
+  for (size_t i = 0; i < len && *src; i++)
     *dest++ = *src++;
   *dest = 0;
   return dest;
