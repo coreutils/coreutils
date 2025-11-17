@@ -451,7 +451,7 @@ src_b2sum_SOURCES = src/cksum.c \
 		    src/blake2/b2sum.c src/blake2/b2sum.h
 
 src_cksum_SOURCES = $(src_b2sum_SOURCES) src/sum.c src/sum.h \
-		    src/cksum_crc.c src/crc.h src/crctab.c
+		    src/cksum_crc.c src/cksum_crc.h src/crctab.c
 src_cksum_CPPFLAGS = -DHASH_ALGO_CKSUM=1 -DHAVE_CONFIG_H $(AM_CPPFLAGS)
 
 if USE_AVX512_CRC32

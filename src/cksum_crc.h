@@ -14,8 +14,8 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-#ifndef __CKSUM_H__
-# define __CKSUM_H__
+#ifndef __CKSUM_CRC_H__
+# define __CKSUM_CRC_H__
 
 # include <stdint.h>
 # include <stdio.h>
