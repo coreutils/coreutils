@@ -552,8 +552,7 @@ require_more_args (void)
 /* Print evaluation trace and args remaining.  */
 
 static void
-trace (fxn)
-     char *fxn;
+trace (char const *fxn)
 {
   char **a;
 
