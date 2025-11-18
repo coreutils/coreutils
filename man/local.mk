@@ -61,7 +61,11 @@ mandeps += $(top_srcdir)/src/system.h
 $(ALL_MANS): $(mandeps)
 
 if SINGLE_BINARY
+if SINGLE_BINARY_HARD
+mandeps += src/coreutils_hardlinks
+else
 mandeps += src/coreutils$(EXEEXT)
+endif
 else
 # Most prog.1 man pages depend on src/prog.  List the exceptions:
 man/install.1:   src/ginstall$(EXEEXT)

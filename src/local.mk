@@ -529,10 +529,22 @@ EXTRA_src_coreutils_DEPENDENCIES = $(single_binary_deps)
 
 include $(top_srcdir)/src/single-binary.mk
 
-# Creates symlinks or shebangs to the installed programs when building
-# coreutils single binary.
+# Creates symlinks, or shebangs to the installed programs
+# _before_ building coreutils single binary.
+if !SINGLE_BINARY_HARD
 EXTRA_src_coreutils_DEPENDENCIES += src/coreutils_$(single_binary_install_type)
+endif
 endif SINGLE_BINARY
+
+# Creates hardlinks _after_ building the coreutils single binary.
+CLEANFILES += src/coreutils_hardlinks
+src/coreutils_hardlinks: src/coreutils$(EXEEXT)
+	$(AM_V_GEN)touch $@
+	$(AM_V_at)for i in x $(single_binary_progs); do \
+		test $$i = x && continue; \
+		rm -f src/$$i$(EXEEXT) || exit $$?; \
+		ln src/coreutils$(EXEEXT) src/$$i$(EXEEXT) || exit $$?; \
+	done
 
 CLEANFILES += src/coreutils_symlinks
 src/coreutils_symlinks: Makefile

@@ -14,6 +14,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New Features
 
+  configure accepts a new --enable-single-binary=hardlinks mode to build the
+  selected programs as hard links to a multi-call binary called "coreutils".
+  This augments the existing "symlinks" and "shebangs" modes already
+  supported by the --enable-single-binary option.
+
   'tail' now accepts the --debug option, which is currently used to
   detail the --follow implementation being used.
 

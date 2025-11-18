@@ -188,11 +188,14 @@ install-exec-hook:
 	  test $$p = x && continue;					\
 	  ptrans=$$(printf '%s' "$$p" | sed -e "$(transform)");		\
 	  rm -f $(DESTDIR)$(bindir)/$$ptrans$(EXEEXT) || exit $$?;	\
-	  if test "x$(single_binary_install_type)" = xshebangs; then	\
+	  if test "$(single_binary_install_type)" = shebangs; then	\
 	    printf '#!%s --coreutils-prog-shebang=%s\n'			\
 	      $(bindir)/$$ctrans$(EXEEXT) $$p				\
 	      >$(DESTDIR)$(bindir)/$$ptrans$(EXEEXT) || exit $$?;	\
 	    chmod a+x,a-w $(DESTDIR)$(bindir)/$$ptrans$(EXEEXT) || exit $$?;\
+	  elif test "$(single_binary_install_type)" = hardlinks; then	\
+	    ln $(DESTDIR)$(bindir)/$$ctrans$(EXEEXT)			\
+	      $(DESTDIR)$(bindir)/$$ptrans$(EXEEXT) || exit $$?;	\
 	  else								\
 	    $(LN_S) -s $$ctrans$(EXEEXT)				\
 	      $(DESTDIR)$(bindir)/$$ptrans$(EXEEXT) || exit $$?;	\

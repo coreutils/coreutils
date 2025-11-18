@@ -105,16 +105,16 @@ AC_DEFUN([gl_GCC_VERSION_IFELSE],
 )
 
 AC_ARG_ENABLE([single-binary],
-  [AS_HELP_STRING([--enable-single-binary=[shebangs|symlinks]],
+  [AS_HELP_STRING([--enable-single-binary=[shebangs|symlinks|hardlinks]],
      [Compile all the tools in a single binary, reducing the overall size.
-      When compiled this way, shebangs (default when enabled) or symlinks are
-      installed for each tool that points to the single binary.])],
+      When compiled this way, shebangs (default when enabled), symlinks, or
+      hardlinks are installed for each tool, which point to a single binary])],
   [gl_single_binary=no ;
    case $enableval in
      yes) gl_single_binary=shebangs ;;
-     no|shebangs|symlinks) gl_single_binary=$enableval ;;
+     no|shebangs|symlinks|hardlinks) gl_single_binary=$enableval ;;
      *)      AC_MSG_ERROR([bad value $enableval for single-binary option.
-                           Options are: symlinks, shebangs, no.]) ;;
+                           Options are: hardlinks, symlinks, shebangs, no.]) ;;
    esac],
   [gl_single_binary=no]
 )
@@ -126,13 +126,15 @@ AC_ARG_ENABLE([single-binary-exceptions],
   [gl_single_binary_exceptions=$enableval],
   [gl_single_binary_exceptions=]
 )
-if test "$gl_single_binary" = 'symlinks'; then
+if test "$gl_single_binary" = 'symlinks' ||
+   test "$gl_single_binary" = 'hardlinks'; then
   if ! test "`echo ls | sed \"$program_transform_name\"`" = 'ls'; then
     AC_MSG_ERROR([program name transformations are not currently supported
-                  with --enable-single-binary=symlinks.])
+                  with --enable-single-binary=$gl_single_binary.])
   fi
 fi
 AM_CONDITIONAL([SINGLE_BINARY], [test "$gl_single_binary" != no])
+AM_CONDITIONAL([SINGLE_BINARY_HARD], [test "$gl_single_binary" == hardlinks])
 
 AC_ARG_ENABLE([bold-man-page-references],
   [AS_HELP_STRING([--disable-bold-man-page-references],
