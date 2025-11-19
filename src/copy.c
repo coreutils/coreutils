@@ -226,13 +226,11 @@ is_terminal_error (int err)
 /* Perform the O(1) btrfs clone operation, if possible.
    Upon success, return 0.  Otherwise, return -1 and set errno.  */
 static inline int
-clone_file (int dest_fd, int src_fd)
+clone_file (MAYBE_UNUSED int dest_fd, MAYBE_UNUSED int src_fd)
 {
 #ifdef FICLONE
   return ioctl (dest_fd, FICLONE, src_fd);
 #else
-  (void) dest_fd;
-  (void) src_fd;
   errno = ENOTSUP;
   return -1;
 #endif
@@ -541,7 +539,8 @@ set_owner (const struct cp_options *x, char const *dst_name,
    DST_NAME if defined.  */
 
 static void
-set_author (char const *dst_name, int dest_desc, const struct stat *src_sb)
+set_author (MAYBE_UNUSED char const *dst_name, MAYBE_UNUSED int dest_desc,
+            MAYBE_UNUSED const struct stat *src_sb)
 {
 #if HAVE_STRUCT_STAT_ST_AUTHOR
   /* FIXME: Modify the following code so that it does not
@@ -561,10 +560,6 @@ set_author (char const *dst_name, int dest_desc, const struct stat *src_sb)
                quoteaf (dst_name));
       mach_port_deallocate (mach_task_self (), file);
     }
-#else
-  (void) dst_name;
-  (void) dest_desc;
-  (void) src_sb;
 #endif
 }
 
