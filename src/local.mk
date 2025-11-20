@@ -337,16 +337,6 @@ src_sort_LDADD += $(LIBPMULTITHREAD)
 # for pthread_sigmask
 src_sort_LDADD += $(PTHREAD_SIGMASK_LIB)
 
-if !USE_NLS
-# for CFPreferencesCopyAppValue
-src_date_LDADD += $(INTL_MACOSX_LIBS)
-src_du_LDADD += $(INTL_MACOSX_LIBS)
-src_ls_LDADD += $(INTL_MACOSX_LIBS)
-src_pr_LDADD += $(INTL_MACOSX_LIBS)
-src_stat_LDADD += $(INTL_MACOSX_LIBS)
-src_uptime_LDADD += $(INTL_MACOSX_LIBS)
-endif
-
 # Get the release year from lib/version-etc.c.
 RELEASE_YEAR = \
   `sed -n '/.*COPYRIGHT_YEAR = \([0-9][0-9][0-9][0-9]\) };/s//\1/p' \
