@@ -72,6 +72,14 @@
 # define SA_RESTART 0
 #endif
 
+#ifndef SIGRTMIN
+# define SIGRTMIN 0
+# undef SIGRTMAX
+#endif
+#ifndef SIGRTMAX
+# define SIGRTMAX (SIGRTMIN - 1)
+#endif
+
 #define PROGRAM_NAME "timeout"
 
 #define AUTHORS proper_name_lite ("Padraig Brady", "P\303\241draig Brady")
@@ -191,6 +199,41 @@ chld (MAYBE_UNUSED int sig)
 {
 }
 
+static int const term_sig[] =
+  {
+    SIGALRM, /* our timeout.  */
+    SIGINT,  /* Ctrl-C at terminal for example.  */
+    SIGQUIT, /* Ctrl-\ at terminal for example.  */
+    SIGHUP,  /* terminal closed for example.  */
+    SIGTERM, /* if terminated, stop monitored proc.  */
+
+    SIGPIPE, SIGUSR1, SIGUSR2,
+    SIGILL, SIGTRAP, SIGABRT, SIGBUS, SIGFPE, SIGSEGV,
+#ifdef SIGXCPU
+    SIGXCPU,
+#endif
+#ifdef SIGXFSZ
+    SIGXFSZ,
+#endif
+#ifdef SIGSYS
+    SIGSYS,
+#endif
+#ifdef SIGVTALRM
+    SIGVTALRM,
+#endif
+#ifdef SIGPROF
+    SIGPROF,
+#endif
+#ifdef SIGPOLL
+    SIGPOLL,
+#endif
+#ifdef SIGPWR
+    SIGPWR,
+#endif
+#ifdef SIGSTKFLT
+    SIGSTKFLT,
+#endif
+  };
 
 static void
 cleanup (int sig)
@@ -410,11 +453,13 @@ install_cleanup (int sigterm)
   sa.sa_flags = SA_RESTART;   /* Restart syscalls if possible, as that's
                                  more likely to work cleanly.  */
 
-  sigaction (SIGALRM, &sa, nullptr); /* our timeout.  */
-  sigaction (SIGINT, &sa, nullptr);  /* Ctrl-C at terminal for example.  */
-  sigaction (SIGQUIT, &sa, nullptr); /* Ctrl-\ at terminal for example.  */
-  sigaction (SIGHUP, &sa, nullptr);  /* terminal closed for example.  */
-  sigaction (SIGTERM, &sa, nullptr); /* if killed, stop monitored proc.  */
+  for (int i = 0; i < countof (term_sig); i++)
+    sigaction (term_sig[i], &sa, nullptr);
+
+  /* Real Time signals also terminate by default.  */
+  for (int s = SIGRTMIN; s <= SIGRTMAX; s++)
+    sigaction (s, &sa, nullptr);
+
   sigaction (sigterm, &sa, nullptr); /* user specified termination signal.  */
 }
 
@@ -429,11 +474,12 @@ block_cleanup_and_chld (int sigterm, sigset_t *old_set)
   sigset_t block_set;
   sigemptyset (&block_set);
 
-  sigaddset (&block_set, SIGALRM);
-  sigaddset (&block_set, SIGINT);
-  sigaddset (&block_set, SIGQUIT);
-  sigaddset (&block_set, SIGHUP);
-  sigaddset (&block_set, SIGTERM);
+  for (int i = 0; i < countof (term_sig); i++)
+    sigaddset (&block_set, term_sig[i]);
+
+  for (int s = SIGRTMIN; s <= SIGRTMAX; s++)
+    sigaddset (&block_set, s);
+
   sigaddset (&block_set, sigterm);
 
   sigaddset (&block_set, SIGCHLD);
