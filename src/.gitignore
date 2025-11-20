@@ -16,6 +16,7 @@ chroot
 cksum
 comm
 coreutils
+coreutils_hardlinks
 cp
 csplit
 cut
