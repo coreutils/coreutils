@@ -33,6 +33,7 @@
 #include "quote.h"
 #include "safe-read.h"
 #include "stdio--.h"
+#include "term-sig.h"
 #include "xdectoint.h"
 #include "xstrtol.h"
 
@@ -1365,36 +1366,16 @@ main (int argc, char **argv)
   parse_patterns (argc, optind, argv);
 
   {
-    static int const sig[] =
-      {
-        /* The usual suspects.  */
-        SIGALRM, SIGHUP, SIGINT, SIGPIPE, SIGQUIT, SIGTERM,
-#ifdef SIGPOLL
-        SIGPOLL,
-#endif
-#ifdef SIGPROF
-        SIGPROF,
-#endif
-#ifdef SIGVTALRM
-        SIGVTALRM,
-#endif
-#ifdef SIGXCPU
-        SIGXCPU,
-#endif
-#ifdef SIGXFSZ
-        SIGXFSZ,
-#endif
-      };
-    enum { nsigs = countof (sig) };
+    enum { nsigs = countof (term_sig) };
 
     struct sigaction act;
 
     sigemptyset (&caught_signals);
     for (int i = 0; i < nsigs; i++)
       {
-        sigaction (sig[i], nullptr, &act);
+        sigaction (term_sig[i], nullptr, &act);
         if (act.sa_handler != SIG_IGN)
-          sigaddset (&caught_signals, sig[i]);
+          sigaddset (&caught_signals, term_sig[i]);
       }
 
     act.sa_handler = interrupt_handler;
@@ -1402,8 +1383,8 @@ main (int argc, char **argv)
     act.sa_flags = 0;
 
     for (int i = 0; i < nsigs; i++)
-      if (sigismember (&caught_signals, sig[i]))
-        sigaction (sig[i], &act, nullptr);
+      if (sigismember (&caught_signals, term_sig[i]))
+        sigaction (term_sig[i], &act, nullptr);
   }
 
   split_file ();

@@ -102,6 +102,7 @@
 #include "stat-size.h"
 #include "stat-time.h"
 #include "strftime.h"
+#include "term-sig.h"
 #include "xdectoint.h"
 #include "xstrtol.h"
 #include "xstrtol-error.h"
@@ -1598,33 +1599,16 @@ static void
 signal_setup (bool init)
 {
   /* The signals that are trapped, and the number of such signals.  */
-  static int const sig[] =
+  static int const stop_sig[] =
     {
       /* This one is handled specially.  */
       SIGTSTP,
-
-      /* The usual suspects.  */
-      SIGALRM, SIGHUP, SIGINT, SIGPIPE, SIGQUIT, SIGTERM,
-#ifdef SIGPOLL
-      SIGPOLL,
-#endif
-#ifdef SIGPROF
-      SIGPROF,
-#endif
-#ifdef SIGVTALRM
-      SIGVTALRM,
-#endif
-#ifdef SIGXCPU
-      SIGXCPU,
-#endif
-#ifdef SIGXFSZ
-      SIGXFSZ,
-#endif
     };
-  enum { nsigs = countof (sig) };
+
+  enum { nsigs = countof (term_sig), nstop = countof (stop_sig) };
 
 #if ! SA_NOCLDSTOP
-  static bool caught_sig[nsigs];
+  static bool caught_sig[nsigs + nstop];
 #endif
 
   if (init)
@@ -1633,29 +1617,34 @@ signal_setup (bool init)
       struct sigaction act;
 
       sigemptyset (&caught_signals);
-      for (int j = 0; j < nsigs; j++)
+      for (int j = 0; j < nsigs + nstop; j++)
         {
-          sigaction (sig[j], nullptr, &act);
+          int sig = j < nsigs ? term_sig[j]: stop_sig[j - nsigs];
+          sigaction (sig, nullptr, &act);
           if (act.sa_handler != SIG_IGN)
-            sigaddset (&caught_signals, sig[j]);
+            sigaddset (&caught_signals, sig);
         }
 
       act.sa_mask = caught_signals;
       act.sa_flags = SA_RESTART;
 
-      for (int j = 0; j < nsigs; j++)
-        if (sigismember (&caught_signals, sig[j]))
-          {
-            act.sa_handler = sig[j] == SIGTSTP ? stophandler : sighandler;
-            sigaction (sig[j], &act, nullptr);
-          }
-#else
-      for (int j = 0; j < nsigs; j++)
+      for (int j = 0; j < nsigs + nstop; j++)
         {
-          caught_sig[j] = (signal (sig[j], SIG_IGN) != SIG_IGN);
+          int sig = j < nsigs ? term_sig[j]: stop_sig[j - nsigs];
+          if (sigismember (&caught_signals, sig))
+            {
+              act.sa_handler = j < nsigs ? sighandler : stophandler;
+              sigaction (sig, &act, nullptr);
+            }
+        }
+#else
+      for (int j = 0; j < nsigs + nstop; j++)
+        {
+          int sig = j < nsigs ? term_sig[j]: stop_sig[j - nsigs];
+          caught_sig[j] = (signal (sig, SIG_IGN) != SIG_IGN);
           if (caught_sig[j])
             {
-              signal (sig[j], sig[j] == SIGTSTP ? stophandler : sighandler);
+              signal (sig, j < nsigs ? sighandler : stophandler);
               siginterrupt (sig[j], 0);
             }
         }
@@ -1663,15 +1652,16 @@ signal_setup (bool init)
     }
   else /* restore.  */
     {
+      for (int j = 0; j < nsigs + nstop; j++)
+        {
+          int sig = j < nsigs ? term_sig[j]: stop_sig[j - nsigs];
 #if SA_NOCLDSTOP
-      for (int j = 0; j < nsigs; j++)
-        if (sigismember (&caught_signals, sig[j]))
-          signal (sig[j], SIG_DFL);
+          if (sigismember (&caught_signals, sig))
 #else
-      for (int j = 0; j < nsigs; j++)
-        if (caught_sig[j])
-          signal (sig[j], SIG_DFL);
+          if (caught_sig[j])
 #endif
+            signal (sig, SIG_DFL);
+        }
     }
 }
 

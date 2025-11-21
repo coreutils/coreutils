@@ -59,6 +59,7 @@
 #include "dtimespec-bound.h"
 #include "sig2str.h"
 #include "operand2sig.h"
+#include "term-sig.h"
 #include "quote.h"
 
 #if HAVE_SETRLIMIT
@@ -198,42 +199,6 @@ static void
 chld (MAYBE_UNUSED int sig)
 {
 }
-
-static int const term_sig[] =
-  {
-    SIGALRM, /* our timeout.  */
-    SIGINT,  /* Ctrl-C at terminal for example.  */
-    SIGQUIT, /* Ctrl-\ at terminal for example.  */
-    SIGHUP,  /* terminal closed for example.  */
-    SIGTERM, /* if terminated, stop monitored proc.  */
-
-    SIGPIPE, SIGUSR1, SIGUSR2,
-    SIGILL, SIGTRAP, SIGABRT, SIGBUS, SIGFPE, SIGSEGV,
-#ifdef SIGXCPU
-    SIGXCPU,
-#endif
-#ifdef SIGXFSZ
-    SIGXFSZ,
-#endif
-#ifdef SIGSYS
-    SIGSYS,
-#endif
-#ifdef SIGVTALRM
-    SIGVTALRM,
-#endif
-#ifdef SIGPROF
-    SIGPROF,
-#endif
-#ifdef SIGPOLL
-    SIGPOLL,
-#endif
-#ifdef SIGPWR
-    SIGPWR,
-#endif
-#ifdef SIGSTKFLT
-    SIGSTKFLT,
-#endif
-  };
 
 static void
 cleanup (int sig)

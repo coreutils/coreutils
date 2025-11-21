@@ -62,6 +62,7 @@ noinst_HEADERS =		\
   src/statx.h			\
   src/system.h			\
   src/temp-stream.h		\
+  src/term-sig.h		\
   src/uname.h			\
   src/wc.h
 
