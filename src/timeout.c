@@ -444,6 +444,23 @@ install_sigchld (void)
   unblock_signal (SIGCHLD);
 }
 
+/* Filter out signals that were ignored.  */
+
+static bool
+sig_needs_handling (int sig, int sigterm)
+{
+  if (sig == SIGALRM || sig == sigterm)
+    return true;  /* We can't ignore these.  */
+
+  /* Note background jobs in shells have SIGINT and SIGQUIT
+     set to SIG_IGN by default.  I.e., those signals will
+     not be propagated through background timeout jobs.  */
+  struct sigaction old_sa;
+  sigaction (sig, nullptr, &old_sa);
+  bool ret = old_sa.sa_handler != SIG_IGN;
+  return ret;
+}
+
 static void
 install_cleanup (int sigterm)
 {
@@ -454,11 +471,13 @@ install_cleanup (int sigterm)
                                  more likely to work cleanly.  */
 
   for (int i = 0; i < countof (term_sig); i++)
-    sigaction (term_sig[i], &sa, nullptr);
+    if (sig_needs_handling (term_sig[i], sigterm))
+      sigaction (term_sig[i], &sa, nullptr);
 
   /* Real Time signals also terminate by default.  */
   for (int s = SIGRTMIN; s <= SIGRTMAX; s++)
-    sigaction (s, &sa, nullptr);
+    if (sig_needs_handling (s, sigterm))
+      sigaction (s, &sa, nullptr);
 
   sigaction (sigterm, &sa, nullptr); /* user specified termination signal.  */
 }
@@ -475,10 +494,12 @@ block_cleanup_and_chld (int sigterm, sigset_t *old_set)
   sigemptyset (&block_set);
 
   for (int i = 0; i < countof (term_sig); i++)
-    sigaddset (&block_set, term_sig[i]);
+    if (sig_needs_handling (term_sig[i], sigterm))
+      sigaddset (&block_set, term_sig[i]);
 
   for (int s = SIGRTMIN; s <= SIGRTMAX; s++)
-    sigaddset (&block_set, s);
+    if (sig_needs_handling (s, sigterm))
+      sigaddset (&block_set, s);
 
   sigaddset (&block_set, sigterm);
 

@@ -78,5 +78,8 @@ done
 echo 125 > timeout.exp || framework_failure_
 { timeout -v .1 sleep 10 2>&1; echo $? >timeout.status; } | :
 compare timeout.exp timeout.status || fail=1
+# Ensure we don't catch/propagate ignored signals
+(trap '' PIPE && timeout 10 yes |:) 2>&1 |
+  grep 'Broken pipe' >/dev/null || fail=1
 
 Exit $fail

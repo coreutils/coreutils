@@ -26,6 +26,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   'tail' now accepts the --debug option, which is currently used to
   detail the --follow implementation being used.
 
+** Changes in behavior
+
+  'timeout' now honors ignored signals and will not propagate them.  E.g.,
+  timeout(1) in a shell backgrounded job, will not terminate upon receiving
+  SIGINT or SIGQUIT, as these are ignored by default in shell background jobs.
+
 
 * Noteworthy changes in release 9.9 (2025-11-10) [stable]
 

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ timeout
+print_ver_ timeout env
 require_trap_signame_
 require_kill_group_
 
@@ -26,18 +26,19 @@ require_kill_group_
 #    group.sh - separate group
 #      timeout.cmd - same group as group.sh
 #
-# We then send a SIGINT to the "separate group"
-# to simulate what happens when a Ctrl-C
+# We then send a SIGUSR1 to the "separate group"
+# to simulate what happens when a terminating signal
 # is sent to the foreground group.
 
 setsid true || skip_ "setsid required to control groups"
 
 printf '%s\n' '#!'"$SHELL" > timeout.cmd || framework_failure_
 cat >> timeout.cmd <<\EOF
-trap 'touch int.received; exit' INT
+trap 'touch sig.received; exit' USR1
+trap
 touch timeout.running
 count=$1
-until test -e int.received || test $count = 0; do
+until test -e sig.received || test $count = 0; do
   sleep 1
   count=$(expr $count - 1)
 done
@@ -46,9 +47,25 @@ chmod a+x timeout.cmd
 
 cat > group.sh <<EOF
 #!$SHELL
-trap '' INT
-timeout --foreground 25 ./timeout.cmd 20&
+
+# trap '' ensures this script ignores the signal,
+# so that the 'wait' below is not interrupted.
+# Note this then requires env --default... to reset
+# the signal disposition so that 'timeout' handles it.
+# Alternatively one could use trap ':' USR1
+# and then handle the retry in wait like:
+# while wait; test \$? -gt 128; do :; done
+# Note also INT and QUIT signals are special for backgrounded
+# processes like this in shell as they're auto ignored
+# and can't be reset with trap to any other disposition.
+# Therefore we use the ignored signal method so any
+# termination signal can be used.
+trap '' USR1
+
+env --default-signal=USR1 \
+timeout -v --foreground 25 ./timeout.cmd 20&
 wait
+echo group.sh wait returned \$ret
 EOF
 chmod a+x group.sh
 
@@ -68,11 +85,11 @@ setsid ./group.sh & pid=$!
 # Wait 6.3s for timeout.cmd to start
 retry_delay_ check_timeout_cmd_running .1 6 || fail=1
 # Simulate a Ctrl-C to the group to test timely exit
-kill -INT -- -$pid
+kill -USR1 -- -$pid
 wait
-test -e int.received || fail=1
+test -e sig.received || fail=1
 
-rm -f int.received timeout.running
+rm -f sig.received timeout.running
 
 
 # Ensure cascaded timeouts work
@@ -84,8 +101,8 @@ start=$(date +%s)
 
 # Note the first timeout must send a signal that
 # the second is handling for it to be propagated to the command.
-# SIGINT, SIGTERM, SIGALRM etc. are implicit.
-timeout -sALRM 30 timeout -sINT 25 ./timeout.cmd 20 & pid=$!
+# termination signals are implicitly handled unless ignored.
+timeout -sALRM 30 timeout -sUSR1 25 ./timeout.cmd 20 & pid=$!
 # Wait 6.3s for timeout.cmd to start
 retry_delay_ check_timeout_cmd_running .1 6 || fail=1
 kill -ALRM $pid # trigger the alarm of the first timeout command
@@ -93,7 +110,7 @@ wait $pid
 ret=$?
 test $ret -eq 124 ||
   skip_ "timeout returned $ret. SIGALRM not handled?"
-test -e int.received || fail=1
+test -e sig.received || fail=1
 
 end=$(date +%s)
 
