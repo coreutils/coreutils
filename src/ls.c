@@ -60,17 +60,6 @@
 # include <langinfo.h>
 #endif
 
-/* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
-   present.  */
-#ifndef SA_NOCLDSTOP
-# define SA_NOCLDSTOP 0
-# define sigprocmask(How, Set, Oset) /* empty */
-# define sigset_t int
-# if ! HAVE_SIGINTERRUPT
-#  define siginterrupt(sig, flag) /* empty */
-# endif
-#endif
-
 /* NonStop circa 2011 lacks both SA_RESTART and siginterrupt, so don't
    restart syscalls after a signal handler fires.  This may cause
    colors to get messed up on the screen if 'ls' is interrupted, but
@@ -1529,8 +1518,6 @@ set_normal_color (void)
 static void
 sighandler (int sig)
 {
-  if (! SA_NOCLDSTOP)
-    signal (sig, SIG_IGN);
   if (! interrupt_signal)
     interrupt_signal = sig;
 }
@@ -1538,10 +1525,8 @@ sighandler (int sig)
 /* A SIGTSTP was received; arrange for the program to suspend itself.  */
 
 static void
-stophandler (int sig)
+stophandler (MAYBE_UNUSED int sig)
 {
-  if (! SA_NOCLDSTOP)
-    signal (sig, stophandler);
   if (! interrupt_signal)
     stop_signal_count++;
 }
@@ -1607,13 +1592,8 @@ signal_setup (bool init)
 
   enum { nsigs = countof (term_sig), nstop = countof (stop_sig) };
 
-#if ! SA_NOCLDSTOP
-  static bool caught_sig[nsigs + nstop];
-#endif
-
   if (init)
     {
-#if SA_NOCLDSTOP
       struct sigaction act;
 
       sigemptyset (&caught_signals);
@@ -1637,29 +1617,13 @@ signal_setup (bool init)
               sigaction (sig, &act, nullptr);
             }
         }
-#else
-      for (int j = 0; j < nsigs + nstop; j++)
-        {
-          int sig = j < nsigs ? term_sig[j]: stop_sig[j - nsigs];
-          caught_sig[j] = (signal (sig, SIG_IGN) != SIG_IGN);
-          if (caught_sig[j])
-            {
-              signal (sig, j < nsigs ? sighandler : stophandler);
-              siginterrupt (sig[j], 0);
-            }
-        }
-#endif
     }
   else /* restore.  */
     {
       for (int j = 0; j < nsigs + nstop; j++)
         {
           int sig = j < nsigs ? term_sig[j]: stop_sig[j - nsigs];
-#if SA_NOCLDSTOP
           if (sigismember (&caught_signals, sig))
-#else
-          if (caught_sig[j])
-#endif
             signal (sig, SIG_DFL);
         }
     }

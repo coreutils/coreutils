@@ -42,17 +42,6 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Stuart Kemp")
 
-/* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
-   present.  */
-#ifndef SA_NOCLDSTOP
-# define SA_NOCLDSTOP 0
-# define sigprocmask(How, Set, Oset) /* empty */
-# define sigset_t int
-# if ! HAVE_SIGINTERRUPT
-#  define siginterrupt(sig, flag) /* empty */
-# endif
-#endif
-
 /* NonStop circa 2011 lacks SA_RESETHAND; see Bug#9076.  */
 #ifndef SA_RESETHAND
 # define SA_RESETHAND 0
@@ -850,10 +839,8 @@ interrupt_handler (int sig)
 /* An info signal was received; arrange for the program to print status.  */
 
 static void
-siginfo_handler (int sig)
+siginfo_handler (MAYBE_UNUSED int sig)
 {
-  if (! SA_NOCLDSTOP)
-    signal (sig, siginfo_handler);
   info_signal_count++;
 }
 
@@ -863,8 +850,6 @@ static void
 install_signal_handlers (void)
 {
   bool catch_siginfo = ! (SIGINFO == SIGUSR1 && getenv ("POSIXLY_CORRECT"));
-
-#if SA_NOCLDSTOP
 
   struct sigaction act;
   sigemptyset (&caught_signals);
@@ -891,20 +876,6 @@ install_signal_handlers (void)
       act.sa_flags = SA_NODEFER | SA_RESETHAND;
       sigaction (SIGINT, &act, nullptr);
     }
-
-#else
-
-  if (catch_siginfo)
-    {
-      signal (SIGINFO, siginfo_handler);
-      siginterrupt (SIGINFO, 1);
-    }
-  if (signal (SIGINT, SIG_IGN) != SIG_IGN)
-    {
-      signal (SIGINT, interrupt_handler);
-      siginterrupt (SIGINT, 1);
-    }
-#endif
 }
 
 /* Close FD.  Return 0 if successful, -1 (setting errno) otherwise.

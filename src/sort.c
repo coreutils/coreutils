@@ -73,18 +73,6 @@ struct rlimit { size_t rlim_cur; };
 # include <langinfo.h>
 #endif
 
-/* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
-   present.  */
-#ifndef SA_NOCLDSTOP
-# define SA_NOCLDSTOP 0
-/* No sigprocmask.  Always 'return' zero. */
-# define sigprocmask(How, Set, Oset) (0)
-# define sigset_t int
-# if ! HAVE_SIGINTERRUPT
-#  define siginterrupt(sig, flag) /* empty */
-# endif
-#endif
-
 #if !defined OPEN_MAX && defined NR_OPEN
 # define OPEN_MAX NR_OPEN
 #endif
@@ -402,9 +390,6 @@ cleanup (void)
 static void
 sighandler (int sig)
 {
-  if (! SA_NOCLDSTOP)
-    signal (sig, SIG_IGN);
-
   cleanup ();
 
   signal (sig, SIG_DFL);
@@ -4450,7 +4435,6 @@ main (int argc, char **argv)
   {
     enum { nsigs = countof (term_sig) };
 
-#if SA_NOCLDSTOP
     struct sigaction act;
 
     sigemptyset (&caught_signals);
@@ -4468,14 +4452,6 @@ main (int argc, char **argv)
     for (size_t i = 0; i < nsigs; i++)
       if (sigismember (&caught_signals, term_sig[i]))
         sigaction (term_sig[i], &act, nullptr);
-#else
-    for (size_t i = 0; i < nsigs; i++)
-      if (signal (term_sig[i], SIG_IGN) != SIG_IGN)
-        {
-          signal (term_sig[i], sighandler);
-          siginterrupt (term_sig[i], 1);
-        }
-#endif
   }
   signal (SIGCHLD, SIG_DFL); /* Don't inherit CHLD handling from parent.  */
 
