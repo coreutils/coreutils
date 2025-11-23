@@ -4229,6 +4229,15 @@ Supported more modern digest algorithms are:
 @samp{sm3}       only available through @command{cksum}
 @end example
 
+The following algorithms are currently considered secure against
+malicious tampering, i.e., there is no known way to modify a file to
+produce the same checksum:
+@example
+@samp{sha2}      equivalent to @command{sha@{224,256,384,512@}sum}
+@samp{sha3}      only available through @command{cksum}
+@samp{blake2b}   equivalent to @command{b2sum}
+@end example
+
 @item --base64
 @opindex --base64
 @cindex base64 checksum encoding
