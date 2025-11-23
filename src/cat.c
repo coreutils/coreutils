@@ -537,7 +537,7 @@ main (int argc, char **argv)
   /* Nonzero if we have ever read standard input.  */
   bool have_read_stdin = false;
 
-  struct stat stat_buf;
+  struct stat ostat_buf;
 
   /* Variables that are set according to the specified options.  */
   bool number = false;
@@ -638,28 +638,17 @@ main (int argc, char **argv)
 
   /* Get device, i-node number, and optimal blocksize of output.  */
 
-  if (fstat (STDOUT_FILENO, &stat_buf) < 0)
+  if (fstat (STDOUT_FILENO, &ostat_buf) < 0)
     error (EXIT_FAILURE, errno, _("standard output"));
 
   /* Optimal size of i/o operations of output.  */
-  idx_t outsize = io_blksize (&stat_buf);
+  idx_t outsize = io_blksize (&ostat_buf);
 
   /* Device, I-node number and lazily-acquired flags of the output.  */
-  struct
-  {
-    dev_t st_dev;
-    ino_t st_ino;
-  } out_id;
   int out_flags = -2;
-  bool have_out_dev = ! (S_TYPEISSHM (&stat_buf) || S_TYPEISTMO (&stat_buf));
-  if (have_out_dev)
-    {
-      out_id.st_dev = stat_buf.st_dev;
-      out_id.st_ino = stat_buf.st_ino;
-   }
 
   /* True if the output is a regular file.  */
-  bool out_isreg = S_ISREG (stat_buf.st_mode) != 0;
+  bool out_isreg = S_ISREG (ostat_buf.st_mode) != 0;
 
   if (! (number || show_ends || squeeze_blank))
     {
@@ -698,7 +687,8 @@ main (int argc, char **argv)
             }
         }
 
-      if (fstat (input_desc, &stat_buf) < 0)
+      struct stat istat_buf;
+      if (fstat (input_desc, &istat_buf) < 0)
         {
           error (0, errno, "%s", quotef (infile));
           ok = false;
@@ -706,7 +696,7 @@ main (int argc, char **argv)
         }
 
       /* Optimal size of i/o operations of input.  */
-      idx_t insize = io_blksize (&stat_buf);
+      idx_t insize = io_blksize (&istat_buf);
 
       fdadvise (input_desc, 0, 0, FADVISE_SEQUENTIAL);
 
@@ -714,10 +704,10 @@ main (int argc, char **argv)
          output device.  It's better to catch this error earlier
          rather than later.  */
 
-      if (! (S_ISFIFO (stat_buf.st_mode) || S_ISSOCK (stat_buf.st_mode)
-             || S_TYPEISSHM (&stat_buf) || S_TYPEISTMO (&stat_buf))
-          && have_out_dev
-          && SAME_INODE (stat_buf, out_id))
+      if (! (S_ISFIFO (istat_buf.st_mode) || S_ISSOCK (istat_buf.st_mode)
+             || S_TYPEISSHM (&istat_buf) || S_TYPEISTMO (&istat_buf))
+          && ! (S_TYPEISSHM (&ostat_buf) || S_TYPEISTMO (&ostat_buf))
+          && SAME_INODE (istat_buf, ostat_buf))
         {
           off_t in_pos = lseek (input_desc, 0, SEEK_CUR);
           if (0 <= in_pos)
@@ -747,7 +737,7 @@ main (int argc, char **argv)
              || show_tabs || squeeze_blank))
         {
           int copy_cat_status =
-            out_isreg && S_ISREG (stat_buf.st_mode) ? copy_cat () : 0;
+            out_isreg && S_ISREG (istat_buf.st_mode) ? copy_cat () : 0;
           if (copy_cat_status != 0)
             {
               inbuf = nullptr;
