@@ -1387,9 +1387,9 @@ mbsmbchr (char const* s, char const* c)
   unsigned char uc = *c;
    /* GB18030 is the most restrictive for the 0x30 optimization below.  */
   if (uc < 0x30 || MB_CUR_MAX == 1)
-    return strchr (s, uc);
+    return (char *) strchr (s, uc);
   else if (is_utf8_charset ())
-    return uc < 0x80 ? strchr (s, uc) : strstr (s, c);
+    return (char *) (uc < 0x80 ? strchr (s, uc) : strstr (s, c));
   else
     return *(c + 1) == '\0' ? mbschr (s, uc) : (char *) mbsstr (s, c);
 }
