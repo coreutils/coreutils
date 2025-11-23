@@ -884,6 +884,10 @@ sc_prohibit-long-form-bug-urls:
 announcement_Cc_ = $(translation_project_), \
   coreutils@gnu.org, coreutils-announce@gnu.org
 
+# Write cksum supported checksums into the announcement.
+# I.e., base64 to reduce space, and possibly tagged to ease usage.
+announce_gen_args = --cksum-checksums
+
 -include $(srcdir)/dist-check.mk
 
 update-copyright-env = \
