@@ -70,20 +70,22 @@
 
 #include <fnmatch.h>
 
+/* Gnulib includes.  */
 #include "acl.h"
+#include "areadlink.h"
 #include "argmatch.h"
-#include "system.h"
 #include "assure.h"
+#include "c-ctype.h"
 #include "c-strcase.h"
+#include "canonicalize.h"
 #include "dev-ino.h"
+#include "filemode.h"
 #include "filenamecat.h"
+#include "filevercmp.h"
 #include "hard-locale.h"
 #include "hash.h"
 #include "human.h"
-#include "filemode.h"
-#include "filevercmp.h"
 #include "idcache.h"
-#include "ls.h"
 #include "mbswidth.h"
 #include "mpsort.h"
 #include "obstack.h"
@@ -91,16 +93,18 @@
 #include "stat-size.h"
 #include "stat-time.h"
 #include "strftime.h"
-#include "term-sig.h"
 #include "xdectoint.h"
-#include "xstrtol.h"
-#include "xstrtol-error.h"
-#include "areadlink.h"
-#include "dircolors.h"
 #include "xgethostname.h"
-#include "c-ctype.h"
-#include "canonicalize.h"
+#include "xmemdup0.h"
+#include "xstrtol-error.h"
+#include "xstrtol.h"
+
+#include "system.h"
+
+#include "dircolors.h"
+#include "ls.h"
 #include "statx.h"
+#include "term-sig.h"
 
 /* Include <sys/capability.h> last to avoid a clash of <sys/types.h>
    include guards with some premature versions of libcap.
@@ -1904,7 +1908,7 @@ stdout_isatty (void)
 static int
 decode_switches (int argc, char **argv)
 {
-  char const *time_style_option = nullptr;
+  char *time_style_option = nullptr;
 
   /* These variables are false or -1 unless a switch says otherwise.  */
   bool kibibytes_specified = false;
@@ -2151,7 +2155,7 @@ decode_switches (int argc, char **argv)
 
         case FULL_TIME_OPTION:
           format_opt = long_format;
-          time_style_option = "full-iso";
+          time_style_option = (char *) "full-iso";
           break;
 
         case COLOR_OPTION:
@@ -2377,35 +2381,39 @@ decode_switches (int argc, char **argv)
 
   if (format == long_format)
     {
-      char const *style = time_style_option;
-      static char const posix_prefix[] = "posix-";
+      char *envstyle = nullptr;
+      char *style = time_style_option;
+      if (! style)
+        style = envstyle = getenv ("TIME_STYLE");
 
       if (! style)
+        style = (char *) "locale";
+      else
         {
-          style = getenv ("TIME_STYLE");
-          if (! style)
-            style = "locale";
-        }
-
-      while (STREQ_LEN (style, posix_prefix, sizeof posix_prefix - 1))
-        {
-          if (! hard_locale (LC_TIME))
-            return optind;
-          style += sizeof posix_prefix - 1;
+          static char const posix_prefix[] = "posix-";
+          while (STREQ_LEN (style, posix_prefix, sizeof posix_prefix - 1))
+            {
+              if (! hard_locale (LC_TIME))
+                return optind;
+              style += sizeof posix_prefix - 1;
+            }
         }
 
       if (*style == '+')
         {
-          char const *p0 = style + 1;
+          char *p0 = style + 1;
           char *p0nl = strchr (p0, '\n');
           char const *p1 = p0;
           if (p0nl)
             {
-              if (strchr (p0nl + 1, '\n'))
+              p1 = p0nl + 1;
+              if (strchr (p1, '\n'))
                 error (LS_FAILURE, 0, _("invalid time style format %s"),
                        quote (p0));
-              *p0nl++ = '\0';
-              p1 = p0nl;
+              if (envstyle)
+                p0 = xmemdup0 (p0, p0nl - p0);
+              else
+                *p0nl = '\0';
             }
           long_time_format[0] = p0;
           long_time_format[1] = p1;

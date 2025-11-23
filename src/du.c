@@ -40,6 +40,7 @@
 #include "stat-time.h"
 #include "stdio--.h"
 #include "xfts.h"
+#include "xmemdup0.h"
 #include "xstrtol.h"
 #include "xstrtol-error.h"
 
@@ -962,9 +963,9 @@ main (int argc, char **argv)
             {
               /* Ignore anything after a newline, for compatibility
                  with ls.  */
-              char *p = strchr (time_style, '\n');
+              char const *p = strchr (time_style, '\n');
               if (p)
-                *p = '\0';
+                time_style = xmemdup0 (time_style, p - time_style);
             }
           else
             {
