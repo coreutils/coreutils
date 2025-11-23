@@ -101,7 +101,7 @@ Concatenate FILE(s) to standard output.\n\
   -A, --show-all           equivalent to -vET\n\
   -b, --number-nonblank    number nonempty output lines, overrides -n\n\
   -e                       equivalent to -vE\n\
-  -E, --show-ends          display $ at end of each line\n\
+  -E, --show-ends          display $ or ^M$ at end of each line\n\
   -n, --number             number all output lines\n\
   -s, --squeeze-blank      suppress repeated empty output lines\n\
 "), stdout);
