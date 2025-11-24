@@ -19,6 +19,8 @@ disabled_by_default_progs='
     arch
     coreutils
     hostname
+    kill
+    uptime
 '
 
 # Programs that can be built only when certain requisite system
@@ -76,7 +78,6 @@ normal_progs='
     head
     id
     join
-    kill
     link
     ln
     logname
@@ -131,7 +132,6 @@ normal_progs='
     unexpand
     uniq
     unlink
-    uptime
     vdir
     wc
     whoami

@@ -43,6 +43,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   csplit, ls, and sort, now handle a more complete set of terminating signals.
 
+** Build-related
+
+  'kill' and 'uptime' are no longer built by default.  These programs can be
+  built with the --enable-install-program=kill,uptime configure option.
+
 
 * Noteworthy changes in release 9.9 (2025-11-10) [stable]
 
