@@ -88,7 +88,7 @@ Wrap input lines in each FILE, writing to standard output.\n\
       fputs (_("\
   -b, --bytes         count bytes rather than columns\n\
   -c, --characters    count characters rather than columns\n\
-  -s, --spaces        break at spaces\n\
+  -s, --spaces        break after blanks, or in words greater than WIDTH\n\
   -w, --width=WIDTH   use WIDTH columns instead of 80\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
