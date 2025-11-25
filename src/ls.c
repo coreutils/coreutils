@@ -5334,6 +5334,54 @@ calculate_columns (bool by_columns)
   return cols;
 }
 
+/* Output --option descriptions;
+   unconditionally formatted with ANSI format and hyperlink codes.
+   Any postprocessors like help2man etc. are expected to handle this.  */
+static void
+oputs (char const *option)
+{
+  static int help_no_sgr = -1;
+  if (help_no_sgr && (help_no_sgr = !!getenv ("HELP_NO_MARKUP")))
+    {
+      fputs (option, stdout);
+      return;
+    }
+
+  char const *option_text = strchr (option, '-');
+  assert (option_text);
+  size_t anchor_len = strcspn (option_text, ",=[ \n");
+
+  /* Set desc_text to spacing after the full option text */
+  char const *desc_text = option_text + anchor_len;
+  while (*desc_text && (! c_isspace (*desc_text) || *(desc_text + 1) == '-'))
+    desc_text++;
+
+  /* write spaces before option text. */
+  fwrite (option, 1, option_text - option, stdout);
+
+  /* write option text.  */
+  char const *url_program = streq (PROGRAM_NAME, "[") ? "test" : PROGRAM_NAME;
+  /* Note this can link to a local manual with file://... */
+  /* Note single node manual doesn't work for ls, cksum, md5sum, sha*sum,
+     but use single node for --help or --version.. */
+  if (STREQ_LEN (option_text, "--help", 6)
+      || STREQ_LEN (option_text, "--version", 9))
+    {
+      printf ("\033]8;;%s%s#%s%.*s", PACKAGE_URL,
+              url_program, url_program, (int) anchor_len, option_text);
+    }
+  else
+    {
+      printf ("\033]8;;%smanual/coreutils.html#%s%.*s", PACKAGE_URL,
+              url_program, (int) anchor_len, option_text);
+    }
+  fputs ("\a", stdout);
+  fwrite (option_text, 1, desc_text - option_text, stdout);
+  fputs ("\033]8;;\a", stdout);
+
+  fputs (desc_text, stdout);
+}
+
 void
 usage (int status)
 {
@@ -5349,151 +5397,181 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
+      oputs (_("\
   -a, --all                  do not ignore entries starting with .\n\
+"));
+      oputs (_("\
   -A, --almost-all           do not list implied . and ..\n\
+"));
+      oputs (_("\
       --author               with -l, print the author of each file\n\
+"));
+      oputs (_("\
   -b, --escape               print C-style escapes for nongraphic characters\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
       --block-size=SIZE      with -l, scale sizes by SIZE when printing them;\n\
                              e.g., '--block-size=M'; see SIZE format below\n\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -B, --ignore-backups       do not list implied entries ending with ~\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -c                         with -lt: sort by, and show, ctime (time of last\n\
                              change of file status information);\n\
                              with -l: show ctime and sort by name;\n\
                              otherwise: sort by ctime, newest first\n\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -C                         list entries by columns\n\
+"));
+      oputs (_("\
       --color[=WHEN]         color the output WHEN; more info below\n\
+"));
+      oputs (_("\
   -d, --directory            list directories themselves, not their contents\n\
+"));
+      oputs (_("\
   -D, --dired                generate output designed for Emacs' dired mode\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -f                         same as -a -U\n\
+"));
+      oputs (_("\
   -F, --classify[=WHEN]      append indicator (one of */=>@|) to entries WHEN\n\
+"));
+      oputs (_("\
       --file-type            likewise, except do not append '*'\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
       --format=WORD          across,horizontal (-x), commas (-m), long (-l),\n\
                              single-column (-1), verbose (-l), vertical (-C)\n\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
       --full-time            like -l --time-style=full-iso\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -g                         like -l, but do not list owner\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
       --group-directories-first\n\
                              group directories before files\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -G, --no-group             in a long listing, don't print group names\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -h, --human-readable       with -l and -s, print sizes like 1K 234M 2G etc.\n\
+"));
+      oputs (_("\
       --si                   likewise, but use powers of 1000 not 1024\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -H, --dereference-command-line\n\
                              follow symbolic links listed on the command line\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
       --dereference-command-line-symlink-to-dir\n\
                              follow each command line symbolic link\n\
                              that points to a directory\n\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
       --hide=PATTERN         do not list implied entries matching shell PATTERN\
 \n\
                              (overridden by -a or -A)\n\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
       --hyperlink[=WHEN]     hyperlink file names WHEN\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
       --indicator-style=WORD\n\
                              append indicator with style WORD to entry names:\n\
                              none (default), slash (-p),\n\
                              file-type (--file-type), classify (-F)\n\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -i, --inode                print the index number of each file\n\
+"));
+      oputs (_("\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -k, --kibibytes            default to 1024-byte blocks for file system usage;\
 \n\
                              used only with -s and per directory totals\n\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -l                         use a long listing format\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -L, --dereference          when showing file information for a symbolic\n\
                              link, show information for the file the link\n\
                              references rather than for the link itself\n\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -m                         fill width with a comma separated list of entries\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -n, --numeric-uid-gid      like -l, but list numeric user and group IDs\n\
+"));
+      oputs (_("\
   -N, --literal              print entry names without quoting\n\
+"));
+      oputs (_("\
   -o                         like -l, but do not list group information\n\
+"));
+      oputs (_("\
   -p, --indicator-style=slash\n\
                              append / indicator to directories\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -q, --hide-control-chars   print ? instead of nongraphic characters\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
       --show-control-chars   show nongraphic characters as-is (the default,\n\
                              unless program is 'ls' and output is a terminal)\
 \n\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -Q, --quote-name           enclose entry names in double quotes\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
       --quoting-style=WORD   use quoting style WORD for entry names:\n\
                              literal, locale, shell, shell-always,\n\
                              shell-escape, shell-escape-always, c, escape\n\
                              (overrides QUOTING_STYLE environment variable)\n\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -r, --reverse              reverse order while sorting\n\
+"));
+      oputs (_("\
   -R, --recursive            list subdirectories recursively\n\
+"));
+      oputs (_("\
   -s, --size                 print the allocated size of each file, in blocks\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -S                         sort by file size, largest first\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
       --sort=WORD            change default 'name' sort to WORD:\n\
                                none (-U), size (-S), time (-t),\n\
                                version (-v), extension (-X), name, width\n\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
       --time=WORD            select which timestamp used to display or sort;\n\
                                access time (-u): atime, access, use;\n\
                                metadata change time (-c): ctime, status;\n\
@@ -5502,37 +5580,49 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
                              with -l, WORD determines which time to show;\n\
                              with --sort=time, sort by WORD (newest first)\n\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
       --time-style=TIME_STYLE\n\
                              time/date format with -l; see TIME_STYLE below\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -t                         sort by time, newest first; see --time\n\
+"));
+      oputs (_("\
   -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -u                         with -lt: sort by, and show, access time;\n\
                              with -l: show access time and sort by name;\n\
                              otherwise: sort by access time, newest first\n\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -U                         do not sort directory entries\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -v                         natural sort of (version) numbers within text\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -w, --width=COLS           set output width to COLS.  0 means no limit\n\
+"));
+      oputs (_("\
   -x                         list entries by lines instead of by columns\n\
+"));
+      oputs (_("\
   -X                         sort alphabetically by entry extension\n\
+"));
+      oputs (_("\
   -Z, --context              print any security context of each file\n\
+"));
+      oputs (_("\
       --zero                 end each output line with NUL, not newline\n\
+"));
+      oputs (_("\
   -1                         list one file per line\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_size_note ();
       fputs (_("\
 \n\

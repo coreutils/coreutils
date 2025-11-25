@@ -44,12 +44,12 @@ for prg in $built_programs; do
   got_option=false
   for opt in $(shortopts $sprg); do
     got_option=true
-    env $prg --help | grep -F -- " -$opt" >/dev/null ||
+    env HELP_NO_MARKUP=1 $prg --help | grep -F -- " -$opt" >/dev/null ||
       { printf -- '%s -%s missing from --help\n' $sprg $opt >&2; fail=1; }
   done
   for opt in $(longopts $sprg); do
     got_option=true
-    env $prg --help | grep -F -- "--$opt" >/dev/null ||
+    env HELP_NO_MARKUP=1 $prg --help | grep -F -- "--$opt" >/dev/null ||
       { printf -- '%s --%s missing from --help\n' $sprg $opt >&2; fail=1; }
   done
   test "$DEBUG" && test $got_option = false && echo No options for $prg ?
