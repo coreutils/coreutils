@@ -312,7 +312,7 @@ Summarize device usage of the set of FILEs, recursively for directories.\n\
       fputs (_("\
       --files0-from=F   summarize device usage of the\n\
                           NUL-terminated file names specified in file F;\n\
-                          if F is -, then read names from standard input\n\
+                          if F is -, read names from standard input\n\
   -H                    equivalent to --dereference-args (-D)\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\
 \n\

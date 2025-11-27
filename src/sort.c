@@ -484,8 +484,8 @@ Other options:\n\
       --debug               annotate the part of the line used to sort, and\n\
                               warn about questionable usage to standard error\n\
       --files0-from=F       read input from the files specified by\n\
-                            NUL-terminated names in file F;\n\
-                            If F is - then read names from standard input\n\
+                              NUL-terminated names in file F;\n\
+                              If F is -, read names from standard input\n\
 "), stdout);
       fputs (_("\
   -k, --key=KEYDEF          sort via a key; KEYDEF gives location and type\n\

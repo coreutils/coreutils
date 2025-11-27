@@ -194,7 +194,7 @@ the following order: newline, word, character, byte, maximum line length.\n\
       fputs (_("\
       --files0-from=F    read input from the files specified by\n\
                            NUL-terminated names in file F;\n\
-                           If F is - then read names from standard input\n\
+                           If F is -, read names from standard input\n\
   -L, --max-line-length  print the maximum display width\n\
   -w, --words            print the word counts\n\
 "), stdout);
