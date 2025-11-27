@@ -131,3 +131,13 @@ sc-lower-case-var:
 	  $(PERL) -lne $(find_upper_case_var) $(texi_files)
 
 check-local: check-texinfo
+
+# Post-process generated HTML to clean up anchor IDs
+_sed_anchor_cleanup = \
+  -e '/id=.*_002doption/ { s/id="\([^"]*\)_002doption/id="\1/g; s/_002d/-/g; }'
+html-local:
+	$(AM_V_GEN)htmlfile=$(info_TEXINFOS:.texi=.html); \
+	sed $(_sed_anchor_cleanup) $$htmlfile > $$htmlfile-t \
+	  && mv $$htmlfile-t $$htmlfile
+
+.PHONY: html-local

@@ -568,6 +568,22 @@ manuals for textutils, fileutils, and sh-utils to produce the present
 omnibus manual.  Richard Stallman contributed his usual invaluable
 insights to the overall process.
 
+@macro optAnchor{command,option}
+@anchor{\command\-option\option\}
+@end macro
+
+@macro optItem{command,option,param}
+@optAnchor{\command\,\option\}
+@item \option\\param\
+@opindex \option\
+@end macro
+
+@macro optItemx{command,option,param}
+@optAnchor{\command\,\option\}
+@itemx \option\\param\
+@opindex \option\
+@end macro
+
 @node Common options
 @chapter Common options
 
@@ -628,19 +644,15 @@ output even when that output would contain data with embedded newlines.
 @outputNUL
 @end macro
 
-@macro optZero
-@item -z
-@itemx --zero
-@opindex -z
-@opindex --zero
+@macro optZero{cmd}
+@optItem{\cmd\,-z}
+@optItemx{\cmd\,--zero}
 @outputNUL
 @end macro
 
-@macro optZeroTerminated
-@item -z
-@itemx --zero-terminated
-@opindex -z
-@opindex --zero-terminated
+@macro optZeroTerminated{cmd}
+@optItem{\cmd\,-z}
+@optItemx{\cmd\,--zero-terminated}
 @cindex process zero-terminated items
 Delimit items with a zero byte rather than a newline (ASCII LF).
 I.e., treat input as items separated by ASCII NUL
