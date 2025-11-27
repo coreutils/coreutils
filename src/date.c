@@ -146,7 +146,9 @@ With -s, or with [MMDDhhmm[[CC]YY][.ss]], set the date and time.\n\
                               warn about questionable usage to standard error\n\
 "), stdout);
       fputs (_("\
-  -f, --file=DATEFILE        like --date; once for each line of DATEFILE\n\
+  -f, --file=DATEFILE        like --date; once for each line of DATEFILE;\n\
+                               If DATEFILE is -, read names from standard input\
+\n\
 "), stdout);
       fputs (_("\
   -I[FMT], --iso-8601[=FMT]  output date/time in ISO 8601 format.\n\
