@@ -136,7 +136,7 @@ mbs_logical_cspn (char const *s, char const *accept)
             for (char const *a = accept; *a; )
               {
                 mcel_t h = mcel_scanz (a);
-                if (mcel_cmp (g, h) == 0)
+                if (mcel_eq (g, h))
                   return idx;
                 a += h.len;
               }

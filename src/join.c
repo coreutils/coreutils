@@ -274,7 +274,7 @@ extract_field (struct line *line, char *field, idx_t len)
 static bool
 eq_tab (mcel_t g)
 {
-  return mcel_cmp (g, tab) == 0;
+  return mcel_eq (g, tab);
 }
 
 static bool
@@ -1116,7 +1116,7 @@ main (int argc, char **argv)
                          quote (optarg));
                 output_separator = optarg;
               }
-            if (tab.len && mcel_cmp (tab, newtab) != 0)
+            if (tab.len && ! mcel_eq (tab, newtab))
               error (EXIT_FAILURE, 0, _("incompatible tabs"));
             tab = newtab;
             output_seplen = newtab.len;
