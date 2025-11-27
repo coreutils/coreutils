@@ -23,10 +23,22 @@ require_root_
 cwd=$(pwd)
 cleanup_() { cd /; umount "$cwd/mnt"; }
 
-truncate -s100M hfs.img || framework_failure_
-mkfs -t hfsplus hfs.img || skip_ 'failed to create hfs file system'
-mkdir mnt               || framework_failure_
-mount hfs.img mnt       || skip_ 'failed to mount hfs file system'
+for ocase in '-t ext4 -O casefold' '-t hfsplus'; do
+  rm -f case.img
+  truncate -s100M case.img || framework_failure_
+  mkfs $ocase case.img &&
+  mkdir mnt &&
+  mount case.img mnt &&
+  printf '%s\n' "$ocase" > mnt/type  &&
+  break
+done
+
+test -f mnt/type || skip_ 'failed to create case insensitive file system'
+
+if grep 'ext4' mnt/type; then
+  rm -d mnt/type mnt/lost+found || framework_failure_
+  chattr +F mnt || skip_ 'failed to create case insensitive file system'
+fi
 
 cd mnt
 touch foo
