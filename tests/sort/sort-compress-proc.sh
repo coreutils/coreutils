@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ sort kill
+print_ver_ sort
 expensive_
 
 # Terminate any background processes
@@ -58,7 +58,7 @@ chmod +x compress
 # while not reading all the data presented.
 PRE_COMPRESS='exit 0' \
  sort --compress-program=./compress -S 1k --batch-size=30 ./in ./in > out
-test $(env kill -l $?) = 'PIPE' && fail=1
+test $(kill -l $?) = 'PIPE' && fail=1
 
 # "Impatient exit" tests
 #
