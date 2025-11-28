@@ -46,6 +46,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   csplit, ls, and sort, now handle a more complete set of terminating signals.
 
+  'timeout' on Linux will always terminate the child in the case where the
+  timeout process itself dies, like when it receives a KILL signal for example.
+
 ** Build-related
 
   'kill' and 'uptime' are no longer built by default.  These programs can be

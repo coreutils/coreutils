@@ -76,6 +76,13 @@ check_timeout_cmd_running()
     { sleep $delay; return 1; }
 }
 
+check_timeout_cmd_exiting()
+{
+  local delay="$1"
+  test -e sig.received ||
+    { sleep $delay; return 1; }
+}
+
 # Terminate any background processes
 cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 
@@ -88,9 +95,20 @@ retry_delay_ check_timeout_cmd_running .1 6 || fail=1
 kill -USR1 -- -$pid
 wait
 test -e sig.received || fail=1
-
 rm -f sig.received timeout.running
 
+# On Linux ensure we kill the monitored command
+# even if we're terminated abnormally (e.g., get SIGKILL).
+if grep '^#define HAVE_PRCTL 1' "$CONFIG_HEADER" >/dev/null; then
+  timeout -sUSR1 25 ./timeout.cmd 20 & pid=$!
+  # Wait 6.3s for timeout.cmd to start
+  retry_delay_ check_timeout_cmd_running .1 6 || fail=1
+  kill -KILL -- $pid
+  wait
+  # Wait 6.3s for timeout.cmd to exit
+  retry_delay_ check_timeout_cmd_exiting .1 6 || fail=1
+  rm -f sig.received timeout.running
+fi
 
 # Ensure cascaded timeouts work
 # or more generally, ensure we timeout

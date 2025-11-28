@@ -592,6 +592,14 @@ main (int argc, char **argv)
     }
   else if (monitored_pid == 0)  /* child */
     {
+#if HAVE_PRCTL
+      /* Add protection if the parent dies without signalling child.  */
+      prctl (PR_SET_PDEATHSIG, term_signal);
+#endif
+      /* If we're already reparented to init, don't proceed.  */
+      if (getppid () == 1)
+        return EXIT_CANCELED;
+
       /* Restore signal mask for child.  */
       if (sigprocmask (SIG_SETMASK, &orig_set, nullptr) != 0)
         {
