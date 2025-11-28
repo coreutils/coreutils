@@ -12755,7 +12755,9 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --all
 Show counts for all files, not just directories.
 
-@item --apparent-size
+@item -A
+@itemx --apparent-size
+@opindex -A
 @opindex --apparent-size
 Print apparent sizes, rather than file system usage.  The apparent size of a
 file is the number of bytes reported by @code{wc -c} on regular files,

@@ -195,8 +195,7 @@ static struct duinfo tot_dui;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  APPARENT_SIZE_OPTION = CHAR_MAX + 1,
-  EXCLUDE_OPTION,
+  EXCLUDE_OPTION = CHAR_MAX + 1,
   FILES0_FROM_OPTION,
   HUMAN_SI_OPTION,
 #if GNULIB_FTS_DEBUG
@@ -210,7 +209,7 @@ enum
 static struct option const long_options[] =
 {
   {"all", no_argument, nullptr, 'a'},
-  {"apparent-size", no_argument, nullptr, APPARENT_SIZE_OPTION},
+  {"apparent-size", no_argument, nullptr, 'A'},
   {"block-size", required_argument, nullptr, 'B'},
   {"bytes", no_argument, nullptr, 'b'},
   {"count-links", no_argument, nullptr, 'l'},
@@ -290,7 +289,7 @@ Summarize device usage of the set of FILEs, recursively for directories.\n\
       fputs (_("\
   -0, --null            end each output line with NUL, not newline\n\
   -a, --all             write counts for all files, not just directories\n\
-      --apparent-size   print apparent sizes rather than device usage; although\
+  -A, --apparent-size   print apparent sizes rather than device usage; although\
 \n\
                           the apparent size is usually smaller, it may be\n\
                           larger due to holes in ('sparse') files, internal\n\
@@ -745,7 +744,7 @@ main (int argc, char **argv)
   while (true)
     {
       int oi = -1;
-      int c = getopt_long (argc, argv, "0abd:chHklmst:xB:DLPSX:",
+      int c = getopt_long (argc, argv, "0aAbd:chHklmst:xB:DLPSX:",
                            long_options, &oi);
       if (c == -1)
         break;
@@ -766,7 +765,7 @@ main (int argc, char **argv)
           opt_all = true;
           break;
 
-        case APPARENT_SIZE_OPTION:
+        case 'A':
           apparent_size = true;
           break;
 

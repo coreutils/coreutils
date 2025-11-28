@@ -33,6 +33,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'tail' now accepts the --debug option, which is currently used to
   detail the --follow implementation being used.
 
+  'du' now supports the short option -A corresponding to the existing long
+  option --apparent-size, for compatibility with FreeBSD.
+
 ** Changes in behavior
 
   'timeout' now honors ignored signals and will not propagate them.  E.g.,
