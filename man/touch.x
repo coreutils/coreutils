@@ -1,5 +1,5 @@
 [NAME]
-touch \- change file timestamps
+touch \- create file, or change file timestamps
 [DESCRIPTION]
 .\" Add any additional description here
 [DATE STRING]
