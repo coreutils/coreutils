@@ -458,6 +458,7 @@ all_tests =					\
   tests/misc/sync.sh				\
   tests/tac/tac.pl				\
   tests/tac/tac-continue.sh			\
+  tests/tac/tac-locale.sh			\
   tests/tac/tac-2-nonseekable.sh		\
   tests/tail/tail.pl				\
   tests/misc/tee.sh				\
