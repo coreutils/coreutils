@@ -12921,6 +12921,9 @@ When combined with the @option{--apparent-size} option, the
 When combined with the @option{--inodes} option, it elides entries
 based on inode counts.
 
+When combined with the @option{--total} option, the @option{--threshold}
+option does not prevent entries from being added to the grand total.
+
 Here's how you would use @option{--threshold} to find directories with a size
 greater than or equal to 200 megabytes:
 
