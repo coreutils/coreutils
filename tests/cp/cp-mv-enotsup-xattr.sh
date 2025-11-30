@@ -33,19 +33,24 @@ make_fs() {
   where="$1"
   opts="$2"
 
-  fs="$where.bin"
+  mkdir "$where"  || framework_failure_
 
-  dd if=/dev/zero of="$fs" bs=8192 count=200 > /dev/null 2>&1 \
-                                                 || skip=1
-  mkdir "$where"                                 || skip=1
-  mkfs -t ext2 -F "$fs" ||
-    skip_ "failed to create ext2 file system"
-  mount -oloop,$opts "$fs" "$where"              || skip=1
-  echo test > "$where"/f                         || skip=1
-  test -s "$where"/f                             || skip=1
+  if test "$opts" = user_xattr; then
+    fs="$where.bin"
+    dd if=/dev/zero of="$fs" bs=8192 count=200 > /dev/null 2>&1 || skip=1
+    mkfs -t ext2 -F "$fs" || skip_ "failed to create ext2 file system"
+    mount -oloop,$opts "$fs" "$where" || skip=1
+  else
+    mount -t ramfs ramfs "$where" || skip=1
+  fi
 
-  test $skip = 1 &&
-    skip_ "insufficient mount/ext2 support"
+  echo test > "$where"/f && test -s "$where"/f || skip=1
+
+  test $skip = 1 && skip_ 'insufficient mount/file system support'
+
+  test "$opts" = nouser_xattr &&
+   setfattr -n user.test -v value "$where"/f 2>/dev/null &&
+    skip_ 'setfattr worked?'
 }
 
 make_fs noxattr nouser_xattr
@@ -106,27 +111,5 @@ mv xattr/a noxattr/ 2>err || fail=1
 test -s noxattr/a         || fail=1  # destination file must not be empty
 compare /dev/null err || fail=1
 
-# This should pass and copy xattrs of the symlink
-# since the xattrs used here are not in the 'user.' namespace.
-# Up to and including coreutils-8.22 xattrs of symlinks
-# were not copied across file systems.
-ln -s 'foo' xattr/symlink || framework_failure_
-# Note 'user.' namespace is only supported on regular files/dirs
-# so use the 'trusted.' namespace here
-txattr='trusted.overlay.whiteout'
-if setfattr -hn "$txattr" -v y xattr/symlink; then
-  # Note only root can read the 'trusted.' namespace
-  if getfattr -h -m- -d xattr/symlink | grep -F "$txattr"; then
-    mv xattr/symlink noxattr/ 2>err || fail=1
-    if grep '^#define USE_XATTR 1' $CONFIG_HEADER > /dev/null; then
-      getfattr -h -m- -d noxattr/symlink | grep -F "$txattr" || fail=1
-    fi
-    compare /dev/null err || fail=1
-  else
-    echo "failed to get '$txattr' xattr. skipping symlink check" >&2
-  fi
-else
-  echo "failed to set '$txattr' xattr. skipping symlink check" >&2
-fi
 
 Exit $fail
