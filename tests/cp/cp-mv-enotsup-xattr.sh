@@ -24,7 +24,10 @@ print_ver_ cp mv
 require_root_
 
 cwd=$(pwd)
-cleanup_() { cd /; umount "$cwd/noxattr"; umount "$cwd/xattr"; }
+cleanup_() {
+  cd /
+  umount "$cwd/noxattr"; umount "$cwd/xattr"; umount "$cwd/xattr2";
+}
 
 skip=0
 
@@ -55,6 +58,7 @@ make_fs() {
 
 make_fs noxattr nouser_xattr
 make_fs xattr   user_xattr
+make_fs xattr2  user_xattr
 
 # testing xattr name-value pair
 xattr_name="user.foo"
@@ -111,5 +115,27 @@ mv xattr/a noxattr/ 2>err || fail=1
 test -s noxattr/a         || fail=1  # destination file must not be empty
 compare /dev/null err || fail=1
 
+# This should pass and copy xattrs of the symlink
+# since the xattrs used here are not in the 'user.' namespace.
+# Up to and including coreutils-8.22 xattrs of symlinks
+# were not copied across file systems.
+ln -s 'foo' xattr/symlink || framework_failure_
+# Note 'user.' namespace is only supported on regular files/dirs
+# so use the 'trusted.' namespace here
+txattr='trusted.overlay.whiteout'
+if setfattr -hn "$txattr" -v y xattr/symlink; then
+  # Note only root can read the 'trusted.' namespace
+  if getfattr -h -m- -d xattr/symlink | grep -F "$txattr"; then
+    mv xattr/symlink xattr2/ 2>err || fail=1
+    if grep '^#define USE_XATTR 1' $CONFIG_HEADER > /dev/null; then
+      getfattr -h -m- -d xattr2/symlink | grep -F "$txattr" || fail=1
+    fi
+    compare /dev/null err || fail=1
+  else
+    echo "failed to get '$txattr' xattr. skipping symlink check" >&2
+  fi
+else
+  echo "failed to set '$txattr' xattr. skipping symlink check" >&2
+fi
 
 Exit $fail
