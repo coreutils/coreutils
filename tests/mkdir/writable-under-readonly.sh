@@ -1,6 +1,4 @@
 #!/bin/sh
-# FIXME: convert this to a root-only test.
-
 # Copyright (C) 2005-2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
@@ -21,32 +19,23 @@
 #
 #   "mkdir -p /a/b/c" no longer fails merely because a leading prefix
 #   directory (e.g., /a or /a/b) exists on a read-only file system.
-#
-# Demonstrate the problem, as root:
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ mkdir
 require_root_
 
-# FIXME: for now, skip it unconditionally
-skip_ temporarily disabled
+cwd=$(pwd)
+cleanup_() { cd /; umount "$cwd/mnt-ro/rw"; umount "$cwd/mnt-ro"; }
 
-# FIXME: define cleanup_ to do the umount
-
-# FIXME: use mktemp
-cd /tmp                                    \
-  && dd if=/dev/zero of=1 bs=8192 count=50 \
-  && dd if=/dev/zero of=2 bs=8192 count=50 \
-  && mkdir -p mnt-ro && mkfs -t ext2 1 && mkfs -t ext2 2 \
-  && mount -o loop=/dev/loop3 1 mnt-ro    \
-  && mkdir -p mnt-ro/rw                    \
-  && mount -o remount,ro mnt-ro           \
-  && mount -o loop=/dev/loop4 2 mnt-ro/rw
+dd if=/dev/zero of=1 bs=8192 count=50 &&
+dd if=/dev/zero of=2 bs=8192 count=50 &&
+mkdir -p mnt-ro && mkfs -t ext2 1 && mkfs -t ext2 2 &&
+mount -o loop 1 mnt-ro &&
+mkdir -p mnt-ro/rw &&
+mount -o remount,ro mnt-ro &&
+mount -o loop 2 mnt-ro/rw ||
+skip_ 'Failed to setup loopback mounts'
 
 mkdir -p mnt-ro/rw/sub || fail=1
-
-# To clean up
-umount /tmp/2
-umount /tmp/1
 
 Exit $fail
