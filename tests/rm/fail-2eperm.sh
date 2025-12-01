@@ -1,6 +1,6 @@
 #!/bin/sh
-# Like fail-eperm, but the failure must be for a file encountered
-# while trying to remove the containing directory with the sticky bit set.
+# Ensure that rm gives the expected diagnostic when failing to remove a file
+# owned by some other user in a directory with the sticky bit set.
 
 # Copyright (C) 2003-2025 Free Software Foundation, Inc.
 
@@ -40,18 +40,22 @@ case $rm_version in
   $PACKAGE_VERSION) ;;
   *) skip_ "cannot access just-built rm as user $NON_ROOT_USERNAME";;
 esac
-chroot --skip-chdir --user=$NON_ROOT_USERNAME / \
-  env PATH="$PATH" rm -rf a 2> out-t && fail=1
 
-# On some systems, we get 'Not owner'.  Convert it.
-# On other systems (HPUX), we get 'Permission denied'.  Convert it, too.
-onp='Operation not permitted'
-sed "s/Not owner/$onp/;s/Permission denied/$onp/" out-t > out
 
-cat <<\EOF > exp
-rm: cannot remove 'a/b': Operation not permitted
-EOF
+# Ensure that rm gives the expected diagnostic when
+# failing to remove the file directly, or when traversed
+for file in 'a/b' 'a'; do
+  echo "$file" | grep / && recurse='-r'
+  returns_ 1 chroot --skip-chdir --user=$NON_ROOT_USERNAME / \
+   env PATH="$PATH" rm $recurse -f "$file" 2> out-t || fail=1
 
-compare exp out || fail=1
+  # On some systems, we get 'Not owner'.  Convert it.
+  # On other systems (HPUX), we get 'Permission denied'.  Convert it, too.
+  onp='Operation not permitted'
+  sed "s/Not owner/$onp/;s/Permission denied/$onp/" out-t > out
+
+  echo "rm: cannot remove 'a/b': Operation not permitted" > exp
+  compare exp out || fail=1
+done
 
 Exit $fail

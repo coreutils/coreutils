@@ -23,7 +23,7 @@ root_tests = $(all_root_tests)
 
 EXTRA_DIST += $(all_tests)
 
-TEST_EXTENSIONS = .sh .pl .xpl
+TEST_EXTENSIONS = .sh .pl
 
 if HAVE_PERL
 TESTSUITE_PERL = $(PERL)
@@ -207,7 +207,6 @@ all_tests =					\
   tests/rm/empty-name.pl			\
   tests/rm/f-1.sh				\
   tests/rm/fail-eacces.sh			\
-  tests/rm/fail-eperm.xpl			\
   tests/tail/assert.sh				\
   tests/rm/hash.sh				\
   tests/rm/i-1.sh				\
