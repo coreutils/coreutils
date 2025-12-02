@@ -206,6 +206,12 @@ cleanup (int sig)
   if (sig == SIGALRM)
     {
       timed_out = 1;
+      /* In case there is an issue with close_stdout,
+         update to a more accurate default exit status.
+         For example we might get failed writes with -v with:
+           timeout -v 1 sleep 10 2>&1 | :
+      */
+      initialize_exit_failure (EXIT_TIMEDOUT);
       sig = term_signal;
     }
   if (0 < monitored_pid)
