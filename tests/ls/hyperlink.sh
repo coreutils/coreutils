@@ -23,6 +23,7 @@ print_ver_ ls
 encode() {
  printf '%s\n' \
   'sp%20ace' 'ques%3ftion' 'back%5cslash' 'encoded%253Fquestion' 'testdir' \
+  'an%23chor' 'utf8%c3%a1' 'invalidutf8%e9' 'col%3aon' \
   "$1" |
  sort -k1,1.1 -s | uniq -w1 -d
 }
@@ -43,7 +44,8 @@ mkdir testdir || framework_failure_
 (
 cd testdir
 ls_encoded "testdir" > ../exp.t || framework_failure_
-for f in 'back\slash' 'encoded%3Fquestion' 'ques?tion' 'sp ace'; do
+for f in 'an#chor' 'back\slash' 'col:on' 'encoded%3Fquestion' \
+         "$(printf 'invalidutf8\xe9')" 'ques?tion' 'sp ace' 'utf8á'; do
   touch "$f" || framework_failure_
   ls_encoded "$f" >> ../exp.t || framework_failure_
 done
