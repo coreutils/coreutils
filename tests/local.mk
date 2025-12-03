@@ -330,7 +330,7 @@ all_tests =					\
   tests/env/env-null.sh				\
   tests/env/env-S.pl				\
   tests/env/env-S-script.sh			\
-  tests/misc/expand.pl				\
+  tests/expand/expand.pl			\
   tests/expand/bounded-memory.sh		\
   tests/expr/expr.pl				\
   tests/expr/expr-multibyte.pl			\
@@ -487,7 +487,7 @@ all_tests =					\
   tests/tty/tty.sh				\
   tests/misc/usage_vs_getopt.sh			\
   tests/misc/getopt_vs_usage.sh			\
-  tests/misc/unexpand.pl			\
+  tests/unexpand/unexpand.pl			\
   tests/unexpand/bounded-memory.sh		\
   tests/uniq/uniq.pl				\
   tests/uniq/uniq-perf.sh			\
