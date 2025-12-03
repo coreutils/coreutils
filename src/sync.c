@@ -125,7 +125,7 @@ sync_arg (enum sync_mode mode, char const *file)
       ret = false;
     }
 
-  if (ret == true)
+  if (ret)
     {
       int sync_status = -1;
 

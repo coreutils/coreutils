@@ -1213,7 +1213,7 @@ init_parameters (int number_of_files)
       extremities = false;
       keep_FF = true;
     }
-  if (extremities == false)
+  if (! extremities)
     lines_per_body = lines_per_page;
 
   if (double_space)

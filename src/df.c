@@ -697,7 +697,7 @@ devlist_for_dev (dev_t dev)
    In the case of duplicates - based on the device number - the mount entry
    with a '/' in its me_devname (i.e., not pseudo name like tmpfs) wins.
    If both have a real devname (e.g. bind mounts), then that with the shorter
-   me_mountdir wins.  With DEVICES_ONLY == true (set with df -a), only update
+   me_mountdir wins.  If DEVICES_ONLY is true (set with df -a), only update
    the global devlist_table, rather than filtering the global mount_list.  */
 
 static void
