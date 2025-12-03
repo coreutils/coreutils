@@ -232,7 +232,7 @@ cleanup (int sig)
       if (verbose)
         {
           char signame[MAX (SIG2STR_MAX, INT_BUFSIZE_BOUND (int))];
-          if (sig2str (sig, signame) != 0)
+          if (sig == 0 || sig2str (sig, signame) != 0)
             snprintf (signame, sizeof signame, "%d", sig);
           error (0, 0, _("sending signal %s to command %s"),
                  signame, quote (command));

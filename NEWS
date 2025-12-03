@@ -42,6 +42,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   timeout(1) in a shell backgrounded job, will not terminate upon receiving
   SIGINT or SIGQUIT, as these are ignored by default in shell background jobs.
 
+  'timeout -v -s 0' now prints the signal number 0 instead of EXIT.
+
 ** Improvements
 
   csplit, ls, and sort, now handle a more complete set of terminating signals.

@@ -62,7 +62,7 @@ test "$out" = "" && test $status = 124 || fail=1
 
 # Verify --verbose output
 cat > exp <<\EOF
-timeout: sending signal EXIT to command 'sleep'
+timeout: sending signal 0 to command 'sleep'
 timeout: sending signal KILL to command 'sleep'
 EOF
 for opt in -v --verbose; do
