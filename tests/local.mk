@@ -331,6 +331,7 @@ all_tests =					\
   tests/env/env-S.pl				\
   tests/env/env-S-script.sh			\
   tests/misc/expand.pl				\
+  tests/expand/bounded-memory.sh		\
   tests/expr/expr.pl				\
   tests/expr/expr-multibyte.pl			\
   tests/factor/factor.pl			\
@@ -487,6 +488,7 @@ all_tests =					\
   tests/misc/usage_vs_getopt.sh			\
   tests/misc/getopt_vs_usage.sh			\
   tests/misc/unexpand.pl			\
+  tests/unexpand/bounded-memory.sh		\
   tests/uniq/uniq.pl				\
   tests/uniq/uniq-perf.sh			\
   tests/uniq/uniq-collate.sh			\
