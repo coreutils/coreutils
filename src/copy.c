@@ -44,7 +44,7 @@
 #include "hash.h"
 #include "hashcode-file.h"
 #include "ignore-value.h"
-#include "issymlink.h"
+#include "issymlinkat.h"
 #include "quote.h"
 #include "renameatu.h"
 #include "root-uid.h"
