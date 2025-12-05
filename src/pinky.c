@@ -26,7 +26,11 @@
 #include "system.h"
 
 #include "canon-host.h"
+#include "fadvise.h"
+#include "filenamecat.h"
+#include "full-write.h"
 #include "hard-locale.h"
+#include "ioblksize.h"
 #include "readutmp.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -309,6 +313,36 @@ print_entry (STRUCT_UTMP const *utmp_ent)
 #endif
 
   putchar ('\n');
+
+  if (ferror (stdout))
+    write_error ();
+}
+
+/* If FILE exists in HOME, print it to standard output, preceded by HEADER. */
+
+static void
+cat_file (char const *header, char const *home, char const *file)
+{
+  char *full_name = file_name_concat (home, file, nullptr);
+  int fd = open (full_name, O_RDONLY);
+
+  if (0 <= fd)
+    {
+      idx_t header_len = strlen (header);
+      if (write (STDOUT_FILENO, header, header_len) != header_len)
+        write_error ();
+
+      fdadvise (fd, 0, 0, FADVISE_SEQUENTIAL);
+
+      char buf[IO_BUFSIZE];
+      for (ssize_t bytes_read; 0 < (bytes_read = read (fd, buf, sizeof buf));)
+        if (full_write (STDOUT_FILENO, buf, bytes_read) != bytes_read)
+          write_error ();
+
+      close (fd);
+    }
+
+  free (full_name);
 }
 
 /* Display a verbose line of information about UTMP_ENT. */
@@ -355,54 +389,15 @@ print_long_entry (const char name[])
     }
 
   if (include_project)
-    {
-      FILE *stream;
-      char buf[1024];
-      char const *const baseproject = "/.project";
-      char *const project =
-        xmalloc (strlen (pw->pw_dir) + strlen (baseproject) + 1);
-      stpcpy (stpcpy (project, pw->pw_dir), baseproject);
-
-      stream = fopen (project, "r");
-      if (stream)
-        {
-          size_t bytes;
-
-          printf (_("Project: "));
-
-          while ((bytes = fread (buf, 1, sizeof (buf), stream)) > 0)
-            fwrite (buf, 1, bytes, stdout);
-          fclose (stream);
-        }
-
-      free (project);
-    }
+    cat_file (_("Project: "), pw->pw_dir, ".project");
 
   if (include_plan)
-    {
-      FILE *stream;
-      char buf[1024];
-      char const *const baseplan = "/.plan";
-      char *const plan =
-        xmalloc (strlen (pw->pw_dir) + strlen (baseplan) + 1);
-      stpcpy (stpcpy (plan, pw->pw_dir), baseplan);
-
-      stream = fopen (plan, "r");
-      if (stream)
-        {
-          size_t bytes;
-
-          printf (_("Plan:\n"));
-
-          while ((bytes = fread (buf, 1, sizeof (buf), stream)) > 0)
-            fwrite (buf, 1, bytes, stdout);
-          fclose (stream);
-        }
-
-      free (plan);
-    }
+    cat_file (_("Plan:\n"), pw->pw_dir, ".plan");
 
   putchar ('\n');
+
+  if (ferror (stdout))
+    write_error ();
 }
 
 /* Print the username of each valid entry and the number of valid entries
