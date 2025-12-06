@@ -37,6 +37,7 @@
 # include "sum.h"
 #endif
 #if HASH_ALGO_CKSUM
+# include "cksum.h"
 # include "cksum_crc.h"
 # include "base64.h"
 #endif
@@ -332,24 +333,6 @@ sm3_sum_stream (FILE *stream, void *resstream, MAYBE_UNUSED uintmax_t *length)
   return sm3_stream (stream, resstream);
 }
 
-enum Algorithm
-{
-  bsd,
-  sysv,
-  crc,
-  crc32b,
-  md5,
-  sha1,
-  sha224,
-  sha256,
-  sha384,
-  sha512,
-  sha2,
-  sha3,
-  blake2b,
-  sm3,
-};
-
 static char const *const algorithm_args[] =
 {
   "bsd", "sysv", "crc", "crc32b", "md5", "sha1",
@@ -380,7 +363,9 @@ static int const algorithm_bits[] =
 static_assert (countof (algorithm_bits) == countof (algorithm_args));
 
 static bool algorithm_specified = false;
-static enum Algorithm cksum_algorithm = crc;
+static bool legacy_mode = false;
+enum Algorithm cksum_algorithm = crc;
+
 static sumfn cksumfns[]=
 {
   bsd_sum_stream,
@@ -434,6 +419,27 @@ enum
   BASE64_OPTION,
 };
 
+#if HASH_ALGO_CKSUM
+static struct option const legacy_long_options[] =
+{
+  { "check", no_argument, nullptr, 'c' },
+  { "ignore-missing", no_argument, nullptr, IGNORE_MISSING_OPTION },
+  { "quiet", no_argument, nullptr, QUIET_OPTION },
+  { "status", no_argument, nullptr, STATUS_OPTION },
+  { "warn", no_argument, nullptr, 'w' },
+  { "strict", no_argument, nullptr, STRICT_OPTION },
+  { "tag", no_argument, nullptr, TAG_OPTION },
+  { "zero", no_argument, nullptr, 'z' },
+
+  { "binary", no_argument, nullptr, 'b' }, /* Deprecated.  */
+  { "text", no_argument, nullptr, 't' }, /* Deprecated.  */
+
+  { GETOPT_HELP_OPTION_DECL },
+  { GETOPT_VERSION_OPTION_DECL },
+  { nullptr, 0, nullptr, 0 }
+};
+#endif
+
 static struct option const long_options[] =
 {
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
@@ -480,6 +486,11 @@ usage (int status)
 Usage: %s [OPTION]... [FILE]...\n\
 "), program_name);
 #if HASH_ALGO_CKSUM
+    if (legacy_mode)
+      printf (_("\
+Print or check %s checksums.\n\
+"), DIGEST_TYPE_STRING);
+    else
       fputs (_("\
 Print or verify checksums.\n\
 By default use the 32 bit CRC algorithm.\n\
@@ -504,17 +515,22 @@ Print or check %s (%d-bit) checksums.\n\
         emit_mandatory_arg_note ();
 #endif
 #if HASH_ALGO_CKSUM
+     if (! legacy_mode)
         fputs (_("\
   -a, --algorithm=TYPE  select the digest type to use.  See DIGEST below\
 \n\
 "), stdout);
+     if (! legacy_mode)
         fputs (_("\
       --base64          emit base64-encoded digests, not hexadecimal\
 \n\
 "), stdout);
 #endif
 #if !HASH_ALGO_SUM
-# if !HASH_ALGO_CKSUM
+# if HASH_ALGO_CKSUM
+     if (legacy_mode)
+       {
+# endif
       if (O_BINARY)
         fputs (_("\
   -b, --binary          read in binary mode (default unless reading tty stdin)\
@@ -524,11 +540,16 @@ Print or check %s (%d-bit) checksums.\n\
         fputs (_("\
   -b, --binary          read in binary mode\n\
 "), stdout);
+# if HASH_ALGO_CKSUM
+       }
 # endif
         fputs (_("\
   -c, --check           read checksums from the FILEs and check them\n\
 "), stdout);
 # if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
+#  if HASH_ALGO_CKSUM
+     if (! legacy_mode)
+#  endif
         fputs (_("\
   -l, --length=BITS     digest length in bits; must not exceed the max size\n\
                           and must be a multiple of 8 for blake2b;\n\
@@ -536,13 +557,20 @@ Print or check %s (%d-bit) checksums.\n\
 "), stdout);
 # endif
 # if HASH_ALGO_CKSUM
+    if (! legacy_mode)
         fputs (_("\
       --raw             emit a raw binary digest, not hexadecimal\
 \n\
 "), stdout);
+    if (legacy_mode)
+      fputs (_("\
+      --tag             create a BSD-style checksum\n\
+"), stdout);
+    else
       fputs (_("\
       --tag             create a BSD-style checksum (the default)\n\
 "), stdout);
+    if (! legacy_mode)
       fputs (_("\
       --untagged        create a reversed style checksum, without digest type\n\
 "), stdout);
@@ -551,7 +579,10 @@ Print or check %s (%d-bit) checksums.\n\
       --tag             create a BSD-style checksum\n\
 "), stdout);
 # endif
-# if !HASH_ALGO_CKSUM
+# if HASH_ALGO_CKSUM
+    if (legacy_mode)
+      {
+# endif
       if (O_BINARY)
         fputs (_("\
   -t, --text            read in text mode (default if reading tty stdin)\n\
@@ -560,6 +591,8 @@ Print or check %s (%d-bit) checksums.\n\
         fputs (_("\
   -t, --text            read in text mode (default)\n\
 "), stdout);
+# if HASH_ALGO_CKSUM
+      }
 # endif
       fputs (_("\
   -z, --zero            end each output line with NUL, not newline,\n\
@@ -577,6 +610,7 @@ The following five options are useful only when verifying checksums:\n\
 "), stdout);
 #endif
 #if HASH_ALGO_CKSUM
+    if (! legacy_mode)
       fputs (_("\
       --debug           indicate which implementation used\n\
 "), stdout);
@@ -584,6 +618,7 @@ The following five options are useful only when verifying checksums:\n\
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
 #if HASH_ALGO_CKSUM
+    if (! legacy_mode)
       fputs (_("\
 \n\
 DIGEST determines the digest algorithm and default output format:\n\
@@ -1491,6 +1526,17 @@ main (int argc, char **argv)
   bool ok = true;
   int binary = -1;
   int prefix_tag = -1;
+  struct option const *long_opts = long_options;
+
+#if HASH_ALGO_CKSUM
+  if (cksum_algorithm != crc)
+    {
+      legacy_mode = true;
+      prefix_tag = 0;
+      algorithm_specified = true;
+      long_opts = legacy_long_options;
+    }
+#endif
 
   /* Setting values of global variables.  */
   initialize_main (&argc, &argv);
@@ -1508,7 +1554,7 @@ main (int argc, char **argv)
 #if HASH_ALGO_SUM
   char const *short_opts = "rs";
 #elif HASH_ALGO_CKSUM
-  char const *short_opts = "a:l:bctwz";
+  char const *short_opts = legacy_mode ? "bctwz" : "a:l:bctwz";
   char const *digest_length_str = "";
 #elif HASH_ALGO_BLAKE2
   char const *short_opts = "l:bctwz";
@@ -1517,7 +1563,7 @@ main (int argc, char **argv)
   char const *short_opts = "bctwz";
 #endif
 
-  while ((opt = getopt_long (argc, argv, short_opts, long_options, nullptr))
+  while ((opt = getopt_long (argc, argv, short_opts, long_opts, nullptr))
          != -1)
     switch (opt)
       {

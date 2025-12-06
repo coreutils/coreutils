@@ -46,6 +46,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  The multi-call binary built with configure --enable-single-binary
+  is reduced in size by 3.2% through the more efficient reuse of the cksum
+  utility by the md5sum and sha*sum utilities.
+
   csplit, ls, and sort, now handle a more complete set of terminating signals.
 
   'pinky' will now exit immediately upon receiving a write error, which is

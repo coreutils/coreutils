@@ -72,6 +72,12 @@ override_single dir ls
 override_single vdir ls
 override_single arch uname
 override_single chgrp chown
+override_single md5sum cksum
+override_single sha1sum cksum
+override_single sha224sum cksum
+override_single sha256sum cksum
+override_single sha384sum cksum
+override_single sha512sum cksum
 
 for cmd in $ALL_PROGRAMS; do
   echo "# Command $cmd"

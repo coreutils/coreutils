@@ -39,6 +39,7 @@ noinst_PROGRAMS =		\
   src/getlimits
 
 noinst_HEADERS =		\
+  src/cksum.h			\
   src/chown.h			\
   src/chown-core.h		\
   src/copy.h			\
