@@ -52,8 +52,6 @@ Print the numeric identifier (in hexadecimal) for the current host.\n\
 int
 main (int argc, char **argv)
 {
-  unsigned int id;
-
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -72,12 +70,10 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  id = gethostid ();
-
   /* POSIX says gethostid returns a "32-bit identifier" but is silent
      whether it's sign-extended.  Turn off any sign-extension.  This
      is a no-op unless unsigned int is wider than 32 bits.  */
-  id &= 0xffffffff;
+  unsigned int id = gethostid () & 0xffffffff;
 
   printf ("%08x\n", id);
 
