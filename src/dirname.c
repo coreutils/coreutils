@@ -76,10 +76,7 @@ Examples:\n\
 int
 main (int argc, char **argv)
 {
-  static char const dot = '.';
   bool use_nuls = false;
-  char const *result;
-  size_t len;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -118,11 +115,12 @@ main (int argc, char **argv)
 
   for (; optind < argc; optind++)
     {
-      result = argv[optind];
-      len = dir_len (result);
+      char const *result = argv[optind];
+      idx_t len = dir_len (result);
 
       if (! len)
         {
+          static char const dot = '.';
           result = &dot;
           len = 1;
         }
