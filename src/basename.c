@@ -83,11 +83,8 @@ Examples:\n\
 static void
 remove_suffix (char *name, char const *suffix)
 {
-  char *np;
-  char const *sp;
-
-  np = name + strlen (name);
-  sp = suffix + strlen (suffix);
+  char *np = name + strlen (name);
+  char const *sp = suffix + strlen (suffix);
 
   while (np > name && sp > suffix)
     if (*--np != *--sp)
