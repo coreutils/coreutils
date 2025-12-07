@@ -273,6 +273,7 @@ src_touch_LDADD += $(CLOCK_TIME_LIB)
 
 # for gethrxtime
 src_dd_LDADD += $(GETHRXTIME_LIB)
+src_shred_LDADD += $(GETHRXTIME_LIB)
 
 # for cap_get_file
 src_ls_LDADD += $(LIB_CAP)

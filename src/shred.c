@@ -89,6 +89,7 @@
 #include "assure.h"
 #include "xdectoint.h"
 #include "fcntl--.h"
+#include "gethrxtime.h"
 #include "human.h"
 #include "randint.h"
 #include "randread.h"
@@ -401,12 +402,12 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
         unsigned long int k, unsigned long int n)
 {
   off_t size = *sizep;
-  off_t offset;			/* Current file position */
-  time_t thresh IF_LINT ( = 0);	/* Time to maybe print next status update */
-  time_t now = 0;		/* Current time */
-  size_t lim;			/* Amount of data to try writing */
-  size_t soff;			/* Offset into buffer for next write */
-  ssize_t ssize;		/* Return value from write */
+  off_t offset;                /* Current file position */
+  xtime_t prev IF_LINT ( = 0); /* Time we printed the previous update.  */
+  xtime_t now = 0;             /* Current time */
+  size_t lim;                  /* Amount of data to try writing */
+  size_t soff;                 /* Offset into buffer for next write */
+  ssize_t ssize;               /* Return value from write */
 
   /* Fill pattern buffer.  Aligning it to a page so we can do direct I/O.  */
   size_t page_size = getpagesize ();
@@ -456,7 +457,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
   if (n)
     {
       error (0, 0, _("%s: pass %lu/%lu (%s)..."), qname, k, n, pass_string);
-      thresh = time (nullptr) + VERBOSE_UPDATE;
+      prev = gethrxtime ();
       previous_human_offset = "";
     }
 
@@ -546,7 +547,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
 
       /* Time to print progress? */
       if (n && ((done && *previous_human_offset)
-                || thresh <= (now = time (nullptr))))
+                || VERBOSE_UPDATE <= xtime_sec ((now = gethrxtime ()) - prev)))
         {
           char offset_buf[LONGEST_HUMAN_READABLE + 1];
           char size_buf[LONGEST_HUMAN_READABLE + 1];
@@ -582,7 +583,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
 
               strcpy (previous_offset_buf, human_offset);
               previous_human_offset = previous_offset_buf;
-              thresh = now + VERBOSE_UPDATE;
+              prev = now;
 
               /*
                * Force periodic syncs to keep displayed progress accurate
