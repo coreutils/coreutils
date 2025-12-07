@@ -20,57 +20,24 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tac
+require_root_
 
-# See if the envvar is defined.
-if test x = "x$FULL_PARTITION_TMPDIR"; then
-  skip_ "FULL_PARTITION_TMPDIR not defined"
-fi
+cwd=$(pwd)
+cleanup_() { cd /; umount "$cwd/full_tmp"; }
 
-if ! test -d "$FULL_PARTITION_TMPDIR"; then
-  echo "$0: $FULL_PARTITION_TMPDIR:" \
-    "\$FULL_PARTITION_TMPDIR does not specify a directory" 1>&2
-  Exit 1
-fi
+mkdir full_tmp || framework_failure_
 
-fp_tmp="$FULL_PARTITION_TMPDIR/tac-cont-$$"
-cleanup_()
-{
-  # Terminate any background process
-  # and remove tmp dir
-  rm -f "$fp_tmp"
-  kill $pid 2>/dev/null && wait $pid
-}
+mount -t tmpfs --options size=1M tmpfs $cwd/full_tmp ||
+ skip_ 'Unable to mount small tmpfs'
 
 # Make sure we can create an empty file there (i.e., no shortage of inodes).
-if ! touch $fp_tmp; then
-  echo "$0: $fp_tmp: cannot create empty file" 1>&2
-  Exit 1
-fi
+touch "$cwd/full_tmp/tac-empty" || framework_failure_
 
-# Make sure that we fail when trying to create a file large enough
-# to consume a non-inode block.
-if seq 1000 > $fp_tmp 2>/dev/null; then
-  echo "$0: $FULL_PARTITION_TMPDIR: not a full partition" 1>&2
-  Exit 1
-fi
+seq 5 > five && seq 5 -1 1 > exp || framework_failure_
 
-seq 5 > in
-
-
-# Give tac a fifo command line argument.
-# This makes it try to create a temporary file in $TMPDIR.
-mkfifo_or_skip_ fifo
-seq 1000 > fifo & pid=$!
-TMPDIR=$FULL_PARTITION_TMPDIR tac fifo in >out 2>err && fail=1
-
-cat <<\EOF > exp || framework_failure_
-5
-4
-3
-2
-1
-EOF
-
+# Make sure we diagnose the failure but continue to subsequent files
+yes | TMPDIR=$cwd/full_tmp timeout 10 tac - five >out 2>err && fail=1
+{ test $? = 124 || ! grep 'space' err >/dev/null; } && fail=1
 compare exp out || fail=1
 
 Exit $fail

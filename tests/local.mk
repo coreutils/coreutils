@@ -142,6 +142,7 @@ all_root_tests =				\
   tests/rm/read-only.sh				\
   tests/rm/empty-immutable-skip.sh		\
   tests/split/l-chunk-root.sh			\
+  tests/tac/tac-continue.sh			\
   tests/tail/append-only.sh			\
   tests/tail/end-of-device.sh			\
   tests/touch/now-owned-by-other.sh
@@ -459,7 +460,6 @@ all_tests =					\
   tests/cksum/sum-sysv.sh			\
   tests/misc/sync.sh				\
   tests/tac/tac.pl				\
-  tests/tac/tac-continue.sh			\
   tests/tac/tac-locale.sh			\
   tests/tac/tac-2-nonseekable.sh		\
   tests/tail/tail.pl				\
