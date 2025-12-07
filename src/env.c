@@ -218,15 +218,13 @@ scan_varname (char const *str)
 static char *
 extract_varname (char const *str)
 {
-  idx_t i;
-  char const *p;
+  char const *p = scan_varname (str);
 
-  p = scan_varname (str);
   if (!p)
     return nullptr;
 
   /* -2 and +2 (below) account for the '${' prefix.  */
-  i = p - str - 2;
+  idx_t i = p - str - 2;
 
   if (i >= vnlen)
     {
@@ -543,9 +541,6 @@ parse_split_string (char const *str, int *orig_optind,
 static void
 parse_signal_action_params (char const *arg, bool set_default)
 {
-  char *opt_sig;
-  char *optarg_writable;
-
   if (! arg)
     {
       /* Without an argument, reset all signals.
@@ -556,9 +551,9 @@ parse_signal_action_params (char const *arg, bool set_default)
       return;
     }
 
-  optarg_writable = xstrdup (arg);
+  char *optarg_writable = xstrdup (arg);
 
-  opt_sig = strtok (optarg_writable, ",");
+  char *opt_sig = strtok (optarg_writable, ",");
   while (opt_sig)
     {
       int signum = operand2sig (opt_sig);
@@ -624,9 +619,6 @@ reset_signal_handlers (void)
 static void
 parse_block_signal_params (char const *arg, bool block)
 {
-  char *opt_sig;
-  char *optarg_writable;
-
   if (! arg)
     {
       /* Without an argument, reset all signals.  */
@@ -645,9 +637,9 @@ parse_block_signal_params (char const *arg, bool block)
   if (! arg)
     return;
 
-  optarg_writable = xstrdup (arg);
+  char *optarg_writable = xstrdup (arg);
 
-  opt_sig = strtok (optarg_writable, ",");
+  char *opt_sig = strtok (optarg_writable, ",");
   while (opt_sig)
     {
       int signum = operand2sig (opt_sig);
@@ -678,7 +670,6 @@ set_signal_proc_mask (void)
 {
   /* Get the existing signal mask */
   sigset_t set;
-  char const *debug_act;
 
   sigemptyset (&set);
 
@@ -687,6 +678,8 @@ set_signal_proc_mask (void)
 
   for (int i = 1; i <= SIGNUM_BOUND; i++)
     {
+      char const *debug_act = nullptr;
+
       if (sigismember (&block_signals, i))
         {
           sigaddset (&set, i);
@@ -696,10 +689,6 @@ set_signal_proc_mask (void)
         {
           sigdelset (&set, i);
           debug_act = "UNBLOCK";
-        }
-      else
-        {
-          debug_act = nullptr;
         }
 
       if (dev_debug && debug_act)
@@ -720,7 +709,6 @@ static void
 list_signal_handling (void)
 {
   sigset_t set;
-  char signame[SIG2STR_MAX];
 
   sigemptyset (&set);
   if (sigprocmask (0, nullptr, &set))
@@ -739,6 +727,7 @@ list_signal_handling (void)
       if (! *ignored && ! *blocked)
         continue;
 
+      char signame[SIG2STR_MAX];
       if (sig2str (i, signame) != 0)
         snprintf (signame, sizeof signame, "SIG%d", i);
       fprintf (stderr, "%-10s (%2d): %s%s%s\n", signame, i,
@@ -760,7 +749,6 @@ initialize_signals (void)
 int
 main (int argc, char **argv)
 {
-  int optc;
   bool ignore_environment = false;
   bool opt_nul_terminate_output = false;
   char const *newdir = nullptr;
@@ -777,6 +765,7 @@ main (int argc, char **argv)
 
   initialize_signals ();
 
+  int optc;
   while ((optc = getopt_long (argc, argv, shortopts, longopts, nullptr)) != -1)
     {
       switch (optc)
