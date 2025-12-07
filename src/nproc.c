@@ -74,7 +74,7 @@ which may be less than the number of online processors\n\
 int
 main (int argc, char **argv)
 {
-  unsigned long nproc, ignore = 0;
+  unsigned long ignore = 0;
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -116,7 +116,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  nproc = num_processors (mode);
+  unsigned long nproc = num_processors (mode);
 
   if (ignore < nproc)
     nproc -= ignore;
