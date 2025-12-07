@@ -81,14 +81,6 @@ To save output to FILE, use '%s COMMAND > FILE'.\n"),
 int
 main (int argc, char **argv)
 {
-  int out_fd = STDOUT_FILENO;
-  int saved_stderr_fd = STDERR_FILENO;
-  bool ignoring_input;
-  bool redirecting_stdout;
-  bool stdout_is_closed;
-  bool redirecting_stderr;
-  int exit_internal_failure;
-
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -99,8 +91,8 @@ main (int argc, char **argv)
      for env, exec, nice, time, and xargs where it requires internal
      failure give something in the range 1-125.  For consistency with
      other tools, fail with EXIT_CANCELED unless POSIXLY_CORRECT.  */
-  exit_internal_failure = (getenv ("POSIXLY_CORRECT")
-                           ? POSIX_NOHUP_FAILURE : EXIT_CANCELED);
+  int exit_internal_failure = (getenv ("POSIXLY_CORRECT")
+                               ? POSIX_NOHUP_FAILURE : EXIT_CANCELED);
   initialize_exit_failure (exit_internal_failure);
   atexit (close_stdout);
 
@@ -114,10 +106,10 @@ main (int argc, char **argv)
       usage (exit_internal_failure);
     }
 
-  ignoring_input = isatty (STDIN_FILENO);
-  redirecting_stdout = isatty (STDOUT_FILENO);
-  stdout_is_closed = (!redirecting_stdout && errno == EBADF);
-  redirecting_stderr = isatty (STDERR_FILENO);
+  bool ignoring_input = isatty (STDIN_FILENO);
+  bool redirecting_stdout = isatty (STDOUT_FILENO);
+  bool stdout_is_closed = (!redirecting_stdout && errno == EBADF);
+  bool redirecting_stderr = isatty (STDERR_FILENO);
 
   /* If standard input is a tty, replace it with /dev/null if possible.
      Note that it is deliberately opened for *writing*,
@@ -135,6 +127,7 @@ main (int argc, char **argv)
      First try nohup.out, then $HOME/nohup.out.  If standard error is
      a tty and standard output is closed, open nohup.out or
      $HOME/nohup.out without redirecting anything.  */
+  int out_fd = STDOUT_FILENO;
   if (redirecting_stdout || (redirecting_stderr && stdout_is_closed))
     {
       char *in_home = nullptr;
@@ -179,6 +172,7 @@ main (int argc, char **argv)
     }
 
   /* If standard error is a tty, redirect it.  */
+  int saved_stderr_fd = STDERR_FILENO;
   if (redirecting_stderr)
     {
       /* Save a copy of stderr before redirecting, so we can use the original
