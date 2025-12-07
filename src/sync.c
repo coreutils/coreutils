@@ -87,9 +87,7 @@ or their containing file systems.\n\
 static bool
 sync_arg (enum sync_mode mode, char const *file)
 {
-  bool ret = true;
   int open_flags = O_RDONLY | O_NONBLOCK;
-  int fd;
 
 #if defined _AIX || defined __CYGWIN__
   /* AIX 7.1, CYGWIN 2.9.0, fsync requires write access to file.  */
@@ -99,7 +97,7 @@ sync_arg (enum sync_mode mode, char const *file)
 
   /* Note O_PATH might be supported with syncfs(),
      though as of Linux 3.18 is not.  */
-  fd = open (file, open_flags);
+  int fd = open (file, open_flags);
   if (fd < 0)
     {
       /* Use the O_RDONLY errno, which is significant
@@ -114,6 +112,7 @@ sync_arg (enum sync_mode mode, char const *file)
         }
     }
 
+  bool ret = true;
   /* We used O_NONBLOCK above to not hang with fifos,
      so reset that here.  */
   int fdflags = fcntl (fd, F_GETFL);
@@ -167,10 +166,7 @@ sync_arg (enum sync_mode mode, char const *file)
 int
 main (int argc, char **argv)
 {
-  int c;
-  bool args_specified;
   bool arg_data = false, arg_file_system = false;
-  enum sync_mode mode;
   bool ok = true;
 
   initialize_main (&argc, &argv);
@@ -181,6 +177,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
+  int c;
   while ((c = getopt_long (argc, argv, "df", long_options, nullptr))
          != -1)
     {
@@ -203,7 +200,7 @@ main (int argc, char **argv)
         }
     }
 
-  args_specified = optind < argc;
+  bool args_specified = optind < argc;
 
   if (arg_data && arg_file_system)
     error (EXIT_FAILURE, 0,
@@ -212,6 +209,7 @@ main (int argc, char **argv)
   if (!args_specified && arg_data)
     error (EXIT_FAILURE, 0, _("--data needs at least one argument"));
 
+  enum sync_mode mode;
   if (! args_specified || (arg_file_system && ! HAVE_SYNCFS))
     mode = MODE_SYNC;
   else if (arg_file_system)
