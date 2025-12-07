@@ -55,8 +55,6 @@ Same as id -un.\n\
 int
 main (int argc, char **argv)
 {
-  struct passwd *pw;
-  uid_t uid;
   uid_t NO_UID = -1;
 
   initialize_main (&argc, &argv);
@@ -78,8 +76,8 @@ main (int argc, char **argv)
     }
 
   errno = 0;
-  uid = geteuid ();
-  pw = uid == NO_UID && errno ? nullptr : getpwuid (uid);
+  uid_t uid = geteuid ();
+  struct passwd *pw = uid == NO_UID && errno ? nullptr : getpwuid (uid);
   if (!pw)
     error (EXIT_FAILURE, errno, _("cannot find name for user ID %ju"),
            (uintmax_t) uid);
