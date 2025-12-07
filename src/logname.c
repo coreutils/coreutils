@@ -49,8 +49,6 @@ Print the user's login name.\n\
 int
 main (int argc, char **argv)
 {
-  char *cp;
-
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -71,7 +69,7 @@ main (int argc, char **argv)
 
   /* POSIX requires using getlogin (or equivalent code) and prohibits
      using a fallback technique.  */
-  cp = getlogin ();
+  char const *cp = getlogin ();
   if (! cp)
     error (EXIT_FAILURE, 0, _("no login name"));
 
