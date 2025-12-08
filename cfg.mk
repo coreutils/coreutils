@@ -372,6 +372,11 @@ sc_texi_long_option_escaped: doc/coreutils.info
 	@grep ' –[^ ]' '$<'						\
 	  && { echo 1>&2 '$@: found unquoted --long-option'; exit 1; } || :
 
+# pdf (and dvi) generation requires explicit empty args (trailing comma)
+sc_texi_ensure_empty_option_args:
+	@grep '^@optItem[^,]*,[^,]*$$' doc/*.texi && { echo 1>&2 \
+	  '$@: Use explicit empty argument to @optItem[x]'; exit 1; } || :
+
 # Ensure all man/*.[1x] files are present.
 sc_man_file_correlation: check-x-vs-1 check-programs-vs-x
 

@@ -588,7 +588,7 @@ insights to the overall process.
 @chapter Common options
 
 @macro optBackup{cmd}
-@optItem{\cmd\,-b}
+@optItem{\cmd\,-b,}
 @optItemx{\cmd\,--backup,[=@var{method}]}
 @vindex VERSION_CONTROL
 @cindex backups, making
@@ -613,8 +613,8 @@ Specify the destination @var{directory}.
 @end macro
 
 @macro optNoTargetDirectory{cmd}
-@optItem{\cmd\,-T}
-@optItemx{\cmd\,--no-target-directory}
+@optItem{\cmd\,-T,}
+@optItemx{\cmd\,--no-target-directory,}
 @cindex target directory
 @cindex destination directory
 Do not treat the last operand specially when it is a directory or a
@@ -629,20 +629,20 @@ output even when that output would contain data with embedded newlines.
 @end macro
 
 @macro optNull{cmd}
-@optItem{\cmd\,-0}
-@optItemx{\cmd\,--null}
+@optItem{\cmd\,-0,}
+@optItemx{\cmd\,--null,}
 @outputNUL
 @end macro
 
 @macro optZero{cmd}
-@optItem{\cmd\,-z}
-@optItemx{\cmd\,--zero}
+@optItem{\cmd\,-z,}
+@optItemx{\cmd\,--zero,}
 @outputNUL
 @end macro
 
 @macro optZeroTerminated{cmd}
-@optItem{\cmd\,-z}
-@optItemx{\cmd\,--zero-terminated}
+@optItem{\cmd\,-z,}
+@optItemx{\cmd\,--zero-terminated,}
 @cindex process zero-terminated items
 Delimit items with a zero byte rather than a newline (ASCII LF).
 I.e., treat input as items separated by ASCII NUL
@@ -654,7 +654,7 @@ or other special characters).
 @end macro
 
 @macro optSi{cmd}
-@optItem{\cmd\,--si}
+@optItem{\cmd\,--si,}
 @cindex SI output
 Append an SI-style abbreviation to each size, such as @samp{M} for
 megabytes.  Powers of 1000 are used, not 1024; @samp{M} stands for
@@ -665,8 +665,8 @@ you prefer powers of 1024.
 @end macro
 
 @macro optHumanReadable{cmd}
-@optItem{\cmd\,-h}
-@optItemx{\cmd\,--human-readable}
+@optItem{\cmd\,-h,}
+@optItemx{\cmd\,--human-readable,}
 @cindex human-readable output
 Append a size letter to each size, such as @samp{M} for mebibytes.
 Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
@@ -675,7 +675,7 @@ Use the @option{--si} option if you prefer powers of 1000.
 @end macro
 
 @macro optStripTrailingSlashes{cmd}
-@optItem{\cmd\,--strip-trailing-slashes}
+@optItem{\cmd\,--strip-trailing-slashes,}
 @cindex stripping trailing slashes
 Remove any trailing slashes from each @var{source} argument.
 @xref{Trailing slashes}.
@@ -1406,15 +1406,15 @@ a symlink or its referent.
 @table @samp
 
 @macro choptH{cmd}
-@optItem{\cmd\,-H}
+@optItem{\cmd\,-H,}
 @cindex symbolic link to directory, traverse if on the command line
 If @option{--recursive} (@option{-R}) is specified and
 a command line argument is a symbolic link to a directory, traverse it.
 @end macro
-@choptH
+@choptH{}
 
 @macro choptL{cmd}
-@optItem{\cmd\,-L}
+@optItem{\cmd\,-L,}
 @cindex symbolic link to directory, traverse each that is encountered
 In a recursive traversal, traverse every symbolic link to a directory
 that is encountered.
@@ -1431,14 +1431,14 @@ the operation will be performed on the target of that symlink,
 possibly allowing the attacker to escalate privileges.
 
 @end macro
-@choptL
+@choptL{}
 
 @macro choptP{cmd}
-@optItem{\cmd\,-P}
+@optItem{\cmd\,-P,}
 @cindex symbolic link to directory, never traverse
 Do not traverse any symbolic links.
 @end macro
-@choptP
+@choptP{}
 
 @macro choptDefault
 This is the default if none of @option{-H}, @option{-L},
@@ -1728,46 +1728,46 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{cat,-A}
-@optItemx{cat,--show-all}
+@optItem{cat,-A,}
+@optItemx{cat,--show-all,}
 Equivalent to @option{-vET}.
 
-@optItem{cat,-b}
-@optItemx{cat,--number-nonblank}
+@optItem{cat,-b,}
+@optItemx{cat,--number-nonblank,}
 Number all nonempty output lines, starting with 1.
 
-@optItem{cat,-e}
+@optItem{cat,-e,}
 Equivalent to @option{-vE}.
 
-@optItem{cat,-E}
-@optItemx{cat,--show-ends}
+@optItem{cat,-E,}
+@optItemx{cat,--show-ends,}
 Display a @samp{$} after the end of each line.
 The @code{\r\n} combination is shown as @samp{^M$}.
 
-@optItem{cat,-n}
-@optItemx{cat,--number}
+@optItem{cat,-n,}
+@optItemx{cat,--number,}
 Number all output lines, starting with 1.  This option is ignored
 if @option{-b} is in effect.
 
-@optItem{cat,-s}
-@optItemx{cat,--squeeze-blank}
+@optItem{cat,-s,}
+@optItemx{cat,--squeeze-blank,}
 @cindex squeezing empty lines
 @cindex squeezing blank lines
 Suppress repeated adjacent blank lines; output just one empty line
 instead of several.
 
-@optItem{cat,-t}
+@optItem{cat,-t,}
 Equivalent to @option{-vT}.
 
-@optItem{cat,-T}
-@optItemx{cat,--show-tabs}
+@optItem{cat,-T,}
+@optItemx{cat,--show-tabs,}
 Display TAB characters as @samp{^I}.
 
-@optItem{cat,-u}
+@optItem{cat,-u,}
 Ignored; for POSIX compatibility.
 
-@optItem{cat,-v}
-@optItemx{cat,--show-nonprinting}
+@optItem{cat,-v,}
+@optItemx{cat,--show-nonprinting,}
 Display control characters except for LFD and TAB using
 @samp{^} notation and precede characters that have the high bit set with
 @samp{M-}.
@@ -1817,13 +1817,13 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{tac,-b}
-@optItemx{tac,--before}
+@optItem{tac,-b,}
+@optItemx{tac,--before,}
 The separator is attached to the beginning of the record that it
 precedes in the file.
 
-@optItem{tac,-r}
-@optItemx{tac,--regex}
+@optItem{tac,-r,}
+@optItemx{tac,--regex,}
 Treat the separator string as a regular expression.
 
 @optItem{tac,-s,@w{ }@var{separator}}
@@ -1970,8 +1970,8 @@ right justified, no leading zeros;
 right justified, leading zeros.
 @end table
 
-@optItem{nl,-p}
-@optItemx{nl,--no-renumber}
+@optItem{nl,-p,}
+@optItemx{nl,--no-renumber,}
 Do not reset the line number at the start of a logical page.
 
 @optItem{nl,-s,@w{ }@var{string}}
@@ -2165,8 +2165,8 @@ double
 long double
 @end table
 
-@optItem{od,-v}
-@optItemx{od,--output-duplicates}
+@optItem{od,-v,}
+@optItemx{od,--output-duplicates,}
 Output consecutive lines that are identical.  By default, when two or
 more consecutive output lines would be identical, @command{od} outputs only
 the first line, and puts just an asterisk on the following line to
@@ -2189,38 +2189,38 @@ specification options.  These options accumulate.
 
 @table @samp
 
-@optItem{od,-a}
+@optItem{od,-a,}
 Output as named characters.  Equivalent to @samp{-t a}.
 
-@optItem{od,-b}
+@optItem{od,-b,}
 Output as octal bytes.  Equivalent to @samp{-t o1}.
 
-@optItem{od,-c}
+@optItem{od,-c,}
 Output as printable single byte characters, C backslash escapes
 or 3 digit octal sequences.  Equivalent to @samp{-t c}.
 
-@optItem{od,-d}
+@optItem{od,-d,}
 Output as unsigned decimal two-byte units.  Equivalent to @samp{-t u2}.
 
-@optItem{od,-f}
+@optItem{od,-f,}
 Output as floats.  Equivalent to @samp{-t fF}.
 
-@optItem{od,-i}
+@optItem{od,-i,}
 Output as decimal ints.  Equivalent to @samp{-t dI}.
 
-@optItem{od,-l}
+@optItem{od,-l,}
 Output as decimal long ints.  Equivalent to @samp{-t dL}.
 
-@optItem{od,-o}
+@optItem{od,-o,}
 Output as octal two-byte units.  Equivalent to @option{-t o2}.
 
-@optItem{od,-s}
+@optItem{od,-s,}
 Output as decimal two-byte units.  Equivalent to @option{-t d2}.
 
-@optItem{od,-x}
+@optItem{od,-x,}
 Output as hexadecimal two-byte units.  Equivalent to @samp{-t x2}.
 
-@optItem{od,--traditional}
+@optItem{od,--traditional,}
 Recognize the non-option label argument that traditional @command{od}
 accepted.  The following syntax:
 
@@ -2296,8 +2296,8 @@ disable line wrapping altogether.
 
 @optAnchor{base32,-d}
 @optAnchor{base32,--decode}
-@optItem{base64,-d}
-@optItemx{base64,--decode}
+@optItem{base64,-d,}
+@optItemx{base64,--decode,}
 @cindex Decode base64 data
 @cindex Base64 decoding
 Change the mode of operation, from the default of encoding data, to
@@ -2306,8 +2306,8 @@ output will be the original data.
 
 @optAnchor{base32,-i}
 @optAnchor{base32,--ignore-garbage}
-@optItem{base64,-i}
-@optItemx{base64,--ignore-garbage}
+@optItem{base64,-i,}
+@optItemx{base64,--ignore-garbage,}
 @cindex Ignore garbage in base64 stream
 When decoding, newlines are always accepted.
 During decoding, ignore unrecognized bytes,
@@ -2345,19 +2345,19 @@ Supported @var{encoding}s are:
 
 @table @samp
 
-@optItem{basenc,--base64}
+@optItem{basenc,--base64,}
 Encode into (or decode from with @option{-d/--decode}) base64 form.
 The format conforms to
 @uref{https://datatracker.ietf.org/doc/html/rfc4648#section-4, RFC 4648#4}.
 Equivalent to the @command{base64} command.
 
-@optItem{basenc,--base64url}
+@optItem{basenc,--base64url,}
 Encode into (or decode from with @option{-d/--decode}) file-and-url-safe
 base64 form (using @samp{_} and @samp{-} instead of @samp{+} and @samp{/}).
 The format conforms to
 @uref{https://datatracker.ietf.org/doc/html/rfc4648#section-5, RFC 4648#5}.
 
-@optItem{basenc,--base58}
+@optItem{basenc,--base58,}
 Encode into (or decode from with @option{-d/--decode}) base58 form.
 The format conforms to
 @uref{https://datatracker.ietf.org/doc/html/draft-msporny-base58-03,
@@ -2369,36 +2369,36 @@ For example this generates a unique 128 bit ID in 22 bytes:
 uuidgen | basenc --base16 -di | basenc --base58
 @end example
 
-@optItem{basenc,--base32}
+@optItem{basenc,--base32,}
 Encode into (or decode from with @option{-d/--decode}) base32 form.
 The encoded data uses the @samp{ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=} characters.
 The format conforms to
 @uref{https://datatracker.ietf.org/doc/html/rfc4648#section-6, RFC 4648#6}.
 Equivalent to the @command{base32} command.
 
-@optItem{basenc,--base32hex}
+@optItem{basenc,--base32hex,}
 Encode into (or decode from with @option{-d/--decode}) Extended Hex Alphabet
 base32 form. The encoded data uses the
 @samp{0123456789ABCDEFGHIJKLMNOPQRSTUV=} characters. The format conforms to
 @uref{https://datatracker.ietf.org/doc/html/rfc4648#section-7, RFC 4648#7}.
 
-@optItem{basenc,--base16}
+@optItem{basenc,--base16,}
 Encode into (or decode from with @option{-d/--decode}) base16 (hexadecimal)
 form. The encoded data uses the @samp{0123456789ABCDEF} characters. The format
 conforms to
 @uref{https://datatracker.ietf.org/doc/html/rfc4648#section-8, RFC 4648#8}.
 
-@optItem{basenc,--base2lsbf}
+@optItem{basenc,--base2lsbf,}
 Encode into (or decode from with @option{-d/--decode}) binary string form
 (@samp{0} and @samp{1}) with the @emph{least} significant bit of every byte
 first.
 
-@optItem{basenc,--base2msbf}
+@optItem{basenc,--base2msbf,}
 Encode into (or decode from with @option{-d/--decode}) binary string form
 (@samp{0} and @samp{1}) with the @emph{most} significant bit of every byte
 first.
 
-@optItem{basenc,--z85}
+@optItem{basenc,--z85,}
 Encode into (or decode from with @option{-d/--decode}) Z85 form
 (a modified Ascii85 form). The encoded data uses the
 @samp{0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU@
@@ -2505,33 +2505,33 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{fmt,-c}
-@optItemx{fmt,--crown-margin}
+@optItem{fmt,-c,}
+@optItemx{fmt,--crown-margin,}
 @cindex crown margin
 @dfn{Crown margin} mode: preserve the indentation of the first two
 lines within a paragraph, and align the left margin of each subsequent
 line with that of the second line.
 
-@optItem{fmt,-t}
-@optItemx{fmt,--tagged-paragraph}
+@optItem{fmt,-t,}
+@optItemx{fmt,--tagged-paragraph,}
 @cindex tagged paragraphs
 @dfn{Tagged paragraph} mode: like crown margin mode, except that if
 indentation of the first line of a paragraph is the same as the
 indentation of the second, the first line is treated as a one-line
 paragraph.
 
-@optItem{fmt,-s}
-@optItemx{fmt,--split-only}
+@optItem{fmt,-s,}
+@optItemx{fmt,--split-only,}
 Split lines only.  Do not join short lines to form longer ones.  This
 prevents sample lines of code, and other such ``formatted'' text from
 being unduly combined.
 
-@optItem{fmt,-u}
-@optItemx{fmt,--uniform-spacing}
+@optItem{fmt,-u,}
+@optItemx{fmt,--uniform-spacing,}
 Uniform spacing.  Reduce spacing between words to one space, and spacing
 between sentences to two spaces.
 
-@optItem{fmt,-@var{width}}
+@optItem{fmt,-@var{width},}
 @optItemx{fmt,-w,@w{ }@var{width}}
 @optItemx{fmt,--width,=@var{width}}
 Fill output lines up to @var{width} characters (default 75 or @var{goal}
@@ -2619,7 +2619,7 @@ is identical.  By default, counting starts with the first page of input
 file (not first page printed).  Line numbering may be altered by @option{-N}
 option.
 
-@optItem{pr,-@var{column}}
+@optItem{pr,-@var{column},}
 @optItemx{pr,--columns,=@var{column}}
 @cindex down columns
 With each single @var{file}, produce @var{column} columns of output
@@ -2636,21 +2636,21 @@ Lines of full length are joined in a free field format and @option{-S}
 option may set field separators.  @option{-@var{column}} may not be used
 with the @option{-m} option.
 
-@optItem{pr,-a}
-@optItemx{pr,--across}
+@optItem{pr,-a,}
+@optItemx{pr,--across,}
 @cindex across columns
 With each single @var{file}, print columns across rather than down.  The
 @option{-@var{column}} option must be given with @var{column} greater than one.
 If a line is too long to fit in a column, it is truncated.
 
-@optItem{pr,-c}
-@optItemx{pr,--show-control-chars}
+@optItem{pr,-c,}
+@optItemx{pr,--show-control-chars,}
 Print control characters using hat notation (e.g., @samp{^G}); print
 other nonprinting characters in octal backslash notation.  By default,
 nonprinting characters are not changed.
 
-@optItem{pr,-d}
-@optItemx{pr,--double-space}
+@optItem{pr,-d,}
+@optItemx{pr,--double-space,}
 @cindex double spacing
 Double space the output.
 
@@ -2688,9 +2688,9 @@ the input tab character (default is the TAB character).  Second optional
 argument @var{in-tabwidth} is the input tab character's width (default
 is 8).
 
-@optItem{pr,-f}
-@optItemx{pr,-F}
-@optItemx{pr,--form-feed}
+@optItem{pr,-f,}
+@optItemx{pr,-F,}
+@optItemx{pr,--form-feed,}
 Use a form feed instead of newlines to separate output pages.  This does
 not alter the default page length of 66 lines.
 
@@ -2708,8 +2708,8 @@ is the output tab character (default is the TAB character).  Second optional
 argument @var{out-tabwidth} is the output tab character's width (default
 is 8).
 
-@optItem{pr,-J}
-@optItemx{pr,--join-lines}
+@optItem{pr,-J,}
+@optItemx{pr,--join-lines,}
 Merge lines of full length.  Used together with the column options
 @option{-@var{column}}, @option{-a -@var{column}} or @option{-m}.  Turns off
 @option{-W/-w} line truncation;
@@ -2727,8 +2727,8 @@ the lines of the header [and the footer].  If @var{page_length} is less
 than or equal to 10, the header and footer are omitted, as if the
 @option{-t} option had been given.
 
-@optItem{pr,-m}
-@optItemx{pr,--merge}
+@optItem{pr,-m,}
+@optItemx{pr,--merge,}
 Merge and print all @var{file}s in parallel, one in each column.  If a
 line is too long to fit in a column, it is truncated, unless the @option{-J}
 option is used.  @option{--sep-string[=@var{string}]} may be used.
@@ -2777,8 +2777,8 @@ The total page width is the size of the margin plus the @var{page_width}
 set with the @option{-W/-w} option.  A limited overflow may occur with
 numbered single column output (compare @option{-n} option).
 
-@optItem{pr,-r}
-@optItemx{pr,--no-file-warnings}
+@optItem{pr,-r,}
+@optItemx{pr,--no-file-warnings,}
 Do not print a warning message when an argument @var{file} cannot be
 opened.  (The exit status will still be nonzero, however.)
 
@@ -2802,8 +2802,8 @@ Without @option{-S} or @option{-J}, @command{pr} uses a @samp{space}
 (same as @option{-S"@w{ }"}).
 If no @samp{@var{string}} argument is specified, @samp{""} is assumed.
 
-@optItem{pr,-t}
-@optItemx{pr,--omit-header}
+@optItem{pr,-t,}
+@optItemx{pr,--omit-header,}
 Do not print the usual header [and footer] on each page, and do not fill
 out the bottom of pages (with blank lines or a form feed).  No page
 structure is produced, but form feeds set in the input files are retained.
@@ -2812,13 +2812,13 @@ useful together with other options; e.g.: @option{-t -e4}, expand TAB characters
 in the input file to 4 spaces but don't make any other changes.  Use of
 @option{-t} overrides @option{-h}.
 
-@optItem{pr,-T}
-@optItemx{pr,--omit-pagination}
+@optItem{pr,-T,}
+@optItemx{pr,--omit-pagination,}
 Do not print header [and footer].  In addition eliminate all form feeds
 set in the input files.
 
-@optItem{pr,-v}
-@optItemx{pr,--show-nonprinting}
+@optItem{pr,-v,}
+@optItemx{pr,--show-nonprinting,}
 Print nonprinting characters in octal backslash notation.
 
 @optItem{pr,-w,@w{ }@var{page_width}}
@@ -2878,19 +2878,19 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{fold,-b}
-@optItemx{fold,--bytes}
+@optItem{fold,-b,}
+@optItemx{fold,--bytes,}
 Count bytes rather than columns, so that tabs, backspaces, and carriage
 returns are each counted as taking up one column, just like other
 characters.
 
-@optItem{fold,-c}
-@optItemx{fold,--characters}
+@optItem{fold,-c,}
+@optItemx{fold,--characters,}
 Count characters rather than columns, meaning that lines containing
 characters wider than one column will be visually longer.
 
-@optItem{fold,-s}
-@optItemx{fold,--spaces}
+@optItem{fold,-s,}
+@optItemx{fold,--spaces,}
 Break at word boundaries: the line is broken after the last blank before
 the maximum line length.  If the line contains no such blanks, the line
 is broken at the maximum line length as usual.
@@ -2966,13 +2966,13 @@ However, if @var{num} is prefixed with a @samp{-},
 print all but the last @var{num} lines of each file.
 Size multiplier suffixes are the same as with the @option{-c} option.
 
-@optItem{head,-q}
-@optItemx{head,--quiet}
-@optItemx{head,--silent}
+@optItem{head,-q,}
+@optItemx{head,--quiet,}
+@optItemx{head,--silent,}
 Never print file name headers.
 
-@optItem{head,-v}
-@optItemx{head,--verbose}
+@optItem{head,-v,}
+@optItemx{head,--verbose,}
 Always print file name headers.
 
 @optZeroTerminated{head}
@@ -3046,11 +3046,11 @@ byte @var{num} from the start of each file. For example to skip the first byte
 use @code{tail -c +2}, while to skip all but the last byte use @code{tail -c 1}.
 @multiplierSuffixes{num}
 
-@optItem{tail,--debug}
+@optItem{tail,--debug,}
 Output extra information to standard error,
 like the --follow implementation being used.
 
-@optItem{tail,-f}
+@optItem{tail,-f,}
 @optItemx{tail,--follow,[=@var{how}]}
 @cindex growing files
 @vindex name @r{follow option}
@@ -3108,7 +3108,7 @@ by using a sub-second sleep interval, e.g., via an alias like this:
 alias tail='tail -s.1'
 @end example
 
-@optItem{tail,-F}
+@optItem{tail,-F,}
 This option is the same as @option{--follow=name --retry}.  That is, tail
 will attempt to reopen a file when it is removed.  Should this fail, tail
 will keep trying until it becomes accessible again.
@@ -3156,12 +3156,12 @@ terminate until long after the real writer has terminated.
 On some systems, @option{--pid} is not supported and @command{tail}
 outputs a warning.
 
-@optItem{tail,-q}
-@optItemx{tail,--quiet}
-@optItemx{tail,--silent}
+@optItem{tail,-q,}
+@optItemx{tail,--quiet,}
+@optItemx{tail,--silent,}
 Never print file name headers.
 
-@optItem{tail,--retry}
+@optItem{tail,--retry,}
 Indefinitely try to open the specified file.
 This option is useful mainly when following (and otherwise issues a warning).
 
@@ -3188,8 +3188,8 @@ every @var{number} seconds.
 The @var{number} must be non-negative and can be a floating-point number
 in either the current or the C locale.  @xref{Floating point}.
 
-@optItem{tail,-v}
-@optItemx{tail,--verbose}
+@optItem{tail,-v,}
+@optItemx{tail,--verbose,}
 Always print file name headers.
 
 @optZeroTerminated{tail}
@@ -3359,7 +3359,7 @@ thus enables the default behavior, which starts the suffix length at 2,
 and unless @option{-n} or @option{--numeric-suffixes=@var{from}} is
 specified, will auto increase the length by 2 as required.
 
-@optItem{split,-d}
+@optItem{split,-d,}
 @optItemx{split,--numeric-suffixes,[=@var{from}]}
 Use digits in suffixes rather than lower-case letters.  The numerical
 suffix counts from @var{from} if specified, 0 otherwise.
@@ -3372,7 +3372,7 @@ suffixes beyond @samp{99}.  If option @option{--number} is specified and
 the number of files is less than @var{from}, a single run is assumed and the
 minimum suffix length required is automatically determined.
 
-@optItem{split,-x}
+@optItem{split,-x,}
 @optItemx{split,--hex-suffixes,[=@var{from}]}
 Like @option{--numeric-suffixes}, but use hexadecimal numbers (in lower case).
 
@@ -3380,8 +3380,8 @@ Like @option{--numeric-suffixes}, but use hexadecimal numbers (in lower case).
 Append an additional @var{suffix} to output file names.  @var{suffix}
 must not contain slash.
 
-@optItem{split,-e}
-@optItemx{split,--elide-empty-files}
+@optItem{split,-e,}
+@optItemx{split,--elide-empty-files,}
 Suppress the generation of zero-length output files.  This can happen
 with the @option{--number} option if a file is (truncated to be) shorter
 than the number requested, or if a line is so long as to completely
@@ -3397,12 +3397,12 @@ newline character (ASCII LF).
 To specify ASCII NUL as the separator, use the two-character string @samp{\0},
 e.g., @samp{split -t '\0'}.
 
-@optItem{split,-u}
-@optItemx{split,--unbuffered}
+@optItem{split,-u,}
+@optItemx{split,--unbuffered,}
 Immediately copy input to output in @option{--number r/@dots{}} mode,
 which is a much slower mode of operation.
 
-@optItem{split,--verbose}
+@optItem{split,--verbose,}
 Write a diagnostic just before each output file is opened.
 
 @end table
@@ -3569,17 +3569,17 @@ individual output files in turn.  If this option is used, the
 Use output file names containing numbers that are @var{digits} digits
 long instead of the default 2.
 
-@optItem{csplit,-k}
-@optItemx{csplit,--keep-files}
+@optItem{csplit,-k,}
+@optItemx{csplit,--keep-files,}
 Do not remove output files when errors are encountered.
 
-@optItem{csplit,--suppress-matched}
+@optItem{csplit,--suppress-matched,}
 Do not output lines matching the specified @var{pattern}.
 I.e., suppress the boundary line from the start of the second
 and subsequent splits.
 
-@optItem{csplit,-z}
-@optItemx{csplit,--elide-empty-files}
+@optItem{csplit,-z,}
+@optItemx{csplit,--elide-empty-files,}
 Suppress the generation of zero-length output files.  (In cases where
 the section delimiters of the input file are supposed to mark the first
 lines of each of the sections, the first output file will generally be a
@@ -3587,10 +3587,10 @@ zero-length file unless you use this option.)  The output file sequence
 numbers always run consecutively starting from 0, even when this option
 is specified.
 
-@optItem{csplit,-s}
-@optItemx{csplit,-q}
-@optItemx{csplit,--silent}
-@optItemx{csplit,--quiet}
+@optItem{csplit,-s,}
+@optItemx{csplit,-q,}
+@optItemx{csplit,--silent,}
+@optItemx{csplit,--quiet,}
 Do not print counts of output file sizes.
 
 @end table
@@ -3742,17 +3742,17 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{wc,-c}
-@optItemx{wc,--bytes}
+@optItem{wc,-c,}
+@optItemx{wc,--bytes,}
 Print only the byte counts.
 
-@optItem{wc,-m}
-@optItemx{wc,--chars}
+@optItem{wc,-m,}
+@optItemx{wc,--chars,}
 Print only the character counts, as per the current locale.
 Encoding errors are not counted.
 
-@optItem{wc,-w}
-@optItemx{wc,--words}
+@optItem{wc,-w,}
+@optItemx{wc,--words,}
 Print only the word counts.  A word is a nonempty sequence of non white
 space delimited by white space characters or by start or end of input.
 The current locale determines which characters are white space.
@@ -3765,24 +3765,24 @@ space even if the current locale does not: U+00A0 NO-BREAK SPACE,
 U+2007 FIGURE SPACE, U+202F NARROW NO-BREAK SPACE, and U+2060 WORD
 JOINER.
 
-@optItem{wc,-l}
-@optItemx{wc,--lines}
+@optItem{wc,-l,}
+@optItemx{wc,--lines,}
 Print only the newline character counts.
 If a file ends in a non-newline character,
 its trailing partial line is not counted.
 
-@optItem{wc,--debug}
+@optItem{wc,--debug,}
 Output extra information to standard error.
 Currently; print the line count acceleration implementation being used.
 
-@optItem{wc,-L}
-@optItemx{wc,--max-line-length}
+@optItem{wc,-L,}
+@optItemx{wc,--max-line-length,}
 Print only the maximum display widths.
 Tabs are set at every 8th column.
 Display widths of wide characters are considered.
 Non-printable characters are given 0 width.
 
-@optItem{wc,--total}
+@optItem{wc,--total,}
 Control when and how the final line with cumulative counts is printed.
 @var{when} is one of:
 @itemize @bullet
@@ -3865,14 +3865,14 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{sum,-r}
+@optItem{sum,-r,}
 @cindex BSD @command{sum}
 Use the default (BSD compatible) algorithm.  This option is included for
 compatibility with the System V @command{sum}.  Unless @option{-s} was also
 given, it has no effect.
 
-@optItem{sum,-s}
-@optItemx{sum,--sysv}
+@optItem{sum,-s,}
+@optItemx{sum,--sysv,}
 @cindex System V @command{sum}
 Compute checksums using an algorithm compatible with System V
 @command{sum}'s default, and print file sizes in units of 512-byte blocks.
@@ -4002,7 +4002,7 @@ produce the same checksum:
 @samp{blake2b}   equivalent to @command{b2sum}
 @end example
 
-@optItem{cksum,--base64}
+@optItem{cksum,--base64,}
 @cindex base64 checksum encoding
 Print base64-encoded digests not hexadecimal.
 This option is ignored with @option{--check}.
@@ -4015,7 +4015,7 @@ modulo 3, and the @option{--check} parser requires precisely the same
 input digest string as what is output.  I.e., removing or adding any
 @samp{=} padding renders a digest non-matching.
 
-@optItem{cksum,--debug}
+@optItem{cksum,--debug,}
 Output extra information to standard error,
 like the checksum implementation being used.
 
@@ -4032,7 +4032,7 @@ option is required, and the @var{length} must be one of 224, 256, 384, or 512.
 This option is ignored when @option{--check} is specified,
 as the length is automatically determined when checking.
 
-@optItem{cksum,--raw}
+@optItem{cksum,--raw,}
 @cindex raw binary checksum
 Print only the unencoded raw binary digest for a single input.
 Do not output the file name or anything else.
@@ -4042,7 +4042,7 @@ This option works only with a single input.
 Unlike other output formats, @command{cksum} provides no way to
 @option{--check} a @option{--raw} checksum.
 
-@optItem{cksum,--untagged}
+@optItem{cksum,--untagged,}
 Output using the original Coreutils format used by the other
 standalone checksum utilities like @command{md5sum} for example.
 This format has the checksum at the start of the line, and may be
@@ -4057,8 +4057,8 @@ This does not identify the digest algorithm used for the checksum.
 
 @table @samp
 
-@optItem{cksum,-b}
-@optItemx{cksum,--binary}
+@optItem{cksum,-b,}
+@optItemx{cksum,--binary,}
 @cindex binary input files
 Treat each input file as binary, by reading it in binary mode and
 outputting a @samp{*} flag.  This is the inverse of @option{--text}.
@@ -4074,8 +4074,8 @@ of the legacy standalone checksumming utilities.
 @end macro
 @cksumTextMode
 
-@optItem{cksum,-c}
-@optItemx{cksum,--check}
+@optItem{cksum,-c,}
+@optItemx{cksum,--check,}
 Read file names and checksum information (not data) from each
 @var{file} (or from standard input if no @var{file} was specified) and report
 whether the checksums match the contents of the named files.
@@ -4116,14 +4116,14 @@ a checksum inconsistent with the associated file, or if no valid
 line is found, @command{cksum} exits with nonzero status.  Otherwise,
 it exits successfully.
 
-@optItem{cksum,--ignore-missing}
+@optItem{cksum,--ignore-missing,}
 @cindex verifying checksums
 This option is useful only when verifying checksums.
 When verifying checksums, don't fail or report any status
 for missing files.  This is useful when verifying a subset
 of downloaded files given a larger list of checksums.
 
-@optItem{cksum,--quiet}
+@optItem{cksum,--quiet,}
 @cindex verifying checksums
 This option is useful only when verifying checksums.
 When verifying checksums, don't generate an 'OK' message per successfully
@@ -4131,7 +4131,7 @@ checked file.  Files that fail the verification are reported in the
 default one-line-per-file format.  If there is any checksum mismatch,
 print a warning summarizing the failures to standard error.
 
-@optItem{cksum,--status}
+@optItem{cksum,--status,}
 @cindex verifying checksums
 This option is useful only when verifying checksums.
 When verifying checksums, don't generate the default one-line-per-file
@@ -4142,7 +4142,7 @@ If all listed files are readable and are consistent with the associated
 checksums, exit successfully.  Otherwise exit with a status code
 indicating there was a failure.
 
-@optItem{cksum,--tag}
+@optItem{cksum,--tag,}
 @cindex BSD output
 Output BSD style checksums, which indicate the checksum algorithm used.
 As a GNU extension, if @option{--zero} is not used, file names with problematic
@@ -4154,8 +4154,8 @@ the output format, while providing little benefit.
 @xref{cksum output modes} for details of this format.
 The @command{cksum} command, uses @option{--tag} as its default output format.
 
-@optItem{cksum,-t}
-@optItemx{cksum,--text}
+@optItem{cksum,-t,}
+@optItemx{cksum,--text,}
 @cindex text input files
 Treat each input file as text, by reading it in text mode and
 outputting a @samp{ } flag.  This is the inverse of @option{--binary}.
@@ -4165,14 +4165,14 @@ the default for reading standard input when standard input is a
 terminal.  This mode is never defaulted to if @option{--tag} is used.
 @cksumTextMode
 
-@optItem{cksum,-w}
-@optItemx{cksum,--warn}
+@optItem{cksum,-w,}
+@optItemx{cksum,--warn,}
 @cindex verifying checksums
 When verifying checksums, warn about improperly formatted checksum lines.
 This option is useful only if all but a few lines in the checked input
 are valid.
 
-@optItem{cksum,--strict}
+@optItem{cksum,--strict,}
 @cindex verifying checksums
 When verifying checksums,
 if one or more input line is invalid,
@@ -4386,8 +4386,8 @@ mode:
 
 @table @samp
 
-@optItem{sort,-c}
-@optItemx{sort,--check}
+@optItem{sort,-c,}
+@optItemx{sort,--check,}
 @itemx --check=diagnose-first
 @cindex checking whether a file is sorted
 Check whether the given file is already sorted: if it is not all
@@ -4396,7 +4396,7 @@ exit with a status of 1.
 Otherwise, exit successfully.
 At most one input file can be given.
 
-@optItem{sort,-C}
+@optItem{sort,-C,}
 @itemx --check=quiet
 @itemx --check=silent
 @opindex --check
@@ -4406,8 +4406,8 @@ exit with status 1 otherwise.
 At most one input file can be given.
 This is like @option{-c}, except it does not print a diagnostic.
 
-@optItem{sort,-m}
-@optItemx{sort,--merge}
+@optItem{sort,-m,}
+@optItemx{sort,--merge,}
 @cindex merging sorted files
 Merge the given files by sorting them as a group.  Each input file must
 always be individually sorted.  It always works to sort instead of
@@ -4441,8 +4441,8 @@ so portable shell scripts should specify global options first.
 
 @table @samp
 
-@optItem{sort,-b}
-@optItemx{sort,--ignore-leading-blanks}
+@optItem{sort,-b,}
+@optItemx{sort,--ignore-leading-blanks,}
 @cindex blanks, ignoring leading
 @vindex LC_CTYPE
 Ignore leading blanks when finding sort keys in each line.
@@ -4451,8 +4451,8 @@ can change this.  Blanks may be ignored by your locale's collating
 rules, but without this option they will be significant for character
 positions specified in keys with the @option{-k} option.
 
-@optItem{sort,-d}
-@optItemx{sort,--dictionary-order}
+@optItem{sort,-d,}
+@optItemx{sort,--dictionary-order,}
 @cindex dictionary order
 @cindex phone directory order
 @cindex telephone directory order
@@ -4462,8 +4462,8 @@ letters, digits and blanks when sorting.
 By default letters and digits are those of ASCII and a blank
 is a space or a tab, but the @env{LC_CTYPE} locale can change this.
 
-@optItem{sort,-f}
-@optItemx{sort,--ignore-case}
+@optItem{sort,-f,}
+@optItemx{sort,--ignore-case,}
 @cindex ignoring case
 @cindex case folding
 @vindex LC_CTYPE
@@ -4475,8 +4475,8 @@ thrown away.  (There is currently no way to throw away the upper case
 equivalent instead.  (Any @option{--reverse} given would only affect
 the final result, after the throwing away.))
 
-@optItem{sort,-g}
-@optItemx{sort,--general-numeric-sort}
+@optItem{sort,-g,}
+@optItemx{sort,--general-numeric-sort,}
 @optItemx{sort,--sort,=general-numeric}
 @cindex general numeric sort
 @vindex LC_NUMERIC
@@ -4509,8 +4509,8 @@ or of varying case.  However for hex numbers of consistent case,
 and left padded with @samp{0} to a consistent width, a standard
 lexicographic sort will be faster.
 
-@optItem{sort,-h}
-@optItemx{sort,--human-numeric-sort}
+@optItem{sort,-h,}
+@optItemx{sort,--human-numeric-sort,}
 @itemx --sort=human-numeric
 @opindex --sort
 @cindex human numeric sort
@@ -4530,8 +4530,8 @@ option; the SI suffix must immediately follow the number.
 To sort more accurately, you can use the @command{numfmt} command
 to reformat numbers to human format @emph{after} the sort.
 
-@optItem{sort,-i}
-@optItemx{sort,--ignore-nonprinting}
+@optItem{sort,-i,}
+@optItemx{sort,--ignore-nonprinting,}
 @cindex nonprinting characters, ignoring
 @cindex unprintable characters, ignoring
 @vindex LC_CTYPE
@@ -4540,8 +4540,8 @@ The @env{LC_CTYPE} locale determines character types.
 This option has no effect if the stronger @option{--dictionary-order}
 (@option{-d}) option is also given.
 
-@optItem{sort,-M}
-@optItemx{sort,--month-sort}
+@optItem{sort,-M,}
+@optItemx{sort,--month-sort,}
 @itemx --sort=month
 @opindex --sort
 @cindex months, sorting by
@@ -4554,8 +4554,8 @@ category determines the month spellings.
 By default a blank is a space or a tab, but the @env{LC_CTYPE} locale
 can change this.
 
-@optItem{sort,-n}
-@optItemx{sort,--numeric-sort}
+@optItem{sort,-n,}
+@optItemx{sort,--numeric-sort,}
 @itemx --sort=numeric
 @opindex --sort
 @cindex numeric sort
@@ -4579,8 +4579,8 @@ Neither a leading @samp{+} nor exponential notation is recognized.
 To compare such strings numerically, use the
 @option{--general-numeric-sort} (@option{-g}) option.
 
-@optItem{sort,-V}
-@optItemx{sort,--version-sort}
+@optItem{sort,-V,}
+@optItemx{sort,--version-sort,}
 @itemx --sort=version
 @opindex --sort
 @cindex version number sort
@@ -4588,14 +4588,14 @@ Sort by version name and number.  It behaves like a standard sort,
 except that each sequence of decimal digits is treated numerically
 as an index/version number.  (@xref{Version sort ordering}.)
 
-@optItem{sort,-r}
-@optItemx{sort,--reverse}
+@optItem{sort,-r,}
+@optItemx{sort,--reverse,}
 @cindex reverse sorting
 Reverse the result of comparison, so that lines with greater key values
 appear earlier in the output instead of later.
 
-@optItem{sort,-R}
-@optItemx{sort,--random-sort}
+@optItem{sort,-R,}
+@optItemx{sort,--random-sort,}
 @itemx --sort=random
 @opindex --sort
 @cindex random sort
@@ -4667,7 +4667,7 @@ Example:  To sort on the second field, use @option{--key=2,2}
 See also the @option{--debug} option to help determine the part
 of the line being used in the sort.
 
-@optItem{sort,--debug}
+@optItem{sort,--debug,}
 Highlight the portion of each line used for sorting.
 Also issue warnings about questionable usage to standard error.
 
@@ -4724,8 +4724,8 @@ Use @var{file} as a source of random data used to determine which
 random hash function to use with the @option{-R} option.  @xref{Random
 sources}.
 
-@optItem{sort,-s}
-@optItemx{sort,--stable}
+@optItem{sort,-s,}
+@optItemx{sort,--stable,}
 @cindex sort stability
 @cindex sort's last-resort comparison
 
@@ -4792,8 +4792,8 @@ to 8, as performance gains diminish after that.
 Using @var{n} threads increases the memory usage by
 a factor of log @var{n}.  Also see @ref{nproc invocation}.
 
-@optItem{sort,-u}
-@optItemx{sort,--unique}
+@optItem{sort,-u,}
+@optItemx{sort,--unique,}
 @cindex uniquifying output
 
 Normally, output only the first of a sequence of lines that compare
@@ -5054,8 +5054,8 @@ input.  The following options change the operation mode:
 
 @table @samp
 
-@optItem{shuf,-e}
-@optItemx{shuf,--echo}
+@optItem{shuf,-e,}
+@optItemx{shuf,--echo,}
 @cindex command-line operands to shuffle
 Treat each command-line operand as an input line.
 
@@ -5091,8 +5091,8 @@ commands like @code{shuf -o F <F} and @code{cat F | shuf -o F}.
 Use @var{file} as a source of random data used to determine which
 permutation to generate.  @xref{Random sources}.
 
-@optItem{shuf,-r}
-@optItemx{shuf,--repeat}
+@optItem{shuf,-r,}
+@optItemx{shuf,--repeat,}
 @cindex repeat output values
 Repeat output values, that is, select with replacement.  With this
 option the output is not a permutation of the input; instead, each
@@ -5240,22 +5240,22 @@ behavior depends on this variable.
 For example, use @samp{uniq ./+10} or @samp{uniq -s 10} rather than
 the ambiguous @samp{uniq +10}.
 
-@optItem{uniq,-c}
-@optItemx{uniq,--count}
+@optItem{uniq,-c,}
+@optItemx{uniq,--count,}
 Print the number of times each line occurred along with the line.
 
-@optItem{uniq,-i}
-@optItemx{uniq,--ignore-case}
+@optItem{uniq,-i,}
+@optItemx{uniq,--ignore-case,}
 Ignore differences in case when comparing lines.
 
-@optItem{uniq,-d}
-@optItemx{uniq,--repeated}
+@optItem{uniq,-d,}
+@optItemx{uniq,--repeated,}
 @cindex repeated lines, outputting
 Discard lines that are not repeated.  When used by itself, this option
 causes @command{uniq} to print the first copy of each repeated line,
 and nothing else.
 
-@optItem{uniq,-D}
+@optItem{uniq,-D,}
 @optItemx{uniq,--all-repeated,[=@var{delimit-method}]}
 @cindex all repeated lines, outputting
 Do not discard the second and subsequent repeated input lines,
@@ -5327,8 +5327,8 @@ Output a delimiter around each group of unique items.
 
 This is a GNU extension.
 
-@optItem{uniq,-u}
-@optItemx{uniq,--unique}
+@optItem{uniq,-u,}
+@optItemx{uniq,--unique,}
 @cindex unique lines, outputting
 Discard the last line that would be output for a repeated input group.
 When used by itself, this option causes @command{uniq} to print unique
@@ -5414,10 +5414,10 @@ probably not correspond with whatever you hoped it would be.
 
 @table @samp
 
-@optItem{comm,--check-order}
+@optItem{comm,--check-order,}
 Fail with an error message if either input file is wrongly ordered.
 
-@optItem{comm,--nocheck-order}
+@optItem{comm,--nocheck-order,}
 Do not check that both input files are in sorted order.
 
 Other options are:
@@ -5429,7 +5429,7 @@ rather than the default of a single TAB character.
 The delimiter @var{str} may be empty, in which case
 the ASCII NUL character is used to delimit output columns.
 
-@optItem{comm,--total}
+@optItem{comm,--total,}
 Output a summary at the end.
 
 Similar to the regular output,
@@ -5528,8 +5528,8 @@ convention more than once per program invocation.
 
 @table @samp
 
-@optItem{ptx,-G}
-@optItemx{ptx,--traditional}
+@optItem{ptx,-G,}
+@optItemx{ptx,--traditional,}
 As already explained, this option disables all GNU extensions to
 @command{ptx} and switches to traditional mode.
 
@@ -5564,8 +5564,8 @@ correctly.
 
 @table @samp
 
-@optItem{ptx,-f}
-@optItemx{ptx,--ignore-case}
+@optItem{ptx,-f,}
+@optItemx{ptx,--ignore-case,}
 Fold lower case letters to upper case for sorting.
 
 @end table
@@ -5612,8 +5612,8 @@ There is no default for the Only file.  When both an Only file and an
 Ignore file are specified, a word is considered a keyword only
 if it is listed in the Only file and not in the Ignore file.
 
-@optItem{ptx,-r}
-@optItemx{ptx,--references}
+@optItem{ptx,-r,}
+@optItemx{ptx,--references,}
 On each input line, the leading sequence of non-white space characters will be
 taken to be a reference that has the purpose of identifying this input
 line in the resulting permuted index.
@@ -5730,8 +5730,8 @@ output after the right context, the maximum output width does not take
 into account the space taken by references, nor the gap that precedes
 them.
 
-@optItem{ptx,-A}
-@optItemx{ptx,--auto-reference}
+@optItem{ptx,-A,}
+@optItemx{ptx,--auto-reference,}
 Select automatic references.  Each input line will have an automatic
 reference made up of the file name and the line ordinal, with a single
 colon between them.  However, the file name will be empty when standard
@@ -5739,8 +5739,8 @@ input is being read.  If both @option{-A} and @option{-r} are selected, then
 the input reference is still read and skipped, but the automatic
 reference is used at output time, overriding the input reference.
 
-@optItem{ptx,-R}
-@optItemx{ptx,--right-side-refs}
+@optItem{ptx,-R,}
+@optItemx{ptx,--right-side-refs,}
 In the default output format, when option @option{-R} is not used, any
 references produced by the effect of options @option{-r} or @option{-A} are
 placed to the far right of output lines, after the right context.  With
@@ -5779,7 +5779,7 @@ the corresponding characters by @command{ptx} itself.
 Select another @var{string} to be used instead of @samp{xx}, while
 generating output suitable for @command{nroff}, @command{troff} or @TeX{}.
 
-@optItem{ptx,-O}
+@optItem{ptx,-O,}
 @optItemx{ptx,--format,=roff}
 Choose an output format suitable for @command{nroff} or @command{troff}
 processing.  Each output line will look like:
@@ -5799,7 +5799,7 @@ tab, is merely changed to exactly one space, with no special attempt to
 compress consecutive spaces.  Each quote character @samp{"} is doubled
 so it will be correctly processed by @command{nroff} or @command{troff}.
 
-@optItem{ptx,-T}
+@optItem{ptx,-T,}
 @itemx --format=tex
 @opindex --format=tex
 
@@ -6162,11 +6162,11 @@ join -a1 -o 1.2,1.1 - /dev/null # reorder the first two fields
 With @option{-f}, use the first byte of @var{input_delim_byte} as
 the input fields separator (default is TAB).
 
-@optItem{cut,-n}
+@optItem{cut,-n,}
 Do not split multi-byte characters (no-op for now).
 
-@optItem{cut,-s}
-@optItemx{cut,--only-delimited}
+@optItem{cut,-s,}
+@optItemx{cut,--only-delimited,}
 For @option{-f}, do not print lines that do not contain the field separator
 character.  Normally, any line without a field separator is printed verbatim.
 
@@ -6178,7 +6178,7 @@ character offsets (as opposed to ranges of fields),
 output @var{output_delim_string} between non-overlapping
 ranges of selected bytes.
 
-@optItem{cut,--complement}
+@optItem{cut,--complement,}
 This option is a GNU extension.
 Select for printing the complement of the bytes, characters or fields
 selected with the @option{-b}, @option{-c} or @option{-f} options.
@@ -6256,8 +6256,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{paste,-s}
-@optItemx{paste,--serial}
+@optItem{paste,-s,}
+@optItemx{paste,--serial,}
 Paste the lines of one file at a time rather than one line from each
 file.  Using the above example data:
 
@@ -6354,17 +6354,17 @@ The program accepts the following options.  Also see @ref{Common options}.
 Print a line for each unpairable line in file @var{file-number} (either
 @samp{1} or @samp{2}), in addition to the normal output.
 
-@optItem{join,--check-order}
+@optItem{join,--check-order,}
 Fail with an error message if either input file is wrongly ordered.
 
-@optItem{join,--nocheck-order}
+@optItem{join,--nocheck-order,}
 Do not check that both input files are in sorted order.  This is the default.
 
 @optItem{join,-e,@w{ }@var{string}}
 Replace those output fields that are missing in the input with @var{string}.
 I.e., missing fields specified with the @option{-12jo} options.
 
-@optItem{join,--header}
+@optItem{join,--header,}
 Treat the first line of each input file as a header line.  The header lines
 will be joined and printed as the first output line.  If @option{-o} is used to
 specify output format, the header line will be printed according to the
@@ -6372,8 +6372,8 @@ specified format.  The header lines will not be checked for ordering even if
 @option{--check-order} is specified.  Also if the header lines from each file
 do not match, the heading fields from the first file will be used.
 
-@optItem{join,-i}
-@optItemx{join,--ignore-case}
+@optItem{join,-i,}
+@optItemx{join,--ignore-case,}
 Ignore differences in case when comparing keys.
 With this option, the lines of the input files must be ordered in the same way.
 Use @samp{sort -f} to produce this ordering.
@@ -6854,25 +6854,25 @@ Options must precede operands.
 
 @table @samp
 
-@optItem{tr,-c}
-@optItemx{tr,-C}
-@optItemx{tr,--complement}
+@optItem{tr,-c,}
+@optItemx{tr,-C,}
+@optItemx{tr,--complement,}
 Instead of @var{array1}, use its complement (all characters not
 specified by @var{string1}), in ascending order.  Use this option with
 caution in multibyte locales where its meaning is not always clear
 or portable; see @ref{Character arrays}.
 
-@optItem{tr,-d}
-@optItemx{tr,--delete}
+@optItem{tr,-d,}
+@optItemx{tr,--delete,}
 Delete characters in @var{array1}; do not translate.
 
-@optItem{tr,-s}
-@optItemx{tr,--squeeze-repeats}
+@optItem{tr,-s,}
+@optItemx{tr,--squeeze-repeats,}
 Replace each sequence of a repeated character that is listed in
 the last specified @var{array}, with a single occurrence of that character.
 
-@optItem{tr,-t}
-@optItemx{tr,--truncate-set1}
+@optItem{tr,-t,}
+@optItemx{tr,--truncate-set1,}
 Truncate @var{array1} to the length of @var{array2}.
 
 @end table
@@ -7257,7 +7257,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{expand,@w{ }@var{tab1}[@comma{}@var{tab2}]@dots{}}
+@optItem{expand,@w{ }@var{tab1}[@comma{}@var{tab2}]@dots{},}
 @optItemx{expand,--tabs,=@var{tab1}[@comma{}@var{tab2}]@dots{}}
 @cindex tab stops, setting
 If only one tab stop is given, set the tabs @var{tab1} spaces apart
@@ -7286,8 +7286,8 @@ For compatibility, GNU @command{expand} also accepts the obsolete
 option syntax, @option{-@var{t1}[,@var{t2}]@dots{}}.  New scripts
 should use @option{-t @var{t1}[,@var{t2}]@dots{}} instead.
 
-@optItem{expand,-i}
-@optItemx{expand,--initial}
+@optItem{expand,-i,}
+@optItemx{expand,--initial,}
 @cindex initial tabs, converting
 Only convert initial tabs (those that precede all non-space or non-tab
 characters) on each line to spaces.
@@ -7323,7 +7323,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{unexpand,@w{ }@var{tab1}[@comma{}@var{tab2}]@dots{}}
+@optItem{unexpand,@w{ }@var{tab1}[@comma{}@var{tab2}]@dots{},}
 @optItemx{unexpand,--tabs,=@var{tab1}[@comma{}@var{tab2}]@dots{}}
 If only one tab stop is given, set the tabs @var{tab1} columns apart
 instead of the default 8.  Otherwise, set the tabs at columns
@@ -7339,12 +7339,12 @@ separated by commas.  (Unlike @option{-t}, this obsolete option does
 not imply @option{-a}.)  New scripts should use @option{--first-only -t
 @var{tab1}[,@var{tab2}]@dots{}} instead.
 
-@optItem{unexpand,-a}
-@optItemx{unexpand,--all}
+@optItem{unexpand,-a,}
+@optItemx{unexpand,--all,}
 Also convert all sequences of two or more blanks just before a tab stop,
 even if they occur after non-blank characters in a line.
 
-@optItem{unexpand,--first-only}
+@optItem{unexpand,--first-only,}
 Convert only leading sequences of blanks (overrides @option{-a}).
 @end table
 
@@ -7436,24 +7436,24 @@ files whose names start with @samp{.}.
 
 @table @samp
 
-@optItem{ls,-a}
-@optItemx{ls,--all}
+@optItem{ls,-a,}
+@optItemx{ls,--all,}
 In directories, do not ignore file names that start with @samp{.}.
 
-@optItem{ls,-A}
-@optItemx{ls,--almost-all}
+@optItem{ls,-A,}
+@optItemx{ls,--almost-all,}
 In directories, do not ignore all file names that start with @samp{.};
 ignore only @file{.} and @file{..}.  The @option{--all} (@option{-a})
 option overrides this option.
 
-@optItem{ls,-B}
-@optItemx{ls,--ignore-backups}
+@optItem{ls,-B,}
+@optItemx{ls,--ignore-backups,}
 @cindex backup files, ignoring
 In directories, ignore files that end with @samp{~}.  This option is
 equivalent to @samp{--ignore='*~' --ignore='.*~'}.
 
-@optItem{ls,-d}
-@optItemx{ls,--directory}
+@optItem{ls,-d,}
+@optItemx{ls,--directory,}
 List just the names of directories, as with other types of files, rather
 than listing their contents.
 @c The following sentence is the same as the one for -F.
@@ -7462,13 +7462,13 @@ command line unless the @option{--dereference-command-line} (@option{-H}),
 @option{--dereference} (@option{-L}), or
 @option{--dereference-command-line-symlink-to-dir} options are specified.
 
-@optItem{ls,-H}
-@optItemx{ls,--dereference-command-line}
+@optItem{ls,-H,}
+@optItemx{ls,--dereference-command-line,}
 @cindex symbolic links, dereferencing
 If a command line argument specifies a symbolic link, show information
 for the file the link references rather than for the link itself.
 
-@optItem{ls,--dereference-command-line-symlink-to-dir}
+@optItem{ls,--dereference-command-line-symlink-to-dir,}
 @cindex symbolic links, dereferencing
 Do not dereference symbolic links, with one exception:
 if a command line argument specifies a symbolic link that refers to
@@ -7510,16 +7510,16 @@ The first option ignores names of length 3 or more that start with @samp{.},
 the second ignores all two-character names that start with @samp{.}
 except @samp{..}, and the third ignores names that start with @samp{#}.
 
-@optItem{ls,-L}
-@optItemx{ls,--dereference}
+@optItem{ls,-L,}
+@optItemx{ls,--dereference,}
 @cindex symbolic links, dereferencing
 When showing file information for a symbolic link, show information
 for the file the link references rather than the link itself.
 However, even with this option, @command{ls} still prints the name
 of the link itself, not the name of the file that the link points to.
 
-@optItem{ls,-R}
-@optItemx{ls,--recursive}
+@optItem{ls,-R,}
+@optItemx{ls,--recursive,}
 @cindex recursive directory listing
 @cindex directory listing, recursive
 List the contents of all directories recursively.
@@ -7535,14 +7535,14 @@ default, only file names are shown.
 
 @table @samp
 
-@optItem{ls,--author}
+@optItem{ls,--author,}
 @cindex hurd, author, printing
 In long format, list each file's author.
 In GNU/Hurd, file authors can differ from their owners, but in other
 operating systems the two are the same.
 
-@optItem{ls,-D}
-@optItemx{ls,--dired}
+@optItem{ls,-D,}
+@optItemx{ls,--dired,}
 @cindex dired Emacs mode support
 Print an additional line after the main output:
 
@@ -7645,30 +7645,30 @@ The @option{--dired} (@option{-D}) option implies long format output
 with hyperlinks disabled, and takes precedence over previously specified
 output formats or hyperlink mode.
 
-@optItem{ls,--full-time}
+@optItem{ls,--full-time,}
 Produce long format, and list times in full.  It is
 equivalent to using @option{--format=long} (@option{-l}) with
 @option{--time-style=full-iso} (@pxref{Formatting file timestamps}).
 
-@optItem{ls,-g}
+@optItem{ls,-g,}
 Produce long format, but omit owner information.
 
-@optItem{ls,-G}
-@optItemx{ls,--no-group}
+@optItem{ls,-G,}
+@optItemx{ls,--no-group,}
 Inhibit display of group information in long format.
 (This is the default in some non-GNU versions of @command{ls}, so we
 provide this option for compatibility.)
 
 @optHumanReadable{ls}
 
-@optItem{ls,-i}
-@optItemx{ls,--inode}
+@optItem{ls,-i,}
+@optItemx{ls,--inode,}
 @cindex inode number, printing
 Print the inode number (also called the file serial number and index
 number) of each file to the left of the file name.  (This number
 uniquely identifies each file within a particular file system.)
 
-@optItem{ls,-l}
+@optItem{ls,-l,}
 @optItemx{ls,--format,=long}
 @itemx --format=verbose
 @opindex long ls @r{format}
@@ -7793,21 +7793,21 @@ is marked with a @samp{+} character.
 whether alternate access methods apply to the file, which may happen for
 example with some NFS setups with files without read permission.
 
-@optItem{ls,-n}
-@optItemx{ls,--numeric-uid-gid}
+@optItem{ls,-n,}
+@optItemx{ls,--numeric-uid-gid,}
 @cindex numeric uid and gid
 @cindex numeric user and group IDs
 Produce long format, but
 display right-justified numeric user and group IDs
 instead of left-justified owner and group names.
 
-@optItem{ls,-o}
+@optItem{ls,-o,}
 Produce long format, but omit group information.
 It is equivalent to using @option{--format=long} (@option{-l})
 with @option{--no-group} (@option{-G}).
 
-@optItem{ls,-s}
-@optItemx{ls,--size}
+@optItem{ls,-s,}
+@optItemx{ls,--size,}
 @cindex file system allocation
 @cindex size of files, reporting
 Print the file system allocation of each file to the left of the file name.
@@ -7826,8 +7826,8 @@ it also affects the HP-UX @command{ls} program.
 
 @optSi{ls}
 
-@optItem{ls,-Z}
-@optItemx{ls,--context}
+@optItem{ls,-Z,}
+@optItemx{ls,--context,}
 @cindex SELinux
 @cindex security context
 Display the SELinux security context or @samp{?} if none is found.
@@ -7849,7 +7849,7 @@ character collating sequence specified by the @env{LC_COLLATE} locale.
 
 @table @samp
 
-@optItem{ls,-c}
+@optItem{ls,-c,}
 @itemx --time=ctime
 @itemx --time=status
 @opindex --time
@@ -7861,14 +7861,14 @@ print the status change timestamp (the ctime) instead of the mtime.
 When sorting by time or when not using long format,
 sort according to the ctime.  @xref{File timestamps}.
 
-@optItem{ls,-f}
+@optItem{ls,-f,}
 @cindex unsorted directory listing
 @cindex directory order, listing by
 Do not sort, and list all files.
 This is like @option{--sort=none} (@option{-U}) combined
 with @option{--all} (@option{-a}).
 
-@optItem{ls,--group-directories-first}
+@optItem{ls,--group-directories-first,}
 When listing a directory's files,
 group all subdirectories before non-directories
 and then sort the subdirectories and the non-directories separately.
@@ -7877,20 +7877,20 @@ and the other sorting options specify a secondary key.
 However, any use of @option{--sort=none}
 (@option{-U}) disables this option altogether.
 
-@optItem{ls,-r}
-@optItemx{ls,--reverse}
+@optItem{ls,-r,}
+@optItemx{ls,--reverse,}
 @cindex reverse sorting
 Reverse whatever the sorting method is -- e.g., list files in reverse
 alphabetical order, youngest first, smallest first, or whatever.
 This option has no effect when @option{--sort=none} (@option{-U})
 is in effect.
 
-@optItem{ls,-S}
+@optItem{ls,-S,}
 @optItemx{ls,--sort,=size}
 @opindex size of files@r{, sorting files by}
 Sort by file size, largest first.
 
-@optItem{ls,-t}
+@optItem{ls,-t,}
 @itemx --sort=time
 @opindex --sort
 @opindex modification timestamp@r{, sorting files by}
@@ -7898,7 +7898,7 @@ Sort by modification timestamp (mtime) by default, newest first.
 The timestamp to order by can be changed with the @option{--time} option.
 @xref{File timestamps}.
 
-@optItem{ls,-u}
+@optItem{ls,-u,}
 @optItem{ls,--time,=atime}
 @itemx --time=access
 @itemx --time=use
@@ -7932,7 +7932,7 @@ When sorting by time or when not using long format,
 sort according to the birth time.
 @xref{File timestamps}.
 
-@optItem{ls,-U}
+@optItem{ls,-U,}
 @itemx --sort=none
 @opindex --sort
 @opindex none@r{, sorting option for @command{ls}}
@@ -7943,7 +7943,7 @@ directories, where sorting can take some time.
 Unlike @option{-f}, this option does not imply @option{--all}
 (@option{-a}).
 
-@optItem{ls,-v}
+@optItem{ls,-v,}
 @itemx --sort=version
 @opindex --sort
 @opindex version@r{, sorting option for @command{ls}}
@@ -7965,7 +7965,7 @@ Sort by printed width of file names.
 This can be useful with the @option{--format=vertical} (@option{-C})
 output format, to most densely display the listed files.
 
-@optItem{ls,-X}
+@optItem{ls,-X,}
 @itemx --sort=extension
 @opindex --sort
 @opindex extension@r{, sorting files by}
@@ -7991,11 +7991,11 @@ output is not a terminal.  See also the @option{--escape} (@option{-b}),
 @option{--hide-control-chars} (@option{-q}), and @option{--zero} options
 to disambiguate output of file names containing newline characters.
 
-@optItem{ls,-1}
+@optItem{ls,-1,}
 List one file per line.  This is like @option{--format=single-column}
 except that it has no effect if long format is also in effect.
 
-@optItem{ls,-C}
+@optItem{ls,-C,}
 @itemx --format=vertical
 @opindex --format
 @opindex vertical @r{sorted files in columns}
@@ -8044,7 +8044,7 @@ eval $(dircolors -p | perl -pe \
 and on a @code{dirent.d_type}-capable file system, @command{ls}
 will perform only one @code{stat} call per command line argument.
 
-@optItem{ls,F}
+@optItem{ls,F,}
 @optItemx{ls,--classify,[=@var{when}]}
 @itemx --indicator-style=classify
 @opindex --indicator-style
@@ -8076,7 +8076,7 @@ command line unless the @option{--dereference-command-line} (@option{-H}),
 @option{--dereference} (@option{-L}), or
 @option{--dereference-command-line-symlink-to-dir} options are specified.
 
-@optItem{ls,--file-type}
+@optItem{ls,--file-type,}
 @itemx --indicator-style=file-type
 @opindex --indicator-style
 @cindex file type, marking
@@ -8123,8 +8123,8 @@ Append @samp{*} for executable regular files, otherwise behave as for
 (@option{-F}) option.
 @end table
 
-@optItem{ls,-k}
-@optItemx{ls,--kibibytes}
+@optItem{ls,-k,}
+@optItemx{ls,--kibibytes,}
 Set the default block size to its normal value of 1024 bytes,
 overriding any contrary specification in environment variables
 (@pxref{Block size}).  If @option{--block-size},
@@ -8138,7 +8138,7 @@ and the file system allocation written by the @option{--size} (@option{-s})
 option.  It does not affect the file size in bytes that is written in
 long format.
 
-@optItem{ls,-m}
+@optItem{ls,-m,}
 @itemx --format=commas
 @opindex --format
 @opindex commas@r{, outputting between files}
@@ -8146,13 +8146,13 @@ List files horizontally, with as many as will fit on each line,
 separated by @samp{, } (a comma and a space),
 and with no other information.
 
-@optItem{ls,-p}
+@optItem{ls,-p,}
 @itemx --indicator-style=slash
 @opindex --indicator-style
 @cindex file type, marking
 Append a @samp{/} to directory names.
 
-@optItem{ls,-x}
+@optItem{ls,-x,}
 @itemx --format=across
 @itemx --format=horizontal
 @opindex --format
@@ -8190,7 +8190,7 @@ is 80.  With a @var{cols} value of @samp{0}, there is no limit on
 the length of the output line, and that single output line will
 be delimited with spaces, not tabs.
 
-@optItem{ls,--zero}
+@optItem{ls,--zero,}
 @outputNUL
 This option is incompatible with the @option{--dired} (@option{-D}) option.
 This option also implies the options @option{--show-control-chars},
@@ -8335,16 +8335,16 @@ These options change how file names themselves are printed.
 
 @table @samp
 
-@optItem{ls,-b}
-@optItemx{ls,--escape}
+@optItem{ls,-b,}
+@optItemx{ls,--escape,}
 @itemx --quoting-style=escape
 @opindex --quoting-style
 @cindex backslash sequences for file names
 Quote nongraphic characters in file names using alphabetic and octal
 backslash sequences like those used in C.
 
-@optItem{ls,-N}
-@optItemx{ls,--literal}
+@optItem{ls,-N,}
+@optItemx{ls,--literal,}
 @itemx --quoting-style=literal
 @opindex --quoting-style
 Do not quote file names.  However, with @command{ls} nongraphic
@@ -8352,14 +8352,14 @@ characters are still printed as question marks if the output is a
 terminal and you do not specify the @option{--show-control-chars}
 option.
 
-@optItem{ls,-q}
-@optItemx{ls,--hide-control-chars}
+@optItem{ls,-q,}
+@optItemx{ls,--hide-control-chars,}
 Print question marks instead of nongraphic characters in file names.
 This is the default if the output is a terminal and the program is
 @command{ls}.
 
-@optItem{ls,-Q}
-@optItemx{ls,--quote-name}
+@optItem{ls,-Q,}
+@optItemx{ls,--quote-name,}
 @itemx --quoting-style=c
 @opindex --quoting-style
 Enclose file names in double quotes and quote nongraphic characters as
@@ -8420,7 +8420,7 @@ with the environment variable @env{QUOTING_STYLE}@.  If that environment
 variable is not set, the default value is @samp{shell-escape} when the
 output is a terminal, and @samp{literal} otherwise.
 
-@optItem{ls,--show-control-chars}
+@optItem{ls,--show-control-chars,}
 Print nongraphic characters as-is in file names.
 This is the default unless the output is a terminal and the program is
 @command{ls}.
@@ -8492,25 +8492,25 @@ environment variable.
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
-@optItem{dircolors,-b}
-@optItemx{dircolors,--sh}
-@optItemx{dircolors,--bourne-shell}
+@optItem{dircolors,-b,}
+@optItemx{dircolors,--sh,}
+@optItemx{dircolors,--bourne-shell,}
 @cindex Bourne shell syntax for color setup
 @cindex @command{sh} syntax for color setup
 Output Bourne shell commands.  This is the default if the @env{SHELL}
 environment variable is set and does not end with @samp{csh} or
 @samp{tcsh}.
 
-@optItem{dircolors,-c}
-@optItemx{dircolors,--csh}
-@optItemx{dircolors,--c-shell}
+@optItem{dircolors,-c,}
+@optItemx{dircolors,--csh,}
+@optItemx{dircolors,--c-shell,}
 @cindex C shell syntax for color setup
 @cindex @command{csh} syntax for color setup
 Output C shell commands.  This is the default if @code{SHELL} ends with
 @command{csh} or @command{tcsh}.
 
-@optItem{dircolors,-p}
-@optItemx{dircolors,--print-database}
+@optItem{dircolors,-p,}
+@optItemx{dircolors,--print-database,}
 @cindex color database, printing
 @cindex database for color setup, printing
 @cindex printing color database
@@ -8518,7 +8518,7 @@ Print the (compiled-in) default color configuration database.  This
 output is itself a valid configuration file, and is fairly descriptive
 of the possibilities.
 
-@optItem{dircolors,--print-ls-colors}
+@optItem{dircolors,--print-ls-colors,}
 @cindex printing ls colors
 Print the LS_COLORS entries on separate lines,
 each colored as per the color they represent.
@@ -8623,8 +8623,8 @@ you simply want to make a backup of an existing file before changing it.
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
-@optItem{cp,-a}
-@optItemx{cp,--archive}
+@optItem{cp,-a,}
+@optItemx{cp,--archive,}
 Preserve as much as possible of the structure and attributes of the
 original files in the copy (but do not attempt to preserve internal
 directory structure; i.e., @samp{ls -U} may list the entries in a copied
@@ -8633,7 +8633,7 @@ Try to preserve SELinux security context and extended attributes (xattr),
 but ignore any failure to do that and print no corresponding diagnostic.
 Equivalent to @option{-dR --preserve=all} with the reduced diagnostics.
 
-@optItem{cp,--attributes-only}
+@optItem{cp,--attributes-only,}
 Copy only the specified attributes of the source file to the destination.
 If the destination already exists, do not alter its contents.
 See the @option{--preserve} option for controlling which attributes to copy.
@@ -8655,7 +8655,7 @@ done
 exit $fail
 @end example
 
-@optItem{cp,--copy-contents}
+@optItem{cp,--copy-contents,}
 @cindex directories, copying recursively
 @cindex copying directories recursively
 @cindex recursively copying directories
@@ -8672,7 +8672,7 @@ fill up your destination file system if you use it to copy @file{/dev/zero}.
 This option has no effect unless copying recursively, and it does not
 affect the copying of symbolic links.
 
-@optItem{cp,-d}
+@optItem{cp,-d,}
 @cindex symbolic links, copying
 @cindex hard links, preserving
 Copy symbolic links as symbolic links rather than copying the files that
@@ -8680,15 +8680,15 @@ they point to, and preserve hard links between source files in the copies.
 Equivalent to @option{--no-dereference --preserve=links}.
 
 @macro optDebugCopy{cmd}
-@optItem{\cmd\,--debug}
+@optItem{\cmd\,--debug,}
 @cindex debugging, copying
 Print extra information to standard output, explaining how files are copied.
 This option implies the @option{--verbose} option.
 @end macro
 @optDebugCopy{cp}
 
-@optItem{cp,-f}
-@optItemx{cp,--force}
+@optItem{cp,-f,}
+@optItemx{cp,--force,}
 When copying without this option and an existing destination file cannot
 be opened for writing, the copy fails.  However, with @option{--force},
 when a destination file cannot be opened, @command{cp} then
@@ -8707,32 +8707,32 @@ This option is independent of the @option{--interactive} or
 This option is ignored when the @option{--no-clobber} or @option{-n} option
 is also used.
 
-@optItem{cp,-H}
+@optItem{cp,-H,}
 If a command line argument specifies a symbolic link, then copy the
 file it points to rather than the symbolic link itself.  However,
 copy (preserving its nature) any symbolic link that is encountered
 via recursive traversal.
 
-@optItem{cp,-i}
-@optItemx{cp,--interactive}
+@optItem{cp,-i,}
+@optItemx{cp,--interactive,}
 When copying a file other than a directory, prompt whether to
 overwrite an existing destination file, and fail if the response
 is not affirmative.  The @option{-i} option overrides
 a previous @option{-n} option.
 
-@optItem{cp,-l}
-@optItemx{cp,--link}
+@optItem{cp,-l,}
+@optItemx{cp,--link,}
 Make hard links instead of copies of non-directories.
 
-@optItem{cp,-L}
-@optItemx{cp,--dereference}
+@optItem{cp,-L,}
+@optItemx{cp,--dereference,}
 Follow symbolic links when copying from them.
 With this option, @command{cp} cannot create a symbolic link.
 For example, a symlink (to regular file) in the source tree will be copied to
 a regular file in the destination tree.
 
-@optItem{cp,-n}
-@optItemx{cp,--no-clobber}
+@optItem{cp,-n,}
+@optItemx{cp,--no-clobber,}
 Do not overwrite an existing file; silently skip instead.
 This option overrides a previous @option{-i} option.
 This option is mutually exclusive with @option{-b} or @option{--backup} option.
@@ -8741,14 +8741,14 @@ other platforms.  See also the @option{--update} option which will
 give more control over how to deal with existing files in the destination,
 and over the exit status in particular.
 
-@optItem{cp,-P}
-@optItemx{cp,--no-dereference}
+@optItem{cp,-P,}
+@optItemx{cp,--no-dereference,}
 @cindex symbolic links, copying
 Copy symbolic links as symbolic links rather than copying the files that
 they point to.  This option affects only symbolic links in the source;
 symbolic links in the destination are always followed if possible.
 
-@optItem{cp,-p}
+@optItem{cp,-p,}
 @optItemx{cp,--preserve,[=@var{attribute_list}]}
 @cindex file information, preserving, extended attributes, xattr
 Preserve the specified attributes of the original files.
@@ -8835,7 +8835,7 @@ file mode.
 Do not preserve the specified attributes.  The @var{attribute_list}
 has the same form as for @option{--preserve}.
 
-@optItem{cp,--parents}
+@optItem{cp,--parents,}
 @cindex parent directories and @command{cp}
 Form the name of each destination file by appending to the target
 directory a slash and the specified name of the source file.  The last
@@ -8850,9 +8850,9 @@ cp --parents a/b/c existing_dir
 copies the file @file{a/b/c} to @file{existing_dir/a/b/c}, creating
 any missing intermediate directories.
 
-@optItem{cp,-r}
-@optItemx{cp,-R}
-@optItemx{cp,--recursive}
+@optItem{cp,-r,}
+@optItemx{cp,-R,}
+@optItemx{cp,--recursive,}
 @cindex directories, copying recursively
 @cindex copying directories recursively
 @cindex recursively copying directories
@@ -8902,7 +8902,7 @@ This option is overridden by the @option{--link}, @option{--symbolic-link}
 and @option{--attributes-only} options, thus allowing it to be used
 to configure the default data copying behavior for @command{cp}.
 
-@optItem{cp,--remove-destination}
+@optItem{cp,--remove-destination,}
 Remove each existing destination file before attempting to open it
 (contrast with @option{-f} above).
 
@@ -8954,8 +8954,8 @@ alias cp='cp --sparse=always'
 
 @optStripTrailingSlashes{cp}
 
-@optItem{cp,-s}
-@optItemx{cp,--symbolic-link}
+@optItem{cp,-s,}
+@optItemx{cp,--symbolic-link,}
 @cindex symbolic links, copying with
 Make symbolic links instead of copies of non-directories.  All source
 file names must be absolute (starting with @samp{/}) unless the
@@ -8968,7 +8968,7 @@ results in an error message on systems that do not support symbolic links.
 
 @optNoTargetDirectory{cp}
 
-@optItem{cp,-u}
+@optItem{cp,-u,}
 @optItemx{cp,--update,[=@var{which}]}
 @cindex newer files, copying only
 Do not copy a non-directory that has an existing destination with the
@@ -9009,19 +9009,19 @@ in files being replaced if they're older than the corresponding source file.
 @end macro
 @whichUpdate
 
-@optItem{cp,-v}
-@optItemx{cp,--verbose}
+@optItem{cp,-v,}
+@optItemx{cp,--verbose,}
 Print the name of each file before copying it.
 
-@optItem{cp,-x}
-@optItemx{cp,--one-file-system}
+@optItem{cp,-x,}
+@optItemx{cp,--one-file-system,}
 @cindex file systems, omitting copying to different
 Skip subdirectories that are on different file systems from the one that
 the copy started on.
 However, mount point directories @emph{are} copied.
 
 @macro optContext{cmd}
-@optItem{\cmd\,-Z}
+@optItem{\cmd\,-Z,}
 @optItemx{\cmd\,--context,[=@var{context}]}
 @cindex SELinux, setting/restoring security context
 @cindex security context
@@ -9668,8 +9668,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @optBackup{install}
 
-@optItem{install,-C}
-@optItemx{install,--compare}
+@optItem{install,-C,}
+@optItemx{install,--compare,}
 Compare content of source and destination files, and if there would be no
 change to the destination content, owner, group, permissions, and possibly
 SELinux context, then do not modify the destination at all.
@@ -9680,17 +9680,17 @@ incorrectly determines the default attributes that installed files would have
 This could result in redundant copies or attributes that are not reset to the
 correct defaults.
 
-@optItem{install,-c}
+@optItem{install,-c,}
 Ignored; for compatibility with old Unix versions of @command{install}.
 
-@optItem{install,-D}
+@optItem{install,-D,}
 Create any missing parent directories of @var{dest},
 then copy @var{source} to @var{dest}.
 Explicitly specifying the @option{--target-directory=@var{dir}} will similarly
 ensure the presence of that hierarchy before copying @var{source} arguments.
 
-@optItem{install,-d}
-@optItemx{install,--directory}
+@optItem{install,-d,}
+@optItemx{install,--directory,}
 @cindex directories, creating with given attributes
 @cindex parent directories, creating missing
 @cindex leading directories, creating missing
@@ -9731,7 +9731,7 @@ ownership of installed files or directories to @var{owner}.  The default
 is @code{root}.  @var{owner} may be either a user name or a numeric user
 ID.
 
-@optItem{install,--preserve-context}
+@optItem{install,--preserve-context,}
 @cindex SELinux
 @cindex security context
 Preserve the SELinux security context of files and directories.
@@ -9739,8 +9739,8 @@ Failure to preserve the context in all of the files or directories
 will result in an exit status of 1.  If SELinux is disabled then
 print a warning and ignore the option.
 
-@optItem{install,-p}
-@optItemx{install,--preserve-timestamps}
+@optItem{install,-p,}
+@optItemx{install,--preserve-timestamps,}
 @cindex timestamps of installed files, preserving
 Set the time of last access and the time of last modification of each
 installed file to match those of each corresponding original file.
@@ -9750,8 +9750,8 @@ This option is useful if you want to use the last modification timestamps
 of installed files to keep track of when they were last built as opposed
 to when they were last installed.
 
-@optItem{install,-s}
-@optItemx{install,--strip}
+@optItem{install,-s,}
+@optItemx{install,--strip,}
 @cindex symbol table information, stripping
 @cindex stripping symbol table information
 Strip the symbol tables from installed binary executables.
@@ -9767,8 +9767,8 @@ Also specifying the @option{-D} option will ensure the directory is present.
 
 @optNoTargetDirectory{install}
 
-@optItem{install,-v}
-@optItemx{install,--verbose}
+@optItem{install,-v,}
+@optItemx{install,--verbose,}
 Print the name of each file before copying it.
 
 @optContext{install}
@@ -9850,8 +9850,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @optDebugCopy{mv}
 
-@optItem{mv,-f}
-@optItemx{mv,--force}
+@optItem{mv,-f,}
+@optItemx{mv,--force,}
 @cindex prompts, omitting
 Do not prompt the user before replacing a destination file.
 @macro mvOptsIfn
@@ -9860,15 +9860,15 @@ options, only the final one takes effect.
 @end macro
 @mvOptsIfn
 
-@optItem{mv,-i}
-@optItemx{mv,--interactive}
+@optItem{mv,-i,}
+@optItemx{mv,--interactive,}
 @cindex prompts, forcing
 Prompt whether to overwrite each existing destination file, regardless
 of its permissions, and fail if the response is not affirmative.
 @mvOptsIfn
 
-@optItem{mv,-n}
-@optItemx{mv,--no-clobber}
+@optItem{mv,-n,}
+@optItemx{mv,--no-clobber,}
 @cindex prompts, omitting
 Do not overwrite an existing file; silently fail instead.
 @mvOptsIfn
@@ -9876,12 +9876,12 @@ This option is mutually exclusive with @option{-b} or @option{--backup} option.
 See also the @option{--update=none} option which will
 skip existing files but not fail.
 
-@optItem{mv,--no-copy}
+@optItem{mv,--no-copy,}
 @cindex renaming files without copying them
 If a file cannot be renamed because the destination file system differs,
 fail with a diagnostic instead of copying and then removing the file.
 
-@optItem{mv,--exchange}
+@optItem{mv,--exchange,}
 Exchange source and destination instead of renaming source to destination.
 Both files must exist; they need not be the same type.
 This exchanges all data and metadata.
@@ -9901,8 +9901,8 @@ If the source and destination might not be on the same file system,
 using @code{--no-copy} will prevent future versions of @command{mv}
 from implementing the exchange by copying.
 
-@optItem{mv,-u}
-@optItemx{mv,--update}
+@optItem{mv,-u,}
+@optItemx{mv,--update,}
 @cindex newer files, moving only
 Do not move a non-directory that has an existing destination with the
 same or newer modification timestamp;
@@ -9917,11 +9917,11 @@ option is also specified.
 
 @whichUpdate
 
-@optItem{mv,-v}
-@optItemx{mv,--verbose}
+@optItem{mv,-v,}
+@optItemx{mv,--verbose,}
 Print the name of each file before moving it.
 
-@optItem{mv,--keep-directory-symlink}
+@optItem{mv,--keep-directory-symlink,}
 Follow existing symlinks to directories when copying.
 Use this option only when the destination directory's contents are trusted,
 as an attacker can place symlinks in the destination
@@ -9935,8 +9935,8 @@ to cause @command{cp} write to arbitrary target directories.
 
 @optNoTargetDirectory{mv}
 
-@optItem{mv,-Z}
-@optItemx{mv,--context}
+@optItem{mv,-Z,}
+@optItemx{mv,--context,}
 @cindex SELinux, restoring security context
 @cindex security context
 This option functions similarly to the @command{restorecon} command,
@@ -9986,23 +9986,23 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{rm,-d}
-@optItemx{rm,--dir}
+@optItem{rm,-d,}
+@optItemx{rm,--dir,}
 @cindex directories, removing
 Remove the listed directories if they are empty.
 
-@optItem{rm,-f}
-@optItemx{rm,--force}
+@optItem{rm,-f,}
+@optItemx{rm,--force,}
 Ignore nonexistent files and missing operands, and never prompt the user.
 Ignore any previous @option{--interactive} (@option{-i}) option.
 
-@optItem{rm,-i}
+@optItem{rm,-i,}
 Prompt whether to remove each file.
 If the response is not affirmative, silently skip the file without failing.
 Ignore any previous @option{--force} (@option{-f}) option.
 Equivalent to @option{--interactive=always}.
 
-@optItem{rm,-I}
+@optItem{rm,-I,}
 Prompt once whether to proceed with the command, if more than three
 files are named or if a recursive removal is requested.  Ignore any
 previous @option{--force} (@option{-f}) option.  Equivalent to
@@ -10026,7 +10026,7 @@ removal is requested.  Equivalent to @option{-I}.
 @option{--interactive} with no @var{when} is equivalent to
 @option{--interactive=always}.
 
-@optItem{rm,--one-file-system}
+@optItem{rm,--one-file-system,}
 @cindex one file system, restricting @command{rm} to
 When removing a hierarchy recursively, do not remove any directory that is on a
 file system different from that of the corresponding command line argument.
@@ -10054,21 +10054,21 @@ This is the default behavior.
 When @samp{all} is specified, reject any command line argument
 that is not on the same file system as its parent.
 
-@optItem{rm,--no-preserve-root}
+@optItem{rm,--no-preserve-root,}
 @cindex root directory, allow recursive destruction
 Do not treat @file{/} specially when removing recursively.
 This option is not recommended unless you really want to
 remove all the files on your computer.
 @xref{Treating / specially}.
 
-@optItem{rm,-r}
-@optItemx{rm,-R}
-@optItemx{rm,--recursive}
+@optItem{rm,-r,}
+@optItemx{rm,-R,}
+@optItemx{rm,--recursive,}
 @cindex directories, removing (recursively)
 Remove the listed directories and their contents recursively.
 
-@optItem{rm,-v}
-@optItemx{rm,--verbose}
+@optItem{rm,-v,}
+@optItemx{rm,--verbose,}
 Print the name of each file before removing it.
 
 @end table
@@ -10241,8 +10241,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{shred,-f}
-@optItemx{shred,--force}
+@optItem{shred,-f,}
+@optItemx{shred,--force,}
 @cindex force deletion
 Override file permissions if necessary to allow overwriting.
 
@@ -10266,7 +10266,7 @@ Shred the first @var{bytes} bytes of the file.  The default is to shred
 the whole file.  @var{bytes} can be followed by a size specification like
 @samp{K}, @samp{M}, or @samp{G} to specify a multiple.  @xref{Block size}.
 
-@optItem{shred,-u}
+@optItem{shred,-u,}
 @optItemx{shred,--remove,[=@var{how}]}
 @cindex removing files after shredding
 After shredding a file, deallocate it (if possible) and then remove it.
@@ -10283,13 +10283,13 @@ requiring a sync for every character in every file.  This can become
 significant with many files, or is redundant if your file system provides
 synchronous metadata updates.
 
-@optItem{shred,-v}
-@optItemx{shred,--verbose}
+@optItem{shred,-v,}
+@optItemx{shred,--verbose,}
 Display to standard error all status updates as sterilization proceeds.
 This details each data and metadata operation as it is performed.
 
-@optItem{shred,-x}
-@optItemx{shred,--exact}
+@optItem{shred,-x,}
+@optItemx{shred,--exact,}
 By default, @command{shred} rounds the size of a regular file up to the next
 multiple of the file system block size to fully erase the slack space in
 the last block of the file.  This space may contain portions of the current
@@ -10299,8 +10299,8 @@ Thus, by default if you shred a 10-byte regular file on a system with 512-byte
 blocks, the resulting file will be 512 bytes long.  With this option,
 shred does not increase the apparent size of the file.
 
-@optItem{shred,-z}
-@optItemx{shred,--zero}
+@optItem{shred,-z,}
+@optItemx{shred,--zero,}
 Normally, the last pass that @command{shred} writes is made up of
 random data.  If this would be conspicuous on your storage device (for
 example, because it looks like encrypted data), or you just think
@@ -10534,33 +10534,33 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @optBackup{ln}
 
-@optItem{ln,-d}
-@optItemx{ln,-F}
-@optItemx{ln,--directory}
+@optItem{ln,-d,}
+@optItemx{ln,-F,}
+@optItemx{ln,--directory,}
 @cindex hard links to directories
 Allow users with appropriate privileges to attempt to make hard links
 to directories.
 However, this will probably fail due to
 system restrictions, even for the super-user.
 
-@optItem{ln,-f}
-@optItemx{ln,--force}
+@optItem{ln,-f,}
+@optItemx{ln,--force,}
 Remove existing destination files.
 
-@optItem{ln,-i}
-@optItemx{ln,--interactive}
+@optItem{ln,-i,}
+@optItemx{ln,--interactive,}
 @cindex prompting, and @command{ln}
 Prompt whether to remove existing destination files,
 and fail if the response is not affirmative.
 
-@optItem{ln,-L}
-@optItemx{ln,--logical}
+@optItem{ln,-L,}
+@optItemx{ln,--logical,}
 If @option{-s} is not in effect, and the source file is a symbolic
 link, create the hard link to the file referred to by the symbolic
 link, rather than the symbolic link itself.
 
-@optItem{ln,-n}
-@optItemx{ln,--no-dereference}
+@optItem{ln,-n,}
+@optItemx{ln,--no-dereference,}
 Do not treat the last operand specially when it is a symbolic link to
 a directory.  Instead, treat it as if it were a normal file.
 
@@ -10578,8 +10578,8 @@ just like a directory.
 This option is weaker than the @option{--no-target-directory}
 (@option{-T}) option, so it has no effect if both options are given.
 
-@optItem{ln,-P}
-@optItemx{ln,--physical}
+@optItem{ln,-P,}
+@optItemx{ln,--physical,}
 If @option{-s} is not in effect, and the source file is a symbolic
 link, create the hard link to the symbolic link itself.  On platforms
 where this is not supported by the kernel, this option creates a
@@ -10587,8 +10587,8 @@ symbolic link with identical contents; since symbolic link contents
 cannot be edited, any file name resolution performed through either
 link will be the same as if a hard link had been created.
 
-@optItem{ln,-r}
-@optItemx{ln,--relative}
+@optItem{ln,-r,}
+@optItemx{ln,--relative,}
 Make symbolic links relative to the link location.
 This option is only valid with the @option{--symbolic} option.
 
@@ -10618,8 +10618,8 @@ ln--relative() {
 @end verbatim
 @end example
 
-@optItem{ln,-s}
-@optItemx{ln,--symbolic}
+@optItem{ln,-s,}
+@optItemx{ln,--symbolic,}
 Make symbolic links instead of hard links.  This option merely produces
 an error message on systems that do not support symbolic links.
 
@@ -10629,8 +10629,8 @@ an error message on systems that do not support symbolic links.
 
 @optNoTargetDirectory{ln}
 
-@optItem{ln,-v}
-@optItemx{ln,--verbose}
+@optItem{ln,-v,}
+@optItemx{ln,--verbose,}
 Print the name of each file after linking it successfully.
 
 @end table
@@ -10714,8 +10714,8 @@ incorrect.  @xref{Directory Setuid and Setgid}, for how the
 set-user-ID and set-group-ID bits of directories are inherited unless
 overridden in this way.
 
-@optItem{mkdir,-p}
-@optItemx{mkdir,--parents}
+@optItem{mkdir,-p,}
+@optItemx{mkdir,--parents,}
 @cindex parent directories, creating
 Make any missing parent directories for each argument, setting their
 file permission bits to @samp{=rwx,u+wx},
@@ -10735,8 +10735,8 @@ To set a parent's special mode bits as well, you can invoke
 Setgid}, for how the set-user-ID and set-group-ID bits of
 newly-created parent directories are inherited.
 
-@optItem{mkdir,-v}
-@optItemx{mkdir,--verbose}
+@optItem{mkdir,-v,}
+@optItemx{mkdir,--verbose,}
 Print a message for each created directory.  This is most useful with
 @option{--parents}.
 
@@ -10899,43 +10899,43 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{readlink,-f}
-@optItemx{readlink,--canonicalize}
+@optItem{readlink,-f,}
+@optItemx{readlink,--canonicalize,}
 Activate canonicalize mode.
 If any component of the file name except the last one is missing or unavailable,
 @command{readlink} produces no output and exits with a nonzero exit
 code.  A trailing slash is ignored.
 
-@optItem{readlink,-e}
-@optItemx{readlink,--canonicalize-existing}
+@optItem{readlink,-e,}
+@optItemx{readlink,--canonicalize-existing,}
 Activate canonicalize mode.
 If any component is missing or unavailable, @command{readlink} produces
 no output and exits with a nonzero exit code.  A trailing slash
 requires that the name resolve to a directory.
 
-@optItem{readlink,-m}
-@optItemx{readlink,--canonicalize-missing}
+@optItem{readlink,-m,}
+@optItemx{readlink,--canonicalize-missing,}
 Activate canonicalize mode.
 If any component is missing or unavailable, @command{readlink} treats it
 as a directory.
 
-@optItem{readlink,-n}
-@optItemx{readlink,--no-newline}
+@optItem{readlink,-n,}
+@optItemx{readlink,--no-newline,}
 Do not print the output delimiter, when a single @var{file} is specified.
 Print a warning if specified along with multiple @var{file}s.
 
-@optItem{readlink,-s}
-@optItemx{readlink,-q}
-@optItemx{readlink,--silent}
-@optItemx{readlink,--quiet}
+@optItem{readlink,-s,}
+@optItemx{readlink,-q,}
+@optItemx{readlink,--silent,}
+@optItemx{readlink,--quiet,}
 Suppress most error messages.
 
 @vindex POSIXLY_CORRECT
 This option is on by default if the @env{POSIXLY_CORRECT} environment
 variable is not set.
 
-@optItem{readlink,-v}
-@optItemx{readlink,--verbose}
+@optItem{readlink,-v,}
+@optItemx{readlink,--verbose,}
 Report error messages.
 
 @vindex POSIXLY_CORRECT
@@ -10974,12 +10974,12 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{rmdir,--ignore-fail-on-non-empty}
+@optItem{rmdir,--ignore-fail-on-non-empty,}
 @cindex directory deletion, ignoring failures
 Ignore each failure to remove a directory that is non-empty.
 
-@optItem{rmdir,-p}
-@optItemx{rmdir,--parents}
+@optItem{rmdir,-p,}
+@optItemx{rmdir,--parents,}
 @cindex parent directories, removing
 Remove @var{directory}, then try to remove each component of @var{directory}.
 So, for example, @samp{rmdir -p a/b/c} is similar to @samp{rmdir a/b/c a/b a}.
@@ -10988,8 +10988,8 @@ Use the @option{--ignore-fail-on-non-empty} option to make it so such
 a failure does not evoke a diagnostic and does not cause @command{rmdir} to
 exit unsuccessfully.
 
-@optItem{rmdir,-v}
-@optItemx{rmdir,--verbose}
+@optItem{rmdir,-v,}
+@optItemx{rmdir,--verbose,}
 @cindex directory deletion, reporting
 Give a diagnostic for each successful removal.
 @var{directory} is removed.
@@ -11155,15 +11155,15 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{chown,-c}
-@optItemx{chown,--changes}
+@optItem{chown,-c,}
+@optItemx{chown,--changes,}
 @cindex changed owners, verbosely describing
 Verbosely describe the action for each @var{file} whose ownership
 actually changes.
 
-@optItem{chown,-f}
-@optItemx{chown,--silent}
-@optItemx{chown,--quiet}
+@optItem{chown,-f,}
+@optItemx{chown,--silent,}
+@optItemx{chown,--quiet,}
 @cindex error messages, omitting
 Do not print error messages about files whose ownership cannot be
 changed.
@@ -11204,7 +11204,7 @@ though still not perfect:
 @chownFromOption{chown}
 
 @macro symlinkRefOpts{cmd}
-@optItem{\cmd\,--dereference}
+@optItem{\cmd\,--dereference,}
 @cindex symbolic links, changing owner, group
 @findex lchown
 Do not act on symbolic links themselves but rather on what they point to.
@@ -11224,13 +11224,13 @@ no diagnostic is issued, but see @option{--verbose}.
 @end macro
 @symlinkRefOpts{chown}
 
-@optItem{chown,--preserve-root}
+@optItem{chown,--preserve-root,}
 @cindex root directory, disallow recursive modification
 Fail upon any attempt to recursively change the root directory, @file{/}.
 Without @option{--recursive}, this option has no effect.
 @xref{Treating / specially}.
 
-@optItem{chown,--no-preserve-root}
+@optItem{chown,--no-preserve-root,}
 @cindex root directory, allow recursive modification
 Cancel the effect of any preceding @option{--preserve-root} option.
 @xref{Treating / specially}.
@@ -11241,16 +11241,16 @@ Change the user and group of each @var{file} to be the same as those of
 user and group of the symbolic link, but rather those of the file it
 refers to.
 
-@optItem{chown,-v}
-@optItemx{chown,--verbose}
+@optItem{chown,-v,}
+@optItemx{chown,--verbose,}
 Output a diagnostic for every file processed.
 If a symbolic link is encountered during a recursive traversal
 on a system without the @code{lchown} system call, and @option{--no-dereference}
 is in effect, then issue a diagnostic saying neither the symbolic link nor
 its referent is being changed.
 
-@optItem{chown,-R}
-@optItemx{chown,--recursive}
+@optItem{chown,-R,}
+@optItemx{chown,--recursive,}
 @cindex recursively changing file ownership
 Recursively change ownership of directories and their contents.
 
@@ -11310,15 +11310,15 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{chgrp,-c}
-@optItemx{chgrp,--changes}
+@optItem{chgrp,-c,}
+@optItemx{chgrp,--changes,}
 @cindex changed files, verbosely describing
 Verbosely describe the action for each @var{file} whose group actually
 changes.
 
-@optItem{chgrp,-f}
-@optItemx{chgrp,--silent}
-@optItemx{chgrp,--quiet}
+@optItem{chgrp,-f,}
+@optItemx{chgrp,--silent,}
+@optItemx{chgrp,--quiet,}
 @cindex error messages, omitting
 Do not print error messages about files whose group cannot be
 changed.
@@ -11327,13 +11327,13 @@ changed.
 
 @symlinkRefOpts{chgrp}
 
-@optItem{chgrp,--preserve-root}
+@optItem{chgrp,--preserve-root,}
 @cindex root directory, disallow recursive modification
 Fail upon any attempt to recursively change the root directory, @file{/}.
 Without @option{--recursive}, this option has no effect.
 @xref{Treating / specially}.
 
-@optItem{chgrp,--no-preserve-root}
+@optItem{chgrp,--no-preserve-root,}
 @cindex root directory, allow recursive modification
 Cancel the effect of any preceding @option{--preserve-root} option.
 @xref{Treating / specially}.
@@ -11343,16 +11343,16 @@ Change the group of each @var{file} to be the same as that of
 @var{ref_file}.  If @var{ref_file} is a symbolic link, do not use the
 group of the symbolic link, but rather that of the file it refers to.
 
-@optItem{chgrp,-v}
-@optItemx{chgrp,--verbose}
+@optItem{chgrp,-v,}
+@optItemx{chgrp,--verbose,}
 Output a diagnostic for every file processed.
 If a symbolic link is encountered during a recursive traversal
 on a system without the @code{lchown} system call, and @option{--no-dereference}
 is in effect, then issue a diagnostic saying neither the symbolic link nor
 its referent is being changed.
 
-@optItem{chgrp,-R}
-@optItemx{chgrp,--recursive}
+@optItem{chgrp,-R,}
+@optItemx{chgrp,--recursive,}
 @cindex recursively changing group ownership
 Recursively change the group ownership of directories and their contents.
 
@@ -11432,45 +11432,45 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{chmod,-c}
-@optItemx{chmod,--changes}
+@optItem{chmod,-c,}
+@optItemx{chmod,--changes,}
 Verbosely describe the action for each @var{file} whose permissions
 actually change.
 
-@optItem{chmod,--dereference}
+@optItem{chmod,--dereference,}
 @cindex symbolic links, changing mode
 Do not act on symbolic links themselves but rather on what they point to.
 This is the default for command line arguments, but not for
 symbolic links encountered when recursing.
 @warnOptDerefWithRec
 
-@optItem{chmod,-h}
-@optItemx{chmod,--no-dereference}
+@optItem{chmod,-h,}
+@optItemx{chmod,--no-dereference,}
 @cindex symbolic links, changing mode
 Act on symbolic links themselves instead of what they point to.
 On systems that do not support this, no diagnostic is issued,
 but see @option{--verbose}.
 
-@optItem{chmod,-f}
-@optItemx{chmod,--silent}
-@optItemx{chmod,--quiet}
+@optItem{chmod,-f,}
+@optItemx{chmod,--silent,}
+@optItemx{chmod,--quiet,}
 @cindex error messages, omitting
 Do not print error messages about files whose permissions cannot be
 changed.
 
-@optItem{chmod,--preserve-root}
+@optItem{chmod,--preserve-root,}
 @cindex root directory, disallow recursive modification
 Fail upon any attempt to recursively change the root directory, @file{/}.
 Without @option{--recursive}, this option has no effect.
 @xref{Treating / specially}.
 
-@optItem{chmod,--no-preserve-root}
+@optItem{chmod,--no-preserve-root,}
 @cindex root directory, allow recursive modification
 Cancel the effect of any preceding @option{--preserve-root} option.
 @xref{Treating / specially}.
 
-@optItem{chmod,-v}
-@optItemx{chmod,--verbose}
+@optItem{chmod,-v,}
+@optItemx{chmod,--verbose,}
 Verbosely describe the action or non-action taken for every @var{file}.
 
 @optItem{chmod,--reference,=@var{ref_file}}
@@ -11479,8 +11479,8 @@ Change the mode of each @var{file} to be the same as that of @var{ref_file}.
 If @var{ref_file} is a symbolic link, do not use the mode
 of the symbolic link, but rather that of the file it refers to.
 
-@optItem{chmod,-R}
-@optItemx{chmod,--recursive}
+@optItem{chmod,-R,}
+@optItemx{chmod,--recursive,}
 @cindex recursively changing access permissions
 Recursively change permissions of directories and their contents.
 
@@ -11573,7 +11573,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{touch,-a}
+@optItem{touch,-a,}
 @optItemx{touch,--time,=atime}
 @itemx --time=access
 @itemx --time=use
@@ -11582,8 +11582,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex use @r{time, changing}
 Change the access timestamp only.  @xref{File timestamps}.
 
-@optItem{touch,-c}
-@optItemx{touch,--no-create}
+@optItem{touch,-c,}
+@optItemx{touch,--no-create,}
 Do not warn about or create files that do not exist.
 
 @optItem{touch,-d,@w{ }@var{time}}
@@ -11598,12 +11598,12 @@ minutes east of UTC@.  @xref{Date input formats}.
 File systems that do not support high-resolution timestamps
 silently ignore any excess precision here.
 
-@optItem{touch,-f}
+@optItem{touch,-f,}
 @cindex BSD @command{touch} compatibility
 Ignored; for compatibility with BSD versions of @command{touch}.
 
-@optItem{touch,-h}
-@optItemx{touch,--no-dereference}
+@optItem{touch,-h,}
+@optItemx{touch,--no-dereference,}
 @cindex symbolic links, changing time
 @findex lutimes
 Attempt to change the timestamps of a symbolic link, rather than what
@@ -11618,7 +11618,7 @@ long enough to be observable.  When coupled with option @option{-r}, a
 reference timestamp is taken from a symbolic link rather than the file
 it refers to.
 
-@optItem{touch,-m}
+@optItem{touch,-m,}
 @itemx --time=mtime
 @itemx --time=modify
 @opindex --time
@@ -11734,8 +11734,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{df,-a}
-@optItemx{df,--all}
+@optItem{df,-a,}
+@optItemx{df,--all,}
 @cindex ignore file systems
 Include in the listing dummy, duplicate, or inaccessible file systems, which
 are omitted by default.  Dummy file systems are typically special purpose
@@ -11754,29 +11754,29 @@ For example, @option{-BG} prints sizes in units of 1,073,741,824 bytes.
 
 @optHumanReadable{df}
 
-@optItem{df,-H}
+@optItem{df,-H,}
 Equivalent to @option{--si}.
 
-@optItem{df,-i}
-@optItemx{df,--inodes}
+@optItem{df,-i,}
+@optItemx{df,--inodes,}
 @cindex inode usage
 List inode usage information instead of block usage.  An inode (short
 for index node) contains information about a file such as its owner,
 permissions, timestamps, and location on the file system.
 
-@optItem{df,-k}
+@optItem{df,-k,}
 @cindex kibibytes for file system sizes
 Print sizes in 1024-byte blocks, overriding the default block size
 (@pxref{Block size}).
 This option is equivalent to @option{--block-size=1K}.
 
-@optItem{df,-l}
-@optItemx{df,--local}
+@optItem{df,-l,}
+@optItemx{df,--local,}
 @cindex file system types, limiting output to certain
 Limit the listing to local file systems.  By default, remote file systems
 are also listed.
 
-@optItem{df,--no-sync}
+@optItem{df,--no-sync,}
 @cindex file system space, retrieving old data more quickly
 Do not invoke the @code{sync} system call before getting any usage data.
 This may make @command{df} run significantly faster on systems with many
@@ -11844,8 +11844,8 @@ df --o
 @end example
 
 
-@optItem{df,-P}
-@optItemx{df,--portability}
+@optItem{df,-P,}
+@optItemx{df,--portability,}
 @cindex one-line output format
 @cindex POSIX output format
 @cindex portable output format
@@ -11873,14 +11873,14 @@ otherwise.  @xref{Block size}.
 
 @optSi{df}
 
-@optItem{df,--sync}
+@optItem{df,--sync,}
 @cindex file system space, retrieving current data more slowly
 Invoke the @code{sync} system call before getting any usage data.  On
 some systems (notably Solaris), doing this yields more up to date results,
 but in general this option makes @command{df} much slower, especially when
 there are many or very busy file systems.
 
-@optItem{df,--total}
+@optItem{df,--total,}
 @cindex grand total of file system size, usage and available space
 Print a grand total of all arguments after all arguments have
 been processed.  This can be used to find out the total size, usage
@@ -11901,8 +11901,8 @@ Limit the listing to file systems of type @var{fstype}.  Multiple
 file system types can be specified by giving multiple @option{-t} options.
 By default, nothing is omitted.
 
-@optItem{df,-T}
-@optItemx{df,--print-type}
+@optItem{df,-T,}
+@optItemx{df,--print-type,}
 @cindex file system types, printing
 Print each file system's type.  The types printed here are the same ones
 you can include or exclude with @option{-t} and @option{-x}.  The particular
@@ -11954,7 +11954,7 @@ Limit the listing to file systems not of type @var{fstype}.
 Multiple file system types can be eliminated by giving multiple
 @option{-x} options.  By default, no file system types are omitted.
 
-@optItem{df,-v}
+@optItem{df,-v,}
 Ignored; for compatibility with System V versions of @command{df}.
 
 @end table
@@ -12005,12 +12005,12 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @optNull{du}
 
-@optItem{du,-a}
-@optItemx{du,--all}
+@optItem{du,-a,}
+@optItemx{du,--all,}
 Show counts for all files, not just directories.
 
-@optItem{du,-A}
-@optItemx{du,--apparent-size}
+@optItem{du,-A,}
+@optItemx{du,--apparent-size,}
 Print apparent sizes, rather than file system usage.  The apparent size of a
 file is the number of bytes reported by @code{wc -c} on regular files,
 or more generally, @code{ls -l --block-size=1} or @code{stat --format=%s}.
@@ -12037,19 +12037,19 @@ Other file types do not contribute to apparent size.
 Scale sizes by @var{size} before printing them (@pxref{Block size}).
 For example, @option{-BG} prints sizes in units of 1,073,741,824 bytes.
 
-@optItem{du,-b}
-@optItemx{du,--bytes}
+@optItem{du,-b,}
+@optItemx{du,--bytes,}
 Equivalent to @code{--apparent-size --block-size=1}.
 
-@optItem{du,-c}
-@optItemx{du,--total}
+@optItem{du,-c,}
+@optItemx{du,--total,}
 @cindex grand total of file system space
 Print a grand total of all arguments after all arguments have
 been processed.  This can be used to find out the total file system usage of
 a given set of files or directories.
 
-@optItem{du,-D}
-@optItemx{du,--dereference-args}
+@optItem{du,-D,}
+@optItemx{du,--dereference-args,}
 Dereference symbolic links that are command line arguments.
 Does not affect other symbolic links.  This is helpful for finding
 out the file system usage of directories, such as @file{/usr/tmp}, which
@@ -12065,12 +12065,12 @@ is at level 0, so @code{du --max-depth=0} is equivalent to @code{du -s}.
 @c --files0-from=FILE
 @filesZeroFromOption{du,, with the @option{--total} (@option{-c}) option}
 
-@optItem{du,-H}
+@optItem{du,-H,}
 Equivalent to @option{--dereference-args} (@option{-D}).
 
 @optHumanReadable{du}
 
-@optItem{du,--inodes}
+@optItem{du,--inodes,}
 @cindex inode usage, dereferencing in @command{du}
 List inode usage information instead of block usage.
 This option is useful for finding directories which contain many files, and
@@ -12081,39 +12081,39 @@ It can well be combined with the options @option{-a}, @option{-c},
 @option{-x}; however, passing other options regarding the block size, for
 example @option{-b}, @option{-m} and @option{--apparent-size}, is ignored.
 
-@optItem{du,-k}
+@optItem{du,-k,}
 @cindex kibibytes for file sizes
 Print sizes in 1024-byte blocks, overriding the default block size
 (@pxref{Block size}).
 This option is equivalent to @option{--block-size=1K}.
 
-@optItem{du,-L}
-@optItemx{du,--dereference}
+@optItem{du,-L,}
+@optItemx{du,--dereference,}
 @cindex symbolic links, dereferencing in @command{du}
 Dereference symbolic links (show the file system space used by the file
 or directory that the link points to instead of the space used by
 the link).
 
-@optItem{du,-l}
-@optItemx{du,--count-links}
+@optItem{du,-l,}
+@optItemx{du,--count-links,}
 @cindex hard links, counting in @command{du}
 Count the size of all files, even if they have appeared already (as a
 hard link).
 
-@optItem{du,-m}
+@optItem{du,-m,}
 @cindex mebibytes for file sizes
 Print sizes in 1,048,576-byte blocks, overriding the default block size
 (@pxref{Block size}).
 This option is equivalent to @option{--block-size=1M}.
 
-@optItem{du,-P}
-@optItemx{du,--no-dereference}
+@optItem{du,-P,}
+@optItemx{du,--no-dereference,}
 @cindex symbolic links, dereferencing in @command{du}
 For each symbolic link encountered by @command{du},
 consider the file system space used by the symbolic link itself.
 
-@optItem{du,-S}
-@optItemx{du,--separate-dirs}
+@optItem{du,-S,}
+@optItemx{du,--separate-dirs,}
 Normally, in the output of @command{du} (when not using @option{--summarize}),
 the size listed next to a directory name, @var{d}, represents the sum
 of sizes of all entries beneath @var{d} as well as the size of @var{d} itself.
@@ -12122,8 +12122,8 @@ With @option{--separate-dirs}, the size reported for a directory name,
 
 @optSi{du}
 
-@optItem{du,-s}
-@optItemx{du,--summarize}
+@optItem{du,-s,}
+@optItemx{du,--summarize,}
 Display only a total for each argument.
 
 @optItem{du,-t,@w{ }@var{size}}
@@ -12173,7 +12173,7 @@ du --inodes -x --threshold=20000 /
 @end example
 
 
-@optItem{du,--time}
+@optItem{du,--time,}
 @cindex last modified dates, displaying in @command{du}
 Show the most recent modification timestamp (mtime) of any file in the
 directory, or any of its subdirectories.  @xref{File timestamps}.
@@ -12251,8 +12251,8 @@ When recursing, skip subdirectories or files matching @var{pattern}.
 For example, @code{du --exclude='*.o'} excludes files whose names
 end in @samp{.o}.
 
-@optItem{du,-x}
-@optItemx{du,--one-file-system}
+@optItem{du,-x,}
+@optItemx{du,--one-file-system,}
 @cindex one file system, restricting @command{du} to
 Skip directories that are on different file systems from the one that
 the argument being processed is on.
@@ -12319,16 +12319,16 @@ also give information about the files the links point to.
 
 @table @samp
 
-@optItem{stat,-L}
-@optItemx{stat,--dereference}
+@optItem{stat,-L,}
+@optItemx{stat,--dereference,}
 @cindex symbolic links, dereferencing in @command{stat}
 Change how @command{stat} treats symbolic links.
 With this option, @command{stat} acts on the file referenced
 by each symbolic link argument.
 Without it, @command{stat} acts on any symbolic link argument directly.
 
-@optItem{stat,-f}
-@optItemx{stat,--file-system}
+@optItem{stat,-f,}
+@optItemx{stat,--file-system,}
 @cindex file systems
 Report information about the file systems where the given files are located
 instead of information about the files themselves.
@@ -12355,7 +12355,7 @@ Leave the caching behavior to the underlying file system.
 
 @end table
 
-@optItem{stat,-c}
+@optItem{stat,-c,}
 @optItemx{stat,--format,=@var{format}}
 @cindex output format
 Use @var{format} rather than the default format.
@@ -12382,8 +12382,8 @@ $ stat --printf='%d:%i\n' / /usr
 2057:2
 @end example
 
-@optItem{stat,-t}
-@optItemx{stat,--terse}
+@optItem{stat,-t,}
+@optItemx{stat,--terse,}
 @cindex terse output
 Print the information in terse form, suitable for parsing by other programs.
 
@@ -12567,13 +12567,13 @@ synchronization method with the following options.  Also see
 @ref{Common options}.
 
 @table @samp
-@optItem{sync,-d}
-@optItemx{sync,--data}
+@optItem{sync,-d,}
+@optItemx{sync,--data,}
 Use fdatasync(2) to sync only the data for the file,
 and any metadata required to maintain file system consistency.
 
-@optItem{sync,-f}
-@optItemx{sync,--file-system}
+@optItem{sync,-f,}
+@optItemx{sync,--file-system,}
 Synchronize all the I/O waiting for the file systems that contain the file,
 using the syscall syncfs(2).  You would usually @emph{not} specify
 this option if passing a device node like @samp{/dev/sda} for example,
@@ -12613,12 +12613,12 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{truncate,-c}
-@optItemx{truncate,--no-create}
+@optItem{truncate,-c,}
+@optItemx{truncate,--no-create,}
 Do not create files that do not exist.
 
-@optItem{truncate,-o}
-@optItemx{truncate,--io-blocks}
+@optItem{truncate,-o,}
+@optItemx{truncate,--io-blocks,}
 Treat @var{size} as number of I/O blocks of the @var{file} rather than bytes.
 
 @optItem{truncate,-r,@w{ }@var{rfile}}
@@ -12693,10 +12693,10 @@ Options must precede operands, and the normally-special argument
 @var{string}.
 
 @table @samp
-@optItem{echo,-n}
+@optItem{echo,-n,}
 Do not output the trailing newline.
 
-@optItem{echo,-e}
+@optItem{echo,-e,}
 @cindex backslash escapes
 Enable interpretation of the following backslash-escaped characters in
 each @var{string}:
@@ -12735,7 +12735,7 @@ the eight-bit value that is the hexadecimal number @var{hh}
 (one or two hexadecimal digits)
 @end table
 
-@optItem{echo,-E}
+@optItem{echo,-E,}
 @cindex backslash escapes
 Disable interpretation of backslash escapes in each @var{string}.
 This is the default.  If @option{-e} and @option{-E} are both
@@ -13717,16 +13717,16 @@ conforms to POSIX and treats @samp{-} as a file name.
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
-@optItem{tee,-a}
-@optItemx{tee,--append}
+@optItem{tee,-a,}
+@optItemx{tee,--append,}
 Append standard input to the given files rather than overwriting
 them.
 
-@optItem{tee,-i}
-@optItemx{tee,--ignore-interrupts}
+@optItem{tee,-i,}
+@optItemx{tee,--ignore-interrupts,}
 Ignore interrupt signals.
 
-@optItem{tee,-p}
+@optItem{tee,-p,}
 @optItemx{tee,--output-error,[=@var{mode}]}
 Adjust the behavior with errors on the outputs.
 In summary @option{-p} allows @command{tee} to operate in a more
@@ -13950,8 +13950,8 @@ Options must precede operands.
 
 @table @samp
 
-@optItem{basename,-a}
-@optItemx{basename,--multiple}
+@optItem{basename,-a,}
+@optItemx{basename,--multiple,}
 Support more than one argument.  Treat every argument as a @var{name}.
 With this, an optional @var{suffix} must be specified using the
 @option{-s} option.
@@ -14074,7 +14074,7 @@ Options must precede operands.
 
 @table @samp
 
-@optItem{pathchk,-p}
+@optItem{pathchk,-p,}
 Instead of performing checks based on the underlying file system,
 print an error message if any of these conditions is true:
 
@@ -14092,11 +14092,11 @@ The length of a file name or one of its components exceeds the
 POSIX minimum limits for portability.
 @end enumerate
 
-@optItem{pathchk,-P}
+@optItem{pathchk,-P,}
 Print an error message if a file name is empty, or if it contains a component
 that begins with @samp{-}.
 
-@optItem{pathchk,--portability}
+@optItem{pathchk,--portability,}
 Print an error message if a file name is not portable to all POSIX
 hosts.  This option is equivalent to @samp{-p -P}.
 
@@ -14216,20 +14216,20 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{mktemp,-d}
-@optItemx{mktemp,--directory}
+@optItem{mktemp,-d,}
+@optItemx{mktemp,--directory,}
 Create a directory rather than a file.  The directory will have read,
 write, and search permissions for the current user, but no permissions
 for the group or others; these permissions are reduced if the current
 umask is more restrictive.
 
-@optItem{mktemp,-q}
-@optItemx{mktemp,--quiet}
+@optItem{mktemp,-q,}
+@optItemx{mktemp,--quiet,}
 Suppress diagnostics about failure to create a file or directory.  The
 exit status will still reflect whether a file was created.
 
-@optItem{mktemp,-u}
-@optItemx{mktemp,--dry-run}
+@optItem{mktemp,-u,}
+@optItemx{mktemp,--dry-run,}
 Generate a temporary name that does not name an existing file, without
 changing the file system contents.  Using the output of this command
 to create a new file is inherently unsafe, as there is a window of
@@ -14255,7 +14255,7 @@ end in @samp{X}; if it is not specified, then an appropriate
 @var{template} and for the creation of a @var{suffix} that starts with
 @samp{X}.
 
-@optItem{mktemp,-t}
+@optItem{mktemp,-t,}
 Treat @var{template} as a single file relative to the value of
 @env{TMPDIR} if available, or to the directory specified by
 @option{-p}, otherwise to @samp{/tmp}.  @var{template} must not
@@ -14309,36 +14309,36 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{realpath,-E}
-@optItemx{realpath,--canonicalize}
+@optItem{realpath,-E,}
+@optItemx{realpath,--canonicalize,}
 Do not fail merely because the named file does not exist.
 Although this is the default behavior of GNU @code{realpath},
 POSIX does not require this default, so portable applications should
 use an explicit @option{-E}.
 
-@optItem{realpath,-e}
-@optItemx{realpath,--canonicalize-existing}
+@optItem{realpath,-e,}
+@optItemx{realpath,--canonicalize-existing,}
 Fail if the named file does not exist.
 A trailing slash requires that the name resolve to a directory.
 
-@optItem{realpath,-m}
-@optItemx{realpath,--canonicalize-missing}
+@optItem{realpath,-m,}
+@optItemx{realpath,--canonicalize-missing,}
 If any component of a specified file name is missing or unavailable,
 treat it as a directory.
 
-@optItem{realpath,-L}
-@optItemx{realpath,--logical}
+@optItem{realpath,-L,}
+@optItemx{realpath,--logical,}
 Symbolic links are resolved in the specified file names,
 but they are resolved after any subsequent @samp{..} components are processed.
 
-@optItem{realpath,-P}
-@optItemx{realpath,--physical}
+@optItem{realpath,-P,}
+@optItemx{realpath,--physical,}
 Symbolic links are resolved in the specified file names,
 and they are resolved before any subsequent @samp{..} components are processed.
 This is the default mode of operation.
 
-@optItem{realpath,-q}
-@optItemx{realpath,--quiet}
+@optItem{realpath,-q,}
+@optItemx{realpath,--quiet,}
 Suppress diagnostic messages for specified file names.
 
 @optItem{realpath,--relative-to,=@var{dir}}
@@ -14356,9 +14356,9 @@ pertaining to file existence.
 For details about combining @option{--relative-to} and @option{--relative-base},
 @pxref{Realpath usage examples}.
 
-@optItem{realpath,-s}
-@optItemx{realpath,--strip}
-@optItemx{realpath,--no-symlinks}
+@optItem{realpath,-s,}
+@optItemx{realpath,--strip,}
+@optItemx{realpath,--no-symlinks,}
 Do not resolve symbolic links.  Only resolve references to
 @samp{/./}, @samp{/../} and remove extra @samp{/} characters.
 When combined with the @option{-m} option, realpath operates
@@ -14487,15 +14487,15 @@ pwd [@var{option}]@dots{}
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
-@optItem{pwd,-L}
-@optItemx{pwd,--logical}
+@optItem{pwd,-L,}
+@optItemx{pwd,--logical,}
 If the contents of the environment variable @env{PWD} provide an
 absolute name of the current directory with no @samp{.} or @samp{..}
 components, but possibly with symbolic links, then output those
 contents.  Otherwise, fall back to default @option{-P} handling.
 
-@optItem{pwd,-P}
-@optItemx{pwd,--physical}
+@optItem{pwd,-P,}
+@optItemx{pwd,--physical,}
 Print a fully resolved name for the current directory.  That is, all
 components of the printed name will be actual directory names -- none
 will be symbolic links.
@@ -14541,8 +14541,8 @@ the terminal line operation, as described below.
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
-@optItem{stty,-a}
-@optItemx{stty,--all}
+@optItem{stty,-a,}
+@optItemx{stty,--all,}
 Print all current settings in human-readable form.  This option may not
 be used in combination with any line settings.
 
@@ -14556,8 +14556,8 @@ until the carrier detect line is high if
 the @code{clocal} flag is not set.  Hence, it is not always possible
 to allow the shell to open the device in the traditional manner.
 
-@optItem{stty,-g}
-@optItemx{stty,--save}
+@optItem{stty,-g,}
+@optItemx{stty,--save,}
 @cindex machine-readable @command{stty} output
 Print all current settings in a form that can be used as an argument to
 another @command{stty} command to restore the current settings.  This option
@@ -15287,9 +15287,9 @@ The program accepts the following option.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{printenv,-s}
-@optItemx{printenv,--silent}
-@optItemx{printenv,--quiet}
+@optItem{printenv,-s,}
+@optItemx{printenv,--silent,}
+@optItemx{printenv,--quiet,}
 Print nothing; only return an exit status.
 
 @end table
@@ -15360,30 +15360,30 @@ The options cause @command{id} to print only part of the above information.
 Also see @ref{Common options}.
 
 @table @samp
-@optItem{id,-g}
-@optItemx{id,--group}
+@optItem{id,-g,}
+@optItemx{id,--group,}
 Print only the group ID.
 
-@optItem{id,-G}
-@optItemx{id,--groups}
+@optItem{id,-G,}
+@optItemx{id,--groups,}
 Print only the group ID and the supplementary groups.
 
-@optItem{id,-n}
-@optItemx{id,--name}
+@optItem{id,-n,}
+@optItemx{id,--name,}
 Print the user or group name instead of the ID number.  Requires
 @option{-u}, @option{-g}, or @option{-G}.
 
-@optItem{id,-r}
-@optItemx{id,--real}
+@optItem{id,-r,}
+@optItemx{id,--real,}
 Print the real, instead of effective, user or group ID@.  Requires
 @option{-u}, @option{-g}, or @option{-G}.
 
-@optItem{id,-u}
-@optItemx{id,--user}
+@optItem{id,-u,}
+@optItemx{id,--user,}
 Print only the user ID.
 
-@optItem{id,-Z}
-@optItemx{id,--context}
+@optItem{id,-Z,}
+@optItemx{id,--context,}
 @cindex SELinux
 @cindex security context
 Print only the security context of the process, which is generally
@@ -15391,8 +15391,8 @@ the user's security context inherited from the parent process.
 If neither SELinux or SMACK is enabled then print a warning and
 set the exit status to 1.
 
-@optItem{id,-z}
-@optItemx{id,--zero}
+@optItem{id,-z,}
+@optItemx{id,--zero,}
 Delimit output items with ASCII NUL characters.
 This option is not permitted when using the default format.
 When multiple users are specified, and the @option{--groups} option
@@ -15564,69 +15564,69 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{who,-a}
-@optItemx{who,--all}
+@optItem{who,-a,}
+@optItemx{who,--all,}
 Same as @samp{-b -d --login -p -r -t -T -u}.
 
-@optItem{who,-b}
-@optItemx{who,--boot}
+@optItem{who,-b,}
+@optItemx{who,--boot,}
 Print the date and time of last system boot.
 
-@optItem{who,-d}
-@optItemx{who,--dead}
+@optItem{who,-d,}
+@optItemx{who,--dead,}
 Print information corresponding to dead processes.
 
-@optItem{who,-H}
-@optItemx{who,--heading}
+@optItem{who,-H,}
+@optItemx{who,--heading,}
 Print a line of column headings.
 
-@optItem{who,-l}
-@optItemx{who,--login}
+@optItem{who,-l,}
+@optItemx{who,--login,}
 List only the entries that correspond to processes via which the
 system is waiting for a user to login.  The user name is always @samp{LOGIN}.
 
 @macro lookupOption{cmd}
-@optItem{\cmd\,--lookup}
+@optItem{\cmd\,--lookup,}
 Attempt to canonicalize hostnames found in utmp through a DNS lookup.
 This is not the default because of potential delays.
 @end macro
 @lookupOption{who}
 
-@optItem{who,-m}
+@optItem{who,-m,}
 Same as @samp{who am i}.
 
-@optItem{who,-p}
-@optItemx{who,--process}
+@optItem{who,-p,}
+@optItemx{who,--process,}
 List active processes spawned by init.
 
-@optItem{who,-q}
-@optItemx{who,--count}
+@optItem{who,-q,}
+@optItemx{who,--count,}
 Print only the login names and the number of users logged on.
 Overrides all other options.
 
-@optItem{who,-r}
-@optItemx{who,--runlevel}
+@optItem{who,-r,}
+@optItemx{who,--runlevel,}
 Print the current (and maybe previous) run-level of the init process.
 
-@optItem{who,-s}
-@optItem{who,--short}
+@optItem{who,-s,}
+@optItem{who,--short,}
 Ignored; for compatibility with other versions of @command{who}.
 
-@optItem{who,-t}
-@optItemx{who,--time}
+@optItem{who,-t,}
+@optItemx{who,--time,}
 Print last system clock change.
 
-@optItem{who,-u}
+@optItem{who,-u,}
 @cindex idle time
 After the login time, print the number of hours and minutes that the
 user has been idle.  @samp{.} means the user was active in the last minute.
 @samp{old} means the user has been idle for more than 24 hours.
 
-@optItem{who,-w}
-@optItemx{who,-T}
-@optItemx{who,--mesg}
-@optItemx{who,--message}
-@optItemx{who,--writable}
+@optItem{who,-w,}
+@optItemx{who,-T,}
+@optItemx{who,--mesg,}
+@optItemx{who,--message,}
+@optItemx{who,--writable,}
 @cindex message status
 @pindex write@r{, allowed}
 After each login name print a character indicating the user's message status:
@@ -15660,37 +15660,37 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{pinky,-l}
+@optItem{pinky,-l,}
 Produce long format output.
 
 When producing long output at least one @var{username} must be given.
 If @var{username} cannot be found, the real name is printed as
 @samp{???} and the home directory and shell are omitted.
 
-@optItem{pinky,-b}
+@optItem{pinky,-b,}
 Omit the user's home directory and shell when printing in long format.
 
-@optItem{pinky,-h}
+@optItem{pinky,-h,}
 Omit the user's project file when printing in long format.
 
-@optItem{pinky,-p}
+@optItem{pinky,-p,}
 Omit the user's plan file when printing in long format.
 
-@optItem{pinky,-s}
+@optItem{pinky,-s,}
 Produce short format output. This is the default behavior when no
 options are given.
 
-@optItem{pinky,-f}
+@optItem{pinky,-f,}
 Omit the column headings when printing in short format.
 
-@optItem{pinky,-w}
+@optItem{pinky,-w,}
 Omit the user's full name when printing in short format.
 
-@optItem{pinky,-i}
+@optItem{pinky,-i,}
 Omit the user's full name and remote host when printing in short
 format.
 
-@optItem{pinky,-q}
+@optItem{pinky,-q,}
 Omit the user's full name, remote host, and idle time when printing in
 short format.
 
@@ -16244,7 +16244,7 @@ date -d "$(LC_TIME=C date)"
 @end example
 @xref{Date input formats}.
 
-@optItem{date,--debug}
+@optItem{date,--debug,}
 @cindex debugging date strings
 @cindex date strings, debugging
 @cindex arbitrary date strings, debugging
@@ -16304,7 +16304,7 @@ for the @option{--date} (@option{-d}) and @option{--file}
 Display the date and time of the last modification of @var{file},
 instead of the current date and time.
 
-@optItem{date,--resolution}
+@optItem{date,--resolution,}
 Display the timestamp resolution instead of the time.
 Current clock timestamps that are output by @command{date}
 are integer multiples of the timestamp resolution.
@@ -16316,8 +16316,8 @@ the output is:
 0.001000000
 @end example
 
-@optItem{date,-R}
-@optItemx{date,--rfc-email}
+@optItem{date,-R,}
+@optItemx{date,--rfc-email,}
 Display the date and time using the format @samp{%a, %d %b %Y %H:%M:%S
 %z}, evaluated in the C locale so abbreviations are always in English.
 For example:
@@ -16372,9 +16372,9 @@ This is like the format @samp{%Y-%m-%d %H:%M:%S.%N%:z}.
 Set the date and time to @var{datestr}.  See @option{-d} above.
 See also @ref{Setting the time}.
 
-@optItem{date,-u}
-@optItemx{date,--utc}
-@optItemx{date,--universal}
+@optItem{date,-u,}
+@optItemx{date,--utc,}
+@optItemx{date,--universal,}
 @cindex Coordinated Universal Time
 @cindex UTC
 @cindex Greenwich Mean Time
@@ -16620,7 +16620,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{nproc,--all}
+@optItem{nproc,--all,}
 Print the number of installed processors on the system, which may
 be greater than the number online or available to the current process.
 The @env{OMP_NUM_THREADS} or @env{OMP_THREAD_LIMIT} environment variables,
@@ -16672,13 +16672,13 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{uname,-a}
-@optItemx{uname,--all}
+@optItem{uname,-a,}
+@optItemx{uname,--all,}
 Print all of the below information, except omit the processor type
 and the hardware platform name if they are unknown.
 
-@optItem{uname,-i}
-@optItemx{uname,--hardware-platform}
+@optItem{uname,-i,}
+@optItemx{uname,--hardware-platform,}
 @cindex implementation, hardware
 @cindex hardware platform
 @cindex platform, hardware
@@ -16687,42 +16687,42 @@ Print the hardware platform name
 Print @samp{unknown} if this information is not available.
 This is non-portable, even across GNU/Linux distributions.
 
-@optItem{uname,-m}
-@optItemx{uname,--machine}
+@optItem{uname,-m,}
+@optItemx{uname,--machine,}
 @cindex machine type
 @cindex hardware class
 @cindex hardware type
 Print the machine hardware name (sometimes called the hardware class
 or hardware type).
 
-@optItem{uname,-n}
-@optItemx{uname,--nodename}
+@optItem{uname,-n,}
+@optItemx{uname,--nodename,}
 @cindex hostname
 @cindex node name
 @cindex network node name
 Print the network node hostname.
 
-@optItem{uname,-p}
-@optItemx{uname,--processor}
+@optItem{uname,-p,}
+@optItemx{uname,--processor,}
 @cindex host processor type
 Print the processor type (sometimes called the instruction set
 architecture or ISA).
 Print @samp{unknown} if this information is not available.
 This is non-portable, even across GNU/Linux distributions.
 
-@optItem{uname,-o}
-@optItemx{uname,--operating-system}
+@optItem{uname,-o,}
+@optItemx{uname,--operating-system,}
 @cindex operating system name
 Print the name of the operating system.
 
-@optItem{uname,-r}
-@optItemx{uname,--kernel-release}
+@optItem{uname,-r,}
+@optItemx{uname,--kernel-release,}
 @cindex kernel release
 @cindex release of kernel
 Print the kernel release.
 
-@optItem{uname,-s}
-@optItemx{uname,--kernel-name}
+@optItem{uname,-s,}
+@optItemx{uname,--kernel-name,}
 @cindex kernel name
 @cindex name of kernel
 Print the kernel name.
@@ -16735,8 +16735,8 @@ differ.  Some operating systems (e.g., FreeBSD, HP-UX) have the same
 name as their underlying kernels; others (e.g., GNU/Linux, Solaris)
 do not.
 
-@optItem{uname,-v}
-@optItemx{uname,--kernel-version}
+@optItem{uname,-v,}
+@optItemx{uname,--kernel-version,}
 @cindex kernel version
 @cindex version of kernel
 Print the kernel version.
@@ -16880,11 +16880,11 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{chcon,--dereference}
+@optItem{chcon,--dereference,}
 Do not affect symbolic links but what they refer to; this is the default.
 
-@optItem{chcon,-h}
-@optItemx{chcon,--no-dereference}
+@optItem{chcon,-h,}
+@optItemx{chcon,--no-dereference,}
 @cindex no dereference
 Affect the symbolic links themselves instead of any referenced file.
 
@@ -16892,16 +16892,16 @@ Affect the symbolic links themselves instead of any referenced file.
 @cindex reference file
 Use @var{rfile}'s security context rather than specifying a @var{context} value.
 
-@optItem{chcon,-R}
-@optItemx{chcon,--recursive}
+@optItem{chcon,-R,}
+@optItemx{chcon,--recursive,}
 Operate on files and directories recursively.
 
-@optItem{chcon,--preserve-root}
+@optItem{chcon,--preserve-root,}
 Refuse to operate recursively on the root directory, @file{/},
 when used together with the @option{--recursive} option.
 @xref{Treating / specially}.
 
-@optItem{chcon,--no-preserve-root}
+@optItem{chcon,--no-preserve-root,}
 Do not treat the root directory, @file{/}, specially when operating
 recursively; this is the default.
 @xref{Treating / specially}.
@@ -16915,8 +16915,8 @@ recursively; this is the default.
 @choptP{chcon}
 @xref{Traversing symlinks}.
 
-@optItem{chcon,-v}
-@optItemx{chcon,--verbose}
+@optItem{chcon,-v,}
+@optItemx{chcon,--verbose,}
 @cindex diagnostic
 Output a diagnostic for every file processed.
 
@@ -16979,8 +16979,8 @@ than the process would normally have.
 
 @table @samp
 
-@optItem{runcon,-c}
-@optItemx{runcon,--compute}
+@optItem{runcon,-c,}
+@optItemx{runcon,--compute,}
 Compute process transition context before modifying.
 
 @optItem{runcon,-u,@w{ }@var{user}}
@@ -17085,7 +17085,7 @@ If a @var{user} is specified then the supplementary groups
 are set according to the system defined list for that user,
 unless overridden with the @option{--groups} option.
 
-@optItem{chroot,--skip-chdir}
+@optItem{chroot,--skip-chdir,}
 Use this option to not change the working directory to @file{/} after changing
 the root directory to @var{newroot}, i.e., inside the chroot.
 This option is only permitted when @var{newroot} is the old @file{/} directory,
@@ -17286,9 +17286,9 @@ Without this option a default value of @var{command} is used.
 Remove variable @var{name} from the environment, if it was in the
 environment.
 
-@optItem{env,-}
-@optItemx{env,-i}
-@optItemx{env,--ignore-environment}
+@optItem{env,-,}
+@optItemx{env,-i,}
+@optItemx{env,--ignore-environment,}
 Start with an empty environment, ignoring the inherited environment.
 
 @optItem{env,-C,@w{ }@var{dir}}
@@ -17368,11 +17368,11 @@ Block signal(s) @var{sig} from being delivered.  Without @var{sig} all
 known signals are set to blocked.  Multiple signals can be comma-separated.
 An empty @var{sig} argument is a no-op.
 
-@optItem{env,--list-signal-handling}
+@optItem{env,--list-signal-handling,}
 List blocked or ignored signals to standard error, before executing a command.
 
-@optItem{env,-v}
-@optItemx{env,--debug}
+@optItem{env,-v,}
+@optItemx{env,--debug,}
 Show verbose information for each processing step.
 
 @example
@@ -18074,8 +18074,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
 
 @table @samp
-@optItem{timeout,-f}
-@optItemx{timeout,--foreground}
+@optItem{timeout,-f,}
+@optItemx{timeout,--foreground,}
 Don't create a separate background program group, so that
 the managed @var{command} can use the foreground TTY normally.
 This is needed to support two situations when timing out commands,
@@ -18112,8 +18112,8 @@ either because the signal was blocked or ignored, or if the @var{command} takes
 too long (e.g. for cleanup work) to terminate itself within a certain amount
 of time.
 
-@optItem{timeout,-p}
-@optItemx{timeout,--preserve-status}
+@optItem{timeout,-p,}
+@optItemx{timeout,--preserve-status,}
 Return the exit status of the managed @var{command} on timeout, rather than
 a specific exit status indicating a timeout.  This is useful if the
 managed @var{command} supports running for an indeterminate amount of time.
@@ -18124,8 +18124,8 @@ Send this @var{signal} to @var{command} on timeout, rather than the
 default @samp{TERM} signal.  @var{signal} may be a name like @samp{HUP}
 or a number.  @xref{Signal specifications}.
 
-@optItem{timeout,-v}
-@optItemx{timeout,--verbose}
+@optItem{timeout,-v,}
+@optItemx{timeout,--verbose,}
 Diagnose to standard error, any signal sent upon timeout.
 @end table
 
@@ -18374,8 +18374,8 @@ numbers from standard input, delimited by newlines, tabs, or spaces.
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
-@optItem{factor,-h}
-@optItemx{factor,--exponents}
+@optItem{factor,-h,}
+@optItemx{factor,--exponents,}
 print factors in the form @math{p^e}, rather than repeating
 the prime @samp{p}, @samp{e} times. If the exponent @samp{e} is 1,
 then it is omitted.
@@ -18457,10 +18457,10 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{numfmt,--debug}
+@optItem{numfmt,--debug,}
 Print (to standard error) warning messages about possible erroneous usage.
 
-@optItem{numfmt,-d}
+@optItem{numfmt,-d,}
 @optItemx{numfmt,--delimiter,=@var{d}}
 Use the character @var{d} as input field separator (default: newline or blank).
 Using non-default delimiter turns off automatic padding.
@@ -18500,7 +18500,7 @@ the input numbers represent other units (e.g. if the input number @samp{10}
 represents 10 units of 512 bytes, use @samp{--from-unit=512}).
 Suffixes are handled as with @samp{--from=auto}.
 
-@optItem{numfmt,--grouping}
+@optItem{numfmt,--grouping,}
 Group digits in output numbers according to the current locale's grouping rules
 (e.g @emph{Thousands Separator} character, commonly @samp{.} (dot) or @samp{,}
 comma).  This option has no effect in @samp{POSIX/C} locale.
@@ -18847,8 +18847,8 @@ the default format is @samp{%g}.
 Separate numbers with @var{string}; default is a newline.
 The output always terminates with a newline.
 
-@optItem{seq,-w}
-@optItemx{seq,--equal-width}
+@optItem{seq,-w,}
+@optItemx{seq,--equal-width,}
 Print all numbers with the same width, by padding with leading zeros.
 @var{first}, @var{step}, and @var{last} should all use a fixed point
 decimal representation.
