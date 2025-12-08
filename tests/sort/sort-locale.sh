@@ -39,7 +39,7 @@ export LC_ALL=en_US.iso8859-1  # only lowercase form works on macOS 10.15.7
 if test "$(locale charmap 2>/dev/null | sed 's/iso/ISO-/')" = ISO-8859-1; then
   check_hard_collate 'a_a' 'a b'  # underscore and space considered equal
   check_hard_collate 'aaa' 'BBB'  # case insensitive ordering
-  check_hard_collate "$(printf 'aa\xe9')" 'aaf'  # é comes before f
+  check_hard_collate "$(printf 'aa\351')" 'aaf'  # é comes before f
 fi
 
 export LC_ALL=$LOCALE_FR_UTF8

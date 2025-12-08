@@ -38,8 +38,8 @@ export LC_ALL=en_US.iso8859-1  # only lowercase form works on macOS 10.15.7
 if test "$(locale charmap 2>/dev/null | sed 's/iso/ISO-/')" = ISO-8859-1; then
   # Case conversion should work on all single byte locales.
   # Check it with é and É in ISO 8859-1.
-  printf '\xe9\n' > input-lower
-  printf '\xc9\n' > input-upper
+  printf '\351\n' > input-lower
+  printf '\311\n' > input-upper
 
   # Check the output when all input characters are already the correct case.
   dd if=input-lower of=output-lower conv=lcase || fail=1

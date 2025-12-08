@@ -45,7 +45,7 @@ mkdir testdir || framework_failure_
 cd testdir
 ls_encoded "testdir" > ../exp.t || framework_failure_
 for f in 'an#chor' 'back\slash' 'col:on' 'encoded%3Fquestion' \
-         "$(printf 'invalidutf8\xe9')" 'ques?tion' 'sp ace' 'utf8á'; do
+         "$(printf 'invalidutf8\351')" 'ques?tion' 'sp ace' 'utf8á'; do
   touch "$f" || framework_failure_
   ls_encoded "$f" >> ../exp.t || framework_failure_
 done
