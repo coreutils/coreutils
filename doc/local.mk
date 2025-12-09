@@ -135,9 +135,9 @@ check-local: check-texinfo
 # Post-process generated HTML to clean up anchor IDs
 _sed_anchor_cleanup = \
   -e '/id=.*_002doption/ { s/id="\([^"]*\)_002doption/id="\1/g; s/_002d/-/g; }'
-html-local:
-	$(AM_V_GEN)htmlfile=$(info_TEXINFOS:.texi=.html); \
-	sed $(_sed_anchor_cleanup) $$htmlfile > $$htmlfile-t \
-	  && mv $$htmlfile-t $$htmlfile
+html-local: $(HTMLS)
+	$(AM_V_GEN)for htmlfile in $(HTMLS); do \
+	  sed $(_sed_anchor_cleanup) $$htmlfile > $$htmlfile-t \
+	    && mv $$htmlfile-t $$htmlfile; done
 
 .PHONY: html-local
