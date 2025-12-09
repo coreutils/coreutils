@@ -17,6 +17,11 @@
 # Used in maint.mk's web-manual rule
 manual_title = Core GNU utilities
 
+# html post processing
+export MAKEINFO = $(abs_top_srcdir)/build-aux/makeinfo-wrapper.sh
+# Don't create node redirection files for each anchor
+gendocs_options_ = --common --no-node-files
+
 # Use the direct link.  This is guaranteed to work immediately, while
 # it can take a while for the faster mirror links to become usable.
 url_dir_list = https://ftp.gnu.org/gnu/$(PACKAGE)
