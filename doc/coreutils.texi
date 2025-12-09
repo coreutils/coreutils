@@ -12928,8 +12928,14 @@ $ recode BIG5..JAVA < sample.txt \
     > sample.sh
 @end example
 
-The only options are a lone @option{--help} or
-@option{--version}.  @xref{Common options}.
+@macro printDash{command}
+To output an argument that begins with @samp{-}, precede it with
+@option{--}, e.g., @samp{\command\ -- --help}.
+@end macro
+
+The only options are a lone @option{--help} or @option{--version}.
+@printDash{printf}
+@xref{Common options}.
 Options must precede operands.
 
 @exitstatus
@@ -12948,8 +12954,7 @@ given, it prints @samp{y} followed by a newline forever until killed.
 Upon a write error, @command{yes} exits with status @samp{1}.
 
 The only options are a lone @option{--help} or @option{--version}.
-To output an argument that begins with
-@samp{-}, precede it with @option{--}, e.g., @samp{yes -- --help}.
+@printDash{yes}
 @xref{Common options}.
 
 
