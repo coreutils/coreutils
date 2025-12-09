@@ -19004,7 +19004,7 @@ to set a file's timestamp to an arbitrary value.
 @chapter Opening the Software Toolbox
 
 An earlier version of this chapter appeared in
-@uref{https://www.linuxjournal.com/article.php?sid=2762, the
+@uref{https://www.linuxjournal.com/article/2762, the
 @cite{What's GNU@?} column of the June 1994 @cite{Linux Journal}}.
 It was written by Arnold Robbins.
 
