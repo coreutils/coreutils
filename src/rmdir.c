@@ -112,13 +112,12 @@ ignorable_failure (int error_number, char const *dir)
 static bool
 remove_parents (char *dir)
 {
-  char *slash;
   bool ok = true;
 
   strip_trailing_slashes (dir);
   while (true)
     {
-      slash = strrchr (dir, '/');
+      char *slash = strrchr (dir, '/');
       if (slash == nullptr)
         break;
       /* Remove any characters after the slash, skipping any extra
@@ -197,9 +196,6 @@ Remove the DIRECTORY(ies), if they are empty.\n\
 int
 main (int argc, char **argv)
 {
-  bool ok = true;
-  int optc;
-
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -210,6 +206,7 @@ main (int argc, char **argv)
 
   remove_empty_parents = false;
 
+  int optc;
   while ((optc = getopt_long (argc, argv, "pv", longopts, nullptr)) != -1)
     {
       switch (optc)
@@ -236,6 +233,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  bool ok = true;
   for (; optind < argc; ++optind)
     {
       char *dir = argv[optind];
