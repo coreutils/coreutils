@@ -80,9 +80,6 @@ If no VARIABLE is specified, print name and value pairs for them all.\n\
 int
 main (int argc, char **argv)
 {
-  char *ep, *ap;
-  bool ok;
-  int optc;
   bool opt_nul_terminate_output = false;
 
   initialize_main (&argc, &argv);
@@ -94,6 +91,7 @@ main (int argc, char **argv)
   initialize_exit_failure (PRINTENV_FAILURE);
   atexit (close_stdout);
 
+  int optc;
   while ((optc = getopt_long (argc, argv, "+iu:0", longopts, nullptr)) != -1)
     {
       switch (optc)
@@ -108,6 +106,7 @@ main (int argc, char **argv)
         }
     }
 
+  bool ok;
   if (optind >= argc)
     {
       for (char **env = environ; *env != nullptr; ++env)
@@ -128,8 +127,8 @@ main (int argc, char **argv)
 
           for (char **env = environ; *env; ++env)
             {
-              ep = *env;
-              ap = argv[i];
+              char const *ep = *env;
+              char const *ap = argv[i];
               while (*ep != '\0' && *ap != '\0' && *ep++ == *ap++)
                 {
                   if (*ep == '=' && *ap == '\0')
