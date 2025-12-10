@@ -87,7 +87,7 @@ env_ignore_delay_()
   local delay="$1"
 
   # The first 'env' is just to ensure timeout is not a shell built-in.
-  env timeout --verbose --kill-after=.1 --signal=INT $delay \
+  env timeout --verbose --kill-after=.1 --signal=$timeout_sig $delay \
     env $env_opt sleep 10 > /dev/null 2>outt
   # check only the first two lines from stderr, which are printed by timeout.
   # (operating systems might add more messages, like "killed").
@@ -102,7 +102,8 @@ env_ignore_delay_()
 cat <<\EOF >exp || framework_failure_
 timeout: sending signal INT to command 'env'
 EOF
-env_opt='' retry_delay_ env_ignore_delay_ .1 6 || fail=1
+timeout_sig=INT env_opt='' \
+  retry_delay_ env_ignore_delay_ .1 6 || fail=1
 
 # env test - ignore signal handler
 # --------------------------------
@@ -112,15 +113,28 @@ cat <<\EOF >exp || framework_failure_
 timeout: sending signal INT to command 'env'
 timeout: sending signal KILL to command 'env'
 EOF
-env_opt='--ignore-signal=INT' retry_delay_ env_ignore_delay_ .1 6 || fail=1
-env_opt='--ignore-signal' retry_delay_ env_ignore_delay_ .1 6 || fail=1
+timeout_sig=INT env_opt='--ignore-signal=INT' \
+  retry_delay_ env_ignore_delay_ .1 6 || fail=1
+timeout_sig=INT env_opt='--ignore-signal' \
+  retry_delay_ env_ignore_delay_ .1 6 || fail=1
+
+# env test - ignore signal handler for PIPE
+# SIGPIPE is often incorrectly interfered with, as per:
+# http://www.pixelbeat.org/programming/sigpipe_handling.html
+cat <<\EOF >exp || framework_failure_
+timeout: sending signal PIPE to command 'env'
+timeout: sending signal KILL to command 'env'
+EOF
+timeout_sig=PIPE env_opt='--ignore-signal=PIPE' \
+  retry_delay_ env_ignore_delay_ .1 6 || fail=1
 
 # env test --list-signal-handling
-env --default-signal --ignore-signal=INT --list-signal-handling true \
-  2> err8t || fail=1
-sed 's/(.*)/()/' err8t > err8 || framework_failure_
-env printf 'INT        (): IGNORE\n' > exp-err8 || framework_failure_
-compare exp-err8 err8 || fail=1
-
+for sig in INT PIPE; do
+  env --default-signal --ignore-signal=$sig --list-signal-handling true \
+    2> err8t || fail=1
+  sed 's/ *(.*)//' err8t > err8 || framework_failure_
+  env printf '%s: IGNORE\n' "$sig" > exp-err8 || framework_failure_
+  compare exp-err8 err8 || fail=1
+done
 
 Exit $fail
