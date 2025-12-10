@@ -170,17 +170,15 @@ need_copy (char const *src_name, char const *dest_name,
            int dest_dirfd, char const *dest_relname,
            const struct cp_options *x)
 {
-  struct stat src_sb, dest_sb;
-  int src_fd, dest_fd;
-  bool content_match;
-
   if (extra_mode (mode))
     return true;
 
   /* compare files using stat */
+  struct stat src_sb;
   if (stat (src_name, &src_sb) != 0)
     return true;
 
+  struct stat dest_sb;
   if (fstatat (dest_dirfd, dest_relname, &dest_sb, AT_SYMLINK_NOFOLLOW) != 0)
     return true;
 
@@ -216,19 +214,17 @@ need_copy (char const *src_name, char const *dest_name,
   if (selinux_enabled && x->preserve_security_context)
     {
       char *file_scontext_raw = nullptr;
-      char *to_scontext_raw = nullptr;
-      bool scontext_match;
-
       if (getfilecon_raw (src_name, &file_scontext_raw) == -1)
         return true;
 
+      char *to_scontext_raw = nullptr;
       if (getfilecon_raw (dest_name, &to_scontext_raw) == -1)
         {
           freecon (file_scontext_raw);
           return true;
         }
 
-      scontext_match = streq (file_scontext_raw, to_scontext_raw);
+      bool scontext_match = streq (file_scontext_raw, to_scontext_raw);
 
       freecon (file_scontext_raw);
       freecon (to_scontext_raw);
@@ -237,18 +233,18 @@ need_copy (char const *src_name, char const *dest_name,
     }
 
   /* compare files content */
-  src_fd = open (src_name, O_RDONLY | O_BINARY);
+  int src_fd = open (src_name, O_RDONLY | O_BINARY);
   if (src_fd < 0)
     return true;
 
-  dest_fd = openat (dest_dirfd, dest_relname, O_RDONLY | O_BINARY);
+  int dest_fd = openat (dest_dirfd, dest_relname, O_RDONLY | O_BINARY);
   if (dest_fd < 0)
     {
       close (src_fd);
       return true;
     }
 
-  content_match = have_same_content (src_fd, dest_fd);
+  bool content_match = have_same_content (src_fd, dest_fd);
 
   close (src_fd);
   close (dest_fd);
@@ -323,20 +319,21 @@ get_labeling_handle (void)
 static void
 setdefaultfilecon (char const *file)
 {
-  struct stat st;
-  char *scontext_raw = nullptr;
-
   if (selinux_enabled != 1)
     {
       /* Indicate no context found. */
       return;
     }
+
+  struct stat st;
   if (lstat (file, &st) != 0)
     return;
 
   struct selabel_handle *hnd = get_labeling_handle ();
   if (!hnd)
     return;
+
+  char *scontext_raw = nullptr;
   if (selabel_lookup_raw (hnd, &scontext_raw, file, st.st_mode) != 0)
     {
       if (errno != ENOENT && ! ignorable_ctx_err (errno))
@@ -470,9 +467,8 @@ static bool
 change_timestamps (struct stat const *src_sb, char const *dest,
                    int dirfd, char const *relname)
 {
-  struct timespec timespec[2];
-  timespec[0] = get_stat_atime (src_sb);
-  timespec[1] = get_stat_mtime (src_sb);
+  struct timespec timespec[2] = { get_stat_atime (src_sb),
+                                  get_stat_mtime (src_sb) };
 
   if (utimensat (dirfd, relname, timespec, 0))
     {
@@ -548,12 +544,9 @@ strip (char const *name)
 static void
 get_ids (void)
 {
-  struct passwd *pw;
-  struct group *gr;
-
   if (owner_name)
     {
-      pw = getpwnam (owner_name);
+      struct passwd *pw = getpwnam (owner_name);
       if (pw == nullptr)
         {
           uintmax_t tmp;
@@ -571,7 +564,7 @@ get_ids (void)
 
   if (group_name)
     {
-      gr = getgrnam (group_name);
+      struct group *gr = getgrnam (group_name);
       if (gr == nullptr)
         {
           uintmax_t tmp;
@@ -708,13 +701,13 @@ mkancesdirs_safe_wd (char const *from, char *to, struct cp_options *x,
   bool save_working_directory =
     save_always
     || ! (IS_ABSOLUTE_FILE_NAME (from) && IS_ABSOLUTE_FILE_NAME (to));
-  int status = EXIT_SUCCESS;
 
   struct savewd wd;
   savewd_init (&wd);
   if (! save_working_directory)
     savewd_finish (&wd);
 
+  int status = EXIT_SUCCESS;
   if (mkancesdirs (to, &wd, make_ancestor, x) == -1)
     {
       error (0, errno, _("cannot create directory %s"), quoteaf (to));
@@ -795,8 +788,6 @@ install_file_in_dir (char const *from, char const *to_dir,
 int
 main (int argc, char **argv)
 {
-  int optc;
-  int exit_status = EXIT_SUCCESS;
   char const *specified_mode = nullptr;
   bool make_backups = false;
   char const *backup_suffix = nullptr;
@@ -805,8 +796,6 @@ main (int argc, char **argv)
   struct cp_options x;
   char const *target_directory = nullptr;
   bool no_target_directory = false;
-  int n_files;
-  char **file;
   bool strip_program_specified = false;
   char const *scontext = nullptr;
   /* set iff kernel has extra selinux system calls */
@@ -828,6 +817,7 @@ main (int argc, char **argv)
   dir_arg = false;
   umask (0);
 
+  int optc;
   while ((optc = getopt_long (argc, argv, "bcCsDdg:m:o:pt:TvS:Z", long_options,
                               nullptr))
          != -1)
@@ -956,8 +946,8 @@ main (int argc, char **argv)
            _("failed to set default file creation context to %s"),
          quote (scontext));
 
-  n_files = argc - optind;
-  file = argv + optind;
+  int n_files = argc - optind;
+  char **file = argv + optind;
 
   if (n_files <= ! (dir_arg || target_directory))
     {
@@ -1039,6 +1029,7 @@ main (int argc, char **argv)
 
   get_ids ();
 
+  int exit_status = EXIT_SUCCESS;
   if (dir_arg)
     exit_status = savewd_process_files (n_files, file, process_dir, &x);
   else
