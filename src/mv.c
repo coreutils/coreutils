@@ -229,15 +229,11 @@ do_move (char const *source, char const *dest,
       if (dir_to_remove != nullptr)
         {
           struct rm_options rm_options;
-          enum RM_status status;
-          char const *dir[2];
-
           rm_option_init (&rm_options);
           rm_options.verbose = x->verbose;
-          dir[0] = dir_to_remove;
-          dir[1] = nullptr;
+          char const *dir[2] = { dir_to_remove, nullptr };
 
-          status = rm ((void *) dir, &rm_options);
+          enum RM_status status = rm ((void *) dir, &rm_options);
           affirm (VALID_STATUS (status));
           if (status == RM_ERROR)
             ok = false;
@@ -315,8 +311,6 @@ If you specify more than one of -i, -f, -n, only the final one takes effect.\n\
 int
 main (int argc, char **argv)
 {
-  int c;
-  bool ok;
   bool make_backups = false;
   char const *backup_suffix = nullptr;
   char *version_control_string = nullptr;
@@ -324,8 +318,6 @@ main (int argc, char **argv)
   bool remove_trailing_slashes = false;
   char const *target_directory = nullptr;
   bool no_target_directory = false;
-  int n_files;
-  char **file;
   bool selinux_enabled = (0 < is_selinux_enabled ());
 
   initialize_main (&argc, &argv);
@@ -341,6 +333,7 @@ main (int argc, char **argv)
   /* Try to disable the ability to unlink a directory.  */
   priv_set_remove_linkdir ();
 
+  int c;
   while ((c = getopt_long (argc, argv, "bfint:uvS:TZ", long_options, nullptr))
          != -1)
     {
@@ -412,8 +405,8 @@ main (int argc, char **argv)
         }
     }
 
-  n_files = argc - optind;
-  file = argv + optind;
+  int n_files = argc - optind;
+  char **file = argv + optind;
 
   if (n_files <= !target_directory)
     {
@@ -516,6 +509,7 @@ main (int argc, char **argv)
 
   hash_init ();
 
+  bool ok;
   if (target_directory)
     {
       /* Initialize the hash table only if we'll need it.
