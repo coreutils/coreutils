@@ -406,11 +406,7 @@ batch_convert (char const *input_filename,
                char const *format, bool format_in_c_locale,
                timezone_t tz, char const *tzstring)
 {
-  bool ok;
   FILE *in_stream;
-  char *line;
-  size_t buflen;
-  struct timespec when;
 
   if (streq (input_filename, "-"))
     {
@@ -424,9 +420,9 @@ batch_convert (char const *input_filename,
         error (EXIT_FAILURE, errno, "%s", quotef (input_filename));
     }
 
-  line = nullptr;
-  buflen = 0;
-  ok = true;
+  char *line = nullptr;
+  size_t buflen = 0;
+  bool ok = true;
   while (true)
     {
       ssize_t line_length = getline (&line, &buflen, in_stream);
@@ -438,6 +434,7 @@ batch_convert (char const *input_filename,
           break;
         }
 
+      struct timespec when;
       if (! parse_datetime2 (&when, line, nullptr,
                              parse_datetime_flags, tz, tzstring))
         {
@@ -466,18 +463,14 @@ batch_convert (char const *input_filename,
 int
 main (int argc, char **argv)
 {
-  int optc;
   char const *datestr = nullptr;
   char const *set_datestr = nullptr;
-  struct timespec when;
   bool set_date = false;
   char const *format = nullptr;
   bool format_in_c_locale = false;
   bool get_resolution = false;
   char *batch_file = nullptr;
   char *reference = nullptr;
-  struct stat refstats;
-  bool ok;
   bool discarded_datestr = false;
   bool discarded_set_datestr = false;
 
@@ -489,6 +482,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
+  int optc;
   while ((optc = getopt_long (argc, argv, short_options, long_options, nullptr))
          != -1)
     {
@@ -642,13 +636,14 @@ main (int argc, char **argv)
   char const *tzstring = getenv ("TZ");
   timezone_t tz = tzalloc (tzstring);
 
+  bool ok = true;
   if (batch_file != nullptr)
     ok = batch_convert (batch_file, format_res, format_in_c_locale,
                         tz, tzstring);
   else
     {
       bool valid_date = true;
-      ok = true;
+      struct timespec when;
 
       if (!option_specified_date && !set_date)
         {
@@ -675,6 +670,7 @@ main (int argc, char **argv)
           /* (option_specified_date || set_date) */
           if (reference != nullptr)
             {
+              struct stat refstats;
               if (stat (reference, &refstats) != 0)
                 error (EXIT_FAILURE, errno, "%s", quotef (reference));
               when = get_stat_mtime (&refstats);
