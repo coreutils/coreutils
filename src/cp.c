@@ -330,10 +330,8 @@ re_protect (char const *const_dst_name, char const *dst_src_name,
 
       if (x->preserve_timestamps)
         {
-          struct timespec timespec[2];
-
-          timespec[0] = get_stat_atime (&p->st);
-          timespec[1] = get_stat_mtime (&p->st);
+          struct timespec timespec[2] = { get_stat_atime (&p->st),
+                                          get_stat_mtime (&p->st) };
 
           if (utimensat (dst_dirfd, relname, timespec, 0))
             {
@@ -407,10 +405,6 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
                           struct dir_attr **attr_list, bool *new_dst,
                           const struct cp_options *x)
 {
-  struct stat stats;
-  char *dir;		/* A copy of CONST_DIR we can change.  */
-  char *src;		/* Source name in DIR.  */
-  char *dst_dir;	/* Leading directory of DIR.  */
   idx_t dirlen = dir_len (const_dir);
 
   *attr_list = nullptr;
@@ -420,11 +414,15 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
   if (dirlen <= src_offset)
     return true;
 
+  /* A copy of CONST_DIR we can change.  */
+  char *dir;
   ASSIGN_STRDUPA (dir, const_dir);
 
-  src = dir + src_offset;
+  /* Source name in DIR.  */
+  char *src = dir + src_offset;
 
-  dst_dir = alloca (dirlen + 1);
+  /* Leading directory of DIR.  */
+  char *dst_dir = alloca (dirlen + 1);
   memcpy (dst_dir, dir, dirlen);
   dst_dir[dirlen] = '\0';
   char const *dst_reldir = dst_dir + src_offset;
@@ -433,13 +431,13 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 
   /* XXX: If all dirs are present at the destination,
      no permissions or security contexts will be updated.  */
+  struct stat stats;
   if (fstatat (dst_dirfd, dst_reldir, &stats, 0) != 0)
     {
       /* A parent of CONST_DIR does not exist.
          Make all missing intermediate directories. */
-      char *slash;
+      char *slash = src;
 
-      slash = src;
       while (*slash == '/')
         slash++;
       dst_reldir = slash;
@@ -447,10 +445,9 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
       while ((slash = strchr (slash, '/')))
         {
           struct dir_attr *new;
-          bool missing_dir;
 
           *slash = '\0';
-          missing_dir = fstatat (dst_dirfd, dst_reldir, &stats, 0) != 0;
+          bool missing_dir = fstatat (dst_dirfd, dst_reldir, &stats, 0) != 0;
 
           if (missing_dir || x->preserve_ownership || x->preserve_mode
               || x->preserve_timestamps)
@@ -486,33 +483,30 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 
           if (missing_dir)
             {
-              mode_t src_mode;
-              mode_t omitted_permissions;
-              mode_t mkdir_mode;
-
               /* This component does not exist.  We must set
                  *new_dst and new->st.st_mode inside this loop because,
                  for example, in the command 'cp --parents ../a/../b/c e_dir',
                  make_dir_parents_private creates only e_dir/../a if
                  ./b already exists. */
               *new_dst = true;
-              src_mode = new->st.st_mode;
+              mode_t src_mode = new->st.st_mode;
 
               /* If the ownership or special mode bits might change,
                  omit some permissions at first, so unauthorized users
                  cannot nip in before the file is ready.  */
-              omitted_permissions = (src_mode
-                                     & (x->preserve_ownership
-                                        ? S_IRWXG | S_IRWXO
-                                        : x->preserve_mode
-                                        ? S_IWGRP | S_IWOTH
-                                        : 0));
+              mode_t omitted_permissions = (src_mode
+                                            & (x->preserve_ownership
+                                               ? S_IRWXG | S_IRWXO
+                                               : x->preserve_mode
+                                               ? S_IWGRP | S_IWOTH
+                                               : 0));
 
               /* POSIX says mkdir's behavior is implementation-defined when
                  (src_mode & ~S_IRWXUGO) != 0.  However, common practice is
                  to ask mkdir to copy all the CHMOD_MODE_BITS, letting mkdir
                  decide what to do with S_ISUID | S_ISGID | S_ISVTX.  */
-              mkdir_mode = x->explicit_no_preserve_mode ? S_IRWXUGO : src_mode;
+              mode_t mkdir_mode = (x->explicit_no_preserve_mode
+                                   ? S_IRWXUGO : src_mode);
               mkdir_mode &= CHMOD_MODE_BITS & ~omitted_permissions;
               if (mkdirat (dst_dirfd, dst_reldir, mkdir_mode) != 0)
                 {
@@ -613,10 +607,6 @@ static bool
 do_copy (int n_files, char **file, char const *target_directory,
          bool no_target_directory, struct cp_options *x)
 {
-  struct stat sb;
-  bool new_dst = false;
-  bool ok = true;
-
   if (n_files <= !target_directory)
     {
       if (n_files <= 0)
@@ -627,8 +617,11 @@ do_copy (int n_files, char **file, char const *target_directory,
       usage (EXIT_FAILURE);
     }
 
+  struct stat sb;
   sb.st_mode = 0;
   int target_dirfd = AT_FDCWD;
+  bool new_dst = false;
+  bool ok = true;
   if (no_target_directory)
     {
       if (target_directory)
@@ -782,10 +775,6 @@ do_copy (int n_files, char **file, char const *target_directory,
     }
   else /* !target_directory */
     {
-      char const *source = file[0];
-      char const *dest = file[1];
-      bool unused;
-
       if (parents_option)
         {
           error (0, 0,
@@ -799,6 +788,8 @@ do_copy (int n_files, char **file, char const *target_directory,
          'cp --force --backup foo foo' to 'cp --force foo fooSUFFIX'
          where SUFFIX is determined by any version control options used.  */
 
+      char const *source = file[0];
+      char const *dest = file[1];
       if (x->unlink_dest_after_failed_open
           && x->backup_type != no_backups
           && streq (source, dest)
@@ -818,6 +809,7 @@ do_copy (int n_files, char **file, char const *target_directory,
           x = &x_tmp;
         }
 
+      bool unused;
       ok = copy (source, dest, AT_FDCWD, dest, -new_dst, x, &unused, nullptr);
     }
 
@@ -973,8 +965,6 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
 int
 main (int argc, char **argv)
 {
-  int c;
-  bool ok;
   bool make_backups = false;
   char const *backup_suffix = nullptr;
   char *version_control_string = nullptr;
@@ -995,6 +985,7 @@ main (int argc, char **argv)
   selinux_enabled = (0 < is_selinux_enabled ());
   cp_option_init (&x);
 
+  int c;
   while ((c = getopt_long (argc, argv, "abdfHilLnprst:uvxPRS:TZ",
                            long_opts, nullptr))
          != -1)
@@ -1275,8 +1266,8 @@ main (int argc, char **argv)
 
   hash_init ();
 
-  ok = do_copy (argc - optind, argv + optind,
-                target_directory, no_target_directory, &x);
+  bool ok = do_copy (argc - optind, argv + optind,
+                     target_directory, no_target_directory, &x);
 
   main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
