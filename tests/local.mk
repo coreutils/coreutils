@@ -464,6 +464,7 @@ all_tests =					\
   tests/tac/tac-locale.sh			\
   tests/tac/tac-2-nonseekable.sh		\
   tests/tail/tail.pl				\
+  tests/tee/append.sh				\
   tests/misc/tee.sh				\
   tests/test/test-N.sh				\
   tests/test/test-diag.pl			\
