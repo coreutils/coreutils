@@ -90,6 +90,14 @@ ENV_TEST1=b
 EOF
 compare exp out || fail=1
 
+# env shouldn't care what encoding name or value is
+for nv in 'NON_UTF8_TEST=\240' 'NON_UTF8_TEST\240=1'; do
+  env $(printf "$nv") env > all || fail=1
+  grep '^NON_UTF8_TEST' all | LC_ALL=C sort > out || framework_failure_
+  printf "$nv\\n" > exp || framework_failure_
+  compare exp out || fail=1
+done
+
 # PATH modifications affect exec.
 mkdir unlikely_name || framework_failure_
 cat <<EOF > unlikely_name/also_unlikely || framework_failure_
