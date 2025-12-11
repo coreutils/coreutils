@@ -642,6 +642,12 @@ sc_env_test_dependencies:
 		|| echo $$test should call: print_ver_ $$prog; \
 	    done | grep . && exit 1 || :
 
+# Enforce using our printf if using \u or \x
+sc_env_printf:
+	@cd $(top_srcdir) && GIT_PAGER= git grep 'printf.*[^\\]\\[ux]' tests \
+	  | grep -v -- '--printf' | grep -v 'env printf' \
+	  && { echo 'use "env printf" with \x or \u'; exit 1; } || :
+
 # Use framework_failure_, not the old name without the trailing underscore.
 sc_prohibit_framework_failure:
 	@prohibit='$(begword)framework_''failure$(endword)'		\

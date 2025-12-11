@@ -45,7 +45,7 @@ fi
 export LC_ALL=$LOCALE_FR_UTF8
 if test "$(locale charmap 2>/dev/null)" = UTF-8; then
   check_hard_collate 'aaé' 'aaf'  # é comes before f
-  check_hard_collate 'aéY' "$(printf 'ae\u0301Z')"  # NFC/NFD é are equal
+  check_hard_collate 'aéY' "$(printf 'ae\314\201Z')"  # NFC/NFD é are equal
 fi
 
 Exit $fail
