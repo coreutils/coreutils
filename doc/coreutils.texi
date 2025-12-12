@@ -8333,6 +8333,11 @@ longer than 1000 bytes may be treated as errors.
 
 These options change how file names themselves are printed.
 
+You can specify the default value of the @option{--quoting-style} option
+with the environment variable @env{QUOTING_STYLE}@.  If that environment
+variable is not set, the default value is @samp{shell-escape} when the
+output is a terminal, and @samp{literal} otherwise.
+
 @table @samp
 
 @optItem{ls,-b,}
@@ -8385,8 +8390,17 @@ like @command{csh}.
 @item shell-always
 Quote strings for the shell, even if they would normally not require quoting.
 @item shell-escape
-Like @samp{shell}, but also quoting non-printable characters using the POSIX
-@samp{$''} syntax suitable for most shells.
+Like @samp{shell}, but also quote non-printable characters using the POSIX
+@samp{$''} syntax suitable for most shells. This is the most general format
+as any file name is represented unambiguously and safely.  I.e., the full
+quoted string can be pasted back to the shell to refer to any file.
+Consequently, this is the default format used when @command{ls}
+is outputting to a tty.
+Note also that specifying the C locale with @code{LC_ALL=C} can be useful
+with this output format, to avoid character set conversion issues
+with some terminals; e.g., xterm always converting to unicode composed form.
+See also
+@uref{https://www.gnu.org/software/coreutils/quotes.html, Quoting file names}.
 @item shell-escape-always
 Like @samp{shell-escape}, but quote strings even if they would
 normally not require quoting.
@@ -8414,11 +8428,6 @@ this"} in the default C locale.  This looks nicer on many displays.
 @end table
 @end macro
 @quotingStyles
-
-You can specify the default value of the @option{--quoting-style} option
-with the environment variable @env{QUOTING_STYLE}@.  If that environment
-variable is not set, the default value is @samp{shell-escape} when the
-output is a terminal, and @samp{literal} otherwise.
 
 @optItem{ls,--show-control-chars,}
 Print nongraphic characters as-is in file names.
