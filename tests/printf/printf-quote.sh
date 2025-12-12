@@ -22,7 +22,8 @@ print_ver_ printf
 prog='env printf'
 
 # Equivalent output to ls --quoting=shell-escape
-$prog '%q\n' '' "'" a 'a b' '~a' 'a~' "$($prog %b 'a\r')" > out
+$prog '%q\n' '' "'" a 'a b' '~a' 'a~' \
+ "$($prog %b 'a\r')" "$($prog "\001'\001")" > out
 cat <<\EOF > exp || framework_failure_
 ''
 "'"
@@ -31,6 +32,7 @@ a
 '~a'
 a~
 'a'$'\r'
+''$'\001'\'''$'\001'
 EOF
 compare exp out || fail=1
 
