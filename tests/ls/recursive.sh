@@ -61,39 +61,9 @@ compare exp out || fail=1
 
 # Check that we don't run out of file descriptors when visiting
 # directories recursively.
-mkdir -p 1/2/3/4/5/6/7/8/9/10 || framework_failure_
-(ulimit -n 7 && ls -R 1 > out) || fail=1
-cat <<EOF > exp
-1:
-2
-
-1/2:
-3
-
-1/2/3:
-4
-
-1/2/3/4:
-5
-
-1/2/3/4/5:
-6
-
-1/2/3/4/5/6:
-7
-
-1/2/3/4/5/6/7:
-8
-
-1/2/3/4/5/6/7/8:
-9
-
-1/2/3/4/5/6/7/8/9:
-10
-
-1/2/3/4/5/6/7/8/9/10:
-EOF
-
-compare exp out || fail=1
+mkdir -p $(seq 30 | tr '\n' '/') || framework_failure_
+(ulimit -n 20 && ls -R 1 > out 2> err) || fail=1
+test $(wc -l < out) = 88 || fail=1
+test $(wc -l < err) = 0 || fail=1
 
 Exit $fail
