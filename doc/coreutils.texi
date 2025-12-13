@@ -9280,6 +9280,17 @@ Change lowercase letters to uppercase.
 
 The @samp{lcase} and @samp{ucase} conversions are mutually exclusive.
 
+@c https://austingroupbugs.net/view.php?id=1959
+POSIX leaves the behavior of @samp{lcase} and @samp{ucase} unspecified
+on multibyte characters.  GNU @command{dd} supports only unibyte
+conversion, because multibyte characters may cross block boundaries and
+case conversion may change the length of characters.
+
+POSIX also leaves the behavior of @samp{lcase} and @samp{ucase}
+unspecified if used with @samp{ascii}, @samp{ebcdic}, or @samp{ibm}.
+GNU @command{dd} will perform the case conversion and then perform the
+character set conversion.
+
 @item sparse
 @opindex sparse
 Try to seek rather than write NUL output blocks.
