@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  release:
+    types: [ created ]
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        default: 'v9.9'
+
+concurrency:
+  group: ${{ github.ref }}-tarball
+
+jobs:
+  upload-official-tarball-to-github:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Strip v from version
+        run: |
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            VERSION="${{ github.event.release.tag_name }}"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            exit 1
+          fi
+          echo "VERSION=${VERSION:1}" | tee $GITHUB_ENV
+      - name: Download official tarball
+        run: |
+          timeout 120 curl https://ftp.gnu.org/gnu/coreutils/coreutils-${{ env.VERSION }}.tar.gz > coreutils-${{ env.VERSION }}.tar.gz
+      - name: Upload the tarball to GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            coreutils-${{ env.VERSION }}.tar.gz
+          tag_name: v${{ env.VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
