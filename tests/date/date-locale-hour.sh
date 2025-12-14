@@ -34,6 +34,26 @@ for loc in "$LOCALE_FR_UTF8" 'en_US.UTF-8'; do
     *"$compare_time"*) ;;
     *) fail=1 ;;
   esac
+
+  # The use of %r requires checking 'locale t_fmt_ampm' for the format.
+  # The use of %X requires checking 'locale t_fmt' for the format.
+  fmt=$(LC_ALL="$loc" locale date_fmt)
+  case "$fmt" in
+    *%r*) fmt=$(LC_ALL="$loc" locale t_fmt_ampm) ;;
+    *%X*) fmt=$(LC_ALL="$loc" locale t_fmt) ;;
+  esac
+
+  case "$fmt" in
+    *%[IHRT]*)  compare_time='01:00' ;;
+    *%_[IH]*)   compare_time=' 1:00' ;;
+    *%[lk]*)    compare_time=' 1:00' ;;
+    *) skip_ 'unrecognised locale hour format';;
+  esac
+
+  case $(LC_ALL="$loc" date -d '2025-10-11T01:00') in
+    *"$compare_time"*) ;;
+    *) fail=1 ;;
+  esac
 done
 
 
