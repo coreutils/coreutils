@@ -23,12 +23,16 @@ cleanup_() { rm -rf "$other_partition_tmpdir"; }
 
 null=mv-null
 dir=mv-dir
+dir2=mv-dir2
 
 rm -f $null || framework_failure_
 mknod $null p || framework_failure_
 test -p $null || framework_failure_
 mkdir -p $dir/a/b/c $dir/d/e/f || framework_failure_
 touch $dir/a/b/c/file1 $dir/d/e/f/file2 || framework_failure_
+mkdir $dir2/ || framework_failure_
+mknod $dir2/$null p || framework_failure_
+test -p $dir2/$null || framework_failure_
 
 # We used to...
 # exit 77 here to indicate that we couldn't run the test.
@@ -36,13 +40,15 @@ touch $dir/a/b/c/file1 $dir/d/e/f/file2 || framework_failure_
 # from an OpenBSD system, the above mknod fails.
 # It's not worth making an exception any more.
 
-timeout 60 mv --verbose $null $dir "$other_partition_tmpdir" > out || fail=1
+timeout 60 mv -v $null $dir $dir2 "$other_partition_tmpdir" > out || fail=1
 # Make sure the files are gone.
 test -p $null && fail=1
 test -d $dir && fail=1
+test -p $dir2/$null && fail=1
 # Make sure they were moved.
 test -p "$other_partition_tmpdir/$null" || fail=1
 test -d "$other_partition_tmpdir/$dir/a/b/c" || fail=1
+test -p "$other_partition_tmpdir/$dir2/$null" || fail=1
 
 # POSIX says rename (A, B) can succeed if A and B are on different file systems,
 # so ignore chatter about when files are removed and copied rather than renamed.
@@ -65,6 +71,8 @@ cat <<EOF | sort > exp
 '$dir/d/e' -> 'XXX/$dir/d/e'
 '$dir/d/e/f' -> 'XXX/$dir/d/e/f'
 '$dir/d/e/f/file2' -> 'XXX/$dir/d/e/f/file2'
+'$dir2' -> 'XXX/$dir2'
+'$dir2/$null' -> 'XXX/$dir2/$null'
 EOF
 
 compare exp out2 || fail=1
