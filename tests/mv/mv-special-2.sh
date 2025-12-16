@@ -59,4 +59,11 @@ mv --verbose blah xdev &&
 returns_ 1 test -L blah &&
 test -L xdev/blah || fail=1
 
+if python -c "import socket as s; s.socket(s.AF_UNIX).bind('test.sock')" &&
+   test -S 'test.sock'; then
+  mv --verbose test.sock xdev &&
+  returns_ 1 test -S test.sock &&
+  test -S xdev/test.sock || fail=1
+fi
+
 Exit $fail
