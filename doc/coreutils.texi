@@ -13794,27 +13794,27 @@ you often want to verify its signature or checksum right away.
 The inefficient way to do it is simply:
 
 @example
-wget https://example.com/some.iso && sha1sum some.iso
+wget https://example.com/some.iso && cksum -a sha2 -l 256 some.iso
 @end example
 
 One problem with the above is that it makes you wait for the
-download to complete before starting the time-consuming SHA1 computation.
-Perhaps even more importantly, the above requires reading
+download to complete before starting the time-consuming SHA-256
+computation.  Perhaps even more importantly, the above requires reading
 the DVD image a second time (the first was from the network).
 
 The efficient way to do it is to interleave the download
-and SHA1 computation.  Then, you'll get the checksum for
+and SHA-256 computation.  Then, you'll get the checksum for
 free, because the entire process parallelizes so well:
 
 @example
 # slightly contrived, to demonstrate process substitution
 wget -O - https://example.com/dvd.iso \
-  | tee >(sha1sum > dvd.sha1) > dvd.iso
+  | tee >(cksum -a sha2 -l 256 > dvd.sha256) > dvd.iso
 @end example
 
 That makes @command{tee} write not just to the expected output file,
-but also to a pipe running @command{sha1sum} and saving the final
-checksum in a file named @file{dvd.sha1}.
+but also to a pipe running @command{cksum} and saving the final
+checksum in a file named @file{dvd.sha256}.
 
 However, this example relies on a feature of modern shells
 called @dfn{process substitution}
@@ -13835,17 +13835,17 @@ a more conventional and portable use of @command{tee} is even better:
 
 @example
 wget -O - https://example.com/dvd.iso \
-  | tee dvd.iso | sha1sum > dvd.sha1
+  | tee dvd.iso | cksum -a sha2 -l 256 > dvd.sha256
 @end example
 
 You can extend this example to make @command{tee} write to two processes,
-computing MD5 and SHA1 checksums in parallel.  In this case,
+computing SHA-256 and SHA3-256 checksums in parallel.  In this case,
 process substitution is required:
 
 @example
 wget -O - https://example.com/dvd.iso \
-  | tee >(sha1sum > dvd.sha1) \
-        >(md5sum > dvd.md5) \
+  | tee >(cksum -a sha2 -l 256 > dvd.sha256) \
+        >(cksum -a sha3 -l 256 > dvd.sha3) \
   > dvd.iso
 @end example
 
@@ -13906,7 +13906,7 @@ PIPE_BUF size at a time), that's possible with a construct like:
 @example
 tardir=your-pkg-M.N
 tar chof - "$tardir" \
-  | tee >(md5sum --tag) > >(sha256sum --tag) \
+  | tee >(cksum -a sha2 -l 256) > >(cksum -a sha3 -l 256) \
   | sort | gpg --clearsign > your-pkg-M.N.tar.sig
 @end example
 
