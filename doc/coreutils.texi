@@ -1837,6 +1837,11 @@ I.e., input and output items are delimited with ASCII NUL.
 On systems like MS-DOS that distinguish between text and binary files,
 @command{tac} reads and writes in binary mode.
 
+@vindex TMPDIR
+Non-seekable input is buffered to @env{$TMPDIR}, defaulting to @file{/tmp},
+if the @env{TMPDIR} environment variable is not set
+or the location is not available.
+
 @exitstatus
 
 Example:
@@ -3346,10 +3351,13 @@ are not split even if they overlap a partition, the files written
 can be larger or smaller than the partition size, and even empty
 if a line/record is so long as to completely overlap the partition.
 
+@vindex TMPDIR
 When the input is a pipe or some other special file where the size
 cannot easily be determined, there is no trouble for @samp{r} mode
-because the size of the input is irrelevant.  For other modes, such an
-input is first copied to a temporary to determine its size.
+because the size of the input is irrelevant.  For other modes,
+such an input's size is determined by first copying to @env{$TMPDIR},
+or @file{/tmp} if the @env{TMPDIR} environment variable is not set
+or the location is not available.
 
 @optItem{split,-a,@w{ }@var{length}}
 @optItemx{split,--suffix-length,=@var{length}}

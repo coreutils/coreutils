@@ -269,6 +269,10 @@ CHUNKS may be:\n\
   r/N     like 'l' but use round robin distribution\n\
   r/K/N   likewise but only output Kth of N to standard output\n\
 "), stdout);
+      fputs (_("\n\
+-n (except -nr) will buffer to $TMPDIR, defaulting to /tmp,\n\
+if the input size cannot easily be determined.\n\
+"), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

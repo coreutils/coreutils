@@ -133,6 +133,9 @@ Write each FILE to standard output, last line first.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\n\
+Non-seekable input is buffered to $TMPDIR, defaulting to /tmp.\n\
+"), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
