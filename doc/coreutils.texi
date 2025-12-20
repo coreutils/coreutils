@@ -8052,7 +8052,7 @@ eval $(dircolors -p | perl -pe \
 and on a @code{dirent.d_type}-capable file system, @command{ls}
 will perform only one @code{stat} call per command line argument.
 
-@optItem{ls,F,}
+@optItem{ls,-F,}
 @optItemx{ls,--classify,[=@var{when}]}
 @itemx --indicator-style=classify
 @opindex --indicator-style
