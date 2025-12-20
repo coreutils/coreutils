@@ -19,6 +19,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ runcon
 
+runcon --version || fail=1
+
 # Create an executable that's sure to fail
 printf '%s\n' '#!/bin/sh' 'exit 1' >> 'true' || framework_failure_
 chmod a+x 'true' || framework_failure_
