@@ -1,2 +1,2 @@
 #include "ls.h"
-int ls_mode = LS_MULTI_COL;
+enum ls_modes ls_mode = LS_MULTI_COL;

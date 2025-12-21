@@ -1,7 +1,10 @@
-/* This is for the 'uname' program. */
-#define UNAME_UNAME 1
+enum uname_modes
+{
+  /* This is for the 'uname' program.  */
+  UNAME_UNAME,
 
-/* This is for the 'arch' program.  */
-#define UNAME_ARCH 2
+  /* This is for the 'arch' program.  */
+  UNAME_ARCH
+};
 
-extern int uname_mode;
+extern enum uname_modes uname_mode;

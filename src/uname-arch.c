@@ -1,2 +1,2 @@
 #include "uname.h"
-int uname_mode = UNAME_ARCH;
+enum uname_modes uname_mode = UNAME_ARCH;
