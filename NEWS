@@ -12,6 +12,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   This also applies to the sha*sum and b2sum utilities.
   [This bug was present in "the beginning".]
 
+  'numfmt' no longer drops custom suffixes from numbers it cannot fully parse.
+  [bug introduced with numfmt in coreutils-8.21]
+
   'timeout' will now propagate all terminating signals to the monitored command.
   Previously 'timeout' could have exited and left the monitored command running.
   [bug introduced with timeout in coreutils-7.0]

@@ -1320,14 +1320,17 @@ print_padded_number (intmax_t padding)
 
 /* Converts the TEXT number string to the requested representation,
    and handles automatic suffix addition.  */
-static int
+static bool
 process_suffixed_number (char *text, long double *result,
                          size_t *precision, long int field)
 {
+  char saved_suffix = '\0';
+
   if (suffix)
     {
       if (mbs_endswith (text, suffix))
         {
+          saved_suffix = *(text + strlen (text) - strlen (suffix));
           *(text + strlen (text) - strlen (suffix)) = '\0';
           devmsg ("trimming suffix %s\n", quote (suffix));
         }
@@ -1361,7 +1364,14 @@ process_suffixed_number (char *text, long double *result,
 
   *result = val;
 
-  return (e == SSE_OK || e == SSE_OK_PRECISION_LOSS);
+  if (e == SSE_OK || e == SSE_OK_PRECISION_LOSS)
+    return true;
+  else
+    {
+      if (saved_suffix)
+        *(text + strlen (text)) = saved_suffix;
+      return false;
+    }
 }
 
 /* Return true if the current charset is UTF-8.  */

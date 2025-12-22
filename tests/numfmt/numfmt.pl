@@ -157,6 +157,10 @@ my @Tests =
      ['suf-18', '--suffix=Foo --to=si   7000FooF',
               {ERR => "$prog: invalid suffix in input: '7000FooF'\n"},
               {EXIT => '2'}],
+     ['suf-18.1', '--invalid=ignore --suffix=QWE 12q3QWE', {OUT=>"12q3QWE"}],
+     ['suf-18.2', '--invalid=abort --suffix=QWE 12q3QWE',
+              {ERR => "$prog: invalid suffix in input: '12q3'\n"},
+              {EXIT => '2'}],
      # space(s) between number and suffix.  Note only field 1 is used
      # by default so specify the NUL delimiter to consider the whole "line".
      ['suf-19', "-d '' --from=si '4.0 K'",         {OUT => "4000"}],
