@@ -22,6 +22,7 @@ getlimits_
 
 vm=$(get_min_ulimit_v_ returns_ 0 cut -b1 /dev/null) \
   || skip_ 'shell lacks ulimit, or ASAN enabled'
+vm=$(($vm+1000))  # https://bugzilla.redhat.com/2424302
 
 # Ensure we can cut up to our sentinel value.
 CUT_MAX=$(expr $UINTMAX_MAX - 1) || framework_failure_
