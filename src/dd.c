@@ -2379,7 +2379,6 @@ synchronize_output (void)
 int
 main (int argc, char **argv)
 {
-  int exit_status;
   off_t offset;
 
   install_signal_handlers ();
@@ -2472,20 +2471,17 @@ main (int argc, char **argv)
               int ftruncate_errno = errno;
               struct stat stdout_stat;
               if (ifstat (STDOUT_FILENO, &stdout_stat) != 0)
-                {
-                  diagnose (errno, _("cannot fstat %s"), quoteaf (output_file));
-                  exit_status = EXIT_FAILURE;
-                }
+                error (EXIT_FAILURE, errno, _("cannot fstat %s"),
+                       quoteaf (output_file));
               else if (S_ISREG (stdout_stat.st_mode)
                        || S_ISDIR (stdout_stat.st_mode)
                        || S_TYPEISSHM (&stdout_stat))
                 {
                   intmax_t isize = size;
-                  diagnose (ftruncate_errno,
-                            _("failed to truncate to %jd bytes"
-                              " in output file %s"),
-                            isize, quoteaf (output_file));
-                  exit_status = EXIT_FAILURE;
+                  error (EXIT_FAILURE, ftruncate_errno,
+                         _("failed to truncate to %jd bytes"
+                           " in output file %s"),
+                         isize, quoteaf (output_file));
                 }
             }
         }
@@ -2494,11 +2490,9 @@ main (int argc, char **argv)
   start_time = gethrxtime ();
   next_time = start_time + XTIME_PRECISION;
 
-  exit_status = dd_copy ();
-
+  int copy_status = dd_copy ();
   int sync_status = synchronize_output ();
-  if (sync_status)
-    exit_status = sync_status;
+  int exit_status = copy_status | sync_status;
 
   if (max_records == 0 && max_bytes == 0)
     {

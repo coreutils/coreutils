@@ -583,6 +583,7 @@ all_tests =					\
   tests/dd/ascii.sh				\
   tests/dd/conv-case.sh				\
   tests/dd/direct.sh				\
+  tests/dd/fail-ftruncate-fstat.sh		\
   tests/dd/misc.sh				\
   tests/dd/no-allocate.sh			\
   tests/dd/nocache.sh				\
