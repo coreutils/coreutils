@@ -18,52 +18,17 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ csplit
-require_gcc_shared_
 
-if ! test -w /dev/full || ! test -c /dev/full; then
-  skip_ '/dev/full is required'
-fi
+# Use root instead of LD_PRELOAD for static binary
+require_root_
+mkdir small || framework_failure_
+mount -t tmpfs -o size=1k tmpfs small  || skip_ 'Unable to mount small tmpfs'
+
+cleanup_() { umount small; rm -d small }
 
 # Ensure error messages are in English
 LC_ALL=C
 export LC_ALL
-
-# Replace fwrite and ferror, always returning an error
-cat > k.c <<'EOF' || framework_failure_
-#include <stdio.h>
-#include <errno.h>
-
-#undef fwrite
-#undef fwrite_unlocked
-
-size_t
-fwrite (const void *ptr, size_t size, size_t nitems, FILE *stream)
-{
-  if (stream == stderr)
-    {
-      /* Perform the normal operation of fwrite.  */
-      const char *p = ptr;
-      size_t count = size * nitems;
-      size_t i;
-      for (i = 0; i < count; i++)
-        if (putc ((unsigned char) *p++, stream) == EOF)
-          break;
-      return i / size;
-    }
-  else
-    {
-      fclose (fopen ("preloaded","w")); /* marker for preloaded interception */
-      errno = ENOSPC;
-      return 0;
-    }
-}
-
-size_t
-fwrite_unlocked (const void *ptr, size_t size, size_t nitems, FILE *stream)
-{
-  return fwrite (ptr, size, nitems, stream);
-}
-EOF
 
 # Get the wording of the OS-dependent ENOSPC message
 returns_ 1 seq 1 >/dev/full 2>msgt || framework_failure_
@@ -73,18 +38,12 @@ sed 's/seq: write error: //' msgt > msg || framework_failure_
 { printf "%s" "csplit: write error for 'xx01': " ; cat msg ; } > exp \
   || framework_failure_
 
-# compile/link the interception shared library:
-gcc_shared_ k.c k.so \
-  || skip_ 'failed to build forced-fwrite-failure shared library'
-
-# Split the input, and force fwrite() failure -
+# Force write error
 # the 'csplit' command should fail with exit code 1
 # (checked with 'returns_ 1 ... || fail=1')
-seq 10 |
-(export LD_PRELOAD=$LD_PRELOAD:./k.so
- returns_ 1 csplit - 1 4 2>out) || fail=1
-
-test -e preloaded || skip_ 'LD_PRELOAD interception failed'
+( cd small && seq 2000 | (returns_ 1 csplit - 1 2>../out) ) || fail=1
+# csplit should cleanup broken files
+test -e small/xx01 && fail=1
 
 # Ensure we got the expected error message
 compare exp out || fail=1
