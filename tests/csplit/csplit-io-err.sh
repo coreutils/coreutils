@@ -1,7 +1,7 @@
 #!/bin/sh
-# Ensure we handle i/o errors correctly in csplit
+# Ensure we handle i/o errors correctly in csplit via /dev/full
 
-# Copyright (C) 2015-2025 Free Software Foundation, Inc.
+# Copyright (C) 2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,75 +18,22 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ csplit
-require_gcc_shared_
 
-if ! test -w /dev/full || ! test -c /dev/full; then
-  skip_ '/dev/full is required'
-fi
-
-# Ensure error messages are in English
-LC_ALL=C
-export LC_ALL
-
-# Replace fwrite and ferror, always returning an error
-cat > k.c <<'EOF' || framework_failure_
-#include <stdio.h>
-#include <errno.h>
-
-#undef fwrite
-#undef fwrite_unlocked
-
-size_t
-fwrite (const void *ptr, size_t size, size_t nitems, FILE *stream)
-{
-  if (stream == stderr)
-    {
-      /* Perform the normal operation of fwrite.  */
-      const char *p = ptr;
-      size_t count = size * nitems;
-      size_t i;
-      for (i = 0; i < count; i++)
-        if (putc ((unsigned char) *p++, stream) == EOF)
-          break;
-      return i / size;
-    }
-  else
-    {
-      fclose (fopen ("preloaded","w")); /* marker for preloaded interception */
-      errno = ENOSPC;
-      return 0;
-    }
-}
-
-size_t
-fwrite_unlocked (const void *ptr, size_t size, size_t nitems, FILE *stream)
-{
-  return fwrite (ptr, size, nitems, stream);
-}
-EOF
+cp -sf /dev/full xx01 || skip_ '/dev/full is required'
 
 # Get the wording of the OS-dependent ENOSPC message
 returns_ 1 seq 1 >/dev/full 2>msgt || framework_failure_
 sed 's/seq: write error: //' msgt > msg || framework_failure_
 
 # Create the expected error message
-{ printf "%s" "csplit: write error for 'xx01': " ; cat msg ; } > exp \
-  || framework_failure_
+{ printf "%s" "csplit: xx01: " ; cat msg ; } > exp || framework_failure_
 
-# compile/link the interception shared library:
-gcc_shared_ k.c k.so \
-  || skip_ 'failed to build forced-fwrite-failure shared library'
-
-# Split the input, and force fwrite() failure -
 # the 'csplit' command should fail with exit code 1
-# (checked with 'returns_ 1 ... || fail=1')
-seq 10 |
-(export LD_PRELOAD=$LD_PRELOAD:./k.so
- returns_ 1 csplit - 1 4 2>out) || fail=1
-
-test -e preloaded || skip_ 'LD_PRELOAD interception failed'
+seq 2 | returns_ 1 csplit - 1 2> err || fail=1
+# csplit should cleanup broken files
+test -e xx01 && fail=1
 
 # Ensure we got the expected error message
-compare exp out || fail=1
+compare exp err || fail=1
 
 Exit $fail
