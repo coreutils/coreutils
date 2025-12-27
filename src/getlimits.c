@@ -17,6 +17,7 @@
 /* Written by Pádraig Brady  */
 
 #include <config.h>             /* sets _FILE_OFFSET_BITS=64 etc. */
+#include <signal.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <float.h>
@@ -52,6 +53,14 @@
 
 #ifndef OFF64_T_MIN
 # define OFF64_T_MIN TYPE_MINIMUM (off64_t)
+#endif
+
+#ifndef SIGRTMIN
+# define SIGRTMIN 0
+# undef SIGRTMAX
+#endif
+#ifndef SIGRTMAX
+# define SIGRTMAX (SIGRTMIN - 1)
 #endif
 
 /* These are not interesting to print.
@@ -179,6 +188,8 @@ main (int argc, char **argv)
   print_float (LDBL);
 
   /* Other useful constants */
+  printf ("SIGRTMIN=%jd\n", (intmax_t) SIGRTMIN);
+  printf ("SIGRTMAX=%jd\n", (intmax_t) SIGRTMAX);
   printf ("IO_BUFSIZE=%ju\n", (uintmax_t) IO_BUFSIZE);
 
   return EXIT_SUCCESS;
