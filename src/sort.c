@@ -4440,6 +4440,8 @@ main (int argc, char **argv)
     sigemptyset (&caught_signals);
     for (size_t i = 0; i < nsigs; i++)
       {
+        if (term_sig[i] == SIGPIPE)
+          continue;  /* Handled below.  */
         sigaction (term_sig[i], nullptr, &act);
         if (act.sa_handler != SIG_IGN)
           sigaddset (&caught_signals, term_sig[i]);
@@ -4450,15 +4452,14 @@ main (int argc, char **argv)
     act.sa_flags = 0;
 
     for (size_t i = 0; i < nsigs; i++)
-      if (sigismember (&caught_signals, term_sig[i]))
-        sigaction (term_sig[i], &act, nullptr);
+      {
+        if (term_sig[i] == SIGPIPE)
+          continue;  /* Handled below.  */
+        if (sigismember (&caught_signals, term_sig[i]))
+          sigaction (term_sig[i], &act, nullptr);
+      }
   }
   signal (SIGCHLD, SIG_DFL); /* Don't inherit CHLD handling from parent.  */
-
-  /* Ignore SIGPIPE so write failures are reported via EPIPE errno.
-     For stdout, sort_die() will reraise SIGPIPE if it was originally SIG_DFL.
-     For compression pipes, sort_die() will exit with SORT_FAILURE.  */
-  default_SIGPIPE = (signal (SIGPIPE, SIG_IGN) == SIG_DFL);
 
   /* The signal mask is known, so it is safe to invoke exit_cleanup.  */
   atexit (exit_cleanup);
@@ -4741,6 +4742,11 @@ main (int argc, char **argv)
           usage (SORT_FAILURE);
         }
     }
+
+  /* Ignore SIGPIPE so write failures are reported via EPIPE errno.
+     For stdout, sort_die() will reraise SIGPIPE if it was originally SIG_DFL.
+     For compression pipes, sort_die() will exit with SORT_FAILURE.  */
+  default_SIGPIPE = (signal (SIGPIPE, SIG_IGN) == SIG_DFL);
 
   if (files_from)
     {
