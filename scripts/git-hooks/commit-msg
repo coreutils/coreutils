@@ -24,7 +24,7 @@ my @valid = qw(
     sum sync tac tail tee test timeout touch tr true truncate tsort
     tty uname unexpand uniq unlink uptime users vdir wc who whoami yes
 
-    all copy gnulib tests maint doc build scripts sha\*sum
+    all copy getlimits gnulib tests maint doc build scripts sha\*sum
     );
 my $v_or = join '|', @valid;
 my $valid_regex = qr/^(?:$v_or)$/;
