@@ -317,7 +317,6 @@ all_tests =					\
   tests/csplit/csplit-1000.sh			\
   tests/csplit/csplit-heap.sh			\
   tests/csplit/csplit-io-err.sh			\
-  tests/csplit/csplit-io-err-2.sh			\
   tests/csplit/csplit-suppress-matched.pl	\
   tests/date/date-debug.sh			\
   tests/date/date-ethiopia.sh			\

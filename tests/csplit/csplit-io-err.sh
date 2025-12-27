@@ -1,7 +1,7 @@
 #!/bin/sh
-# Ensure we handle i/o errors correctly in csplit
+# Ensure we handle i/o errors correctly in csplit via /dev/full
 
-# Copyright (C) 2015-2025 Free Software Foundation, Inc.
+# Copyright (C) 2025 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,33 +19,21 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ csplit
 
-# Use root instead of LD_PRELOAD for static binary
-require_root_
-mkdir small || framework_failure_
-mount -t tmpfs -o size=1k tmpfs small  || skip_ 'Unable to mount small tmpfs'
-
-cleanup_() { umount small; rm -d small }
-
-# Ensure error messages are in English
-LC_ALL=C
-export LC_ALL
+cp -sf /dev/full xx01 || skip_ '/dev/full is required'
 
 # Get the wording of the OS-dependent ENOSPC message
 returns_ 1 seq 1 >/dev/full 2>msgt || framework_failure_
 sed 's/seq: write error: //' msgt > msg || framework_failure_
 
 # Create the expected error message
-{ printf "%s" "csplit: write error for 'xx01': " ; cat msg ; } > exp \
-  || framework_failure_
+{ printf "%s" "csplit: xx01: " ; cat msg ; } > exp || framework_failure_
 
-# Force write error
 # the 'csplit' command should fail with exit code 1
-# (checked with 'returns_ 1 ... || fail=1')
-( cd small && seq 2000 | (returns_ 1 csplit - 1 2>../out) ) || fail=1
+seq 2 | returns_ 1 csplit - 1 2> err || fail=1
 # csplit should cleanup broken files
-test -e small/xx01 && fail=1
+test -e xx01 && fail=1
 
 # Ensure we got the expected error message
-compare exp out || fail=1
+compare exp err || fail=1
 
 Exit $fail
