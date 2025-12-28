@@ -9,9 +9,6 @@
 # This test simulates that situation by intercepting stat for a nonexistent
 # destination, D, and making the stat fill in the result struct for another
 # file and return 0.
-#
-# This test is skipped on systems that lack LD_PRELOAD support; that's fine.
-# Similarly, on a system that lacks <dlfcn.h> or __xstat, skipping it is fine.
 
 # Copyright (C) 2012-2025 Free Software Foundation, Inc.
 
@@ -30,46 +27,11 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
-require_gcc_shared_
 
-# Replace each stat call with a call to this wrapper.
-cat > k.c <<'EOF' || framework_failure_
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <sys/types.h>
-#include <dlfcn.h>
+touch S || framework_failure_
 
-#define __xstat __xstat_orig
+strace -o strace.log -P D -e inject=%stat:retval=0 -e inject=openat:error=ENOENT:when=1 cp S D || fail=1
+grep INJECTED strace.log || skip_ 'syscall openat is not injected?'
 
-#include <sys/stat.h>
-#include <stddef.h>
-
-#undef __xstat
-
-int
-__xstat (int ver, const char *path, struct stat *st)
-{
-  static int (*real_stat)(int ver, const char *path, struct stat *st) = NULL;
-  fclose(fopen("preloaded", "w"));
-  if (!real_stat)
-    real_stat = dlsym (RTLD_NEXT, "__xstat");
-  /* When asked to stat nonexistent "d",
-     return results suggesting it exists. */
-  return real_stat (ver, *path == 'd' && path[1] == 0 ? "d2" : path, st);
-}
-EOF
-
-# Then compile/link it:
-gcc_shared_ k.c k.so \
-  || framework_failure_ 'failed to build shared library'
-
-touch d2 || framework_failure_
-echo xyz > src || framework_failure_
-
-# Finally, run the test:
-LD_PRELOAD=$LD_PRELOAD:./k.so cp src d || fail=1
-
-test -f preloaded || skip_ 'LD_PRELOAD was ineffective?'
-
-compare src d || fail=1
+compare S D || fail=1
 Exit $fail
