@@ -793,6 +793,13 @@ sub get_option_value
 	kark $err, $this_program, $opt, $prog, $extra;
     }
 
+    # Strip ANSI SGR formatting codes (colors, bold, etc.)
+    $value =~ s/\x1b\[[0-9;]*m//g;
+
+    # Strip OSC 8 hyperlinks (keep just the display text)
+    # TODO: Convert to roff \X escapes while preserving help2man's formatting
+    $value =~ s/\x1b\]8;;[^\x07]*\x07(.*?)\x1b\]8;;\x07/$1/gs;
+
     $value;
 }
 
