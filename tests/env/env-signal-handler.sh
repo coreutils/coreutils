@@ -23,6 +23,8 @@ trap_sigpipe_or_skip_
 # /bin/sh has an intermittent failure in ignoring SIGPIPE on OpenIndiana 11
 # so we require bash as discussed at:
 # https://lists.gnu.org/archive/html/coreutils/2020-03/msg00004.html
+# This test also relies on bash's 'kill' builtin which allows the signal name
+# "RTMIN" and "RTMAX" if those real-time signals are supported.
 require_bash_as_SHELL_
 
 # Paraphrasing https://bugs.gnu.org/34488#8:
@@ -127,6 +129,33 @@ timeout: sending signal KILL to command 'env'
 EOF
 timeout_sig=PIPE env_opt='--ignore-signal=PIPE' \
   retry_delay_ env_ignore_delay_ .1 6 || fail=1
+
+if kill -l RTMIN RTMAX; then
+  for sig in RTMIN RTMAX; do
+    # Baseline test - ignore signal handler
+    # -------------------------------------
+    # Terminate 'sleep' with $sig
+    # All real-time signals terminate the program by default.
+    cat <<EOF >exp || framework_failure_
+timeout: sending signal $sig to command 'env'
+EOF
+    timeout_sig=$sig env_opt='' \
+      retry_delay_ env_ignore_delay_ .1 6 || fail=1
+
+    # env test - ignore signal handler
+    # --------------------------------
+    # Use env to ignore $sig - "sleep" should continue running
+    # after timeout sends $sig, and be killed using SIGKILL.
+    cat <<EOF >exp || framework_failure_
+timeout: sending signal $sig to command 'env'
+timeout: sending signal KILL to command 'env'
+EOF
+    timeout_sig=$sig env_opt="--ignore-signal=$sig" \
+      retry_delay_ env_ignore_delay_ .1 6 || fail=1
+    timeout_sig=$sig env_opt='--ignore-signal' \
+      retry_delay_ env_ignore_delay_ .1 6 || fail=1
+  done
+fi
 
 # env test --list-signal-handling
 for sig in INT PIPE; do
