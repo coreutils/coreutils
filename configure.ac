@@ -138,8 +138,8 @@ AM_CONDITIONAL([SINGLE_BINARY_HARD], [test "$gl_single_binary" == hardlinks])
 
 AC_ARG_ENABLE([bold-man-page-references],
   [AS_HELP_STRING([--disable-bold-man-page-references],
-     [When generating man pages, do not apply bold style around any
-      references like name(1) etc.])],
+     [When generating man pages, or displaying --help, do not apply bold style
+      around any references like name(1) or --option references etc.])],
   [gl_bold_manpages=yes ;
    case $enableval in
      no|yes) gl_bold_manpages=$enableval ;;
@@ -148,6 +148,9 @@ AC_ARG_ENABLE([bold-man-page-references],
    esac],
   [gl_bold_manpages=yes]
 )
+if test "$gl_bold_manpages" != no; then
+  AC_DEFINE([BOLD_MAN_REFS], [1], [Whether to markup references as bold])
+fi
 AM_CONDITIONAL([BOLD_MAN_REFS], [test "$gl_bold_manpages" != no])
 
 AC_ARG_ENABLE([gcc-warnings],

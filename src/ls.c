@@ -5376,7 +5376,14 @@ oputs (char const *option)
               url_program, (int) anchor_len, option_text);
     }
   fputs ("\a", stdout);
+#ifdef BOLD_MAN_REFS
+  /* Note help2man strips this and will reinstate with --bold-refs.  */
+  fputs ("\033[1m", stdout);
+#endif
   fwrite (option_text, 1, desc_text - option_text, stdout);
+#ifdef BOLD_MAN_REFS
+  fputs ("\033[0m", stdout);
+#endif
   fputs ("\033]8;;\a", stdout);
 
   fputs (desc_text, stdout);
