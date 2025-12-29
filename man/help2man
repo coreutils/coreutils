@@ -724,6 +724,19 @@ my @post = (_('ENVIRONMENT'), _('FILES'), _('AUTHOR'),
     _('REPORTING BUGS'), _('COPYRIGHT'), _('SEE ALSO'));
 my %filter = map { $_ => 1 } @pre, @post;
 
+# Global storage for OSC 8 hyperlink URLs
+our @hyperlink_urls;
+
+# Helper to convert hyperlink markers to roff \X escapes
+sub convert_hyperlink {
+    my ($dashes, $idx, $text) = @_;
+    my $url = $hyperlink_urls[$idx];
+    my $full = $dashes . $text;
+    $full =~ s/\\f[BIRP]//g;
+    $full = "\\fB$full\\fP" if $opt_bold_refs;
+    return "\\X'tty: link $url'$full\\X'tty: link'";
+}
+
 # Output content.
 my %done;
 for my $sect (@pre, (grep !$filter{$_}, @sections), @post)
@@ -750,6 +763,10 @@ for my $sect (@pre, (grep !$filter{$_}, @sections), @post)
 	    s/\x81/\\&'/g;
 	    s/\x82/\\e/g;
 	    s/\x83/\\-/g;
+
+	    # Convert hyperlink markers to roff \X escape sequences
+	    s{((?:\\f.)?\\-(?:\\-)?(?:\\f.)?)\x01(\d+)\x02(.*?)\x03}
+	     {convert_hyperlink($1, $2, $3)}gse;
 
 	    # Convert some latin1 chars to troff equivalents.
 	    s/\xa0/\\ /g;  # non-breaking space
@@ -796,9 +813,13 @@ sub get_option_value
     # Strip ANSI SGR formatting codes (colors, bold, etc.)
     $value =~ s/\x1b\[[0-9;]*m//g;
 
-    # Strip OSC 8 hyperlinks (keep just the display text)
-    # TODO: Convert to roff \X escapes while preserving help2man's formatting
-    $value =~ s/\x1b\]8;;[^\x07]*\x07(.*?)\x1b\]8;;\x07/$1/gs;
+    # Convert OSC 8 hyperlinks to markers placed after leading dashes
+    # This preserves help2man's option detection (which looks for /^  +[-+]/)
+    $value =~ s/\x1b\]8;;([^\x07]*)\x07(--?)(.*?)\x1b\]8;;\x07/{
+        my $idx = scalar @hyperlink_urls;
+        push @hyperlink_urls, $1;
+        "$2\x01$idx\x02$3\x03";
+    }/gse;
 
     $value;
 }
