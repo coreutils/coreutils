@@ -61,4 +61,16 @@ EOF
 
 compare exp out || fail=1
 
+# Test du -l (--count-links) without -a flag
+# This should count hard-linked files separately
+mkdir test-dir &&
+echo 'content' > test-dir/file1 &&
+ln test-dir/file1 test-dir/file2 || framework_failure_
+du_normal=$(du test-dir | cut -f1) || fail=1
+du_count_links=$(du -l test-dir | cut -f1) || fail=1
+# The count-links version should be larger
+if test "$du_normal" -gt 0; then
+  test "$du_count_links" -gt "$du_normal" || fail=1
+fi
+
 Exit $fail
