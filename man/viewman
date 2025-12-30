@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# Generate and view man page with less, for passed command name
+
+# Note to get man to behave like this you can also:
+# export MANROFFOPT=-P-i
+# export LESS=-R
+# export MANPAGER=less
+
+unset GROFF_NO_SGR
+unset HELP_NO_MARKUP
+
+hdir=$(dirname "$0")
+
+CONFIG_HEADER="$hdir"/../lib/config.h
+
+grep '^#define BOLD_MAN_REFS 1' $CONFIG_HEADER > /dev/null &&
+  BOLD_REFS=--bold-refs
+
+man="$1"; cmd="$1"
+test "$1" = 'test' && cmd='['
+test "$1" = '[' && man='test'
+test "$1" = 'install' && cmd='ginstall'
+test "$1" = 'ginstall' && man='install'
+
+"$hdir"/help2man \
+  --include="$hdir"/../man/$man.x \
+  $BOLD_REFS \
+  --loose-indent \
+  "$hdir"/../src/$cmd |
+preconv | # convert utf-8 chars like in Author names to groff compat
+groff -Tutf8 -man -P-i -rLL=${MANWIDTH:-$COLUMNS}n |
+less -R
