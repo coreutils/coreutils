@@ -580,6 +580,7 @@ all_tests =					\
   tests/df/unreadable.sh			\
   tests/df/total-unprocessed.sh			\
   tests/df/no-mtab-status.sh			\
+  tests/df/no-mtab-status-masked-proc.sh			\
   tests/df/skip-duplicates.sh			\
   tests/df/skip-rootfs.sh			\
   tests/dd/ascii.sh				\
