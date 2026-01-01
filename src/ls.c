@@ -5334,65 +5334,6 @@ calculate_columns (bool by_columns)
   return cols;
 }
 
-/* Output --option descriptions;
-   unconditionally formatted with ANSI format and hyperlink codes.
-   Any postprocessors like help2man etc. are expected to handle this.  */
-static void
-oputs (char const *option)
-{
-  static int help_no_sgr = -1;
-  if (help_no_sgr && (help_no_sgr = !!getenv ("HELP_NO_MARKUP")))
-    {
-      fputs (option, stdout);
-      return;
-    }
-
-  char const *option_text = strchr (option, '-');
-  assert (option_text);
-  size_t anchor_len = strcspn (option_text, ",=[ \n");
-
-  /* Set desc_text to spacing after the full option text */
-  char const *desc_text = option_text + anchor_len;
-  while (*desc_text && (! c_isspace (*desc_text) || *(desc_text + 1) == '-'))
-    desc_text++;
-
-  /* write spaces before option text. */
-  fwrite (option, 1, option_text - option, stdout);
-
-  /* write option text.  */
-#ifdef MANUAL_URL
-  char const *url_program = streq (PROGRAM_NAME, "[") ? "test" : PROGRAM_NAME;
-  /* Note single node manual doesn't work for ls, cksum, md5sum, sha*sum,
-     but use single node for --help or --version.. */
-  if (STREQ_LEN (option_text, "--help", 6)
-      || STREQ_LEN (option_text, "--version", 9))
-    {
-      printf ("\033]8;;%s%s#%s%.*s", PACKAGE_URL,
-              url_program, url_program, (int) anchor_len, option_text);
-    }
-  else
-    {
-      printf ("\033]8;;%s#%s%.*s", MANUAL_URL, url_program,
-              (int) anchor_len, option_text);
-    }
-  fputs ("\a", stdout);
-#endif
-#ifdef BOLD_MAN_REFS
-  /* Note help2man strips this and will reinstate with --bold-refs.  */
-  fputs ("\033[1m", stdout);
-#endif
-  fwrite (option_text, 1, desc_text - option_text, stdout);
-#ifdef BOLD_MAN_REFS
-  fputs ("\033[0m", stdout);
-#endif
-#ifdef MANUAL_URL
-  fputs ("\033]8;;\a", stdout);
-#endif
-
-  /* write description.  */
-  fputs (desc_text, stdout);
-}
-
 void
 usage (int status)
 {

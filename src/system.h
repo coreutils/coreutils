@@ -536,6 +536,73 @@ is_nul (void const *buf, size_t length)
 #define DECIMAL_DIGIT_ACCUMULATE(Accum, Digit_val)			\
   (!ckd_mul (&(Accum), Accum, 10) && !ckd_add (&(Accum), Accum, Digit_val))
 
+
+/* Output --option descriptions;
+   formatted with ANSI format and hyperlink codes.
+   Any postprocessors like help2man etc. are expected to handle this,
+   though it can be disabled in edge cases with the HELP_NO_MARKUP env var.  */
+#define oputs(option) oputs_ (PROGRAM_NAME, option)
+static inline void
+oputs_ (MAYBE_UNUSED char const* program, char const *option)
+{
+  static int help_no_sgr = -1;
+  if (help_no_sgr && (help_no_sgr = !!getenv ("HELP_NO_MARKUP")))
+    {
+      fputs (option, stdout);
+      return;
+    }
+
+  char const *option_text = strchr (option, '-');
+  if (!option_text)
+    {
+      fputs (option, stdout);
+      return;
+    }
+  size_t anchor_len = strcspn (option_text, ",=[ \n");
+
+  /* Set desc_text to spacing after the full option text */
+  char const *desc_text = option_text + anchor_len;
+  while (*desc_text && (! (*desc_text == ' ' || *desc_text == '\n')
+                        || *(desc_text + 1) == '-'))
+    desc_text++;
+
+  /* write spaces before option text. */
+  fwrite (option, 1, option_text - option, stdout);
+
+  /* write option text.  */
+#ifdef MANUAL_URL
+  char const *url_program = streq (program, "[") ? "test" : program;
+  /* Note single node manual doesn't work for ls, cksum, md5sum, sha*sum,
+     but use single node for --help or --version.. */
+  if (STREQ_LEN (option_text, "--help", 6)
+      || STREQ_LEN (option_text, "--version", 9))
+    {
+      printf ("\033]8;;%s%s#%s%.*s", PACKAGE_URL,
+              url_program, url_program, (int) anchor_len, option_text);
+    }
+  else
+    {
+      printf ("\033]8;;%s#%s%.*s", MANUAL_URL, url_program,
+              (int) anchor_len, option_text);
+    }
+  fputs ("\a", stdout);
+#endif
+#ifdef BOLD_MAN_REFS
+  /* Note help2man strips this and will reinstate with --bold-refs.  */
+  fputs ("\033[1m", stdout);
+#endif
+  fwrite (option_text, 1, desc_text - option_text, stdout);
+#ifdef BOLD_MAN_REFS
+  fputs ("\033[0m", stdout);
+#endif
+#ifdef MANUAL_URL
+  fputs ("\033]8;;\a", stdout);
+#endif
+
+  /* write description.  */
+  fputs (desc_text, stdout);
+}
+
 static inline void
 emit_stdin_note (void)
 {
