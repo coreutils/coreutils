@@ -38,4 +38,10 @@ test -e xab && fail=1
 # Ensure we got the expected error message
 compare exp err || fail=1
 
+rm xaa || framework_failure_
+# Similar for directory
+mkdir xaa || framework_failure_
+seq 2 | returns_ 1 split -b 1 2 || fail=1
+test -d xaa || fail=1
+
 Exit $fail
