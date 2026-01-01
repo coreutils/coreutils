@@ -59,6 +59,12 @@ mv --verbose blah xdev &&
 returns_ 1 test -L blah &&
 test -L xdev/blah || fail=1
 
+# Test moving a broken symlink to another file system
+ln -nsf nonexistent broken_symlink || framework_failure_
+mv --verbose broken_symlink xdev &&
+returns_ 1 test -L broken_symlink &&
+test -L xdev/broken_symlink || fail=1
+
 if python -c "import socket as s; s.socket(s.AF_UNIX).bind('test.sock')" &&
    test -S 'test.sock'; then
   mv --verbose test.sock xdev &&
