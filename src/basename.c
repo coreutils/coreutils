@@ -56,13 +56,20 @@ If specified, also remove a trailing SUFFIX.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -a, --multiple       support multiple arguments and treat each as a NAME\n\
-  -s, --suffix=SUFFIX  remove a trailing SUFFIX; implies -a\n\
-  -z, --zero           end each output line with NUL, not newline\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -a, --multiple\n\
+         support multiple arguments and treat each as a NAME\n\
+"));
+      oputs (_("\
+  -s, --suffix=SUFFIX\n\
+         remove a trailing SUFFIX; implies -a\n\
+"));
+      oputs (_("\
+  -z, --zero\n\
+         end each output line with NUL, not newline\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       printf (_("\
 \n\
 Examples:\n\

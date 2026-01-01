@@ -104,13 +104,25 @@ usage (int status)
 Output commands to set the LS_COLORS environment variable.\n\
 \n\
 Determine format of output:\n\
-  -b, --sh, --bourne-shell    output Bourne shell code to set LS_COLORS\n\
-  -c, --csh, --c-shell        output C shell code to set LS_COLORS\n\
-  -p, --print-database        output defaults\n\
-      --print-ls-colors       output fully escaped colors for display\n\
 "), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -b, --sh, --bourne-shell\n\
+         output Bourne shell code to set LS_COLORS\n\
+"));
+      oputs (_("\
+  -c, --csh, --c-shell\n\
+         output C shell code to set LS_COLORS\n\
+"));
+      oputs (_("\
+  -p, --print-database\n\
+         output defaults\n\
+"));
+      oputs (_("\
+      --print-ls-colors\n\
+         output fully escaped colors for display\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 If FILE is specified, read it to determine which colors to use for which\n\

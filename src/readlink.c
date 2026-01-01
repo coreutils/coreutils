@@ -61,31 +61,47 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
       fputs (_("Print value of a symbolic link or canonical file name\n\n"),
              stdout);
-      fputs (_("\
-  -f, --canonicalize            canonicalize by following every symlink in\n\
-                                every component of the given name recursively;\
-\n\
-                                all but the last component must exist\n\
-  -e, --canonicalize-existing   canonicalize by following every symlink in\n\
-                                every component of the given name recursively,\
-\n\
-                                all components must exist\n\
-"), stdout);
-      fputs (_("\
-  -m, --canonicalize-missing    canonicalize by following every symlink in\n\
-                                every component of the given name recursively,\
-\n\
-                                without requirements on components existence\n\
-  -n, --no-newline              do not output the trailing delimiter\n\
+      oputs (_("\
+  -f, --canonicalize\n\
+         canonicalize by following every symlink\n\
+         in every component of the given name recursively;\n\
+         all but the last component must exist\n\
+"));
+      oputs (_("\
+  -e, --canonicalize-existing\n\
+         canonicalize by following every symlink\n\
+         in every component of the given name recursively;\n\
+         all components must exist\n\
+"));
+      oputs (_("\
+  -m, --canonicalize-missing\n\
+         canonicalize by following every symlink\n\
+         in every component of the given name recursively,\n\
+         without requirements on components existence\n\
+"));
+      oputs (_("\
+  -n, --no-newline\n\
+         do not output the trailing delimiter\n\
+"));
+      oputs (_("\
   -q, --quiet\n\
-  -s, --silent                  suppress most error messages (on by default\n\
-                                if POSIXLY_CORRECT is not set)\n\
-  -v, --verbose                 report error messages (on by default if\n\
-                                POSIXLY_CORRECT is set)\n\
-  -z, --zero                    end each output line with NUL, not newline\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+"));
+      oputs (_("\
+  -s, --silent\n\
+         suppress most error messages\n\
+         (on by default if POSIXLY_CORRECT is not set)\n\
+"));
+      oputs (_("\
+  -v, --verbose\n\
+         report error messages\n\
+         (on by default if POSIXLY_CORRECT is set)\n\
+"));
+      oputs (_("\
+  -z, --zero\n\
+         end each output line with NUL, not newline\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

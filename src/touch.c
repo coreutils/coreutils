@@ -226,30 +226,48 @@ change the times of the file associated with standard output.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -a                     change only the access time\n\
-  -c, --no-create        do not create any files\n\
-  -d, --date=STRING      parse STRING and use it instead of current time\n\
-  -f                     (ignored)\n\
-"), stdout);
-      fputs (_("\
-  -h, --no-dereference   affect each symbolic link instead of any referenced\n\
-                         file (useful only on systems that can change the\n\
-                         timestamps of a symlink)\n\
-  -m                     change only the modification time\n\
-"), stdout);
-      fputs (_("\
-  -r, --reference=FILE   use this file's times instead of current time\n\
-  -t [[CC]YY]MMDDhhmm[.ss]  use specified time instead of current time,\n\
-                         with a date-time format that differs from -d's\n\
-"), stdout);
-      fputs (_("\
-      --time=WORD        specify which time to change:\n\
-                           access time (-a): 'access', 'atime', 'use';\n\
-                           modification time (-m): 'modify', 'mtime'\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -a\n\
+         change only the access time\n\
+"));
+      oputs (_("\
+  -c, --no-create\n\
+         do not create any files\n\
+"));
+      oputs (_("\
+  -d, --date=STRING\n\
+         parse STRING and use it instead of current time\n\
+"));
+      oputs (_("\
+  -f\n\
+         (ignored)\n\
+"));
+      oputs (_("\
+  -h, --no-dereference\n\
+         affect each symbolic link instead of any referenced file;\n\
+         useful only on systems that can change the timestamps of a symlink\n\
+"));
+      oputs (_("\
+  -m\n\
+         change only the modification time\n\
+"));
+      oputs (_("\
+  -r, --reference=FILE\n\
+         use this file's times instead of current time\n\
+"));
+      oputs (_("\
+  -t [[CC]YY]MMDDhhmm[.ss]\n\
+         use specified time instead of current time,\n\
+         with a date-time format that differs from -d's\n\
+"));
+      oputs (_("\
+      --time=WORD\n\
+         specify which time to change:\n\
+         access time (-a): 'access', 'atime', 'use';\n\
+         modification time (-m): 'modify', 'mtime'\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

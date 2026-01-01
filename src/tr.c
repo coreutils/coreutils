@@ -291,15 +291,27 @@ Translate, squeeze, and/or delete characters from standard input,\n\
 writing to standard output.  STRING1 and STRING2 specify arrays of\n\
 characters ARRAY1 and ARRAY2 that control the action.\n\
 \n\
-  -c, -C, --complement    use the complement of ARRAY1\n\
-  -d, --delete            delete characters in ARRAY1, do not translate\n\
-  -s, --squeeze-repeats   replace each sequence of a repeated character\n\
-                            that is listed in the last specified ARRAY,\n\
-                            with a single occurrence of that character\n\
-  -t, --truncate-set1     first truncate ARRAY1 to length of ARRAY2\n\
 "), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -c, -C, --complement\n\
+         use the complement of ARRAY1\n\
+"));
+      oputs (_("\
+  -d, --delete\n\
+         delete characters in ARRAY1, do not translate\n\
+"));
+      oputs (_("\
+  -s, --squeeze-repeats\n\
+         replace each sequence of a repeated character\n\
+         that is listed in the last specified ARRAY,\n\
+         with a single occurrence of that character\n\
+"));
+      oputs (_("\
+  -t, --truncate-set1\n\
+         first truncate ARRAY1 to length of ARRAY2\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 ARRAYs are specified as strings of characters.  Most represent themselves.\n\

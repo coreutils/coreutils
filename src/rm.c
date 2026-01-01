@@ -132,34 +132,56 @@ usage (int status)
       fputs (_("\
 Remove (unlink) the FILE(s).\n\
 \n\
-  -f, --force           ignore nonexistent files and arguments, never prompt\n\
-  -i                    prompt before every removal\n\
 "), stdout);
-      fputs (_("\
-  -I                    prompt once before removing more than three files, or\n\
-                          when removing recursively; less intrusive than -i,\n\
-                          while still giving protection against most mistakes\n\
-      --interactive[=WHEN]  prompt according to WHEN: never, once (-I), or\n\
-                          always (-i); without WHEN, prompt always\n\
-"), stdout);
-      fputs (_("\
-      --one-file-system  when removing a hierarchy recursively, skip any\n\
-                          directory that is on a file system different from\n\
-                          that of the corresponding command line argument\n\
-"), stdout);
-      fputs (_("\
-      --no-preserve-root  do not treat '/' specially\n\
-      --preserve-root[=all]  do not remove '/' (default);\n\
-                              with 'all', reject any command line argument\n\
-                              on a separate device from its parent\n\
-"), stdout);
-      fputs (_("\
-  -r, -R, --recursive   remove directories and their contents recursively\n\
-  -d, --dir             remove empty directories\n\
-  -v, --verbose         explain what is being done\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -f, --force\n\
+         ignore nonexistent files and arguments, never prompt\n\
+"));
+      oputs (_("\
+  -i\n\
+         prompt before every removal\n\
+"));
+      oputs (_("\
+  -I\n\
+         prompt once before removing more than three files,\n\
+         or when removing recursively; less intrusive than -i,\n\
+         while still giving protection against most mistakes\n\
+"));
+      oputs (_("\
+      --interactive[=WHEN]\n\
+         prompt according to WHEN: never, once (-I), or always (-i);\n\
+         without WHEN, prompt always\n\
+"));
+      oputs (_("\
+      --one-file-system\n\
+         when removing a hierarchy recursively,\n\
+         skip any directory that is on a file system different\n\
+         from that of the corresponding command line argument\n\
+"));
+      oputs (_("\
+      --no-preserve-root\n\
+         do not treat '/' specially\n\
+"));
+      oputs (_("\
+      --preserve-root[=all]\n\
+         do not remove '/' (default);\n\
+         with 'all', reject any command line argument\n\
+         on a separate device from its parent\n\
+"));
+      oputs (_("\
+  -r, -R, --recursive\n\
+         remove directories and their contents recursively\n\
+"));
+      oputs (_("\
+  -d, --dir\n\
+         remove empty directories\n\
+"));
+      oputs (_("\
+  -v, --verbose\n\
+         explain what is being done\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 By default, rm does not remove directories.  Use the --recursive (-r or -R)\n\

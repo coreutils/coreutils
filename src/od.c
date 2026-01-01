@@ -380,41 +380,82 @@ suffixes may be . for octal and b for multiply by 512.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -A, --address-radix=RADIX   output format for file offsets; RADIX is one\n\
-                                of [doxn], for Decimal, Octal, Hex or None\n\
-      --endian={big|little}   swap input bytes according the specified order\n\
-  -j, --skip-bytes=BYTES      skip BYTES input bytes first\n\
-"), stdout);
-      fputs (_("\
-  -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n\
-  -S BYTES, --strings[=BYTES]  show only NUL terminated strings\n\
-                                of at least BYTES (3) printable characters\n\
-  -t, --format=TYPE           select output format or formats\n\
-  -v, --output-duplicates     do not use * to mark line suppression\n\
-  -w[BYTES], --width[=BYTES]  output BYTES bytes per output line;\n\
-                                32 is implied when BYTES is not specified\n\
-      --traditional           accept arguments in third form above\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -A, --address-radix=RADIX\n\
+         output format for file offsets;\n\
+         RADIX is one of [doxn], for Decimal, Octal, Hex or None\n\
+"));
+      oputs (_("\
+      --endian={big|little}\n\
+         swap input bytes according the specified order\n\
+"));
+      oputs (_("\
+  -j, --skip-bytes=BYTES\n\
+         skip BYTES input bytes first\n\
+"));
+      oputs (_("\
+  -N, --read-bytes=BYTES\n\
+         limit dump to BYTES input bytes\n\
+"));
+      oputs (_("\
+  -S BYTES, --strings[=BYTES]\n\
+         show only NUL terminated strings\n\
+         of at least BYTES (default 3) printable characters\n\
+"));
+      oputs (_("\
+  -t, --format=TYPE\n\
+         select output format or formats\n\
+"));
+      oputs (_("\
+  -v, --output-duplicates\n\
+         do not use * to mark line suppression\n\
+"));
+      oputs (_("\
+  -w[BYTES], --width[=BYTES]\n\
+         output BYTES bytes per output line;\n\
+         32 is implied when BYTES is not specified\n\
+"));
+      oputs (_("\
+      --traditional\n\
+         accept arguments in third form above\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 \n\
 Traditional format specifications may be intermixed; they accumulate:\n\
+"), stdout);
+      oputs (_("\
   -a   same as -t a,  select named characters, ignoring high-order bit\n\
+"));
+      oputs (_("\
   -b   same as -t o1, select octal bytes\n\
+"));
+      oputs (_("\
   -c   same as -t c,  select printable characters or backslash escapes\n\
+"));
+      oputs (_("\
   -d   same as -t u2, select unsigned decimal 2-byte units\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -f   same as -t fF, select floats\n\
+"));
+      oputs (_("\
   -i   same as -t dI, select decimal ints\n\
+"));
+      oputs (_("\
   -l   same as -t dL, select decimal longs\n\
+"));
+      oputs (_("\
   -o   same as -t o2, select octal 2-byte units\n\
+"));
+      oputs (_("\
   -s   same as -t d2, select decimal 2-byte units\n\
+"));
+      oputs (_("\
   -x   same as -t x2, select hexadecimal 2-byte units\n\
-"), stdout);
+"));
       fputs (_("\
 \n\
 \n\

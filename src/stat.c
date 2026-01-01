@@ -1757,24 +1757,36 @@ Display file or file system status.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -L, --dereference     follow links\n\
-  -f, --file-system     display file system status instead of file status\n\
-"), stdout);
-      fputs (_("\
-      --cached=MODE     specify how to use cached attributes;\n\
-                          useful on remote file systems. See MODE below\n\
-"), stdout);
-      fputs (_("\
-  -c  --format=FORMAT   use the specified FORMAT instead of the default;\n\
-                          output a newline after each use of FORMAT\n\
-      --printf=FORMAT   like --format, but interpret backslash escapes,\n\
-                          and do not output a mandatory trailing newline;\n\
-                          if you want a newline, include \\n in FORMAT\n\
-  -t, --terse           print the information in terse form\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -L, --dereference\n\
+         follow links\n\
+"));
+      oputs (_("\
+  -f, --file-system\n\
+         display file system status instead of file status\n\
+"));
+      oputs (_("\
+      --cached=MODE\n\
+         specify how to use cached attributes;\n\
+         useful on remote file systems. See MODE below\n\
+"));
+      oputs (_("\
+  -c  --format=FORMAT\n\
+         use the specified FORMAT instead of the default;\n\
+         output a newline after each use of FORMAT\n\
+"));
+      oputs (_("\
+      --printf=FORMAT\n\
+         like --format, but interpret backslash escapes,\n\
+         and do not output a mandatory trailing newline;\n\
+         if you want a newline, include \\n in FORMAT\n\
+"));
+      oputs (_("\
+  -t, --terse\n\
+         print the information in terse form\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
 
       fputs (_("\n\
 The MODE argument of --cached can be: always, never, or default.\n\

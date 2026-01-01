@@ -68,14 +68,20 @@ Send signals to processes, or list signals.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
+      oputs (_("\
   -s, --signal=SIGNAL, -SIGNAL\n\
-                   specify the name or number of the signal to be sent\n\
-  -l, --list       list signal names, or convert signal names to/from numbers\n\
-  -t, --table      print a table of signal information\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+         specify the name or number of the signal to be sent\n\
+"));
+      oputs (_("\
+  -l, --list\n\
+         list signal names, or convert signal names to/from numbers\n\
+"));
+      oputs (_("\
+  -t, --table\n\
+         print a table of signal information\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\n\
 SIGNAL may be a signal name like 'HUP', or a signal number like '1',\n\
 or the exit status of a process terminated by a signal.\n\

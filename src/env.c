@@ -119,39 +119,53 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -a, --argv0=ARG      pass ARG as the zeroth argument of COMMAND\n\
-"), stdout);
-      fputs (_("\
-  -i, --ignore-environment  start with an empty environment\n\
-  -0, --null           end each output line with NUL, not newline\n\
-  -u, --unset=NAME     remove variable from the environment\n\
-"), stdout);
-      fputs (_("\
-  -C, --chdir=DIR      change working directory to DIR\n\
-"), stdout);
-      fputs (_("\
-  -S, --split-string=S  process and split S into separate arguments;\n\
-                        used to pass multiple arguments on shebang lines\n\
-"), stdout);
-      fputs (_("\
-      --block-signal[=SIG]    block delivery of SIG signal(s) to COMMAND\n\
-"), stdout);
-      fputs (_("\
-      --default-signal[=SIG]  reset handling of SIG signal(s) to the default\n\
-"), stdout);
-      fputs (_("\
-      --ignore-signal[=SIG]   set handling of SIG signal(s) to do nothing\n\
-"), stdout);
-      fputs (_("\
-      --list-signal-handling  list non default signal handling to \
-standard error\n\
-"), stdout);
-      fputs (_("\
-  -v, --debug          print verbose information for each processing step\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -a, --argv0=ARG\n\
+         pass ARG as the zeroth argument of COMMAND\n\
+"));
+      oputs (_("\
+  -i, --ignore-environment\n\
+         start with an empty environment\n\
+"));
+      oputs (_("\
+  -0, --null\n\
+         end each output line with NUL, not newline\n\
+"));
+      oputs (_("\
+  -u, --unset=NAME\n\
+         remove variable from the environment\n\
+"));
+      oputs (_("\
+  -C, --chdir=DIR\n\
+         change working directory to DIR\n\
+"));
+      oputs (_("\
+  -S, --split-string=S\n\
+         process and split S into separate arguments;\n\
+         used to pass multiple arguments on shebang lines\n\
+"));
+      oputs (_("\
+      --block-signal[=SIG]\n\
+         block delivery of SIG signal(s) to COMMAND\n\
+"));
+      oputs (_("\
+      --default-signal[=SIG]\n\
+         reset handling of SIG signal(s) to the default\n\
+"));
+      oputs (_("\
+      --ignore-signal[=SIG]\n\
+         set handling of SIG signal(s) to do nothing\n\
+"));
+      oputs (_("\
+      --list-signal-handling\n\
+         list non default signal handling to standard error\n\
+"));
+      oputs (_("\
+  -v, --debug\n\
+         print verbose information for each processing step\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 A mere - implies -i.  If no COMMAND, print the resulting environment.\n\

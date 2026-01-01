@@ -262,45 +262,76 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
 
       emit_mandatory_arg_note ();
 
+      oputs (_("\
+      --backup[=CONTROL]\n\
+         make a backup of each existing destination file\n\
+"));
+      oputs (_("\
+  -b\n\
+         like --backup but does not accept an argument\n\
+"));
+      oputs (_("\
+      --debug\n\
+         explain how a file is copied.  Implies -v\n\
+"));
+      oputs (_("\
+      --exchange\n\
+         exchange source and destination\n\
+"));
+      oputs (_("\
+  -f, --force\n\
+         do not prompt before overwriting\n\
+"));
+      oputs (_("\
+  -i, --interactive\n\
+         prompt before overwrite\n\
+"));
+      oputs (_("\
+  -n, --no-clobber\n\
+         do not overwrite an existing file\n\
+"));
       fputs (_("\
-      --backup[=CONTROL]       make a backup of each existing destination file\
-\n\
-  -b                           like --backup but does not accept an argument\n\
-"), stdout);
-      fputs (_("\
-      --debug                  explain how a file is copied.  Implies -v\n\
-"), stdout);
-      fputs (_("\
-      --exchange               exchange source and destination\n\
-"), stdout);
-      fputs (_("\
-  -f, --force                  do not prompt before overwriting\n\
-  -i, --interactive            prompt before overwrite\n\
-  -n, --no-clobber             do not overwrite an existing file\n\
 If you specify more than one of -i, -f, -n, only the final one takes effect.\n\
 "), stdout);
-      fputs (_("\
-      --no-copy                do not copy if renaming fails\n\
-      --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n\
-                                 argument\n\
-  -S, --suffix=SUFFIX          override the usual backup suffix\n\
-"), stdout);
-      fputs (_("\
-  -t, --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
-  -T, --no-target-directory    treat DEST as a normal file\n\
-"), stdout);
-      fputs (_("\
-      --update[=UPDATE]        control which existing files are updated;\n\
-                                 UPDATE={all,none,none-fail,older(default)}\n\
-  -u                           equivalent to --update[=older].  See below\n\
-"), stdout);
-      fputs (_("\
-  -v, --verbose                explain what is being done\n\
-  -Z, --context                set SELinux security context of destination\n\
-                                 file to default type\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+      --no-copy\n\
+         do not copy if renaming fails\n\
+"));
+      oputs (_("\
+      --strip-trailing-slashes\n\
+         remove any trailing slashes from each SOURCE argument\n\
+"));
+      oputs (_("\
+  -S, --suffix=SUFFIX\n\
+         override the usual backup suffix\n\
+"));
+      oputs (_("\
+  -t, --target-directory=DIRECTORY\n\
+         move all SOURCE arguments into DIRECTORY\n\
+"));
+      oputs (_("\
+  -T, --no-target-directory\n\
+         treat DEST as a normal file\n\
+"));
+      oputs (_("\
+      --update[=UPDATE]\n\
+         control which existing files are updated;\n\
+         UPDATE={all,none,none-fail,older(default)}\n\
+"));
+      oputs (_("\
+  -u\n\
+         equivalent to --update[=older].  See below\n\
+"));
+      oputs (_("\
+  -v, --verbose\n\
+         explain what is being done\n\
+"));
+      oputs (_("\
+  -Z, --context\n\
+         set SELinux security context of destination file to default type\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_update_parameters_note ();
       emit_backup_suffix_note ();
       emit_ancillary_info (PROGRAM_NAME);

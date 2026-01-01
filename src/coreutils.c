@@ -66,8 +66,8 @@ Usage: %s --coreutils-prog=PROGRAM_NAME [PARAMETERS]... \n"),
       fputs (_("\
 Execute the PROGRAM_NAME built-in program with the given PARAMETERS.\n\
 \n"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
 
 #ifdef SINGLE_BINARY
 /* XXX: Ideally we'd like to present "install" here, not "ginstall".  */

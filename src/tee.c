@@ -88,15 +88,25 @@ usage (int status)
       fputs (_("\
 Copy standard input to each FILE, and also to standard output.\n\
 \n\
-  -a, --append              append to the given FILEs, do not overwrite\n\
-  -i, --ignore-interrupts   ignore interrupt signals\n\
 "), stdout);
-      fputs (_("\
-  -p                        operate in a more appropriate MODE with pipes\n\
-      --output-error[=MODE]   set behavior on write error.  See MODE below\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -a, --append\n\
+         append to the given FILEs, do not overwrite\n\
+"));
+      oputs (_("\
+  -i, --ignore-interrupts\n\
+         ignore interrupt signals\n\
+"));
+      oputs (_("\
+  -p\n\
+         operate in a more appropriate MODE with pipes\n\
+"));
+      oputs (_("\
+      --output-error[=MODE]\n\
+         set behavior on write error.  See MODE below\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 MODE determines behavior with write errors on the outputs:\n\

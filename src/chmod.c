@@ -421,30 +421,47 @@ Change the mode of each FILE to MODE.\n\
 With --reference, change the mode of each FILE to that of RFILE.\n\
 \n\
 "), stdout);
-      fputs (_("\
-  -c, --changes          like verbose but report only when a change is made\n\
-  -f, --silent, --quiet  suppress most error messages\n\
-  -v, --verbose          output a diagnostic for every file processed\n\
-"), stdout);
-      fputs (_("\
-      --dereference      affect the referent of each symbolic link,\n\
-                           rather than the symbolic link itself\n\
-  -h, --no-dereference   affect each symbolic link, rather than the referent\n\
-"), stdout);
-      fputs (_("\
-      --no-preserve-root  do not treat '/' specially (the default)\n\
-      --preserve-root    fail to operate recursively on '/'\n\
-"), stdout);
-      fputs (_("\
-      --reference=RFILE  use RFILE's mode instead of specifying MODE values.\n\
-                         RFILE is always dereferenced if a symbolic link.\n\
-"), stdout);
-      fputs (_("\
-  -R, --recursive        change files and directories recursively\n\
-"), stdout);
+      oputs (_("\
+  -c, --changes\n\
+         like verbose but report only when a change is made\n\
+"));
+      oputs (_("\
+  -f, --silent, --quiet\n\
+         suppress most error messages\n\
+"));
+      oputs (_("\
+  -v, --verbose\n\
+         output a diagnostic for every file processed\n\
+"));
+      oputs (_("\
+      --dereference\n\
+         affect the referent of each symbolic link,\n\
+         rather than the symbolic link itself\n\
+"));
+      oputs (_("\
+  -h, --no-dereference\n\
+         affect each symbolic link, rather than the referent\n\
+"));
+      oputs (_("\
+      --no-preserve-root\n\
+         do not treat '/' specially (the default)\n\
+"));
+      oputs (_("\
+      --preserve-root\n\
+         fail to operate recursively on '/'\n\
+"));
+      oputs (_("\
+      --reference=RFILE\n\
+         use RFILE's mode instead of specifying MODE values.\n\
+         RFILE is always dereferenced if a symbolic link.\n\
+"));
+      oputs (_("\
+  -R, --recursive\n\
+         change files and directories recursively\n\
+"));
       emit_symlink_recurse_options ("-H");
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 Each MODE is of the form '[ugoa]*([-+=]([rwxXst]*|[ugo]))+|[-+=][0-7]+'.\n\

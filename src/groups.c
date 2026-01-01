@@ -56,8 +56,8 @@ Print group memberships for each USERNAME or, if no USERNAME is specified, for\
 \n\
 the current process (which may differ if the groups database has changed).\n"),
              stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

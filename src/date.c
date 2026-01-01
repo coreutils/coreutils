@@ -138,48 +138,58 @@ With -s, or with [MMDDhhmm[[CC]YY][.ss]], set the date and time.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -d, --date=STRING          display time described by STRING, not 'now'\n\
-"), stdout);
-      fputs (_("\
-      --debug                annotate the parsed date, and\n\
-                              warn about questionable usage to standard error\n\
-"), stdout);
-      fputs (_("\
-  -f, --file=DATEFILE        like --date; once for each line of DATEFILE;\n\
-                               If DATEFILE is -, read names from standard input\
-\n\
-"), stdout);
-      fputs (_("\
-  -I[FMT], --iso-8601[=FMT]  output date/time in ISO 8601 format.\n\
-                               FMT='date' for date only (the default),\n\
-                               'hours', 'minutes', 'seconds', or 'ns'\n\
-                               for date and time to the indicated precision.\n\
-                               Example: 2006-08-14T02:34:56-06:00\n\
-"), stdout);
-      fputs (_("\
-  --resolution               output the available resolution of timestamps\n\
-                               Example: 0.000000001\n\
-"), stdout);
-      fputs (_("\
-  -R, --rfc-email            output date and time in RFC 5322 format.\n\
-                               Example: Mon, 14 Aug 2006 02:34:56 -0600\n\
-"), stdout);
-      fputs (_("\
-      --rfc-3339=FMT         output date/time in RFC 3339 format.\n\
-                               FMT='date', 'seconds', or 'ns'\n\
-                               for date and time to the indicated precision.\n\
-                               Example: 2006-08-14 02:34:56-06:00\n\
-"), stdout);
-      fputs (_("\
-  -r, --reference=FILE       display the last modification time of FILE\n\
-"), stdout);
-      fputs (_("\
-  -s, --set=STRING           set time described by STRING\n\
-  -u, --utc, --universal     print or set Coordinated Universal Time (UTC)\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -d, --date=STRING\n\
+         display time described by STRING, not 'now'\n\
+"));
+      oputs (_("\
+      --debug\n\
+         annotate the parsed date,\n\
+         and warn about questionable usage to standard error\n\
+"));
+      oputs (_("\
+  -f, --file=DATEFILE\n\
+         like --date; once for each line of DATEFILE;\n\
+         if DATEFILE is -, read names from standard input\n\
+"));
+      oputs (_("\
+  -I[FMT], --iso-8601[=FMT]\n\
+         output date/time in ISO 8601 format.\n\
+         FMT='date' (default), 'hours', 'minutes', 'seconds', or 'ns'\n\
+         for date and time to the indicated precision.\n\
+         Example: 2006-08-14T02:34:56-06:00\n\
+"));
+      oputs (_("\
+      --resolution\n\
+         output the available resolution of timestamps.\n\
+         Example: 0.000000001\n\
+"));
+      oputs (_("\
+  -R, --rfc-email\n\
+         output date and time in RFC 5322 format.\n\
+         Example: Mon, 14 Aug 2006 02:34:56 +0000\n\
+"));
+      oputs (_("\
+      --rfc-3339=FMT\n\
+         output date/time in RFC 3339 format.\n\
+         FMT='date', 'seconds', or 'ns'\n\
+         for date and time to the indicated precision.\n\
+         Example: 2006-08-14 02:34:56-06:00\n\
+"));
+      oputs (_("\
+  -r, --reference=FILE\n\
+         display the last modification time of FILE\n\
+"));
+      oputs (_("\
+  -s, --set=STRING\n\
+         set time described by STRING\n\
+"));
+      oputs (_("\
+  -u, --utc, --universal\n\
+         print or set Coordinated Universal Time (UTC)\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 All options that specify the date to display are mutually exclusive.\n\

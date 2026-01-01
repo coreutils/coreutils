@@ -78,17 +78,20 @@ reads as zero bytes.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
+      oputs (_("\
   -c, --no-create        do not create any files\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -o, --io-blocks        treat SIZE as number of IO blocks instead of bytes\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -r, --reference=RFILE  base size on RFILE\n\
-  -s, --size=SIZE        set or adjust the file size by SIZE bytes\n"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+"));
+      oputs (_("\
+  -s, --size=SIZE        set or adjust the file size by SIZE bytes\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_size_note ();
       fputs (_("\n\
 SIZE may also be prefixed by one of the following modifying characters:\n\

@@ -531,26 +531,50 @@ Usage: %s [OPERAND]...\n\
       fputs (_("\
 Copy a file, converting and formatting according to the operands.\n\
 \n\
+"), stdout);
+      oputs (_("\
   bs=BYTES        read and write up to BYTES bytes at a time (default: 512);\n\
                   overrides ibs and obs\n\
+"));
+      oputs (_("\
   cbs=BYTES       convert BYTES bytes at a time\n\
+"));
+      oputs (_("\
   conv=CONVS      convert the file as per the comma separated symbol list\n\
+"));
+      oputs (_("\
   count=N         copy only N input blocks\n\
+"));
+      oputs (_("\
   ibs=BYTES       read up to BYTES bytes at a time (default: 512)\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   if=FILE         read from FILE instead of standard input\n\
+"));
+      oputs (_("\
   iflag=FLAGS     read as per the comma separated symbol list\n\
+"));
+      oputs (_("\
   obs=BYTES       write BYTES bytes at a time (default: 512)\n\
+"));
+      oputs (_("\
   of=FILE         write to FILE instead of standard output\n\
+"));
+      oputs (_("\
   oflag=FLAGS     write as per the comma separated symbol list\n\
-  seek=N          (or oseek=N) skip N obs-sized output blocks\n\
-  skip=N          (or iseek=N) skip N ibs-sized input blocks\n\
+"));
+      oputs (_("\
+  seek=N          (or oseek=N) skip N obs sized output blocks\n\
+"));
+      oputs (_("\
+  skip=N          (or iseek=N) skip N ibs sized input blocks\n\
+"));
+      oputs (_("\
   status=LEVEL    The LEVEL of information to print to standard error;\n\
                   'none' suppresses everything but error messages,\n\
                   'noxfer' suppresses the final transfer statistics,\n\
                   'progress' shows periodic transfer statistics\n\
-"), stdout);
+"));
       fputs (_("\
 \n\
 N and BYTES may be followed by the following multiplicative suffixes:\n\
@@ -632,8 +656,8 @@ Options are:\n\
 "), SIGINFO == SIGUSR1 ? "USR1" : "INFO");
       }
 
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

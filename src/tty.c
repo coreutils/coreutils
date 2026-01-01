@@ -66,10 +66,13 @@ usage (int status)
       fputs (_("\
 Print the file name of the terminal connected to standard input.\n\
 \n\
-  -s, --silent, --quiet   print nothing, only return an exit status\n\
 "), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -s, --silent, --quiet\n\
+         print nothing, only return an exit status\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

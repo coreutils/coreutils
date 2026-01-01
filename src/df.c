@@ -1502,43 +1502,75 @@ or all file systems by default.\n\
 
       /* TRANSLATORS: The thousands and decimal separators are best
          adjusted to an appropriate default for your locale.  */
-      fputs (_("\
-  -a, --all             include pseudo, duplicate, inaccessible file systems\n\
-  -B, --block-size=SIZE  scale sizes by SIZE before printing them; e.g.,\n\
-                           '-BM' prints sizes in units of 1,048,576 bytes;\n\
-                           see SIZE format below\n\
-  -h, --human-readable  print sizes in powers of 1024 (e.g., 1023M)\n\
-  -H, --si              print sizes in powers of 1000 (e.g., 1.1G)\n\
-"), stdout);
-      fputs (_("\
-  -i, --inodes          list inode information instead of block usage\n\
-  -k                    like --block-size=1K\n\
-  -l, --local           limit listing to local file systems\n\
-      --no-sync         do not invoke sync before getting usage info (default)\
-\n\
-"), stdout);
-      fputs (_("\
-      --output[=FIELD_LIST]  use the output format defined by FIELD_LIST,\n\
-                               or print all fields if FIELD_LIST is omitted\n\
-"), stdout);
-      fputs (_("\
-  -P, --portability     use the POSIX output format\n\
-"), stdout);
-      fputs (_("\
-      --sync            invoke sync before getting usage info\n\
-"), stdout);
-      fputs (_("\
-      --total           elide all entries insignificant to available space,\n\
-                          and produce a grand total\n\
-"), stdout);
-      fputs (_("\
-  -t, --type=TYPE       limit listing to file systems of type TYPE\n\
-  -T, --print-type      print file system type\n\
-  -x, --exclude-type=TYPE   limit listing to file systems not of type TYPE\n\
-  -v                    (ignored)\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -a, --all\n\
+         include pseudo, duplicate, inaccessible file systems\n\
+"));
+      oputs (_("\
+  -B, --block-size=SIZE\n\
+         scale sizes by SIZE before printing them; see SIZE format below;\n\
+         E.g., '-BM' prints sizes in units of 1,048,576 bytes\n\
+"));
+      oputs (_("\
+  -h, --human-readable\n\
+         print sizes in powers of 1024 (e.g., 1023M)\n\
+"));
+      oputs (_("\
+  -H, --si\n\
+         print sizes in powers of 1000 (e.g., 1.1G)\n\
+"));
+      oputs (_("\
+  -i, --inodes\n\
+         list inode information instead of block usage\n\
+"));
+      oputs (_("\
+  -k\n\
+         like --block-size=1K\n\
+"));
+      oputs (_("\
+  -l, --local\n\
+         limit listing to local file systems\n\
+"));
+      oputs (_("\
+      --no-sync\n\
+         do not invoke sync before getting usage info (default)\n\
+"));
+      oputs (_("\
+      --output[=FIELD_LIST]\n\
+         use the output format defined by FIELD_LIST,\n\
+         or print all fields if FIELD_LIST is omitted\n\
+"));
+      oputs (_("\
+  -P, --portability\n\
+         use the POSIX output format\n\
+"));
+      oputs (_("\
+      --sync\n\
+         invoke sync before getting usage info\n\
+"));
+      oputs (_("\
+      --total\n\
+         elide all entries insignificant to available space,\n\
+         and produce a grand total\n\
+"));
+      oputs (_("\
+  -t, --type=TYPE\n\
+         limit listing to file systems of type TYPE\n\
+"));
+      oputs (_("\
+  -T, --print-type\n\
+         print file system type\n\
+"));
+      oputs (_("\
+  -x, --exclude-type=TYPE\n\
+         limit listing to file systems not of type TYPE\n\
+"));
+      oputs (_("\
+  -v\n\
+         (ignored)\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_blocksize_note ("DF");
       emit_size_note ();
       fputs (_("\n\

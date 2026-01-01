@@ -286,67 +286,126 @@ Summarize device usage of the set of FILEs, recursively for directories.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -0, --null            end each output line with NUL, not newline\n\
-  -a, --all             write counts for all files, not just directories\n\
-  -A, --apparent-size   print apparent sizes rather than device usage; although\
-\n\
-                          the apparent size is usually smaller, it may be\n\
-                          larger due to holes in ('sparse') files, internal\n\
-                          fragmentation, indirect blocks, and the like\n\
-"), stdout);
-      fputs (_("\
-  -B, --block-size=SIZE  scale sizes by SIZE before printing them; e.g.,\n\
-                           '-BM' prints sizes in units of 1,048,576 bytes;\n\
-                           see SIZE format below\n\
-  -b, --bytes           equivalent to '--apparent-size --block-size=1'\n\
-  -c, --total           produce a grand total\n\
-  -D, --dereference-args  dereference only symlinks that are listed on the\n\
-                          command line\n\
-  -d, --max-depth=N     print the total for a directory (or file, with --all)\n\
-                          only if it is N or fewer levels below the command\n\
-                          line argument;  --max-depth=0 is the same as\n\
-                          --summarize\n\
-"), stdout);
-      fputs (_("\
-      --files0-from=F   summarize device usage of the\n\
-                          NUL-terminated file names specified in file F;\n\
-                          if F is -, read names from standard input\n\
-  -H                    equivalent to --dereference-args (-D)\n\
-  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\
-\n\
-      --inodes          list inode usage information instead of block usage\n\
-"), stdout);
-      fputs (_("\
-  -k                    like --block-size=1K\n\
-  -L, --dereference     dereference all symbolic links\n\
-  -l, --count-links     count sizes many times if hard linked\n\
-  -m                    like --block-size=1M\n\
-"), stdout);
-      fputs (_("\
-  -P, --no-dereference  don't follow any symbolic links (this is the default)\n\
-  -S, --separate-dirs   for directories do not include size of subdirectories\n\
-      --si              like -h, but use powers of 1000 not 1024\n\
-  -s, --summarize       display only a total for each argument\n\
-"), stdout);
-      fputs (_("\
-  -t, --threshold=SIZE  exclude entries smaller than SIZE if positive,\n\
-                          or entries greater than SIZE if negative\n\
-      --time            show time of the last modification of any file in the\n\
-                          directory, or any of its subdirectories\n\
-      --time=WORD       show time as WORD instead of modification time:\n\
-                          atime, access, use, ctime or status\n\
-"), stdout);
-      fputs (_("\
-      --time-style=STYLE   time/date format with --time; see TIME_STYLE below\n\
-"), stdout);
-      fputs (_("\
-  -X, --exclude-from=FILE  exclude files that match any pattern in FILE\n\
-      --exclude=PATTERN    exclude files that match PATTERN\n\
-  -x, --one-file-system    skip directories on different file systems\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -0, --null\n\
+         end each output line with NUL, not newline\n\
+"));
+      oputs (_("\
+  -a, --all\n\
+         write counts for all files, not just directories\n\
+"));
+      oputs (_("\
+  -A, --apparent-size\n\
+         print apparent sizes rather than device usage;\n\
+         although the apparent size is usually smaller, it may be\n\
+         larger due to holes in ('sparse') files,\n\
+         internal fragmentation, indirect blocks, etc.\n\
+"));
+      oputs (_("\
+  -B, --block-size=SIZE\n\
+         scale sizes by SIZE before printing them; See SIZE format below;\n\
+         E.g., '-BM' prints sizes in units of 1,048,576 bytes\n\
+"));
+      oputs (_("\
+  -b, --bytes\n\
+         equivalent to '--apparent-size --block-size=1'\n\
+"));
+      oputs (_("\
+  -c, --total\n\
+         produce a grand total\n\
+"));
+      oputs (_("\
+  -D, --dereference-args\n\
+         dereference only symlinks that are listed on the command line\n\
+"));
+      oputs (_("\
+  -d, --max-depth=N\n\
+         print the total for a directory (or file, with --all)\n\
+         only if it is N or fewer levels below the command\n\
+         line argument;  --max-depth=0 is the same as --summarize\n\
+"));
+      oputs (_("\
+      --files0-from=F\n\
+         summarize device usage of the NUL-terminated file names\n\
+         specified in file F;  if F is -, read names from standard input\n\
+"));
+      oputs (_("\
+  -H\n\
+         equivalent to --dereference-args (-D)\n\
+"));
+      oputs (_("\
+  -h, --human-readable\n\
+         print sizes in human readable format (e.g., 1K 234M 2G)\n\
+"));
+      oputs (_("\
+      --inodes\n\
+         list inode usage information instead of block usage\n\
+"));
+      oputs (_("\
+  -k\n\
+         like --block-size=1K\n\
+"));
+      oputs (_("\
+  -L, --dereference\n\
+         dereference all symbolic links\n\
+"));
+      oputs (_("\
+  -l, --count-links\n\
+         count sizes many times if hard linked\n\
+"));
+      oputs (_("\
+  -m\n\
+         like --block-size=1M\n\
+"));
+      oputs (_("\
+  -P, --no-dereference\n\
+         don't follow any symbolic links (this is the default)\n\
+"));
+      oputs (_("\
+  -S, --separate-dirs\n\
+         for directories do not include size of subdirectories\n\
+"));
+      oputs (_("\
+      --si\n\
+         like -h, but use powers of 1000 not 1024\n\
+"));
+      oputs (_("\
+  -s, --summarize\n\
+         display only a total for each argument\n\
+"));
+      oputs (_("\
+  -t, --threshold=SIZE\n\
+         exclude entries smaller than SIZE if positive,\n\
+         or entries greater than SIZE if negative\n\
+"));
+      oputs (_("\
+      --time\n\
+         show time of the last modification of any file in the directory,\n\
+         or any of its subdirectories\n\
+"));
+      oputs (_("\
+      --time=WORD\n\
+         show time as WORD instead of modification time:\n\
+         atime, access, use, ctime or status\n\
+"));
+      oputs (_("\
+      --time-style=STYLE\n\
+         time/date format with --time; see TIME_STYLE below\n\
+"));
+      oputs (_("\
+  -X, --exclude-from=FILE\n\
+         exclude files that match any pattern in FILE\n\
+"));
+      oputs (_("\
+      --exclude=PATTERN\n\
+         exclude files that match PATTERN\n\
+"));
+      oputs (_("\
+  -x, --one-file-system\n\
+         skip directories on different file systems\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_blocksize_note ("DU");
       emit_size_note ();
       fputs (_("\

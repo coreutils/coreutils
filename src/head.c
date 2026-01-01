@@ -117,23 +117,30 @@ With more than one FILE, precede each with a header giving the file name.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      printf (_("\
-  -c, --bytes=[-]NUM       print the first NUM bytes of each file;\n\
-                             with the leading '-', print all but the last\n\
-                             NUM bytes of each file\n\
-  -n, --lines=[-]NUM       print the first NUM lines instead of the first %d;\n\
-                             with the leading '-', print all but the last\n\
-                             NUM lines of each file\n\
+      oputs (_("\
+  -c, --bytes=[-]NUM\n\
+         print the first NUM bytes of each file;\n\
+         with the leading '-', print all but the last NUM bytes of each file\n\
+"));
+      oprintf (_("\
+  -n, --lines=[-]NUM\n\
+         print the first NUM lines instead of the first %d;\n\
+         with the leading '-', print all but the last NUM lines of each file\n\
 "), DEFAULT_NUMBER);
-      fputs (_("\
-  -q, --quiet, --silent    never print headers giving file names\n\
-  -v, --verbose            always print headers giving file names\n\
-"), stdout);
-      fputs (_("\
-  -z, --zero-terminated    line delimiter is NUL, not newline\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -q, --quiet, --silent\n\
+         never print headers giving file names\n\
+"));
+      oputs (_("\
+  -v, --verbose\n\
+         always print headers giving file names\n\
+"));
+      oputs (_("\
+  -z, --zero-terminated\n\
+         line delimiter is NUL, not newline\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 NUM may have a multiplier suffix:\n\

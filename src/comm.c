@@ -120,29 +120,38 @@ With no options, produce three-column output.  Column one contains\n\
 lines unique to FILE1, column two contains lines unique to FILE2,\n\
 and column three contains lines common to both files.\n\
 "), stdout);
-      fputs (_("\
-\n\
-  -1                      suppress column 1 (lines unique to FILE1)\n\
-  -2                      suppress column 2 (lines unique to FILE2)\n\
-  -3                      suppress column 3 (lines that appear in both files)\n\
-"), stdout);
-      fputs (_("\
-\n\
-      --check-order       check that the input is correctly sorted, even\n\
-                            if all input lines are pairable\n\
-      --nocheck-order     do not check that the input is correctly sorted\n\
-"), stdout);
-      fputs (_("\
-      --output-delimiter=STR  separate columns with STR\n\
-"), stdout);
-      fputs (_("\
-      --total             output a summary\n\
-"), stdout);
-      fputs (_("\
-  -z, --zero-terminated   line delimiter is NUL, not newline\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -1     suppress column 1 (lines unique to FILE1)\n\
+"));
+      oputs (_("\
+  -2     suppress column 2 (lines unique to FILE2)\n\
+"));
+      oputs (_("\
+  -3     suppress column 3 (lines that appear in both files)\n\
+"));
+      oputs (_("\
+      --check-order\n\
+         check that the input is correctly sorted,\n\
+         even if all input lines are pairable\n\
+"));
+      oputs (_("\
+      --nocheck-order\n\
+         do not check that the input is correctly sorted\n\
+"));
+      oputs (_("\
+      --output-delimiter=STR\n\
+         separate columns with STR\n\
+"));
+      oputs (_("\
+      --total\n\
+         output a summary\n\
+"));
+      oputs (_("\
+  -z, --zero-terminated\n\
+         line delimiter is NUL, not newline\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 Comparisons honor the rules specified by 'LC_COLLATE'.\n\

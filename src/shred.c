@@ -179,28 +179,45 @@ If FILE is -, shred standard output.\n\
 
       emit_mandatory_arg_note ();
 
-      printf (_("\
-  -f, --force    change permissions to allow writing if necessary\n\
-  -n, --iterations=N  overwrite N times instead of the default (%d)\n\
-      --random-source=FILE  get random bytes from FILE\n\
-  -s, --size=N   shred this many bytes (suffixes like K, M, G accepted)\n\
+      oputs (_("\
+  -f, --force\n\
+         change permissions to allow writing if necessary\n\
+"));
+      oprintf (_("\
+  -n, --iterations=N\n\
+         overwrite N times instead of the default (%d)\n\
 "), DEFAULT_PASSES);
-      fputs (_("\
-  -u             deallocate and remove file after overwriting\n\
-      --remove[=HOW]  like -u but give control on HOW to delete;  See below\n\
-"), stdout);
-      fputs (_("\
-  -v, --verbose  show details of data and metadata operations performed\n\
-"), stdout);
-      fputs (_("\
-  -x, --exact    do not round file sizes up to the next full block;\n\
-                   this is the default for non-regular files\n\
-"), stdout);
-      fputs (_("\
-  -z, --zero     add a final overwrite with zeros to hide shredding\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+      --random-source=FILE\n\
+         get random bytes from FILE\n\
+"));
+      oputs (_("\
+  -s, --size=N\n\
+         shred this many bytes (suffixes like K, M, G accepted)\n\
+"));
+      oputs (_("\
+  -u\n\
+         deallocate and remove file after overwriting\n\
+"));
+      oputs (_("\
+      --remove[=HOW]\n\
+         like -u but give control on HOW to delete;  See below\n\
+"));
+      oputs (_("\
+  -v, --verbose\n\
+         show details of data and metadata operations performed\n\
+"));
+      oputs (_("\
+  -x, --exact\n\
+         do not round file sizes up to the next full block;\n\
+         this is the default for non-regular files\n\
+"));
+      oputs (_("\
+  -z, --zero\n\
+         add a final overwrite with zeros to hide shredding\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n\

@@ -56,8 +56,8 @@ Usage: %s COMMAND [ARG]...\n\
 Run COMMAND, ignoring hangup signals.\n\
 \n\
 "), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       printf (_("\n\
 If standard input is a terminal, redirect it from an unreadable file.\n\
 If standard output is a terminal, append output to 'nohup.out' if possible,\n\

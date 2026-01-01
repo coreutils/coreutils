@@ -83,14 +83,21 @@ Convert blanks in each FILE to tabs, writing to standard output.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -a, --all        convert all blanks, instead of just initial blanks\n\
-      --first-only  convert only leading sequences of blanks (overrides -a)\n\
-  -t, --tabs=N     have tabs N characters apart instead of 8 (enables -a)\n\
-"), stdout);
-      emit_tab_list_info ();
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -a, --all\n\
+         convert all blanks, instead of just initial blanks\n\
+"));
+      oputs (_("\
+      --first-only\n\
+         convert only leading sequences of blanks (overrides -a)\n\
+"));
+      oputs (_("\
+  -t, --tabs=N\n\
+         have tabs N characters apart instead of 8 (enables -a)\n\
+"));
+      emit_tab_list_info (PROGRAM_NAME);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

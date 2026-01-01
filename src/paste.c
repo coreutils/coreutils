@@ -464,23 +464,23 @@ is replaced with a TAB.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      fputs (_("\
+      oputs (_("\
   -d, --delimiters=LIST\n\
          reuse characters from LIST instead of TABs;\n\
          backslash escapes are supported\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -s, --serial\n\
          paste one file at a time instead of in parallel; the newline of\n\
          every line except the last line in each file is replaced with a TAB\
 \n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -z, --zero-terminated\n\
          line delimiter is NUL, not newline\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       /* FIXME: add a couple of examples.  */
       emit_ancillary_info (PROGRAM_NAME);
     }

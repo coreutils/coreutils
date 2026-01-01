@@ -292,53 +292,67 @@ With more than one FILE, precede each with a header giving the file name.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-     fputs (_("\
-  -c, --bytes=[+]NUM       output the last NUM bytes; or use -c +NUM to\n\
-                             output starting with byte NUM of each file\n\
-"), stdout);
-     fputs (_("\
-      --debug             indicate which --follow implementation is used\n\
-"), stdout);
-     fputs (_("\
+     oputs (_("\
+  -c, --bytes=[+]NUM\n\
+         output the last NUM bytes;\n\
+         or use -c +NUM to output starting with byte NUM of each file\n\
+"));
+     oputs (_("\
+      --debug\n\
+         indicate which --follow implementation is used\n\
+"));
+     oputs (_("\
   -f, --follow[={name|descriptor}]\n\
-                           output appended data as the file grows;\n\
-                             an absent option argument means 'descriptor'\n\
-  -F                       same as --follow=name --retry\n\
-"), stdout);
-     printf (_("\
-  -n, --lines=[+]NUM       output the last NUM lines, instead of the last %d;\n\
-                             or use -n +NUM to skip NUM-1 lines at the start\n\
-"),
-             DEFAULT_N_LINES
-             );
-     printf (_("\
+         output appended data as the file grows;\n\
+         an absent option argument means 'descriptor'\n\
+"));
+     oputs (_("\
+  -F\n\
+         same as --follow=name --retry\n\
+"));
+     oprintf (_("\
+  -n, --lines=[+]NUM\n\
+         output the last NUM lines, instead of the last %d;\n\
+         or use -n +NUM to skip NUM-1 lines at the start\n\
+"), DEFAULT_N_LINES);
+     oprintf (_("\
       --max-unchanged-stats=N\n\
-                           with --follow=name, reopen a FILE which has not\n\
-                             changed size after N (default %d) iterations\n\
-                             to see if it has been unlinked or renamed\n\
-                             (this is the usual case of rotated log files);\n\
-                             with inotify, this option is rarely useful\n\
-"),
-             DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS
-             );
-     fputs (_("\
-      --pid=PID            with -f, exit after PID no longer exists;\n\
-                             can be repeated to watch multiple processes\n\
-  -q, --quiet, --silent    never output headers giving file names\n\
-      --retry              keep trying to open a file if it is inaccessible\n\
-"), stdout);
-     fputs (_("\
-  -s, --sleep-interval=N   with -f, sleep for approximately N seconds\n\
-                             (default 1.0) between iterations;\n\
-                             with inotify and --pid=P, check process P at\n\
-                             least once every N seconds\n\
-  -v, --verbose            always output headers giving file names\n\
-"), stdout);
-     fputs (_("\
-  -z, --zero-terminated    line delimiter is NUL, not newline\n\
-"), stdout);
-     fputs (HELP_OPTION_DESCRIPTION, stdout);
-     fputs (VERSION_OPTION_DESCRIPTION, stdout);
+         with --follow=name, reopen a FILE which has not\n\
+         changed size after N (default %d) iterations\n\
+         to see if it has been unlinked or renamed\n\
+         (this is the usual case of rotated log files);\n\
+         with inotify, this option is rarely useful\n\
+"), DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS);
+     oputs (_("\
+      --pid=PID\n\
+         with -f, exit after PID no longer exists;\n\
+         can be repeated to watch multiple processes\n\
+"));
+     oputs (_("\
+  -q, --quiet, --silent\n\
+         never output headers giving file names\n\
+"));
+     oputs (_("\
+      --retry\n\
+         keep trying to open a file if it is inaccessible\n\
+"));
+     oputs (_("\
+  -s, --sleep-interval=N\n\
+         with -f, sleep for approximately N seconds\n\
+         (default 1.0) between iterations;\n\
+         with inotify and --pid=P,\n\
+         check process P at least once every N seconds\n\
+"));
+     oputs (_("\
+  -v, --verbose\n\
+         always output headers giving file names\n\
+"));
+     oputs (_("\
+  -z, --zero-terminated\n\
+         line delimiter is NUL, not newline\n\
+"));
+     oputs (HELP_OPTION_DESCRIPTION);
+     oputs (VERSION_OPTION_DESCRIPTION);
      fputs (_("\
 \n\
 NUM may have a multiplier suffix:\n\

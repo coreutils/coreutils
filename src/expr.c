@@ -237,8 +237,8 @@ Usage: %s EXPRESSION\n\
 "),
               program_name, program_name);
       putchar ('\n');
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 Print the value of EXPRESSION to standard output.  A blank line below\n\

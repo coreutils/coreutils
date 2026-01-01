@@ -183,26 +183,44 @@ space delimited by white space characters or by start or end of input.\n\
 \n\
 The options below may be used to select which counts are printed, always in\n\
 the following order: newline, word, character, byte, maximum line length.\n\
-  -c, --bytes            print the byte counts\n\
-  -m, --chars            print the character counts\n\
-  -l, --lines            print the newline counts\n\
 "), stdout);
-      fputs (_("\
-      --debug            indicate what line count acceleration is used\n\
-"), stdout);
-      fputs (_("\
-      --files0-from=F    read input from the files specified by\n\
-                           NUL-terminated names in file F;\n\
-                           If F is -, read names from standard input\n\
-  -L, --max-line-length  print the maximum display width\n\
-  -w, --words            print the word counts\n\
-"), stdout);
-      fputs (_("\
-      --total=WHEN       when to print a line with total counts;\n\
-                           WHEN can be: auto, always, only, never\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -c, --bytes\n\
+         print the byte counts\n\
+"));
+      oputs (_("\
+  -m, --chars\n\
+         print the character counts\n\
+"));
+      oputs (_("\
+  -l, --lines\n\
+         print the newline counts\n\
+"));
+      oputs (_("\
+      --debug\n\
+         indicate what line count acceleration is used\n\
+"));
+      oputs (_("\
+      --files0-from=F\n\
+         read input from the files specified by\n\
+         NUL-terminated names in file F;\n\
+         If F is -, read names from standard input\n\
+"));
+      oputs (_("\
+  -L, --max-line-length\n\
+         print the maximum display width\n\
+"));
+      oputs (_("\
+  -w, --words\n\
+         print the word counts\n\
+"));
+      oputs (_("\
+      --total=WHEN\n\
+         when to print a line with total counts;\n\
+         WHEN can be: auto, always, only, never\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

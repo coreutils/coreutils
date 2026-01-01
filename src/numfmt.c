@@ -922,69 +922,84 @@ Usage: %s [OPTION]... [NUMBER]...\n\
 Reformat NUMBER(s), or the numbers from standard input if none are specified.\n\
 "), stdout);
       emit_mandatory_arg_note ();
-      fputs (_("\
-      --debug          print warnings about invalid input\n\
-"), stdout);
-      fputs (_("\
-  -d, --delimiter=X    use X instead of whitespace for field delimiter\n\
-"), stdout);
-      fputs (_("\
-      --field=FIELDS   replace the numbers in these input fields (default=1);\n\
-                         see FIELDS below\n\
-"), stdout);
-      fputs (_("\
-      --format=FORMAT  use printf style floating-point FORMAT;\n\
-                         see FORMAT below for details\n\
-"), stdout);
-      fputs (_("\
-      --from=UNIT      auto-scale input numbers to UNITs; default is 'none';\n\
-                         see UNIT below\n\
-"), stdout);
-      fputs (_("\
-      --from-unit=N    specify the input unit size (instead of the default 1)\n\
-"), stdout);
-      fputs (_("\
-      --grouping       use locale-defined grouping of digits, e.g. 1,000,000\n\
-                         (which means it has no effect in the C/POSIX locale)\n\
-"), stdout);
-      fputs (_("\
-      --header[=N]     print (without converting) the first N header lines;\n\
-                         N defaults to 1 if not specified\n\
-"), stdout);
-      fputs (_("\
-      --invalid=MODE   failure mode for invalid numbers: MODE can be:\n\
-                         abort (default), fail, warn, ignore\n\
-"), stdout);
-      fputs (_("\
-      --padding=N      pad the output to N characters; positive N will\n\
-                         right-align; negative N will left-align;\n\
-                         padding is ignored if the output is wider than N;\n\
-                         the default is to automatically pad if a whitespace\n\
-                         is found\n\
-"), stdout);
-      fputs (_("\
-      --round=METHOD   use METHOD for rounding when scaling; METHOD can be:\n\
-                         up, down, from-zero (default), towards-zero, nearest\n\
-"), stdout);
-      fputs (_("\
-      --suffix=SUFFIX  add SUFFIX to output numbers, and accept optional\n\
-                         SUFFIX in input numbers\n\
-"), stdout);
-      fputs (_("\
-      --unit-separator=SEP  insert SEP between number and unit on output,\n\
-                         and accept optional SEP in input numbers\n\
-"), stdout);
-      fputs (_("\
-      --to=UNIT        auto-scale output numbers to UNITs; see UNIT below\n\
-"), stdout);
-      fputs (_("\
-      --to-unit=N      the output unit size (instead of the default 1)\n\
-"), stdout);
-      fputs (_("\
-  -z, --zero-terminated    line delimiter is NUL, not newline\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+      --debug\n\
+         print warnings about invalid input\n\
+"));
+      oputs (_("\
+  -d, --delimiter=X\n\
+         use X instead of whitespace for field delimiter\n\
+"));
+      oputs (_("\
+      --field=FIELDS\n\
+         replace the numbers in these input fields (default=1);\n\
+         see FIELDS below for details\n\
+"));
+      oputs (_("\
+      --format=FORMAT\n\
+         use printf style floating-point FORMAT;\n\
+         see FORMAT below for details\n\
+"));
+      oputs (_("\
+      --from=UNIT\n\
+         auto-scale input numbers to UNITs; default is 'none';\n\
+         see UNIT below for details\n\
+"));
+      oputs (_("\
+      --from-unit=N\n\
+         specify the input unit size (instead of the default 1)\n\
+"));
+      oputs (_("\
+      --grouping\n\
+         use locale-defined grouping of digits, e.g. 1,000,000.\n\
+         This has no effect in the C/POSIX locale\n\
+"));
+      oputs (_("\
+      --header[=N]\n\
+         print (without converting) the first N header lines;\n\
+         N defaults to 1 if not specified\n\
+"));
+      oputs (_("\
+      --invalid=MODE\n\
+         failure mode for invalid numbers;\n\
+         MODE can be: abort (default), fail, warn, ignore\n\
+"));
+      oputs (_("\
+      --padding=N\n\
+         pad the output to N characters;\n\
+         positive N will right-align, negative N will left-align;\n\
+         padding is ignored if the output is wider than N;\n\
+         the default is to automatically pad if a whitespace is found\n\
+"));
+      oputs (_("\
+      --round=METHOD\n\
+         use METHOD for rounding when scaling; METHOD can be:\n\
+         up, down, from-zero (default), towards-zero, nearest\n\
+"));
+      oputs (_("\
+      --suffix=SUFFIX\n\
+         add SUFFIX to output numbers,\n\
+         and accept an optional SUFFIX in input numbers\n\
+"));
+      oputs (_("\
+      --unit-separator=SEP\n\
+         insert SEP between number and unit on output,\n\
+         and accept an optional SEP in input numbers\n\
+"));
+      oputs (_("\
+      --to=UNIT\n\
+         auto-scale output numbers to UNITs; see UNIT below\n\
+"));
+      oputs (_("\
+      --to-unit=N\n\
+         the output unit size (instead of the default 1)\n\
+"));
+      oputs (_("\
+  -z, --zero-terminated\n\
+         line delimiter is NUL, not newline\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
 
       fputs (_("\
 \n\

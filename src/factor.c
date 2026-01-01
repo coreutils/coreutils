@@ -1953,11 +1953,12 @@ Print the prime factors of each specified integer NUMBER.  If none\n\
 are specified on the command line, read them from standard input.\n\
 \n\
 "), stdout);
-      fputs ("\
-  -h, --exponents   print repeated factors in form p^e unless e is 1\n\
-", stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -h, --exponents\n\
+         print repeated factors in form p^e unless e is 1\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

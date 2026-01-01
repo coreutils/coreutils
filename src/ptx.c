@@ -1680,36 +1680,60 @@ Output a permuted index, including context, of the words in the input files.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      fputs (_("\
+      oputs (_("\
   -A, --auto-reference           output automatically generated references\n\
+"));
+      oputs (_("\
   -G, --traditional              behave more like System V 'ptx'\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -F, --flag-truncation=STRING   use STRING for flagging line truncations.\n\
                                  The default is '/'\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -M, --macro-name=STRING        macro name to use instead of 'xx'\n\
+"));
+      oputs (_("\
   -O, --format=roff              generate output as roff directives\n\
+"));
+      oputs (_("\
   -R, --right-side-refs          put references at right, not counted in -w\n\
+"));
+      oputs (_("\
   -S, --sentence-regexp=REGEXP   for end of lines or end of sentences\n\
+"));
+      oputs (_("\
   -T, --format=tex               generate output as TeX directives\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -W, --word-regexp=REGEXP       use REGEXP to match each keyword\n\
+"));
+      oputs (_("\
   -b, --break-file=FILE          word break characters in this FILE\n\
+"));
+      oputs (_("\
   -f, --ignore-case              fold lower case to upper case for sorting\n\
+"));
+      oputs (_("\
   -g, --gap-size=NUMBER          gap size in columns between output fields\n\
+"));
+      oputs (_("\
   -i, --ignore-file=FILE         read ignore word list from FILE\n\
+"));
+      oputs (_("\
   -o, --only-file=FILE           read only word list from this FILE\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -r, --references               first field of each line is a reference\n\
+"));
+      oputs (_("\
   -t, --typeset-mode             change the default width from 72 to 100\n\
+"));
+      oputs (_("\
   -w, --width=NUMBER             output width in columns, reference excluded\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

@@ -94,13 +94,17 @@ Run COMMAND, with modified buffering operations for its standard streams.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
+      oputs (_("\
   -i, --input=MODE   adjust standard input stream buffering\n\
+"));
+      oputs (_("\
   -o, --output=MODE  adjust standard output stream buffering\n\
+"));
+      oputs (_("\
   -e, --error=MODE   adjust standard error stream buffering\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\n\
 If MODE is 'L' the corresponding stream will be line buffered.\n\
 This option is invalid with standard input.\n"), stdout);

@@ -59,13 +59,17 @@ Print the number of processing units available to the current process,\n\
 which may be less than the number of online processors\n\
 \n\
 "), stdout);
-      fputs (_("\
-      --all      print the number of installed processors\n\
-      --ignore=N  if possible, exclude N processing units\n\
-"), stdout);
+      oputs (_("\
+      --all\n\
+         print the number of installed processors\n\
+"));
+      oputs (_("\
+      --ignore=N\n\
+         if possible, exclude N processing units\n\
+"));
 
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

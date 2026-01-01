@@ -86,14 +86,24 @@ With neither CONTEXT nor COMMAND, print the current security context.\n\
 
       fputs (_("\
   CONTEXT            Complete security context\n\
-  -c, --compute      compute process transition context before modifying\n\
-  -t, --type=TYPE    type (for same role as parent)\n\
-  -u, --user=USER    user identity\n\
-  -r, --role=ROLE    role\n\
-  -l, --range=RANGE  levelrange\n\
 "), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -c, --compute      compute process transition context before modifying\n\
+"));
+      oputs (_("\
+  -t, --type=TYPE    type (for same role as parent)\n\
+"));
+      oputs (_("\
+  -u, --user=USER    user identity\n\
+"));
+      oputs (_("\
+  -r, --role=ROLE    role\n\
+"));
+      oputs (_("\
+  -l, --range=RANGE  levelrange\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_exec_status (PROGRAM_NAME);
       emit_ancillary_info (PROGRAM_NAME);
     }

@@ -66,19 +66,29 @@ Write a random permutation of the input lines to standard output.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      fputs (_("\
+      oputs (_("\
   -e, --echo                treat each ARG as an input line\n\
+"));
+      oputs (_("\
   -i, --input-range=LO-HI   treat each number LO through HI as an input line\n\
+"));
+      oputs (_("\
   -n, --head-count=COUNT    output at most COUNT lines\n\
+"));
+      oputs (_("\
   -o, --output=FILE         write result to FILE instead of standard output\n\
+"));
+      oputs (_("\
       --random-source=FILE  get random bytes from FILE\n\
+"));
+      oputs (_("\
   -r, --repeat              output lines can be repeated\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -z, --zero-terminated     line delimiter is NUL, not newline\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
 

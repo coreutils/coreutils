@@ -168,36 +168,54 @@ With no options, matching lines are merged to the first occurrence.\n\
 
       emit_mandatory_arg_note ();
 
-     fputs (_("\
-  -c, --count           prefix lines by the number of occurrences\n\
-  -d, --repeated        only print duplicate lines, one for each group\n\
-"), stdout);
-     fputs (_("\
-  -D                    print all duplicate lines\n\
-      --all-repeated[=METHOD]  like -D, but allow separating groups\n\
-                                 with an empty line;\n\
-                                 METHOD={none(default),prepend,separate}\n\
-"), stdout);
-     fputs (_("\
-  -f, --skip-fields=N   avoid comparing the first N fields\n\
-"), stdout);
-     fputs (_("\
-      --group[=METHOD]  show all items, separating groups with an empty line;\n\
-                          METHOD={separate(default),prepend,append,both}\n\
-"), stdout);
-     fputs (_("\
-  -i, --ignore-case     ignore differences in case when comparing\n\
-  -s, --skip-chars=N    avoid comparing the first N characters\n\
-  -u, --unique          only print unique lines\n\
-"), stdout);
-      fputs (_("\
-  -z, --zero-terminated     line delimiter is NUL, not newline\n\
-"), stdout);
-     fputs (_("\
-  -w, --check-chars=N   compare no more than N characters in lines\n\
-"), stdout);
-     fputs (HELP_OPTION_DESCRIPTION, stdout);
-     fputs (VERSION_OPTION_DESCRIPTION, stdout);
+     oputs (_("\
+  -c, --count\n\
+         prefix lines by the number of occurrences\n\
+"));
+     oputs (_("\
+  -d, --repeated\n\
+         only print duplicate lines, one for each group\n\
+"));
+     oputs (_("\
+  -D\n\
+         print all duplicate lines\n\
+"));
+     oputs (_("\
+      --all-repeated[=METHOD]\n\
+         like -D, but allow separating groups with an empty line;\n\
+         METHOD={none(default),prepend,separate}\n\
+"));
+     oputs (_("\
+  -f, --skip-fields=N\n\
+         avoid comparing the first N fields\n\
+"));
+     oputs (_("\
+      --group[=METHOD]\n\
+         show all items, separating groups with an empty line;\n\
+         METHOD={separate(default),prepend,append,both}\n\
+"));
+     oputs (_("\
+  -i, --ignore-case\n\
+         ignore differences in case when comparing\n\
+"));
+     oputs (_("\
+  -s, --skip-chars=N\n\
+         avoid comparing the first N characters\n\
+"));
+     oputs (_("\
+  -u, --unique\n\
+         only print unique lines\n\
+"));
+     oputs (_("\
+  -z, --zero-terminated\n\
+         line delimiter is NUL, not newline\n\
+"));
+     oputs (_("\
+  -w, --check-chars=N\n\
+         compare no more than N characters in lines\n\
+"));
+     oputs (HELP_OPTION_DESCRIPTION);
+     oputs (VERSION_OPTION_DESCRIPTION);
      fputs (_("\
 \n\
 A field is a run of blanks (usually spaces and/or TABs), then non-blank\n\

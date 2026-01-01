@@ -55,11 +55,12 @@ Output each NAME with its last non-slash component and trailing slashes\n\
 removed; if NAME contains no /'s, output '.' (meaning the current directory).\n\
 \n\
 "), stdout);
-      fputs (_("\
-  -z, --zero     end each output line with NUL, not newline\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -z, --zero\n\
+         end each output line with NUL, not newline\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       printf (_("\
 \n\
 Examples:\n\

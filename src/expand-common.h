@@ -73,4 +73,4 @@ cleanup_file_list_stdin (void);
 /* Emit the --help output for --tabs=LIST option accepted by expand and
    unexpand.  */
 extern void
-emit_tab_list_info (void);
+emit_tab_list_info (char const *program);

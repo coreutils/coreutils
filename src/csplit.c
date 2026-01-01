@@ -1419,21 +1419,36 @@ Read standard input if FILE is -\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -b, --suffix-format=FORMAT  use sprintf FORMAT instead of %02d\n\
-  -f, --prefix=PREFIX        use PREFIX instead of 'xx'\n\
-  -k, --keep-files           do not remove output files on errors\n\
-"), stdout);
-      fputs (_("\
-      --suppress-matched     suppress the lines matching PATTERN\n\
-"), stdout);
-      fputs (_("\
-  -n, --digits=DIGITS        use specified number of digits instead of 2\n\
-  -s, --quiet, --silent      do not print counts of output file sizes\n\
-  -z, --elide-empty-files    suppress empty output files\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -b, --suffix-format=FORMAT\n\
+         use sprintf FORMAT instead of %02d\n\
+"));
+      oputs (_("\
+  -f, --prefix=PREFIX\n\
+         use PREFIX instead of 'xx'\n\
+"));
+      oputs (_("\
+  -k, --keep-files\n\
+         do not remove output files on errors\n\
+"));
+      oputs (_("\
+      --suppress-matched\n\
+         suppress the lines matching PATTERN\n\
+"));
+      oputs (_("\
+  -n, --digits=DIGITS\n\
+         use specified number of digits instead of 2\n\
+"));
+      oputs (_("\
+  -s, --quiet, --silent\n\
+         do not print counts of output file sizes\n\
+"));
+      oputs (_("\
+  -z, --elide-empty-files\n\
+         suppress empty output files\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 Each PATTERN may be:\n\

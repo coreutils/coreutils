@@ -59,8 +59,8 @@ Usage: %s FORMAT [ARGUMENT]...\n\
 Print ARGUMENT(s) according to FORMAT, or execute according to OPTION:\n\
 \n\
 "), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 FORMAT controls the output as in C printf.  Interpreted sequences are:\n\

@@ -166,8 +166,8 @@ an uninterruptible sleep state also contribute to the load average.\n"));
 If FILE is not specified, use %s.  %s as FILE is common.\n\
 \n"),
               UTMP_FILE, WTMP_FILE);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

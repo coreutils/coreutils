@@ -2776,100 +2776,120 @@ Paginate or columnate FILE(s) for printing.\n\
 
       fputs (_("\
   +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]\n\
-                    begin [stop] printing with page FIRST_[LAST_]PAGE\n\
+         begin [stop] printing with page FIRST_[LAST_]PAGE\n\
   -COLUMN, --columns=COLUMN\n\
-                    output COLUMN columns and print columns down,\n\
-                    unless -a is used. Balance number of lines in the\n\
-                    columns on each page\n\
+         output COLUMN columns and print columns down, unless -a is used.\n\
+         Balance number of lines in the columns on each page\n\
 "), stdout);
-      fputs (_("\
-  -a, --across      print columns across rather than down, used together\n\
-                    with -COLUMN\n\
+      oputs (_("\
+  -a, --across\n\
+         print columns across rather than down, used together with -COLUMN\n\
+"));
+      oputs (_("\
   -c, --show-control-chars\n\
-                    use hat notation (^G) and octal backslash notation\n\
+         use hat notation (^G) and octal backslash notation\n\
+"));
+      oputs (_("\
   -d, --double-space\n\
-                    double space the output\n\
-"), stdout);
-      fputs (_("\
+         double space the output\n\
+"));
+      oputs (_("\
   -D, --date-format=FORMAT\n\
-                    use FORMAT for the header date\n\
+         use FORMAT for the header date\n\
+"));
+      oputs (_("\
   -e[CHAR[WIDTH]], --expand-tabs[=CHAR[WIDTH]]\n\
-                    expand input CHARs (TABs) to tab WIDTH (8)\n\
+         expand input CHARs (TABs) to tab WIDTH (8)\n\
+"));
+      oputs (_("\
   -F, -f, --form-feed\n\
-                    use form feeds instead of newlines to separate pages\n\
-                    (by a 3-line page header with -F or a 5-line header\n\
-                    and trailer without -F)\n\
-"), stdout);
-      fputs (_("\
+         use form feeds instead of newlines to separate pages\n\
+         (by a 3-line page header with -F or a 5-line header\n\
+         and trailer without -F)\n\
+"));
+      oputs (_("\
   -h, --header=HEADER\n\
-                    use a centered HEADER instead of filename in page header,\n\
-                    -h \"\" prints a blank line, don't use -h\"\"\n\
+         use a centered HEADER instead of filename in page header,\n\
+         -h \"\" prints a blank line, don't use -h\"\"\n\
+"));
+      oputs (_("\
   -i[CHAR[WIDTH]], --output-tabs[=CHAR[WIDTH]]\n\
-                    replace spaces with CHARs (TABs) to tab WIDTH (8)\n\
+         replace spaces with CHARs (TABs) to tab WIDTH (8)\n\
+"));
+      oputs (_("\
   -J, --join-lines  merge full lines, turns off -W line truncation, no column\n\
-                    alignment, --sep-string[=STRING] sets separators\n\
-"), stdout);
-      fputs (_("\
+         alignment, --sep-string[=STRING] sets separators\n\
+"));
+      oputs (_("\
   -l, --length=PAGE_LENGTH\n\
-                    set the page length to PAGE_LENGTH (66) lines\n\
-                    (default number of lines of text 56, and with -F 63).\n\
-                    implies -t if PAGE_LENGTH <= 10\n\
-"), stdout);
-      fputs (_("\
-  -m, --merge       print all files in parallel, one in each column,\n\
-                    truncate lines, but join lines of full length with -J\n\
-"), stdout);
-      fputs (_("\
+         set the page length to PAGE_LENGTH (66) lines\n\
+         (default number of lines of text 56, and with -F 63).\n\
+         implies -t if PAGE_LENGTH <= 10\n\
+"));
+      oputs (_("\
+  -m, --merge\n\
+         print all files in parallel, one in each column,\n\
+         truncate lines, but join lines of full length with -J\n\
+"));
+      oputs (_("\
   -n[SEP[DIGITS]], --number-lines[=SEP[DIGITS]]\n\
-                    number lines, use DIGITS (5) digits, then SEP (TAB),\n\
-                    default counting starts with 1st line of input file\n\
+         number lines, use DIGITS (5) digits, then SEP (TAB),\n\
+         default counting starts with 1st line of input file\n\
+"));
+      oputs (_("\
   -N, --first-line-number=NUMBER\n\
-                    start counting with NUMBER at 1st line of first\n\
-                    page printed (see +FIRST_PAGE)\n\
-"), stdout);
-      fputs (_("\
+         start counting with NUMBER at 1st line of first\n\
+         page printed (see +FIRST_PAGE)\n\
+"));
+      oputs (_("\
   -o, --indent=MARGIN\n\
-                    offset each line with MARGIN (zero) spaces, do not\n\
-                    affect -w or -W, MARGIN will be added to PAGE_WIDTH\n\
+         offset each line with MARGIN (zero) spaces, do not\n\
+         affect -w or -W, MARGIN will be added to PAGE_WIDTH\n\
+"));
+      oputs (_("\
   -r, --no-file-warnings\n\
-                    omit warning when a file cannot be opened\n\
-"), stdout);
-      fputs (_("\
+         omit warning when a file cannot be opened\n\
+"));
+      oputs (_("\
   -s[CHAR], --separator[=CHAR]\n\
-                    separate columns by a single character, default for CHAR\n\
-                    is the <TAB> character without -w and \'no char\' with -w.\
+         separate columns by a single character, default for CHAR\n\
+         is the <TAB> character without -w and \'no char\' with -w.\
 \n\
-                    -s[CHAR] turns off line truncation of all 3 column\n\
-                    options (-COLUMN|-a -COLUMN|-m) except -w is set\n\
-"), stdout);
-      fputs (_("\
+         -s[CHAR] turns off line truncation of all 3 column\n\
+         options (-COLUMN|-a -COLUMN|-m) except -w is set\n\
+"));
+      oputs (_("\
   -S[STRING], --sep-string[=STRING]\n\
-                    separate columns by STRING,\n\
-                    without -S: Default separator <TAB> with -J and <space>\n\
-                    otherwise (same as -S\" \"), no effect on column options\n\
-"), stdout);
-      fputs (_("\
-  -t, --omit-header  omit page headers and trailers;\n\
-                     implied if PAGE_LENGTH <= 10\n\
-"), stdout);
-      fputs (_("\
+         separate columns by STRING,\n\
+         without -S: Default separator <TAB> with -J and <space>\n\
+         otherwise (same as -S\" \"), no effect on column options\n\
+"));
+      oputs (_("\
+  -t, --omit-header\n\
+         omit page headers and trailers; implied if PAGE_LENGTH <= 10\n\
+"));
+      oputs (_("\
   -T, --omit-pagination\n\
-                    omit page headers and trailers, eliminate any pagination\n\
-                    by form feeds set in input files\n\
+         omit page headers and trailers,\n\
+         eliminate any pagination by form feeds set in input files\n\
+"));
+      oputs (_("\
   -v, --show-nonprinting\n\
-                    use octal backslash notation\n\
+         use octal backslash notation\n\
+"));
+      oputs (_("\
   -w, --width=PAGE_WIDTH\n\
-                    set page width to PAGE_WIDTH (72) characters for\n\
-                    multiple text-column output only, -s[char] turns off (72)\n\
-"), stdout);
-      fputs (_("\
+         set page width to PAGE_WIDTH (72) characters for\n\
+         multiple text-column output only, -s[char] turns off (72)\n\
+"));
+      oputs (_("\
   -W, --page-width=PAGE_WIDTH\n\
-                    set page width to PAGE_WIDTH (72) characters always,\n\
-                    truncate lines, except -J option is set, no interference\n\
-                    with -S or -s\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+         set page width to PAGE_WIDTH (72) characters always,\n\
+         truncate lines, except -J option is set,\n\
+         no interference with -S or -s\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

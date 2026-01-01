@@ -274,23 +274,39 @@ The option -WIDTH is an abbreviated form of --width=DIGITS.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -c, --crown-margin        preserve indentation of first two lines\n\
-  -p, --prefix=STRING       reformat only lines beginning with STRING,\n\
-                              reattaching the prefix to reformatted lines\n\
-  -s, --split-only          split long lines, but do not refill\n\
-"),
-             stdout);
+      oputs (_("\
+  -c, --crown-margin\n\
+         preserve indentation of first two lines\n\
+"));
+      oputs (_("\
+  -p, --prefix=STRING\n\
+         reformat only lines beginning with STRING,\n\
+         reattaching the prefix to reformatted lines\n\
+"));
+      oputs (_("\
+  -s, --split-only\n\
+         split long lines, but do not refill\n\
+"));
       /* Tell xgettext that the "% o" below is not a printf-style
          format string:  xgettext:no-c-format */
-      fputs (_("\
-  -t, --tagged-paragraph    indentation of first line different from second\n\
-  -u, --uniform-spacing     one space between words, two after sentences\n\
-  -w, --width=WIDTH         maximum line width (default of 75 columns)\n\
-  -g, --goal=WIDTH          goal width (default of 93% of width)\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -t, --tagged-paragraph\n\
+         indentation of first line different from second\n\
+"));
+      oputs (_("\
+  -u, --uniform-spacing\n\
+         one space between words, two after sentences\n\
+"));
+      oputs (_("\
+  -w, --width=WIDTH\n\
+         maximum line width (default of 75 columns)\n\
+"));
+      oputs (_("\
+  -g, --goal=WIDTH\n\
+         goal width (default of 93% of width)\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

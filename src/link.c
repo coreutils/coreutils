@@ -46,8 +46,8 @@ Usage: %s FILE1 FILE2\n\
       fputs (_("Call the link function to create a link named FILE2\
  to an existing FILE1.\n\n"),
              stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

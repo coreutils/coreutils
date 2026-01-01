@@ -438,32 +438,66 @@ interpreted in relation to its parent directory.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-      --backup[=CONTROL]      make a backup of each existing destination file\n\
-  -b                          like --backup but does not accept an argument\n\
-  -d, -F, --directory         allow the superuser to attempt to hard link\n\
-                                directories (this will probably fail due to\n\
-                                system restrictions, even for the superuser)\n\
-  -f, --force                 remove existing destination files\n\
-"), stdout);
-      fputs (_("\
-  -i, --interactive           prompt whether to remove destinations\n\
-  -L, --logical               dereference TARGETs that are symbolic links\n\
-  -n, --no-dereference        treat LINK_NAME as a normal file if\n\
-                                it is a symbolic link to a directory\n\
-  -P, --physical              make hard links directly to symbolic links\n\
-  -r, --relative              with -s, create links relative to link location\n\
-  -s, --symbolic              make symbolic links instead of hard links\n\
-"), stdout);
-      fputs (_("\
-  -S, --suffix=SUFFIX         override the usual backup suffix\n\
-  -t, --target-directory=DIRECTORY  specify the DIRECTORY in which to create\n\
-                                the links\n\
-  -T, --no-target-directory   treat LINK_NAME as a normal file always\n\
-  -v, --verbose               print name of each linked file\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+      --backup[=CONTROL]\n\
+         make a backup of each existing destination file\n\
+"));
+      oputs (_("\
+  -b\n\
+         like --backup but does not accept an argument\n\
+"));
+      oputs (_("\
+  -d, -F, --directory\n\
+         allow the superuser to attempt to hard link directories,\n\
+         if supported by the system\n\
+"));
+      oputs (_("\
+  -f, --force\n\
+         remove existing destination files\n\
+"));
+      oputs (_("\
+  -i, --interactive\n\
+         prompt whether to remove destinations\n\
+"));
+      oputs (_("\
+  -L, --logical\n\
+         dereference TARGETs that are symbolic links\n\
+"));
+      oputs (_("\
+  -n, --no-dereference\n\
+         treat LINK_NAME as a normal file\n\
+         if it is a symbolic link to a directory\n\
+"));
+      oputs (_("\
+  -P, --physical\n\
+         make hard links directly to symbolic links\n\
+"));
+      oputs (_("\
+  -r, --relative\n\
+         with -s, create links relative to link location\n\
+"));
+      oputs (_("\
+  -s, --symbolic\n\
+         make symbolic links instead of hard links\n\
+"));
+      oputs (_("\
+  -S, --suffix=SUFFIX\n\
+         override the usual backup suffix\n\
+"));
+      oputs (_("\
+  -t, --target-directory=DIRECTORY\n\
+         specify the DIRECTORY in which to create the links\n\
+"));
+      oputs (_("\
+  -T, --no-target-directory\n\
+         treat LINK_NAME as a normal file always\n\
+"));
+      oputs (_("\
+  -v, --verbose\n\
+         print name of each linked file\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_backup_suffix_note ();
       printf (_("\
 \n\

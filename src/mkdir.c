@@ -61,20 +61,31 @@ Create the DIRECTORY(ies), if they do not already exist.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -m, --mode=MODE   set file mode (as in chmod), not a=rwx - umask\n\
-  -p, --parents     no error if existing, make parent directories as needed,\n\
-                    with their file modes unaffected by any -m option\n\
-  -v, --verbose     print a message for each created directory\n\
-"), stdout);
-      fputs (_("\
-  -Z                   set SELinux security context of each created directory\n\
-                         to the default type\n\
-      --context[=CTX]  like -Z, or if CTX is specified then set the SELinux\n\
-                         or SMACK security context to CTX\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -m, --mode=MODE\n\
+         set file mode (as in chmod), not a=rwx - umask\n\
+"));
+      oputs (_("\
+  -p, --parents\n\
+         no error if existing, make parent directories as needed,\n\
+         with their file modes unaffected by any -m option\n\
+"));
+      oputs (_("\
+  -v, --verbose\n\
+         print a message for each created directory\n\
+"));
+      oputs (_("\
+  -Z\n\
+         set SELinux security context of each created directory\n\
+         to the default type\n\
+"));
+      oputs (_("\
+      --context[=CTX]\n\
+         like -Z, or if CTX is specified then set the\n\
+         SELinux or SMACK security context to CTX\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

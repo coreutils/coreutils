@@ -95,41 +95,55 @@ Change the group of each FILE to GROUP.\n\
 With --reference, change the group of each FILE to that of RFILE.\n\
 \n\
 "), stdout);
-      fputs (_("\
-  -c, --changes          like verbose but report only when a change is made\n\
-  -f, --silent, --quiet  suppress most error messages\n\
-  -v, --verbose          output a diagnostic for every file processed\n\
-"), stdout);
-      fputs (_("\
-      --dereference      affect the referent of each symbolic link (this is\n\
-                         the default), rather than the symbolic link itself\n\
-  -h, --no-dereference   affect symbolic links instead of any referenced file\n\
-"), stdout);
-      fputs (_("\
-                         (useful only on systems that can change the\n\
-                         ownership of a symlink)\n\
-"), stdout);
-      fputs (_("\
+      oputs (_("\
+  -c, --changes\n\
+         like verbose but report only when a change is made\n\
+"));
+      oputs (_("\
+  -f, --silent, --quiet\n\
+         suppress most error messages\n\
+"));
+      oputs (_("\
+  -v, --verbose\n\
+         output a diagnostic for every file processed\n\
+"));
+      oputs (_("\
+      --dereference\n\
+         affect the referent of each symbolic link (this is\n\
+         the default), rather than the symbolic link itself\n\
+"));
+      oputs (_("\
+  -h, --no-dereference\n\
+         affect symbolic links instead of any referenced file;\n\
+         useful only on systems that can change the ownership of a symlink\n\
+"));
+      oputs (_("\
       --from=CURRENT_OWNER:CURRENT_GROUP\n\
-                         change the ownership of each file only if\n\
-                         its current owner and/or group match those specified\n\
-                         here. Either may be omitted, in which case a match\n\
-                         is not required for the omitted attribute\n\
-"), stdout);
-      fputs (_("\
-      --no-preserve-root  do not treat '/' specially (the default)\n\
-      --preserve-root    fail to operate recursively on '/'\n\
-"), stdout);
-      fputs (_("\
-      --reference=RFILE  use RFILE's ownership rather than specifying values.\n\
-                         RFILE is always dereferenced if a symbolic link.\n\
-"), stdout);
-      fputs (_("\
-  -R, --recursive        operate on files and directories recursively\n\
-"), stdout);
+         change the ownership of each file only if its\n\
+         current owner and/or group match those specified here.\n\
+         Either may be omitted, in which case a match\n\
+         is not required for the omitted attribute\n\
+"));
+      oputs (_("\
+      --no-preserve-root\n\
+         do not treat '/' specially (the default)\n\
+"));
+      oputs (_("\
+      --preserve-root\n\
+         fail to operate recursively on '/'\n\
+"));
+      oputs (_("\
+      --reference=RFILE\n\
+         use RFILE's ownership rather than specifying values.\n\
+         RFILE is always dereferenced if a symbolic link.\n\
+"));
+      oputs (_("\
+  -R, --recursive\n\
+         operate on files and directories recursively\n\
+"));
       emit_symlink_recurse_options ("-P");
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       if (chown_mode == CHOWN_CHOWN)
         fputs (_("\
 \n\

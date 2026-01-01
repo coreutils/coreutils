@@ -117,46 +117,62 @@ Base%d encode or decode FILE, or standard input, to standard output.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 #if BASE_TYPE == 42
-      fputs (_("\
-      --base64          same as 'base64' program (RFC4648 section 4)\n\
-"), stdout);
-      fputs (_("\
-      --base64url       file- and url-safe base64 (RFC4648 section 5)\n\
-"), stdout);
-      fputs (_("\
-      --base58          visually unambiguous base58 encoding\n\
-"), stdout);
-      fputs (_("\
-      --base32          same as 'base32' program (RFC4648 section 6)\n\
-"), stdout);
-      fputs (_("\
-      --base32hex       extended hex alphabet base32 (RFC4648 section 7)\n\
-"), stdout);
-      fputs (_("\
-      --base16          hex encoding (RFC4648 section 8)\n\
-"), stdout);
-      fputs (_("\
-      --base2msbf       bit string with most significant bit (msb) first\n\
-"), stdout);
-      fputs (_("\
-      --base2lsbf       bit string with least significant bit (lsb) first\n\
-"), stdout);
+      oputs (_("\
+      --base64\n\
+         same as 'base64' program (RFC4648 section 4)\n\
+"));
+      oputs (_("\
+      --base64url\n\
+         file- and url-safe base64 (RFC4648 section 5)\n\
+"));
+      oputs (_("\
+      --base58\n\
+         visually unambiguous base58 encoding\n\
+"));
+      oputs (_("\
+      --base32\n\
+         same as 'base32' program (RFC4648 section 6)\n\
+"));
+      oputs (_("\
+      --base32hex\n\
+         extended hex alphabet base32 (RFC4648 section 7)\n\
+"));
+      oputs (_("\
+      --base16\n\
+         hex encoding (RFC4648 section 8)\n\
+"));
+      oputs (_("\
+      --base2msbf\n\
+         bit string with most significant bit (msb) first\n\
+"));
+      oputs (_("\
+      --base2lsbf\n\
+         bit string with least significant bit (lsb) first\n\
+"));
 #endif
-      fputs (_("\
-  -d, --decode          decode data\n\
-  -i, --ignore-garbage  when decoding, ignore non-alphabet characters\n\
-  -w, --wrap=COLS       wrap encoded lines after COLS character (default 76).\n\
-                          Use 0 to disable line wrapping\n\
-"), stdout);
+      oputs (_("\
+  -d, --decode\n\
+         decode data\n\
+"));
+      oputs (_("\
+  -i, --ignore-garbage\n\
+         when decoding, ignore non-alphabet characters\n\
+"));
+      oputs (_("\
+  -w, --wrap=COLS\n\
+         wrap encoded lines after COLS character (default 76).\n\
+         Use 0 to disable line wrapping\n\
+"));
 #if BASE_TYPE == 42
-      fputs (_("\
-      --z85             ascii85-like encoding (ZeroMQ spec:32/Z85);\n\
-                        when encoding, input length must be a multiple of 4;\n\
-                        when decoding, input length must be a multiple of 5\n\
-"), stdout);
+      oputs (_("\
+      --z85\n\
+         ascii85-like encoding (ZeroMQ spec:32/Z85);\n\
+         when encoding, input length must be a multiple of 4;\n\
+         when decoding, input length must be a multiple of 5\n\
+"));
 #endif
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
 #if BASE_TYPE == 42
       fputs (_("\
 \n\

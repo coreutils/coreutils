@@ -169,85 +169,148 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -a, --archive                same as -dR --preserve=all\n\
-      --attributes-only        don't copy the file data, just the attributes\n\
-      --backup[=CONTROL]       make a backup of each existing destination file\
-\n\
-  -b                           like --backup but does not accept an argument\n\
-      --copy-contents          copy contents of special files when recursive\n\
-  -d                           same as --no-dereference --preserve=links\n\
-"), stdout);
-      fputs (_("\
-      --debug                  explain how a file is copied.  Implies -v\n\
-"), stdout);
-      fputs (_("\
-  -f, --force                  if an existing destination file cannot be\n\
-                                 opened, remove it and try again (this option\n\
-                                 is ignored when the -n option is also used)\n\
-  -i, --interactive            prompt before overwrite (overrides a previous -n\
-\n\
-                                  option)\n\
-  -H                           follow command-line symbolic links in SOURCE\n\
-"), stdout);
-      fputs (_("\
-  -l, --link                   hard link files instead of copying\n\
-  -L, --dereference            always follow symbolic links in SOURCE\n\
-"), stdout);
-      fputs (_("\
-  -n, --no-clobber             (deprecated) silently skip existing files.\n\
-                                 See also --update\n\
-"), stdout);
-      fputs (_("\
-  -P, --no-dereference         never follow symbolic links in SOURCE\n\
-"), stdout);
-      fputs (_("\
-  -p                           same as --preserve=mode,ownership,timestamps\n\
-      --preserve[=ATTR_LIST]   preserve the specified attributes\n\
-"), stdout);
-      fputs (_("\
-      --no-preserve=ATTR_LIST  don't preserve the specified attributes\n\
-      --parents                use full source file name under DIRECTORY\n\
-"), stdout);
-      fputs (_("\
-  -R, -r, --recursive          copy directories recursively\n\
-      --reflink[=WHEN]         control clone/CoW copies. See below\n\
-      --remove-destination     remove each existing destination file before\n\
-                                 attempting to open it (contrast with --force)\
-\n"), stdout);
-      fputs (_("\
-      --sparse=WHEN            control creation of sparse files. See below\n\
-      --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n\
-                                 argument\n\
-"), stdout);
-      fputs (_("\
-  -s, --symbolic-link          make symbolic links instead of copying\n\
-  -S, --suffix=SUFFIX          override the usual backup suffix\n\
-  -t, --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
-  -T, --no-target-directory    treat DEST as a normal file\n\
-"), stdout);
-      fputs (_("\
-      --update[=UPDATE]        control which existing files are updated;\n\
-                                 UPDATE={all,none,none-fail,older(default)}\n\
-  -u                           equivalent to --update[=older].  See below\n\
-"), stdout);
-      fputs (_("\
-  -v, --verbose                explain what is being done\n\
-"), stdout);
-      fputs (_("\
-      --keep-directory-symlink  follow existing symlinks to directories\n\
-"), stdout);
-      fputs (_("\
-  -x, --one-file-system        stay on this file system\n\
-"), stdout);
-      fputs (_("\
-  -Z                           set SELinux security context of destination\n\
-                                 file to default type\n\
-      --context[=CTX]          like -Z, or if CTX is specified then set the\n\
-                                 SELinux or SMACK security context to CTX\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -a, --archive\n\
+         same as -dR --preserve=all\n\
+"));
+      oputs (_("\
+      --attributes-only\n\
+         don't copy the file data, just the attributes\n\
+"));
+      oputs (_("\
+      --backup[=CONTROL]\n\
+         make a backup of each existing destination file\n\
+"));
+      oputs (_("\
+  -b\n\
+         like --backup but does not accept an argument\n\
+"));
+      oputs (_("\
+      --copy-contents\n\
+         copy contents of special files when recursive\n\
+"));
+      oputs (_("\
+  -d\n\
+         same as --no-dereference --preserve=links\n\
+"));
+      oputs (_("\
+      --debug\n\
+         explain how a file is copied.  Implies -v\n\
+"));
+      oputs (_("\
+  -f, --force\n\
+         if an existing destination file cannot be opened, remove it and try\n\
+         again (this option is ignored when the -n option is also used)\n\
+"));
+      oputs (_("\
+  -i, --interactive\n\
+         prompt before overwrite (overrides a previous -n option)\n\
+"));
+      oputs (_("\
+  -H\n\
+         follow command-line symbolic links in SOURCE\n\
+"));
+      oputs (_("\
+  -l, --link\n\
+         hard link files instead of copying\n\
+"));
+      oputs (_("\
+  -L, --dereference\n\
+         always follow symbolic links in SOURCE\n\
+"));
+      oputs (_("\
+  -n, --no-clobber\n\
+         (deprecated) silently skip existing files.  See also --update\n\
+"));
+      oputs (_("\
+  -P, --no-dereference\n\
+         never follow symbolic links in SOURCE\n\
+"));
+      oputs (_("\
+  -p\n\
+         same as --preserve=mode,ownership,timestamps\n\
+"));
+      oputs (_("\
+      --preserve[=ATTR_LIST]\n\
+         preserve the specified attributes\n\
+"));
+      oputs (_("\
+      --no-preserve=ATTR_LIST\n\
+         don't preserve the specified attributes\n\
+"));
+      oputs (_("\
+      --parents\n\
+         use full source file name under DIRECTORY\n\
+"));
+      oputs (_("\
+  -R, -r, --recursive\n\
+         copy directories recursively\n\
+"));
+      oputs (_("\
+      --reflink[=WHEN]\n\
+         control clone/CoW copies. See below\n\
+"));
+      oputs (_("\
+      --remove-destination\n\
+         remove each existing destination file before attempting to open it\n\
+         (contrast with --force)\n\
+"));
+      oputs (_("\
+      --sparse=WHEN\n\
+         control creation of sparse files. See below\n\
+"));
+      oputs (_("\
+      --strip-trailing-slashes\n\
+         remove any trailing slashes from each SOURCE argument\n\
+"));
+      oputs (_("\
+  -s, --symbolic-link\n\
+         make symbolic links instead of copying\n\
+"));
+      oputs (_("\
+  -S, --suffix=SUFFIX\n\
+         override the usual backup suffix\n\
+"));
+      oputs (_("\
+  -t, --target-directory=DIRECTORY\n\
+         copy all SOURCE arguments into DIRECTORY\n\
+"));
+      oputs (_("\
+  -T, --no-target-directory\n\
+         treat DEST as a normal file\n\
+"));
+      oputs (_("\
+      --update[=UPDATE]\n\
+         control which existing files are updated;\n\
+         UPDATE={all,none,none-fail,older(default)}\n\
+"));
+      oputs (_("\
+  -u\n\
+         equivalent to --update[=older].  See below\n\
+"));
+      oputs (_("\
+  -v, --verbose\n\
+         explain what is being done\n\
+"));
+      oputs (_("\
+      --keep-directory-symlink\n\
+         follow existing symlinks to directories\n\
+"));
+      oputs (_("\
+  -x, --one-file-system\n\
+         stay on this file system\n\
+"));
+      oputs (_("\
+  -Z\n\
+         set SELinux security context of destination file to default type\n\
+"));
+      oputs (_("\
+      --context[=CTX]\n\
+         like -Z, or if CTX is specified then set the\n\
+         SELinux or SMACK security context to CTX\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 ATTR_LIST is a comma-separated list of attributes. Attributes are 'mode' for\n\

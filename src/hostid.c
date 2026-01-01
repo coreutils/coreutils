@@ -42,8 +42,8 @@ Usage: %s [OPTION]\n\
 Print the numeric identifier (in hexadecimal) for the current host.\n\
 \n\
 "), program_name);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

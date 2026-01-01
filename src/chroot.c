@@ -190,18 +190,21 @@ Run COMMAND with root directory set to NEWROOT.\n\
 \n\
 "), stdout);
 
-      fputs (_("\
-      --groups=G_LIST        specify supplementary groups as g1,g2,..,gN\n\
-"), stdout);
-      fputs (_("\
-      --userspec=USER:GROUP  specify user and group (ID or name) to use\n\
-"), stdout);
-      printf (_("\
-      --skip-chdir           do not change working directory to %s\n\
+      oputs (_("\
+      --groups=G_LIST\n\
+         specify supplementary groups as g1,g2,..,gN\n\
+"));
+      oputs (_("\
+      --userspec=USER:GROUP\n\
+         specify user and group (ID or name) to use\n\
+"));
+      oprintf (_("\
+      --skip-chdir\n\
+         do not change working directory to %s\n\
 "), quoteaf ("/"));
 
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 If no command is given, run '\"$SHELL\" -i' (default: '/bin/sh -i').\n\

@@ -79,11 +79,12 @@ With no COMMAND, print the current niceness.  Niceness values range from\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -n, --adjustment=N   add integer N to the niceness (default 10)\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -n, --adjustment=N\n\
+         add integer N to the niceness (default 10)\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       emit_exec_status (PROGRAM_NAME);
       emit_ancillary_info (PROGRAM_NAME);

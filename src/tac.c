@@ -126,13 +126,17 @@ Write each FILE to standard output, last line first.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      fputs (_("\
+      oputs (_("\
   -b, --before             attach the separator before instead of after\n\
+"));
+      oputs (_("\
   -r, --regex              interpret the separator as a regular expression\n\
+"));
+      oputs (_("\
   -s, --separator=STRING   use STRING as the separator instead of newline\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\n\
 Non-seekable input is buffered to $TMPDIR, defaulting to /tmp.\n\
 "), stdout);

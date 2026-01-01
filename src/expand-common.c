@@ -399,17 +399,18 @@ cleanup_file_list_stdin (void)
 /* Emit the --help output for --tabs=LIST option accepted by expand and
    unexpand.  */
 extern void
-emit_tab_list_info (void)
+emit_tab_list_info (char const* program)
 {
   /* suppress syntax check for emit_mandatory_arg_note() */
+  oputs_ (program, _("\
+  -t, --tabs=LIST\n\
+         use comma separated list of tab positions.\n\
+"));
   fputs (_("\
-  -t, --tabs=LIST  use comma separated list of tab positions.\n\
-"), stdout);
-  fputs (_("\
-                     The last specified position can be prefixed with '/'\n\
-                     to specify a tab size to use after the last\n\
-                     explicitly specified tab stop.  Also a prefix of '+'\n\
-                     can be used to align remaining tab stops relative to\n\
-                     the last specified tab stop instead of the first column\n\
+         The last specified position can be prefixed with '/'\n\
+         to specify a tab size to use after the last\n\
+         explicitly specified tab stop.  Also a prefix of '+'\n\
+         can be used to align remaining tab stops relative to\n\
+         the last specified tab stop instead of the first column\n\
 "), stdout);
 }

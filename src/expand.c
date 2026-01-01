@@ -74,13 +74,17 @@ Convert tabs in each FILE to spaces, writing to standard output.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -i, --initial    do not convert tabs after non blanks\n\
-  -t, --tabs=N     have tabs N characters apart, not 8\n\
-"), stdout);
-      emit_tab_list_info ();
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -i, --initial\n\
+         do not convert tabs after non blanks\n\
+"));
+      oputs (_("\
+  -t, --tabs=N\n\
+         have tabs N characters apart, not 8\n\
+"));
+      emit_tab_list_info (PROGRAM_NAME);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

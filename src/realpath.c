@@ -71,22 +71,40 @@ usage (int status)
       fputs (_("\
 Print the resolved absolute file name.\n\
 "), stdout);
-      fputs (_("\
+      oputs (_("\
   -E, --canonicalize           all but the last component must exist (default)\
 \n\
+"));
+      oputs (_("\
   -e, --canonicalize-existing  all components of the path must exist\n\
+"));
+      oputs (_("\
   -m, --canonicalize-missing   no path components need exist or be a directory\
 \n\
+"));
+      oputs (_("\
   -L, --logical                resolve '..' components before symlinks\n\
+"));
+      oputs (_("\
   -P, --physical               resolve symlinks as encountered (default)\n\
+"));
+      oputs (_("\
   -q, --quiet                  suppress most error messages\n\
+"));
+      oputs (_("\
       --relative-to=DIR        print the resolved path relative to DIR\n\
+"));
+      oputs (_("\
       --relative-base=DIR      print absolute paths unless paths below DIR\n\
+"));
+      oputs (_("\
   -s, --strip, --no-symlinks   don't expand symlinks\n\
+"));
+      oputs (_("\
   -z, --zero                   end each output line with NUL, not newline\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

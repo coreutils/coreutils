@@ -609,51 +609,97 @@ In the 4th form, create all components of the given DIRECTORY(ies).\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-      --backup[=CONTROL]  make a backup of each existing destination file\n\
-  -b                  like --backup but does not accept an argument\n\
-  -c                  (ignored)\n\
-  -C, --compare       compare content of source and destination files, and\n\
-                        if no change to content, ownership, and permissions,\n\
-                        do not modify the destination at all\n\
-  -d, --directory     treat all arguments as directory names; create all\n\
-                        components of the specified directories\n\
-"), stdout);
-      fputs (_("\
-  -D                  create all leading components of DEST except the last,\n\
-                        or all components of --target-directory,\n\
-                        then copy SOURCE to DEST\n\
-"), stdout);
-      fputs (_("\
-      --debug         explain how a file is copied.  Implies -v\n\
-"), stdout);
-      fputs (_("\
-  -g, --group=GROUP   set group ownership, instead of process' current group\n\
-  -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x\n\
-  -o, --owner=OWNER   set ownership (super-user only)\n\
-"), stdout);
-      fputs (_("\
-  -p, --preserve-timestamps   apply access/modification times of SOURCE files\n\
-                        to corresponding destination files\n\
-  -s, --strip         strip symbol tables\n\
-      --strip-program=PROGRAM  program used to strip binaries\n\
-  -S, --suffix=SUFFIX  override the usual backup suffix\n\
-  -t, --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
-  -T, --no-target-directory  treat DEST as a normal file\n\
-"), stdout);
-      fputs (_("\
-  -v, --verbose       print the name of each created file or directory\n\
-"), stdout);
-      fputs (_("\
-      --preserve-context  preserve SELinux security context\n\
-  -Z                      set SELinux security context of destination\n\
-                            file and each created directory to default type\n\
-      --context[=CTX]     like -Z, or if CTX is specified then set the\n\
-                            SELinux or SMACK security context to CTX\n\
-"), stdout);
+      oputs (_("\
+      --backup[=CONTROL]\n\
+         make a backup of each existing destination file\n\
+"));
+      oputs (_("\
+  -b\n\
+         like --backup but does not accept an argument\n\
+"));
+      oputs (_("\
+  -c\n\
+         (ignored)\n\
+"));
+      oputs (_("\
+  -C, --compare\n\
+         compare content of source and destination files,\n\
+         and if no change to content, ownership, and permissions,\n\
+         do not modify the destination at all\n\
+"));
+      oputs (_("\
+  -d, --directory\n\
+         treat all arguments as directory names;\n\
+         create all components of the specified directories\n\
+"));
+      oputs (_("\
+  -D\n\
+         create all leading components of DEST except the last,\n\
+         or all components of --target-directory,\n\
+         then copy SOURCE to DEST\n\
+"));
+      oputs (_("\
+      --debug\n\
+         explain how a file is copied.  Implies -v\n\
+"));
+      oputs (_("\
+  -g, --group=GROUP\n\
+         set group ownership, instead of process' current group\n\
+"));
+      oputs (_("\
+  -m, --mode=MODE\n\
+         set permission mode (as in chmod), instead of rwxr-xr-x\n\
+"));
+      oputs (_("\
+  -o, --owner=OWNER\n\
+         set ownership (super-user only)\n\
+"));
+      oputs (_("\
+  -p, --preserve-timestamps\n\
+         apply access/modification times of SOURCE files\n\
+         to corresponding destination files\n\
+"));
+      oputs (_("\
+  -s, --strip\n\
+         strip symbol tables\n\
+"));
+      oputs (_("\
+      --strip-program=PROGRAM\n\
+         program used to strip binaries\n\
+"));
+      oputs (_("\
+  -S, --suffix=SUFFIX\n\
+         override the usual backup suffix\n\
+"));
+      oputs (_("\
+  -t, --target-directory=DIRECTORY\n\
+         copy all SOURCE arguments into DIRECTORY\n\
+"));
+      oputs (_("\
+  -T, --no-target-directory\n\
+         treat DEST as a normal file\n\
+"));
+      oputs (_("\
+  -v, --verbose\n\
+         print the name of each created file or directory\n\
+"));
+      oputs (_("\
+      --preserve-context\n\
+         preserve SELinux security context\n\
+"));
+      oputs (_("\
+  -Z\n\
+         set SELinux security context of destination file\n\
+         and each created directory, to default type\n\
+"));
+      oputs (_("\
+      --context[=CTX]\n\
+         like -Z, or if CTX is specified then set the\n\
+         SELinux or SMACK security context to CTX\n\
+"));
 
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_backup_suffix_note ();
       emit_ancillary_info (PROGRAM_NAME);
     }

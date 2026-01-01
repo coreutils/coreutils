@@ -433,82 +433,137 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
 Ordering options:\n\
 \n\
 "), stdout);
+      oputs (_("\
+  -b, --ignore-leading-blanks\n\
+         ignore leading blanks when finding sort keys in each line\n\
+"));
+      oputs (_("\
+  -d, --dictionary-order\n\
+         consider only blanks and alphanumeric characters\n\
+"));
+      oputs (_("\
+  -f, --ignore-case\n\
+         fold lower case to upper case characters\n\
+"));
+      oputs (_("\
+  -g, --general-numeric-sort\n\
+         compare according to general numerical value\n\
+"));
+      oputs (_("\
+  -i, --ignore-nonprinting\n\
+         consider only printable characters\n\
+"));
+      oputs (_("\
+  -M, --month-sort\n\
+         compare (unknown) < 'JAN' < ... < 'DEC'\n\
+"));
+      oputs (_("\
+  -h, --human-numeric-sort\n\
+         compare human readable numbers (e.g., 2K 1G)\n\
+"));
+      oputs (_("\
+  -n, --numeric-sort\n\
+         compare according to string numerical value;\n\
+         see full documentation for supported strings\n\
+"));
+      oputs (_("\
+  -R, --random-sort\n\
+         shuffle, but group identical keys.  See also shuf(1)\n\
+"));
+      oputs (_("\
+      --random-source=FILE\n\
+         get random bytes from FILE\n\
+"));
+      oputs (_("\
+  -r, --reverse\n\
+         reverse the result of comparisons\n\
+"));
+      oputs (_("\
+      --sort=WORD\n\
+         sort according to WORD:\n\
+           general-numeric -g, human-numeric -h, month -M,\n\
+           numeric -n, random -R, version -V\n\
+"));
+      oputs (_("\
+  -V, --version-sort\n\
+         natural sort of (version) numbers within text\n\
+"));
       fputs (_("\
-  -b, --ignore-leading-blanks  ignore leading blanks\n\
-  -d, --dictionary-order      consider only blanks and alphanumeric characters\
 \n\
-  -f, --ignore-case           fold lower case to upper case characters\n\
-"), stdout);
-      fputs (_("\
-  -g, --general-numeric-sort  compare according to general numerical value\n\
-  -i, --ignore-nonprinting    consider only printable characters\n\
-  -M, --month-sort            compare (unknown) < 'JAN' < ... < 'DEC'\n\
-"), stdout);
-      fputs (_("\
-  -h, --human-numeric-sort    compare human readable numbers (e.g., 2K 1G)\n\
-"), stdout);
-      fputs (_("\
-  -n, --numeric-sort          compare according to string numerical value;\n\
-                                see full documentation for supported strings\n\
-"), stdout);
-      fputs (_("\
-  -R, --random-sort           shuffle, but group identical keys.  See shuf(1)\n\
-      --random-source=FILE    get random bytes from FILE\n\
-  -r, --reverse               reverse the result of comparisons\n\
-"), stdout);
-      fputs (_("\
-      --sort=WORD             sort according to WORD:\n\
-                                general-numeric -g, human-numeric -h, month -M,\
-\n\
-                                numeric -n, random -R, version -V\n\
-  -V, --version-sort          natural sort of (version) numbers within text\n\
-\n\
-"), stdout);
-      fputs (_("\
 Other options:\n\
 \n\
 "), stdout);
-      fputs (_("\
-      --batch-size=NMERGE   merge at most NMERGE inputs at once;\n\
-                            for more use temp files\n\
-"), stdout);
-      fputs (_("\
-  -c, --check, --check=diagnose-first  check for sorted input; do not sort\n\
-  -C, --check=quiet, --check=silent  like -c, but do not report first bad line\
+      oputs (_("\
+      --batch-size=NMERGE\n\
+         merge at most NMERGE inputs at once; for more use temp files\n\
+"));
+      oputs (_("\
+  -c, --check, --check=diagnose-first\n\
+         check for sorted input; do not sort\n\
+"));
+      oputs (_("\
+  -C, --check=quiet, --check=silent\n\
+         like -c, but do not report first bad line\n\
+"));
+      oputs (_("\
+      --compress-program=PROG\n\
+         compress temporaries with PROG; decompress them with PROG -d\n\
+"));
+      oputs (_("\
+      --debug\n\
+         annotate the part of the line used to sort,\n\
+         and warn about questionable usage to standard error\n\
+"));
+      oputs (_("\
+      --files0-from=F\n\
+         read input from the files specified by NUL-terminated names in file F;\
 \n\
-      --compress-program=PROG  compress temporaries with PROG;\n\
-                              decompress them with PROG -d\n\
-"), stdout);
-      fputs (_("\
-      --debug               annotate the part of the line used to sort, and\n\
-                              warn about questionable usage to standard error\n\
-      --files0-from=F       read input from the files specified by\n\
-                              NUL-terminated names in file F;\n\
-                              If F is -, read names from standard input\n\
-"), stdout);
-      fputs (_("\
-  -k, --key=KEYDEF          sort via a key; KEYDEF gives location and type\n\
-  -m, --merge               merge already sorted files; do not sort\n\
-"), stdout);
-      fputs (_("\
-  -o, --output=FILE         write result to FILE instead of standard output\n\
-  -s, --stable              stabilize sort by disabling last-resort comparison\
-\n\
-  -S, --buffer-size=SIZE    use SIZE for main memory buffer\n\
-"), stdout);
-      printf (_("\
-  -t, --field-separator=SEP  use SEP instead of non-blank to blank transition\n\
-  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s;\n\
-                              multiple options specify multiple directories\n\
-      --parallel=N          change the number of sorts run concurrently to N\n\
-  -u, --unique              output only the first of lines with equal keys;\n\
-                              with -c, check for strict ordering\n\
+         If F is -, read names from standard input\n\
+"));
+      oputs (_("\
+  -k, --key=KEYDEF\n\
+         sort via a key; KEYDEF gives location and type\n\
+"));
+      oputs (_("\
+  -m, --merge\n\
+         merge already sorted files; do not sort\n\
+"));
+      oputs (_("\
+  -o, --output=FILE\n\
+         write result to FILE instead of standard output\n\
+"));
+      oputs (_("\
+  -s, --stable\n\
+         stabilize sort by disabling last-resort comparison\n\
+"));
+      oputs (_("\
+  -S, --buffer-size=SIZE\n\
+         use SIZE for main memory buffer\n\
+"));
+      oputs (_("\
+  -t, --field-separator=SEP\n\
+         use SEP instead of non-blank to blank transition\n\
+"));
+      oprintf (_("\
+  -T, --temporary-directory=DIR\n\
+         use DIR for temporaries, not $TMPDIR or %s;\n\
+         multiple options specify multiple directories\n\
 "), DEFAULT_TMPDIR);
-      fputs (_("\
-  -z, --zero-terminated     line delimiter is NUL, not newline\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+      --parallel=N\n\
+         change the number of sorts run concurrently to N\n\
+"));
+      oputs (_("\
+  -u, --unique\n\
+         output only the first of lines with equal keys;\n\
+         with -c, check for strict ordering\n\
+"));
+      oputs (_("\
+  -z, --zero-terminated\n\
+         line delimiter is NUL, not newline\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 KEYDEF is F[.C][OPTS][,F[.C][OPTS]] for start and stop position, where F is a\n\

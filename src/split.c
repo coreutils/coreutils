@@ -234,30 +234,69 @@ default size is 1000 lines, and default PREFIX is 'x'.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      fprintf (stdout, _("\
-  -a, --suffix-length=N   generate suffixes of length N (default %d)\n\
-      --additional-suffix=SUFFIX  append an additional SUFFIX to file names\n\
-  -b, --bytes=SIZE        put SIZE bytes per output file\n\
-  -C, --line-bytes=SIZE   put at most SIZE bytes of records per output file\n\
-  -d                      use numeric suffixes starting at 0, not alphabetic\n\
-      --numeric-suffixes[=FROM]  same as -d, but allow setting the start value\
-\n\
-  -x                      use hex suffixes starting at 0, not alphabetic\n\
-      --hex-suffixes[=FROM]  same as -x, but allow setting the start value\n\
-  -e, --elide-empty-files  do not generate empty output files with '-n'\n\
-      --filter=COMMAND    write to shell COMMAND; file name is $FILE\n\
-  -l, --lines=NUMBER      put NUMBER lines/records per output file\n\
-  -n, --number=CHUNKS     generate CHUNKS output files; see explanation below\n\
-  -t, --separator=SEP     use SEP instead of newline as the record separator;\n\
-                            '\\0' (zero) specifies the NUL character\n\
-  -u, --unbuffered        immediately copy input to output with '-n r/...'\n\
+      oprintf (_("\
+  -a, --suffix-length=N\n\
+         generate suffixes of length N (default %d)\n\
 "), DEFAULT_SUFFIX_LENGTH);
-      fputs (_("\
-      --verbose           print a diagnostic just before each\n\
-                            output file is opened\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+      --additional-suffix=SUFFIX\n\
+         append an additional SUFFIX to file names\n\
+"));
+      oputs (_("\
+  -b, --bytes=SIZE\n\
+         put SIZE bytes per output file\n\
+"));
+      oputs (_("\
+  -C, --line-bytes=SIZE\n\
+         put at most SIZE bytes of records per output file\n\
+"));
+      oputs (_("\
+  -d\n\
+         use numeric suffixes starting at 0, not alphabetic\n\
+"));
+      oputs (_("\
+      --numeric-suffixes[=FROM]\n\
+         same as -d, but allow setting the start value\n\
+"));
+      oputs (_("\
+  -x\n\
+         use hex suffixes starting at 0, not alphabetic\n\
+"));
+      oputs (_("\
+      --hex-suffixes[=FROM]\n\
+         same as -x, but allow setting the start value\n\
+"));
+      oputs (_("\
+  -e, --elide-empty-files\n\
+         do not generate empty output files with '-n'\n\
+"));
+      oputs (_("\
+      --filter=COMMAND\n\
+         write to shell COMMAND; file name is $FILE\n\
+"));
+      oputs (_("\
+  -l, --lines=NUMBER\n\
+         put NUMBER lines/records per output file\n\
+"));
+      oputs (_("\
+  -n, --number=CHUNKS\n\
+         generate CHUNKS output files; see explanation below\n\
+"));
+      oputs (_("\
+  -t, --separator=SEP\n\
+         use SEP instead of newline as the record separator;\n\
+         '\\0' (zero) specifies the NUL character\n\
+"));
+      oputs (_("\
+  -u, --unbuffered\n\
+         immediately copy input to output with '-n r/...'\n\
+"));
+      oputs (_("\
+      --verbose\n\
+         print a diagnostic just before each output file is opened\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_size_note ();
       fputs (_("\n\
 CHUNKS may be:\n\

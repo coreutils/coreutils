@@ -57,14 +57,16 @@ usage (int status)
 Print the full filename of the current working directory.\n\
 \n\
 "), stdout);
-      fputs (_("\
-  -L, --logical   use PWD from environment, even if it contains symlinks\n\
-"), stdout);
-      fputs (_("\
-  -P, --physical  resolve all symlinks\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -L, --logical\n\
+         use PWD from environment, even if it contains symlinks\n\
+"));
+      oputs (_("\
+  -P, --physical\n\
+         resolve all symlinks\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\n\
 If no option is specified, -P is assumed.\n\
 "), stdout);

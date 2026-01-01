@@ -139,31 +139,46 @@ Print selected parts of lines from each FILE to standard output.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -b, --bytes=LIST        select only these bytes\n\
-  -c, --characters=LIST   select only these characters\n\
-  -d, --delimiter=DELIM   use DELIM instead of TAB for field delimiter\n\
-"), stdout);
-      fputs (_("\
-  -f, --fields=LIST       select only these fields;  also print any line\n\
-                            that contains no delimiter character, unless\n\
-                            the -s option is specified\n\
-  -n                      (ignored)\n\
-"), stdout);
-      fputs (_("\
-      --complement        complement the set of selected bytes, characters\n\
-                            or fields\n\
-"), stdout);
-      fputs (_("\
-  -s, --only-delimited    do not print lines not containing delimiters\n\
-      --output-delimiter=STRING  use STRING as the output delimiter\n\
-                            the default is to use the input delimiter\n\
-"), stdout);
-      fputs (_("\
-  -z, --zero-terminated   line delimiter is NUL, not newline\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -b, --bytes=LIST\n\
+         select only these bytes\n\
+"));
+      oputs (_("\
+  -c, --characters=LIST\n\
+         select only these characters\n\
+"));
+      oputs (_("\
+  -d, --delimiter=DELIM\n\
+         use DELIM instead of TAB for field delimiter\n\
+"));
+      oputs (_("\
+  -f, --fields=LIST\n\
+         select only these fields;  also print any line that contains\n\
+         no delimiter character, unless the -s option is specified\n\
+"));
+      oputs (_("\
+  -n\n\
+         (ignored)\n\
+"));
+      oputs (_("\
+      --complement\n\
+         complement the set of selected bytes, characters or fields\n\
+"));
+      oputs (_("\
+  -s, --only-delimited\n\
+         do not print lines not containing delimiters\n\
+"));
+      oputs (_("\
+      --output-delimiter=STRING\n\
+         use STRING as the output delimiter;\n\
+         the default is to use the input delimiter\n\
+"));
+      oputs (_("\
+  -z, --zero-terminated\n\
+         line delimiter is NUL, not newline\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 Use one, and only one of -b, -c or -f.  Each LIST is made up of one\n\

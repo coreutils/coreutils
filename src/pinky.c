@@ -491,24 +491,40 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... [USER]...\n"), program_name);
       fputs (_("\
 \n\
-  -l              produce long format output for the specified USERs\n\
-  -b              omit the user's home directory and shell in long format\n\
-  -h              omit the user's project file in long format\n\
-  -p              omit the user's plan file in long format\n\
-  -s              do short format output, this is the default\n\
 "), stdout);
-      fputs (_("\
-  -f              omit the line of column headings in short format\n\
-  -w              omit the user's full name in short format\n\
-  -i              omit the user's full name and remote host in short format\n\
-  -q              omit the user's full name, remote host and idle time\n\
-                  in short format\n\
-"), stdout);
-      fputs (_("\
-      --lookup    attempt to canonicalize hostnames via DNS\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -l     produce long format output for the specified USERs\n\
+"));
+      oputs (_("\
+  -b     omit the user's home directory and shell in long format\n\
+"));
+      oputs (_("\
+  -h     omit the user's project file in long format\n\
+"));
+      oputs (_("\
+  -p     omit the user's plan file in long format\n\
+"));
+      oputs (_("\
+  -s     do short format output, this is the default\n\
+"));
+      oputs (_("\
+  -f     omit the line of column headings in short format\n\
+"));
+      oputs (_("\
+  -w     omit the user's full name in short format\n\
+"));
+      oputs (_("\
+  -i     omit the user's full name and remote host in short format\n\
+"));
+      oputs (_("\
+  -q     omit the user's full name, remote host and idle time in short format\n\
+"));
+      oputs (_("\
+      --lookup\n\
+         attempt to canonicalize hostnames via DNS\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       printf (_("\
 \n\
 A lightweight 'finger' program;  print user information.\n\

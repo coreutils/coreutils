@@ -96,23 +96,38 @@ Concatenate FILE(s) to standard output.\n\
 
       emit_stdin_note ();
 
-      fputs (_("\
-\n\
+      oputs (_("\
   -A, --show-all           equivalent to -vET\n\
+"));
+      oputs (_("\
   -b, --number-nonblank    number nonempty output lines, overrides -n\n\
+"));
+      oputs (_("\
   -e                       equivalent to -vE\n\
+"));
+      oputs (_("\
   -E, --show-ends          display $ or ^M$ at end of each line\n\
+"));
+      oputs (_("\
   -n, --number             number all output lines\n\
+"));
+      oputs (_("\
   -s, --squeeze-blank      suppress repeated empty output lines\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -t                       equivalent to -vT\n\
+"));
+      oputs (_("\
   -T, --show-tabs          display TAB characters as ^I\n\
+"));
+      oputs (_("\
   -u                       (ignored)\n\
+"));
+      oputs (_("\
   -v, --show-nonprinting   use ^ and M- notation, except for LFD and TAB\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       printf (_("\
 \n\
 Examples:\n\

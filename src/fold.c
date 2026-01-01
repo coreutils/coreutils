@@ -84,14 +84,24 @@ Wrap input lines in each FILE, writing to standard output.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -b, --bytes         count bytes rather than columns\n\
-  -c, --characters    count characters rather than columns\n\
-  -s, --spaces        break after blanks, or in words greater than WIDTH\n\
-  -w, --width=WIDTH   use WIDTH columns instead of 80\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -b, --bytes\n\
+         count bytes rather than columns\n\
+"));
+      oputs (_("\
+  -c, --characters\n\
+         count characters rather than columns\n\
+"));
+      oputs (_("\
+  -s, --spaces\n\
+         break after blanks, or in words greater than WIDTH\n\
+"));
+      oputs (_("\
+  -w, --width=WIDTH\n\
+         use WIDTH columns instead of 80\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

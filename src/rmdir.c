@@ -174,20 +174,21 @@ usage (int status)
 Remove the DIRECTORY(ies), if they are empty.\n\
 \n\
 "), stdout);
-      fputs (_("\
+      oputs (_("\
       --ignore-fail-on-non-empty\n\
-                    ignore each failure to remove a non-empty directory\n\
-"), stdout);
-      fputs (_("\
-  -p, --parents     remove DIRECTORY and its ancestors;\n\
-                    e.g., 'rmdir -p a/b' is similar to 'rmdir a/b a'\n\
-\n\
-"), stdout);
-      fputs (_("\
-  -v, --verbose     output a diagnostic for every directory processed\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+         ignore each failure to remove a non-empty directory\n\
+"));
+      oputs (_("\
+  -p, --parents\n\
+         remove DIRECTORY and its ancestors;\n\
+         e.g., 'rmdir -p a/b' is similar to 'rmdir a/b a'\n\
+"));
+      oputs (_("\
+  -v, --verbose\n\
+         output a diagnostic for every directory processed\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

@@ -185,25 +185,41 @@ Write each FILE to standard output, with line numbers added.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      fputs (_("\
+      oputs (_("\
   -b, --body-numbering=STYLE      use STYLE for numbering body lines\n\
+"));
+      oputs (_("\
   -d, --section-delimiter=CC      use CC for logical page delimiters\n\
+"));
+      oputs (_("\
   -f, --footer-numbering=STYLE    use STYLE for numbering footer lines\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -h, --header-numbering=STYLE    use STYLE for numbering header lines\n\
+"));
+      oputs (_("\
   -i, --line-increment=NUMBER     line number increment at each line\n\
+"));
+      oputs (_("\
   -l, --join-blank-lines=NUMBER   group of NUMBER empty lines counted as one\n\
+"));
+      oputs (_("\
   -n, --number-format=FORMAT      insert line numbers according to FORMAT\n\
+"));
+      oputs (_("\
   -p, --no-renumber               do not reset line numbers for each section\n\
+"));
+      oputs (_("\
   -s, --number-separator=STRING   add STRING after (possible) line number\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -v, --starting-line-number=NUMBER  first line number for each section\n\
+"));
+      oputs (_("\
   -w, --number-width=NUMBER       use NUMBER columns for line numbers\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 Default options are: -bt -d'\\:' -fn -hn -i1 -l1 -n'rn' -s<TAB> -v1 -w6\n\

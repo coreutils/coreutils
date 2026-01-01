@@ -88,13 +88,20 @@ Print numbers from FIRST to LAST, in steps of INCREMENT.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -f, --format=FORMAT      use printf style floating-point FORMAT\n\
-  -s, --separator=STRING   use STRING to separate numbers (default: \\n)\n\
-  -w, --equal-width        equalize width by padding with leading zeroes\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -f, --format=FORMAT\n\
+         use printf style floating-point FORMAT\n\
+"));
+      oputs (_("\
+  -s, --separator=STRING\n\
+         use STRING to separate numbers (default: \\n)\n\
+"));
+      oputs (_("\
+  -w, --equal-width\n\
+         equalize width by padding with leading zeroes\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 If FIRST or INCREMENT is omitted, it defaults to 1.  That is, an\n\

@@ -118,19 +118,35 @@ usage (int status)
           fputs (_("\
 Print certain system information.  With no OPTION, same as -s.\n\
 \n\
+"), stdout);
+          oputs (_("\
   -a, --all                print all information, in the following order,\n\
-                             except omit -p and -i if unknown:\n\
+                             except omit -p and -i if unknown\n\
+"));
+          oputs (_("\
   -s, --kernel-name        print the kernel name\n\
+"));
+          oputs (_("\
   -n, --nodename           print the network node hostname\n\
+"));
+          oputs (_("\
   -r, --kernel-release     print the kernel release\n\
-"), stdout);
-          fputs (_("\
+"));
+          oputs (_("\
   -v, --kernel-version     print the kernel version\n\
+"));
+          oputs (_("\
   -m, --machine            print the machine hardware name\n\
+"));
+          oputs (_("\
   -p, --processor          print the processor type (non-portable)\n\
+"));
+          oputs (_("\
   -i, --hardware-platform  print the hardware platform (non-portable)\n\
+"));
+          oputs (_("\
   -o, --operating-system   print the operating system\n\
-"), stdout);
+"));
         }
       else
         {
@@ -140,8 +156,8 @@ Print machine architecture.\n\
 "), stdout);
         }
 
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

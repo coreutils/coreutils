@@ -47,18 +47,26 @@ Usage: %s [SHORT-OPTION]... [STRING]...\n\
   fputs (_("\
 Echo the STRING(s) to standard output.\n\
 \n\
-  -n             do not output the trailing newline\n\
 "), stdout);
-  fputs (_(DEFAULT_ECHO_TO_XPG
+  oputs (_("\
+  -n     do not output the trailing newline\n\
+"));
+  oputs (_(DEFAULT_ECHO_TO_XPG
            ? N_("\
-  -e             enable interpretation of backslash escapes (default)\n\
-  -E             disable interpretation of backslash escapes\n")
+  -e     enable interpretation of backslash escapes (default)\n\
+")
            : N_("\
-  -e             enable interpretation of backslash escapes\n\
-  -E             disable interpretation of backslash escapes (default)\n")),
-         stdout);
-  fputs (HELP_OPTION_DESCRIPTION, stdout);
-  fputs (VERSION_OPTION_DESCRIPTION, stdout);
+  -e     enable interpretation of backslash escapes\n\
+")));
+  oputs (_(DEFAULT_ECHO_TO_XPG
+           ? N_("\
+  -E     disable interpretation of backslash escapes\n\
+")
+           : N_("\
+  -E     disable interpretation of backslash escapes (default)\n\
+")));
+  oputs (HELP_OPTION_DESCRIPTION);
+  oputs (VERSION_OPTION_DESCRIPTION);
   fputs (_("\
 \n\
 If -e is in effect, the following sequences are recognized:\n\

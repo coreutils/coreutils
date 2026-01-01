@@ -67,15 +67,14 @@ or their containing file systems.\n\
 \n\
 "), stdout);
 
-      fputs (_("\
+      oputs (_("\
   -d, --data             sync only file data, no unneeded metadata\n\
-"), stdout);
-      fputs (_("\
+"));
+      oputs (_("\
   -f, --file-system      sync the file systems that contain the files\n\
-"), stdout);
-
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

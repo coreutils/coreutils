@@ -551,13 +551,17 @@ Print or change terminal characteristics.\n\
 
       emit_mandatory_arg_note ();
 
-      fputs (_("\
+      oputs (_("\
   -a, --all          print all current settings in human-readable form\n\
+"));
+      oputs (_("\
   -g, --save         print all current settings in a stty-readable form\n\
+"));
+      oputs (_("\
   -F, --file=DEVICE  open and use DEVICE instead of standard input\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
 Optional - before SETTING indicates negation.  An * marks non-POSIX\n\

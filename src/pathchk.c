@@ -88,12 +88,19 @@ usage (int status)
       fputs (_("\
 Diagnose invalid or non-portable file names.\n\
 \n\
-  -p                  check for most POSIX systems\n\
-  -P                  check for empty names and leading \"-\"\n\
-      --portability   check for all POSIX systems (equivalent to -p -P)\n\
 "), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      oputs (_("\
+  -p     check for most POSIX systems\n\
+"));
+      oputs (_("\
+  -P     check for empty names and leading \"-\"\n\
+"));
+      oputs (_("\
+      --portability\n\
+         check for all POSIX systems (equivalent to -p -P)\n\
+"));
+      oputs (HELP_OPTION_DESCRIPTION);
+      oputs (VERSION_OPTION_DESCRIPTION);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
