@@ -29,7 +29,7 @@ unshare -rm true || skip_ 'User namespace sandbox is disabled'
 
 # mask /proc
 df() {
-  unshare -rm bash -c \
+  unshare -rm $SHELL -c \
     "mount -t tmpfs tmpfs /proc && command df \"\$@\"" -- "$@";
 }
 
