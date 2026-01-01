@@ -153,6 +153,26 @@ if test "$gl_bold_manpages" != no; then
 fi
 AM_CONDITIONAL([BOLD_MAN_REFS], [test "$gl_bold_manpages" != no])
 
+AC_ARG_ENABLE([manual-url],
+  [AS_HELP_STRING([--enable-manual-url@<:@=<url>@:>@],
+     [When generating man pages, or displaying --help, generate hyperlinks
+      from each "--option" to <url>@%:@command-option.  A local file is
+      supported through a file:// URL.  The default URL used is:
+      $PACKAGE_URL/manual/$PACKAGE.html.])],
+  [case $enableval in
+     yes) gl_manual_url=default ;;
+     no) gl_manual_url='' ;;
+     *)  gl_manual_url="$enableval" ;;
+   esac],
+  [gl_manual_url=default]
+)
+if test x"$gl_manual_url" != x; then
+  if test "$gl_manual_url" = default; then
+    gl_manual_url=${PACKAGE_URL}manual/$PACKAGE.html
+  fi
+  AC_DEFINE_UNQUOTED([MANUAL_URL], ["$gl_manual_url"], [URL for full manual])
+fi
+
 AC_ARG_ENABLE([gcc-warnings],
   [AS_HELP_STRING([--enable-gcc-warnings@<:@=TYPE@:>@],
     [control generation of GCC warnings.  The TYPE 'no' disables

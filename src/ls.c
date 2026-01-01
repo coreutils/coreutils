@@ -5360,8 +5360,8 @@ oputs (char const *option)
   fwrite (option, 1, option_text - option, stdout);
 
   /* write option text.  */
+#ifdef MANUAL_URL
   char const *url_program = streq (PROGRAM_NAME, "[") ? "test" : PROGRAM_NAME;
-  /* Note this can link to a local manual with file://... */
   /* Note single node manual doesn't work for ls, cksum, md5sum, sha*sum,
      but use single node for --help or --version.. */
   if (STREQ_LEN (option_text, "--help", 6)
@@ -5372,10 +5372,11 @@ oputs (char const *option)
     }
   else
     {
-      printf ("\033]8;;%smanual/coreutils.html#%s%.*s", PACKAGE_URL,
-              url_program, (int) anchor_len, option_text);
+      printf ("\033]8;;%s#%s%.*s", MANUAL_URL, url_program,
+              (int) anchor_len, option_text);
     }
   fputs ("\a", stdout);
+#endif
 #ifdef BOLD_MAN_REFS
   /* Note help2man strips this and will reinstate with --bold-refs.  */
   fputs ("\033[1m", stdout);
@@ -5384,8 +5385,11 @@ oputs (char const *option)
 #ifdef BOLD_MAN_REFS
   fputs ("\033[0m", stdout);
 #endif
+#ifdef MANUAL_URL
   fputs ("\033]8;;\a", stdout);
+#endif
 
+  /* write description.  */
   fputs (desc_text, stdout);
 }
 
