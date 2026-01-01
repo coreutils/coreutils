@@ -2,7 +2,7 @@
 # Try to create a symlink with backup where the destination file exists
 # and the backup file name is a hard link to the destination file.
 
-# Copyright (C) 1999-2025 Free Software Foundation, Inc.
+# Copyright (C) 1999-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

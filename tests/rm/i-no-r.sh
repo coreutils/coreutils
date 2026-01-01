@@ -3,7 +3,7 @@
 # recurse into directory DIR.  rm -i (without -r) must fail in that case.
 # Fixed in coreutils-4.5.2.
 
-# Copyright (C) 2002-2025 Free Software Foundation, Inc.
+# Copyright (C) 2002-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

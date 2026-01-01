@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure that "tail --pid=PID fifo" exits responsively
 
-# Copyright (C) 2025 Free Software Foundation, Inc.
+# Copyright (C) 2025-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

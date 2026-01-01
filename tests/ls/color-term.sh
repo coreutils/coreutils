@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure "ls --color" doesn't output colors for TERM=dumb
 
-# Copyright (C) 2014-2025 Free Software Foundation, Inc.
+# Copyright (C) 2014-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

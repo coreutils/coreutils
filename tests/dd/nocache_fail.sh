@@ -2,7 +2,7 @@
 # Ensure we diagnose failure to drop caches
 # We didn't check the return from posix_fadvise() correctly before v9.7
 
-# Copyright (C) 2025 Free Software Foundation, Inc.
+# Copyright (C) 2025-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

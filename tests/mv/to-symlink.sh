@@ -2,7 +2,7 @@
 # Make sure that the copying code used in an inter-partition
 # move unlinks a destination symlink before opening it.
 
-# Copyright (C) 1999-2025 Free Software Foundation, Inc.
+# Copyright (C) 1999-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

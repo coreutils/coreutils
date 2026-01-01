@@ -1,7 +1,7 @@
 #!/bin/sh
 # mv must fail when src and dest are mismatched directory/non-directory.
 
-# Copyright (C) 2000-2025 Free Software Foundation, Inc.
+# Copyright (C) 2000-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

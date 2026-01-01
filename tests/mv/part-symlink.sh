@@ -2,7 +2,7 @@
 # make sure cp and mv can handle many combinations of local and
 # other-partition regular/symlink'd files.
 
-# Copyright (C) 2000-2025 Free Software Foundation, Inc.
+# Copyright (C) 2000-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

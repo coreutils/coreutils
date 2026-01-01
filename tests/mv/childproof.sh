@@ -3,7 +3,7 @@
 # With fileutils-4.1 and earlier, this test would fail for cp and mv.
 # With coreutils-6.9 and earlier, this test would fail for ln.
 
-# Copyright (C) 2001-2025 Free Software Foundation, Inc.
+# Copyright (C) 2001-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

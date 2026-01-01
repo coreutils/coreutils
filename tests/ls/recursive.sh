@@ -2,7 +2,7 @@
 # 4.1.1 and 4.1.2 had a bug whereby some recursive listings
 # didn't include a blank line between per-directory groups of files.
 
-# Copyright (C) 2001-2025 Free Software Foundation, Inc.
+# Copyright (C) 2001-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -4,7 +4,7 @@
 # This test is skipped on systems that lack LD_PRELOAD support; that's fine.
 # Similarly, on a system that lacks lgetfilecon altogether, skipping it is fine.
 
-# Copyright (C) 2014-2025 Free Software Foundation, Inc.
+# Copyright (C) 2014-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

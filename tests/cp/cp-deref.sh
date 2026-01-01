@@ -2,7 +2,7 @@
 # cp -RL dir1 dir2' must handle the case in which each of dir1 and dir2
 # contain a symlink pointing to some third directory.
 
-# Copyright (C) 2006-2025 Free Software Foundation, Inc.
+# Copyright (C) 2006-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

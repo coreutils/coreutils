@@ -2,7 +2,7 @@
 # Verify that tail works even when it's reading from a file
 # that is not at its beginning.  Based on a report from John Roll.
 
-# Copyright (C) 2001-2025 Free Software Foundation, Inc.
+# Copyright (C) 2001-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

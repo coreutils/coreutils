@@ -3,7 +3,7 @@
 # date --date="21:04 +0100" +%S' always prints '00'.
 # Before coreutils-5.2.1, it would print the seconds from the current time.
 
-# Copyright (C) 2004-2025 Free Software Foundation, Inc.
+# Copyright (C) 2004-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

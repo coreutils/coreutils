@@ -1,7 +1,7 @@
 #!/bin/sh
 # From 7.2-9.7, this would trigger an out of bounds mem read
 
-# Copyright (C) 2025 Free Software Foundation, Inc.
+# Copyright (C) 2025-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

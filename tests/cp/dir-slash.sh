@@ -2,7 +2,7 @@
 # Make sure that cp -R DIR1 DIR2 does the right thing
 # when DIR1 is written with a trailing slash.
 
-# Copyright (C) 2000-2025 Free Software Foundation, Inc.
+# Copyright (C) 2000-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

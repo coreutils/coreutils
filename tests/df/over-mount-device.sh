@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure that df /dev/loop0 errors out if overmounted by another device
 
-# Copyright (C) 2014-2025 Free Software Foundation, Inc.
+# Copyright (C) 2014-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

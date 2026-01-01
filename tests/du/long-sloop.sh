@@ -3,7 +3,7 @@
 # Show that du fails with ELOOP (Too many levels of symbolic links)
 # when it encounters that condition.
 
-# Copyright (C) 2006-2025 Free Software Foundation, Inc.
+# Copyright (C) 2006-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

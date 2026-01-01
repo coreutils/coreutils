@@ -1,7 +1,7 @@
 #!/bin/sh
 # On GNU, 'id' must fail for processes with zero UIDs.
 
-# Copyright (C) 2011-2025 Free Software Foundation, Inc.
+# Copyright (C) 2011-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

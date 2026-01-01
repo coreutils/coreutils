@@ -2,7 +2,7 @@
 # ensure that false exits nonzero even with --help or --version
 # and ensure that true exits nonzero when it can't write --help or --version
 
-# Copyright (C) 2003-2025 Free Software Foundation, Inc.
+# Copyright (C) 2003-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

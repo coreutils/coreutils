@@ -2,7 +2,7 @@
 # Ensure that md5sum prints each checksum atomically
 # so that concurrent md5sums don't intersperse their output
 
-# Copyright (C) 2009-2025 Free Software Foundation, Inc.
+# Copyright (C) 2009-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

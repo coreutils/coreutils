@@ -2,7 +2,7 @@
 # Verify that ls works properly when it fails to stat a file that is
 # not mentioned on the command line.
 
-# Copyright (C) 2006-2025 Free Software Foundation, Inc.
+# Copyright (C) 2006-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

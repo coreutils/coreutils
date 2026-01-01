@@ -5,7 +5,7 @@
 # indefinitely if no *other* data is appended, but it would be printed as
 # soon as any additional appended data is detected.
 
-# Copyright (C) 2009-2025 Free Software Foundation, Inc.
+# Copyright (C) 2009-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

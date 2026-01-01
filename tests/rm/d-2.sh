@@ -2,7 +2,7 @@
 # Ensure that 'rm -d dir' (i.e., without --recursive) gives a reasonable
 # diagnostic when failing.
 
-# Copyright (C) 2012-2025 Free Software Foundation, Inc.
+# Copyright (C) 2012-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

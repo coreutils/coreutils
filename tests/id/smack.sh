@@ -1,7 +1,7 @@
 #!/bin/sh
 # SMACK test for the id-command.
 # Derived from tests/id/context.sh and tests/id/no-context.sh.
-# Copyright (C) 2014-2025 Free Software Foundation, Inc.
+# Copyright (C) 2014-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

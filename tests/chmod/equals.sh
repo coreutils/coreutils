@@ -3,7 +3,7 @@
 # Before fileutils-4.1.2, some of them didn't.
 # Also, before coreutils-5.3.1, =[ugo] sometimes didn't work.
 
-# Copyright (C) 2001-2025 Free Software Foundation, Inc.
+# Copyright (C) 2001-2026 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
