@@ -671,8 +671,6 @@ problematic_chars (char const *s)
   return s[length] != '\0';
 }
 
-#define ISWHITE(c) ((c) == ' ' || (c) == '\t')
-
 /* Given a file name, S of length S_LEN, that is not NUL-terminated,
    modify it in place, performing the equivalent of this sed substitution:
    's/\\n/\n/g;s/\\r/\r/g;s/\\\\/\\/g' i.e., replacing each "\\n" string
@@ -798,7 +796,7 @@ bsd_split_3 (char *s, size_t s_len,
 
   s[i++] = '\0';
 
-  while (ISWHITE (s[i]))
+  while (c_isblank (s[i]))
     i++;
 
   if (s[i] != '=')
@@ -806,7 +804,7 @@ bsd_split_3 (char *s, size_t s_len,
 
   i++;
 
-  while (ISWHITE (s[i]))
+  while (c_isblank (s[i]))
     i++;
 
   *digest = (unsigned char *) &s[i];
@@ -837,7 +835,7 @@ algorithm_from_tag (char *s)
   size_t i = 0;
 
   /* Find end of tag */
-  while (i <= max_tag_len && s[i] && ! ISWHITE (s[i])
+  while (i <= max_tag_len && s[i] && ! c_isblank (s[i])
          && s[i] != '-' && s[i] != '(')
     ++i;
 
@@ -867,7 +865,7 @@ split_3 (char *s, size_t s_len,
   size_t algo_name_len;
 
   size_t i = 0;
-  while (ISWHITE (s[i]))
+  while (c_isblank (s[i]))
     ++i;
 
   if (s[i] == '\\')
@@ -1041,7 +1039,7 @@ split_3 (char *s, size_t s_len,
 
   /* This field must be the hexadecimal or base64 representation
      of the message digest.  */
-  while (s[i] && !ISWHITE (s[i]))
+  while (s[i] && !c_isblank (s[i]))
     i++;
 
   /* The digest must be followed by at least one whitespace character.  */
