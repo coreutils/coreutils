@@ -5349,228 +5349,260 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
       emit_mandatory_arg_note ();
 
       oputs (_("\
-  -a, --all                  do not ignore entries starting with .\n\
+  -a, --all\n\
+         do not ignore entries starting with .\n\
 "));
       oputs (_("\
-  -A, --almost-all           do not list implied . and ..\n\
+  -A, --almost-all\n\
+         do not list implied . and ..\n\
 "));
       oputs (_("\
-      --author               with -l, print the author of each file\n\
+      --author\n\
+         with -l, print the author of each file\n\
 "));
       oputs (_("\
-  -b, --escape               print C-style escapes for nongraphic characters\n\
+  -b, --escape\n\
+         print C-style escapes for nongraphic characters\n\
 "));
       oputs (_("\
-      --block-size=SIZE      with -l, scale sizes by SIZE when printing them;\n\
-                             e.g., '--block-size=M'; see SIZE format below\n\
-\n\
+      --block-size=SIZE\n\
+         with -l, scale sizes by SIZE when printing them;\n\
+         e.g., '--block-size=M'; see SIZE format below\n\
 "));
       oputs (_("\
-  -B, --ignore-backups       do not list implied entries ending with ~\n\
+  -B, --ignore-backups\n\
+         do not list implied entries ending with ~\n\
 "));
       oputs (_("\
-  -c                         with -lt: sort by, and show, ctime (time of last\n\
-                             change of file status information);\n\
-                             with -l: show ctime and sort by name;\n\
-                             otherwise: sort by ctime, newest first\n\
-\n\
+  -c\n\
+         with -lt: sort by, and show, ctime\n\
+           (time of last change of file status information);\n\
+         with -l: show ctime and sort by name;\n\
+         otherwise: sort by ctime, newest first\n\
 "));
       oputs (_("\
-  -C                         list entries by columns\n\
+  -C\n\
+         list entries by columns\n\
 "));
       oputs (_("\
-      --color[=WHEN]         color the output WHEN; more info below\n\
+      --color[=WHEN]\n\
+         color the output WHEN; more info below\n\
 "));
       oputs (_("\
-  -d, --directory            list directories themselves, not their contents\n\
+  -d, --directory\n\
+         list directories themselves, not their contents\n\
 "));
       oputs (_("\
-  -D, --dired                generate output designed for Emacs' dired mode\n\
+  -D, --dired\n\
+         generate output designed for Emacs' dired mode\n\
 "));
       oputs (_("\
-  -f                         same as -a -U\n\
+  -f\n\
+         same as -a -U\n\
 "));
       oputs (_("\
-  -F, --classify[=WHEN]      append indicator (one of */=>@|) to entries WHEN\n\
+  -F, --classify[=WHEN]\n\
+         append indicator (one of */=>@|) to entries WHEN\n\
 "));
       oputs (_("\
-      --file-type            likewise, except do not append '*'\n\
+      --file-type\n\
+         like -F, except do not append '*'\n\
 "));
       oputs (_("\
-      --format=WORD          across,horizontal (-x), commas (-m), long (-l),\n\
-                             single-column (-1), verbose (-l), vertical (-C)\n\
-\n\
+      --format=WORD\n\
+         across,horizontal (-x), commas (-m), long (-l),\n\
+         single-column (-1), verbose (-l), vertical (-C)\n\
 "));
       oputs (_("\
-      --full-time            like -l --time-style=full-iso\n\
+      --full-time\n\
+         like -l --time-style=full-iso\n\
 "));
       oputs (_("\
-  -g                         like -l, but do not list owner\n\
+  -g\n\
+         like -l, but do not list owner\n\
 "));
       oputs (_("\
       --group-directories-first\n\
-                             group directories before files\n\
+         group directories before files\n\
 "));
       oputs (_("\
-  -G, --no-group             in a long listing, don't print group names\n\
+  -G, --no-group\n\
+         in a long listing, don't print group names\n\
 "));
       oputs (_("\
-  -h, --human-readable       with -l and -s, print sizes like 1K 234M 2G etc.\n\
+  -h, --human-readable\n\
+         with -l and -s, print sizes like 1K 234M 2G etc.\n\
 "));
       oputs (_("\
-      --si                   likewise, but use powers of 1000 not 1024\n\
+      --si\n\
+         likewise, but use powers of 1000 not 1024\n\
 "));
       oputs (_("\
   -H, --dereference-command-line\n\
-                             follow symbolic links listed on the command line\n\
+         follow symbolic links listed on the command line\n\
 "));
       oputs (_("\
       --dereference-command-line-symlink-to-dir\n\
-                             follow each command line symbolic link\n\
-                             that points to a directory\n\
-\n\
+         follow each command line symbolic link that points to a directory\n\
 "));
       oputs (_("\
-      --hide=PATTERN         do not list implied entries matching shell PATTERN\
-\n\
-                             (overridden by -a or -A)\n\
-\n\
+      --hide=PATTERN\n\
+         do not list implied entries matching shell PATTERN\n\
+         (overridden by -a or -A)\n\
 "));
       oputs (_("\
-      --hyperlink[=WHEN]     hyperlink file names WHEN\n\
+      --hyperlink[=WHEN]\n\
+         hyperlink file names WHEN\n\
 "));
       oputs (_("\
       --indicator-style=WORD\n\
-                             append indicator with style WORD to entry names:\n\
-                             none (default), slash (-p),\n\
-                             file-type (--file-type), classify (-F)\n\
-\n\
+         append indicator with style WORD to entry names:\n\
+           none (default), slash (-p), file-type (--file-type), classify (-F)\n\
 "));
       oputs (_("\
-  -i, --inode                print the index number of each file\n\
+  -i, --inode\n\
+         print the index number of each file\n\
 "));
       oputs (_("\
-  -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\
-\n\
+  -I, --ignore=PATTERN\n\
+         do not list implied entries matching shell PATTERN\n\
 "));
       oputs (_("\
-  -k, --kibibytes            default to 1024-byte blocks for file system usage;\
-\n\
-                             used only with -s and per directory totals\n\
-\n\
+  -k, --kibibytes\n\
+         default to 1024-byte blocks for file system usage;\n\
+         used only with -s and per directory totals\n\
 "));
       oputs (_("\
-  -l                         use a long listing format\n\
+  -l\n\
+         use a long listing format\n\
 "));
       oputs (_("\
-  -L, --dereference          when showing file information for a symbolic\n\
-                             link, show information for the file the link\n\
-                             references rather than for the link itself\n\
-\n\
+  -L, --dereference\n\
+         when showing file information for a symbolic link,\n\
+         show information for the file the link references\n\
+         rather than for the link itself\n\
 "));
       oputs (_("\
-  -m                         fill width with a comma separated list of entries\
-\n\
+  -m\n\
+         fill width with a comma separated list of entries\n\
 "));
       oputs (_("\
-  -n, --numeric-uid-gid      like -l, but list numeric user and group IDs\n\
+  -n, --numeric-uid-gid\n\
+         like -l, but list numeric user and group IDs\n\
 "));
       oputs (_("\
-  -N, --literal              print entry names without quoting\n\
+  -N, --literal\n\
+         print entry names without quoting\n\
 "));
       oputs (_("\
-  -o                         like -l, but do not list group information\n\
+  -o\n\
+         like -l, but do not list group information\n\
 "));
       oputs (_("\
   -p, --indicator-style=slash\n\
-                             append / indicator to directories\n\
+         append / indicator to directories\n\
 "));
       oputs (_("\
-  -q, --hide-control-chars   print ? instead of nongraphic characters\n\
+  -q, --hide-control-chars\n\
+         print ? instead of nongraphic characters\n\
 "));
       oputs (_("\
-      --show-control-chars   show nongraphic characters as-is (the default,\n\
-                             unless program is 'ls' and output is a terminal)\
-\n\
-\n\
+      --show-control-chars\n\
+         show nongraphic characters as-is;\n\
+         the default, unless program is 'ls' and output is a terminal\n\
 "));
       oputs (_("\
-  -Q, --quote-name           enclose entry names in double quotes\n\
+  -Q, --quote-name\n\
+         enclose entry names in double quotes\n\
 "));
       oputs (_("\
-      --quoting-style=WORD   use quoting style WORD for entry names:\n\
-                             literal, locale, shell, shell-always,\n\
-                             shell-escape, shell-escape-always, c, escape\n\
-                             (overrides QUOTING_STYLE environment variable)\n\
-\n\
+      --quoting-style=WORD\n\
+         use quoting style WORD for entry names:\n\
+           literal, locale, shell, shell-always,\n\
+           shell-escape, shell-escape-always, c, escape\n\
+         (overrides QUOTING_STYLE environment variable)\n\
 "));
       oputs (_("\
-  -r, --reverse              reverse order while sorting\n\
+  -r, --reverse\n\
+         reverse order while sorting\n\
 "));
       oputs (_("\
-  -R, --recursive            list subdirectories recursively\n\
+  -R, --recursive\n\
+         list subdirectories recursively\n\
 "));
       oputs (_("\
-  -s, --size                 print the allocated size of each file, in blocks\n\
+  -s, --size\n\
+         print the allocated size of each file, in blocks\n\
 "));
       oputs (_("\
-  -S                         sort by file size, largest first\n\
+  -S\n\
+         sort by file size, largest first\n\
 "));
       oputs (_("\
-      --sort=WORD            change default 'name' sort to WORD:\n\
-                               none (-U), size (-S), time (-t),\n\
-                               version (-v), extension (-X), name, width\n\
-\n\
+      --sort=WORD\n\
+         change default 'name' sort to WORD:\n\
+           none (-U), size (-S), time (-t),\n\
+           version (-v), extension (-X), name, width\n\
 "));
       oputs (_("\
-      --time=WORD            select which timestamp used to display or sort;\n\
-                               access time (-u): atime, access, use;\n\
-                               metadata change time (-c): ctime, status;\n\
-                               modified time (default): mtime, modification;\n\
-                               birth time: birth, creation;\n\
-                             with -l, WORD determines which time to show;\n\
-                             with --sort=time, sort by WORD (newest first)\n\
-\n\
+      --time=WORD\n\
+         select which timestamp used to display or sort;\n\
+           access time (-u): atime, access, use;\n\
+           metadata change time (-c): ctime, status;\n\
+           modified time (default): mtime, modification;\n\
+           birth time: birth, creation;\n\
+         with -l, WORD determines which time to show;\n\
+         with --sort=time, sort by WORD (newest first)\n\
 "));
       oputs (_("\
       --time-style=TIME_STYLE\n\
-                             time/date format with -l; see TIME_STYLE below\n\
+         time/date format with -l; see TIME_STYLE below\n\
 "));
       oputs (_("\
-  -t                         sort by time, newest first; see --time\n\
+  -t\n\
+         sort by time, newest first; see --time\n\
 "));
       oputs (_("\
-  -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
+  -T, --tabsize=COLS\n\
+         assume tab stops at each COLS instead of 8\n\
 "));
       oputs (_("\
-  -u                         with -lt: sort by, and show, access time;\n\
-                             with -l: show access time and sort by name;\n\
-                             otherwise: sort by access time, newest first\n\
-\n\
+  -u\n\
+         with -lt: sort by, and show, access time;\n\
+         with -l: show access time and sort by name;\n\
+         otherwise: sort by access time, newest first\n\
 "));
       oputs (_("\
-  -U                         do not sort directory entries\n\
+  -U\n\
+         do not sort directory entries\n\
 "));
       oputs (_("\
-  -v                         natural sort of (version) numbers within text\n\
+  -v\n\
+         natural sort of (version) numbers within text\n\
 "));
       oputs (_("\
-  -w, --width=COLS           set output width to COLS.  0 means no limit\n\
+  -w, --width=COLS\n\
+         set output width to COLS.  0 means no limit\n\
 "));
       oputs (_("\
-  -x                         list entries by lines instead of by columns\n\
+  -x\n\
+         list entries by lines instead of by columns\n\
 "));
       oputs (_("\
-  -X                         sort alphabetically by entry extension\n\
+  -X\n\
+         sort alphabetically by entry extension\n\
 "));
       oputs (_("\
-  -Z, --context              print any security context of each file\n\
+  -Z, --context\n\
+         print any security context of each file\n\
 "));
       oputs (_("\
-      --zero                 end each output line with NUL, not newline\n\
+      --zero\n\
+         end each output line with NUL, not newline\n\
 "));
       oputs (_("\
-  -1                         list one file per line\n\
+  -1\n\
+         list one file per line\n\
 "));
       oputs (HELP_OPTION_DESCRIPTION);
       oputs (VERSION_OPTION_DESCRIPTION);
