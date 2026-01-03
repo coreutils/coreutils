@@ -534,7 +534,7 @@ while (length)
     my $content = '';
 
     # Option with description.
-    if (s/^( {1,10}([+-]\S.*?))(?:(  +(?!-))|\n( {20,}))(\S.*)\n//)
+    if (s/^( {1,10}([+-]\S.*?))(?:(  +(?!-))|\n( {7,}))(\S.*)\n//)
     {
 	$matched .= $& if %append_match;
 	$indent = set_indent length ($4 || "$1$3");
