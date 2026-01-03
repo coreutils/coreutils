@@ -62,6 +62,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   csplit, ls, and sort, now handle a more complete set of terminating signals.
 
+  'du' now processes directories with 10,000 or more entries up to 9 times
+  faster on the Lustre file system.
+
   'pinky' will now exit immediately upon receiving a write error, which is
   significant when reading large plan or project files.
 
