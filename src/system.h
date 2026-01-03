@@ -545,8 +545,14 @@ is_nul (void const *buf, size_t length)
 static inline void
 oputs_ (MAYBE_UNUSED char const* program, char const *option)
 {
-  static int help_no_sgr = -1;
-  if (help_no_sgr && (help_no_sgr = !!getenv ("HELP_NO_MARKUP")))
+  static int help_no_sgr =
+#if ! defined MANUAL_URL && ! defined BOLD_MAN_REFS
+    1;   /* Disable.  */
+#else
+    -1;  /* Lookup.  */
+#endif
+  if (help_no_sgr == 1
+      || (help_no_sgr == -1 && (help_no_sgr = !!getenv ("HELP_NO_MARKUP"))))
     {
       fputs (option, stdout);
       return;
