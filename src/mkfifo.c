@@ -74,10 +74,7 @@ Create named pipes (FIFOs) with the given NAMEs.\n\
 int
 main (int argc, char **argv)
 {
-  mode_t newmode;
   char const *specified_mode = nullptr;
-  int exit_status = EXIT_SUCCESS;
-  int optc;
   char const *scontext = nullptr;
   struct selabel_handle *set_security_context = nullptr;
 
@@ -89,6 +86,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
+  int optc;
   while ((optc = getopt_long (argc, argv, "m:Z", longopts, nullptr)) != -1)
     {
       switch (optc)
@@ -148,14 +146,13 @@ main (int argc, char **argv)
                quote (scontext));
     }
 
-  newmode = MODE_RW_UGO;
+  mode_t newmode = MODE_RW_UGO;
   if (specified_mode)
     {
-      mode_t umask_value;
       struct mode_change *change = mode_compile (specified_mode);
       if (!change)
         error (EXIT_FAILURE, 0, _("invalid mode"));
-      umask_value = umask (0);
+      mode_t umask_value = umask (0);
       umask (umask_value);
       newmode = mode_adjust (newmode, false, umask_value, change, nullptr);
       free (change);
@@ -164,6 +161,7 @@ main (int argc, char **argv)
                _("mode must specify only file permission bits"));
     }
 
+  int exit_status = EXIT_SUCCESS;
   for (; optind < argc; ++optind)
     {
       if (set_security_context)
