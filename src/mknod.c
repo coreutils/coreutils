@@ -90,11 +90,7 @@ otherwise, as decimal.  TYPE may be:\n\
 int
 main (int argc, char **argv)
 {
-  mode_t newmode;
   char const *specified_mode = nullptr;
-  int optc;
-  size_t expected_operands;
-  mode_t node_type;
   char const *scontext = nullptr;
   struct selabel_handle *set_security_context = nullptr;
 
@@ -106,6 +102,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
+  int optc;
   while ((optc = getopt_long (argc, argv, "m:Z", longopts, nullptr)) != -1)
     {
       switch (optc)
@@ -145,14 +142,13 @@ main (int argc, char **argv)
         }
     }
 
-  newmode = MODE_RW_UGO;
+  mode_t newmode = MODE_RW_UGO;
   if (specified_mode)
     {
-      mode_t umask_value;
       struct mode_change *change = mode_compile (specified_mode);
       if (!change)
         error (EXIT_FAILURE, 0, _("invalid mode"));
-      umask_value = umask (0);
+      mode_t umask_value = umask (0);
       umask (umask_value);
       newmode = mode_adjust (newmode, false, umask_value, change, nullptr);
       free (change);
@@ -164,9 +160,9 @@ main (int argc, char **argv)
   /* If the number of arguments is 0 or 1,
      or (if it's 2 or more and the second one starts with 'p'), then there
      must be exactly two operands.  Otherwise, there must be four.  */
-  expected_operands = (argc <= optind
-                       || (optind + 1 < argc && argv[optind + 1][0] == 'p')
-                       ? 2 : 4);
+  int expected_operands = (argc <= optind
+                           || (optind + 1 < argc && argv[optind + 1][0] == 'p')
+                           ? 2 : 4);
 
   if (argc - optind < expected_operands)
     {
@@ -207,6 +203,7 @@ main (int argc, char **argv)
   /* Only check the first character, to allow mnemonic usage like
      'mknod /dev/rst0 character 18 0'. */
 
+  mode_t node_type;
   switch (argv[optind + 1][0])
     {
     case 'b':			/* 'block' or 'buffered' */
@@ -229,21 +226,20 @@ main (int argc, char **argv)
     block_or_character:
       {
         char const *s_major = argv[optind + 2];
-        char const *s_minor = argv[optind + 3];
-        uintmax_t i_major, i_minor;
-        dev_t device;
-
+        uintmax_t i_major;
         if (xstrtoumax (s_major, nullptr, 0, &i_major, "") != LONGINT_OK
             || i_major != (major_t) i_major)
           error (EXIT_FAILURE, 0,
                  _("invalid major device number %s"), quote (s_major));
 
+        char const *s_minor = argv[optind + 3];
+        uintmax_t i_minor;
         if (xstrtoumax (s_minor, nullptr, 0, &i_minor, "") != LONGINT_OK
             || i_minor != (minor_t) i_minor)
           error (EXIT_FAILURE, 0,
                  _("invalid minor device number %s"), quote (s_minor));
 
-        device = makedev (i_major, i_minor);
+        dev_t device = makedev (i_major, i_minor);
 #ifdef NODEV
         if (device == NODEV)
           error (EXIT_FAILURE, 0, _("invalid device %s %s"),
