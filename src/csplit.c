@@ -19,7 +19,6 @@
 
 #include <config.h>
 
-#include <ctype.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>

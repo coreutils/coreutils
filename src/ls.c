@@ -36,7 +36,6 @@
    Greg Lee <lee@uhunix.uhcc.hawaii.edu>.  */
 
 #include <config.h>
-#include <ctype.h>
 #include <sys/types.h>
 
 #include <termios.h>

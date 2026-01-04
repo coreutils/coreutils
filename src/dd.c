@@ -18,7 +18,6 @@
 
 #include <config.h>
 
-#include <ctype.h>
 #include <sys/types.h>
 #include <signal.h>
 

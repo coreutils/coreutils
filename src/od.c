@@ -18,7 +18,6 @@
 
 #include <config.h>
 
-#include <ctype.h>
 #include <endian.h>
 #include <float.h>
 #include <stdio.h>

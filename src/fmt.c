@@ -17,7 +17,6 @@
 /* Written by Ross Paterson <rap@doc.ic.ac.uk>.  */
 
 #include <config.h>
-#include <ctype.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>

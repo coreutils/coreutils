@@ -15,7 +15,6 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include <config.h>
-#include <ctype.h>
 #include <float.h>
 #include <getopt.h>
 #include <stdio.h>

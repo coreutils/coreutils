@@ -20,6 +20,8 @@
 
 #include <alloca.h>
 
+#include <ctype.h>
+
 #include <sys/stat.h>
 
 /* Commonly used file permission combination.  */
@@ -568,8 +570,7 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
 
   /* Set desc_text to spacing after the full option text */
   char const *desc_text = option_text + anchor_len;
-  while (*desc_text && (! (*desc_text == ' ' || *desc_text == '\n')
-                        || *(desc_text + 1) == '-'))
+  while (*desc_text && (! isspace (*desc_text) || *(desc_text + 1) == '-'))
     desc_text++;
 
   /* write spaces before option text. */

@@ -19,7 +19,6 @@
 #include <config.h>
 
 #include "system.h"
-#include <ctype.h>
 #include "c-ctype.h"
 #include "quote.h"
 #include "set-fields.h"

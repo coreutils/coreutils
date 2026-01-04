@@ -22,7 +22,6 @@
 
 #include <config.h>
 
-#include <ctype.h>
 #include <getopt.h>
 #include <pthread.h>
 #include <sys/resource.h>
