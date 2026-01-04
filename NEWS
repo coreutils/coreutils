@@ -4,6 +4,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cp, install, and mv no longer enter an infinite loop copying sparse files
+  with SEEK_HOLE.  E.g., this was seen on ext4 when copying sparse files with
+  extents that are being actively updated, and copy offload is not being used.
+  [bug introduced in coreutils-9.9]
+
   'date' no longer fails with format directives that return an empty string.
   [bug introduced in coreutils-9.9]
 

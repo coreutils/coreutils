@@ -338,7 +338,7 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, idx_t buf_size,
   for (off_t ext_start = scan_inference->ext_start;
        0 <= ext_start && ext_start < max_ipos; )
     {
-      off_t ext_end = (ext_start == ipos
+      off_t ext_end = (ext_start == src_pos
                        ? scan_inference->hole_start
                        : lseek (src_fd, ext_start, SEEK_HOLE));
       if (0 <= ext_end)
