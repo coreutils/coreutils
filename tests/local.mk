@@ -279,6 +279,7 @@ all_tests =					\
   tests/od/od.pl				\
   tests/od/od-endian.sh				\
   tests/od/od-float.sh				\
+  tests/mktemp/bad-unicode.sh			\
   tests/misc/mktemp.pl				\
   tests/misc/arch.sh				\
   tests/pr/bounded-memory.sh			\
