@@ -5726,6 +5726,12 @@ Output format is further controlled by the following options.
 Select the size of the minimum white space gap between the fields on the
 output line.
 
+@optItem{ptx,-t,}
+@optItemx{ptx,--typeset-mode,}
+Prepare the output for a phototypesetter.
+I.e., change the default output width from 72 to 100 columns.
+This is equivalent to @option{--width=100}.
+
 @optItem{ptx,-w,@w{ }@var{number}}
 @optItemx{ptx,--width,=@var{number}}
 Select the maximum output width of each final line.  If references are

@@ -76,7 +76,7 @@ static bool gnu_extensions = true;	/* trigger all GNU extensions */
 static bool auto_reference = false;	/* refs are 'file_name:line_number:' */
 static bool input_reference = false;	/* refs at beginning of input lines */
 static bool right_reference = false;	/* output refs after right context  */
-static idx_t line_width = 72;		/* output line width in characters */
+static idx_t line_width = -1;		/* output line width in characters */
 static idx_t gap_size = 3;	/* number of spaces between output fields */
 static char const *truncation_string = "/";
                                 /* string used to mark line truncations */
@@ -1710,7 +1710,7 @@ Output a permuted index, including context, of the words in the input files.\n\
 "), stdout);
       fputs (_("\
   -r, --references               first field of each line is a reference\n\
-  -t, --typeset-mode               - not implemented -\n\
+  -t, --typeset-mode             change the default width from 72 to 100\n\
   -w, --width=NUMBER             output width in columns, reference excluded\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -1820,7 +1820,8 @@ main (int argc, char **argv)
           break;
 
         case 't':
-          /* Yet to understand...  */
+          if (line_width < 0)
+            line_width = 100;
           break;
 
         case 'w':
@@ -1881,6 +1882,9 @@ main (int argc, char **argv)
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
         }
     }
+
+  if (line_width < 0)
+    line_width = 72;
 
   /* Process remaining arguments.  If GNU extensions are enabled, process
      all arguments as input parameters.  If disabled, accept at most two

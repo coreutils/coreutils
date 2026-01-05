@@ -53,6 +53,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  'ptx' -t is no longer a no-op, and now sets the default width to 100 columns.
+
   'timeout' now honors ignored signals and will not propagate them.  E.g.,
   timeout(1) in a shell backgrounded job, will not terminate upon receiving
   SIGINT or SIGQUIT, as these are ignored by default in shell background jobs.
