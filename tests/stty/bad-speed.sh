@@ -19,6 +19,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ stty
+require_controlling_input_terminal_
 require_gcc_shared_
 
 # Replace each cfsetispeed call with a call to these stubs.
