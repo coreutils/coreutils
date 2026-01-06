@@ -11,7 +11,9 @@
 # file and return 0.
 #
 # This test is skipped on systems that lack LD_PRELOAD support; that's fine.
-# Similarly, on a system that lacks <dlfcn.h> or __xstat, skipping it is fine.
+# Similarly, on a system that lacks <dlfcn.h>, skipping it is fine.
+# Note: glibc 2.33+ removed __xstat, so we intercept both __xstat (old glibc)
+# and stat (new glibc) to support all systems.
 
 # Copyright (C) 2012-2026 Free Software Foundation, Inc.
 
@@ -33,6 +35,8 @@ print_ver_ cp
 require_gcc_shared_
 
 # Replace each stat call with a call to this wrapper.
+# We intercept both __xstat (glibc < 2.33) and stat (glibc >= 2.33)
+# to support all glibc versions.
 cat > k.c <<'EOF' || framework_failure_
 #define _GNU_SOURCE
 #include <stdio.h>
@@ -46,16 +50,48 @@ cat > k.c <<'EOF' || framework_failure_
 
 #undef __xstat
 
+static int
+is_dest_path (const char *path)
+{
+  return *path == 'd' && path[1] == 0;
+}
+
+static const char *
+redirect_path (const char *path)
+{
+  /* When asked to stat nonexistent "d",
+     return results suggesting it exists. */
+  if (is_dest_path (path))
+    {
+      /* Only mark preloaded when we intercept stat on the destination "d".
+         This ensures the test verifies that cp actually calls stat on
+         the destination, not just any file. */
+      fclose (fopen ("preloaded", "w"));
+      return "d2";
+    }
+  return path;
+}
+
+/* For glibc < 2.33: stat() calls __xstat() internally */
 int
 __xstat (int ver, const char *path, struct stat *st)
 {
-  static int (*real_stat)(int ver, const char *path, struct stat *st) = NULL;
-  fclose(fopen("preloaded", "w"));
+  static int (*real_xstat) (int, const char *, struct stat *) = NULL;
+  if (!real_xstat)
+    real_xstat = dlsym (RTLD_NEXT, "__xstat");
+  if (!real_xstat)
+    return -1;
+  return real_xstat (ver, redirect_path (path), st);
+}
+
+/* For glibc >= 2.33: stat() is a direct symbol */
+int
+stat (const char *path, struct stat *st)
+{
+  static int (*real_stat) (const char *, struct stat *) = NULL;
   if (!real_stat)
-    real_stat = dlsym (RTLD_NEXT, "__xstat");
-  /* When asked to stat nonexistent "d",
-     return results suggesting it exists. */
-  return real_stat (ver, *path == 'd' && path[1] == 0 ? "d2" : path, st);
+    real_stat = dlsym (RTLD_NEXT, "stat");
+  return real_stat (redirect_path (path), st);
 }
 EOF
 
