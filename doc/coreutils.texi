@@ -7074,6 +7074,9 @@ which is of no particular use.
 
 @end table
 
+Since @samp{[:@var{class}:]} and @samp{[=@var{c}=]} syntax
+are similar to shell globbing syntax, all such class arguments should
+be quoted appropriately, when running @command{tr} from the shell.
 
 @node Translating
 @subsection Translating

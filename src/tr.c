@@ -342,8 +342,9 @@ Translation occurs if -d is not given and both STRING1 and STRING2 appear.\n\
 -t is only significant when translating.  ARRAY2 is extended to length of\n\
 ARRAY1 by repeating its last character as necessary.  Excess characters\n\
 of ARRAY2 are ignored.  Character classes expand in unspecified order;\n\
-while translating, [:lower:] and [:upper:] may be used in pairs to\n\
+while translating, '[:lower:]' and '[:upper:]' may be used in pairs to\n\
 specify case conversion.  Squeezing occurs after translation or deletion.\n\
+Arguments like '[...]' should be quoted, to avoid potential shell globbing.\n\
 "), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
