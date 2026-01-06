@@ -93,6 +93,18 @@ stat (const char *path, struct stat *st)
     real_stat = dlsym (RTLD_NEXT, "stat");
   return real_stat (redirect_path (path), st);
 }
+
+/* Since coreutils v8.32 we use fstatat() rather than stat()  */
+int fstatat(int dirfd, const char *restrict path,
+            struct stat *restrict statbuf, int flags)
+{
+  static int (*real_fstatat) (int dirfd, const char *restrict pathname,
+              struct stat *restrict statbuf, int flags) = NULL;
+  if (!real_fstatat)
+    real_fstatat = dlsym (RTLD_NEXT, "fstatat");
+  return real_fstatat (dirfd, redirect_path (path), statbuf, flags);
+}
+
 EOF
 
 # Then compile/link it:
@@ -103,7 +115,7 @@ touch d2 || framework_failure_
 echo xyz > src || framework_failure_
 
 # Finally, run the test:
-LD_PRELOAD=$LD_PRELOAD:./k.so cp src d || fail=1
+LD_PRELOAD=$LD_PRELOAD:./k.so cp -T src d || fail=1
 
 test -f preloaded || skip_ 'LD_PRELOAD was ineffective?'
 
