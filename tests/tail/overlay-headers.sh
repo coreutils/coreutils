@@ -38,11 +38,12 @@ wait4lines_ ()
 }
 
 # Speedup the non inotify case
-fastpoll='---dis -s.1 --max-unchanged-stats=1'
+fastpoll='-s.1 --max-unchanged-stats=1'
 
 # Terminate any background tail process
 cleanup_() {
-  kill $pid 2>/dev/null && wait $pid;
+  kill -CONT $pid 2>/dev/null
+  kill $pid 2>/dev/null && wait $pid
   kill $sleep 2>/dev/null && wait $sleep
 }
 
@@ -52,15 +53,31 @@ echo start > file2 || framework_failure_
 # Use this as a way to gracefully terminate tail
 env sleep 60 & sleep=$!
 
-timeout 60 tail $fastpoll --pid=$sleep -f file1 file2 > out & pid=$!
+# Note don't use timeout(1) here as it currently
+# does not propagate SIGCONT
+tail $fastpoll --pid=$sleep -f file1 file2 > out & pid=$!
 
+# Ensure tail is running
 kill -0 $pid || fail=1
+
+# Ensure SIGCONT is supported
+kill -CONT $pid || framework_failure_
 
 # Wait for 5 initial lines
 retry_delay_ wait4lines_ .1 6 5 || fail=1
 
 # Suspend tail so single read() caters for multiple inotify events
 kill -STOP $pid || fail=1
+
+wait4stopped_() {
+  local delay=$1
+  case $(ps -o state= -p "$pid" 2>/dev/null) in
+    T*) return 0 ;;
+    *) sleep $delay; return 1 ;;
+  esac
+}
+
+retry_delay_ wait4stopped_ .1 6 || skip_ 'failed to detect stopped tail'
 
 # Interleave writes to files to generate overlapping inotify events
 echo line >> file1 || framework_failure_
@@ -76,6 +93,6 @@ retry_delay_ wait4lines_ .1 6 13 || fail=1
 
 kill $sleep && wait || framework_failure_
 
-test "$(countlines_)" = 13 || fail=1
+test "$(countlines_)" = 13 || { cat out; fail=1; }
 
 Exit $fail
