@@ -21,6 +21,11 @@ print_ver_ chmod
 
 touch file || framework_failure_
 returns_ 1 chmod 0 missing_file file || fail=1
-test -r file && fail=1
+
+touch unreadable || framework_failure_
+chmod 0 unreadable || framework_failure_
+if ! test -r unreadable; then
+  test -r file && fail=1
+fi
 
 Exit $fail
