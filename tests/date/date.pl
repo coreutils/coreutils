@@ -319,6 +319,21 @@ my @Tests =
 
      # test with %%-N
      ['pct-pct', '+%%-N', {OUT => '%-N'}],
+
+     # Test parenthesis comment handling
+     # Single parenthesis - should be treated as empty string (midnight today)
+     ['paren-1', "-d '(' +'%H:%M:%S'", {OUT=>"00:00:00"}],
+
+     # Parenthesis with preceding text - comment should be ignored
+     ['paren-2', "-d '1(ignore this comment' +'%H:%M:%S'", {OUT=>"01:00:00"}],
+
+     # Parenthesis with date - comment should be ignored
+     ['paren-3', "-d '2026-01-05(this is a comment' -u +'%Y-%m-%d'",
+      {OUT=>"2026-01-05"}],
+
+     # Text enclosed in parentheses is treated as a comment
+     ['paren-4', "-d '2026(this is a comment)-01-05' -u +'%Y-%m-%d'",
+      {OUT=>"2026-01-05"}],
     );
 
 # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
