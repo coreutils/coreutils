@@ -251,6 +251,7 @@ all_tests =					\
   tests/fmt/goal-option.sh			\
   tests/fmt/long-line.sh			\
   tests/fmt/non-space.sh			\
+  tests/fmt/width.sh				\
   tests/misc/echo.sh				\
   tests/env/env.sh				\
   tests/env/env-signal-handler.sh		\

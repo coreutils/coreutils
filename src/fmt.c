@@ -908,7 +908,7 @@ fmt_paragraph (void)
 
           len += (w - 1)->space + w->length;	/* w > start >= word */
         }
-      while (len < max_width);
+      while (len <= max_width);
       start->best_cost = best + base_cost (start);
     }
 
