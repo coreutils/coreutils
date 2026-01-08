@@ -68,14 +68,15 @@ returns_ 1 cksum -a bsd --check </dev/null || fail=1
 # Ensure abbreviations not supported for algorithm selection
 returns_ 1 cksum -a sha22 </dev/null || fail=1
 
+# Ensure --text and --tag combo is disallowed
+returns_ 1 cksum --text --tag -a md5 </dev/null || fail=1
+returns_ 1 cksum --tag --text -a md5 </dev/null || fail=1
+
 # Ensure --tag -> --untagged transition resets binary indicator
 cksum --tag --untagged -a md5 /dev/null >out-1 || fail=1
-# --binary ignored in this edge case
-cksum --binary --tag --untagged -a md5 /dev/null >out-2 || fail=1
 # base case for comparison
 cksum --untagged -a md5 /dev/null >out || fail=1
 compare out out-1 || fail=1
-compare out out-2 || fail=1
 
 # check that the '*' is present
 cksum --tag --untagged --binary -a md5 /dev/null >out || fail=1
@@ -83,5 +84,7 @@ grep " *" out >/dev/null || { fail=1; cat out; }
 # Verify that the order does not reset binary indicator
 cksum --binary --untagged -a md5 /dev/null >out-1 || fail=1
 compare out out-1 || fail=1
+cksum --binary --tag --untagged -a md5 /dev/null >out-2 || fail=1
+compare out out-2 || fail=1
 
 Exit $fail

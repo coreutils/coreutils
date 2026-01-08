@@ -70,6 +70,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   is reduced in size by 3.2% through the more efficient reuse of the cksum
   utility by the md5sum and sha*sum utilities.
 
+  'cksum' now validates its options more consistently.
+  E.g., `cksum --text --tag` now fails like `cksum --tag --text` already did.
+
   csplit, ls, and sort, now handle a more complete set of terminating signals.
 
   'du' now processes directories with 10,000 or more entries up to 9 times

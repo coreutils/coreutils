@@ -1623,14 +1623,11 @@ main (int argc, char **argv)
         raw_digest = true;
         break;
       case UNTAG_OPTION:
-        if (prefix_tag == 1)
-          binary = -1;
         prefix_tag = 0;
         break;
 # endif
       case TAG_OPTION:
         prefix_tag = 1;
-        binary = 1;
         break;
       case 'z':
         digest_delim = '\0';
@@ -1735,38 +1732,20 @@ main (int argc, char **argv)
    }
 #endif
 
-  if (prefix_tag == -1)
-    prefix_tag = HASH_ALGO_CKSUM;
-
-  if (prefix_tag && !binary)
-   {
-     /* This could be supported in a backwards compatible way
-        by prefixing the output line with a space in text mode.
-        However that's invasive enough that it was agreed to
-        not support this mode with --tag, as --text use cases
-        are adequately supported by the default output format.  */
-#if !HASH_ALGO_CKSUM
-     error (0, 0, _("--tag does not support --text mode"));
-#else
-     error (0, 0, _("--text mode is only supported with --untagged"));
-#endif
-     usage (EXIT_FAILURE);
-   }
-
   if (digest_delim != '\n' && do_check)
     {
       error (0, 0, _("the --zero option is not supported when "
                      "verifying checksums"));
       usage (EXIT_FAILURE);
     }
-#if !HASH_ALGO_CKSUM
-  if (prefix_tag && do_check)
+  if (1 <= prefix_tag && do_check)
     {
+      /* Note we allow --untagged with --check to more
+         seamlessly support --untagged in an emulation wrapper.  */
       error (0, 0, _("the --tag option is meaningless when "
                      "verifying checksums"));
       usage (EXIT_FAILURE);
     }
-#endif
 
   if (0 <= binary && do_check)
     {
@@ -1811,8 +1790,28 @@ main (int argc, char **argv)
      usage (EXIT_FAILURE);
    }
 
+  if (prefix_tag == -1)
+    prefix_tag = HASH_ALGO_CKSUM;
+
+  if (prefix_tag && !binary)
+   {
+     /* This could be supported in a backwards compatible way
+        by prefixing the output line with a space in text mode.
+        However that's invasive enough that it was agreed to
+        not support this mode with --tag, as --text use cases
+        are adequately supported by the default output format.  */
+#if !HASH_ALGO_CKSUM
+     error (0, 0, _("--tag does not support --text mode"));
+#else
+     error (0, 0, _("--text mode is only supported with --untagged"));
+#endif
+     usage (EXIT_FAILURE);
+   }
+
   if (!O_BINARY && binary < 0)
     binary = 0;
+  else if (prefix_tag)
+    binary = 1;
 
   char **operand_lim = argv + argc;
   if (optind == argc)

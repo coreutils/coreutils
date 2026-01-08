@@ -192,4 +192,13 @@ touch empty-1 empty-2 || framework_failure_
 cksum --check empty-1 empty-2 > out 2>&1 && fail=1
 grep 'empty-1: no properly formatted checksum lines found' out || fail=1
 grep 'empty-2: no properly formatted checksum lines found' out || fail=1
+
+
+# Disallow --tag --check, with appropriate error
+returns_ 1 cksum --tag --check /dev/null 2> err
+grep 'the --tag option is meaningless when verifying checksums' err || fail=1
+# Allow --untagged --check, to better support
+# an emulation wrapper for legacy *sum utils.
+cksum -a md5 /dev/null | cksum --untagged --check || fail=1
+
 Exit $fail
