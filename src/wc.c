@@ -258,6 +258,9 @@ write_counts (uintmax_t lines,
   if (file)
     printf (" %s", strchr (file, '\n') ? quotef (file) : file);
   putchar ('\n');
+
+  if (ferror (stdout))
+    write_error ();
 }
 
 /* Read FD and return a summary.  */

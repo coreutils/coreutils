@@ -56,6 +56,7 @@ tee < /dev/zero
 tr . . < /dev/zero
 unexpand /dev/zero
 uniq -z -D /dev/zero
+wc --version; yes /dev/null | tr '\\\\n' '\\\\0' | wc --files0-from=-
 yes
 " |
 sort -k 1b,1 > all_writers || framework_failure_

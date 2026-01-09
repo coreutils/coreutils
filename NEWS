@@ -88,6 +88,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'timeout' on Linux will always terminate the child in the case where the
   timeout process itself dies, like when it receives a KILL signal for example.
 
+  'wc' now exits promptly upon receiving a write error,
+  which is significant when processing many input files.
+
 ** Build-related
 
   'kill' and 'uptime' are no longer built by default.  These programs can be
