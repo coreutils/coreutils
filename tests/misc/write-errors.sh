@@ -24,8 +24,9 @@ if ! test -w /dev/full || ! test -c /dev/full; then
   skip_ '/dev/full is required'
 fi
 
-# Writers that may output data indefinitely
-# First word in command line is checked against built programs
+# Writers that may output data indefinitely.
+# First word in command line is checked against built programs.
+# Escapes must be double escaped.
 printf '%s' "\
 cat /dev/zero
 comm -z /dev/zero /dev/zero
@@ -42,7 +43,7 @@ fmt --version; yes | fmt
 fold /dev/zero
 fold -b /dev/zero
 fold -c /dev/zero
-fold --version; yes | tr -d '\\n' | fold
+fold --version; yes | fold
 head -z -n-1 /dev/zero
 join -a 1 -z /dev/zero /dev/null
 nl --version; yes | nl
