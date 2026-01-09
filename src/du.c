@@ -406,7 +406,9 @@ print_size (const struct duinfo *pdui, char const *string)
         }
     }
   printf ("\t%s%c", string, opt_nul_terminate_output ? '\0' : '\n');
-  fflush (stdout);
+  if (fflush (stdout) != 0)
+    write_error ();
+
 }
 
 /* Fill the di_mnt set with local mount point dev/ino pairs.  */

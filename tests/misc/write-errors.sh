@@ -34,6 +34,7 @@ cut -z -f1- /dev/zero
 date +%${OFF64_T_MAX}c
 date --version; yes 0 | date -f-
 dd if=/dev/zero
+du --version; yes /dev/null | tr '\\\\n' '\\\\0' | du -l --files0-from=-
 expand /dev/zero
 factor --version; yes 1 | factor
 fmt /dev/zero
