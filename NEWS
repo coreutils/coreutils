@@ -81,6 +81,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'pinky' will now exit immediately upon receiving a write error, which is
   significant when reading large plan or project files.
 
+  'readlink' and 'realpath' will now exit promptly upon receiving a write error,
+  which is significant when canonicalizing multiple file names longer than
+  PATH_MAX.
+
   'timeout' on Linux will always terminate the child in the case where the
   timeout process itself dies, like when it receives a KILL signal for example.
 

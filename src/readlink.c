@@ -171,6 +171,8 @@ main (int argc, char **argv)
           if (! no_newline)
             putchar (use_nuls ? '\0' : '\n');
           free (value);
+          if (ferror (stdout))
+            write_error ();
         }
       else
         {

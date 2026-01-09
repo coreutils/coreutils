@@ -166,6 +166,9 @@ process_path (char const *fname, int can_mode)
 
   free (can_fname);
 
+  if (ferror (stdout))
+    write_error ();
+
   return true;
 }
 
