@@ -28,6 +28,7 @@ include $(srcdir)/src/cu-progs.mk
 EXTRA_PROGRAMS = \
    $(no_install__progs) \
    $(build_if_possible__progs) \
+   $(build_if_appropriate__progs) \
    $(default__progs)
 
 # The user can tweak these lists at configure time.

@@ -26,19 +26,25 @@ disabled_by_default_progs='
 # Programs that can be built only when certain requisite system
 # features are detected at configure time.
 build_if_possible_progs='
-    chcon
     chroot
     df
     hostid
     libstdbuf.so
     nice
     pinky
-    runcon
     stdbuf
     stty
     timeout
     users
     who
+'
+# Programs that are built only when certain requisite system
+# features are detected at configure time.  I.e., they can
+# be built on all systems, but are only effective on some.
+# These will be built to create man pages for distribution.
+build_if_appropriate_progs='
+   chcon
+   runcon
 '
 
 # All the other programs, to be built by default, and that should
@@ -149,7 +155,8 @@ case $#,$1 in
       echo "gl_ADD_PROG([optional_bin_progs], [$p])"
     done
     # Extra 'echo' to normalize whitespace.
-    echo "no_install_progs_default='`echo $disabled_by_default_progs`'"
+    echo "no_install_progs_default='`echo $disabled_by_default_progs \
+                                          $build_if_appropriate_progs`'"
     sed 's/^ *//' <<END
         # Given the name of a variable containing a space-separated
         # list of install-by-default programs and the actual list of
@@ -177,6 +184,10 @@ END
     for p in $build_if_possible_progs; do
       echo build_if_possible__progs += $progsdir/$p
     done
+    echo build_if_appropriate__progs =
+    for p in $build_if_appropriate_progs; do
+      echo build_if_appropriate__progs += $progsdir/$p
+    done
     echo default__progs =
     for p in $normal_progs; do
       echo default__progs += $progsdir/$p
@@ -184,7 +195,7 @@ END
     ;;
   1,--list-progs)
     for p in $disabled_by_default_progs $build_if_possible_progs \
-        $normal_progs; do
+        $build_if_appropriate_progs $normal_progs; do
       echo $p
     done
     ;;
