@@ -24,11 +24,14 @@ if ! test -w /dev/full || ! test -c /dev/full; then
   skip_ '/dev/full is required'
 fi
 
+dev_null_hash=$(cksum -a sha3 -l 256 /dev/null) || framework_failure_
+
 # Writers that may output data indefinitely.
 # First word in command line is checked against built programs.
 # Escapes must be double escaped.
 printf '%s' "\
 cat /dev/zero
+cksum --version; yes '${dev_null_hash}' | cksum --check
 comm -z /dev/zero /dev/zero
 cut -z -c1- /dev/zero
 cut -z -f1- /dev/zero

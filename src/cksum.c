@@ -1266,6 +1266,9 @@ output_file (char const *file, int binary_file, void const *digest,
     }
 
   putchar (delim);
+
+  if (ferror (stdout))
+    write_error ();
 }
 #endif
 
@@ -1447,6 +1450,9 @@ digest_check (char const *checkfile_name)
                     printf (": %s\n", _("OK"));
                 }
             }
+
+          if (ferror (stdout))
+            write_error ();
         }
     }
   while (!feof (checkfile_stream) && !ferror (checkfile_stream));
