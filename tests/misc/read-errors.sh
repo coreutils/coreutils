@@ -40,6 +40,7 @@ cksum -a sha3 -l 384 .
 cksum -a sha3 -l 512 .
 cksum -a sm3 .
 cksum -a sysv .
+cksum -a md5 /dev/null | sed 's|/dev/null|.|' | cksum --check
 comm . .
 csplit . 1
 cut -c1 .
