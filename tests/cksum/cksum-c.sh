@@ -201,4 +201,22 @@ grep 'the --tag option is meaningless when verifying checksums' err || fail=1
 # an emulation wrapper for legacy *sum utils.
 cksum -a md5 /dev/null | cksum --untagged --check || fail=1
 
+# Ensure I/O errors handled appropriately
+if strace -o /dev/null -P path -e fault=read:error=EIO true; then
+  touch ok eio || framework_failure_
+  cksum -a md5 eio ok > check.md5 || fail=1
+  # Test one of the files being checked returns EIO
+  returns_ 1 strace -o /dev/null -P eio -e fault=read:error=EIO \
+   cksum --check check.md5 2>err >out || fail=1
+
+  printf '%s\n' 'eio: FAILED open or read' 'ok: OK' >exp || framework_failure_
+  compare exp out || fail=1
+
+  # Generate the expected error using cat:
+  strace -o /dev/null -P eio -e fault=read:error=EIO cat eio 2> exp.t
+  sed 's/cat/cksum/' < exp.t > exp && grep eio: exp && echo \
+   'cksum: WARNING: 1 listed file could not be read' >>exp || framework_failure_
+  compare exp err || fail=1
+fi
+
 Exit $fail
