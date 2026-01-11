@@ -16993,9 +16993,9 @@ Set range @var{range} in the target security context.
 
 Synopses:
 @example
-runcon @var{context} @var{command} [@var{args}]
-runcon [ -c ] [-u @var{user}] [-r @var{role}] [-t @var{type}]@c
- [-l @var{range}] @var{command} [@var{args}]
+runcon [@var{context} @var{command} [@var{arg}]@dots{}]
+runcon [-c] [-u @var{user}] [-r @var{role}] [-t @var{type}]@c
+ [-l @var{range}] @var{command} [@var{arg}@dots{}]
 @end example
 
 Run @var{command} with completely-specified @var{context}, or with

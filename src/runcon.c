@@ -74,8 +74,8 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s CONTEXT COMMAND [args]\n\
-  or:  %s [ -c ] [-u USER] [-r ROLE] [-t TYPE] [-l RANGE] COMMAND [args]\n\
+Usage: %s [CONTEXT COMMAND [ARG]...]\n\
+  or:  %s [-c] [-u USER] [-r ROLE] [-t TYPE] [-l RANGE] COMMAND [ARG]...\n\
 "), program_name, program_name);
       fputs (_("\
 Run a program in a different SELinux security context.\n\
