@@ -93,6 +93,12 @@ sort -k 1b,1 > built_programs || framework_failure_
 
 join all_readers built_programs > built_readers || framework_failure_
 
+touch a || framework_failure_
+cksum -a md5 a > a.md5 || framework_failure_
+# The case a.md5 is fine but a is broken
+returns_ 1 strace -o /dev/null -P a -e fault=read:error=EIO cksum --check a.md5 2> err || fail=1
+grep "cksum: a: Input/output error" err || fail=1 # How to extract the message from OS?
+
 while read reader; do
   eval $reader >/dev/null && { fail=1; echo "$reader: exited with 0" >&2; }
 done < built_readers
