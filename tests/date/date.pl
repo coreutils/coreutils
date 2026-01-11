@@ -334,6 +334,11 @@ my @Tests =
      # Text enclosed in parentheses is treated as a comment
      ['paren-4', "-d '2026(this is a comment)-01-05' -u +'%Y-%m-%d'",
       {OUT=>"2026-01-05"}],
+
+     # Nested comments are supported
+     ['paren-5', "-d '((nested))2026-01-05' -u +'%Y-%m-%d'",
+      {OUT=>"2026-01-05"}],
+     ['paren-6', "-d '((nested)2026-01-05)' +'%H:%M:%S'", {OUT=>"00:00:00"}],
     );
 
 # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
