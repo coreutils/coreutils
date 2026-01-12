@@ -27,6 +27,7 @@
 #include "argmatch.h"
 #include "c-ctype.h"
 #include "fadvise.h"
+#include "octhexdigits.h"
 #include "quote.h"
 #include "read-file.h"
 #include "stdio--.h"
@@ -42,11 +43,6 @@
 
 /* Number of possible characters in a byte.  */
 #define CHAR_SET_SIZE 256
-
-#define ISODIGIT(C) ((C) >= '0' && (C) <= '7')
-#define HEXTOBIN(C) ((C) >= 'a' && (C) <= 'f' ? (C)-'a'+10 \
-                     : (C) >= 'A' && (C) <= 'F' ? (C)-'A'+10 : (C)-'0')
-#define OCTTOBIN(C) ((C) - '0')
 
 /* Debugging the memory allocator.  */
 
@@ -314,7 +310,7 @@ unescape_string (char *string)
               for (length = 0, string++;
                    length < 3 && c_isxdigit (*string);
                    length++, string++)
-                value = value * 16 + HEXTOBIN (*string);
+                value = value * 16 + fromhex (*string);
               if (length == 0)
                 {
                   *cursor++ = '\\';
@@ -327,9 +323,9 @@ unescape_string (char *string)
             case '0':		/* \0ooo escape, 3 chars maximum */
               value = 0;
               for (length = 0, string++;
-                   length < 3 && ISODIGIT (*string);
+                   length < 3 && isoct (*string);
                    length++, string++)
-                value = value * 8 + OCTTOBIN (*string);
+                value = value * 8 + fromoct (*string);
               *cursor++ = value;
               break;
 
