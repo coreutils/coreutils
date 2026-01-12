@@ -42,6 +42,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "fadvise.h"
+#include "mcel.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "paste"
@@ -50,9 +51,6 @@
   proper_name ("David M. Ihnat"), \
   proper_name ("David MacKenzie")
 
-/* Indicates that no delimiter should be added in the current position. */
-#define EMPTY_DELIM '\0'
-
 /* If nonzero, we have read standard input at some point. */
 static bool have_read_stdin;
 
@@ -60,11 +58,16 @@ static bool have_read_stdin;
    corresponding lines from each file in parallel. */
 static bool serial_merge;
 
-/* The delimiters between lines of input files (used cyclically). */
+/* The delimiters between lines of input files (used cyclically).
+   This stores the raw bytes of all delimiters concatenated.  */
 static char *delims;
 
-/* A pointer to the character after the end of 'delims'. */
-static char const *delim_end;
+/* Length of each delimiter in bytes (supports multi-byte characters).
+   A length of 0 indicates no delimiter at this position (from \0 escape).  */
+static size_t *delim_lens;
+
+/* Number of delimiters.  */
+static idx_t num_delims;
 
 static unsigned char line_delim = '\n';
 
@@ -78,10 +81,10 @@ static struct option const longopts[] =
   {nullptr, 0, nullptr, 0}
 };
 
-/* Set globals delims and delim_end.  Copy STRPTR to DELIMS, converting
-   backslash representations of special characters in STRPTR to their actual
-   values. The set of possible backslash characters has been expanded beyond
-   that recognized by the Unix version.
+/* Set globals delims, delim_lens, and num_delims.
+   Process STRPTR converting backslash representations of special characters
+   to their actual values.  The set of possible backslash characters has been
+   expanded beyond that recognized by the Unix version.
    Return 0 upon success.
    If the string ends in an odd number of backslashes, ignore the
    final backslash and return nonzero.  */
@@ -93,62 +96,65 @@ collapse_escapes (char const *strptr)
   bool backslash_at_end = false;
 
   delims = strout;
+  delim_lens = xnmalloc (MAX (1, strlen (strptr)), sizeof *delim_lens);
 
-  while (*strptr)
+  char const *s = strptr;
+  idx_t idx = 0;
+
+  while (*s)
     {
-      if (*strptr != '\\')	/* Is it an escape character? */
-        *strout++ = *strptr++;	/* No, just transfer it. */
-      else
+      if (*s == '\\')
         {
-          switch (*++strptr)
+          s++;
+          if (*s == '\0')
             {
-            case '0':
-              *strout++ = EMPTY_DELIM;
-              break;
-
-            case 'b':
-              *strout++ = '\b';
-              break;
-
-            case 'f':
-              *strout++ = '\f';
-              break;
-
-            case 'n':
-              *strout++ = '\n';
-              break;
-
-            case 'r':
-              *strout++ = '\r';
-              break;
-
-            case 't':
-              *strout++ = '\t';
-              break;
-
-            case 'v':
-              *strout++ = '\v';
-              break;
-
-            case '\\':
-              *strout++ = '\\';
-              break;
-
-            case '\0':
               backslash_at_end = true;
-              goto done;
-
-            default:
-              *strout++ = *strptr;
               break;
             }
-          strptr++;
+          else if (*s == '0')
+            {
+              /* Empty delimiter at this position.  */
+              s++;
+              delim_lens[idx++] = 0;
+            }
+          else
+            {
+              switch (*s)
+                {
+                case 'b': *strout++ = '\b'; break;
+                case 'f': *strout++ = '\f'; break;
+                case 'n': *strout++ = '\n'; break;
+                case 'r': *strout++ = '\r'; break;
+                case 't': *strout++ = '\t'; break;
+                case 'v': *strout++ = '\v'; break;
+                case '\\': *strout++ = '\\'; break;
+                default: goto copy_character;
+                }
+
+              s++;
+              delim_lens[idx++] = 1;
+            }
+
+          continue;
         }
+
+      copy_character:
+      mcel_t g = mcel_scanz (s);
+      strout = mempcpy (strout, s, g.len);
+      s += g.len;
+      delim_lens[idx++] = g.len;
     }
 
- done:
+  *strout = '\0';
 
-  delim_end = strout;
+  if (idx == 0)
+    {
+      delim_lens[0] = 0;
+      idx = 1;
+    }
+
+  num_delims = idx;
+
   return backslash_at_end ? 1 : 0;
 }
 
@@ -158,6 +164,16 @@ static inline void
 xputchar (char c)
 {
   if (putchar (c) < 0)
+    write_error ();
+}
+
+/* Output the delimiter at DELIMPTR with length LEN.
+   If LEN is 0, nothing is output (empty delimiter from \0 escape).  */
+
+static inline void
+output_delim (char const *delimptr, size_t len)
+{
+  if (len > 0 && fwrite (delimptr, 1, len, stdout) != len)
     write_error ();
 }
 
@@ -171,9 +187,9 @@ paste_parallel (size_t nfiles, char **fnamptr)
   bool ok = true;
   /* If all files are just ready to be closed, or will be on this
      round, the string of delimiters must be preserved.
-     delbuf[0] through delbuf[nfiles]
-     store the delimiters for closed files. */
-  char *delbuf = xmalloc (nfiles + 2);
+     delbuf stores the delimiter bytes for closed files.
+     Size it to hold up to (nfiles - 1) delimiters.  */
+  char *delbuf = xmalloc ((nfiles - 1) * MB_CUR_MAX + 1);
 
   /* Streams open to the files to process; null if the corresponding
      stream is closed.  */
@@ -218,8 +234,9 @@ paste_parallel (size_t nfiles, char **fnamptr)
     {
       /* Set up for the next line. */
       bool somedone = false;
-      char const *delimptr = delims;
-      size_t delims_saved = 0;	/* Number of delims saved in 'delbuf'. */
+      idx_t delimidx = 0;              /* Current delimiter index.  */
+      idx_t delimoff = 0;              /* Current offset into delims.  */
+      idx_t delims_saved = 0;          /* Bytes saved in 'delbuf'. */
 
       for (size_t i = 0; i < nfiles && files_open; i++)
         {
@@ -292,10 +309,18 @@ paste_parallel (size_t nfiles, char **fnamptr)
               else
                 {
                   /* Closed file; add delimiter to 'delbuf'. */
-                  if (*delimptr != EMPTY_DELIM)
-                    delbuf[delims_saved++] = *delimptr;
-                  if (++delimptr == delim_end)
-                    delimptr = delims;
+                  size_t len = delim_lens[delimidx];
+                  if (len > 0)
+                    {
+                      memcpy (delbuf + delims_saved, delims + delimoff, len);
+                      delims_saved += len;
+                    }
+                  delimoff += len;
+                  if (++delimidx == num_delims)
+                    {
+                      delimidx = 0;
+                      delimoff = 0;
+                    }
                 }
             }
           else
@@ -308,10 +333,13 @@ paste_parallel (size_t nfiles, char **fnamptr)
                 {
                   if (chr != line_delim && chr != EOF)
                     xputchar (chr);
-                  if (*delimptr != EMPTY_DELIM)
-                    xputchar (*delimptr);
-                  if (++delimptr == delim_end)
-                    delimptr = delims;
+                  output_delim (delims + delimoff, delim_lens[delimidx]);
+                  delimoff += delim_lens[delimidx];
+                  if (++delimidx == num_delims)
+                    {
+                      delimidx = 0;
+                      delimoff = 0;
+                    }
                 }
               else
                 {
@@ -337,7 +365,6 @@ paste_serial (size_t nfiles, char **fnamptr)
 {
   bool ok = true;	/* false if open or read errors occur. */
   int charnew, charold; /* Current and previous char read. */
-  char const *delimptr;	/* Current delimiter char. */
   FILE *fileptr;	/* Open for reading current file. */
 
   for (; nfiles; nfiles--, fnamptr++)
@@ -361,7 +388,8 @@ paste_serial (size_t nfiles, char **fnamptr)
           fadvise (fileptr, FADVISE_SEQUENTIAL);
         }
 
-      delimptr = delims;	/* Set up for delimiter string. */
+      idx_t delimidx = 0;      /* Current delimiter index.  */
+      idx_t delimoff = 0;      /* Current offset into delims.  */
 
       charold = getc (fileptr);
       saved_errno = errno;
@@ -378,11 +406,13 @@ paste_serial (size_t nfiles, char **fnamptr)
               /* Process the old character. */
               if (charold == line_delim)
                 {
-                  if (*delimptr != EMPTY_DELIM)
-                    xputchar (*delimptr);
-
-                  if (++delimptr == delim_end)
-                    delimptr = delims;
+                  output_delim (delims + delimoff, delim_lens[delimidx]);
+                  delimoff += delim_lens[delimidx];
+                  if (++delimidx == num_delims)
+                    {
+                      delimidx = 0;
+                      delimoff = 0;
+                    }
                 }
               else
                 xputchar (charold);
@@ -520,6 +550,7 @@ main (int argc, char **argv)
              (nfiles, &argv[optind]));
 
   free (delims);
+  free (delim_lens);
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, "-");

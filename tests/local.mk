@@ -377,9 +377,10 @@ all_tests =					\
   tests/od/od-j.sh				\
   tests/od/od-multiple-t.sh			\
   tests/od/od-x8.sh				\
-  tests/misc/paste.pl				\
   tests/misc/pathchk.sh				\
   tests/misc/printenv.sh			\
+  tests/paste/paste.pl				\
+  tests/paste/multi-byte.sh			\
   tests/printf/printf.sh			\
   tests/printf/printf-cov.pl			\
   tests/printf/printf-hex.sh			\
