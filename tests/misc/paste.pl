@@ -65,6 +65,21 @@ my @Tests =
    # paste: 23^H^H^H.....@...@: No such file or directory$
    ['delim-bs2', q!-d'\'!, {IN=>{'123\b\b\b.....@'=>''}}, {EXIT => 1},
     {ERR => $msg . q!\\! . "\n"} ],
+
+   # \0 allows cycling thtough an empty delimiter (while "-d ''" does not)
+   ['delim-empty-1', q{-s -d '\0,'}, {IN=>"1\n2\n3\n"}, {OUT=>"12,3\n"}],
+
+   # POSIX escapes
+   ['delim-esc-0', q{-s -d '\0'},   {IN=>"1\n2\n"}, {OUT=>"12\n"}],
+   ['delim-esc-n', q{-s -d '\n'},   {IN=>"1\n2\n"}, {OUT=>"1\n2\n"}],
+   ['delim-esc-t', q{-s -d '\t'},   {IN=>"1\n2\n"}, {OUT=>"1\t2\n"}],
+   ['delim-esc-s', q{-s -d '\\\\'}, {IN=>"1\n2\n"}, {OUT=>"1\\2\n"}],
+   # GNU escapes
+   ['delim-esc-b', q{-s -d '\b'},   {IN=>"1\n2\n"}, {OUT=>"1\b2\n"}],
+   ['delim-esc-f', q{-s -d '\f'},   {IN=>"1\n2\n"}, {OUT=>"1\f2\n"}],
+   ['delim-esc-r', q{-s -d '\r'},   {IN=>"1\n2\n"}, {OUT=>"1\r2\n"}],
+   ['delim-esc-v', q{-s -d '\v'},   {IN=>"1\n2\n"}, {OUT=>"1\0132\n"}],
+   ['delim-esc-foo', q{-s -d '\q'}, {IN=>"1\n2\n"}, {OUT=>"1q2\n"}],
   );
 
 my $save_temps = $ENV{DEBUG};
