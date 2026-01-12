@@ -1721,6 +1721,13 @@ Output a permuted index, including context, of the words in the input files.\n\
 | strings, then launch execution.				        |
 `----------------------------------------------------------------------*/
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  FORMAT_OPTION = CHAR_MAX + 1
+};
+
 /* Long options equivalences.  */
 static struct option const long_options[] =
 {
@@ -1734,7 +1741,7 @@ static struct option const long_options[] =
   {"only-file", required_argument, nullptr, 'o'},
   {"references", no_argument, nullptr, 'r'},
   {"right-side-refs", no_argument, nullptr, 'R'},
-  {"format", required_argument, nullptr, 10},
+  {"format", required_argument, nullptr, FORMAT_OPTION},
   {"sentence-regexp", required_argument, nullptr, 'S'},
   {"traditional", no_argument, nullptr, 'G'},
   {"typeset-mode", no_argument, nullptr, 't'},
@@ -1868,7 +1875,7 @@ main (int argc, char **argv)
             word_regex.string = nullptr;
           break;
 
-        case 10:
+        case FORMAT_OPTION:
           output_format = XARGMATCH ("--format", optarg,
                                      format_args, format_vals);
           break;
