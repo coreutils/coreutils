@@ -6214,7 +6214,10 @@ many fields and want to print all but a few of them.
 @cindex merging files
 
 @command{paste} writes to standard output lines consisting of sequentially
-corresponding lines of each given file, separated by a TAB character.
+corresponding lines of each given file, separated by a delimiter character
+(default is the TAB character).
+The newline of every line except the line from the last input file
+is replaced with a delimiter character.
 Standard input is used for a file name of @samp{-} or if no input files
 are given.
 
@@ -6272,8 +6275,10 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @optItem{paste,-s,}
 @optItemx{paste,--serial,}
-Paste the lines of one file at a time rather than one line from each
-file.  Using the above example data:
+Paste the lines of one file at a time rather than one line from each file.
+The newline of every line except the last line in each input file
+is replaced with a delimiter character.
+Using the above example data:
 
 @example
 $ paste -s num2 let3
@@ -6285,8 +6290,27 @@ a       b       c
 @optItemx{paste,--delimiter,=@var{delim-list}}
 Consecutively use the characters in @var{delim-list} instead of
 TAB to separate merged lines.  When @var{delim-list} is
-exhausted, start again at its beginning.  Using the above example data:
+exhausted, start again at its beginning.
 
+The following backslash escape sequences are recognized
+in @var{delim-list}:
+
+@table @samp
+@item \0 The empty string (not the NUL character)
+@item \n newline
+@item \t TAB
+@item \\ A backslash
+@item \b backspace (GNU extension)
+@item \f form feed (GNU extension)
+@item \r carriage return (GNU extension)
+@item \v vertical tab (GNU extension)
+@end table
+
+It is an error if no character follows an unescaped backslash.
+As a GNU extension, a backslash followed by a character not listed
+above is interpreted as that character.
+
+Using the above example data:
 @example
 $ paste -d '%_' num2 let3 num2
 1%a_1

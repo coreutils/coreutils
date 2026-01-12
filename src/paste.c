@@ -427,17 +427,27 @@ Usage: %s [OPTION]... [FILE]...\n\
       fputs (_("\
 Write lines consisting of the sequentially corresponding lines from\n\
 each FILE, separated by TABs, to standard output.\n\
+The newline of every line except the line from the last file\n\
+is replaced with a TAB.\n\
 "), stdout);
 
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
       fputs (_("\
-  -d, --delimiters=LIST   reuse characters from LIST instead of TABs\n\
-  -s, --serial            paste one file at a time instead of in parallel\n\
+  -d, --delimiters=LIST\n\
+         reuse characters from LIST instead of TABs;\n\
+         backslash escapes are supported\n\
 "), stdout);
       fputs (_("\
-  -z, --zero-terminated    line delimiter is NUL, not newline\n\
+  -s, --serial\n\
+         paste one file at a time instead of in parallel; the newline of\n\
+         every line except the last line in each file is replaced with a TAB\
+\n\
+"), stdout);
+      fputs (_("\
+  -z, --zero-terminated\n\
+         line delimiter is NUL, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
