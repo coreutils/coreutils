@@ -98,4 +98,28 @@ while read reader; do
   eval $reader >/dev/null && { fail=1; echo "$reader: exited with 0" >&2; }
 done < built_readers
 
+
+expected_failure_status_sort=2
+
+# Ensure read is called, otherwise it's a layering violation.
+# Also ensure a read error is diagnosed appropriately.
+if strace -o /dev/null -P /dev/null -e '/read' -e fault=all:error=EIO true; then
+  # Get EIO error message independently from utils
+  strace -o /dev/null -P /dev/null -e '/read' -e fault=all:error=EIO \
+   $SHELL -c 'read < /dev/null' 2>&1 |
+    sed -e 's/\[/: /' -e 's/\]//' -e 's/.*: //' > io.err
+  strerror_eio="$(cat io.err)" && test -n "$strerror_eio" || framework_failure_
+
+  while read reader; do
+    cmd=$(printf '%s\n' "$reader" | cut -d ' ' -f1) || framework_failure_
+    eval "expected=\$expected_failure_status_$cmd"
+    test x$expected = x && expected=1
+    returns_ $expected \
+     strace -f -o /dev/null -P . -e '/read' -e fault=all:error=EIO \
+     $SHELL -c "$reader" 2>err || fail=1
+    grep -F "$strerror_eio" err >/dev/null || { cat err; fail=1; }
+  done < built_readers
+fi
+
+
 Exit $fail
