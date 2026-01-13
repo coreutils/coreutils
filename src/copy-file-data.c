@@ -85,9 +85,8 @@ create_hole (int fd, char const *name, off_t size)
   return file_end;
 }
 
-/* Similarly, whether ERR indicates that the copying operation is not
-   supported or allowed for this file or process, even though the
-   operation was invoked correctly.  */
+/* Does ERR mean the copying operation is not supported or allowed for
+   this file or process, even though the operation was invoked correctly?  */
 static bool
 is_CLONENOTSUP (int err)
 {
@@ -97,10 +96,11 @@ is_CLONENOTSUP (int err)
          || err == EPERM || err == EACCES;
 }
 
-/* Copy the regular file open on SRC_FD/SRC_NAME to DST_FD/DST_NAME,
-   honoring the MAKE_HOLES setting and using the BUF_SIZE-byte buffer
-   *ABUF for temporary storage, allocating it lazily if *ABUF is null.
+/* Copy SRC_FD to DEST_FD, using the buffer *ABUF of size BUF_SIZE
+   for temporary storage, allocating the buffer lazily if *ABUF is null.
    For best results, *ABUF should be well-aligned.
+   If ALLOW_REFLINK, possibly use copy_file_range to copy.
+   SRC_NAME and DST_NAME are the source and destination's name.
    Copy no more than MAX_N_READ bytes.
    If HOLE_SIZE, look for holes in the input; *HOLE_SIZE contains
    the size of the current hole so far, and update *HOLE_SIZE
@@ -267,8 +267,10 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, idx_t buf_size,
   return total_n_read;
 }
 
-/* Write N_BYTES zero bytes to file descriptor FD.  Return true if successful.
-   Upon write failure, set errno and return false.  */
+/* Write to FD.  Write data consisting of N_BYTES' worth of '\0's.
+   Use the buffer *ABUF of size BUF_SIZE for temporary storage,
+   allocating the buffer lazily if *ABUF is null.
+   Return true if successful, false (setting errno) otherwise.  */
 static bool
 write_zeros (int fd, off_t n_bytes, char **abuf, idx_t buf_size)
 {
@@ -296,19 +298,19 @@ write_zeros (int fd, off_t n_bytes, char **abuf, idx_t buf_size)
    copy, and thus makes copying sparse files much more efficient.
    Copy from SRC_FD to DEST_FD, using *ABUF (of size BUF_SIZE) for a buffer.
    Allocate *ABUF lazily if *ABUF is null.
-   The input file was originally positioned at SRC_POS
-   and the output file is positioned at OPOS.
+   The input file was originally positioned at SRC_POS.
    Copy at most IBYTES.
-   If EXT_START is nonnegative the file is now positioned at EXT_START,
-   the start of its first data extent on or after SRC_POS;
+   SCAN_INFERENCE points to the result of an input file scan inference.
+   If SCAN_INFERENCE->ext_start is nonnegative, SRC_FD now positioned there;
    otherwise the file has no data extents and the file is now
    positioned at SRC_POS.
+   SCAN_INFERENCE->hole_start is the position of the first hole.
    The file is of size SRC_TOTAL_SIZE.
    Use SPARSE_MODE to determine whether to create holes in the output.
+   If ALLOW_REFLINK, possibly use copy_file_range to copy.
    SRC_NAME and DST_NAME are the input and output file names.
-   Set *HOLE_SIZE to be the size of the hole at the end of the input.
-   Set *TOTAL_N_READ to the number of bytes read; this counts
-   the trailing hole, which has not yet been output.
+   Set *HOLE_SIZE to be the size of the hole at the end of the input;
+   do not output the zeros in that hole.
    Read and update *DEBUG as needed.
    If successful, return the number of bytes copied,
    otherwise diagnose the failure and return -1.  */
@@ -518,12 +520,14 @@ infer_scantype (int fd, struct stat const *sb, off_t pos,
    offset IPOS, and name INAME) to output file (OFD, OST, OPOS, ONAME).
    If IPOS and OPOS are negative, their values are not known, perhaps
    because the files are not seekable so their positions are irrelevant.
+   Set the input and output file positions to unspecified values.
    Copy until IBYTES have been copied or until end of file;
    if IBYTES is COUNT_MAX that suffices to copy to end of file.
    Respect copy options X's sparse_mode and reflink_mode settings.
    Read and update *DEBUG as needed.
    If successful, return the number of bytes copied;
-   otherwise, diagnose the error and return -1.  */
+   otherwise, diagnose the error and return -1.
+   If unsuccessful, the destination area's contents are unspecified.  */
 
 extern intmax_t
 copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
