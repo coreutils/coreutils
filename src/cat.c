@@ -523,7 +523,7 @@ copy_cat (void)
       case -1:
         if (errno == ENOSYS || is_ENOTSUP (errno) || errno == EINVAL
             || errno == EBADF || errno == EXDEV || errno == ETXTBSY
-            || errno == EPERM)
+            || errno == EPERM || errno == EFBIG)
           return 0;
         error (0, errno, "%s", quotef (infile));
         return -1;
