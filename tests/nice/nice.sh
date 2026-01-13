@@ -74,7 +74,7 @@ done
 if test x$(nice -n -1 nice 2> /dev/null) = x0 ; then
   # GNU/Hurd does not allow negative niceness even if we are a privileged user.
   if test "$(uname)" = GNU; then
-    max_nice=$(nice -n "$INT_MAX" nice) || framework_failure_
+    max_nice=$(nice -n "$INT_MAX" nice) || fail=1
     # Check that the lowest niceness is 0.
     nice -n -1 nice > out || fail=1
     echo '0' > exp || framework_failure_
@@ -119,5 +119,8 @@ else
   test x$(nice -n -1 nice) = x-1 || fail=1
   test x$(nice --1 nice) = x-1 || fail=1
 fi
+
+# Ensure large values are clamped
+nice -n $UINTMAX_OFLOW nice || fail=1
 
 Exit $fail
