@@ -501,9 +501,9 @@ fmt (FILE *f, char const *file)
   if (0 <= err)
     {
       if (f == stdin)
-        error (0, err, _("read error"));
+        error (0, errno, _("read error"));
       else
-        error (0, err, _("error reading %s"), quoteaf (file));
+        error (0, errno, _("error reading %s"), quoteaf (file));
     }
   return err < 0;
 }
