@@ -33,4 +33,8 @@ echo "coreutils: unknown program 'blah'" > exp
 coreutils --coreutils-prog='blah' --help 2>err && fail=1
 compare exp err || fail=1
 
+# symlink to /bin/false compat
+ln -sf "$(command -v coreutils)" dummy || framework_failure_
+./dummy && fail=1
+
 Exit $fail
