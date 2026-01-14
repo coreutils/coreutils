@@ -138,7 +138,7 @@ collapse_escapes (char const *strptr)
           continue;
         }
 
-      copy_character:
+      copy_character:;
       mcel_t g = mcel_scanz (s);
       strout = mempcpy (strout, s, g.len);
       s += g.len;
