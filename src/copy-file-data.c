@@ -148,7 +148,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, idx_t buf_size,
           {
             /* Don’t treat EFBIG as a reportable error from copy_file_range.
                If the input is at EOF and the output position is 2**63 - 1,
-               copy_file_range (ifd, NULL, ofd, NULL, 2146435072, 0)
+               copy_file_range (ifd, nullptr, ofd, nullptr, 2146435072, 0)
                incorrectly fails with EFBIG.  Problem observed on Ubuntu 25.10
                x86-64 with Linux kernel 6.17.0-8-generic #8-Ubuntu.  */
             if (errno == EFBIG)
