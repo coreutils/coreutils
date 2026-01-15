@@ -6269,6 +6269,12 @@ $ seq 4 | paste -d ' ' - -
 3 4
 @end example
 
+Comma separate data:
+@example
+$ seq 4 | paste -s -d ','
+1,2,3,4
+@end example
+
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
