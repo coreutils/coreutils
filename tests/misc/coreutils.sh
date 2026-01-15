@@ -21,16 +21,23 @@
 print_ver_ coreutils
 
 test -s "$abs_top_builddir/src/coreutils.h" \
- || skip_ "multicall binary is disabled"
+ || skip_ 'multicall binary is disabled'
 
 # Yes outputs all its params so is good to verify argv manipulations
-echo 'y' > exp
-coreutils --coreutils-prog=yes | head -n10 | uniq > out
+echo 'y' > exp &&
+coreutils --coreutils-prog=yes | head -n10 | uniq > out || framework_failure_
 compare exp out || fail=1
 
 # Ensure if incorrect program passed, we diagnose
-echo "coreutils: unknown program 'blah'" > exp
-coreutils --coreutils-prog='blah' --help 2>err && fail=1
+echo "coreutils: unknown program 'blah'" > exp || framework_failure_
+
+returns_ 1 coreutils --coreutils-prog='blah' --help 2>err || fail=1
+compare exp err || fail=1
+
+ln -s $abs_top_builddir/src/coreutils$EXEEXT blah || framework_failure_
+returns_ 1 ./blah 2>err || fail=1
+compare exp err || fail=1
+returns_ 1 ./blah --version 2>err || fail=1
 compare exp err || fail=1
 
 Exit $fail

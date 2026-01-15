@@ -68,6 +68,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   'timeout -v -s 0' now prints the signal number 0 instead of EXIT.
 
+  The multi-call binary now only processes --help or --version options
+  if it is installed with a name ending with "coreutils".  This allows
+  for more consistent handling of these options with unsupported commands.
+
 ** Improvements
 
   The multi-call binary built with configure --enable-single-binary

@@ -148,9 +148,9 @@ main (int argc, char **argv)
        path/to/coreutils --coreutils-prog=someprog someprog ...
      The third argument is what the program will see as argv[0].  */
 
+  size_t nskip = 0;
   if (argc >= 2)
     {
-      size_t nskip = 0;
       char *arg_name = nullptr;
 
       /* If calling coreutils directly, the "script" name isn't passed.
@@ -174,13 +174,19 @@ main (int argc, char **argv)
         {
           argv[nskip] = arg_name; /* XXX: Discards any specified path.  */
           launch_program (prog_name, argc - nskip, argv + nskip);
-          error (EXIT_FAILURE, 0, _("unknown program %s"),
-                 quote (prog_name));
         }
     }
 
-  /* No known program was selected.  From here on, we behave like any other
-     coreutils program.  */
+  /* Only process options if calling multi-call binary directly,
+     otherwise `foo --version` would succeed.  */
+  if (nskip || (prog_name && !str_endswith (prog_name, "coreutils")))
+    {
+      fprintf (stderr, _("%s: unknown program %s\n"),
+               PROGRAM_NAME, quote (prog_name));
+      exit (EXIT_FAILURE);
+    }
+
+  /* From here on, we behave like any other coreutils program.  */
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -195,12 +201,6 @@ main (int argc, char **argv)
 
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
       }
-
-  /* Only print the error message when no options have been passed
-     to coreutils.  */
-  if (optind == 1 && prog_name && !streq (prog_name, "coreutils"))
-    error (0, 0, _("unknown program %s"),
-           quote (prog_name));
 
   usage (EXIT_FAILURE);
 }
