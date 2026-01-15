@@ -156,7 +156,7 @@ src_ln_LDADD = $(LDADD)
 src_logname_LDADD = $(LDADD)
 src_ls_LDADD = $(LDADD)
 
-src_md5sum_LDADD = $(LDADD)
+# See src_md5sum_LDADD below
 src_mkdir_LDADD = $(LDADD)
 src_mkfifo_LDADD = $(LDADD)
 src_mknod_LDADD = $(LDADD)
@@ -181,11 +181,12 @@ src_rm_LDADD = $(LDADD)
 src_rmdir_LDADD = $(LDADD)
 src_runcon_LDADD = $(LDADD)
 src_seq_LDADD = $(LDADD)
-src_sha1sum_LDADD = $(LDADD)
-src_sha224sum_LDADD = $(LDADD)
-src_sha256sum_LDADD = $(LDADD)
-src_sha384sum_LDADD = $(LDADD)
-src_sha512sum_LDADD = $(LDADD)
+# See src_md5sum_LDADD below
+# See src_sha1sum_LDADD below
+# See src_sha224sum_LDADD below
+# See src_sha256sum_LDADD below
+# See src_sha384sum_LDADD below
+# See src_sha512sum_LDADD below
 src_shred_LDADD = $(LDADD)
 src_shuf_LDADD = $(LDADD)
 src_sleep_LDADD = $(LDADD)
@@ -224,6 +225,12 @@ src___LDADD = $(src_test_LDADD)
 src_dir_LDADD = $(src_ls_LDADD)
 src_vdir_LDADD = $(src_ls_LDADD)
 src_chgrp_LDADD = $(src_chown_LDADD)
+src_md5sum_LDADD = $(src_cksum_LDADD)
+src_sha1sum_LDADD = $(src_cksum_LDADD)
+src_sha224sum_LDADD = $(src_cksum_LDADD)
+src_sha256sum_LDADD = $(src_cksum_LDADD)
+src_sha384sum_LDADD = $(src_cksum_LDADD)
+src_sha512sum_LDADD = $(src_cksum_LDADD)
 
 src_cp_LDADD += $(copy_ldadd)
 src_ginstall_LDADD += $(copy_ldadd)
