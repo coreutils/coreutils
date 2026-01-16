@@ -543,6 +543,7 @@ is_nul (void const *buf, size_t length)
    formatted with ANSI format and hyperlink codes.
    Any postprocessors like help2man etc. are expected to handle this,
    though it can be disabled in edge cases with the HELP_NO_MARKUP env var.  */
+
 #define oputs(option) oputs_ (PROGRAM_NAME, option)
 static inline void
 oputs_ (MAYBE_UNUSED char const* program, char const *option)
@@ -609,6 +610,34 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
 
   /* write description.  */
   fputs (desc_text, stdout);
+}
+
+/* If required and possible,
+   call oputs with printf formatted message.  */
+
+#define oprintf(...) oprintf_ (PROGRAM_NAME, __VA_ARGS__)
+ATTRIBUTE_FORMAT ((printf, 2, 3))
+static inline void
+oprintf_ (char const* program, char const *message, ...)
+{
+  va_list args;
+  char *buf;
+  int buflen = -1;
+
+#if defined MANUAL_URL || defined BOLD_MAN_REFS
+  va_start (args, message);
+  buflen = vasprintf (&buf, message, args);
+  va_end (args);
+#endif
+
+  if (buflen < 0)
+    {
+      vprintf (message, args);
+      return;
+    }
+
+  oputs_ (program, buf);
+  free (buf);
 }
 
 static inline void
