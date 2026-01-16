@@ -533,7 +533,7 @@ nextarg (char const *str)
 static bool
 nomoreargs (void)
 {
-  return *args == 0;
+  return !*args;
 }
 
 /* Report missing operand.

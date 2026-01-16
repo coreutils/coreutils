@@ -358,7 +358,7 @@ build_argv (char const *str, int extra_argc, int *argc)
   ss.half_alloc = extra_argc + 2;
   ss.extra_argc = extra_argc;
   ss.sep = true;
-  ss.argv[ss.argc] = 0;
+  ss.argv[ss.argc] = NULL;
 
   /* In the following loop,
      'break' causes the character 'newc' to be added to *dest,

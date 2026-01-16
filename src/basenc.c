@@ -74,19 +74,19 @@ enum
 
 static struct option const long_options[] =
 {
-  {"decode", no_argument, 0, 'd'},
-  {"wrap", required_argument, 0, 'w'},
-  {"ignore-garbage", no_argument, 0, 'i'},
+  {"decode", no_argument, NULL, 'd'},
+  {"wrap", required_argument, NULL, 'w'},
+  {"ignore-garbage", no_argument, NULL, 'i'},
 #if BASE_TYPE == 42
-  {"base64",    no_argument, 0, BASE64_OPTION},
-  {"base64url", no_argument, 0, BASE64URL_OPTION},
-  {"base58",    no_argument, 0, BASE58_OPTION},
-  {"base32",    no_argument, 0, BASE32_OPTION},
-  {"base32hex", no_argument, 0, BASE32HEX_OPTION},
-  {"base16",    no_argument, 0, BASE16_OPTION},
-  {"base2msbf", no_argument, 0, BASE2MSBF_OPTION},
-  {"base2lsbf", no_argument, 0, BASE2LSBF_OPTION},
-  {"z85",       no_argument, 0, Z85_OPTION},
+  {"base64",    no_argument, NULL, BASE64_OPTION},
+  {"base64url", no_argument, NULL, BASE64URL_OPTION},
+  {"base58",    no_argument, NULL, BASE58_OPTION},
+  {"base32",    no_argument, NULL, BASE32_OPTION},
+  {"base32hex", no_argument, NULL, BASE32HEX_OPTION},
+  {"base16",    no_argument, NULL, BASE16_OPTION},
+  {"base2msbf", no_argument, NULL, BASE2MSBF_OPTION},
+  {"base2lsbf", no_argument, NULL, BASE2LSBF_OPTION},
+  {"z85",       no_argument, NULL, Z85_OPTION},
 #endif
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},

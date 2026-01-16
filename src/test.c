@@ -255,7 +255,7 @@ term (void)
           }
 
       value = posixtest (nargs);
-      if (argv[pos] == 0)
+      if (!argv[pos])
         test_syntax_error (_("%s expected"), quote (")"));
       else
         if (argv[pos][0] != ')' || argv[pos][1])

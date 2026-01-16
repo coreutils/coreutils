@@ -917,7 +917,7 @@ static struct option const long_options[] =
   {"color", optional_argument, nullptr, COLOR_OPTION},
   {"hyperlink", optional_argument, nullptr, HYPERLINK_OPTION},
   {"block-size", required_argument, nullptr, BLOCK_SIZE_OPTION},
-  {"context", no_argument, 0, 'Z'},
+  {"context", no_argument, NULL, 'Z'},
   {"author", no_argument, nullptr, AUTHOR_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -1784,7 +1784,7 @@ main (int argc, char **argv)
       if (pending_dirs)
         dired_outbyte ('\n');
     }
-  else if (n_files <= 1 && pending_dirs && pending_dirs->next == 0)
+  else if (n_files <= 1 && pending_dirs && !pending_dirs->next)
     print_dir_name = false;
 
   while (pending_dirs)

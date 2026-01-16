@@ -357,7 +357,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
       bool first_group_printed = false;
 
       while (!feof (stdin)
-             && readlinebuffer_delim (thisline, stdin, delimiter) != 0)
+             && readlinebuffer_delim (thisline, stdin, delimiter))
         {
           idx_t thislen;
           char *thisfield = find_field (thisline, &thislen);
@@ -388,7 +388,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
     }
   else
     {
-      if (readlinebuffer_delim (prevline, stdin, delimiter) == 0)
+      if (!readlinebuffer_delim (prevline, stdin, delimiter))
         goto closefiles;
 
       idx_t prevlen;
@@ -398,7 +398,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
 
       while (!feof (stdin))
         {
-          if (readlinebuffer_delim (thisline, stdin, delimiter) == 0)
+          if (!readlinebuffer_delim (thisline, stdin, delimiter))
             {
               if (ferror (stdin))
                 goto closefiles;

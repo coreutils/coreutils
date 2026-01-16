@@ -245,7 +245,7 @@ ATTRIBUTE_PURE
 static bool
 is_ancestor (const struct stat *sb, const struct dir_list *ancestors)
 {
-  while (ancestors != 0)
+  while (ancestors)
     {
       if (PSAME_INODE (ancestors, sb))
         return true;

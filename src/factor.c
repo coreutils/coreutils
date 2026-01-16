@@ -659,7 +659,7 @@ static struct mp_factors mp_factor (mpz_t);
 static struct mp_factors
 mp_no_factors (void)
 {
-  return (struct mp_factors) {0,};
+  return (struct mp_factors) {NULL,};
 }
 
 /* Free storage allocated for FACTORS, making it uninitialized.  */

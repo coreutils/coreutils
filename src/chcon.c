@@ -140,7 +140,7 @@ static int
 change_file_context (int fd, char const *file)
 {
   char *file_context = nullptr;
-  context_t context IF_LINT (= 0);
+  context_t context IF_LINT (= NULL);
   char const * context_string;
   int errors = 0;
 

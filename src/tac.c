@@ -152,7 +152,7 @@ output (char const *start, char const *past_end)
   size_t bytes_to_add = past_end - start;
   size_t bytes_available = WRITESIZE - bytes_in_buffer;
 
-  if (start == 0)
+  if (!start)
     {
       fwrite (buffer, 1, bytes_in_buffer, stdout);
       bytes_in_buffer = 0;

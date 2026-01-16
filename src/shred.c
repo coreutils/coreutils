@@ -450,7 +450,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
     }
   else
     {
-      passname (0, pass_string);
+      passname (NULL, pass_string);
     }
 
   /* Set position if first status update */
