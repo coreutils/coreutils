@@ -508,7 +508,7 @@ infer_scantype (int fd, struct stat const *sb, off_t pos,
 
           /* we prefer to return PLAIN_SCANTYPE here so that copy offload
              continues to be used.  Falling through to ZERO_SCANTYPE would be
-             less performant in the compressed file case.  */
+             less efficient in the compressed file case.  */
           return PLAIN_SCANTYPE;
         }
     }

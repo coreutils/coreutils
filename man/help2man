@@ -406,7 +406,7 @@ if ($help_text =~ s/^($PAT_USAGE):( +(\S+))(.*)((?:\n(?: {6}\1| *($PAT_USAGE_CON
 my $sect = _('DESCRIPTION');
 $_ = "$help_text\n\n$version_text";
 
-# Normalise paragraph breaks.
+# Normalize paragraph breaks.
 s/^\n+//;
 s/\n*$/\n/;
 s/\n\n+/\n\n/g;
@@ -607,7 +607,7 @@ while (length)
 		)
 	    /$1 . convert_option $2/xmge;
 
-	    # Italicise filenames: /a/b, $VAR/c/d, ~/e/f
+	    # Italicize filenames: /a/b, $VAR/c/d, ~/e/f
 	    s!
 		(^|[ (])			# space/punctuation before
 		(
@@ -797,7 +797,7 @@ sub get_option_value
 }
 
 # Convert option dashes to \- to stop nroff from hyphenating 'em, and
-# embolden.  Option arguments get italicised.
+# embolden.  Option arguments get italicized.
 sub convert_option
 {
     local $_ = '\fB' . shift;

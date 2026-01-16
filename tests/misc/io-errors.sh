@@ -74,7 +74,7 @@ while read writer; do
 
   # Check /dev/full diagnosed.
   # Note we usually give a specific diagnostic (ENOSPC),
-  # but that's not guarantted in the generic close_stream() handling.
+  # but that's not guaranteed in the generic close_stream() handling.
   # For e.g. with _IOLBF etc, stdio will discard pending data at each line,
   # thus only giving a generic error upon ferror() in close_stream().
   rm -f full.err || framework_failure_

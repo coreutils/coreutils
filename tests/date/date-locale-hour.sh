@@ -27,7 +27,7 @@ for loc in "$LOCALE_FR_UTF8" 'en_US.UTF-8'; do
   case $(LC_ALL="$loc" locale date_fmt) in
     *%[Ilr]*)  compare_time='1:00' ;;
     *%[HkRT]*) compare_time='13:00' ;;
-    *) skip_ 'unrecognised locale hour format';;
+    *) skip_ 'unrecognized locale hour format';;
   esac
 
   case $(LC_ALL="$loc" date -d '2025-10-11T13:00') in
@@ -47,7 +47,7 @@ for loc in "$LOCALE_FR_UTF8" 'en_US.UTF-8'; do
     *%[IHRT]*)  compare_time='01:00' ;;
     *%_[IH]*)   compare_time=' 1:00' ;;
     *%[lk]*)    compare_time=' 1:00' ;;
-    *) skip_ 'unrecognised locale hour format';;
+    *) skip_ 'unrecognized locale hour format';;
   esac
 
   case $(LC_ALL="$loc" date -d '2025-10-11T01:00') in

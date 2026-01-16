@@ -66,7 +66,7 @@ my @Tests =
    ['delim-bs2', q!-d'\'!, {IN=>{'123\b\b\b.....@'=>''}}, {EXIT => 1},
     {ERR => $msg . q!\\! . "\n"} ],
 
-   # \0 allows cycling thtough an empty delimiter (while "-d ''" does not)
+   # \0 allows cycling through an empty delimiter (while "-d ''" does not)
    ['delim-empty-1', q{-s -d '\0,'}, {IN=>"1\n2\n3\n"}, {OUT=>"12,3\n"}],
 
    # POSIX escapes
