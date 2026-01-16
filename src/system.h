@@ -710,8 +710,10 @@ the VERSION_CONTROL environment variable.  Here are the values:\n\
 "), stdout);
 }
 
+#define emit_symlink_recurse_options(default_opt) \
+ emit_symlink_recurse_options_ (PROGRAM_NAME, default_opt)
 static inline void
-emit_symlink_recurse_options (char const *default_opt)
+emit_symlink_recurse_options_ (char const* program, char const *default_opt)
 {
       printf (_("\
 \n\
@@ -719,13 +721,20 @@ The following options modify how a hierarchy is traversed when the -R\n\
 option is also specified.  If more than one is specified, only the final\n\
 one takes effect. %s is the default.\n\
 \n\
-  -H                     if a command line argument is a symbolic link\n\
-                         to a directory, traverse it\n\
-  -L                     traverse every symbolic link to a directory\n\
-                         encountered\n\
-  -P                     do not traverse any symbolic links\n\
-\n\
 "), default_opt);
+      oputs_ (program, _("\
+  -H\n\
+         if a command line argument is a symlink to a directory, traverse it\n\
+"));
+      oputs_ (program, _("\
+  -L\n\
+         traverse every symbolic link to a directory encountered\n\
+"));
+      oputs_ (program, _("\
+  -P\n\
+         do not traverse any symbolic links\n\
+\n\
+"));
 }
 
 static inline void
