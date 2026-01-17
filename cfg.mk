@@ -526,12 +526,6 @@ sc_prohibit_exit_write_error:
 	halt='Use write_error() instead' \
 	  $(_sc_search_regexp)
 
-sc_prohibit_NULL:
-	@prohibit='$(begword)NULL$(endword)'				\
-	in_vc_files='\.[ch]$$'						\
-	halt='use nullptr instead'					\
-	  $(_sc_search_regexp)
-
 sc_prohibit_bare_set:
 	@prohibit='^ *set [`$$]'					\
 	in_vc_files='\.sh$$'						\
