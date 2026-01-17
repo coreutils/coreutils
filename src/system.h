@@ -560,21 +560,21 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
       return;
     }
 
+  char const* first_word = option + strspn (option, " \t\n");
   char const *option_text = strchr (option, '-');
   if (!option_text)
-    {
-      fputs (option, stdout);
-      return;
-    }
+    option_text = first_word;  /* for dd option syntax.  */
   size_t anchor_len = strcspn (option_text, ",=[ \n");
 
-  /* Set desc_text to spacing after the full option text */
+  /* Set highlighted text up to spacing after the full option text.
+     Any single space is included in highlighted text.  */
   char const *desc_text = option_text + anchor_len;
-  while (*desc_text && (! isspace (*desc_text) || *(desc_text + 1) == '-'))
+  while (*desc_text && *desc_text != '\n'
+         && (! isspace (*desc_text) || ! isspace (*(desc_text + 1))))
     desc_text++;
 
   /* write spaces before option text. */
-  fwrite (option, 1, option_text - option, stdout);
+  fwrite (option, 1, first_word - option, stdout);
 
   /* write option text.  */
 #ifdef MANUAL_URL
@@ -598,7 +598,8 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
   /* Note help2man strips this and will reinstate with --bold-refs.  */
   fputs ("\033[1m", stdout);
 #endif
-  fwrite (option_text, 1, desc_text - option_text, stdout);
+  /* first_word != option_text for test(1).  */
+  fwrite (first_word, 1, desc_text - first_word, stdout);
 #ifdef BOLD_MAN_REFS
   fputs ("\033[0m", stdout);
 #endif
