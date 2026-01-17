@@ -66,7 +66,7 @@ print_uptime (idx_t n, STRUCT_UTMP const *utmp_buf)
      previous versions of coreutils don't. */
   if (tmn)
     /* TRANSLATORS: This prints the current clock time. */
-    fprintftime (stdout, _(" %H:%M:%S  "), tmn, 0, 0);
+    fprintftime (stdout, _(" %H:%M:%S  "), tmn, (timezone_t) 0, 0);
   else
     {
       printf (_(" ??:????  "));
