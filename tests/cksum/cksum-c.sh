@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cksum shuf
+uses_strace_
 
 shuf -i 1-10 > input || framework_failure_
 
