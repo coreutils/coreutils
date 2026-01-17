@@ -136,5 +136,5 @@ grep ' ineffective ' err >/dev/null || { fail=1; cat out err; }
 
 # Ensure that --inodes is mentioned in the usage.
 du --help > out || fail=1
-grep ' --inodes ' out >/dev/null || { fail=1; cat out; }
+grep -- '--inodes' out >/dev/null || { fail=1; cat out; }
 Exit $fail

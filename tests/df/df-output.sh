@@ -125,7 +125,7 @@ compare exp out2 || fail=1
 
 # Ensure that --output is mentioned in the usage.
 df --help > out || fail=1
-grep ' --output' out >/dev/null || { fail=1; cat out; }
+grep -- '--output' out >/dev/null || { fail=1; cat out; }
 
 # Ensure that the FILE field contains the argument.
 cat <<\EOF > exp || framework_failure_
