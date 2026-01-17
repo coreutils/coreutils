@@ -11006,10 +11006,10 @@ as a directory.
 Do not print the output delimiter, when a single @var{file} is specified.
 Print a warning if specified along with multiple @var{file}s.
 
-@optItem{readlink,-s,}
-@optItemx{readlink,-q,}
-@optItemx{readlink,--silent,}
+@optItem{readlink,-q,}
+@optItemx{readlink,-s,}
 @optItemx{readlink,--quiet,}
+@optItemx{readlink,--silent,}
 Suppress most error messages.
 
 @vindex POSIXLY_CORRECT
