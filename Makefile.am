@@ -32,6 +32,7 @@ EXTRA_DIST =				\
   bootstrap.conf			\
   build-aux/gen-lists-of-programs.sh	\
   build-aux/gen-single-binary.sh	\
+  build-aux/makeinfo-wrapper.sh		\
   cfg.mk				\
   dist-check.mk				\
   maint.mk				\
