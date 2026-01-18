@@ -172,13 +172,16 @@ got=$(env --chdir=empty pwd) || fail=1
 test "$exp" = "$got" || fail=1
 
 # Verify argv0 overriding
+cat <<EOF > truetrue || framework_failure_
+#!$SHELL
+EOF
+chmod +x truetrue || framework_failure_
 for arg in 'argv0' ''; do
-env -v -a short --argv0=$arg true --coreutils-prog=true 2>err || fail=1
+env -v -a short --argv0=$arg ./truetrue 2>err || fail=1
 cat <<EOF >err_exp || framework_failure_
 argv0:     '$arg'
-executing: true
+executing: ./truetrue
    arg[0]= '$arg'
-   arg[1]= '--coreutils-prog=true'
 EOF
 compare err_exp err || fail=1
 done
