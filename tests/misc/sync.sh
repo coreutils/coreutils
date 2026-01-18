@@ -52,7 +52,10 @@ fi
 if test "$fail" != '1'; then
   # Ensure a fifo doesn't block
   mkfifo_or_skip_ fifo
-  returns_ 124 timeout 10 sync fifo && fail=1
+  for opt in '' '-f' '-d'; do
+    test "$opt" = '-f' && test "$RUN_EXPENSIVE_TESTS" != yes && continue
+    returns_ 124 timeout 10 sync $opt fifo && fail=1
+  done
 fi
 
 Exit $fail
