@@ -4203,6 +4203,12 @@ Also file name escaping is not used.
 @command{md5sum} computes a 128-bit checksum (or @dfn{fingerprint} or
 @dfn{message-digest}) for each specified @var{file}.
 
+@macro legacyDigest
+This is a legacy interface to the more modern @command{cksum} utility.
+@xref{cksum invocation}.
+@end macro
+@legacyDigest
+
 @macro weakHash{hash}
 The \hash\ digest is more reliable than a simple CRC (provided by
 the @command{cksum} command) for detecting accidental file corruption,
@@ -4214,7 +4220,6 @@ to modify certain files, including digital certificates, so that they
 appear valid when signed with an \hash\ digest.  For more secure hashes,
 consider using @samp{sha2}, @samp{sha3}, or @samp{blake2b},
 available through the @command{cksum} @option{--algorithm} option.
-@xref{cksum invocation}.
 @end macro
 @weakHash{MD5}
 
@@ -4251,6 +4256,8 @@ The program accepts @ref{cksum common options}.  Also see @ref{Common options}.
 @command{b2sum} computes a 512-bit checksum for each specified
 @var{file}.
 
+@legacyDigest
+
 @checksumUsage{b2sum}
 
 In addition @command{b2sum} supports the following options.
@@ -4282,12 +4289,16 @@ as the length is automatically determined when checking.
 
 @command{sha1sum} computes a 160-bit checksum for each specified @var{file}.
 
+@legacyDigest
+
 @weakHash{SHA-1}
 
 @checksumUsage{sha1sum}
 
 @node sha2 utilities
 @section sha2 utilities: Print or check SHA-2 digests
+
+@legacyDigest
 
 @pindex sha224sum
 @pindex sha256sum

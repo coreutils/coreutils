@@ -487,9 +487,14 @@ Usage: %s [OPTION]... [FILE]...\n\
 "), program_name);
 #if HASH_ALGO_CKSUM
     if (legacy_mode)
-      printf (_("\
+      {
+        printf (_("\
 Print or check %s checksums.\n\
 "), DIGEST_TYPE_STRING);
+        fputs (_("\
+Legacy interface to the cksum utility.\n\
+"), stdout);
+      }
     else
       fputs (_("\
 Print or verify checksums.\n\
@@ -501,6 +506,9 @@ Print or check %s (%d-bit) checksums.\n\
 "),
               DIGEST_TYPE_STRING,
               DIGEST_BITS);
+      fputs (_("\
+Legacy interface to the cksum utility.\n\
+"), stdout);
 #endif
 
       emit_stdin_note ();
