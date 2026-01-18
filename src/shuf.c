@@ -94,13 +94,13 @@ enum
 
 static struct option const long_opts[] =
 {
-  {"echo", no_argument, nullptr, 'e'},
-  {"input-range", required_argument, nullptr, 'i'},
-  {"head-count", required_argument, nullptr, 'n'},
-  {"output", required_argument, nullptr, 'o'},
-  {"random-source", required_argument, nullptr, RANDOM_SOURCE_OPTION},
-  {"repeat", no_argument, nullptr, 'r'},
-  {"zero-terminated", no_argument, nullptr, 'z'},
+  {"echo", no_argument, NULL, 'e'},
+  {"input-range", required_argument, NULL, 'i'},
+  {"head-count", required_argument, NULL, 'n'},
+  {"output", required_argument, NULL, 'o'},
+  {"random-source", required_argument, NULL, RANDOM_SOURCE_OPTION},
+  {"repeat", no_argument, NULL, 'r'},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0},
@@ -172,8 +172,8 @@ read_input_reservoir_sampling (FILE *in, char eolbyte, idx_t k,
 {
   randint n_lines = 0;
   idx_t n_alloc_lines = 0;
-  struct linebuffer *line = nullptr;
-  struct linebuffer *rsrv = nullptr;
+  struct linebuffer *line = NULL;
+  struct linebuffer *rsrv = NULL;
 
   /* Fill the first K lines, directly into the reservoir.  */
   for (n_lines = 0; n_lines < k; n_lines++)
@@ -192,7 +192,7 @@ read_input_reservoir_sampling (FILE *in, char eolbyte, idx_t k,
     }
 
   /* last line wasn't null - so there may be more lines to read.  */
-  if (line != nullptr)
+  if (line != NULL)
     {
       struct linebuffer dummy;
       initbuffer (&dummy);  /* space for lines not put in reservoir.  */
@@ -211,7 +211,7 @@ read_input_reservoir_sampling (FILE *in, char eolbyte, idx_t k,
           randint j = randint_choose (s, n_lines + 1);  /* 0 .. n_lines.  */
           line = (j < k) ? (&rsrv[j]) : (&dummy);
         }
-      while (readlinebuffer_delim (line, in, eolbyte) != nullptr && n_lines++);
+      while (readlinebuffer_delim (line, in, eolbyte) != NULL && n_lines++);
 
       if (! n_lines)
         error (EXIT_FAILURE, EOVERFLOW, _("too many input lines"));
@@ -251,7 +251,7 @@ static size_t
 read_input (FILE *in, char eolbyte, char ***pline)
 {
   char *p;
-  char *buf = nullptr;
+  char *buf = NULL;
   size_t used;
   char *lim;
   char **line;
@@ -367,10 +367,10 @@ main (int argc, char **argv)
   size_t lo_input = SIZE_MAX;
   size_t hi_input = 0;
   idx_t head_lines = MIN (IDX_MAX, SIZE_MAX);
-  char const *outfile = nullptr;
-  char *random_source = nullptr;
+  char const *outfile = NULL;
+  char *random_source = NULL;
   char eolbyte = '\n';
-  char **input_lines = nullptr;
+  char **input_lines = NULL;
   bool use_reservoir_sampling = false;
   bool repeat = false;
 
@@ -378,10 +378,10 @@ main (int argc, char **argv)
   int n_operands;
   char **operand;
   size_t n_lines;
-  char **line = nullptr;
-  struct linebuffer *reservoir = nullptr;
+  char **line = NULL;
+  struct linebuffer *reservoir = NULL;
   struct randint_source *randint_source;
-  size_t *permutation = nullptr;
+  size_t *permutation = NULL;
   int i;
 
   initialize_main (&argc, &argv);
@@ -392,7 +392,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "ei:n:o:rz", long_opts, nullptr))
+  while ((optc = getopt_long (argc, argv, "ei:n:o:rz", long_opts, NULL))
          != -1)
     switch (optc)
       {
@@ -408,7 +408,7 @@ main (int argc, char **argv)
 
           uintmax_t u;
           char *lo_end;
-          strtol_error err = xstrtoumax (optarg, &lo_end, 10, &u, nullptr);
+          strtol_error err = xstrtoumax (optarg, &lo_end, 10, &u, NULL);
           if (err == LONGINT_OK)
             {
               lo_input = u;
@@ -418,7 +418,7 @@ main (int argc, char **argv)
                 err = LONGINT_INVALID;
               else
                 {
-                  err = xstrtoumax (lo_end + 1, nullptr, 10, &u, "");
+                  err = xstrtoumax (lo_end + 1, NULL, 10, &u, "");
                   if (err == LONGINT_OK)
                     {
                       hi_input = u;
@@ -439,7 +439,7 @@ main (int argc, char **argv)
       case 'n':
         {
           uintmax_t argval;
-          strtol_error e = xstrtoumax (optarg, nullptr, 10, &argval, "");
+          strtol_error e = xstrtoumax (optarg, NULL, 10, &argval, "");
 
           if (e == LONGINT_OK)
             head_lines = MIN (head_lines, argval);
@@ -494,7 +494,7 @@ main (int argc, char **argv)
   if (head_lines == 0)
     {
       n_lines = 0;
-      line = nullptr;
+      line = NULL;
     }
   else if (echo)
     {
@@ -505,7 +505,7 @@ main (int argc, char **argv)
   else if (input_range)
     {
       IF_LINT (n_lines = hi_input - lo_input + 1); /* Avoid GCC 10 warning.  */
-      line = nullptr;
+      line = NULL;
     }
   else
     {

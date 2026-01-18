@@ -100,12 +100,12 @@ static struct re_registers regs;
 
 static struct option const longopts[] =
 {
-  {"before", no_argument, nullptr, 'b'},
-  {"regex", no_argument, nullptr, 'r'},
-  {"separator", required_argument, nullptr, 's'},
+  {"before", no_argument, NULL, 'b'},
+  {"regex", no_argument, NULL, 'r'},
+  {"separator", required_argument, NULL, 's'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -489,7 +489,7 @@ main (int argc, char **argv)
 
   /* Initializer for file_list if no file-arguments
      were specified on the command line.  */
-  static char const *const default_file_list[] = {"-", nullptr};
+  static char const *const default_file_list[] = {"-", NULL};
   char const *const *file;
 
   initialize_main (&argc, &argv);
@@ -504,7 +504,7 @@ main (int argc, char **argv)
   sentinel_length = 1;
   separator_ends_record = true;
 
-  while ((optc = getopt_long (argc, argv, "brs:", longopts, nullptr)) != -1)
+  while ((optc = getopt_long (argc, argv, "brs:", longopts, NULL)) != -1)
     {
       switch (optc)
         {
@@ -529,10 +529,10 @@ main (int argc, char **argv)
       if (*separator == 0)
         error (EXIT_FAILURE, 0, _("separator cannot be empty"));
 
-      compiled_separator.buffer = nullptr;
+      compiled_separator.buffer = NULL;
       compiled_separator.allocated = 0;
       compiled_separator.fastmap = compiled_separator_fastmap;
-      compiled_separator.translate = nullptr;
+      compiled_separator.translate = NULL;
       error_message = re_compile_pattern (separator, strlen (separator),
                                           &compiled_separator);
       if (error_message)
@@ -576,7 +576,7 @@ main (int argc, char **argv)
   }
 
   /* Flush the output buffer. */
-  output ((char *) nullptr, (char *) nullptr);
+  output ((char *) NULL, (char *) NULL);
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     {

@@ -37,10 +37,10 @@
 static struct option const longopts[] =
 {
   {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
-  {"mode", required_argument, nullptr, 'm'},
+  {"mode", required_argument, NULL, 'm'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -90,9 +90,9 @@ otherwise, as decimal.  TYPE may be:\n\
 int
 main (int argc, char **argv)
 {
-  char const *specified_mode = nullptr;
-  char const *scontext = nullptr;
-  struct selabel_handle *set_security_context = nullptr;
+  char const *specified_mode = NULL;
+  char const *scontext = NULL;
+  struct selabel_handle *set_security_context = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -103,7 +103,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   int optc;
-  while ((optc = getopt_long (argc, argv, "m:Z", longopts, nullptr)) != -1)
+  while ((optc = getopt_long (argc, argv, "m:Z", longopts, NULL)) != -1)
     {
       switch (optc)
         {
@@ -123,7 +123,7 @@ main (int argc, char **argv)
               else
                 {
                   set_security_context = selabel_open (SELABEL_CTX_FILE,
-                                                       nullptr, 0);
+                                                       NULL, 0);
                   if (! set_security_context)
                     error (0, errno, _("warning: ignoring --context"));
                 }
@@ -150,7 +150,7 @@ main (int argc, char **argv)
         error (EXIT_FAILURE, 0, _("invalid mode"));
       mode_t umask_value = umask (0);
       umask (umask_value);
-      newmode = mode_adjust (newmode, false, umask_value, change, nullptr);
+      newmode = mode_adjust (newmode, false, umask_value, change, NULL);
       free (change);
       if (newmode & ~S_IRWXUGO)
         error (EXIT_FAILURE, 0,
@@ -227,14 +227,14 @@ main (int argc, char **argv)
       {
         char const *s_major = argv[optind + 2];
         uintmax_t i_major;
-        if (xstrtoumax (s_major, nullptr, 0, &i_major, "") != LONGINT_OK
+        if (xstrtoumax (s_major, NULL, 0, &i_major, "") != LONGINT_OK
             || i_major != (major_t) i_major)
           error (EXIT_FAILURE, 0,
                  _("invalid major device number %s"), quote (s_major));
 
         char const *s_minor = argv[optind + 3];
         uintmax_t i_minor;
-        if (xstrtoumax (s_minor, nullptr, 0, &i_minor, "") != LONGINT_OK
+        if (xstrtoumax (s_minor, NULL, 0, &i_minor, "") != LONGINT_OK
             || i_minor != (minor_t) i_minor)
           error (EXIT_FAILURE, 0,
                  _("invalid minor device number %s"), quote (s_minor));

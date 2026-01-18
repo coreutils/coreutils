@@ -261,7 +261,7 @@ readdir_ignoring_dot_and_dotdot (DIR *dirp)
   while (true)
     {
       struct dirent const *dp = readdir (dirp);
-      if (dp == nullptr || ! dot_or_dotdot (dp->d_name))
+      if (dp == NULL || ! dot_or_dotdot (dp->d_name))
         return dp;
     }
 }
@@ -289,7 +289,7 @@ directory_status (int fd_cwd, char const *dir)
     return errno;
 
   dirp = fdopendir (fd);
-  if (dirp == nullptr)
+  if (dirp == NULL)
     {
       saved_errno = errno;
       close (fd);
@@ -315,11 +315,11 @@ enum
 };
 
 #define GETOPT_HELP_OPTION_DECL \
-  "help", no_argument, nullptr, GETOPT_HELP_CHAR
+  "help", no_argument, NULL, GETOPT_HELP_CHAR
 #define GETOPT_VERSION_OPTION_DECL \
-  "version", no_argument, nullptr, GETOPT_VERSION_CHAR
+  "version", no_argument, NULL, GETOPT_VERSION_CHAR
 #define GETOPT_SELINUX_CONTEXT_OPTION_DECL \
-  "context", optional_argument, nullptr, 'Z'
+  "context", optional_argument, NULL, 'Z'
 
 #define case_GETOPT_HELP_CHAR			\
   case GETOPT_HELP_CHAR:			\
@@ -356,7 +356,7 @@ enum
 #define case_GETOPT_VERSION_CHAR(Program_name, Authors)			\
   case GETOPT_VERSION_CHAR:						\
     version_etc (stdout, Program_name, PACKAGE_NAME, Version, Authors,	\
-                 (char *) nullptr);					\
+                 (char *) NULL);					\
     exit (EXIT_SUCCESS);						\
     break;
 
@@ -646,7 +646,7 @@ emit_ancillary_info (char const *program)
     { "sha256sum", "sha2 utilities" },
     { "sha384sum", "sha2 utilities" },
     { "sha512sum", "sha2 utilities" },
-    { nullptr, nullptr }
+    { NULL, NULL }
   };
 
   char const *node = program;
@@ -662,7 +662,7 @@ emit_ancillary_info (char const *program)
 
   /* Don't output this redundant message for English locales.
      Note we still output for 'C' so that it gets included in the man page.  */
-  char const *lc_messages = setlocale (LC_MESSAGES, nullptr);
+  char const *lc_messages = setlocale (LC_MESSAGES, NULL);
   if (lc_messages && STRNCMP_LIT (lc_messages, "en_"))
     {
       /* TRANSLATORS: Replace LANG_CODE in this URL with your language code

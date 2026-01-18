@@ -88,7 +88,7 @@ static char header_fastmap[UCHAR_MAX + 1];
 static char footer_fastmap[UCHAR_MAX + 1];
 
 /* Pointer to current regex, if any.  */
-static struct re_pattern_buffer *current_regex = nullptr;
+static struct re_pattern_buffer *current_regex = NULL;
 
 /* Separator string to print after line number (-s).  */
 static char const *separator_str = "\t";
@@ -97,19 +97,19 @@ static char const *separator_str = "\t";
 static char *section_del = DEFAULT_SECTION_DELIMITERS;
 
 /* Header delimiter string.  */
-static char *header_del = nullptr;
+static char *header_del = NULL;
 
 /* Header section delimiter length.  */
 static size_t header_del_len;
 
 /* Body delimiter string.  */
-static char *body_del = nullptr;
+static char *body_del = NULL;
 
 /* Body section delimiter length.  */
 static size_t body_del_len;
 
 /* Footer delimiter string.  */
-static char *footer_del = nullptr;
+static char *footer_del = NULL;
 
 /* Footer section delimiter length.  */
 static size_t footer_del_len;
@@ -118,7 +118,7 @@ static size_t footer_del_len;
 static struct linebuffer line_buf;
 
 /* printf format string for unnumbered lines.  */
-static char *print_no_line_fmt = nullptr;
+static char *print_no_line_fmt = NULL;
 
 /* Starting line number on each page (-v).  */
 static intmax_t starting_line_number = 1;
@@ -149,20 +149,20 @@ static bool have_read_stdin;
 
 static struct option const longopts[] =
 {
-  {"header-numbering", required_argument, nullptr, 'h'},
-  {"body-numbering", required_argument, nullptr, 'b'},
-  {"footer-numbering", required_argument, nullptr, 'f'},
-  {"starting-line-number", required_argument, nullptr, 'v'},
-  {"line-increment", required_argument, nullptr, 'i'},
-  {"no-renumber", no_argument, nullptr, 'p'},
-  {"join-blank-lines", required_argument, nullptr, 'l'},
-  {"number-separator", required_argument, nullptr, 's'},
-  {"number-width", required_argument, nullptr, 'w'},
-  {"number-format", required_argument, nullptr, 'n'},
-  {"section-delimiter", required_argument, nullptr, 'd'},
+  {"header-numbering", required_argument, NULL, 'h'},
+  {"body-numbering", required_argument, NULL, 'b'},
+  {"footer-numbering", required_argument, NULL, 'f'},
+  {"starting-line-number", required_argument, NULL, 'v'},
+  {"line-increment", required_argument, NULL, 'i'},
+  {"no-renumber", no_argument, NULL, 'p'},
+  {"join-blank-lines", required_argument, NULL, 'l'},
+  {"number-separator", required_argument, NULL, 's'},
+  {"number-width", required_argument, NULL, 'w'},
+  {"number-format", required_argument, NULL, 'n'},
+  {"section-delimiter", required_argument, NULL, 'd'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 /* Print a usage message and quit. */
@@ -256,10 +256,10 @@ build_type_arg (char const **typep,
       break;
     case 'p':
       *typep = optarg++;
-      regexp->buffer = nullptr;
+      regexp->buffer = NULL;
       regexp->allocated = 0;
       regexp->fastmap = fastmap;
-      regexp->translate = nullptr;
+      regexp->translate = NULL;
       re_syntax_options =
         RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP & ~RE_NO_EMPTY_RANGES;
       errmsg = re_compile_pattern (optarg, strlen (optarg), regexp);
@@ -364,7 +364,7 @@ proc_text (void)
       break;
     case 'p':
       switch (re_search (current_regex, line_buf.buffer, line_buf.length - 1,
-                         0, line_buf.length - 1, nullptr))
+                         0, line_buf.length - 1, NULL))
         {
         case -2:
           error (EXIT_FAILURE, errno, _("error in regular expression search"));
@@ -448,7 +448,7 @@ nl_file (char const *file)
   else
     {
       stream = fopen (file, "r");
-      if (stream == nullptr)
+      if (stream == NULL)
         {
           error (0, errno, "%s", quotef (file));
           return false;
@@ -492,7 +492,7 @@ main (int argc, char **argv)
   have_read_stdin = false;
 
   while ((c = getopt_long (argc, argv, "h:b:f:v:i:pl:s:w:n:d:", longopts,
-                           nullptr))
+                           NULL))
          != -1)
     {
       switch (c)

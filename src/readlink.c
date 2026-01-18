@@ -38,17 +38,17 @@ static bool verbose;
 
 static struct option const longopts[] =
 {
-  {"canonicalize", no_argument, nullptr, 'f'},
-  {"canonicalize-existing", no_argument, nullptr, 'e'},
-  {"canonicalize-missing", no_argument, nullptr, 'm'},
-  {"no-newline", no_argument, nullptr, 'n'},
-  {"quiet", no_argument, nullptr, 'q'},
-  {"silent", no_argument, nullptr, 's'},
-  {"verbose", no_argument, nullptr, 'v'},
-  {"zero", no_argument, nullptr, 'z'},
+  {"canonicalize", no_argument, NULL, 'f'},
+  {"canonicalize-existing", no_argument, NULL, 'e'},
+  {"canonicalize-missing", no_argument, NULL, 'm'},
+  {"no-newline", no_argument, NULL, 'n'},
+  {"quiet", no_argument, NULL, 'q'},
+  {"silent", no_argument, NULL, 's'},
+  {"verbose", no_argument, NULL, 'v'},
+  {"zero", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -108,7 +108,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "efmnqsvz", longopts, nullptr)) != -1)
+  while ((optc = getopt_long (argc, argv, "efmnqsvz", longopts, NULL)) != -1)
     {
       switch (optc)
         {
@@ -156,7 +156,7 @@ main (int argc, char **argv)
 
   /* POSIX requires a diagnostic message written to standard error and a
      non-zero exit status when given a file that is not a symbolic link.  */
-  if (getenv ("POSIXLY_CORRECT") != nullptr)
+  if (getenv ("POSIXLY_CORRECT") != NULL)
     verbose = true;
 
   for (; optind < argc; ++optind)

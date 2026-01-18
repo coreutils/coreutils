@@ -75,7 +75,7 @@ enum scale_type
 
 static char const *const scale_from_args[] =
 {
-  "none", "auto", "si", "iec", "iec-i", nullptr
+  "none", "auto", "si", "iec", "iec-i", NULL
 };
 
 static enum scale_type const scale_from_types[] =
@@ -85,7 +85,7 @@ static enum scale_type const scale_from_types[] =
 
 static char const *const scale_to_args[] =
 {
-  "none", "si", "iec", "iec-i", nullptr
+  "none", "si", "iec", "iec-i", NULL
 };
 
 static enum scale_type const scale_to_types[] =
@@ -105,7 +105,7 @@ enum round_type
 
 static char const *const round_args[] =
 {
-  "up", "down", "from-zero", "towards-zero", "nearest", nullptr
+  "up", "down", "from-zero", "towards-zero", "nearest", NULL
 };
 
 static enum round_type const round_types[] =
@@ -124,7 +124,7 @@ enum inval_type
 
 static char const *const inval_args[] =
 {
-  "abort", "fail", "warn", "ignore", nullptr
+  "abort", "fail", "warn", "ignore", NULL
 };
 
 static enum inval_type const inval_types[] =
@@ -134,26 +134,26 @@ static enum inval_type const inval_types[] =
 
 static struct option const longopts[] =
 {
-  {"from", required_argument, nullptr, FROM_OPTION},
-  {"from-unit", required_argument, nullptr, FROM_UNIT_OPTION},
-  {"to", required_argument, nullptr, TO_OPTION},
-  {"to-unit", required_argument, nullptr, TO_UNIT_OPTION},
-  {"round", required_argument, nullptr, ROUND_OPTION},
-  {"padding", required_argument, nullptr, PADDING_OPTION},
-  {"suffix", required_argument, nullptr, SUFFIX_OPTION},
-  {"unit-separator", required_argument, nullptr, UNIT_SEPARATOR_OPTION},
-  {"grouping", no_argument, nullptr, GROUPING_OPTION},
-  {"delimiter", required_argument, nullptr, 'd'},
-  {"field", required_argument, nullptr, FIELD_OPTION},
-  {"debug", no_argument, nullptr, DEBUG_OPTION},
-  {"-debug", no_argument, nullptr, DEV_DEBUG_OPTION},
-  {"header", optional_argument, nullptr, HEADER_OPTION},
-  {"format", required_argument, nullptr, FORMAT_OPTION},
-  {"invalid", required_argument, nullptr, INVALID_OPTION},
-  {"zero-terminated", no_argument, nullptr, 'z'},
+  {"from", required_argument, NULL, FROM_OPTION},
+  {"from-unit", required_argument, NULL, FROM_UNIT_OPTION},
+  {"to", required_argument, NULL, TO_OPTION},
+  {"to-unit", required_argument, NULL, TO_UNIT_OPTION},
+  {"round", required_argument, NULL, ROUND_OPTION},
+  {"padding", required_argument, NULL, PADDING_OPTION},
+  {"suffix", required_argument, NULL, SUFFIX_OPTION},
+  {"unit-separator", required_argument, NULL, UNIT_SEPARATOR_OPTION},
+  {"grouping", no_argument, NULL, GROUPING_OPTION},
+  {"delimiter", required_argument, NULL, 'd'},
+  {"field", required_argument, NULL, FIELD_OPTION},
+  {"debug", no_argument, NULL, DEBUG_OPTION},
+  {"-debug", no_argument, NULL, DEV_DEBUG_OPTION},
+  {"header", optional_argument, NULL, HEADER_OPTION},
+  {"format", required_argument, NULL, FORMAT_OPTION},
+  {"invalid", required_argument, NULL, INVALID_OPTION},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 /* Maximum number of digits we can safely handle
@@ -170,19 +170,19 @@ static enum scale_type scale_from = scale_none;
 static enum scale_type scale_to = scale_none;
 static enum round_type round_style = round_from_zero;
 static enum inval_type inval_style = inval_abort;
-static char const *suffix = nullptr;
-static char const *unit_separator = nullptr;
+static char const *suffix = NULL;
+static char const *unit_separator = NULL;
 static uintmax_t from_unit_size = 1;
 static uintmax_t to_unit_size = 1;
 static int grouping = 0;
-static char *padding_buffer = nullptr;
+static char *padding_buffer = NULL;
 static idx_t padding_buffer_size = 0;
 static intmax_t padding_width = 0;
 static int zero_padding_width = 0;
 static long int user_precision = -1;
-static char const *format_str = nullptr;
-static char *format_str_prefix = nullptr;
-static char *format_str_suffix = nullptr;
+static char const *format_str = NULL;
+static char *format_str_prefix = NULL;
+static char *format_str_suffix = NULL;
 
 /* By default, any conversion error will terminate the program.  */
 static int conv_exit_code = EXIT_CONVERSION_WARNINGS;
@@ -191,8 +191,8 @@ static int conv_exit_code = EXIT_CONVERSION_WARNINGS;
 /* auto-pad each line based on skipped whitespace.  */
 static int auto_padding = 0;
 
-/* field delimiter - if nullptr, blanks separate fields.  */
-static char const *delimiter = nullptr;
+/* field delimiter - if NULL, blanks separate fields.  */
+static char const *delimiter = NULL;
 
 /* line delimiter.  */
 static unsigned char line_delim = '\n';
@@ -243,7 +243,7 @@ static char const *valid_suffixes = 1 + zero_and_valid_suffixes;
 static inline bool
 valid_suffix (const char suf)
 {
-  return strchr (valid_suffixes, suf) != nullptr;
+  return strchr (valid_suffixes, suf) != NULL;
 }
 
 static inline int
@@ -738,7 +738,7 @@ simple_strtod_human (char const *input_str,
 static void
 simple_strtod_fatal (enum simple_strtod_error err, char const *input_str)
 {
-  char const *msgid = nullptr;
+  char const *msgid = NULL;
 
   switch (err)
     {
@@ -871,9 +871,9 @@ unit_to_umax (char const *n_string)
 {
   strtol_error s_err;
   char const *c_string = n_string;
-  char *t_string = nullptr;
+  char *t_string = NULL;
   size_t n_len = strlen (n_string);
-  char *end = nullptr;
+  char *end = NULL;
   uintmax_t n;
   char const *suffixes = valid_suffixes;
 
@@ -1087,7 +1087,7 @@ parse_format_string (char const *fmt)
   size_t i;
   size_t prefix_len = 0;
   size_t suffix_pos;
-  char *endptr = nullptr;
+  char *endptr = NULL;
   bool zero_padding = false;
 
   for (i = 0; !(fmt[i] == '%' && fmt[i + 1] != '%'); i += (fmt[i] == '%') + 1)
@@ -1199,7 +1199,7 @@ static enum simple_strtod_error
 parse_human_number (char const *str, long double /*output */ *value,
                     size_t *precision)
 {
-  char *ptr = nullptr;
+  char *ptr = NULL;
 
   enum simple_strtod_error e =
     simple_strtod_human (str, &ptr, value, precision, scale_from);
@@ -1389,7 +1389,7 @@ is_utf8_charset (void)
 }
 
 /* Search for multi-byte character C in multi-byte string S.
-   Return a pointer to the character, or nullptr if not found.  */
+   Return a pointer to the character, or NULL if not found.  */
 ATTRIBUTE_PURE
 static char *
 mbsmbchr (char const* s, char const* c)
@@ -1496,7 +1496,7 @@ process_line (char *line, bool newline)
         if (! process_field (next, field))
           valid_number = false;
 
-        if (delimiter != nullptr)
+        if (delimiter != NULL)
           fputs (delimiter, stdout);
         else
           fputc (' ', stdout);
@@ -1547,12 +1547,12 @@ main (int argc, char **argv)
 #endif
 
   decimal_point = nl_langinfo (RADIXCHAR);
-  if (decimal_point == nullptr || strlen (decimal_point) == 0)
+  if (decimal_point == NULL || strlen (decimal_point) == 0)
     decimal_point = ".";
   decimal_point_length = strlen (decimal_point);
 
   thousands_sep = nl_langinfo (THOUSEP);
-  if (thousands_sep == nullptr)
+  if (thousands_sep == NULL)
     thousands_sep = "";
   thousands_sep_length = strlen (thousands_sep);
 
@@ -1560,7 +1560,7 @@ main (int argc, char **argv)
 
   while (true)
     {
-      int c = getopt_long (argc, argv, "d:z", longopts, nullptr);
+      int c = getopt_long (argc, argv, "d:z", longopts, NULL);
 
       if (c == -1)
         break;
@@ -1594,7 +1594,7 @@ main (int argc, char **argv)
           break;
 
         case PADDING_OPTION:
-          if (((xstrtoimax (optarg, nullptr, 10, &padding_width, "")
+          if (((xstrtoimax (optarg, NULL, 10, &padding_width, "")
                 & ~LONGINT_OVERFLOW)
                != LONGINT_OK)
               || padding_width == 0)
@@ -1649,7 +1649,7 @@ main (int argc, char **argv)
         case HEADER_OPTION:
           if (optarg)
             {
-              if (xstrtoumax (optarg, nullptr, 10, &header, "") != LONGINT_OK
+              if (xstrtoumax (optarg, NULL, 10, &header, "") != LONGINT_OK
                   || header == 0)
                 error (EXIT_FAILURE, 0, _("invalid header value %s"),
                        quote (optarg));
@@ -1677,7 +1677,7 @@ main (int argc, char **argv)
         }
     }
 
-  if (format_str != nullptr && grouping)
+  if (format_str != NULL && grouping)
     error (EXIT_FAILURE, 0, _("--grouping cannot be combined with --format"));
 
   if (debug && ! locale_ok)
@@ -1685,10 +1685,10 @@ main (int argc, char **argv)
 
   /* Warn about no-op.  */
   if (debug && scale_from == scale_none && scale_to == scale_none
-      && !grouping && (padding_width == 0) && (format_str == nullptr))
+      && !grouping && (padding_width == 0) && (format_str == NULL))
     error (0, 0, _("no conversion option specified"));
 
-  if (debug && unit_separator && delimiter == nullptr)
+  if (debug && unit_separator && delimiter == NULL)
     error (0, 0,
            _("field delimiters have higher precedence than unit separators"));
 
@@ -1703,7 +1703,7 @@ main (int argc, char **argv)
         error (0, 0, _("grouping has no effect in this locale"));
     }
 
-  auto_padding = (padding_width == 0 && delimiter == nullptr);
+  auto_padding = (padding_width == 0 && delimiter == NULL);
 
   if (inval_style != inval_abort)
     conv_exit_code = 0;
@@ -1718,7 +1718,7 @@ main (int argc, char **argv)
     }
   else
     {
-      char *line = nullptr;
+      char *line = NULL;
       size_t line_allocated = 0;
       ssize_t len;
 

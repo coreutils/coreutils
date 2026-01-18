@@ -742,33 +742,33 @@ static char const short_options[] =
 
 static struct option const long_options[] =
 {
-  {"pages", required_argument, nullptr, PAGES_OPTION},
-  {"columns", required_argument, nullptr, COLUMNS_OPTION},
-  {"across", no_argument, nullptr, 'a'},
-  {"show-control-chars", no_argument, nullptr, 'c'},
-  {"double-space", no_argument, nullptr, 'd'},
-  {"date-format", required_argument, nullptr, 'D'},
-  {"expand-tabs", optional_argument, nullptr, 'e'},
-  {"form-feed", no_argument, nullptr, 'f'},
-  {"header", required_argument, nullptr, 'h'},
-  {"output-tabs", optional_argument, nullptr, 'i'},
-  {"join-lines", no_argument, nullptr, 'J'},
-  {"length", required_argument, nullptr, 'l'},
-  {"merge", no_argument, nullptr, 'm'},
-  {"number-lines", optional_argument, nullptr, 'n'},
-  {"first-line-number", required_argument, nullptr, 'N'},
-  {"indent", required_argument, nullptr, 'o'},
-  {"no-file-warnings", no_argument, nullptr, 'r'},
-  {"separator", optional_argument, nullptr, 's'},
-  {"sep-string", optional_argument, nullptr, 'S'},
-  {"omit-header", no_argument, nullptr, 't'},
-  {"omit-pagination", no_argument, nullptr, 'T'},
-  {"show-nonprinting", no_argument, nullptr, 'v'},
-  {"width", required_argument, nullptr, 'w'},
-  {"page-width", required_argument, nullptr, 'W'},
+  {"pages", required_argument, NULL, PAGES_OPTION},
+  {"columns", required_argument, NULL, COLUMNS_OPTION},
+  {"across", no_argument, NULL, 'a'},
+  {"show-control-chars", no_argument, NULL, 'c'},
+  {"double-space", no_argument, NULL, 'd'},
+  {"date-format", required_argument, NULL, 'D'},
+  {"expand-tabs", optional_argument, NULL, 'e'},
+  {"form-feed", no_argument, NULL, 'f'},
+  {"header", required_argument, NULL, 'h'},
+  {"output-tabs", optional_argument, NULL, 'i'},
+  {"join-lines", no_argument, NULL, 'J'},
+  {"length", required_argument, NULL, 'l'},
+  {"merge", no_argument, NULL, 'm'},
+  {"number-lines", optional_argument, NULL, 'n'},
+  {"first-line-number", required_argument, NULL, 'N'},
+  {"indent", required_argument, NULL, 'o'},
+  {"no-file-warnings", no_argument, NULL, 'r'},
+  {"separator", optional_argument, NULL, 's'},
+  {"sep-string", optional_argument, NULL, 'S'},
+  {"omit-header", no_argument, NULL, 't'},
+  {"omit-pagination", no_argument, NULL, 'T'},
+  {"show-nonprinting", no_argument, NULL, 'v'},
+  {"width", required_argument, NULL, 'w'},
+  {"page-width", required_argument, NULL, 'W'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 static _Noreturn void
@@ -864,7 +864,7 @@ main (int argc, char **argv)
   char **file_names;
 
   /* Accumulate the digits of old-style options like -99.  */
-  char *column_count_string = nullptr;
+  char *column_count_string = NULL;
   idx_t n_digits = 0;
   idx_t n_alloc = 0;
 
@@ -879,7 +879,7 @@ main (int argc, char **argv)
   n_files = 0;
   file_names = (argc > 1
                 ? xnmalloc (argc - 1, sizeof (char *))
-                : nullptr);
+                : NULL);
 
   while (true)
     {
@@ -929,7 +929,7 @@ main (int argc, char **argv)
                short-named option syntax, e.g., -9, ensure that this
                long-name-specified value overrides it.  */
             free (column_count_string);
-            column_count_string = nullptr;
+            column_count_string = NULL;
             n_alloc = 0;
             break;
           }
@@ -1132,7 +1132,7 @@ main (int argc, char **argv)
   if (n_files == 0)
     {
       /* No file arguments specified;  read from standard input.  */
-      print_files (0, nullptr);
+      print_files (0, NULL);
     }
   else
     {
@@ -1181,7 +1181,7 @@ getoptarg (char *arg, char switch_char, char *character, int *number)
   if (*arg)
     {
       long int tmp_long;
-      strtol_error e = xstrtol (arg, nullptr, 10, &tmp_long, "");
+      strtol_error e = xstrtol (arg, NULL, 10, &tmp_long, "");
       if (e == LONGINT_OK)
         {
           if (tmp_long <= 0)
@@ -1494,7 +1494,7 @@ open_file (char *name, COLUMN *p)
       p->name = name;
       p->fp = fopen (name, "r");
     }
-  if (p->fp == nullptr)
+  if (p->fp == NULL)
     {
       failed_opens = true;
       if (!ignore_failed_opens)
@@ -1647,7 +1647,7 @@ print_files (int number_of_files, char **av)
 static void
 init_header (char const *filename, int desc)
 {
-  char *buf = nullptr;
+  char *buf = NULL;
   struct stat st;
   struct timespec t;
   int ns;
@@ -1669,7 +1669,7 @@ init_header (char const *filename, int desc)
   ns = t.tv_nsec;
   if (localtime_rz (localtz, &t.tv_sec, &tm))
     {
-      ptrdiff_t len = nstrftime (nullptr, MIN (PTRDIFF_MAX, SIZE_MAX),
+      ptrdiff_t len = nstrftime (NULL, MIN (PTRDIFF_MAX, SIZE_MAX),
                                  date_format, &tm, localtz, ns);
       if (0 <= len)
         {

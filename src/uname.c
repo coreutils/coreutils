@@ -81,27 +81,27 @@
 
 static struct option const uname_long_options[] =
 {
-  {"all", no_argument, nullptr, 'a'},
-  {"kernel-name", no_argument, nullptr, 's'},
-  {"sysname", no_argument, nullptr, 's'},	/* Obsolescent.  */
-  {"nodename", no_argument, nullptr, 'n'},
-  {"kernel-release", no_argument, nullptr, 'r'},
-  {"release", no_argument, nullptr, 'r'},  /* Obsolescent.  */
-  {"kernel-version", no_argument, nullptr, 'v'},
-  {"machine", no_argument, nullptr, 'm'},
-  {"processor", no_argument, nullptr, 'p'},
-  {"hardware-platform", no_argument, nullptr, 'i'},
-  {"operating-system", no_argument, nullptr, 'o'},
+  {"all", no_argument, NULL, 'a'},
+  {"kernel-name", no_argument, NULL, 's'},
+  {"sysname", no_argument, NULL, 's'},	/* Obsolescent.  */
+  {"nodename", no_argument, NULL, 'n'},
+  {"kernel-release", no_argument, NULL, 'r'},
+  {"release", no_argument, NULL, 'r'},  /* Obsolescent.  */
+  {"kernel-version", no_argument, NULL, 'v'},
+  {"machine", no_argument, NULL, 'm'},
+  {"processor", no_argument, NULL, 'p'},
+  {"hardware-platform", no_argument, NULL, 'i'},
+  {"operating-system", no_argument, NULL, 'o'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 static struct option const arch_long_options[] =
 {
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -191,7 +191,7 @@ decode_switches (int argc, char **argv)
   if (uname_mode == UNAME_ARCH)
     {
       while ((c = getopt_long (argc, argv, "",
-                               arch_long_options, nullptr))
+                               arch_long_options, NULL))
              != -1)
         {
           switch (c)
@@ -209,7 +209,7 @@ decode_switches (int argc, char **argv)
   else
     {
       while ((c = getopt_long (argc, argv, "asnrvmpio",
-                               uname_long_options, nullptr))
+                               uname_long_options, NULL))
              != -1)
         {
           switch (c)

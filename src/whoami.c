@@ -67,7 +67,7 @@ main (int argc, char **argv)
 
   parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE_NAME,
                                    Version, true, usage, AUTHORS,
-                                   (char const *) nullptr);
+                                   (char const *) NULL);
 
   if (optind != argc)
     {
@@ -77,7 +77,7 @@ main (int argc, char **argv)
 
   errno = 0;
   uid_t uid = geteuid ();
-  struct passwd *pw = uid == NO_UID && errno ? nullptr : getpwuid (uid);
+  struct passwd *pw = uid == NO_UID && errno ? NULL : getpwuid (uid);
   if (!pw)
     error (EXIT_FAILURE, errno, _("cannot find name for user ID %ju"),
            (uintmax_t) uid);

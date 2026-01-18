@@ -156,7 +156,7 @@ pclmul_supported (void)
 #  endif
 # endif
 
-  return nullptr;
+  return NULL;
 }
 
 static cksum_fp_t
@@ -177,7 +177,7 @@ avx2_supported (void)
     return cksum_avx2;
 # endif
 
-  return nullptr;
+  return NULL;
 }
 
 static cksum_fp_t
@@ -200,7 +200,7 @@ avx512_supported (void)
     return cksum_avx512;
 # endif
 
-  return nullptr;
+  return NULL;
 }
 
 static cksum_fp_t
@@ -219,7 +219,7 @@ vmull_supported (void)
     return cksum_vmull;
 # endif
 
-  return nullptr;
+  return NULL;
 }
 
 static bool

@@ -267,13 +267,13 @@ static char xlate[N_CHARS];
 
 static struct option const long_options[] =
 {
-  {"complement", no_argument, nullptr, 'c'},
-  {"delete", no_argument, nullptr, 'd'},
-  {"squeeze-repeats", no_argument, nullptr, 's'},
-  {"truncate-set1", no_argument, nullptr, 't'},
+  {"complement", no_argument, NULL, 'c'},
+  {"delete", no_argument, NULL, 'd'},
+  {"squeeze-repeats", no_argument, NULL, 's'},
+  {"truncate-set1", no_argument, NULL, 't'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -589,7 +589,7 @@ make_printable_str (char const *s, size_t len)
   for (size_t i = 0; i < len; i++)
     {
       char buf[5];
-      char const *tmp = nullptr;
+      char const *tmp = NULL;
       unsigned char c = s[i];
 
       switch (c)
@@ -641,7 +641,7 @@ static void
 append_normal_char (struct Spec_list *list, unsigned char c)
 {
   struct List_element *new = xmalloc (sizeof *new);
-  new->next = nullptr;
+  new->next = NULL;
   new->type = RE_NORMAL_CHAR;
   new->u.normal_char = c;
   list->tail->next = new;
@@ -669,7 +669,7 @@ append_range (struct Spec_list *list, unsigned char first, unsigned char last)
       return false;
     }
   struct List_element *new = xmalloc (sizeof *new);
-  new->next = nullptr;
+  new->next = NULL;
   new->type = RE_RANGE;
   new->u.range.first_char = first;
   new->u.range.last_char = last;
@@ -691,7 +691,7 @@ append_char_class (struct Spec_list *list,
   if (char_class == CC_NO_CLASS)
     return false;
   struct List_element *new = xmalloc (sizeof *new);
-  new->next = nullptr;
+  new->next = NULL;
   new->type = RE_CHAR_CLASS;
   new->u.char_class = char_class;
   list->tail->next = new;
@@ -709,7 +709,7 @@ append_repeated_char (struct Spec_list *list, unsigned char the_char,
                       count repeat_count)
 {
   struct List_element *new = xmalloc (sizeof *new);
-  new->next = nullptr;
+  new->next = NULL;
   new->type = RE_REPEATED_CHAR;
   new->u.repeated_char.the_repeated_char = the_char;
   new->u.repeated_char.repeat_count = repeat_count;
@@ -731,7 +731,7 @@ append_equiv_class (struct Spec_list *list,
     return false;
 
   struct List_element *new = xmalloc (sizeof *new);
-  new->next = nullptr;
+  new->next = NULL;
   new->type = RE_EQUIV_CLASS;
   new->u.equiv_code = *equiv_class_str;
   list->tail->next = new;
@@ -797,7 +797,7 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
               char const *digit_str = &es->s[start_idx + 2];
               char *d_end;
               if ((xstrtoumax (digit_str, &d_end, *digit_str == '0' ? 8 : 10,
-                               repeat_count, nullptr)
+                               repeat_count, NULL)
                    != LONGINT_OK)
                   || REPEAT_COUNT_MAXIMUM < *repeat_count
                   || digit_str + digit_str_len != d_end)
@@ -1024,7 +1024,7 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
     }
 
   p = s->tail;
-  if (p == nullptr)
+  if (p == NULL)
     return -1;
 
   switch (p->type)
@@ -1139,7 +1139,7 @@ card_of_complement (struct Spec_list *s)
   bool in_set[N_CHARS] = {0};
 
   s->state = BEGIN_STATE;
-  while ((c = get_next (s, nullptr)) != -1)
+  while ((c = get_next (s, NULL)) != -1)
     {
       cardinality -= (!in_set[c]);
       in_set[c] = true;
@@ -1327,7 +1327,7 @@ spec_init (struct Spec_list *spec_list)
 {
   struct List_element *new = xmalloc (sizeof *new);
   spec_list->head = spec_list->tail = new;
-  spec_list->head->next = nullptr;
+  spec_list->head->next = NULL;
 }
 
 /* This function makes two passes over the argument string S.  The first
@@ -1410,10 +1410,10 @@ homogeneous_spec_list (struct Spec_list *s)
 
   s->state = BEGIN_STATE;
 
-  if ((b = get_next (s, nullptr)) == -1)
+  if ((b = get_next (s, NULL)) == -1)
     return false;
 
-  while ((c = get_next (s, nullptr)) != -1)
+  while ((c = get_next (s, NULL)) != -1)
     if (c != b)
       return false;
 
@@ -1660,7 +1660,7 @@ set_initialize (struct Spec_list *s, bool complement_this_set, bool *in_set)
   int c;
 
   s->state = BEGIN_STATE;
-  while ((c = get_next (s, nullptr)) != -1)
+  while ((c = get_next (s, NULL)) != -1)
     in_set[c] = true;
   if (complement_this_set)
     for (size_t i = 0; i < N_CHARS; i++)
@@ -1686,7 +1686,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "+AcCdst", long_options, nullptr)) != -1)
+  while ((c = getopt_long (argc, argv, "+AcCdst", long_options, NULL)) != -1)
     {
       switch (c)
         {
@@ -1765,7 +1765,7 @@ main (int argc, char **argv)
         main_exit (EXIT_FAILURE);
     }
   else
-    s2 = nullptr;
+    s2 = NULL;
 
   validate (s1, s2);
 
@@ -1814,7 +1814,7 @@ main (int argc, char **argv)
             {
               if (!in_s1[i])
                 {
-                  int ch = get_next (s2, nullptr);
+                  int ch = get_next (s2, NULL);
                   affirm (ch != -1 || truncate_set1);
                   if (ch == -1)
                     {

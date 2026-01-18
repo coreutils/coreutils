@@ -85,7 +85,7 @@ enum delimit_method
 
 static char const *const delimit_method_string[] =
 {
-  "none", "prepend", "separate", nullptr
+  "none", "prepend", "separate", NULL
 };
 
 static enum delimit_method const delimit_method_map[] =
@@ -116,7 +116,7 @@ enum grouping_method
 
 static char const *const grouping_method_string[] =
 {
-  "prepend", "append", "separate", "both", nullptr
+  "prepend", "append", "separate", "both", NULL
 };
 
 static enum grouping_method const grouping_method_map[] =
@@ -133,19 +133,19 @@ enum
 
 static struct option const longopts[] =
 {
-  {"count", no_argument, nullptr, 'c'},
-  {"repeated", no_argument, nullptr, 'd'},
-  {"all-repeated", optional_argument, nullptr, 'D'},
-  {"group", optional_argument, nullptr, GROUP_OPTION},
-  {"ignore-case", no_argument, nullptr, 'i'},
-  {"unique", no_argument, nullptr, 'u'},
-  {"skip-fields", required_argument, nullptr, 'f'},
-  {"skip-chars", required_argument, nullptr, 's'},
-  {"check-chars", required_argument, nullptr, 'w'},
-  {"zero-terminated", no_argument, nullptr, 'z'},
+  {"count", no_argument, NULL, 'c'},
+  {"repeated", no_argument, NULL, 'd'},
+  {"all-repeated", optional_argument, NULL, 'D'},
+  {"group", optional_argument, NULL, GROUP_OPTION},
+  {"ignore-case", no_argument, NULL, 'i'},
+  {"unique", no_argument, NULL, 'u'},
+  {"skip-fields", required_argument, NULL, 'f'},
+  {"skip-chars", required_argument, NULL, 's'},
+  {"check-chars", required_argument, NULL, 'w'},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -227,7 +227,7 @@ static idx_t
 size_opt (char const *opt, char const *msgid)
 {
   intmax_t size;
-  if (LONGINT_OVERFLOW < xstrtoimax (opt, nullptr, 10, &size, "")
+  if (LONGINT_OVERFLOW < xstrtoimax (opt, NULL, 10, &size, "")
       || size < 0)
     error (EXIT_FAILURE, 0, "%s: %s", opt, _(msgid));
   return MIN (size, IDX_MAX);
@@ -352,7 +352,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
   */
   if (output_unique && output_first_repeated && !count_occurrences)
     {
-      char *prevfield = nullptr;
+      char *prevfield = NULL;
       idx_t prevlen;
       bool first_group_printed = false;
 
@@ -467,7 +467,7 @@ int
 main (int argc, char **argv)
 {
   int optc = 0;
-  bool posixly_correct = (getenv ("POSIXLY_CORRECT") != nullptr);
+  bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
   enum Skip_field_option_type skip_field_option_type = SFO_NONE;
   int nfiles = 0;
   char const *file[2];
@@ -493,7 +493,7 @@ main (int argc, char **argv)
           || (posixly_correct && nfiles != 0)
           || ((optc = getopt_long (argc, argv,
                                    "-0123456789Dcdf:is:uw:z",
-                                   longopts, nullptr))
+                                   longopts, NULL))
               == -1))
         {
           if (argc <= optind)
@@ -512,7 +512,7 @@ main (int argc, char **argv)
             intmax_t size;
             if (optarg[0] == '+'
                 && ! strict_posix2 ()
-                && (xstrtoimax (optarg, nullptr, 10, &size, "")
+                && (xstrtoimax (optarg, NULL, 10, &size, "")
                     <= LONGINT_OVERFLOW))
               skip_chars = MIN (size, IDX_MAX);
             else if (nfiles == 2)
@@ -559,7 +559,7 @@ main (int argc, char **argv)
         case 'D':
           output_unique = false;
           output_later_repeated = true;
-          if (optarg == nullptr)
+          if (optarg == NULL)
             delimit_groups = DM_NONE;
           else
             delimit_groups = XARGMATCH ("--all-repeated", optarg,
@@ -569,7 +569,7 @@ main (int argc, char **argv)
           break;
 
         case GROUP_OPTION:
-          if (optarg == nullptr)
+          if (optarg == NULL)
             grouping = GM_SEPARATE;
           else
             grouping = XARGMATCH ("--group", optarg,

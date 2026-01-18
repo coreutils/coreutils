@@ -86,10 +86,10 @@ enum
 
 static struct option const longopts[] =
 {
-  {"lookup", no_argument, nullptr, LOOKUP_OPTION},
+  {"lookup", no_argument, NULL, LOOKUP_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 /* Count and return the number of ampersands in STR.  */
@@ -246,7 +246,7 @@ print_entry (STRUCT_UTMP const *utmp_ent)
   if (include_fullname)
     {
       struct passwd *pw = getpwnam (ut_user);
-      if (pw == nullptr)
+      if (pw == NULL)
         /* TRANSLATORS: Real name is unknown; at most 19 characters. */
         printf (" %19s", _("        ???"));
       else
@@ -284,8 +284,8 @@ print_entry (STRUCT_UTMP const *utmp_ent)
 #ifdef HAVE_STRUCT_XTMP_UT_HOST
   if (include_where && utmp_ent->ut_host[0])
     {
-      char *host = nullptr;
-      char *display = nullptr;
+      char *host = NULL;
+      char *display = NULL;
       char *ut_host = utmp_ent->ut_host;
 
       /* Look for an X display.  */
@@ -323,7 +323,7 @@ print_entry (STRUCT_UTMP const *utmp_ent)
 static void
 cat_file (char const *header, char const *home, char const *file)
 {
-  char *full_name = file_name_concat (home, file, nullptr);
+  char *full_name = file_name_concat (home, file, NULL);
   int fd = open (full_name, O_RDONLY);
 
   if (0 <= fd)
@@ -358,7 +358,7 @@ print_long_entry (const char name[])
   printf ("%-28s", name);
 
   printf (_("In real life: "));
-  if (pw == nullptr)
+  if (pw == NULL)
     {
       /* TRANSLATORS: Real name is unknown; no hard limit. */
       printf (" %s", _("???\n"));
@@ -534,7 +534,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "sfwiqbhlp", longopts, nullptr))
+  while ((optc = getopt_long (argc, argv, "sfwiqbhlp", longopts, NULL))
          != -1)
     {
       switch (optc)

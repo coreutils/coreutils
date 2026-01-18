@@ -29,12 +29,12 @@
 
 static struct option const longopts[] =
 {
-  {"multiple", no_argument, nullptr, 'a'},
-  {"suffix", required_argument, nullptr, 's'},
-  {"zero", no_argument, nullptr, 'z'},
+  {"multiple", no_argument, NULL, 'a'},
+  {"suffix", required_argument, NULL, 's'},
+  {"zero", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -121,7 +121,7 @@ main (int argc, char **argv)
 {
   bool multiple_names = false;
   bool use_nuls = false;
-  char const *suffix = nullptr;
+  char const *suffix = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -133,7 +133,7 @@ main (int argc, char **argv)
 
   while (true)
     {
-      int c = getopt_long (argc, argv, "+as:z", longopts, nullptr);
+      int c = getopt_long (argc, argv, "+as:z", longopts, NULL);
 
       if (c == -1)
         break;
@@ -180,7 +180,7 @@ main (int argc, char **argv)
     }
   else
     perform_basename (argv[optind],
-                      optind + 2 == argc ? argv[optind + 1] : nullptr,
+                      optind + 2 == argc ? argv[optind + 1] : NULL,
                       use_nuls);
 
   return EXIT_SUCCESS;

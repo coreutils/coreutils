@@ -71,10 +71,10 @@ enum
 
 static struct option const longopts[] =
 {
-  {"portability", no_argument, nullptr, PORTABILITY_OPTION},
+  {"portability", no_argument, NULL, PORTABILITY_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -115,7 +115,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "+pP", longopts, nullptr)) != -1)
+  while ((optc = getopt_long (argc, argv, "+pP", longopts, NULL)) != -1)
     {
       switch (optc)
         {

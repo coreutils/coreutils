@@ -581,7 +581,7 @@ main (int argc, char **argv)
 
   /* If invoked with a positive argument, run a benchmark;
      if with a negative, run a do-nothing benchmark.  */
-  for (iterations = argc <= 1 ? 0 : strtol (argv[1], nullptr, 10);
+  for (iterations = argc <= 1 ? 0 : strtol (argv[1], NULL, 10);
        iterations != 0;
        iterations += (iterations < 0 ? 1 : -1))
     if (0 <= iterations)

@@ -39,11 +39,11 @@ enum
 
 static struct option const longopts[] =
 {
-  {"all", no_argument, nullptr, ALL_OPTION},
-  {"ignore", required_argument, nullptr, IGNORE_OPTION},
+  {"all", no_argument, NULL, ALL_OPTION},
+  {"ignore", required_argument, NULL, IGNORE_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -87,7 +87,7 @@ main (int argc, char **argv)
 
   while (true)
     {
-      int c = getopt_long (argc, argv, "", longopts, nullptr);
+      int c = getopt_long (argc, argv, "", longopts, NULL);
       if (c == -1)
         break;
       switch (c)

@@ -318,7 +318,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
-                      usage, AUTHORS, (char const *) nullptr);
+                      usage, AUTHORS, (char const *) NULL);
 
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle '--' here.  */
@@ -456,7 +456,7 @@ tostring (VALUE *v)
     {
     case integer:
       {
-        char *s = mpz_get_str (nullptr, 10, v->u.i);
+        char *s = mpz_get_str (NULL, 10, v->u.i);
         mpz_clear (v->u.i);
         v->u.s = s;
         v->type = string;
@@ -518,7 +518,7 @@ getsize (mpz_t i)
 static bool
 nextarg (char const *str)
 {
-  if (*args == nullptr)
+  if (*args == NULL)
     return false;
   else
     {
@@ -581,13 +581,13 @@ docolon (VALUE *sv, VALUE *pv)
   tostring (pv);
 
   re_regs.num_regs = 0;
-  re_regs.start = nullptr;
-  re_regs.end = nullptr;
+  re_regs.start = NULL;
+  re_regs.end = NULL;
 
-  re_buffer.buffer = nullptr;
+  re_buffer.buffer = NULL;
   re_buffer.allocated = 0;
   re_buffer.fastmap = fastmap;
-  re_buffer.translate = nullptr;
+  re_buffer.translate = NULL;
   re_syntax_options =
     RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP & ~RE_NO_EMPTY_RANGES;
   errmsg = re_compile_pattern (pv->u.s, strlen (pv->u.s), &re_buffer);
@@ -637,7 +637,7 @@ docolon (VALUE *sv, VALUE *pv)
       free (re_regs.start);
       free (re_regs.end);
     }
-  re_buffer.fastmap = nullptr;
+  re_buffer.fastmap = NULL;
   regfree (&re_buffer);
   return v;
 }

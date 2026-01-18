@@ -49,7 +49,7 @@ static struct option const long_options[] =
 {
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 
@@ -93,7 +93,7 @@ Use: '%s --coreutils-prog=PROGRAM_NAME --help' for individual program help.\n"),
 static void
 launch_program (char const *prog_name, int prog_argc, char **prog_argv)
 {
-  int (*prog_main) (int, char **) = nullptr;
+  int (*prog_main) (int, char **) = NULL;
 
   /* Ensure that at least one parameter was passed.  */
   if (!prog_argc || !prog_argv || !prog_argv[0] || !prog_name)
@@ -151,7 +151,7 @@ main (int argc, char **argv)
   size_t nskip = 0;
   if (argc >= 2)
     {
-      char *arg_name = nullptr;
+      char *arg_name = NULL;
 
       /* If calling coreutils directly, the "script" name isn't passed.
          Distinguish the two cases with a -shebang suffix.  */
@@ -194,7 +194,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
   atexit (close_stdout);
 
-  if ((optc = getopt_long (argc, argv, "", long_options, nullptr)) != -1)
+  if ((optc = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     switch (optc)
       {
       case_GETOPT_HELP_CHAR;

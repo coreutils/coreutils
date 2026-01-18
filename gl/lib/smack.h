@@ -37,7 +37,7 @@ static inline bool
 is_smack_enabled (void)
 {
 #ifdef HAVE_SMACK
-  return smack_smackfs_path () != nullptr;
+  return smack_smackfs_path () != NULL;
 #else
   return false;
 #endif

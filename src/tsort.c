@@ -60,13 +60,13 @@ struct item
 };
 
 /* The head of the sorted list.  */
-static struct item *head = nullptr;
+static struct item *head = NULL;
 
 /* The tail of the list of 'zeros', strings that have no predecessors.  */
-static struct item *zeros = nullptr;
+static struct item *zeros = NULL;
 
 /* Used for loop detection.  */
-static struct item *loop = nullptr;
+static struct item *loop = NULL;
 
 /* The number of strings to sort.  */
 static size_t n_strings = 0;
@@ -123,7 +123,7 @@ search_item (struct item *root, char const *str)
 
   /* Make sure the tree is not empty, since that is what the algorithm
      below expects.  */
-  if (root->right == nullptr)
+  if (root->right == NULL)
     return (root->right = new_item (str));
 
   /* A1. Initialize.  */
@@ -143,7 +143,7 @@ search_item (struct item *root, char const *str)
       else
         q = p->right;
 
-      if (q == nullptr)
+      if (q == NULL)
         {
           /* A5. Insert.  */
           q = new_item (str);
@@ -288,7 +288,7 @@ scan_zeros (struct item *k)
   /* Ignore strings that have already been printed.  */
   if (k->count == 0 && !k->printed)
     {
-      if (head == nullptr)
+      if (head == NULL)
         head = k;
       else
         zeros->qlink = k;
@@ -325,7 +325,7 @@ detect_loop (struct item *k)
       /* K does not have to be part of a cycle.  It is however part of
          a graph that contains a cycle.  */
 
-      if (loop == nullptr)
+      if (loop == NULL)
         /* Start traversing the graph at K.  */
         loop = k;
       else
@@ -358,7 +358,7 @@ detect_loop (struct item *k)
 
                           /* Tidy things up since we might have to
                              detect another loop.  */
-                          loop->qlink = nullptr;
+                          loop->qlink = NULL;
                           loop = tmp;
                         }
 
@@ -366,7 +366,7 @@ detect_loop (struct item *k)
                         {
                           struct item *tmp = loop->qlink;
 
-                          loop->qlink = nullptr;
+                          loop->qlink = NULL;
                           loop = tmp;
                         }
 
@@ -396,16 +396,16 @@ detect_loop (struct item *k)
 static bool
 recurse_tree (struct item *root, bool (*action) (struct item *))
 {
-  if (root->left == nullptr && root->right == nullptr)
+  if (root->left == NULL && root->right == NULL)
     return (*action) (root);
   else
     {
-      if (root->left != nullptr)
+      if (root->left != NULL)
         if (recurse_tree (root->left, action))
           return true;
       if ((*action) (root))
         return true;
-      if (root->right != nullptr)
+      if (root->right != NULL)
         if (recurse_tree (root->right, action))
           return true;
     }
@@ -429,13 +429,13 @@ static _Noreturn void
 tsort (char const *file)
 {
   bool ok = true;
-  struct item *j = nullptr;
-  struct item *k = nullptr;
+  struct item *j = NULL;
+  struct item *k = NULL;
   token_buffer tokenbuffer;
   bool is_stdin = streq (file, "-");
 
   /* Initialize the head of the tree holding the strings we're sorting.  */
-  struct item *root = new_item (nullptr);
+  struct item *root = new_item (NULL);
 
   if (!is_stdin && ! freopen (file, "r", stdin))
     error (EXIT_FAILURE, errno, "%s", quotef (file));
@@ -462,13 +462,13 @@ tsort (char const *file)
         {
           /* T3. Record the relation.  */
           record_relation (j, k);
-          k = nullptr;
+          k = NULL;
         }
 
       j = k;
     }
 
-  if (k != nullptr)
+  if (k != NULL)
     error (EXIT_FAILURE, 0, _("%s: input contains an odd number of tokens"),
            quotef (file));
 
@@ -544,9 +544,9 @@ main (int argc, char **argv)
         {
           {GETOPT_HELP_OPTION_DECL},
           {GETOPT_VERSION_OPTION_DECL},
-          {nullptr, 0, nullptr, 0}
+          {NULL, 0, NULL, 0}
         };
-      int c = getopt_long (argc, argv, "w", long_options, nullptr);
+      int c = getopt_long (argc, argv, "w", long_options, NULL);
 
       if (c == -1)
         break;

@@ -36,7 +36,7 @@ main (void)
   fdadvise (fileno (stdin), 0, 0, FADVISE_RANDOM);
 
   /* Ignored.  */
-  fadvise (nullptr, FADVISE_RANDOM);
+  fadvise (NULL, FADVISE_RANDOM);
 
   /* Invalid.  */
   fdadvise (42, 0, 0, FADVISE_RANDOM);

@@ -99,17 +99,17 @@ enum
 
 static struct option const longopts[] =
 {
-  {"bytes", no_argument, nullptr, 'c'},
-  {"chars", no_argument, nullptr, 'm'},
-  {"lines", no_argument, nullptr, 'l'},
-  {"words", no_argument, nullptr, 'w'},
-  {"debug", no_argument, nullptr, DEBUG_PROGRAM_OPTION},
-  {"files0-from", required_argument, nullptr, FILES0_FROM_OPTION},
-  {"max-line-length", no_argument, nullptr, 'L'},
-  {"total", required_argument, nullptr, TOTAL_OPTION},
+  {"bytes", no_argument, NULL, 'c'},
+  {"chars", no_argument, NULL, 'm'},
+  {"lines", no_argument, NULL, 'l'},
+  {"words", no_argument, NULL, 'w'},
+  {"debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
+  {"files0-from", required_argument, NULL, FILES0_FROM_OPTION},
+  {"max-line-length", no_argument, NULL, 'L'},
+  {"total", required_argument, NULL, TOTAL_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 enum total_type
@@ -121,7 +121,7 @@ enum total_type
   };
 static char const *const total_args[] =
 {
-  "auto", "always", "only", "never", nullptr
+  "auto", "always", "only", "never", NULL
 };
 static enum total_type const total_types[] =
 {
@@ -750,7 +750,7 @@ main (int argc, char **argv)
   int optc;
   idx_t nfiles;
   char **files;
-  char *files_from = nullptr;
+  char *files_from = NULL;
   struct fstatus *fstatus;
   struct Tokens tok;
 
@@ -765,15 +765,15 @@ main (int argc, char **argv)
   page_size = getpagesize ();
   /* Line buffer stdout to ensure lines are written atomically and immediately
      so that processes running in parallel do not intersperse their output.  */
-  setvbuf (stdout, nullptr, _IOLBF, 0);
+  setvbuf (stdout, NULL, _IOLBF, 0);
 
-  posixly_correct = (getenv ("POSIXLY_CORRECT") != nullptr);
+  posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
 
   print_lines = print_words = print_chars = print_bytes = false;
   print_linelength = false;
   total_lines = total_words = total_chars = total_bytes = max_line_length = 0;
 
-  while ((optc = getopt_long (argc, argv, "clLmw", longopts, nullptr)) != -1)
+  while ((optc = getopt_long (argc, argv, "clLmw", longopts, NULL)) != -1)
     switch (optc)
       {
       case 'c':
@@ -848,7 +848,7 @@ main (int argc, char **argv)
       else
         {
           stream = fopen (files_from, "r");
-          if (stream == nullptr)
+          if (stream == NULL)
             error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
                    quoteaf (files_from));
         }
@@ -871,14 +871,14 @@ main (int argc, char **argv)
         }
       else
         {
-          files = nullptr;
+          files = NULL;
           nfiles = 0;
           ai = argv_iter_init_stream (stream);
         }
     }
   else
     {
-      static char *stdin_only[] = { nullptr };
+      static char *stdin_only[] = { NULL };
       files = (optind < argc ? argv + optind : stdin_only);
       nfiles = (optind < argc ? argc - optind : 1);
       ai = argv_iter_init_argv (files);
@@ -915,7 +915,7 @@ main (int argc, char **argv)
              among many, knowing the record number may help.
              FIXME: currently print the record number only with
              --files0-from=FILE.  Maybe do it for argv, too?  */
-          if (files_from == nullptr)
+          if (files_from == NULL)
             error (0, 0, "%s", _("invalid zero-length file name"));
           else
             {
@@ -957,7 +957,7 @@ main (int argc, char **argv)
      However, no arguments on the --files0-from input stream is an error
      means don't read anything.  */
   if (ok && !files_from && argv_iter_n_args (ai) == 0)
-    ok &= wc_file (nullptr, &fstatus[0]);
+    ok &= wc_file (NULL, &fstatus[0]);
 
   if (read_tokens)
     readtokens0_free (&tok);
@@ -992,7 +992,7 @@ main (int argc, char **argv)
 
       write_counts (total_lines, total_words, total_chars, total_bytes,
                     max_line_length,
-                    total_mode != total_only ? _("total") : nullptr);
+                    total_mode != total_only ? _("total") : NULL);
     }
 
   argv_iter_free (ai);

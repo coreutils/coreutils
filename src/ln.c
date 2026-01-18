@@ -90,22 +90,22 @@ enum { DEST_INFO_INITIAL_CAPACITY = 61 };
 
 static struct option const long_options[] =
 {
-  {"backup", optional_argument, nullptr, 'b'},
-  {"directory", no_argument, nullptr, 'F'},
-  {"no-dereference", no_argument, nullptr, 'n'},
-  {"no-target-directory", no_argument, nullptr, 'T'},
-  {"force", no_argument, nullptr, 'f'},
-  {"interactive", no_argument, nullptr, 'i'},
-  {"suffix", required_argument, nullptr, 'S'},
-  {"target-directory", required_argument, nullptr, 't'},
-  {"logical", no_argument, nullptr, 'L'},
-  {"physical", no_argument, nullptr, 'P'},
-  {"relative", no_argument, nullptr, 'r'},
-  {"symbolic", no_argument, nullptr, 's'},
-  {"verbose", no_argument, nullptr, 'v'},
+  {"backup", optional_argument, NULL, 'b'},
+  {"directory", no_argument, NULL, 'F'},
+  {"no-dereference", no_argument, NULL, 'n'},
+  {"no-target-directory", no_argument, NULL, 'T'},
+  {"force", no_argument, NULL, 'f'},
+  {"interactive", no_argument, NULL, 'i'},
+  {"suffix", required_argument, NULL, 'S'},
+  {"target-directory", required_argument, NULL, 't'},
+  {"logical", no_argument, NULL, 'L'},
+  {"physical", no_argument, NULL, 'P'},
+  {"relative", no_argument, NULL, 'r'},
+  {"symbolic", no_argument, NULL, 's'},
+  {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 /* Return an errno value for a system call that returned STATUS.
@@ -130,7 +130,7 @@ convert_abs_rel (char const *from, char const *target)
   char *realdest = canonicalize_filename_mode (targetdir, CAN_MISSING);
   char *realfrom = canonicalize_filename_mode (from, CAN_MISSING);
 
-  char *relative_from = nullptr;
+  char *relative_from = NULL;
   if (realdest && realfrom)
     {
       /* Write to a PATH_MAX buffer.  */
@@ -139,7 +139,7 @@ convert_abs_rel (char const *from, char const *target)
       if (!relpath (realfrom, realdest, relative_from, PATH_MAX))
         {
           free (relative_from);
-          relative_from = nullptr;
+          relative_from = NULL;
         }
     }
 
@@ -180,8 +180,8 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
 {
   struct stat source_stats;
   int source_status = 1;
-  char *backup_base = nullptr;
-  char *rel_source = nullptr;
+  char *backup_base = NULL;
+  char *rel_source = NULL;
   int nofollow_flag = logical ? 0 : AT_SYMLINK_NOFOLLOW;
   if (link_errno < 0)
     link_errno = atomic_link (source, destdir_fd, dest_base);
@@ -294,7 +294,7 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
                         {
                           int rename_errno = errno;
                           free (backup_base);
-                          backup_base = nullptr;
+                          backup_base = NULL;
                           if (rename_errno != ENOENT)
                             {
                               error (0, rename_errno, _("cannot backup %s"),
@@ -350,7 +350,7 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
           if (backup_base)
             {
               char *backup = backup_base;
-              void *alloc = nullptr;
+              void *alloc = NULL;
               ptrdiff_t destdirlen = dest_base - dest;
               if (0 < destdirlen)
                 {
@@ -481,9 +481,9 @@ main (int argc, char **argv)
   int c;
   bool ok;
   bool make_backups = false;
-  char const *backup_suffix = nullptr;
-  char *version_control_string = nullptr;
-  char const *target_directory = nullptr;
+  char const *backup_suffix = NULL;
+  char *version_control_string = NULL;
+  char const *target_directory = NULL;
   int destdir_fd;
   bool no_target_directory = false;
   int n_files;
@@ -502,7 +502,7 @@ main (int argc, char **argv)
     = hard_dir_link = false;
 
   while ((c = getopt_long (argc, argv, "bdfinrst:vFLPS:T",
-                           long_options, nullptr))
+                           long_options, NULL))
          != -1)
     {
       switch (c)
@@ -655,11 +655,11 @@ main (int argc, char **argv)
           && backup_type != numbered_backups)
         {
           dest_set = hash_initialize (DEST_INFO_INITIAL_CAPACITY,
-                                      nullptr,
+                                      NULL,
                                       triple_hash,
                                       triple_compare,
                                       triple_free);
-          if (dest_set == nullptr)
+          if (dest_set == NULL)
             xalloc_die ();
         }
 

@@ -492,7 +492,7 @@ unary_operator (void)
         unary_advance ();
         arg = find_int (argv[pos - 1]);
         errno = 0;
-        fd = strtol (arg, nullptr, 10);
+        fd = strtol (arg, NULL, 10);
         return (errno != ERANGE && 0 <= fd && fd <= INT_MAX && isatty (fd));
       }
 
@@ -821,7 +821,7 @@ main (int margc, char **margv)
           if (streq (margv[1], "--version"))
             {
               version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
-                           (char *) nullptr);
+                           (char *) NULL);
               test_main_return (EXIT_SUCCESS);
             }
         }

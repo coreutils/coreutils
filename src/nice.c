@@ -56,10 +56,10 @@
 
 static struct option const longopts[] =
 {
-  {"adjustment", required_argument, nullptr, 'n'},
+  {"adjustment", required_argument, NULL, 'n'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -102,7 +102,7 @@ main (int argc, char **argv)
 {
   int current_niceness;
   int adjustment = 10;
-  char const *adjustment_given = nullptr;
+  char const *adjustment_given = NULL;
   bool ok;
   int i;
 
@@ -136,7 +136,7 @@ main (int argc, char **argv)
           /* Initialize getopt_long's internal state.  */
           optind = 0;
 
-          c = getopt_long (fake_argc, fake_argv, "+n:", longopts, nullptr);
+          c = getopt_long (fake_argc, fake_argv, "+n:", longopts, NULL);
           i += optind - 1;
 
           switch (c)
@@ -176,7 +176,7 @@ main (int argc, char **argv)
       enum { MIN_ADJUSTMENT = 1 - 2 * NZERO, MAX_ADJUSTMENT = 2 * NZERO - 1 };
 #endif
       long int tmp;
-      if (LONGINT_OVERFLOW < xstrtol (adjustment_given, nullptr, 10, &tmp, ""))
+      if (LONGINT_OVERFLOW < xstrtol (adjustment_given, NULL, 10, &tmp, ""))
         error (EXIT_CANCELED, 0, _("invalid adjustment %s"),
                quote (adjustment_given));
 #if (defined __gnu_hurd__                                               \

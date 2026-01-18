@@ -48,11 +48,11 @@ static bool silent;
 
 static struct option const longopts[] =
 {
-  {"silent", no_argument, nullptr, 's'},
-  {"quiet", no_argument, nullptr, 's'},
+  {"silent", no_argument, NULL, 's'},
+  {"quiet", no_argument, NULL, 's'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -91,7 +91,7 @@ main (int argc, char **argv)
 
   silent = false;
 
-  while ((optc = getopt_long (argc, argv, "s", longopts, nullptr)) != -1)
+  while ((optc = getopt_long (argc, argv, "s", longopts, NULL)) != -1)
     {
       switch (optc)
         {

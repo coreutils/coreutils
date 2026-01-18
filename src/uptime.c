@@ -60,8 +60,8 @@ print_uptime (idx_t n, STRUCT_UTMP const *utmp_buf)
       status = EXIT_FAILURE;
     }
 
-  time_t time_now = time (nullptr);
-  struct tm *tmn = time_now == (time_t) -1 ? nullptr : localtime (&time_now);
+  time_t time_now = time (NULL);
+  struct tm *tmn = time_now == (time_t) -1 ? NULL : localtime (&time_now);
   /* procps' version of uptime also prints the seconds field, but
      previous versions of coreutils don't. */
   if (tmn)
@@ -132,7 +132,7 @@ uptime (char const *filename, int options)
     {
       error (0, errno, "%s", quotef (filename));
       n_users = 0;
-      utmp_buf = nullptr;
+      utmp_buf = NULL;
     }
 
   int print_uptime_status = print_uptime (n_users, utmp_buf);
@@ -186,7 +186,7 @@ main (int argc, char **argv)
 
   parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE_NAME,
                                    Version, true, usage, AUTHORS,
-                                   (char const *) nullptr);
+                                   (char const *) NULL);
 
   switch (argc - optind)
     {

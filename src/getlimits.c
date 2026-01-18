@@ -145,7 +145,7 @@ main (int argc, char **argv)
 
   parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE_NAME,
                                    VERSION, true, usage, AUTHORS,
-                                   (char const *) nullptr);
+                                   (char const *) NULL);
 
 #define print_int(TYPE)                                                  \
   sprintf (limit + 1, "%ju", (uintmax_t) TYPE##_MAX);               \

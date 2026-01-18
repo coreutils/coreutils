@@ -85,17 +85,17 @@ enum
 
 static struct option const long_options[] =
 {
-  {"bytes", required_argument, nullptr, 'c'},
-  {"lines", required_argument, nullptr, 'n'},
-  {"-presume-input-pipe", no_argument, nullptr,
+  {"bytes", required_argument, NULL, 'c'},
+  {"lines", required_argument, NULL, 'n'},
+  {"-presume-input-pipe", no_argument, NULL,
    PRESUME_INPUT_PIPE_OPTION}, /* do not document */
-  {"quiet", no_argument, nullptr, 'q'},
-  {"silent", no_argument, nullptr, 'q'},
-  {"verbose", no_argument, nullptr, 'v'},
-  {"zero-terminated", no_argument, nullptr, 'z'},
+  {"quiet", no_argument, NULL, 'q'},
+  {"silent", no_argument, NULL, 'q'},
+  {"verbose", no_argument, NULL, 'v'},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -356,7 +356,7 @@ elide_tail_bytes_pipe (char const *filename, int fd, uintmax_t n_elide,
 
       bool eof = false;
       idx_t n_read;
-      char **b = nullptr;
+      char **b = NULL;
 
       idx_t remainder = n_elide % READ_BUFSIZE;
       /* The number of buffers needed to hold n_elide bytes plus one
@@ -510,7 +510,7 @@ elide_tail_lines_pipe (char const *filename, int fd, uintmax_t n_elide,
 
   first = last = xmalloc (sizeof (LBUFFER));
   first->nbytes = first->nlines = 0;
-  first->next = nullptr;
+  first->next = NULL;
   tmp = xmalloc (sizeof (LBUFFER));
 
   /* Always read into a fresh buffer.
@@ -531,7 +531,7 @@ elide_tail_lines_pipe (char const *filename, int fd, uintmax_t n_elide,
 
       tmp->nbytes = n_read;
       tmp->nlines = 0;
-      tmp->next = nullptr;
+      tmp->next = NULL;
 
       /* Count the number of newlines just read.  */
       {
@@ -686,7 +686,7 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
             {
               char const *nl;
               nl = memrchr (buffer, line_end, n);
-              if (nl == nullptr)
+              if (nl == NULL)
                 break;
               n = nl - buffer;
             }
@@ -925,7 +925,7 @@ main (int argc, char **argv)
 
   /* Initializer for file_list if no file-arguments
      were specified on the command line.  */
-  static char const *const default_file_list[] = {"-", nullptr};
+  static char const *const default_file_list[] = {"-", NULL};
   char const *const *file_list;
 
   initialize_main (&argc, &argv);
@@ -1011,7 +1011,7 @@ main (int argc, char **argv)
     }
 
   while ((c = getopt_long (argc, argv, "c:n:qvz0123456789",
-                           long_options, nullptr))
+                           long_options, NULL))
          != -1)
     {
       switch (c)

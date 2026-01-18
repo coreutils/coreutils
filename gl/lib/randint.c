@@ -35,8 +35,8 @@ int
 main (int argc, char **argv)
 {
   randint i;
-  randint n = strtoumax (argv[1], nullptr, 10);
-  randint choices = strtoumax (argv[2], nullptr, 10);
+  randint n = strtoumax (argv[1], NULL, 10);
+  randint choices = strtoumax (argv[2], NULL, 10);
   char const *name = argv[3];
   struct randint_source *ints = randint_all_new (name, SIZE_MAX);
 
@@ -77,14 +77,14 @@ randint_new (struct randread_source *source)
 }
 
 /* Create a new randint_source by creating a randread_source from
-   NAME and ESTIMATED_BYTES.  Return nullptr (setting errno) if
+   NAME and ESTIMATED_BYTES.  Return NULL (setting errno) if
    unsuccessful.  */
 
 struct randint_source *
 randint_all_new (char const *name, size_t bytes_bound)
 {
   struct randread_source *source = randread_new (name, bytes_bound);
-  return (source ? randint_new (source) : nullptr);
+  return (source ? randint_new (source) : NULL);
 }
 
 /* Return the random data source of *S.  */

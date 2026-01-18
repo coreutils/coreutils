@@ -96,14 +96,14 @@ static char const *command;
 
 static struct option const long_options[] =
 {
-  {"foreground", no_argument, nullptr, 'f'},
-  {"kill-after", required_argument, nullptr, 'k'},
-  {"preserve-status", no_argument, nullptr, 'p'},
-  {"signal", required_argument, nullptr, 's'},
-  {"verbose", no_argument, nullptr, 'v'},
+  {"foreground", no_argument, NULL, 'f'},
+  {"kill-after", required_argument, NULL, 'k'},
+  {"preserve-status", no_argument, NULL, 'p'},
+  {"signal", required_argument, NULL, 's'},
+  {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 /* Start the timeout after which we'll receive a SIGALRM.
@@ -121,9 +121,9 @@ settimeout (double duration, bool warn)
   struct timespec ts = dtotimespec (duration);
   struct itimerspec its = {.it_interval = {0}, .it_value = ts};
   timer_t timerid;
-  if (timer_create (CLOCK_REALTIME, nullptr, &timerid) == 0)
+  if (timer_create (CLOCK_REALTIME, NULL, &timerid) == 0)
     {
-      if (timer_settime (timerid, 0, &its, nullptr) == 0)
+      if (timer_settime (timerid, 0, &its, NULL) == 0)
         return;
       else
         {
@@ -154,7 +154,7 @@ settimeout (double duration, bool warn)
         tv.tv_usec--;
     }
   struct itimerval it = {.it_interval = {0}, .it_value = tv };
-  if (setitimer (ITIMER_REAL, &it, nullptr) == 0)
+  if (setitimer (ITIMER_REAL, &it, NULL) == 0)
     return;
   else
     {
@@ -395,7 +395,7 @@ unblock_signal (int sig)
   sigset_t unblock_set;
   sigemptyset (&unblock_set);
   sigaddset (&unblock_set, sig);
-  if (sigprocmask (SIG_UNBLOCK, &unblock_set, nullptr) != 0)
+  if (sigprocmask (SIG_UNBLOCK, &unblock_set, NULL) != 0)
     error (0, errno, _("warning: sigprocmask"));
 }
 
@@ -408,7 +408,7 @@ install_sigchld (void)
   sa.sa_flags = SA_RESTART;   /* Restart syscalls if possible, as that's
                                  more likely to work cleanly.  */
 
-  sigaction (SIGCHLD, &sa, nullptr);
+  sigaction (SIGCHLD, &sa, NULL);
 
   /* We inherit the signal mask from our parent process,
      so ensure SIGCHLD is not blocked. */
@@ -427,7 +427,7 @@ sig_needs_handling (int sig, int sigterm)
      set to SIG_IGN by default.  I.e., those signals will
      not be propagated through background timeout jobs.  */
   struct sigaction old_sa;
-  sigaction (sig, nullptr, &old_sa);
+  sigaction (sig, NULL, &old_sa);
   bool ret = old_sa.sa_handler != SIG_IGN;
   return ret;
 }
@@ -443,14 +443,14 @@ install_cleanup (int sigterm)
 
   for (int i = 0; i < countof (term_sig); i++)
     if (sig_needs_handling (term_sig[i], sigterm))
-      sigaction (term_sig[i], &sa, nullptr);
+      sigaction (term_sig[i], &sa, NULL);
 
   /* Real Time signals also terminate by default.  */
   for (int s = SIGRTMIN; s <= SIGRTMAX; s++)
     if (sig_needs_handling (s, sigterm))
-      sigaction (s, &sa, nullptr);
+      sigaction (s, &sa, NULL);
 
-  sigaction (sigterm, &sa, nullptr); /* user specified termination signal.  */
+  sigaction (sigterm, &sa, NULL); /* user specified termination signal.  */
 }
 
 /* Block all signals which were registered with cleanup() as the signal
@@ -518,7 +518,7 @@ main (int argc, char **argv)
   initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "+fk:ps:v", long_options, nullptr))
+  while ((c = getopt_long (argc, argv, "+fk:ps:v", long_options, NULL))
          != -1)
     {
       switch (c)
@@ -607,7 +607,7 @@ main (int argc, char **argv)
         return EXIT_CANCELED;
 
       /* Restore signal mask for child.  */
-      if (sigprocmask (SIG_SETMASK, &orig_set, nullptr) != 0)
+      if (sigprocmask (SIG_SETMASK, &orig_set, NULL) != 0)
         {
           error (0, errno, _("child failed to reset signal mask"));
           return EXIT_CANCELED;

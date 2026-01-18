@@ -35,7 +35,7 @@
    the buffer size, and more problematically does not give any indication
    that the new size request was ignored:
 
-       setvbuf (stdout, nullptr, _IOFBF, 8192);
+       setvbuf (stdout, NULL, _IOFBF, 8192);
 
    The ISO C99 standard section 7.19.5.6 on the setvbuf function says:
 
@@ -70,7 +70,7 @@
 static void
 apply_mode (FILE *stream, char const *stream_name, char const *envvar)
 {
-  char *buf = nullptr;
+  char *buf = NULL;
   int setvbuf_mode;
   unsigned long int size = 0;
 
@@ -99,7 +99,7 @@ apply_mode (FILE *stream, char const *stream_name, char const *envvar)
          Huge sizes can cause problems with some stdio implementations.  */
       buf = (size <= ((unsigned long int) -2 < (size_t) -1 / 2
                       ? (unsigned long int) -2 : (size_t) -1 / 2)
-             ? malloc (size) : nullptr);
+             ? malloc (size) : NULL);
       if (!buf)
         {
           /* We could defer the allocation to libc, however since

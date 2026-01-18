@@ -24,19 +24,19 @@
 
 /* Return the root mountpoint of the file system on which FILE exists, in
    malloced storage.  FILE_STAT should be the result of stating FILE.
-   Give a diagnostic and return nullptr if unable to determine the mount point.
+   Give a diagnostic and return NULL if unable to determine the mount point.
    Exit if unable to restore current working directory.  */
 extern char *
 find_mount_point (char const *file, struct stat const *file_stat)
 {
   struct saved_cwd cwd;
   struct stat last_stat;
-  char *mp = nullptr;		/* The malloc'd mount point.  */
+  char *mp = NULL;		/* The malloc'd mount point.  */
 
   if (save_cwd (&cwd) != 0)
     {
       error (0, errno, _("cannot get current directory"));
-      return nullptr;
+      return NULL;
     }
 
   if (S_ISDIR (file_stat->st_mode))
@@ -46,7 +46,7 @@ find_mount_point (char const *file, struct stat const *file_stat)
       if (chdir (file) < 0)
         {
           error (0, errno, _("cannot change to directory %s"), quoteaf (file));
-          return nullptr;
+          return NULL;
         }
     }
   else
@@ -60,7 +60,7 @@ find_mount_point (char const *file, struct stat const *file_stat)
       if (chdir (dir) < 0)
         {
           error (0, errno, _("cannot change to directory %s"), quoteaf (dir));
-          return nullptr;
+          return NULL;
         }
 
       if (stat (".", &last_stat) < 0)

@@ -85,14 +85,14 @@ enum
 
 static struct option const long_options[] =
 {
-  {"check-order", no_argument, nullptr, CHECK_ORDER_OPTION},
-  {"nocheck-order", no_argument, nullptr, NOCHECK_ORDER_OPTION},
-  {"output-delimiter", required_argument, nullptr, OUTPUT_DELIMITER_OPTION},
-  {"total", no_argument, nullptr, TOTAL_OPTION},
-  {"zero-terminated", no_argument, nullptr, 'z'},
+  {"check-order", no_argument, NULL, CHECK_ORDER_OPTION},
+  {"nocheck-order", no_argument, NULL, NOCHECK_ORDER_OPTION},
+  {"output-delimiter", required_argument, NULL, OUTPUT_DELIMITER_OPTION},
+  {"total", no_argument, NULL, TOTAL_OPTION},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 
@@ -434,7 +434,7 @@ main (int argc, char **argv)
   check_input_order = CHECK_ORDER_DEFAULT;
   total_option = false;
 
-  while ((c = getopt_long (argc, argv, "123z", long_options, nullptr)) != -1)
+  while ((c = getopt_long (argc, argv, "123z", long_options, NULL)) != -1)
     switch (c)
       {
       case '1':

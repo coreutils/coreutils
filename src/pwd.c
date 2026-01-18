@@ -38,11 +38,11 @@ struct file_name
 
 static struct option const longopts[] =
 {
-  {"logical", no_argument, nullptr, 'L'},
-  {"physical", no_argument, nullptr, 'P'},
+  {"logical", no_argument, NULL, 'L'},
+  {"physical", no_argument, NULL, 'P'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -104,12 +104,12 @@ file_name_prepend (struct file_name *p, char const *s, size_t s_len)
   idx_t n_free = p->start - p->buf;
   if (n_free < 1 + s_len)
     {
-      /* Call xpalloc with nullptr not p->buf, since with the latter
+      /* Call xpalloc with NULL not p->buf, since with the latter
          we'd end up copying the data twice: once via realloc, then again
-         to align it with the end of the new buffer.  By passing nullptr we
+         to align it with the end of the new buffer.  By passing NULL we
          copy it only once.  */
       idx_t n_used = p->n_alloc - n_free;
-      char *buf = xpalloc (nullptr, &p->n_alloc, 1 + s_len - n_free, -1, 1);
+      char *buf = xpalloc (NULL, &p->n_alloc, 1 + s_len - n_free, -1, 1);
       p->start = memcpy (buf + p->n_alloc - n_free, p->start, n_used);
       free (p->buf);
       p->buf = buf;
@@ -152,7 +152,7 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
                 size_t parent_height)
 {
   DIR *dirp = opendir ("..");
-  if (dirp == nullptr)
+  if (dirp == NULL)
     error (EXIT_FAILURE, errno, _("cannot open directory %s"),
            quote (nth_parent (parent_height)));
 
@@ -176,7 +176,7 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
       struct dirent const *dp;
 
       errno = 0;
-      if ((dp = readdir_ignoring_dot_and_dotdot (dirp)) == nullptr)
+      if ((dp = readdir_ignoring_dot_and_dotdot (dirp)) == NULL)
         {
           if (errno)
             {
@@ -186,7 +186,7 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
               errno = e;
 
               /* Arrange to give a diagnostic after exiting this loop.  */
-              dirp = nullptr;
+              dirp = NULL;
             }
           break;
         }
@@ -217,7 +217,7 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
         }
     }
 
-  if (dirp == nullptr || closedir (dirp) != 0)
+  if (dirp == NULL || closedir (dirp) != 0)
     {
       /* Note that this diagnostic serves for both readdir
          and closedir failures.  */
@@ -263,7 +263,7 @@ robust_getcwd (struct file_name *file_name)
   struct dev_ino dev_ino_buf;
   struct dev_ino *root_dev_ino = get_root_dev_ino (&dev_ino_buf);
 
-  if (root_dev_ino == nullptr)
+  if (root_dev_ino == NULL)
     error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
            quoteaf ("/"));
 
@@ -287,7 +287,7 @@ robust_getcwd (struct file_name *file_name)
 
 
 /* Return PWD from the environment if it is acceptable for 'pwd -L'
-   output, otherwise nullptr.  */
+   output, otherwise NULL.  */
 static char const *
 logical_getcwd (void)
 {
@@ -295,13 +295,13 @@ logical_getcwd (void)
 
   /* Textual validation first.  */
   if (!wd || wd[0] != '/')
-    return nullptr;
+    return NULL;
   char const *p = wd;
   while ((p = strstr (p, "/.")))
     {
       if (!p[2] || p[2] == '/'
           || (p[2] == '.' && (!p[3] || p[3] == '/')))
-        return nullptr;
+        return NULL;
       p++;
     }
 
@@ -310,7 +310,7 @@ logical_getcwd (void)
   struct stat st2;
   if (stat (wd, &st1) == 0 && stat (".", &st2) == 0 && psame_inode (&st1, &st2))
     return wd;
-  return nullptr;
+  return NULL;
 }
 
 
@@ -320,7 +320,7 @@ main (int argc, char **argv)
   /* POSIX requires a default of -L, but most scripts expect -P.
      Currently shells default to -L, while stand-alone
      pwd implementations default to -P.  */
-  bool logical = (getenv ("POSIXLY_CORRECT") != nullptr);
+  bool logical = (getenv ("POSIXLY_CORRECT") != NULL);
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -332,7 +332,7 @@ main (int argc, char **argv)
 
   while (true)
     {
-      int c = getopt_long (argc, argv, "LP", longopts, nullptr);
+      int c = getopt_long (argc, argv, "LP", longopts, NULL);
       if (c == -1)
         break;
       switch (c)
@@ -367,7 +367,7 @@ main (int argc, char **argv)
     }
 
   char *wd = xgetcwd ();
-  if (wd != nullptr)
+  if (wd != NULL)
     {
       puts (wd);
       free (wd);

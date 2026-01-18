@@ -50,11 +50,11 @@ static char const shortopts[] = "it:0::1::2::3::4::5::6::7::8::9::";
 
 static struct option const longopts[] =
 {
-  {"tabs", required_argument, nullptr, 't'},
-  {"initial", no_argument, nullptr, 'i'},
+  {"tabs", required_argument, NULL, 't'},
+  {"initial", no_argument, NULL, 'i'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -95,7 +95,7 @@ static void
 expand (void)
 {
   /* Input stream.  */
-  FILE *fp = next_file (nullptr);
+  FILE *fp = next_file (NULL);
 
   if (!fp)
     return;
@@ -181,7 +181,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
   convert_entire_line = true;
 
-  while ((c = getopt_long (argc, argv, shortopts, longopts, nullptr)) != -1)
+  while ((c = getopt_long (argc, argv, shortopts, longopts, NULL)) != -1)
     {
       switch (c)
         {
@@ -217,7 +217,7 @@ main (int argc, char **argv)
 
   finalize_tab_stops ();
 
-  set_file_list (optind < argc ? &argv[optind] : nullptr);
+  set_file_list (optind < argc ? &argv[optind] : NULL);
 
   expand ();
 

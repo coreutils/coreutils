@@ -327,7 +327,7 @@ copy_attr (char const *src_path, int src_fd,
   bool some_errors = (!all_errors && !x->reduce_diagnostics);
   int (*check) (char const *, struct error_context *)
     = (x->preserve_security_context || x->set_security_context
-       ? check_selinux_attr : nullptr);
+       ? check_selinux_attr : NULL);
 
 # if 4 < __GNUC__ + (8 <= __GNUC_MINOR__)
   /* Pacify gcc -Wsuggest-attribute=format through at least GCC 13.2.1.  */
@@ -341,7 +341,7 @@ copy_attr (char const *src_path, int src_fd,
            .quote = copy_attr_quote,
            .quote_free = copy_attr_free
          })
-       : nullptr);
+       : NULL);
 # if 4 < __GNUC__ + (8 <= __GNUC_MINOR__)
 #  pragma GCC diagnostic pop
 # endif
@@ -390,7 +390,7 @@ copy_dir (char const *src_name_in, char const *dst_name_in,
   bool ok = true;
 
   name_space = savedir (src_name_in, SAVEDIR_SORT_FASTREAD);
-  if (name_space == nullptr)
+  if (name_space == NULL)
     {
       /* This diagnostic is a bit vague because savedir can fail in
          several different ways.  */
@@ -408,8 +408,8 @@ copy_dir (char const *src_name_in, char const *dst_name_in,
   while (*namep != '\0')
     {
       bool local_copy_into_self;
-      char *src_name = file_name_concat (src_name_in, namep, nullptr);
-      char *dst_name = file_name_concat (dst_name_in, namep, nullptr);
+      char *src_name = file_name_concat (src_name_in, namep, NULL);
+      char *dst_name = file_name_concat (dst_name_in, namep, NULL);
       bool first_dir_created = *first_dir_created_per_command_line_arg;
       bool rename_succeeded;
 
@@ -1444,7 +1444,7 @@ dest_info_init (struct cp_options *x)
 {
   x->dest_info
     = hash_initialize (DEST_INFO_INITIAL_CAPACITY,
-                       nullptr,
+                       NULL,
                        triple_hash,
                        triple_compare,
                        triple_free);
@@ -1468,7 +1468,7 @@ src_info_init (struct cp_options *x)
   */
   x->src_info
     = hash_initialize (DEST_INFO_INITIAL_CAPACITY,
-                       nullptr,
+                       NULL,
                        triple_hash_no_name,
                        triple_compare,
                        triple_free);
@@ -1513,11 +1513,11 @@ emit_verbose (char const *format, char const *src, char const *dst,
   putchar ('\n');
 }
 
-/* A wrapper around "setfscreatecon (nullptr)" that exits upon failure.  */
+/* A wrapper around "setfscreatecon (NULL)" that exits upon failure.  */
 static void
 restore_default_fscreatecon_or_die (void)
 {
-  if (setfscreatecon (nullptr) != 0)
+  if (setfscreatecon (NULL) != 0)
     error (EXIT_FAILURE, errno,
            _("failed to restore the default file creation context"));
 }
@@ -1555,7 +1555,7 @@ create_hard_link (char const *src_name, int src_dirfd, char const *src_relname,
   if (0 < err)
     {
 
-      char *a_src_name = nullptr;
+      char *a_src_name = NULL;
       if (!src_name)
         src_name = a_src_name = subst_suffix (dst_name, dst_relname,
                                               src_relname);
@@ -1638,8 +1638,8 @@ copy_internal (char const *src_name, char const *dst_name,
   mode_t dst_mode_bits;
   mode_t omitted_permissions;
   bool restore_dst_mode = false;
-  char *earlier_file = nullptr;
-  char *dst_backup = nullptr;
+  char *earlier_file = NULL;
+  char *dst_backup = NULL;
   char const *drelname = *dst_relname ? dst_relname : ".";
   bool delayed_ok;
   bool copied_as_regular = false;
@@ -1815,7 +1815,7 @@ copy_internal (char const *src_name, char const *dst_name,
                     {
                       /* Note we currently replace DST_NAME unconditionally,
                          even if it was a newer separate file.  */
-                      if (! create_hard_link (nullptr, dst_dirfd, earlier_file,
+                      if (! create_hard_link (NULL, dst_dirfd, earlier_file,
                                               dst_name, dst_dirfd, dst_relname,
                                               true,
                                               x->verbose, dereference))
@@ -1998,7 +1998,7 @@ skip:
       struct stat *dst_lstat_sb
         = (have_dst_lstat ? &dst_sb
            : fstatat (dst_dirfd, drelname, &tmp_buf, AT_SYMLINK_NOFOLLOW) < 0
-           ? nullptr : &tmp_buf);
+           ? NULL : &tmp_buf);
 
       /* Never copy through a symlink we've just created.  */
       if (dst_lstat_sb
@@ -2050,7 +2050,7 @@ skip:
      We'll use that info to detect this problem: cp -R dir dir.  */
 
   if (rename_errno == 0 || x->exchange)
-    earlier_file = nullptr;
+    earlier_file = NULL;
   else if (x->recursive && S_ISDIR (src_mode))
     {
       if (command_line_arg)
@@ -2133,7 +2133,7 @@ skip:
         }
       else
         {
-          if (! create_hard_link (nullptr, dst_dirfd, earlier_file,
+          if (! create_hard_link (NULL, dst_dirfd, earlier_file,
                                   dst_name, dst_dirfd, dst_relname,
                                   true, x->verbose, dereference))
             goto un_backup;
@@ -2381,7 +2381,7 @@ skip:
               if (x->move_mode)
                 printf (_("created directory %s\n"), quoteaf (dst_name));
               else
-                emit_verbose ("%s -> %s", src_name, dst_name, nullptr);
+                emit_verbose ("%s -> %s", src_name, dst_name, NULL);
             }
         }
       else
@@ -2529,7 +2529,7 @@ skip:
     {
       char *src_link_val = areadlink_with_size (src_name, src_sb.st_size);
       dest_is_symlink = true;
-      if (src_link_val == nullptr)
+      if (src_link_val == NULL)
         {
           error (0, errno, _("cannot read symbolic link %s"),
                  quoteaf (src_name));
@@ -2755,7 +2755,7 @@ un_backup:
      remove the entry associating the source dev/ino with the
      destination file name, so we don't try to 'preserve' a link
      to a file we didn't create.  */
-  if (earlier_file == nullptr)
+  if (earlier_file == NULL)
     forget_created (src_sb.st_ino, src_sb.st_dev);
 
   if (dst_backup)
@@ -2816,7 +2816,7 @@ copy (char const *src_name, char const *dst_name,
 
   bool first_dir_created_per_command_line_arg = false;
   return copy_internal (src_name, dst_name, dst_dirfd, dst_relname,
-                        nonexistent_dst, nullptr, nullptr,
+                        nonexistent_dst, NULL, NULL,
                         options, true,
                         &first_dir_created_per_command_line_arg,
                         copy_into_self, rename_succeeded);

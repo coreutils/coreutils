@@ -90,7 +90,7 @@ static bool diagnose_surprises;
 static enum Verbosity verbosity = V_off;
 
 /* Pointer to the device and inode numbers of '/', when --recursive.
-   Otherwise nullptr.  */
+   Otherwise NULL.  */
 static struct dev_ino *root_dev_ino;
 
 /* For long options that have no equivalent short option, use a
@@ -105,19 +105,19 @@ enum
 
 static struct option const long_options[] =
 {
-  {"changes", no_argument, nullptr, 'c'},
-  {"dereference", no_argument, nullptr, DEREFERENCE_OPTION},
-  {"recursive", no_argument, nullptr, 'R'},
-  {"no-dereference", no_argument, nullptr, 'h'},
-  {"no-preserve-root", no_argument, nullptr, NO_PRESERVE_ROOT},
-  {"preserve-root", no_argument, nullptr, PRESERVE_ROOT},
-  {"quiet", no_argument, nullptr, 'f'},
-  {"reference", required_argument, nullptr, REFERENCE_FILE_OPTION},
-  {"silent", no_argument, nullptr, 'f'},
-  {"verbose", no_argument, nullptr, 'v'},
+  {"changes", no_argument, NULL, 'c'},
+  {"dereference", no_argument, NULL, DEREFERENCE_OPTION},
+  {"recursive", no_argument, NULL, 'R'},
+  {"no-dereference", no_argument, NULL, 'h'},
+  {"no-preserve-root", no_argument, NULL, NO_PRESERVE_ROOT},
+  {"preserve-root", no_argument, NULL, PRESERVE_ROOT},
+  {"quiet", no_argument, NULL, 'f'},
+  {"reference", required_argument, NULL, REFERENCE_FILE_OPTION},
+  {"silent", no_argument, NULL, 'f'},
+  {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 /* Return true if the chmodable permission bits of FILE changed.
@@ -305,7 +305,7 @@ process_file (FTS *fts, FTSENT *ent)
     {
       ch.old_mode = file_stats->st_mode;
       ch.new_mode = mode_adjust (ch.old_mode, S_ISDIR (ch.old_mode) != 0,
-                                 umask_value, change, nullptr);
+                                 umask_value, change, NULL);
       bool follow_symlink = !!dereference;
       if (dereference == -1) /* -H with/without -R, -P without -R.  */
         follow_symlink = ent->fts_level == FTS_ROOTLEVEL;
@@ -341,7 +341,7 @@ process_file (FTS *fts, FTSENT *ent)
     {
       mode_t naively_expected_mode =
         mode_adjust (ch.old_mode, S_ISDIR (ch.old_mode) != 0,
-                     0, change, nullptr);
+                     0, change, NULL);
       if (ch.new_mode & ~naively_expected_mode)
         {
           char new_perms[12];
@@ -372,14 +372,14 @@ process_files (char **files, int bit_flags)
 {
   bool ok = true;
 
-  FTS *fts = xfts_open (files, bit_flags, nullptr);
+  FTS *fts = xfts_open (files, bit_flags, NULL);
 
   while (true)
     {
       FTSENT *ent;
 
       ent = fts_read (fts);
-      if (ent == nullptr)
+      if (ent == NULL)
         {
           if (errno != 0)
             {
@@ -460,12 +460,12 @@ Each MODE is of the form '[ugoa]*([-+=]([rwxXst]*|[ugo]))+|[-+=][0-7]+'.\n\
 int
 main (int argc, char **argv)
 {
-  char *mode = nullptr;
+  char *mode = NULL;
   idx_t mode_len = 0;
   idx_t mode_alloc = 0;
   bool ok;
   bool preserve_root = false;
-  char const *reference_file = nullptr;
+  char const *reference_file = NULL;
   int c;
   int bit_flags = FTS_COMFOLLOW | FTS_PHYSICAL;
 
@@ -482,7 +482,7 @@ main (int argc, char **argv)
   while ((c = getopt_long (argc, argv,
                            ("HLPRcfhvr::w::x::X::s::t::u::g::o::a::,::+::=::"
                             "0::1::2::3::4::5::6::7::"),
-                           long_options, nullptr))
+                           long_options, NULL))
          != -1)
     {
       switch (c)
@@ -636,13 +636,13 @@ main (int argc, char **argv)
     {
       static struct dev_ino dev_ino_buf;
       root_dev_ino = get_root_dev_ino (&dev_ino_buf);
-      if (root_dev_ino == nullptr)
+      if (root_dev_ino == NULL)
         error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
                quoteaf ("/"));
     }
   else
     {
-      root_dev_ino = nullptr;
+      root_dev_ino = NULL;
     }
 
   bit_flags |= FTS_DEFER_STAT;

@@ -267,12 +267,12 @@ int main( int argc, char **argv )
   while( 1 )
   {
     int option_index = 0;
-    char *end = nullptr;
+    char *end = NULL;
     unsigned long outbits;
     static struct option long_options[] = {
       { "help",  no_argument, 0,  0  },
       { "tag",   no_argument, 0,  0  },
-      { nullptr, 0, nullptr, 0 }
+      { NULL, 0, NULL, 0 }
     };
 
     c = getopt_long( argc, argv, "a:l:", long_options, &option_index );
@@ -349,7 +349,7 @@ int main( int argc, char **argv )
 
   for( i = optind; i < argc; ++i )
   {
-    FILE *f = nullptr;
+    FILE *f = NULL;
     if( argv[i][0] == '-' && argv[i][1] == '\0' )
       f = stdin;
     else

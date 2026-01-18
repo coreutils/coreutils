@@ -55,12 +55,12 @@ enum
 
 static struct option const long_opts[] =
 {
-  {"groups", required_argument, nullptr, GROUPS},
-  {"userspec", required_argument, nullptr, USERSPEC},
-  {"skip-chdir", no_argument, nullptr, SKIP_CHDIR},
+  {"groups", required_argument, NULL, GROUPS},
+  {"userspec", required_argument, NULL, USERSPEC},
+  {"skip-chdir", no_argument, NULL, SKIP_CHDIR},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 #if ! HAVE_SETGROUPS
@@ -95,19 +95,19 @@ static int
 parse_additional_groups (char const *groups, GETGROUPS_T **pgids,
                          idx_t *pn_gids, bool show_errors)
 {
-  GETGROUPS_T *gids = nullptr;
+  GETGROUPS_T *gids = NULL;
   idx_t n_gids_allocated = 0;
   idx_t n_gids = 0;
   char *buffer = xstrdup (groups);
   int ret = 0;
 
   for (char const *tmp = strtok (buffer, ","); tmp;
-       tmp = strtok (nullptr, ","))
+       tmp = strtok (NULL, ","))
     {
       struct group *g;
       uintmax_t value;
 
-      if (xstrtoumax (tmp, nullptr, 10, &value, "") == LONGINT_OK
+      if (xstrtoumax (tmp, NULL, 10, &value, "") == LONGINT_OK
           && value <= MAXGID)
         {
           while (isspace (to_uchar (*tmp)))
@@ -116,20 +116,20 @@ parse_additional_groups (char const *groups, GETGROUPS_T **pgids,
             {
               /* Handle the case where the name is numeric.  */
               g = getgrnam (tmp);
-              if (g != nullptr)
+              if (g != NULL)
                 value = g->gr_gid;
             }
           /* Flag that we've got a group from the number.  */
-          g = (struct group *) (intptr_t) ! nullptr;
+          g = (struct group *) (intptr_t) ! NULL;
         }
       else
         {
           g = getgrnam (tmp);
-          if (g != nullptr)
+          if (g != NULL)
             value = g->gr_gid;
         }
 
-      if (g == nullptr)
+      if (g == NULL)
         {
           ret = -1;
 
@@ -219,15 +219,15 @@ main (int argc, char **argv)
   int c;
 
   /* Input user and groups spec.  */
-  char *userspec = nullptr;
-  char const *username = nullptr;
-  char const *groups = nullptr;
+  char *userspec = NULL;
+  char const *username = NULL;
+  char const *groups = NULL;
   bool skip_chdir = false;
 
   /* Parsed user and group IDs.  */
   uid_t uid = -1;
   gid_t gid = -1;
-  GETGROUPS_T *out_gids = nullptr;
+  GETGROUPS_T *out_gids = NULL;
   idx_t n_gids = 0;
 
   initialize_main (&argc, &argv);
@@ -239,7 +239,7 @@ main (int argc, char **argv)
   initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "+", long_opts, nullptr)) != -1)
+  while ((c = getopt_long (argc, argv, "+", long_opts, NULL)) != -1)
     {
       switch (c)
         {
@@ -297,7 +297,7 @@ main (int argc, char **argv)
           Within chroot lookup is the main justification for having
           the --user option supported by the chroot command itself.  */
       if (userspec)
-        ignore_value (parse_user_spec (userspec, &uid, &gid, nullptr, nullptr));
+        ignore_value (parse_user_spec (userspec, &uid, &gid, NULL, NULL));
 
       /* If no gid is supplied or looked up, do so now.
         Also lookup the username for use with getgroups.  */
@@ -336,11 +336,11 @@ main (int argc, char **argv)
     {
       /* No command.  Run an interactive shell.  */
       char *shell = getenv ("SHELL");
-      if (shell == nullptr)
+      if (shell == NULL)
         shell = bad_cast ("/bin/sh");
       argv[0] = shell;
       argv[1] = bad_cast ("-i");
-      argv[2] = nullptr;
+      argv[2] = NULL;
     }
   else
     {
@@ -354,7 +354,7 @@ main (int argc, char **argv)
     {
       bool warn;
       char const *err = parse_user_spec_warn (userspec, &uid, &gid,
-                                              nullptr, nullptr, &warn);
+                                              NULL, NULL, &warn);
       if (err)
         error (warn ? 0 : EXIT_CANCELED, 0, "%s", (err));
     }
@@ -379,7 +379,7 @@ main (int argc, char **argv)
     }
 
   GETGROUPS_T *gids = out_gids;
-  GETGROUPS_T *in_gids = nullptr;
+  GETGROUPS_T *in_gids = NULL;
   if (groups && *groups)
     {
       if (parse_additional_groups (groups, &in_gids, &n_gids, !n_gids) != 0)

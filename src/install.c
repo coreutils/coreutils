@@ -61,14 +61,14 @@ static bool use_default_selinux_context = true;
 # define endpwent() ((void) 0)
 #endif
 
-/* The user name that will own the files, or nullptr to make the owner
+/* The user name that will own the files, or NULL to make the owner
    the current user ID. */
 static char *owner_name;
 
 /* The user ID corresponding to 'owner_name'. */
 static uid_t owner_id;
 
-/* The group name that will own the files, or nullptr to make the group
+/* The group name that will own the files, or NULL to make the group
    the current group ID. */
 static char *group_name;
 
@@ -113,25 +113,25 @@ enum
 
 static struct option const long_options[] =
 {
-  {"backup", optional_argument, nullptr, 'b'},
-  {"compare", no_argument, nullptr, 'C'},
+  {"backup", optional_argument, NULL, 'b'},
+  {"compare", no_argument, NULL, 'C'},
   {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
-  {"debug", no_argument, nullptr, DEBUG_OPTION},
-  {"directory", no_argument, nullptr, 'd'},
-  {"group", required_argument, nullptr, 'g'},
-  {"mode", required_argument, nullptr, 'm'},
-  {"no-target-directory", no_argument, nullptr, 'T'},
-  {"owner", required_argument, nullptr, 'o'},
-  {"preserve-timestamps", no_argument, nullptr, 'p'},
-  {"preserve-context", no_argument, nullptr, PRESERVE_CONTEXT_OPTION},
-  {"strip", no_argument, nullptr, 's'},
-  {"strip-program", required_argument, nullptr, STRIP_PROGRAM_OPTION},
-  {"suffix", required_argument, nullptr, 'S'},
-  {"target-directory", required_argument, nullptr, 't'},
-  {"verbose", no_argument, nullptr, 'v'},
+  {"debug", no_argument, NULL, DEBUG_OPTION},
+  {"directory", no_argument, NULL, 'd'},
+  {"group", required_argument, NULL, 'g'},
+  {"mode", required_argument, NULL, 'm'},
+  {"no-target-directory", no_argument, NULL, 'T'},
+  {"owner", required_argument, NULL, 'o'},
+  {"preserve-timestamps", no_argument, NULL, 'p'},
+  {"preserve-context", no_argument, NULL, PRESERVE_CONTEXT_OPTION},
+  {"strip", no_argument, NULL, 's'},
+  {"strip-program", required_argument, NULL, STRIP_PROGRAM_OPTION},
+  {"suffix", required_argument, NULL, 'S'},
+  {"target-directory", required_argument, NULL, 't'},
+  {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 /* Compare content of opened files using file descriptors A_FD and B_FD. Return
@@ -213,11 +213,11 @@ need_copy (char const *src_name, char const *dest_name,
   /* compare SELinux context if preserving */
   if (selinux_enabled && x->preserve_security_context)
     {
-      char *file_scontext_raw = nullptr;
+      char *file_scontext_raw = NULL;
       if (getfilecon_raw (src_name, &file_scontext_raw) == -1)
         return true;
 
-      char *to_scontext_raw = nullptr;
+      char *to_scontext_raw = NULL;
       if (getfilecon_raw (dest_name, &to_scontext_raw) == -1)
         {
           freecon (file_scontext_raw);
@@ -290,11 +290,11 @@ cp_option_init (struct cp_options *x)
   x->update = UPDATE_ALL;
   x->require_preserve_context = false;  /* Not used by install currently.  */
   x->preserve_security_context = false; /* Whether to copy context from src.  */
-  x->set_security_context = nullptr; /* Whether to set sys default context.  */
+  x->set_security_context = NULL; /* Whether to set sys default context.  */
   x->preserve_xattr = false;
   x->verbose = false;
-  x->dest_info = nullptr;
-  x->src_info = nullptr;
+  x->dest_info = NULL;
+  x->src_info = NULL;
 }
 
 static struct selabel_handle *
@@ -305,7 +305,7 @@ get_labeling_handle (void)
   if (!initialized)
     {
       initialized = true;
-      hnd = selabel_open (SELABEL_CTX_FILE, nullptr, 0);
+      hnd = selabel_open (SELABEL_CTX_FILE, NULL, 0);
       if (!hnd)
         error (0, errno, _("warning: security labeling handle failed"));
     }
@@ -333,7 +333,7 @@ setdefaultfilecon (char const *file)
   if (!hnd)
     return;
 
-  char *scontext_raw = nullptr;
+  char *scontext_raw = NULL;
   if (selabel_lookup_raw (hnd, &scontext_raw, file, st.st_mode) != 0)
     {
       if (errno != ENOENT && ! ignorable_ctx_err (errno))
@@ -424,7 +424,7 @@ copy_file (char const *from, char const *to,
      However, since !x->recursive, the call to "copy" will fail if FROM
      is a directory.  */
 
-  return copy (from, to, to_dirfd, to_relname, 0, x, &copy_into_self, nullptr);
+  return copy (from, to, to_dirfd, to_relname, 0, x, &copy_into_self, NULL);
 }
 
 /* Set the attributes of file or directory NAME aka DIRFD+RELNAME.
@@ -488,7 +488,7 @@ static bool
 strip (char const *name)
 {
   posix_spawnattr_t attr;
-  posix_spawnattr_t *attrp = nullptr;
+  posix_spawnattr_t *attrp = NULL;
 
   /* Try to use vfork for systems where it matters.  */
   if (posix_spawnattr_init (&attr) == 0)
@@ -500,15 +500,15 @@ strip (char const *name)
     }
 
   /* Construct the arguments to 'strip'.  */
-  char *concat_name = nullptr;
+  char *concat_name = NULL;
   char const *safe_name = name;
   if (name && *name == '-')
-    safe_name = concat_name = file_name_concat (".", name, nullptr);
-  char const *const argv[] = { strip_program, safe_name, nullptr };
+    safe_name = concat_name = file_name_concat (".", name, NULL);
+  char const *const argv[] = { strip_program, safe_name, NULL };
 
   /* Run 'strip'.  */
   pid_t pid;
-  int result = posix_spawnp (&pid, strip_program, nullptr, attrp,
+  int result = posix_spawnp (&pid, strip_program, NULL, attrp,
                              (char * const *) argv, environ);
 
   bool ok = false;
@@ -547,10 +547,10 @@ get_ids (void)
   if (owner_name)
     {
       struct passwd *pw = getpwnam (owner_name);
-      if (pw == nullptr)
+      if (pw == NULL)
         {
           uintmax_t tmp;
-          if (xstrtoumax (owner_name, nullptr, 0, &tmp, "") != LONGINT_OK
+          if (xstrtoumax (owner_name, NULL, 0, &tmp, "") != LONGINT_OK
               || ckd_add (&owner_id, tmp, 0))
             error (EXIT_FAILURE, 0, _("invalid user %s"),
                    quoteaf (owner_name));
@@ -565,10 +565,10 @@ get_ids (void)
   if (group_name)
     {
       struct group *gr = getgrnam (group_name);
-      if (gr == nullptr)
+      if (gr == NULL)
         {
           uintmax_t tmp;
-          if (xstrtoumax (group_name, nullptr, 0, &tmp, "") != LONGINT_OK
+          if (xstrtoumax (group_name, NULL, 0, &tmp, "") != LONGINT_OK
               || ckd_add (&group_id, tmp, 0))
             error (EXIT_FAILURE, 0, _("invalid group %s"),
                    quoteaf (group_name));
@@ -788,16 +788,16 @@ install_file_in_dir (char const *from, char const *to_dir,
 int
 main (int argc, char **argv)
 {
-  char const *specified_mode = nullptr;
+  char const *specified_mode = NULL;
   bool make_backups = false;
-  char const *backup_suffix = nullptr;
-  char *version_control_string = nullptr;
+  char const *backup_suffix = NULL;
+  char *version_control_string = NULL;
   bool mkdir_and_install = false;
   struct cp_options x;
-  char const *target_directory = nullptr;
+  char const *target_directory = NULL;
   bool no_target_directory = false;
   bool strip_program_specified = false;
-  char const *scontext = nullptr;
+  char const *scontext = NULL;
   /* set iff kernel has extra selinux system calls */
   selinux_enabled = (0 < is_selinux_enabled ());
 
@@ -811,15 +811,15 @@ main (int argc, char **argv)
 
   cp_option_init (&x);
 
-  owner_name = nullptr;
-  group_name = nullptr;
+  owner_name = NULL;
+  group_name = NULL;
   strip_files = false;
   dir_arg = false;
   umask (0);
 
   int optc;
   while ((optc = getopt_long (argc, argv, "bcCsDdg:m:o:pt:TvS:Z", long_options,
-                              nullptr))
+                              NULL))
          != -1)
     {
       switch (optc)
@@ -1000,7 +1000,7 @@ main (int argc, char **argv)
       struct mode_change *change = mode_compile (specified_mode);
       if (!change)
         error (EXIT_FAILURE, 0, _("invalid mode %s"), quote (specified_mode));
-      mode = mode_adjust (0, false, 0, change, nullptr);
+      mode = mode_adjust (0, false, 0, change, NULL);
       dir_mode = mode_adjust (0, true, 0, change, &dir_mode_bits);
       free (change);
     }

@@ -337,7 +337,7 @@ static char const *const algorithm_args[] =
 {
   "bsd", "sysv", "crc", "crc32b", "md5", "sha1",
   "sha224", "sha256", "sha384", "sha512", /* Legacy naming */
-  "sha2", "sha3", "blake2b", "sm3", nullptr
+  "sha2", "sha3", "blake2b", "sm3", NULL
 };
 static enum Algorithm const algorithm_types[] =
 {
@@ -351,7 +351,7 @@ static char const *const algorithm_tags[] =
 {
   "BSD", "SYSV", "CRC", "CRC32B", "MD5", "SHA1",
   "SHA224", "SHA256", "SHA384", "SHA512",
-  "SHA2", "SHA3", "BLAKE2b", "SM3", nullptr
+  "SHA2", "SHA3", "BLAKE2b", "SM3", NULL
 };
 static int const algorithm_bits[] =
 {
@@ -422,57 +422,57 @@ enum
 #if HASH_ALGO_CKSUM
 static struct option const legacy_long_options[] =
 {
-  { "check", no_argument, nullptr, 'c' },
-  { "ignore-missing", no_argument, nullptr, IGNORE_MISSING_OPTION },
-  { "quiet", no_argument, nullptr, QUIET_OPTION },
-  { "status", no_argument, nullptr, STATUS_OPTION },
-  { "warn", no_argument, nullptr, 'w' },
-  { "strict", no_argument, nullptr, STRICT_OPTION },
-  { "tag", no_argument, nullptr, TAG_OPTION },
-  { "zero", no_argument, nullptr, 'z' },
+  { "check", no_argument, NULL, 'c' },
+  { "ignore-missing", no_argument, NULL, IGNORE_MISSING_OPTION },
+  { "quiet", no_argument, NULL, QUIET_OPTION },
+  { "status", no_argument, NULL, STATUS_OPTION },
+  { "warn", no_argument, NULL, 'w' },
+  { "strict", no_argument, NULL, STRICT_OPTION },
+  { "tag", no_argument, NULL, TAG_OPTION },
+  { "zero", no_argument, NULL, 'z' },
 
-  { "binary", no_argument, nullptr, 'b' }, /* Deprecated.  */
-  { "text", no_argument, nullptr, 't' }, /* Deprecated.  */
+  { "binary", no_argument, NULL, 'b' }, /* Deprecated.  */
+  { "text", no_argument, NULL, 't' }, /* Deprecated.  */
 
   { GETOPT_HELP_OPTION_DECL },
   { GETOPT_VERSION_OPTION_DECL },
-  { nullptr, 0, nullptr, 0 }
+  { NULL, 0, NULL, 0 }
 };
 #endif
 
 static struct option const long_options[] =
 {
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
-  { "length", required_argument, nullptr, 'l'},
+  { "length", required_argument, NULL, 'l'},
 #endif
 
 #if !HASH_ALGO_SUM
-  { "check", no_argument, nullptr, 'c' },
-  { "ignore-missing", no_argument, nullptr, IGNORE_MISSING_OPTION},
-  { "quiet", no_argument, nullptr, QUIET_OPTION },
-  { "status", no_argument, nullptr, STATUS_OPTION },
-  { "warn", no_argument, nullptr, 'w' },
-  { "strict", no_argument, nullptr, STRICT_OPTION },
-  { "tag", no_argument, nullptr, TAG_OPTION },
-  { "zero", no_argument, nullptr, 'z' },
+  { "check", no_argument, NULL, 'c' },
+  { "ignore-missing", no_argument, NULL, IGNORE_MISSING_OPTION},
+  { "quiet", no_argument, NULL, QUIET_OPTION },
+  { "status", no_argument, NULL, STATUS_OPTION },
+  { "warn", no_argument, NULL, 'w' },
+  { "strict", no_argument, NULL, STRICT_OPTION },
+  { "tag", no_argument, NULL, TAG_OPTION },
+  { "zero", no_argument, NULL, 'z' },
 
 # if HASH_ALGO_CKSUM
-  { "algorithm", required_argument, nullptr, 'a'},
-  { "base64", no_argument, nullptr, BASE64_OPTION },
-  { "debug", no_argument, nullptr, DEBUG_PROGRAM_OPTION},
-  { "raw", no_argument, nullptr, RAW_OPTION},
-  { "untagged", no_argument, nullptr, UNTAG_OPTION },
+  { "algorithm", required_argument, NULL, 'a'},
+  { "base64", no_argument, NULL, BASE64_OPTION },
+  { "debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
+  { "raw", no_argument, NULL, RAW_OPTION},
+  { "untagged", no_argument, NULL, UNTAG_OPTION },
 # endif
-  { "binary", no_argument, nullptr, 'b' }, /* Deprecated.  */
-  { "text", no_argument, nullptr, 't' }, /* Deprecated.  */
+  { "binary", no_argument, NULL, 'b' }, /* Deprecated.  */
+  { "text", no_argument, NULL, 't' }, /* Deprecated.  */
 
 #else
-  {"sysv", no_argument, nullptr, 's'},  /* Not in cksum.  */
+  {"sysv", no_argument, NULL, 's'},  /* Not in cksum.  */
 #endif
 
   { GETOPT_HELP_OPTION_DECL },
   { GETOPT_VERSION_OPTION_DECL },
-  { nullptr, 0, nullptr, 0 }
+  { NULL, 0, NULL, 0 }
 };
 
 void
@@ -686,7 +686,7 @@ problematic_chars (char const *s)
    and each "\\\\" with a single backslash, NUL-terminate it and return S.
    If S is not a valid escaped file name, i.e., if it ends with an odd number
    of backslashes or if it contains a backslash followed by anything other
-   than "n" or another backslash, return nullptr.  */
+   than "n" or another backslash, return NULL.  */
 
 static char *
 filename_unescape (char *s, size_t s_len)
@@ -701,7 +701,7 @@ filename_unescape (char *s, size_t s_len)
           if (i == s_len - 1)
             {
               /* File name ends with an unescaped backslash: invalid.  */
-              return nullptr;
+              return NULL;
             }
           ++i;
           switch (s[i])
@@ -717,13 +717,13 @@ filename_unescape (char *s, size_t s_len)
               break;
             default:
               /* Only '\', 'n' or 'r' may follow a backslash.  */
-              return nullptr;
+              return NULL;
             }
           break;
 
         case '\0':
           /* The file name may not contain a NUL.  */
-          return nullptr;
+          return NULL;
 
         default:
           *dst++ = s[i];
@@ -799,7 +799,7 @@ bsd_split_3 (char *s, size_t s_len,
 
   *file_name = s;
 
-  if (escaped_filename && filename_unescape (s, i) == nullptr)
+  if (escaped_filename && filename_unescape (s, i) == NULL)
     return false;
 
   s[i++] = '\0';
@@ -930,7 +930,7 @@ split_3 (char *s, size_t s_len,
           ++i;
           uintmax_t length;
           char *siend;
-          if (xstrtoumax (s + i, &siend, 0, &length, nullptr) != LONGINT_OK)
+          if (xstrtoumax (s + i, &siend, 0, &length, NULL) != LONGINT_OK)
             return false;
 # if HASH_ALGO_CKSUM
           else if (cksum_algorithm == sha2 || cksum_algorithm == sha3)
@@ -1084,7 +1084,7 @@ split_3 (char *s, size_t s_len,
   *file_name = &s[i];
 
   if (escaped_filename)
-    return filename_unescape (&s[i], s_len - i) != nullptr;
+    return filename_unescape (&s[i], s_len - i) != NULL;
 
   return true;
 }
@@ -1163,7 +1163,7 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
   else
     {
       fp = fopen (filename, O_BINARY ? (*binary ? "rb" : "rt") : "r");
-      if (fp == nullptr)
+      if (fp == NULL)
         {
           if (ignore_missing && errno == ENOENT)
             {
@@ -1344,7 +1344,7 @@ digest_check (char const *checkfile_name)
   else
     {
       checkfile_stream = fopen (checkfile_name, "r");
-      if (checkfile_stream == nullptr)
+      if (checkfile_stream == NULL)
         {
           error (0, errno, "%s", quotef (checkfile_name));
           return false;
@@ -1352,7 +1352,7 @@ digest_check (char const *checkfile_name)
     }
 
   line_number = 0;
-  line = nullptr;
+  line = NULL;
   line_chars_allocated = 0;
   do
     {
@@ -1561,7 +1561,7 @@ main (int argc, char **argv)
 
   /* Line buffer stdout to ensure lines are written atomically and immediately
      so that processes running in parallel do not intersperse their output.  */
-  setvbuf (stdout, nullptr, _IOLBF, 0);
+  setvbuf (stdout, NULL, _IOLBF, 0);
 
 #if HASH_ALGO_SUM
   char const *short_opts = "rs";
@@ -1575,7 +1575,7 @@ main (int argc, char **argv)
   char const *short_opts = "bctwz";
 #endif
 
-  while ((opt = getopt_long (argc, argv, short_opts, long_opts, nullptr))
+  while ((opt = getopt_long (argc, argv, short_opts, long_opts, NULL))
          != -1)
     switch (opt)
       {

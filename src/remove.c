@@ -490,7 +490,7 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
           if (x->preserve_all_root)
             {
               bool failed = false;
-              char *parent = file_name_concat (ent->fts_accpath, "..", nullptr);
+              char *parent = file_name_concat (ent->fts_accpath, "..", NULL);
               struct stat statbuf;
 
               if (!parent || lstat (parent, &statbuf))
@@ -611,14 +611,14 @@ rm (char *const *file, struct rm_options const *x)
       if (x->one_file_system)
         bit_flags |= FTS_XDEV;
 
-      FTS *fts = xfts_open (file, bit_flags, nullptr);
+      FTS *fts = xfts_open (file, bit_flags, NULL);
 
       while (true)
         {
           FTSENT *ent;
 
           ent = fts_read (fts);
-          if (ent == nullptr)
+          if (ent == NULL)
             {
               if (errno != 0)
                 {

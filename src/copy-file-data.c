@@ -131,7 +131,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, idx_t buf_size,
            (SSIZE_MAX, SIZE_MAX) truncated to a value that is
            surely aligned well.  */
         ssize_t copy_max = MIN (SSIZE_MAX, SIZE_MAX) >> 30 << 30;
-        ssize_t n_copied = copy_file_range (src_fd, nullptr, dest_fd, nullptr,
+        ssize_t n_copied = copy_file_range (src_fd, NULL, dest_fd, NULL,
                                             MIN (max_n_read, copy_max), 0);
         if (n_copied == 0)
           {
@@ -148,7 +148,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, idx_t buf_size,
           {
             /* Don’t treat EFBIG as a reportable error from copy_file_range.
                If the input is at EOF and the output position is 2**63 - 1,
-               copy_file_range (ifd, nullptr, ofd, nullptr, 2146435072, 0)
+               copy_file_range (ifd, NULL, ofd, NULL, 2146435072, 0)
                incorrectly fails with EFBIG.  Problem observed on Ubuntu 25.10
                x86-64 with Linux kernel 6.17.0-8-generic #8-Ubuntu.  */
             if (errno == EFBIG)
@@ -282,7 +282,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, idx_t buf_size,
 static bool
 write_zeros (int fd, off_t n_bytes, char **abuf, idx_t buf_size)
 {
-  char *zeros = nullptr;
+  char *zeros = NULL;
   while (n_bytes)
     {
       idx_t n = MIN (buf_size, n_bytes);
@@ -424,7 +424,7 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, idx_t buf_size,
         = sparse_copy (src_fd, dest_fd, abuf, buf_size,
                        allow_reflink, src_name, dst_name,
                        ext_len,
-                       sparse_mode == SPARSE_ALWAYS ? hole_size : nullptr,
+                       sparse_mode == SPARSE_ALWAYS ? hole_size : NULL,
                        debug);
       if (n_read < 0)
         return -1;
@@ -598,7 +598,7 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
       buf_size -= buf_size % blcm;
     }
 
-  char *buf = nullptr;
+  char *buf = NULL;
   intmax_t result;
   off_t hole_size = 0;
 
@@ -618,7 +618,7 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
     result = sparse_copy (ifd, ofd, &buf, buf_size,
                           x->reflink_mode != REFLINK_NEVER,
                           iname, oname, ibytes,
-                          make_holes ? &hole_size : nullptr,
+                          make_holes ? &hole_size : NULL,
                           debug);
 
   if (0 <= result && 0 < hole_size)

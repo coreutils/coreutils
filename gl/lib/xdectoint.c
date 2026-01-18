@@ -44,7 +44,7 @@ __xnumtoint (char const *n_str, int base, __xdectoint_t min, __xdectoint_t max,
              int flags)
 {
   __xdectoint_t tnum, r;
-  strtol_error s_err = __xstrtol (n_str, nullptr, base, &tnum, suffixes);
+  strtol_error s_err = __xstrtol (n_str, NULL, base, &tnum, suffixes);
 
   /* Errno value to report if there is an overflow.  */
   int overflow_errno;

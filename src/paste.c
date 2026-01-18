@@ -73,12 +73,12 @@ static unsigned char line_delim = '\n';
 
 static struct option const longopts[] =
 {
-  {"serial", no_argument, nullptr, 's'},
-  {"delimiters", required_argument, nullptr, 'd'},
-  {"zero-terminated", no_argument, nullptr, 'z'},
+  {"serial", no_argument, NULL, 's'},
+  {"delimiters", required_argument, NULL, 'd'},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 /* Set globals delims, delim_lens, and num_delims.
@@ -215,7 +215,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
       else
         {
           fileptr[files_open] = fopen (fnamptr[files_open], "r");
-          if (fileptr[files_open] == nullptr)
+          if (fileptr[files_open] == NULL)
             error (EXIT_FAILURE, errno, "%s", quotef (fnamptr[files_open]));
           else if (fileno (fileptr[files_open]) == STDIN_FILENO)
             opened_stdin = true;
@@ -284,7 +284,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
                       ok = false;
                     }
 
-                  fileptr[i] = nullptr;
+                  fileptr[i] = NULL;
                   files_open--;
                 }
 
@@ -379,7 +379,7 @@ paste_serial (size_t nfiles, char **fnamptr)
       else
         {
           fileptr = fopen (*fnamptr, "r");
-          if (fileptr == nullptr)
+          if (fileptr == NULL)
             {
               error (0, errno, "%s", quotef (*fnamptr));
               ok = false;
@@ -504,7 +504,7 @@ main (int argc, char **argv)
   have_read_stdin = false;
   serial_merge = false;
 
-  while ((optc = getopt_long (argc, argv, "d:sz", longopts, nullptr)) != -1)
+  while ((optc = getopt_long (argc, argv, "d:sz", longopts, NULL)) != -1)
     {
       switch (optc)
         {

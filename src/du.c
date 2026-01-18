@@ -170,10 +170,10 @@ enum time_type
 static enum time_type time_type = time_mtime;
 
 /* User specified date / time style */
-static char const *time_style = nullptr;
+static char const *time_style = NULL;
 
 /* Format used to display date / time. Controlled by --time-style */
-static char const *time_format = nullptr;
+static char const *time_format = NULL;
 
 /* The local time zone rules, as per the TZ environment variable.  */
 static timezone_t localtz;
@@ -208,40 +208,40 @@ enum
 
 static struct option const long_options[] =
 {
-  {"all", no_argument, nullptr, 'a'},
-  {"apparent-size", no_argument, nullptr, 'A'},
-  {"block-size", required_argument, nullptr, 'B'},
-  {"bytes", no_argument, nullptr, 'b'},
-  {"count-links", no_argument, nullptr, 'l'},
+  {"all", no_argument, NULL, 'a'},
+  {"apparent-size", no_argument, NULL, 'A'},
+  {"block-size", required_argument, NULL, 'B'},
+  {"bytes", no_argument, NULL, 'b'},
+  {"count-links", no_argument, NULL, 'l'},
 #if GNULIB_FTS_DEBUG
-  {"-debug", no_argument, nullptr, FTS_DEBUG},
+  {"-debug", no_argument, NULL, FTS_DEBUG},
 #endif
-  {"dereference", no_argument, nullptr, 'L'},
-  {"dereference-args", no_argument, nullptr, 'D'},
-  {"exclude", required_argument, nullptr, EXCLUDE_OPTION},
-  {"exclude-from", required_argument, nullptr, 'X'},
-  {"files0-from", required_argument, nullptr, FILES0_FROM_OPTION},
-  {"human-readable", no_argument, nullptr, 'h'},
-  {"inodes", no_argument, nullptr, INODES_OPTION},
-  {"si", no_argument, nullptr, HUMAN_SI_OPTION},
-  {"max-depth", required_argument, nullptr, 'd'},
-  {"null", no_argument, nullptr, '0'},
-  {"no-dereference", no_argument, nullptr, 'P'},
-  {"one-file-system", no_argument, nullptr, 'x'},
-  {"separate-dirs", no_argument, nullptr, 'S'},
-  {"summarize", no_argument, nullptr, 's'},
-  {"total", no_argument, nullptr, 'c'},
-  {"threshold", required_argument, nullptr, 't'},
-  {"time", optional_argument, nullptr, TIME_OPTION},
-  {"time-style", required_argument, nullptr, TIME_STYLE_OPTION},
+  {"dereference", no_argument, NULL, 'L'},
+  {"dereference-args", no_argument, NULL, 'D'},
+  {"exclude", required_argument, NULL, EXCLUDE_OPTION},
+  {"exclude-from", required_argument, NULL, 'X'},
+  {"files0-from", required_argument, NULL, FILES0_FROM_OPTION},
+  {"human-readable", no_argument, NULL, 'h'},
+  {"inodes", no_argument, NULL, INODES_OPTION},
+  {"si", no_argument, NULL, HUMAN_SI_OPTION},
+  {"max-depth", required_argument, NULL, 'd'},
+  {"null", no_argument, NULL, '0'},
+  {"no-dereference", no_argument, NULL, 'P'},
+  {"one-file-system", no_argument, NULL, 'x'},
+  {"separate-dirs", no_argument, NULL, 'S'},
+  {"summarize", no_argument, NULL, 's'},
+  {"total", no_argument, NULL, 'c'},
+  {"threshold", required_argument, NULL, 't'},
+  {"time", optional_argument, NULL, TIME_OPTION},
+  {"time-style", required_argument, NULL, TIME_STYLE_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 static char const *const time_args[] =
 {
-  "atime", "access", "use", "ctime", "status", nullptr
+  "atime", "access", "use", "ctime", "status", NULL
 };
 static enum time_type const time_types[] =
 {
@@ -261,7 +261,7 @@ enum time_style
 
 static char const *const time_style_args[] =
 {
-  "full-iso", "long-iso", "iso", nullptr
+  "full-iso", "long-iso", "iso", NULL
 };
 static enum time_style const time_style_types[] =
 {
@@ -668,14 +668,14 @@ du_files (char **files, int bit_flags)
 
   if (*files)
     {
-      FTS *fts = xfts_open (files, bit_flags, nullptr);
+      FTS *fts = xfts_open (files, bit_flags, NULL);
 
       while (true)
         {
           FTSENT *ent;
 
           ent = fts_read (fts);
-          if (ent == nullptr)
+          if (ent == NULL)
             {
               if (errno != 0)
                 {
@@ -715,7 +715,7 @@ main (int argc, char **argv)
   char *cwd_only[2];
   bool max_depth_specified = false;
   bool ok = true;
-  char *files_from = nullptr;
+  char *files_from = NULL;
 
   /* Bit flags that control how fts works.  */
   int bit_flags = FTS_NOSTAT;
@@ -728,7 +728,7 @@ main (int argc, char **argv)
   bool opt_summarize_only = false;
 
   cwd_only[0] = bad_cast (".");
-  cwd_only[1] = nullptr;
+  cwd_only[1] = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -799,7 +799,7 @@ main (int argc, char **argv)
         case 'd':		/* --max-depth=N */
           {
             intmax_t tmp;
-            if (xstrtoimax (optarg, nullptr, 0, &tmp, "") == LONGINT_OK
+            if (xstrtoimax (optarg, NULL, 0, &tmp, "") == LONGINT_OK
                 && tmp <= IDX_MAX)
               {
                 max_depth_specified = true;
@@ -830,7 +830,7 @@ main (int argc, char **argv)
         case 't':
           {
             enum strtol_error e;
-            e = xstrtoimax (optarg, nullptr, 0, &opt_threshold,
+            e = xstrtoimax (optarg, NULL, 0, &opt_threshold,
                             "kKmMGTPEZYRQ0");
             if (e != LONGINT_OK)
               xstrtol_fatal (e, oi, c, long_options, optarg);
@@ -1050,7 +1050,7 @@ main (int argc, char **argv)
     bit_flags |= FTS_TIGHT_CYCLE_CHECK;
 
   bit_flags |= symlink_deref_bits;
-  static char *temp_argv[] = { nullptr, nullptr };
+  static char *temp_argv[] = { NULL, NULL };
 
   while (true)
     {
@@ -1094,7 +1094,7 @@ main (int argc, char **argv)
              among many, knowing the record number may help.
              FIXME: currently print the record number only with
              --files0-from=FILE.  Maybe do it for argv, too?  */
-          if (files_from == nullptr)
+          if (files_from == NULL)
             error (0, 0, "%s", _("invalid zero-length file name"));
           else
             {

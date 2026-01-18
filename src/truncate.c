@@ -47,13 +47,13 @@ static char const *ref_file;
 
 static struct option const longopts[] =
 {
-  {"no-create", no_argument, nullptr, 'c'},
-  {"io-blocks", no_argument, nullptr, 'o'},
-  {"reference", required_argument, nullptr, 'r'},
-  {"size", required_argument, nullptr, 's'},
+  {"no-create", no_argument, NULL, 'c'},
+  {"io-blocks", no_argument, NULL, 'o'},
+  {"reference", required_argument, NULL, 'r'},
+  {"size", required_argument, NULL, 's'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 typedef enum
@@ -212,7 +212,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "cor:s:", longopts, nullptr)) != -1)
+  while ((c = getopt_long (argc, argv, "cor:s:", longopts, NULL)) != -1)
     {
       switch (c)
         {

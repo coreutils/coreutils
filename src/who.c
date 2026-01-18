@@ -152,24 +152,24 @@ enum
 
 static struct option const longopts[] =
 {
-  {"all", no_argument, nullptr, 'a'},
-  {"boot", no_argument, nullptr, 'b'},
-  {"count", no_argument, nullptr, 'q'},
-  {"dead", no_argument, nullptr, 'd'},
-  {"heading", no_argument, nullptr, 'H'},
-  {"login", no_argument, nullptr, 'l'},
-  {"lookup", no_argument, nullptr, LOOKUP_OPTION},
-  {"message", no_argument, nullptr, 'T'},
-  {"mesg", no_argument, nullptr, 'T'},
-  {"process", no_argument, nullptr, 'p'},
-  {"runlevel", no_argument, nullptr, 'r'},
-  {"short", no_argument, nullptr, 's'},
-  {"time", no_argument, nullptr, 't'},
-  {"users", no_argument, nullptr, 'u'},
-  {"writable", no_argument, nullptr, 'T'},
+  {"all", no_argument, NULL, 'a'},
+  {"boot", no_argument, NULL, 'b'},
+  {"count", no_argument, NULL, 'q'},
+  {"dead", no_argument, NULL, 'd'},
+  {"heading", no_argument, NULL, 'H'},
+  {"login", no_argument, NULL, 'l'},
+  {"lookup", no_argument, NULL, LOOKUP_OPTION},
+  {"message", no_argument, NULL, 'T'},
+  {"mesg", no_argument, NULL, 'T'},
+  {"process", no_argument, NULL, 'p'},
+  {"runlevel", no_argument, NULL, 'r'},
+  {"short", no_argument, NULL, 's'},
+  {"time", no_argument, NULL, 't'},
+  {"users", no_argument, NULL, 'u'},
+  {"writable", no_argument, NULL, 'T'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 /* Return a string representing the time between WHEN and now.
@@ -363,8 +363,8 @@ print_user (STRUCT_UTMP const *utmp_ent, time_t boottime)
 #if HAVE_STRUCT_XTMP_UT_HOST
   if (utmp_ent->ut_host[0])
     {
-      char *host = nullptr;
-      char *display = nullptr;
+      char *host = NULL;
+      char *display = NULL;
       char *ut_host = utmp_ent->ut_host;
 
       /* Look for an X display.  */
@@ -387,7 +387,7 @@ print_user (STRUCT_UTMP const *utmp_ent, time_t boottime)
           if (hostlen < needed)
             {
               free (hoststr);
-              hoststr = xpalloc (nullptr, &hostlen, needed - hostlen, -1, 1);
+              hoststr = xpalloc (NULL, &hostlen, needed - hostlen, -1, 1);
             }
           char *p = hoststr;
           *p++ = '(';
@@ -401,7 +401,7 @@ print_user (STRUCT_UTMP const *utmp_ent, time_t boottime)
           if (hostlen < needed)
             {
               free (hoststr);
-              hoststr = xpalloc (nullptr, &hostlen, needed - hostlen, -1, 1);
+              hoststr = xpalloc (NULL, &hostlen, needed - hostlen, -1, 1);
             }
           char *p = hoststr;
           *p++ = '(';
@@ -559,7 +559,7 @@ print_heading (void)
 static void
 scan_entries (idx_t n, STRUCT_UTMP const *utmp_buf)
 {
-  char *ttyname_b IF_LINT ( = nullptr);
+  char *ttyname_b IF_LINT ( = NULL);
   time_t boottime = TYPE_MINIMUM (time_t);
 
   if (include_heading)
@@ -689,7 +689,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "abdlmpqrstuwHT", longopts, nullptr))
+  while ((optc = getopt_long (argc, argv, "abdlmpqrstuwHT", longopts, NULL))
          != -1)
     {
       switch (optc)

@@ -167,21 +167,21 @@ randread_free_body (struct randread_source *s)
    default handler.  Unless a non-default handler is used, NAME's
    lifetime should be at least that of the returned value.
 
-   Return nullptr (setting errno) on failure.  */
+   Return NULL (setting errno) on failure.  */
 
 struct randread_source *
 randread_new (char const *name, size_t bytes_bound)
 {
   if (bytes_bound == 0)
-    return simple_new (nullptr, nullptr);
+    return simple_new (NULL, NULL);
   else
     {
-      FILE *source = nullptr;
+      FILE *source = NULL;
       struct randread_source *s;
 
       if (name)
         if (! (source = fopen_safer (name, "rb")))
-          return nullptr;
+          return NULL;
 
       s = simple_new (source, name);
 
@@ -206,7 +206,7 @@ randread_new (char const *name, size_t bytes_bound)
               int e = errno;
               randread_free_body (s);
               errno = e;
-              return nullptr;
+              return NULL;
             }
           isaac_seed (&s->buf.isaac.state);
         }

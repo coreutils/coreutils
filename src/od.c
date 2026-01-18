@@ -249,7 +249,7 @@ static char const *const *file_list;
 
 /* Initializer for file_list if no file-arguments
    were specified on the command line.  */
-static char const *const default_file_list[] = {"-", nullptr};
+static char const *const default_file_list[] = {"-", NULL};
 
 /* The input stream associated with the current file.  */
 static FILE *in_stream;
@@ -323,7 +323,7 @@ enum endian_type
 
 static char const *const endian_args[] =
 {
-  "little", "big", nullptr
+  "little", "big", NULL
 };
 
 static enum endian_type const endian_types[] =
@@ -333,19 +333,19 @@ static enum endian_type const endian_types[] =
 
 static struct option const long_options[] =
 {
-  {"skip-bytes", required_argument, nullptr, 'j'},
-  {"address-radix", required_argument, nullptr, 'A'},
-  {"read-bytes", required_argument, nullptr, 'N'},
-  {"format", required_argument, nullptr, 't'},
-  {"output-duplicates", no_argument, nullptr, 'v'},
-  {"strings", optional_argument, nullptr, 'S'},
-  {"traditional", no_argument, nullptr, TRADITIONAL_OPTION},
-  {"width", optional_argument, nullptr, 'w'},
-  {"endian", required_argument, nullptr, ENDIAN_OPTION },
+  {"skip-bytes", required_argument, NULL, 'j'},
+  {"address-radix", required_argument, NULL, 'A'},
+  {"read-bytes", required_argument, NULL, 'N'},
+  {"format", required_argument, NULL, 't'},
+  {"output-duplicates", no_argument, NULL, 'v'},
+  {"strings", optional_argument, NULL, 'S'},
+  {"traditional", no_argument, NULL, TRADITIONAL_OPTION},
+  {"width", optional_argument, NULL, 'w'},
+  {"endian", required_argument, NULL, ENDIAN_OPTION },
 
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -825,7 +825,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
            ? print_intmax
            : LONG < LONG_LONG && LONG_LONG < INTMAX && size_spec == LONG_LONG
            ? print_long_long
-           : (affirm (false), (print_function_type) nullptr));
+           : (affirm (false), (print_function_type) NULL));
       break;
 
     case 'f':
@@ -983,7 +983,7 @@ open_next_file (void)
   do
     {
       input_filename = *file_list;
-      if (input_filename == nullptr)
+      if (input_filename == NULL)
         return ok;
       ++file_list;
 
@@ -997,17 +997,17 @@ open_next_file (void)
       else
         {
           in_stream = fopen (input_filename, (O_BINARY ? "rb" : "r"));
-          if (in_stream == nullptr)
+          if (in_stream == NULL)
             {
               error (0, errno, "%s", quotef (input_filename));
               ok = false;
             }
         }
     }
-  while (in_stream == nullptr);
+  while (in_stream == NULL);
 
   if (0 <= end_offset && !flag_dump_strings)
-    setvbuf (in_stream, nullptr, _IONBF, 0);
+    setvbuf (in_stream, NULL, _IONBF, 0);
 
   return ok;
 }
@@ -1024,7 +1024,7 @@ check_and_close (int in_errno)
 {
   bool ok = true;
 
-  if (in_stream != nullptr)
+  if (in_stream != NULL)
     {
       if (!ferror (in_stream))
         in_errno = 0;
@@ -1038,7 +1038,7 @@ check_and_close (int in_errno)
           ok = false;
         }
 
-      in_stream = nullptr;
+      in_stream = NULL;
     }
 
   if (ferror (stdout))
@@ -1093,7 +1093,7 @@ skip (intmax_t n_skip)
   if (n_skip == 0)
     return true;
 
-  while (in_stream != nullptr)	/* EOF.  */
+  while (in_stream != NULL)	/* EOF.  */
     {
       struct stat file_stats;
 
@@ -1370,7 +1370,7 @@ read_block (idx_t n, char *block, idx_t *n_bytes_in_buffer)
 
   *n_bytes_in_buffer = 0;
 
-  while (in_stream != nullptr)	/* EOF.  */
+  while (in_stream != NULL)	/* EOF.  */
     {
       idx_t n_needed = n - *n_bytes_in_buffer;
       idx_t n_read = fread (block + *n_bytes_in_buffer,
@@ -1403,14 +1403,14 @@ get_lcm (void)
   return l_c_m;
 }
 
-/* Act like xstrtoimax (NPTR, nullptr, BASE, VAL, VALID_SUFFIXES),
+/* Act like xstrtoimax (NPTR, NULL, BASE, VAL, VALID_SUFFIXES),
    except reject negative values, and *VAL may be set if
    LONGINT_INVALID is returned.  */
 static strtol_error
 xstr2nonneg (char const *restrict nptr, int base, intmax_t *val,
              char const *restrict valid_suffixes)
 {
-  strtol_error s_err = xstrtoimax (nptr, nullptr, base, val, valid_suffixes);
+  strtol_error s_err = xstrtoimax (nptr, NULL, base, val, valid_suffixes);
   return s_err != LONGINT_INVALID && *val < 0 ? LONGINT_INVALID : s_err;
 }
 
@@ -1435,7 +1435,7 @@ parse_old_offset (char *str, intmax_t *offset)
      it's hexadecimal, else octal.  */
   char *dot = strchr (s, '.');
   if (dot && dot[(dot[1] == 'b' || dot[1] == 'B') + 1])
-    dot = nullptr;
+    dot = NULL;
   int radix = dot ? 10 : s[0] == '0' && (s[1] == 'x' || s[1] == 'X') ? 16 : 8;
 
   if (dot)
@@ -1719,7 +1719,7 @@ main (int argc, char **argv)
 
         case 'S':
           modern = true;
-          if (optarg == nullptr)
+          if (optarg == NULL)
             string_min = 3;
           else
             {
@@ -1798,7 +1798,7 @@ main (int argc, char **argv)
 
         case 'w':
           modern = true;
-          if (optarg == nullptr)
+          if (optarg == NULL)
             {
               desired_width = 32;
             }
@@ -1950,12 +1950,12 @@ main (int argc, char **argv)
 
   /* open the first input file */
   ok = open_next_file ();
-  if (in_stream == nullptr)
+  if (in_stream == NULL)
     goto cleanup;
 
   /* skip over any unwanted header bytes */
   ok &= skip (n_bytes_to_skip);
-  if (in_stream == nullptr)
+  if (in_stream == NULL)
     goto cleanup;
 
   pseudo_offset = (flag_pseudo_start ? pseudo_start - n_bytes_to_skip : 0);

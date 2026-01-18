@@ -119,7 +119,7 @@ enum remove_method
 
 static char const *const remove_args[] =
 {
-  "unlink", "wipe", "wipesync", nullptr
+  "unlink", "wipe", "wipesync", NULL
 };
 
 static enum remove_method const remove_methods[] =
@@ -147,17 +147,17 @@ enum
 
 static struct option const long_opts[] =
 {
-  {"exact", no_argument, nullptr, 'x'},
-  {"force", no_argument, nullptr, 'f'},
-  {"iterations", required_argument, nullptr, 'n'},
-  {"size", required_argument, nullptr, 's'},
-  {"random-source", required_argument, nullptr, RANDOM_SOURCE_OPTION},
-  {"remove", optional_argument, nullptr, 'u'},
-  {"verbose", no_argument, nullptr, 'v'},
-  {"zero", no_argument, nullptr, 'z'},
+  {"exact", no_argument, NULL, 'x'},
+  {"force", no_argument, NULL, 'f'},
+  {"iterations", required_argument, NULL, 'n'},
+  {"size", required_argument, NULL, 's'},
+  {"random-source", required_argument, NULL, RANDOM_SOURCE_OPTION},
+  {"remove", optional_argument, NULL, 'u'},
+  {"verbose", no_argument, NULL, 'v'},
+  {"zero", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -1169,7 +1169,7 @@ main (int argc, char **argv)
   char **file;
   int n_files;
   int c;
-  char const *random_source = nullptr;
+  char const *random_source = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -1182,7 +1182,7 @@ main (int argc, char **argv)
   flags.n_iterations = DEFAULT_PASSES;
   flags.size = -1;
 
-  while ((c = getopt_long (argc, argv, "fn:s:uvxz", long_opts, nullptr)) != -1)
+  while ((c = getopt_long (argc, argv, "fn:s:uvxz", long_opts, NULL)) != -1)
     {
       switch (c)
         {
@@ -1204,7 +1204,7 @@ main (int argc, char **argv)
           break;
 
         case 'u':
-          if (optarg == nullptr)
+          if (optarg == NULL)
             flags.remove_file = remove_wipesync;
           else
             flags.remove_file = XARGMATCH ("--remove", optarg,

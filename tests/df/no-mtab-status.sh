@@ -28,8 +28,8 @@ grep '^#define HAVE_GETMNTENT 1' $CONFIG_HEADER > /dev/null \
       || skip_ "getmntent is not used on this system"
 
 # Simulate "mtab" failure.
-# Replace gnulib streq and C23 nullptr as that are not available here.
-sed 's/streq/0==str''cmp/; s/nullptr/NU''LL/' > k.c <<EOF || framework_failure_
+# Replace gnulib streq as that is not available here.
+sed 's/streq/0==str''cmp/' > k.c <<EOF || framework_failure_
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,7 +54,7 @@ FILE* fopen(const char *path, const char *mode)
         {
           fprintf (stderr, "Failed to find fopen()\n");
           errno = ESRCH;
-          return nullptr;
+          return NULL;
         }
     }
 
@@ -63,7 +63,7 @@ FILE* fopen(const char *path, const char *mode)
   if (streq (path, "/proc/self/mountinfo"))
     {
       errno = ENOENT;
-      return nullptr;
+      return NULL;
     }
 
   return fopen_func(path, mode);
@@ -115,7 +115,7 @@ struct mntent *getmntent (FILE *fp)
     }
   /* Now simulate the failure. */
   errno = ENOENT;
-  return nullptr;
+  return NULL;
 }
 EOF
 

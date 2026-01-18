@@ -141,7 +141,7 @@ main (int argc, char **argv)
       if (streq (argv[1], "--version"))
         {
           version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
-                       (char *) nullptr);
+                       (char *) NULL);
           return EXIT_SUCCESS;
         }
     }

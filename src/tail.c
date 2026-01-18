@@ -107,7 +107,7 @@ enum Follow_mode
 
 static char const *const follow_mode_string[] =
 {
-  "descriptor", "name", nullptr
+  "descriptor", "name", NULL
 };
 
 static enum Follow_mode const follow_mode_map[] =
@@ -216,7 +216,7 @@ static count_t max_n_unchanged_stats_between_opens =
 /* The process IDs of the processes to watch (those writing the followed
    files, or perhaps other processes the user cares about).  */
 static int nbpids = 0;
-static pid_t * pids = nullptr;
+static pid_t * pids = NULL;
 static idx_t pids_alloc;
 
 /* Used to determine the buffer size when scanning backwards in a file.  */
@@ -251,26 +251,26 @@ enum
 
 static struct option const long_options[] =
 {
-  {"bytes", required_argument, nullptr, 'c'},
-  {"debug", no_argument, nullptr, DEBUG_PROGRAM_OPTION},
-  {"follow", optional_argument, nullptr, LONG_FOLLOW_OPTION},
-  {"lines", required_argument, nullptr, 'n'},
-  {"max-unchanged-stats", required_argument, nullptr,
+  {"bytes", required_argument, NULL, 'c'},
+  {"debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
+  {"follow", optional_argument, NULL, LONG_FOLLOW_OPTION},
+  {"lines", required_argument, NULL, 'n'},
+  {"max-unchanged-stats", required_argument, NULL,
    MAX_UNCHANGED_STATS_OPTION},
-  {"-disable-inotify", no_argument, nullptr,
+  {"-disable-inotify", no_argument, NULL,
    DISABLE_INOTIFY_OPTION}, /* do not document */
-  {"pid", required_argument, nullptr, PID_OPTION},
-  {"-presume-input-pipe", no_argument, nullptr,
+  {"pid", required_argument, NULL, PID_OPTION},
+  {"-presume-input-pipe", no_argument, NULL,
    PRESUME_INPUT_PIPE_OPTION}, /* do not document */
-  {"quiet", no_argument, nullptr, 'q'},
-  {"retry", no_argument, nullptr, RETRY_OPTION},
-  {"silent", no_argument, nullptr, 'q'},
-  {"sleep-interval", required_argument, nullptr, 's'},
-  {"verbose", no_argument, nullptr, 'v'},
-  {"zero-terminated", no_argument, nullptr, 'z'},
+  {"quiet", no_argument, NULL, 'q'},
+  {"retry", no_argument, NULL, RETRY_OPTION},
+  {"silent", no_argument, NULL, 'q'},
+  {"sleep-interval", required_argument, NULL, 's'},
+  {"verbose", no_argument, NULL, 'v'},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -581,7 +581,7 @@ file_lines (char const *prettyname, int fd, struct stat const *sb,
         {
           char const *nl;
           nl = memrchr (buffer, line_end, n);
-          if (nl == nullptr)
+          if (nl == NULL)
             break;
           n = nl - buffer;
           if (n_lines-- == 0)
@@ -643,7 +643,7 @@ pipe_lines (char const *prettyname, int fd, count_t n_lines)
 
   first = last = xmalloc (sizeof (LBUFFER));
   first->nbytes = first->nlines = 0;
-  first->next = nullptr;
+  first->next = NULL;
   tmp = xmalloc (sizeof (LBUFFER));
 
   /* Input is always read into a fresh buffer.  */
@@ -654,7 +654,7 @@ pipe_lines (char const *prettyname, int fd, count_t n_lines)
         break;
       tmp->nbytes = n_read;
       tmp->nlines = 0;
-      tmp->next = nullptr;
+      tmp->next = NULL;
 
       /* Count the number of newlines just read.  */
       {
@@ -784,7 +784,7 @@ pipe_bytes (char const *prettyname, int fd, count_t n_bytes,
 
   first = last = xmalloc (sizeof (CBUFFER));
   first->nbytes = 0;
-  first->next = nullptr;
+  first->next = NULL;
   tmp = xmalloc (sizeof (CBUFFER));
 
   /* Input is always read into a fresh buffer.  */
@@ -795,7 +795,7 @@ pipe_bytes (char const *prettyname, int fd, count_t n_bytes,
         break;
       read_pos += n_read;
       tmp->nbytes = n_read;
-      tmp->next = nullptr;
+      tmp->next = NULL;
 
       total_bytes += tmp->nbytes;
       /* If there is enough room in the last buffer read, just append the new
@@ -1486,8 +1486,8 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
   char *evbuf;
   idx_t evbuf_off = 0;
 
-  wd_to_name = hash_initialize (n_files, nullptr, wd_hasher, wd_comparator,
-                                nullptr);
+  wd_to_name = hash_initialize (n_files, NULL, wd_hasher, wd_comparator,
+                                NULL);
   if (! wd_to_name)
     xalloc_die ();
   *wd_to_namep = wd_to_name;
@@ -1560,7 +1560,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
               continue;
             }
 
-          if (hash_insert (wd_to_name, &(f[i])) == nullptr)
+          if (hash_insert (wd_to_name, &(f[i])) == NULL)
             xalloc_die ();
 
           found_watchable_file = true;
@@ -1788,7 +1788,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
                   close_fd (prev->fd, prev);
                 }
 
-              if (hash_insert (wd_to_name, fspec) == nullptr)
+              if (hash_insert (wd_to_name, fspec) == NULL)
                 xalloc_die ();
             }
 
@@ -2167,7 +2167,7 @@ parse_options (int argc, char **argv,
   int c;
 
   while ((c = getopt_long (argc, argv, "c:n:fFqs:vz0123456789",
-                           long_options, nullptr))
+                           long_options, NULL))
          != -1)
     {
       switch (c)
@@ -2196,7 +2196,7 @@ parse_options (int argc, char **argv,
         case 'f':
         case LONG_FOLLOW_OPTION:
           forever = true;
-          if (optarg == nullptr)
+          if (optarg == NULL)
             follow_mode = DEFAULT_FOLLOW_MODE;
           else
             follow_mode = XARGMATCH ("--follow", optarg,
@@ -2293,7 +2293,7 @@ parse_options (int argc, char **argv,
                : ("warning: PID ignored;"
                   " --pid=PID is useful only when following")));
       free (pids);
-      pids = nullptr;
+      pids = NULL;
     }
 }
 

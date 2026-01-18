@@ -60,7 +60,7 @@ buf_init_from_stdin (Buf *x, char eol_byte)
     {
       char *buf = malloc (BUFFER_SIZE);
 
-      if (buf == nullptr)
+      if (buf == NULL)
         {
           /* Fall back on the code that relies on a temporary file.
              Write all buffers to that file and free them.  */
@@ -93,7 +93,7 @@ buf_init_from_stdin (Buf *x, char eol_byte)
       if (!last_byte_is_eol_byte)
         {
           char *buf = malloc (1);
-          if (buf == nullptr)
+          if (buf == NULL)
             {
               /* FIXME: just like above */
               ok = false;
@@ -126,7 +126,7 @@ buf_free (Buf *x)
 {
   for (size_t i = 0; i < x->n_bufs; i++)
     free (x->p[i].start);
-  obstack_free (OBS, nullptr);
+  obstack_free (OBS, NULL);
 }
 
 Line_ptr

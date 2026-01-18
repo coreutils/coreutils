@@ -53,20 +53,20 @@ enum
 
 static struct option const long_options[] =
 {
-  {"recursive", no_argument, nullptr, 'R'},
-  {"changes", no_argument, nullptr, 'c'},
-  {"dereference", no_argument, nullptr, DEREFERENCE_OPTION},
-  {"from", required_argument, nullptr, FROM_OPTION},
-  {"no-dereference", no_argument, nullptr, 'h'},
-  {"no-preserve-root", no_argument, nullptr, NO_PRESERVE_ROOT},
-  {"preserve-root", no_argument, nullptr, PRESERVE_ROOT},
-  {"quiet", no_argument, nullptr, 'f'},
-  {"silent", no_argument, nullptr, 'f'},
-  {"reference", required_argument, nullptr, REFERENCE_FILE_OPTION},
-  {"verbose", no_argument, nullptr, 'v'},
+  {"recursive", no_argument, NULL, 'R'},
+  {"changes", no_argument, NULL, 'c'},
+  {"dereference", no_argument, NULL, DEREFERENCE_OPTION},
+  {"from", required_argument, NULL, FROM_OPTION},
+  {"no-dereference", no_argument, NULL, 'h'},
+  {"no-preserve-root", no_argument, NULL, NO_PRESERVE_ROOT},
+  {"preserve-root", no_argument, NULL, PRESERVE_ROOT},
+  {"quiet", no_argument, NULL, 'f'},
+  {"silent", no_argument, NULL, 'f'},
+  {"reference", required_argument, NULL, REFERENCE_FILE_OPTION},
+  {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -194,7 +194,7 @@ main (int argc, char **argv)
 
   chopt_init (&chopt);
 
-  while ((optc = getopt_long (argc, argv, "HLPRcfhv", long_options, nullptr))
+  while ((optc = getopt_long (argc, argv, "HLPRcfhv", long_options, NULL))
          != -1)
     {
       switch (optc)
@@ -237,7 +237,7 @@ main (int argc, char **argv)
             bool warn;
             char const *e = parse_user_spec_warn (optarg,
                                                   &required_uid, &required_gid,
-                                                  nullptr, nullptr, &warn);
+                                                  NULL, NULL, &warn);
             if (e)
               error (warn ? 0 : EXIT_FAILURE, 0, "%s: %s", e, quote (optarg));
             break;
@@ -339,7 +339,7 @@ main (int argc, char **argv)
     {
       static struct dev_ino dev_ino_buf;
       chopt.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
-      if (chopt.root_dev_ino == nullptr)
+      if (chopt.root_dev_ino == NULL)
         error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
                quoteaf ("/"));
     }

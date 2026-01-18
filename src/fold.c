@@ -58,13 +58,13 @@ static char const shortopts[] = "bcsw:0::1::2::3::4::5::6::7::8::9::";
 
 static struct option const longopts[] =
 {
-  {"bytes", no_argument, nullptr, 'b'},
-  {"characters", no_argument, nullptr, 'c'},
-  {"spaces", no_argument, nullptr, 's'},
-  {"width", required_argument, nullptr, 'w'},
+  {"bytes", no_argument, NULL, 'b'},
+  {"characters", no_argument, NULL, 'c'},
+  {"spaces", no_argument, NULL, 's'},
+  {"width", required_argument, NULL, 'w'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -165,7 +165,7 @@ fold_file (char const *filename, size_t width)
   else
     istream = fopen (filename, "r");
 
-  if (istream == nullptr)
+  if (istream == NULL)
     {
       error (0, errno, "%s", quotef (filename));
       return false;
@@ -293,7 +293,7 @@ main (int argc, char **argv)
 
   break_spaces = have_read_stdin = false;
 
-  while ((optc = getopt_long (argc, argv, shortopts, longopts, nullptr)) != -1)
+  while ((optc = getopt_long (argc, argv, shortopts, longopts, NULL)) != -1)
     {
       char optargbuf[2];
 

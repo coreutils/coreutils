@@ -83,11 +83,11 @@ record_or_unlink_tempfile (char const *fn, MAYBE_UNUSED FILE *fp)
 bool
 temp_stream (FILE **fp, char **file_name)
 {
-  static char *tempfile = nullptr;
+  static char *tempfile = NULL;
   static FILE *tmp_fp;
-  if (tempfile == nullptr)
+  if (tempfile == NULL)
     {
-      char *tempbuf = nullptr;
+      char *tempbuf = NULL;
       size_t tempbuf_len = 128;
 
       while (true)
@@ -98,7 +98,7 @@ temp_stream (FILE **fp, char **file_name)
               return false;
             }
 
-          if (path_search (tempbuf, tempbuf_len, nullptr, "cutmp", true) == 0)
+          if (path_search (tempbuf, tempbuf_len, NULL, "cutmp", true) == 0)
             break;
 
           if (errno != EINVAL || PATH_MAX / 2 < tempbuf_len)
@@ -139,7 +139,7 @@ temp_stream (FILE **fp, char **file_name)
           unlink (tempfile);
         Reset:
           free (tempfile);
-          tempfile = nullptr;
+          tempfile = NULL;
           return false;
         }
 

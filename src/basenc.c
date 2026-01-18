@@ -90,7 +90,7 @@ static struct option const long_options[] =
 #endif
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -833,7 +833,7 @@ z85_length (idx_t len)
 static bool
 isuz85 (unsigned char ch)
 {
-  return c_isalnum (ch) || strchr (".-:+=^!/*?&<>()[]{}@%$#", ch) != nullptr;
+  return c_isalnum (ch) || strchr (".-:+=^!/*?&<>()[]{}@%$#", ch) != NULL;
 }
 
 static char const z85_encoding[85] ATTRIBUTE_NONSTRING =
@@ -1224,7 +1224,7 @@ base58_length (idx_t len)
 static void
 base58_encode_ctx_init (struct base_encode_context *ctx)
 {
-  ctx->ctx.base58.buf = nullptr;
+  ctx->ctx.base58.buf = NULL;
   ctx->ctx.base58.size = 0;
   ctx->ctx.base58.capacity = 0;
 }
@@ -1300,7 +1300,7 @@ base58_encode_ctx_finalize (struct base_encode_context *ctx,
                  *out, outlen);
 
   free (ctx->ctx.base58.buf);
-  ctx->ctx.base58.buf = nullptr;
+  ctx->ctx.base58.buf = NULL;
 
   return true;
 }
@@ -1311,7 +1311,7 @@ base58_decode_ctx_init (struct base_decode_context *ctx)
 {
   ctx->ctx.base58.size = 0;
   ctx->ctx.base58.capacity = 0;
-  ctx->ctx.base58.buf = nullptr;
+  ctx->ctx.base58.buf = NULL;
 }
 
 static bool
@@ -1414,7 +1414,7 @@ base58_decode_ctx_finalize (struct base_decode_context *ctx,
                             *out, outlen);
 
   free (ctx->ctx.base58.buf);
-  ctx->ctx.base58.buf = nullptr;
+  ctx->ctx.base58.buf = NULL;
 
   return ret;
 }
@@ -1481,7 +1481,7 @@ do_encode (FILE *in, char const *infile, FILE *out, idx_t wrap_column)
 #if BASE_TYPE == 42
   /* Initialize encoding context if needed (for base58) */
   struct base_encode_context encode_ctx;
-  bool use_ctx = (base_encode_ctx_init != nullptr);
+  bool use_ctx = (base_encode_ctx_init != NULL);
   if (use_ctx)
     base_encode_ctx_init (&encode_ctx);
 #endif
@@ -1553,7 +1553,7 @@ do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
   outbuf = xmalloc (DEC_BLOCKSIZE);
 
 #if BASE_TYPE == 42
-  ctx.inbuf = nullptr;
+  ctx.inbuf = NULL;
 #endif
   base_decode_ctx_init (&ctx);
 
@@ -1636,7 +1636,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((opt = getopt_long (argc, argv, "diw:", long_options, nullptr)) != -1)
+  while ((opt = getopt_long (argc, argv, "diw:", long_options, NULL)) != -1)
     switch (opt)
       {
       case 'd':
@@ -1646,7 +1646,7 @@ main (int argc, char **argv)
       case 'w':
         {
           intmax_t w;
-          strtol_error s_err = xstrtoimax (optarg, nullptr, 10, &w, "");
+          strtol_error s_err = xstrtoimax (optarg, NULL, 10, &w, "");
           if (LONGINT_OVERFLOW < s_err || w < 0)
             error (EXIT_FAILURE, 0, "%s: %s",
                    _("invalid wrap size"), quote (optarg));
@@ -1805,7 +1805,7 @@ main (int argc, char **argv)
   else
     {
       input_fh = fopen (infile, "rb");
-      if (input_fh == nullptr)
+      if (input_fh == NULL)
         error (EXIT_FAILURE, errno, "%s", quotef (infile));
     }
 

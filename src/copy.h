@@ -294,7 +294,7 @@ struct cp_options
        rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
      For now, it protects only regular files when copying (i.e., not renaming).
      When renaming, it protects all non-directories.
-     Use dest_info_init to initialize it, or set it to nullptr to disable
+     Use dest_info_init to initialize it, or set it to NULL to disable
      this feature.  */
   Hash_table *dest_info;
 

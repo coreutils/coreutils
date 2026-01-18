@@ -669,7 +669,7 @@ print_formatted (char const *format, int argc, char **argv)
           print_direc (direc, *ac.f,
                        have_field_width, field_width,
                        have_precision, precision,
-                       ac.curr_arg < argc ? argv[ac.curr_arg] : nullptr);
+                       ac.curr_arg < argc ? argv[ac.curr_arg] : NULL);
 
           break;
 
@@ -702,7 +702,7 @@ main (int argc, char **argv)
 
   exit_status = EXIT_SUCCESS;
 
-  posixly_correct = (getenv ("POSIXLY_CORRECT") != nullptr);
+  posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
 
   /* We directly parse options, rather than use parse_long_options, in
      order to avoid accepting abbreviations.  */
@@ -714,7 +714,7 @@ main (int argc, char **argv)
       if (streq (argv[1], "--version"))
         {
           version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
-                       (char *) nullptr);
+                       (char *) NULL);
           return EXIT_SUCCESS;
         }
     }

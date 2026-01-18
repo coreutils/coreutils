@@ -87,20 +87,20 @@ enum
 
 static struct option const longopts[] =
 {
-  {"argv0", required_argument, nullptr, 'a'},
-  {"ignore-environment", no_argument, nullptr, 'i'},
-  {"null", no_argument, nullptr, '0'},
-  {"unset", required_argument, nullptr, 'u'},
-  {"chdir", required_argument, nullptr, 'C'},
-  {"default-signal", optional_argument, nullptr, DEFAULT_SIGNAL_OPTION},
-  {"ignore-signal",  optional_argument, nullptr, IGNORE_SIGNAL_OPTION},
-  {"block-signal",   optional_argument, nullptr, BLOCK_SIGNAL_OPTION},
-  {"list-signal-handling", no_argument, nullptr,  LIST_SIGNAL_HANDLING_OPTION},
-  {"debug", no_argument, nullptr, 'v'},
-  {"split-string", required_argument, nullptr, 'S'},
+  {"argv0", required_argument, NULL, 'a'},
+  {"ignore-environment", no_argument, NULL, 'i'},
+  {"null", no_argument, NULL, '0'},
+  {"unset", required_argument, NULL, 'u'},
+  {"chdir", required_argument, NULL, 'C'},
+  {"default-signal", optional_argument, NULL, DEFAULT_SIGNAL_OPTION},
+  {"ignore-signal",  optional_argument, NULL, IGNORE_SIGNAL_OPTION},
+  {"block-signal",   optional_argument, NULL, BLOCK_SIGNAL_OPTION},
+  {"list-signal-handling", no_argument, NULL,  LIST_SIGNAL_HANDLING_OPTION},
+  {"debug", no_argument, NULL, 'v'},
+  {"split-string", required_argument, NULL, 'S'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
@@ -189,7 +189,7 @@ unset_envvars (void)
     }
 }
 
-/* Return a pointer to the end of a valid ${VARNAME} string, or nullptr.
+/* Return a pointer to the end of a valid ${VARNAME} string, or NULL.
    'str' should point to the '$' character.
    First letter in VARNAME must be alpha or underscore,
    rest of letters are alnum or underscore.
@@ -207,21 +207,21 @@ scan_varname (char const *str)
         return end;
     }
 
-  return nullptr;
+  return NULL;
 }
 
 /* Return a pointer to a static buffer containing the VARNAME as
    extracted from a '${VARNAME}' string.
    The returned string will be NUL terminated.
    The returned pointer should not be freed.
-   Return nullptr if not a valid ${VARNAME} syntax.  */
+   Return NULL if not a valid ${VARNAME} syntax.  */
 static char *
 extract_varname (char const *str)
 {
   char const *p = scan_varname (str);
 
   if (!p)
-    return nullptr;
+    return NULL;
 
   /* -2 and +2 (below) account for the '${' prefix.  */
   idx_t i = p - str - 2;
@@ -229,7 +229,7 @@ extract_varname (char const *str)
   if (i >= vnlen)
     {
       free (varname);
-      varname = xpalloc (nullptr, &vnlen, i + 1 - vnlen, -1, sizeof *varname);
+      varname = xpalloc (NULL, &vnlen, i + 1 - vnlen, -1, sizeof *varname);
     }
 
   memcpy (varname, str + 2, i);
@@ -497,7 +497,7 @@ build_argv (char const *str, int extra_argc, int *argc)
       argv[1] = "-S-i -C/tmp A=B"
       argv[2] = "foo"
       argv[3] = "bar"
-      argv[4] = nullptr
+      argv[4] = NULL
    This function will modify argv to be:
       argv[0] = "env"
       argv[1] = "-i"
@@ -505,7 +505,7 @@ build_argv (char const *str, int extra_argc, int *argc)
       argv[3] = "A=B"
       argv[4] = "foo"
       argv[5] = "bar"
-      argv[6] = nullptr
+      argv[6] = NULL
    argc will be updated from 4 to 6.
    optind will be reset to 0 to force getopt_long to rescan all arguments.  */
 static void
@@ -565,7 +565,7 @@ parse_signal_action_params (char const *arg, bool set_default)
 
       signals[signum] = set_default ? DEFAULT : IGNORE;
 
-      opt_sig = strtok (nullptr, ",");
+      opt_sig = strtok (NULL, ",");
     }
 
   free (optarg_writable);
@@ -587,7 +587,7 @@ reset_signal_handlers (void)
       bool set_to_default = (signals[i] == DEFAULT
                              || signals[i] == DEFAULT_NOERR);
 
-      int sig_err = sigaction (i, nullptr, &act);
+      int sig_err = sigaction (i, NULL, &act);
 
       if (sig_err && !ignore_errors)
         error (EXIT_CANCELED, errno,
@@ -596,7 +596,7 @@ reset_signal_handlers (void)
       if (! sig_err)
         {
           act.sa_handler = set_to_default ? SIG_DFL : SIG_IGN;
-          sig_err = sigaction (i, &act, nullptr);
+          sig_err = sigaction (i, &act, NULL);
           if (sig_err && !ignore_errors)
             error (EXIT_CANCELED, errno,
                    _("failed to set signal action for signal %d"), i);
@@ -659,7 +659,7 @@ parse_block_signal_params (char const *arg, bool block)
       else
         sigdelset (block ? &unblock_signals : &block_signals, signum);
 
-      opt_sig = strtok (nullptr, ",");
+      opt_sig = strtok (NULL, ",");
     }
 
   free (optarg_writable);
@@ -673,12 +673,12 @@ set_signal_proc_mask (void)
 
   sigemptyset (&set);
 
-  if (sigprocmask (0, nullptr, &set))
+  if (sigprocmask (0, NULL, &set))
     error (EXIT_CANCELED, errno, _("failed to get signal process mask"));
 
   for (int i = 1; i <= SIGNUM_BOUND; i++)
     {
-      char const *debug_act = nullptr;
+      char const *debug_act = NULL;
 
       if (sigismember (&block_signals, i))
         {
@@ -701,7 +701,7 @@ set_signal_proc_mask (void)
         }
     }
 
-  if (sigprocmask (SIG_SETMASK, &set, nullptr))
+  if (sigprocmask (SIG_SETMASK, &set, NULL))
     error (EXIT_CANCELED, errno, _("failed to set signal process mask"));
 }
 
@@ -711,13 +711,13 @@ list_signal_handling (void)
   sigset_t set;
 
   sigemptyset (&set);
-  if (sigprocmask (0, nullptr, &set))
+  if (sigprocmask (0, NULL, &set))
     error (EXIT_CANCELED, errno, _("failed to get signal process mask"));
 
   for (int i = 1; i <= SIGNUM_BOUND; i++)
     {
       struct sigaction act;
-      if (sigaction (i, nullptr, &act))
+      if (sigaction (i, NULL, &act))
         continue;
 
       char const *ignored = act.sa_handler == SIG_IGN ? "IGNORE" : "";
@@ -751,8 +751,8 @@ main (int argc, char **argv)
 {
   bool ignore_environment = false;
   bool opt_nul_terminate_output = false;
-  char const *newdir = nullptr;
-  char *argv0 = nullptr;
+  char const *newdir = NULL;
+  char *argv0 = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -766,7 +766,7 @@ main (int argc, char **argv)
   initialize_signals ();
 
   int optc;
-  while ((optc = getopt_long (argc, argv, shortopts, longopts, nullptr)) != -1)
+  while ((optc = getopt_long (argc, argv, shortopts, longopts, NULL)) != -1)
     {
       switch (optc)
         {
@@ -829,7 +829,7 @@ main (int argc, char **argv)
   if (ignore_environment)
     {
       devmsg ("cleaning environ\n");
-      static char *dummy_environ[] = { nullptr };
+      static char *dummy_environ[] = { NULL };
       environ = dummy_environ;
     }
   else

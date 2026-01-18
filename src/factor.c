@@ -199,11 +199,11 @@ enum
 
 static struct option const long_options[] =
 {
-  {"exponents", no_argument, nullptr, 'h'},
-  {"-debug", no_argument, nullptr, DEV_DEBUG_OPTION},
+  {"exponents", no_argument, NULL, 'h'},
+  {"-debug", no_argument, NULL, DEV_DEBUG_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {nullptr, 0, nullptr, 0}
+  {NULL, 0, NULL, 0}
 };
 
 /* If true, use p^e output format.  */
@@ -645,11 +645,11 @@ mpn_tdiv_qr (mp_limb_t *qp, mp_limb_t *rp, MAYBE_UNUSED mp_size_t qxn,
              mp_limb_t const *dp, mp_size_t dn)
 {
   mpz_t q, r, n, d;
-  mpz_inits (q, r, nullptr);
+  mpz_inits (q, r, NULL);
   mpz_tdiv_qr (q, r, mpz_roinit_n (n, np, nn), mpz_roinit_n (d, dp, dn));
   copy_mpn_from_mpz (qp, nn - dn + 1, q);
   copy_mpn_from_mpz (rp, dn, r);
-  mpz_clears (q, r, nullptr);
+  mpz_clears (q, r, NULL);
 }
 #endif
 
@@ -2002,7 +2002,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   int c;
-  while ((c = getopt_long (argc, argv, "h", long_options, nullptr)) != -1)
+  while ((c = getopt_long (argc, argv, "h", long_options, NULL)) != -1)
     {
       switch (c)
         {
