@@ -38,6 +38,14 @@ sync file || fail=1
 # Ensure multiple args are processed and diagnosed
 returns_ 1 sync file nofile || fail=1
 
+# Ensure all arguments a processed even if one results in an error
+returns_ 1 sync nofile1 file nofile2 2>err || fail=1
+cat <<\EOF > exp || framework_failure_
+sync: error opening 'nofile1': No such file or directory
+sync: error opening 'nofile2': No such file or directory
+EOF
+compare exp err || fail=1
+
 # Ensure inaccessible dirs give an appropriate error
 mkdir norw || framework_failure_
 chmod 0 norw || framework_failure_
