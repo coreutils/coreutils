@@ -3,7 +3,7 @@
 # only on lines containing "option", corresponding to our @optAnchor macro.
 # Note texi uses "-" in anchors for spaces, hence why it escapes - with _002d.
 
-makeinfo "$@" || exit
+@MAKEINFO@ "$@" || exit
 
 process_html()
 {

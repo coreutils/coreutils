@@ -904,4 +904,6 @@ AC_CONFIG_FILES(
   po/Makefile.in
   gnulib-tests/Makefile
   )
+AC_CONFIG_FILES([build-aux/makeinfo-wrapper.sh],
+                [chmod +x build-aux/makeinfo-wrapper.sh])
 AC_OUTPUT

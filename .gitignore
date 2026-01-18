@@ -29,6 +29,7 @@
 /build-aux/config.sub
 /build-aux/depcomp
 /build-aux/install-sh
+/build-aux/makeinfo-wrapper.sh
 /build-aux/mdate-sh
 /build-aux/missing
 /build-aux/snippet/

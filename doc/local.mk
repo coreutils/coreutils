@@ -25,9 +25,11 @@ doc_coreutils_TEXINFOS = \
   doc/fdl.texi \
   doc/sort-version.texi
 
+MAKEINFO = $(abs_top_builddir)/build-aux/makeinfo-wrapper.sh
+
 # The customization variable CHECK_NORMAL_MENU_STRUCTURE is necessary with
 # makeinfo versions ≥ 6.8.
-MAKEINFO = @MAKEINFO@ -c CHECK_NORMAL_MENU_STRUCTURE=1
+AM_MAKEINFOFLAGS = -c CHECK_NORMAL_MENU_STRUCTURE=1
 
 # The following is necessary if the package name is 8 characters or longer.
 # If the info documentation would be split into 10 or more separate files,
@@ -37,7 +39,7 @@ MAKEINFO = @MAKEINFO@ -c CHECK_NORMAL_MENU_STRUCTURE=1
 # Otherwise, it would also generate files with names like <package>.info-[123],
 # and those names all map to one 14-byte name (<package>.info-) on some crufty
 # old systems.
-AM_MAKEINFOFLAGS = --no-split
+AM_MAKEINFOFLAGS += --no-split
 
 doc/constants.texi: $(top_srcdir)/src/tail.c $(top_srcdir)/src/shred.c
 	$(AM_V_GEN)LC_ALL=C; export LC_ALL; \
