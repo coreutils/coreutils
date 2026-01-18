@@ -34,7 +34,7 @@ echo "coreutils: unknown program 'blah'" > exp || framework_failure_
 returns_ 1 coreutils --coreutils-prog='blah' --help 2>err || fail=1
 compare exp err || fail=1
 
-ln -s $abs_top_builddir/src/coreutils$EXEEXT blah || framework_failure_
+ln -s "$(command -v coreutils)" blah || framework_failure_
 returns_ 1 ./blah 2>err || fail=1
 compare exp err || fail=1
 returns_ 1 ./blah --version 2>err || fail=1
