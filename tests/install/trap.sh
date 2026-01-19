@@ -27,7 +27,7 @@ require_trap_signame_
   trap '' CHLD
 
   # Before 2004-04-21, install would infloop, in the 'while (wait...' loop:
-  exec ginstall -s "$abs_top_builddir/src/ginstall$EXEEXT" .
+  exec ginstall -s "$(command -v ginstall)" .
 )
 
 Exit $fail
