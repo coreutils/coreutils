@@ -15374,9 +15374,9 @@ The program accepts the following option.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{printenv,-s,}
-@optItemx{printenv,--silent,}
-@optItemx{printenv,--quiet,}
+@optItem{tty,-s,}
+@optItemx{tty,--silent,}
+@optItemx{tty,--quiet,}
 Print nothing; only return an exit status.
 
 @end table
