@@ -609,7 +609,7 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
       printf ("\033]8;;%s#%s%.*s", MANUAL_URL, url_program,
               (int) anchor_len, option_text);
     }
-  fputs ("\a", stdout);
+  fputs ("\033\\", stdout);
 #endif
 #ifdef BOLD_MAN_REFS
   /* Note help2man strips this and will reinstate with --bold-refs.  */
@@ -621,7 +621,7 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
   fputs ("\033[0m", stdout);
 #endif
 #ifdef MANUAL_URL
-  fputs ("\033]8;;\a", stdout);
+  fputs ("\033]8;;\033\\", stdout);
 #endif
 
   /* write description.  */
