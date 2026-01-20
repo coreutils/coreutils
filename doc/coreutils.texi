@@ -7731,6 +7731,12 @@ Inhibit display of group information in long format.
 (This is the default in some non-GNU versions of @command{ls}, so we
 provide this option for compatibility.)
 
+@optItem{ls,--block-size,=@var{size}}
+@cindex file sizes
+With @option{-l}, scale sizes by @var{size} before printing them
+(@pxref{Block size}).  For example,
+@option{--block-size=G} prints sizes in units of 1,073,741,824 bytes.
+
 @optHumanReadable{ls}
 
 @optItem{ls,-i,}
