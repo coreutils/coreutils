@@ -8835,6 +8835,12 @@ Copy symbolic links as symbolic links rather than copying the files that
 they point to.  This option affects only symbolic links in the source;
 symbolic links in the destination are always followed if possible.
 
+@optItem{cp,--keep-directory-symlink,}
+Follow existing symlinks to directories when copying.
+Use this option only when the destination directory's contents are trusted,
+as an attacker can place symlinks in the destination
+to cause @command{cp} write to arbitrary target directories.
+
 @optItem{cp,-p,}
 @optItemx{cp,--preserve,[=@var{attribute_list}]}
 @cindex file information, preserving, extended attributes, xattr
@@ -10018,12 +10024,6 @@ option is also specified.
 @optItem{mv,-v,}
 @optItemx{mv,--verbose,}
 Print the name of each file before moving it.
-
-@optItem{mv,--keep-directory-symlink,}
-Follow existing symlinks to directories when copying.
-Use this option only when the destination directory's contents are trusted,
-as an attacker can place symlinks in the destination
-to cause @command{cp} write to arbitrary target directories.
 
 @optStripTrailingSlashes{mv}
 

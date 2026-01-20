@@ -227,6 +227,10 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
          never follow symbolic links in SOURCE\n\
 "));
       oputs (_("\
+      --keep-directory-symlink\n\
+         follow existing symlinks to directories\n\
+"));
+      oputs (_("\
   -p\n\
          same as --preserve=mode,ownership,timestamps\n\
 "));
@@ -291,10 +295,6 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
       oputs (_("\
   -v, --verbose\n\
          explain what is being done\n\
-"));
-      oputs (_("\
-      --keep-directory-symlink\n\
-         follow existing symlinks to directories\n\
 "));
       oputs (_("\
   -x, --one-file-system\n\
