@@ -568,7 +568,8 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
   size_t anchor_len = strcspn (option_text, ",=[ \n");
 
   /* Set highlighted text up to spacing after the full option text.
-     Any single space is included in highlighted text.  */
+     Any single space is included in highlighted text,
+     double space or newline terminates the option text.  */
   char const *desc_text = option_text + anchor_len;
   while (*desc_text && *desc_text != '\n'
          && (! isspace (*desc_text) || ! isspace (*(desc_text + 1))))
@@ -588,16 +589,23 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
                             : streq (program, "sha384sum") ? "cksum"
                             : streq (program, "sha512sum") ? "cksum"
                             : program;
-  /* Note single node manual doesn't work for ls, cksum, md5sum, sha*sum,
-     but use single node for --help or --version.. */
+  /* Note we don't add the hostname to the links below, because
+     it's unused with http:// links and not usually useful with file:// links.
+     Also there is the possibility that local (hostname agnostic) links
+     would work if remotely accessing a similar system to the local one.  */
   if (STREQ_LEN (option_text, "--help", 6)
       || STREQ_LEN (option_text, "--version", 9))
     {
+      /* We don't have --help and --version links for each command,
+         and they wouldn't be useful to reference anyway.
+         Instead use these to reference the single node manual.  */
       printf ("\033]8;;%s%s#%s%.*s", PACKAGE_URL,
               url_program, url_program, (int) anchor_len, option_text);
     }
   else
     {
+      /* The single node manual doesn't work for ls, cksum, md5sum, sha*sum,
+         so we link to the full manual.  */
       printf ("\033]8;;%s#%s%.*s", MANUAL_URL, url_program,
               (int) anchor_len, option_text);
     }
