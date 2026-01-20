@@ -77,7 +77,6 @@
 #elif HASH_ALGO_CKSUM
 # define MAX_DIGEST_BITS 512
 # define MAX_DIGEST_ALIGN 8
-# define PROGRAM_NAME "cksum"
 # define DIGEST_TYPE_STRING algorithm_tags[cksum_algorithm]
 # define DIGEST_STREAM cksumfns[cksum_algorithm]
 # define DIGEST_OUT cksum_output_fns[cksum_algorithm]
@@ -137,6 +136,17 @@
 #endif
 #if !HASH_ALGO_SUM && !HASH_ALGO_CKSUM
 # define DIGEST_OUT output_file
+#endif
+
+#if HASH_ALGO_CKSUM
+# define PROGRAM_NAME (!legacy_mode ? "cksum"			 \
+                       : cksum_algorithm == md5 ? "md5sum"	 \
+                       : cksum_algorithm == sha1 ? "sha1sum"	 \
+                       : cksum_algorithm == sha224 ? "sha224sum" \
+                       : cksum_algorithm == sha256 ? "sha256sum" \
+                       : cksum_algorithm == sha384 ? "sha384sum" \
+                       : cksum_algorithm == sha512 ? "sha512sum" \
+                       : "cksum")
 #endif
 
 #if HASH_ALGO_SUM
