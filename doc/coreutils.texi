@@ -15455,6 +15455,9 @@ The options cause @command{id} to print only part of the above information.
 Also see @ref{Common options}.
 
 @table @samp
+@optItem{id,-a,}
+Ignored; for compatibility with other versions of @command{id}.
+
 @optItem{id,-g,}
 @optItemx{id,--group,}
 Print only the group ID.
