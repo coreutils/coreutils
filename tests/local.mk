@@ -495,6 +495,7 @@ all_tests =					\
   tests/tty/tty.sh				\
   tests/misc/usage_vs_getopt.sh			\
   tests/misc/getopt_vs_usage.sh			\
+  tests/misc/usage_vs_refs.sh			\
   tests/unexpand/unexpand.pl			\
   tests/unexpand/bounded-memory.sh		\
   tests/uniq/uniq.pl				\
