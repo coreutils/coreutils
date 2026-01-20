@@ -2293,6 +2293,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @optAnchor{base32,-w}
 @optAnchor{base32,--wrap}
+@optAnchor{basenc,-w}
+@optAnchor{basenc,--wrap}
 @optItem{base64,-w,@w{ }@var{cols}}
 @optItemx{base64,--wrap,=@var{cols}}
 @cindex wrap data
@@ -2305,6 +2307,8 @@ disable line wrapping altogether.
 
 @optAnchor{base32,-d}
 @optAnchor{base32,--decode}
+@optAnchor{basenc,-d}
+@optAnchor{basenc,--decode}
 @optItem{base64,-d,}
 @optItemx{base64,--decode,}
 @cindex Decode base64 data
@@ -2315,6 +2319,8 @@ output will be the original data.
 
 @optAnchor{base32,-i}
 @optAnchor{base32,--ignore-garbage}
+@optAnchor{basenc,-i}
+@optAnchor{basenc,--ignore-garbage}
 @optItem{base64,-i,}
 @optItemx{base64,--ignore-garbage,}
 @cindex Ignore garbage in base64 stream
@@ -2628,6 +2634,7 @@ is identical.  By default, counting starts with the first page of input
 file (not first page printed).  Line numbering may be altered by @option{-N}
 option.
 
+@optAnchor{pr,-COLS}
 @optItem{pr,-@var{column},}
 @optItemx{pr,--columns,=@var{column}}
 @cindex down columns
@@ -3296,7 +3303,7 @@ Put @var{size} bytes of @var{input} into each output file.
 @multiplierSuffixes{size}
 
 @optItem{split,-C,@w{ }@var{size}}
-@optItemx{split,--lines-bytes,=@var{size}}
+@optItemx{split,--line-bytes,=@var{size}}
 Put into each output file as many complete lines of @var{input} as
 possible without exceeding @var{size} bytes.  Individual lines or records
 longer than @var{size} bytes are broken into multiple files.
@@ -5402,6 +5409,9 @@ Columns are separated by a single TAB character.
 @c FIXME: when there's an option to supply an alternative separator
 @c string, append "by default" to the above sentence.
 
+@optAnchor{comm,-1}
+@optAnchor{comm,-2}
+@optAnchor{comm,-3}
 @opindex -1
 @opindex -2
 @opindex -3
@@ -6308,7 +6318,7 @@ a       b       c
 @end example
 
 @optItem{paste,-d,@w{ }@var{delim-list}}
-@optItemx{paste,--delimiter,=@var{delim-list}}
+@optItemx{paste,--delimiters,=@var{delim-list}}
 Consecutively use the characters in @var{delim-list} instead of
 TAB to separate merged lines.  When @var{delim-list} is
 exhausted, start again at its beginning.
@@ -7319,7 +7329,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{expand,@w{ }@var{tab1}[@comma{}@var{tab2}]@dots{},}
+@optItem{expand,-t,@w{ }@var{tab1}[@comma{}@var{tab2}]@dots{}}
 @optItemx{expand,--tabs,=@var{tab1}[@comma{}@var{tab2}]@dots{}}
 @cindex tab stops, setting
 If only one tab stop is given, set the tabs @var{tab1} spaces apart
@@ -7385,7 +7395,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optItem{unexpand,@w{ }@var{tab1}[@comma{}@var{tab2}]@dots{},}
+@optItem{unexpand,-t,@w{ }@var{tab1}[@comma{}@var{tab2}]@dots{}}
 @optItemx{unexpand,--tabs,=@var{tab1}[@comma{}@var{tab2}]@dots{}}
 If only one tab stop is given, set the tabs @var{tab1} columns apart
 instead of the default 8.  Otherwise, set the tabs at columns
@@ -11293,10 +11303,8 @@ Do not act on symbolic links themselves but rather on what they point to.
 This is the default when not operating recursively.
 @warnOptDerefWithRec
 
-@item -h
-@itemx --no-dereference
-@opindex -h
-@opindex --no-dereference
+@optItem{\cmd\,-h,}
+@optItemx{\cmd\,--no-dereference,}
 @cindex symbolic links, changing owner
 @findex lchown
 Act on symbolic links themselves instead of what they point to.

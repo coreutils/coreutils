@@ -2777,10 +2777,12 @@ Paginate or columnate FILE(s) for printing.\n\
       fputs (_("\
   +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]\n\
          begin [stop] printing with page FIRST_[LAST_]PAGE\n\
-  -COLUMN, --columns=COLUMN\n\
-         output COLUMN columns and print columns down, unless -a is used.\n\
-         Balance number of lines in the columns on each page\n\
 "), stdout);
+      oputs (_("\
+  -COLS, --columns=COLS\n\
+         output COLS columns and print columns down, unless -a is used.\n\
+         Balance number of lines in the columns on each page\n\
+"));
       oputs (_("\
   -a, --across\n\
          print columns across rather than down, used together with -COLUMN\n\
