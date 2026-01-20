@@ -679,7 +679,7 @@ Print information about users who are currently logged in.\n\
   -T, -w, --mesg    add user's message status as +, - or ?\n\
 "));
       oputs (_("\
-  -u, --users       list users logged in\n\
+  -u, --users       list users logged in, including idle time\n\
 "));
       oputs (_("\
       --message     same as -T\n\

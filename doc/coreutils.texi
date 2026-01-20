@@ -15707,7 +15707,7 @@ Overrides all other options.
 Print the current (and maybe previous) run-level of the init process.
 
 @optItem{who,-s,}
-@optItem{who,--short,}
+@optItemx{who,--short,}
 Ignored; for compatibility with other versions of @command{who}.
 
 @optItem{who,-t,}
@@ -15715,6 +15715,7 @@ Ignored; for compatibility with other versions of @command{who}.
 Print last system clock change.
 
 @optItem{who,-u,}
+@optItemx{who,--users,}
 @cindex idle time
 After the login time, print the number of hours and minutes that the
 user has been idle.  @samp{.} means the user was active in the last minute.
