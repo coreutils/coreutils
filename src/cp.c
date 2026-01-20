@@ -211,16 +211,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
          follow command-line symbolic links in SOURCE\n\
 "));
       oputs (_("\
-  -l, --link\n\
-         hard link files instead of copying\n\
-"));
-      oputs (_("\
   -L, --dereference\n\
          always follow symbolic links in SOURCE\n\
-"));
-      oputs (_("\
-  -n, --no-clobber\n\
-         (deprecated) silently skip existing files.  See also --update\n\
 "));
       oputs (_("\
   -P, --no-dereference\n\
@@ -229,6 +221,14 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
       oputs (_("\
       --keep-directory-symlink\n\
          follow existing symlinks to directories\n\
+"));
+      oputs (_("\
+  -l, --link\n\
+         hard link files instead of copying\n\
+"));
+      oputs (_("\
+  -n, --no-clobber\n\
+         (deprecated) silently skip existing files.  See also --update\n\
 "));
       oputs (_("\
   -p\n\

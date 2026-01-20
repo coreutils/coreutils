@@ -8794,12 +8794,6 @@ This option is independent of the @option{--interactive} or
 This option is ignored when the @option{--no-clobber} or @option{-n} option
 is also used.
 
-@optItem{cp,-H,}
-If a command line argument specifies a symbolic link, then copy the
-file it points to rather than the symbolic link itself.  However,
-copy (preserving its nature) any symbolic link that is encountered
-via recursive traversal.
-
 @optItem{cp,-i,}
 @optItemx{cp,--interactive,}
 When copying a file other than a directory, prompt whether to
@@ -8807,9 +8801,11 @@ overwrite an existing destination file, and fail if the response
 is not affirmative.  The @option{-i} option overrides
 a previous @option{-n} option.
 
-@optItem{cp,-l,}
-@optItemx{cp,--link,}
-Make hard links instead of copies of non-directories.
+@optItem{cp,-H,}
+If a command line argument specifies a symbolic link, then copy the
+file it points to rather than the symbolic link itself.  However,
+copy (preserving its nature) any symbolic link that is encountered
+via recursive traversal.
 
 @optItem{cp,-L,}
 @optItemx{cp,--dereference,}
@@ -8817,16 +8813,6 @@ Follow symbolic links when copying from them.
 With this option, @command{cp} cannot create a symbolic link.
 For example, a symlink (to regular file) in the source tree will be copied to
 a regular file in the destination tree.
-
-@optItem{cp,-n,}
-@optItemx{cp,--no-clobber,}
-Do not overwrite an existing file; silently skip instead.
-This option overrides a previous @option{-i} option.
-This option is mutually exclusive with @option{-b} or @option{--backup} option.
-This option is deprecated due to having a different exit status from
-other platforms.  See also the @option{--update} option which will
-give more control over how to deal with existing files in the destination,
-and over the exit status in particular.
 
 @optItem{cp,-P,}
 @optItemx{cp,--no-dereference,}
@@ -8840,6 +8826,20 @@ Follow existing symlinks to directories when copying.
 Use this option only when the destination directory's contents are trusted,
 as an attacker can place symlinks in the destination
 to cause @command{cp} write to arbitrary target directories.
+
+@optItem{cp,-l,}
+@optItemx{cp,--link,}
+Make hard links instead of copies of non-directories.
+
+@optItem{cp,-n,}
+@optItemx{cp,--no-clobber,}
+Do not overwrite an existing file; silently skip instead.
+This option overrides a previous @option{-i} option.
+This option is mutually exclusive with @option{-b} or @option{--backup} option.
+This option is deprecated due to having a different exit status from
+other platforms.  See also the @option{--update} option which will
+give more control over how to deal with existing files in the destination,
+and over the exit status in particular.
 
 @optItem{cp,-p,}
 @optItemx{cp,--preserve,[=@var{attribute_list}]}
