@@ -4723,7 +4723,7 @@ quote_name (char const *name, struct quoting_options const *options,
          For example since ls is outputting a dense block of URIs
          it would be best to not underline by default, and only
          do so upon hover etc.  */
-      printf ("\033]8;;file://%s%s%s\a", h, *n == '/' ? "" : "/", n);
+      printf ("\033]8;;file://%s%s%s\033\\", h, *n == '/' ? "" : "/", n);
       free (h);
       free (n);
     }
@@ -4740,7 +4740,7 @@ quote_name (char const *name, struct quoting_options const *options,
 
   if (absolute_name)
     {
-      fputs ("\033]8;;\a", stdout);
+      fputs ("\033]8;;\033\\", stdout);
       if (skip_quotes)
         putchar (*(buf + len - 1));
     }

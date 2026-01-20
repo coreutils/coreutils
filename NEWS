@@ -71,6 +71,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'fmt' -w,--width no longer includes '\n' in the width of a line.
   I.e., the specified width is interpreted to be an _inclusive_ maximum.
 
+  'ls --hyperlink' now uses more standard format hyperlinks.
+  'ESC\' (ST) is now used as a delimiter, instead of '\a' (BEL).
+
   'ptx' -t is no longer a no-op, and now sets the default width to 100 columns.
 
   'timeout' now honors ignored signals and will not propagate them.  E.g.,

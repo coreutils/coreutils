@@ -31,7 +31,7 @@ encode() {
 ls_encoded() {
   ef=$(encode "$1")
   echo "$ef" | grep 'dir$' >/dev/null && dir=: || dir=''
-  printf '\033]8;;file:///%s\a%s\033]8;;\a%s\n' \
+  printf '\033]8;;file:///%s\033\\%s\033]8;;\033\\%s\n' \
     "$ef" "$1" "$dir"
 }
 
@@ -51,7 +51,7 @@ for f in 'an#chor' 'back\slash' 'col:on' 'encoded%3Fquestion' \
 done
 )
 ln -s testdir testdirl || framework_failure_
-(cat exp.t && printf '\n' && sed 's/[^\/]testdir/&l/' exp.t) > exp \
+(cat exp.t && printf '\n' && sed 's|[^/]testdir|&l|' exp.t) > exp \
   || framework_failure_
 ls --hyper testdir testdirl >out.t || fail=1
 strip_host_and_path <out.t >out || framework_failure_
