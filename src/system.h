@@ -579,7 +579,15 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
 
   /* write option text.  */
 #ifdef MANUAL_URL
-  char const *url_program = streq (program, "[") ? "test" : program;
+  char const *url_program =   streq (program, "[") ? "test"
+                            : streq (program, "b2sum") ? "cksum"
+                            : streq (program, "md5sum") ? "cksum"
+                            : streq (program, "sha1sum") ? "cksum"
+                            : streq (program, "sha224sum") ? "cksum"
+                            : streq (program, "sha256sum") ? "cksum"
+                            : streq (program, "sha384sum") ? "cksum"
+                            : streq (program, "sha512sum") ? "cksum"
+                            : program;
   /* Note single node manual doesn't work for ls, cksum, md5sum, sha*sum,
      but use single node for --help or --version.. */
   if (STREQ_LEN (option_text, "--help", 6)
