@@ -58,11 +58,14 @@ yes | head -n 2048 | tr -d '\n' > out || framework_failure_
 cp out exp-out || framework_failure_
 
 LD_PRELOAD=$LD_PRELOAD:./k.so dd if=/dev/zero of=out count=1 \
-                              seek=1 status=none 2>err
+                              seek=1 status=none 2>errt
 ret=$?
 
 test -f x && test -f y \
   || skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
+
+# Solaris 11.4 gives a different, but reasonable, error message here.
+sed 's/Insufficient privileges/Operation not permitted/g' < errt > err
 
 # After ftruncate fails, we use fstat to get the file type.
 echo "dd: cannot fstat 'out': Operation not permitted" > exp
