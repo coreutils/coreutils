@@ -97,7 +97,7 @@ read_fifo_delayed & pid=$!
 dd count=20 bs=100K if=/dev/zero status=none |
 {
   dd count=0 oflag=nonblock status=none
-  tee || { cleanup_; touch tee.fail; }
+  timeout 10 tee || { cleanup_; touch tee.fail; }
 } >fifo
 test -f tee.fail && fail=1 || cleanup_
 
