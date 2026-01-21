@@ -22,6 +22,9 @@
 print_ver_ df
 skip_if_root_
 
+# Sanitizers need to read from /proc
+sanitizer_build_ df && skip_ 'Sanitizer not supported'
+
 # Protect against inaccessible remote mounts etc.
 timeout 10 df || skip_ "df fails"
 
@@ -30,7 +33,7 @@ unshare -rm true || skip_ 'User namespace sandbox is disabled'
 # mask /proc
 df() {
   unshare -rm $SHELL -c \
-    "mount -t tmpfs tmpfs /proc && command df \"\$@\"" -- "$@";
+    "mount -t tmpfs tmpfs /proc && env df \"\$@\"" -- "$@";
 }
 
 df /proc || fail=1
