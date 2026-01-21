@@ -62,6 +62,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  all commands now markup option names in --help and man pages,
+  with bold attributes, and hyperlinks into the online manual on gnu.org.
+  The links can be configured with the --enable-manual-url configure option,
+  and the bold highlighting with --disable-bold-man-page-references.
+  At runtime all markup can be disabled by setting the HELP_NO_MARKUP env var.
+
   'fmt' -w,--width no longer includes '\n' in the width of a line.
   I.e., the specified width is interpreted to be an _inclusive_ maximum.
 
