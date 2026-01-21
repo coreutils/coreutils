@@ -54,6 +54,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   This augments the existing "symlinks" and "shebangs" modes already
   supported by the --enable-single-binary option.
 
+  'stat and 'tail' now know about the "guest-memfd" file system type.
+  stat -f -c%T now reports the file system type,
+  and tail -f uses polling for this file system.
+
   'tail' now accepts the --debug option, which is currently used to
   detail the --follow implementation being used.
 

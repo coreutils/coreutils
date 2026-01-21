@@ -385,6 +385,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "gfs/gfs2";
     case S_MAGIC_GPFS: /* 0x47504653 remote */
       return "gpfs";
+    case S_MAGIC_GUEST_MEMFD: /* 0x474D454D remote */
+      return "guest-memfd";
     case S_MAGIC_HFS: /* 0x4244 local */
       return "hfs";
     case S_MAGIC_HFS_PLUS: /* 0x482B local */
