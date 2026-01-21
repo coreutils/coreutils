@@ -44,8 +44,10 @@ mkfifo --mode='ug+rw,o+r' f5 || fail=1
 mode=$(ls -dgo f5 | cut -b-10)
 test "$mode" = prw-rw-rw- || fail=1
 
-mkdir --mode='ug+rw,o+r' f6 || fail=1
-mode=$(ls -dgo f6 | cut -b-10)
-test "$mode" = drwxrwxrwx || fail=1
+if ! test -g .; then
+  mkdir --mode='ug+rw,o+r' f6 || fail=1
+  mode=$(ls -dgo f6 | cut -b-10)
+  test "$mode" = drwxrwxrwx || fail=1
+fi
 
 Exit $fail
