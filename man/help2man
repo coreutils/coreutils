@@ -766,7 +766,7 @@ for my $sect (@pre, (grep !$filter{$_}, @sections), @post)
 	    s/\x83/\\-/g;
 
 	    # Convert hyperlink markers to roff \X escape sequences
-	    s{((?:(?:\\f.)?\\-(?:\\-)?(?:\\f.)?)?)\x01(\d+)\x02(.*?)\x03}
+	    s{((?:\+|(?:(?:\\f.)?\\-(?:\\-)?(?:\\f.)?))?)\x01(\d+)\x02(.*?)\x03}
 	     {convert_hyperlink($1, $2, $3)}gse;
 
 	    # Convert some latin1 chars to troff equivalents.
@@ -814,12 +814,12 @@ sub get_option_value
     # Strip ANSI SGR formatting codes (colors, bold, etc.)
     $value =~ s/\x1b\[[0-9;]*m//g;
 
-    # Convert OSC 8 hyperlinks to markers placed after any leading dashes
+    # Convert OSC 8 hyperlinks to markers placed after any leading dashes/plus
     # This preserves help2man's option detection (which looks for /^  +[-+]/)
     # Support both BEL (\x07) and ST (\x1b\) terminators
     $value =~ s/
         \x1b\]8;;([^\x07\x1b]*)(?:\x07|\x1b\\)  # opening OSC 8 with URL
-        (--?)?(.*?)                             # optional dashes and link text
+        (\+|--?)?(.*?)                          # optional +, -, or -- and link text
         \x1b\]8;;(?:\x07|\x1b\\)                # closing OSC 8
     /{
         my $idx = scalar @hyperlink_urls;
