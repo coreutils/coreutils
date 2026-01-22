@@ -70,7 +70,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   with bold attributes, and hyperlinks into the online manual on gnu.org.
   The links can be configured with the --enable-manual-url configure option,
   and the bold highlighting with --disable-bold-man-page-references.
-  At runtime all markup can be disabled by setting the HELP_NO_MARKUP env var.
+  At runtime all markup can be disabled by with the TERM=dumb env var value.
 
   'fmt' -w,--width no longer includes '\n' in the width of a line.
   I.e., the specified width is interpreted to be an _inclusive_ maximum.

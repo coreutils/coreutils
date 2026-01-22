@@ -8,7 +8,6 @@
 # export MANPAGER=less
 
 unset GROFF_NO_SGR
-unset HELP_NO_MARKUP
 
 hdir=$(dirname "$0")
 

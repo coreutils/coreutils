@@ -542,7 +542,7 @@ is_nul (void const *buf, size_t length)
 /* Output --option descriptions;
    formatted with ANSI format and hyperlink codes.
    Any postprocessors like help2man etc. are expected to handle this,
-   though it can be disabled in edge cases with the HELP_NO_MARKUP env var.  */
+   though it can be disabled in edge cases with the TERM=dumb env var.  */
 
 #define oputs(option) oputs_ (PROGRAM_NAME, option)
 static inline void
@@ -554,12 +554,19 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
 #else
     -1;  /* Lookup.  */
 #endif
-  if (help_no_sgr == 1
-      || (help_no_sgr == -1 && (help_no_sgr = !!getenv ("HELP_NO_MARKUP"))))
+  if (help_no_sgr == -1)
+    {
+      /* Note we don't consult isatty() since usually you
+         would want markup when piping to grep/less etc.  */
+      char const *term = getenv ("TERM");
+      help_no_sgr = (!term || !*term || streq (term, "dumb"));
+    }
+  if (help_no_sgr)
     {
       fputs (option, stdout);
       return;
     }
+
 
   char const* first_word = option + strspn (option, " \t\n");
   char const *option_text = strchr (option, '-');

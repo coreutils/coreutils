@@ -25,7 +25,7 @@ longopts() { getopts $1 | cut -s -d'"' -f2; }
 getopts() {
   skip='--help|--version'              # These refs treated specially
 
-  HELP_NO_MARKUP=1 env "$1" --help |
+  env "$1" --help |
   grep -E '^(  -|      --)' |          # find options
   grep -Ev -- " - |-M.*from first" |   # exclude invalid matches
   sed -e 's/^ *//' -e's/  .*//' |      # strip leading space and descriptions

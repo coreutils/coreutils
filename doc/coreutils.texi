@@ -764,12 +764,12 @@ these programs, abbreviations of the long options are not always recognized.
 
 @item --help
 @opindex --help
-@vindex HELP_NO_MARKUP
+@vindex TERM
 @cindex help, online
 Print a usage message listing all available options, then exit successfully.
 Help output may be marked up with terminal codes for formatting or
-hyperlinks, which can be disabled by setting the @env{HELP_NO_MARKUP}
-environment variable.
+hyperlinks, which can be disabled by unsetting the @env{TERM} environment
+variable, or setting it to the value @samp{dumb}.
 
 @item --version
 @opindex --version
