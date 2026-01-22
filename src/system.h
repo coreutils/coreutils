@@ -588,6 +588,8 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
   /* write option text.  */
 #ifdef MANUAL_URL
   char const *url_program =   streq (program, "[") ? "test"
+                            : streq (program, "dir") ? "ls"
+                            : streq (program, "vdir") ? "ls"
                             : streq (program, "b2sum") ? "cksum"
                             : streq (program, "md5sum") ? "cksum"
                             : streq (program, "sha1sum") ? "cksum"
