@@ -2774,10 +2774,10 @@ Paginate or columnate FILE(s) for printing.\n\
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      fputs (_("\
+      oputs (_("\n\
   +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]\n\
          begin [stop] printing with page FIRST_[LAST_]PAGE\n\
-"), stdout);
+"));
       oputs (_("\
   -COLS, --columns=COLS\n\
          output COLS columns and print columns down, unless -a is used.\n\
@@ -2819,8 +2819,9 @@ Paginate or columnate FILE(s) for printing.\n\
          replace spaces with CHARs (TABs) to tab WIDTH (8)\n\
 "));
       oputs (_("\
-  -J, --join-lines  merge full lines, turns off -W line truncation, no column\n\
-         alignment, --sep-string[=STRING] sets separators\n\
+  -J, --join-lines\n\
+         merge full lines, turns off -W line truncation,\n\
+         no column alignment, --sep-string[=STRING] sets separators\n\
 "));
       oputs (_("\
   -l, --length=PAGE_LENGTH\n\
