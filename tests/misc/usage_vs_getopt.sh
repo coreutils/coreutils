@@ -70,7 +70,7 @@ checkprg () {
       # Else $prg should have complained about a missing argument.
       # Catch false positives.
       case "$prg/$opt" in
-        'pr/-COLUMN') continue;;
+        'pr/-COLS') continue;;
       esac
       # Replace $opt in stderr output by the neutral placeholder.
       # Handle both long and short option error messages.
