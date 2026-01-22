@@ -44,9 +44,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   after a failure to allocate memory.
   [bug introduced in coreutils-9.0]
 
-  Programs now port to C23 platforms that strictly check types when
-  qualifier-generic functions like strchr are used.
-
 ** New Features
 
   configure accepts a new --enable-single-binary=hardlinks mode to build the
@@ -66,11 +63,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
-  all commands now markup option names in --help and man pages,
+  All commands now markup option names in --help and man pages,
   with bold attributes, and hyperlinks into the online manual on gnu.org.
   The links can be configured with the --enable-manual-url configure option,
   and the bold highlighting with --disable-bold-man-page-references.
-  At runtime all markup can be disabled by with the TERM=dumb env var value.
+  At runtime all markup can be disabled with the TERM=dumb env var value.
 
   'fmt' -w,--width no longer includes '\n' in the width of a line.
   I.e., the specified width is interpreted to be an _inclusive_ maximum.
@@ -120,6 +117,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   timeout process itself dies, like when it receives a KILL signal for example.
 
 ** Build-related
+
+  Programs now port to C23 platforms that strictly check types when
+  qualifier-generic functions like strchr are used.
 
   'chcon' and 'runcon' stub binaries will be built on systems without
   libselinux, when configured using --with-selinux.
