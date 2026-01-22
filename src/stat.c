@@ -1773,7 +1773,7 @@ Display file or file system status.\n\
          useful on remote file systems. See MODE below\n\
 "));
       oputs (_("\
-  -c  --format=FORMAT\n\
+  -c, --format=FORMAT\n\
          use the specified FORMAT instead of the default;\n\
          output a newline after each use of FORMAT\n\
 "));
