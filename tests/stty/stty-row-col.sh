@@ -58,6 +58,15 @@ set -- $tests
 saved_size=$(stty size) && test -n "$saved_size" \
   || skip_ "can't get window size"
 
+cleanup_()
+{
+  trap - WINCH
+  if test -n "$saved_size" && test "x$saved_size" != "x0 0"; then
+    set x $saved_size
+    stty rows $2 columns $3
+  fi
+}
+
 # Linux virtual consoles issue an error if you
 # try to increase their size.  So skip in that case.
 if test "x$saved_size" != "x0 0"; then
@@ -78,14 +87,14 @@ while :; do
     # echo "testing \$(stty $args; stty size\) = $expected_result ..."
     echo "test $test_name... " | tr -d '\n'
   fi
+  trap '' WINCH # Ignore terminal resizes
   stty $args || exit 1
+  # Skip if other terminal resizes detected
+  trap 'skip_ "terminal resize detected"' WINCH
   test x"$(stty size 2> /dev/null)" = "x$expected_result" \
     && ok=ok || ok=FAIL fail=1
   test "$VERBOSE" = yes && echo $ok
   shift; shift; shift
 done
-
-set x $saved_size
-stty rows $2 columns $3 || exit 1
 
 Exit $fail
