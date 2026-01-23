@@ -53,7 +53,7 @@ for prg in $built_programs; do
   got_option=false
   for opt in $(getopts $prg); do
     got_option=true
-    if ! grep -E "opt(Itemx?|Anchor){$dprg,$opt[,}]" \
+    if ! grep -E "opt(Itemx?|Anchor)\\{$dprg,$opt[,}]" \
           "$abs_top_srcdir/doc/coreutils.texi" >/dev/null; then
       if ! grep "optItemx\\?{\\\\cmd\\\\,$opt," \
             "$abs_top_srcdir/doc/coreutils.texi" >/dev/null; then
