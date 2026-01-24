@@ -30,7 +30,7 @@ set _ $(ls -n f); shift; test ":$4" = ':1' || fail=1
 # Make sure the correct diagnostic is output
 # Note we output a name even though an id was specified.
 chgrp -v --from=42 43 f > out || fail=1
-printf "group of 'f' retained as $(id -nu 1)\n" > exp
+printf "group of 'f' retained as $(id -nu 1 || printf 1)\n" > exp
 compare exp out || fail=1
 
 chgrp --from=:1 010 f || fail=1
