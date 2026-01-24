@@ -1684,7 +1684,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
               pfd[1].events = pfd[1].revents = 0;
               file_change = poll (pfd, monitor_output + 1, delay);
             }
-          while (file_change == 0);
+          while (file_change == 0 || (file_change < 0 && errno == EINTR));
 
           if (file_change < 0)
             error (EXIT_FAILURE, errno,
