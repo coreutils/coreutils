@@ -64,8 +64,11 @@ ret=$?
 test -f x && test -f y \
   || skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
 
-# Solaris 11.4 gives a different, but reasonable, error message here.
-sed 's/Insufficient privileges/Operation not permitted/g' < errt > err
+# EPERM='Not owner'               on Solaris 11.4.0.15.0 (2018)
+# EPERM='Insufficient privileges' on Solaris 11.4.89.207 (2026)
+sed -e 's/Insufficient privileges/Operation not permitted/' \
+    -e 's/Not owner/Operation not permitted/' \
+    < errt > err || framework_failure_
 
 # After ftruncate fails, we use fstat to get the file type.
 echo "dd: cannot fstat 'out': Operation not permitted" > exp
