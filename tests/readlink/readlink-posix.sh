@@ -27,7 +27,9 @@ ln -s file link1 || framework_failure_
 cat <<\EOF > exp || framework_failure_
 readlink: file: Invalid argument
 EOF
-returns_ 1 env POSIXLY_CORRECT=1 readlink file 2>err || fail=1
+returns_ 1 env POSIXLY_CORRECT=1 readlink file 2>errt || fail=1
+# Haiku capitalizes this.
+sed 's/Argument/argument/g' < errt > err
 compare exp err || fail=1
 
 # Does not occur for non-POSIX options.
