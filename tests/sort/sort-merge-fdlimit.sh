@@ -35,9 +35,11 @@ seq 17 >some-data
 # the ATF but fail inside it.
 
 # The default batch size (nmerge) is 16.
-(ulimit -n 19 \
+(ulimit -n 19 && touch ulimit-worked \
    && sort -m --batch-size=16 in/* 2>err/merge-default-err \
    || ! grep "open failed" err/merge-default-err) || fail=1
+
+test -f ulimit-worked || skip_ 'cannot modify open file descriptor limit'
 
 # If sort opens a file to sort by random hashes of keys,
 # it needs to consider this file against its limit on open file
