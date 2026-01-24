@@ -56,16 +56,20 @@ usage (int status)
       printf (_("Usage: %s [OPTION]...\n"), program_name);
       fputs (_("\
 Print the number of processing units available to the current process,\n\
-which may be less than the number of online processors\n\
+which may be less than the number of online processors.\n\
+If the 'OMP_NUM_THREADS' or 'OMP_THREAD_LIMIT' environment variables are set,\n\
+then they will determine the minimum and maximum returned value respectively.\n\
 \n\
 "), stdout);
       oputs (_("\
       --all\n\
-         print the number of installed processors\n\
+         print the number of installed processors,\n\
+         disregarding any OpenMP environment variables, or CPU quotas.\n\
 "));
       oputs (_("\
       --ignore=N\n\
-         if possible, exclude N processing units\n\
+         if possible, exclude N processing units.\n\
+         The result is guaranteed to be at least 1.\n\
 "));
 
       oputs (HELP_OPTION_DESCRIPTION);
