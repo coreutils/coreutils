@@ -24,6 +24,7 @@ echo a > "$(bad_unicode)" \
 
 for loc in C "$LOCALE_FR" "$LOCALE_FR_UTF8"; do
   test -z "$loc" && continue
+  export LC_ALL="$loc"
   # Bad Unicode as a suffix.
   file1=$(mktemp --tmpdir='.' --suffix=$(bad_unicode)) || fail=1
   test -n "$file1" && test -f "$file1" || fail=1
