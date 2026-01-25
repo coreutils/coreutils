@@ -576,10 +576,11 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
 
   /* Set highlighted text up to spacing after the full option text.
      Any single space is included in highlighted text,
-     double space or newline terminates the option text.  */
+     double space or TAB or newline terminates the option text.  */
   char const *desc_text = option_text + anchor_len;
   while (*desc_text && *desc_text != '\n'
-         && (! isspace (*desc_text) || ! isspace (*(desc_text + 1))))
+         && (! isspace (*desc_text)
+             || (*desc_text != '\t' && ! isspace (*(desc_text + 1)))))
     desc_text++;
 
   /* write spaces before option text. */
