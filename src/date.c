@@ -128,12 +128,12 @@ usage (int status)
     {
       printf (_("\
 Usage: %s [OPTION]... [+FORMAT]\n\
-  or:  %s [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]\n\
+  or:  %s [OPTION]... MMDDhhmm[[CC]YY][.ss]\n\
 "),
               program_name, program_name);
       fputs (_("\
 Display date and time in the given FORMAT.\n\
-With -s, or with [MMDDhhmm[[CC]YY][.ss]], set the date and time.\n\
+With -s, or with MMDDhhmm[[CC]YY][.ss], set the date and time first.\n\
 "), stdout);
 
       emit_mandatory_arg_note ();

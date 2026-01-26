@@ -15837,20 +15837,20 @@ Synopses:
 
 @example
 date [@var{option}]@dots{} [+@var{format}]
-date [-u|--utc|--universal] @c this avoids a newline in the output
-[ MMDDhhmm[[CC]YY][.ss] ]
+date [@var{option}]@dots{} @c Avoid a newline in the output.
+@var{mm}@var{dd}@var{hh}@var{mm}[[@var{cc}]@var{yy}][.@var{ss}]
 @end example
 
 The @command{date} command displays the date and time.
 With the @option{--set} (@option{-s}) option, or with
-@samp{MMDDhhmm[[CC]YY][.ss]},
-it sets the date and time.
+@samp{@var{mm}@var{dd}@var{hh}@var{mm}[[@var{cc}]@var{yy}][.@var{ss}]},
+it sets the date and time before displaying it.
 
 @vindex LC_TIME
-Invoking @command{date} with no @var{format} argument is equivalent to invoking
+Invoking @command{date} with no operands is equivalent to invoking
 it with a default format that depends on the @env{LC_TIME} locale category.
-In the default C locale, this format is @samp{'+%a %b %e %H:%M:%S %Z %Y'},
-so the output looks like @samp{Thu Jul @ 9 17:00:00 EDT 2020}.
+In the default C locale, this format is @samp{+%a %b %e %H:%M:%S %Z %Y},
+so the output looks like @samp{Thu Jul @ 9 17:00:00 EDT 2026}.
 
 @vindex TZ
 Normally, @command{date} uses the time zone rules indicated by the
@@ -15878,8 +15878,7 @@ is not set.  @xref{TZ Variable,, Specifying the Time Zone with
 @cindex time formats
 @cindex formatting times
 If given an argument that starts with a @samp{+}, @command{date} prints the
-current date and time (or the date and time specified by the
-@option{--date} option, see below) in the format defined by that argument,
+date and time in the format defined by that argument,
 which is similar to that of the @code{strftime} function.  Except for
 conversion specifiers, which start with @samp{%}, characters in the
 format string are printed unchanged.  The conversion specifiers are
@@ -16283,26 +16282,26 @@ hardware clock may need to be updated from the system clock, which
 might not happen automatically on your system.
 
 To set the clock, you can use the @option{--set} (@option{-s}) option
-(@pxref{Options for date}).  To set the clock without using GNU
-extensions, you can give @command{date} an argument of the form
-@samp{MMDDhhmm[[CC]YY][.ss]} where each two-letter
+(@pxref{Options for date}) or a operand of the form
+@samp{@var{mm}@var{dd}@var{hh}@var{mm}[[@var{cc}]@var{yy}][.@var{ss}]}
+where each two-letter
 component stands for two digits with the following meanings:
 
 @table @var
-@item MM
-month
-@item DD
+@item mm
+month (this is the first @var{mm})
+@item dd
 day within month
 @item hh
 hour
 @item mm
-minute
-@item CC
+minute (this is the second @var{mm})
+@item cc
 first two digits of year (optional)
-@item YY
+@item yy
 last two digits of year (optional)
 @item ss
-second (optional)
+second (optional; this is a GNU extension)
 @end table
 
 The @option{--date} and @option{--set} options may not be used with an
