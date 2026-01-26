@@ -63,6 +63,10 @@ my @Tests =
    {IN=>"a.___b.__1._2.__3.___4._"},
    {OUT=>"4._3.___2.__1._b.__a.___"}],
 
+ ['opt-r3', qw(-r -s '^'), {IN=>"a\nb\nc\n"}, {OUT=>"c\nb\na\n"}],
+ ['opt-r4', qw(-r -s '$'), {IN=>"a\nb\nc\n"}, {OUT=>"\n\nc\nba"}],
+ ['opt-r5', qw(-r -s '^$'), {IN=>"a\nb\nc\n"}, {OUT=>"a\nb\nc\n"}],
+
   # This gave incorrect output (.___4._2.__3._1) with tac-1.22.
   ['opt-br', qw(-b -r -s '\._+'),
    {IN=>"._1._2.__3.___4"}, {OUT=>".___4.__3._2._1"}],
