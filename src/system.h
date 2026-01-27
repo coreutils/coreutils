@@ -567,7 +567,6 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
       return;
     }
 
-
   char const* first_word = option + strspn (option, " \t\n");
   char const *option_text = strchr (option, '-');
   if (!option_text)
@@ -577,11 +576,24 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
   /* Set highlighted text up to spacing after the full option text.
      Any single space is included in highlighted text,
      double space or TAB or newline terminates the option text.  */
+  bool long_option = false;
   char const *desc_text = option_text + anchor_len;
-  while (*desc_text && *desc_text != '\n'
-         && (! isspace (*desc_text)
-             || (*desc_text != '\t' && ! isspace (*(desc_text + 1)))))
-    desc_text++;
+  while (*desc_text && *desc_text != '\n')
+    {
+      if (*desc_text == '-' && *(desc_text + 1) == '-')
+        long_option = true;
+      if (isspace (*desc_text))
+        {
+          if (*desc_text == '\t' || isspace (*(desc_text + 1)))
+            break;
+          /* With long options we restrict the match as some translations
+             delimit a long option and description with a single space.  */
+          if (long_option && *(desc_text + 1) != '-')
+            break;
+        }
+
+      desc_text++;
+    }
 
   /* write spaces before option text. */
   fwrite (option, 1, first_word - option, stdout);
