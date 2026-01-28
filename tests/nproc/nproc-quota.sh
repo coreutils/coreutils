@@ -32,7 +32,7 @@ int
 sched_getscheduler (pid_t pid)
 {
   fclose (fopen ("preloaded","w")); /* marker for preloaded interception */
-  FILE* policyf = fopen ("/proc/self/sched", "r");
+  FILE *policyf = fopen ("/proc/self/sched", "r");
   int policy;
   #define fscanfmt fscanf  /* Avoid syntax check.  */
   if (pid == 0 && fscanfmt (policyf, "policy : %d", &policy) == 1)

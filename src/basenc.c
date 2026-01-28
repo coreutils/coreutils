@@ -1272,7 +1272,7 @@ base58_encode_ctx (struct base_encode_context *ctx,
 }
 
 static void
-base58_encode (char const* data, size_t data_len,
+base58_encode (char const *data, size_t data_len,
                char *out, idx_t *outlen)
 {
   affirm (base_length (data_len) <= *outlen);

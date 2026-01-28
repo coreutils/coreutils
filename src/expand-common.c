@@ -399,7 +399,7 @@ cleanup_file_list_stdin (void)
 /* Emit the --help output for --tabs=LIST option accepted by expand and
    unexpand.  */
 extern void
-emit_tab_list_info (char const* program)
+emit_tab_list_info (char const *program)
 {
   /* suppress syntax check for emit_mandatory_arg_note() */
   oputs_ (program, _("\

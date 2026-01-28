@@ -4902,7 +4902,7 @@ print_color_indicator (const struct bin_str *ind)
 
 /* Returns color indicator or NULL if none.  */
 ATTRIBUTE_PURE
-static const struct bin_str*
+static const struct bin_str *
 get_color_indicator (const struct fileinfo *f, bool symlink_target)
 {
   enum indicator_no type;

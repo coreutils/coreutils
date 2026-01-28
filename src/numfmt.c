@@ -1406,7 +1406,7 @@ is_utf8_charset (void)
    Return a pointer to the character, or NULL if not found.  */
 ATTRIBUTE_PURE
 static char *
-mbsmbchr (char const* s, char const* c)
+mbsmbchr (char const *s, char const *c)
 {
   unsigned char uc = *c;
    /* GB18030 is the most restrictive for the 0x30 optimization below.  */
@@ -1420,7 +1420,7 @@ mbsmbchr (char const* s, char const* c)
 
 /* Return a pointer to the beginning of the next field in line.
    The line pointer is moved to the end of the next field. */
-static char*
+static char *
 next_field (char **line)
 {
   char *field_start = *line;

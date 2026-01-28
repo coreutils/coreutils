@@ -40,9 +40,9 @@ sed 's/streq/0==str''cmp/' > k.c <<EOF || framework_failure_
 #include <stdarg.h>
 #include <dlfcn.h>
 
-static FILE* (*fopen_func)(const char *, const char *);
+static FILE *(*fopen_func) (const char *, const char *);
 
-FILE* fopen(const char *path, const char *mode)
+FILE *fopen(const char *path, const char *mode)
 {
 
   /* get reference to original (libc provided) fopen */

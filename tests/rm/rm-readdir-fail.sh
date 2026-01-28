@@ -56,7 +56,7 @@ struct dirent *readdir (DIR *dirp)
       errno = ESRCH;
       return NULL;
     }
-  struct dirent* d;
+  struct dirent *d;
   if (! (d = real_readdir (dirp)))
     {
       fprintf (stderr, "Failed to get dirent\n");

@@ -546,7 +546,7 @@ is_nul (void const *buf, size_t length)
 
 #define oputs(option) oputs_ (PROGRAM_NAME, option)
 static inline void
-oputs_ (MAYBE_UNUSED char const* program, char const *option)
+oputs_ (MAYBE_UNUSED char const *program, char const *option)
 {
   static int help_no_sgr =
 #if ! defined MANUAL_URL && ! defined BOLD_MAN_REFS
@@ -567,7 +567,7 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
       return;
     }
 
-  char const* first_word = option + strspn (option, " \t\n");
+  char const *first_word = option + strspn (option, " \t\n");
   char const *option_text = strchr (option, '-');
   if (!option_text)
     option_text = first_word;  /* for dd option syntax.  */
@@ -656,7 +656,7 @@ oputs_ (MAYBE_UNUSED char const* program, char const *option)
 #define oprintf(...) oprintf_ (PROGRAM_NAME, __VA_ARGS__)
 ATTRIBUTE_FORMAT ((printf, 2, 3))
 static inline void
-oprintf_ (char const* program, char const *message, ...)
+oprintf_ (char const *program, char const *message, ...)
 {
   va_list args;
   char *buf;
@@ -751,7 +751,7 @@ the VERSION_CONTROL environment variable.  Here are the values:\n\
 #define emit_symlink_recurse_options(default_opt) \
  emit_symlink_recurse_options_ (PROGRAM_NAME, default_opt)
 static inline void
-emit_symlink_recurse_options_ (char const* program, char const *default_opt)
+emit_symlink_recurse_options_ (char const *program, char const *default_opt)
 {
       printf (_("\
 \n\
