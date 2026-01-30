@@ -131,7 +131,7 @@ static char const *top_level_dst_name;
 /* debug info about the last file copy.  */
 static struct copy_debug copy_debug;
 
-static const char *
+static char const *
 copy_debug_string (enum copy_debug_val debug_val)
 {
   switch (debug_val)
@@ -148,7 +148,7 @@ copy_debug_string (enum copy_debug_val debug_val)
     }
 }
 
-static const char *
+static char const *
 copy_debug_sparse_string (enum copy_debug_val debug_val)
 {
   switch (debug_val)
