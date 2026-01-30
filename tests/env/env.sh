@@ -186,4 +186,7 @@ EOF
 compare err_exp err || fail=1
 done
 
+# env should not abort by I/O error caused by --debug
+env --debug true 2> /dev/full || fail=1
+
 Exit $fail
