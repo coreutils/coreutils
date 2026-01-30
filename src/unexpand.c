@@ -140,9 +140,6 @@ unexpand (void)
       /* Column of next input character.  */
       colno column = 0;
 
-      /* Column the next input tab stop is on.  */
-      colno next_tab_column = 0;
-
       /* Index in TAB_LIST of next tab stop to examine.  */
       idx_t tab_index = 0;
 
@@ -173,8 +170,10 @@ unexpand (void)
                 {
                   bool last_tab;
 
-                  next_tab_column = get_next_tab_column (column, &tab_index,
-                                                         &last_tab);
+                  /* Column the next input tab stop is on.  */
+                  colno next_tab_column = get_next_tab_column (column,
+                                                               &tab_index,
+                                                               &last_tab);
 
                   if (last_tab)
                     convert = false;
@@ -217,7 +216,6 @@ unexpand (void)
                   /* Go back one column, and force recalculation of the
                      next tab stop.  */
                   column -= !!column;
-                  next_tab_column = column;
                   tab_index -= !!tab_index;
                 }
               else
