@@ -287,8 +287,6 @@ The option -WIDTH is an abbreviated form of --width=DIGITS.\n\
   -s, --split-only\n\
          split long lines, but do not refill\n\
 "));
-      /* Tell xgettext that the "% o" below is not a printf-style
-         format string:  xgettext:no-c-format */
       oputs (_("\
   -t, --tagged-paragraph\n\
          indentation of first line different from second\n\
@@ -301,6 +299,8 @@ The option -WIDTH is an abbreviated form of --width=DIGITS.\n\
   -w, --width=WIDTH\n\
          maximum line width (default of 75 columns)\n\
 "));
+      /* Tell xgettext that the "% o" below is not a printf-style
+         format string:  xgettext:no-c-format */
       oputs (_("\
   -g, --goal=WIDTH\n\
          goal width (default of 93% of width)\n\
