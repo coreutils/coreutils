@@ -567,28 +567,49 @@ oputs_ (MAYBE_UNUSED char const *program, char const *option)
       return;
     }
 
+  bool double_space = true;
   char const *first_word = option + strspn (option, " \t\n");
   char const *option_text = strchr (option, '-');
-  if (!option_text)
-    option_text = first_word;  /* for dd option syntax.  */
+  if (!option_text)                    /* for dd(1) option syntax.  */
+    {
+      option_text = first_word;
+      /* Just match first word to support single spaced
+         translated dd "foo=bar description" format.  */
+      double_space = false;
+    }
+  else if (option_text != first_word)  /* for test(1) option syntax.  */
+    {
+      /* Ensure only a single space encountered before '-', to avoid
+         matching within descriptions for translated dd option syntax.  */
+      char const *s = first_word;
+      size_t spaces = 0;
+      while (s < option_text && spaces < 2)
+        spaces += !!isspace (*s++);
+      if (spaces == 2)
+        {
+          /* Probably mismatched dd format.  */
+          option_text = first_word;
+          double_space = false;
+        }
+    }
+
   size_t anchor_len = strcspn (option_text, ",=[ \n");
 
   /* Set highlighted text up to spacing after the full option text.
      Any single space is included in highlighted text,
      double space or TAB or newline terminates the option text.  */
-  bool long_option = false;
   char const *desc_text = option_text + anchor_len;
   while (*desc_text && *desc_text != '\n')
     {
       if (*desc_text == '-' && *(desc_text + 1) == '-')
-        long_option = true;
+        double_space = false;
       if (isspace (*desc_text))
         {
           if (*desc_text == '\t' || isspace (*(desc_text + 1)))
             break;
           /* With long options we restrict the match as some translations
              delimit a long option and description with a single space.  */
-          if (long_option && *(desc_text + 1) != '-')
+          if (!double_space && *(desc_text + 1) != '-')
             break;
         }
 
