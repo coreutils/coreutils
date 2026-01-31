@@ -53,7 +53,7 @@
       two conflicting POSIX requirements exist:
    First "default n-separator is TAB", second "output text columns shall
    be of equal width". Moreover POSIX specifies the number+separator a
-   part of the column, together with '-COLUMN' and '-a -COLUMN'.
+   part of the column, together with '-COLS' and '-a -COLS'.
    (With -m output the number shall occupy each line only once. Exactly
    the same situation as single column output exists.)
       GNU pr gives priority to the 2nd requirement and observes POSIX
@@ -114,13 +114,13 @@
    +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]
                 begin [stop] printing with page FIRST_[LAST_]PAGE
 
-   -COLUMN, --columns=COLUMN
-                Produce output that is COLUMN columns wide and
+   -COLS, --columns=COLS
+                Produce output that is COLS columns wide and
                 print columns down, unless -a is used. Balance number of
                 lines in the columns on each page.
 
    -a, --across		Print columns across rather than down, used
-                together with -COLUMN. The input
+                together with -COLS. The input
                 one
                 two
                 three
@@ -131,7 +131,7 @@
 
    -b		Balance columns on the last page.
                 -b is no longer an independent option. It's always used
-                together with -COLUMN (unless -a is used) to get a
+                together with -COLS (unless -a is used) to get a
                 consistent formulation with "FF set by hand" in input
                 files. Each formfeed found terminates the number of lines
                 to be read with the actual page. The situation for
@@ -174,7 +174,7 @@
    -J, --join-lines	Merge lines of full length, turns off -W/-w
                 line truncation, no column alignment, --sep-string[=STRING]
                 sets separators, works with all column options
-                (-COLUMN | -a -COLUMN | -m).
+                (-COLS | -a -COLS | -m).
                 -J has been introduced (together with -W and --sep-string) to
                 disentangle the old (POSIX compliant) options -w, -s
                 along with the 3 column options.
@@ -246,7 +246,7 @@
                 CHAR is the TAB character without -w and 'no char' with -w.
                 Without '-s' default separator 'space' is set.
                 -s[CHAR] turns off line truncation of all 3 column options
-                (-COLUMN|-a -COLUMN|-m) except -w is set. That is a POSIX
+                (-COLS|-a -COLS|-m) except -w is set. That is a POSIX
                 compliant formulation. The source code translates -s into
                 the new options -S and -J, also -W if required.
 
@@ -287,7 +287,7 @@
                 Set the page width to PAGE_WIDTH characters. That's valid
                 with and without a column option. Text lines will be
                 truncated, unless -J is used. Together with one of the
-                column options (-COLUMN| -a -COLUMN| -m) column alignment
+                column options (-COLS| -a -COLS| -m) column alignment
                 is always used.
                 Default is 72 characters.
                 Without -W PAGE_WIDTH
@@ -920,7 +920,7 @@ main (int argc, char **argv)
             break;
           }
 
-        case COLUMNS_OPTION:	/* --columns=COLUMN */
+        case COLUMNS_OPTION:	/* --columns=COLS */
           {
             parse_column_count (optarg);
 
@@ -2785,7 +2785,7 @@ Paginate or columnate FILE(s) for printing.\n\
 "));
       oputs (_("\
   -a, --across\n\
-         print columns across rather than down, used together with -COLUMN\n\
+         print columns across rather than down, used together with -COLS\n\
 "));
       oputs (_("\
   -c, --show-control-chars\n\
@@ -2856,10 +2856,9 @@ Paginate or columnate FILE(s) for printing.\n\
       oputs (_("\
   -s[CHAR], --separator[=CHAR]\n\
          separate columns by a single character, default for CHAR\n\
-         is the <TAB> character without -w and \'no char\' with -w.\
-\n\
+         is the <TAB> character without -w and \'no char\' with -w.\n\
          -s[CHAR] turns off line truncation of all 3 column\n\
-         options (-COLUMN|-a -COLUMN|-m) except -w is set\n\
+         options (-COLS|-a -COLS|-m) except -w is set\n\
 "));
       oputs (_("\
   -S[STRING], --sep-string[=STRING]\n\
