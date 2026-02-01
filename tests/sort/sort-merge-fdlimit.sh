@@ -34,6 +34,8 @@ seq 17 >some-data
 # inside the ATF, then the same test with batch size b+1 may pass outside
 # the ATF but fail inside it.
 
+(ulimit -n 19 && touch ulimit-worked && sort --batch-size=20 /dev/null) && fail=1
+rm ulimit-worked || skip_ 'cannot modify open file descriptor limit'
 # The default batch size (nmerge) is 16.
 (ulimit -n 19 && touch ulimit-worked \
    && sort -m --batch-size=16 in/* 2>err/merge-default-err \
