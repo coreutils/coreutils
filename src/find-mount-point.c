@@ -52,14 +52,12 @@ find_mount_point (char const *file, struct stat const *file_stat)
   else
     /* FILE is some other kind of file; use its directory.  */
     {
-      char *xdir = dir_name (file);
-      char *dir;
-      ASSIGN_STRDUPA (dir, xdir);
-      free (xdir);
+      char *dir = dir_name (file);
 
       if (chdir (dir) < 0)
         {
           error (0, errno, _("cannot change to directory %s"), quoteaf (dir));
+          free (dir);
           return NULL;
         }
 
@@ -67,8 +65,11 @@ find_mount_point (char const *file, struct stat const *file_stat)
         {
           error (0, errno, _("cannot stat current directory (now %s)"),
                  quoteaf (dir));
+          free (dir);
           goto done;
         }
+
+      free (dir);
     }
 
   /* Now walk up FILE's parents until we find another file system or /,
