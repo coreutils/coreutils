@@ -943,7 +943,7 @@ _ll = ^src/longlong\.h$$
 exclude_file_name_regexp--sc_useless_cpp_parens = $(_ll)
 exclude_file_name_regexp--sc_space_before_open_paren = $(_ll)
 
-tbi_1 = ^tests/pr/|(\.mk|^man/help2man)$$
+tbi_1 = ^tests/pr/|(\.mk|^gl/.*\.diff|^man/help2man)$$
 tbi_2 = ^scripts/git-hooks/(pre-commit|pre-applypatch|applypatch-msg)$$
 tbi_3 = (GNU)?[Mm]akefile(\.am)?$$|$(_ll)
 exclude_file_name_regexp--sc_prohibit_tab_based_indentation = \
