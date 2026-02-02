@@ -584,6 +584,7 @@ all_tests =					\
   tests/df/df-P.sh				\
   tests/df/df-output.sh				\
   tests/df/df-symlink.sh			\
+  tests/df/sync.sh				\
   tests/df/unreadable.sh			\
   tests/df/total-unprocessed.sh			\
   tests/df/no-mtab-status.sh			\
