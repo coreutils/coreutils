@@ -25,7 +25,7 @@ doc_coreutils_TEXINFOS = \
   doc/fdl.texi \
   doc/sort-version.texi
 
-MAKEINFO = $(abs_top_builddir)/build-aux/makeinfo-wrapper.sh
+MAKEINFO = SHELL='$(SHELL)' $(abs_top_builddir)/build-aux/makeinfo-wrapper.sh
 
 # The customization variable CHECK_NORMAL_MENU_STRUCTURE is necessary with
 # makeinfo versions ≥ 6.8.
