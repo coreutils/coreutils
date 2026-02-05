@@ -81,5 +81,4 @@ gl/modules/targetdir \
 gl/modules/xdectoint \
 gl/modules/xfts \
 gl/tests/test-fadvise.c \
-gl/tests/test-rand-isaac.c \
-gl/top/maint.mk.diff
+gl/tests/test-rand-isaac.c
