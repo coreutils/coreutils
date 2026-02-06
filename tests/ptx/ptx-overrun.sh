@@ -18,6 +18,9 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ptx
 
+# This should not crush ptx
+ptx <<< "012345678901234567890123456789🛠" || fail=1
+
 # Trigger a heap-clobbering bug in ptx from coreutils-6.10 and earlier.
 # Using a long file name makes an abort more likely.
 # Even with no file name, valgrind detects the buffer overrun.
