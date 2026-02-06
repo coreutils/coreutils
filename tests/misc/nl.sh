@@ -110,4 +110,18 @@ cat <<EOF > exp
 EOF
 compare exp out || fail=1
 
+# Test that all files are processed.
+echo a > file1
+echo b > file2
+returns_ 1 nl file1 missing file2 > out 2> err || fail=1
+cat <<EOF > exp-out || framework_failure_
+     1	a
+     2	b
+EOF
+cat <<EOF > exp-err || framework_failure_
+nl: missing: No such file or directory
+EOF
+compare exp-out out || fail=1
+compare exp-err err || fail=1
+
 Exit $fail
