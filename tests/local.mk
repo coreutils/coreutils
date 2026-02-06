@@ -349,6 +349,7 @@ all_tests =					\
   tests/fold/fold-spaces.sh			\
   tests/fold/fold-zero-width.sh			\
   tests/fold/fold.pl				\
+  tests/fold/multiple-files.sh			\
   tests/groups/groups-dash.sh			\
   tests/groups/groups-process-all.sh		\
   tests/groups/groups-version.sh		\
