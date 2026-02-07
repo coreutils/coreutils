@@ -25,6 +25,8 @@ returns_ 1 cksum missing 2> /dev/null || fail=1
 GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX512F,-AVX2,-AVX,-PMULL' \
  cksum --debug /dev/null 2>debug || fail=1
 grep 'using.*hardware support' debug && fail=1
+# cksum should not abort by I/O error caused by --debug
+cksum --debug /dev/null 2> /dev/full || fail=1
 
 # Pass in expected crc and crc32b for file "in"
 # Sets fail=1 upon failure

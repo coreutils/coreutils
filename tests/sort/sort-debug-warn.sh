@@ -19,6 +19,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ sort
 
+returns_ 2 sort --debug /dev/null > /dev/full || fail=1
+
 cat <<\EOF > exp
 1
 sort: text ordering performed using simple byte comparison
