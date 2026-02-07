@@ -12,6 +12,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'date --date' now parses dot delimited dd.mm.yy format common in Europe.
   This is in addition to the already supported mm/dd/yy and yy-mm-dd formats.
 
+** Improvements
+
+  'nl' now supports multi-byte --section-delimiter characters.
+
 ** Build-related
 
   ./configure --enable-single-binary=hardlinks is now supported on systems

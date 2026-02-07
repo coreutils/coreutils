@@ -905,7 +905,7 @@ update-copyright-env = \
 
 # List syntax-check exemptions.
 exclude_file_name_regexp--sc_space_tab = \
-  ^(tests/pr/|tests/misc/nl\.sh$$|gl/.*\.diff$$|man/help2man$$)
+  ^(tests/pr/|tests/nl/nl\.sh$$|gl/.*\.diff$$|man/help2man$$)
 exclude_file_name_regexp--sc_bindtextdomain = \
   ^(gl/.*|lib/euidaccess-stat|src/make-prime-list|src/cksum_crc)\.c$$
 exclude_file_name_regexp--sc_trailing_blank = \

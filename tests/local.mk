@@ -367,7 +367,8 @@ all_tests =					\
   tests/misc/mknod.sh				\
   tests/nice/nice.sh				\
   tests/nice/nice-fail.sh			\
-  tests/misc/nl.sh				\
+  tests/nl/nl.sh				\
+  tests/nl/multibyte.sh				\
   tests/misc/nohup.sh				\
   tests/nproc/nproc-avail.sh			\
   tests/nproc/nproc-positive.sh			\

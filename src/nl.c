@@ -29,6 +29,7 @@
 
 #include "fadvise.h"
 #include "linebuffer.h"
+#include "mcel.h"
 #include "quote.h"
 #include "xdectoint.h"
 
@@ -52,7 +53,7 @@ static char const FORMAT_RIGHT_LZ[] = "%0*jd%s";
 static char const FORMAT_LEFT[] = "%-*jd%s";
 
 /* Default section delimiter characters.  */
-static char DEFAULT_SECTION_DELIMITERS[] = "\\:";
+static char DEFAULT_SECTION_DELIMITERS[MCEL_LEN_MAX * 2 + 1] = "\\:";
 
 /* Types of input lines: either one of the section delimiters,
    or text to output. */
@@ -95,6 +96,9 @@ static char const *separator_str = "\t";
 
 /* Input section delimiter string (-d).  */
 static char *section_del = DEFAULT_SECTION_DELIMITERS;
+
+/* Input section delimiter length.  */
+static size_t section_del_len;
 
 /* Header delimiter string.  */
 static char *header_del = NULL;
@@ -404,8 +408,8 @@ check_section (void)
 {
   size_t len = line_buf.length - 1;
 
-  if (len < 2 || footer_del_len < 2
-      || !memeq (line_buf.buffer, section_del, 2))
+  if (len < section_del_len || footer_del_len < section_del_len
+      || !memeq (line_buf.buffer, section_del, section_del_len))
     return Text;
   if (len == header_del_len
       && memeq (line_buf.buffer, header_del, header_del_len))
@@ -578,14 +582,25 @@ main (int argc, char **argv)
           break;
         case 'd':
           len = strlen (optarg);
-          if (len == 1 || len == 2)  /* POSIX.  */
+          if (1 < MB_CUR_MAX)
             {
-              char *p = section_del;
-              while (*optarg)
-                *p++ = *optarg++;
+              char const *p = optarg;
+              char const *lim = p + len;
+              int n_chars = 0;
+              for (; p < lim && n_chars < 2; ++n_chars)
+                  p += mcel_scan (p, lim).len;
+              if (n_chars == 1)
+                memcpy (mempcpy (section_del, optarg, len),  ":", sizeof ":");
+              else
+                section_del = optarg;
             }
           else
-            section_del = optarg;  /* GNU extension.  */
+            {
+              if (len == 1)
+                *section_del = *optarg;
+              else
+                section_del = optarg;
+            }
           break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -599,7 +614,7 @@ main (int argc, char **argv)
     usage (EXIT_FAILURE);
 
   /* Initialize the section delimiters.  */
-  len = strlen (section_del);
+  section_del_len = len = strlen (section_del);
 
   header_del_len = len * 3;
   header_del = xmalloc (header_del_len + 1);
