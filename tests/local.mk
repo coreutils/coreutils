@@ -571,6 +571,7 @@ all_tests =					\
   tests/cp/proc-short-read.sh			\
   tests/cp/proc-zero-len.sh			\
   tests/cp/r-vs-symlink.sh			\
+  tests/cp/readonly-dir.sh			\
   tests/cp/reflink-auto.sh			\
   tests/cp/reflink-perm.sh			\
   tests/cp/same-file.sh				\
