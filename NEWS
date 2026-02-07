@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  'kill --help' now has links to valid anchors in the html manual.
+  [bug introduced in coreutils-9.10]
+
 
 * Noteworthy changes in release 9.10 (2026-02-04) [stable]
 
