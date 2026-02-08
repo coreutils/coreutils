@@ -17,8 +17,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-require_bash_as_SHELL_
 uses_strace_
+getlimits_
 
 ! cat . >/dev/null 2>&1 || skip_ "Need unreadable directories"
 
@@ -106,12 +106,6 @@ expected_failure_status_sort=2
 # Ensure read is called, otherwise it's a layering violation.
 # Also ensure a read error is diagnosed appropriately.
 if strace -o /dev/null -P _ -e '/read,splice' -e fault=all:error=EIO true; then
-  # Get EIO error message independently from utils
-  strace -o /dev/null -P /dev/null -e '/read,splice' -e fault=all:error=EIO \
-   $SHELL -c 'read < /dev/null' 2>&1 |
-    sed -e 's/\[/: /' -e 's/\]//' -e 's/.*: //' > io.err
-  strerror_eio="$(cat io.err)" && test -n "$strerror_eio" || framework_failure_
-
   while read reader; do
     cmd=$(printf '%s\n' "$reader" | cut -d ' ' -f1) || framework_failure_
     eval "expected=\$expected_failure_status_$cmd"
@@ -119,7 +113,7 @@ if strace -o /dev/null -P _ -e '/read,splice' -e fault=all:error=EIO true; then
     returns_ $expected \
      strace -f -o /dev/null -P . -e '/read,splice' -e fault=all:error=EIO \
      $SHELL -c "$reader" 2>err || fail=1
-    grep -F "$strerror_eio" err >/dev/null || { cat err; fail=1; }
+    grep -F "$EIO" err >/dev/null || { cat err; fail=1; }
   done < built_readers
 fi
 
