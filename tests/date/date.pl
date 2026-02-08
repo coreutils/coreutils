@@ -196,6 +196,12 @@ my @Tests =
      ['moname-d-y', '--iso -d May-23-2003', {OUT=>"2003-05-23"}],
      ['moname-d-y-r', '--rfc-3339=date -d May-23-2003', {OUT=>"2003-05-23"}],
 
+     # Ensure we can parse DAY.MONTH.YEAR and its short form DAY.MONTH.
+     ['european-0', "-I -d '24.01.2026'", {OUT=>"2026-01-24"}],
+     ['european-1', "-I -d '24.1.2026'", {OUT=>"2026-01-24"}],
+     ['european-2', "-d '24.01.' +%m-%d", {OUT=>"01-24"}],
+     ['european-3', "-d '1.2.' +%m-%d", {OUT=>"02-01"}],
+
      ['epoch', '--iso=sec -d @31536000',
       {OUT=>"1971-01-01T00:00:00+00:00"}],
      ['epoch-r', '--rfc-3339=sec -d @31536000',

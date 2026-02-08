@@ -7,6 +7,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   'kill --help' now has links to valid anchors in the html manual.
   [bug introduced in coreutils-9.10]
 
+** New Features
+
+  'date --date' now parses dot delimited dd.mm.yy format common in Europe.
+  This is in addition to the already supported mm/dd/yy and yy-mm-dd formats.
+
 ** Build-related
 
   ./configure --enable-single-binary=hardlinks is now supported on systems
