@@ -181,6 +181,7 @@ all_tests =					\
   tests/cp/link-heap.sh				\
   tests/cp/no-ctx.sh				\
   tests/tty/tty-eof.pl				\
+  tests/misc/bad-unicode.sh			\
   tests/misc/io-errors.sh			\
   tests/misc/read-errors.sh			\
   tests/misc/write-errors.sh			\

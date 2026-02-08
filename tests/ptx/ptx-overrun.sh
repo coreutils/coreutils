@@ -18,9 +18,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ptx
 
-# Ensure these inputs are processed
+# Ensure this input is processed
 printf '%s' '012345678901234567890123456789🛠' | ptx || fail=1
-bad_unicode | ptx || fail=1
 
 # Trigger a heap-clobbering bug in ptx from coreutils-6.10 and earlier.
 # Using a long file name makes an abort more likely.
