@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
+require_bash_as_SHELL_
 uses_strace_
 
 ! cat . >/dev/null 2>&1 || skip_ "Need unreadable directories"
