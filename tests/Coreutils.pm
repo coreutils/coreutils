@@ -21,6 +21,7 @@ use vars qw($VERSION @ISA @EXPORT);
 
 use FileHandle;
 use File::Compare qw(compare);
+use Text::ParseWords qw(shellwords);
 
 @ISA = qw(Exporter);
 ($VERSION = '$Revision: 1.5 $ ') =~ tr/[0-9].//cd;
@@ -213,7 +214,12 @@ sub getlimits()
 {
   my $NV;
   open $NV, "getlimits |" or die "Error running getlimits\n";
-  my %limits = map {split /=|\n/} <$NV>;
+  my %limits = map {
+    chomp;
+    my ($k, $v) = split /=/, $_, 2;
+    $v = (shellwords($v))[0] if defined $v;
+    ($k, $v)
+  } <$NV>;
   return \%limits;
 }
 

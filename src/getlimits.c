@@ -22,6 +22,7 @@
 #include <sys/types.h>
 #include <float.h>
 
+#include "errno-iter.h"
 #include "ftoastr.h"
 #include "system.h"
 #include "ioblksize.h"
@@ -129,6 +130,16 @@ PRINT_FLOATTYPE (print_FLT, float, ftoastr, FLT_BUFSIZE_BOUND)
 PRINT_FLOATTYPE (print_DBL, double, dtoastr, DBL_BUFSIZE_BOUND)
 PRINT_FLOATTYPE (print_LDBL, long double, ldtoastr, LDBL_BUFSIZE_BOUND)
 
+static int
+print_errno (void *name, int e)
+{
+  char const *err_name = name ? name : strerrorname_np (e);
+  if (err_name)
+    printf ("%s=%s\n", err_name,
+            quotearg_style (shell_escape_quoting_style, strerror (e)));
+  return 0;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -191,6 +202,22 @@ main (int argc, char **argv)
   printf ("SIGRTMIN=%jd\n", (intmax_t) SIGRTMIN);
   printf ("SIGRTMAX=%jd\n", (intmax_t) SIGRTMAX);
   printf ("IO_BUFSIZE=%ju\n", (uintmax_t) IO_BUFSIZE);
+
+  /* Errnos */
+  errno_iterate (print_errno, NULL);
+  /* Common errno aliases */
+#if defined ENOTEMPTY && ENOTEMPTY == EEXIST
+  print_errno ((char*)"ENOTEMPTY", EEXIST);
+#endif
+#if defined ENOTSUP && ENOTSUP == EOPNOTSUPP
+  print_errno ((char*)"ENOTSUP", EOPNOTSUPP);
+#endif
+#if defined EWOULDBLOCK && EWOULDBLOCK == EAGAIN
+  print_errno ((char*)"EWOULDBLOCK", EAGAIN);
+#endif
+#if defined EDEADLOCK && EDEADLOCK == EDEADLK
+  print_errno ((char*)"EDEADLOCK", EDEADLK);
+#endif
 
   return EXIT_SUCCESS;
 }
