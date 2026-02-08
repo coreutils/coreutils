@@ -7,6 +7,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   'kill --help' now has links to valid anchors in the html manual.
   [bug introduced in coreutils-9.10]
 
+** Build-related
+
+  ./configure --enable-single-binary=hardlinks is now supported on systems
+  with dash as the system shell at /bin/sh.
+
 
 * Noteworthy changes in release 9.10 (2026-02-04) [stable]
 

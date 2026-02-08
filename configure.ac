@@ -134,7 +134,7 @@ if test "$gl_single_binary" = 'symlinks' ||
   fi
 fi
 AM_CONDITIONAL([SINGLE_BINARY], [test "$gl_single_binary" != no])
-AM_CONDITIONAL([SINGLE_BINARY_HARD], [test "$gl_single_binary" == hardlinks])
+AM_CONDITIONAL([SINGLE_BINARY_HARD], [test "$gl_single_binary" = hardlinks])
 
 AC_ARG_ENABLE([bold-man-page-references],
   [AS_HELP_STRING([--disable-bold-man-page-references],
