@@ -18,9 +18,6 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 
-# Currently only check short opts with corresponding long opt
-shortopts() { getopts $1 | cut -s -d"'" -f2; }
-longopts() { getopts $1 | cut -s -d'"' -f2; }
 
 getopts() {
   skip='--help|--version'              # These refs treated specially
