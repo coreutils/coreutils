@@ -113,8 +113,6 @@ static char *
 create_fullname (char const *gecos_name, char const *user_name)
 {
   idx_t rsize = strlen (gecos_name) + 1;
-  char *result;
-  char *r;
   idx_t ampersands = count_ampersands (gecos_name);
 
   if (ampersands != 0)
@@ -126,7 +124,8 @@ create_fullname (char const *gecos_name, char const *user_name)
         xalloc_die ();
     }
 
-  r = result = xmalloc (rsize);
+  char *result = xmalloc (rsize);
+  char *r = result;
 
   while (*gecos_name)
     {
@@ -158,12 +157,11 @@ idle_string (time_t when)
 {
   static time_t now = 0;
   static char buf[INT_STRLEN_BOUND (intmax_t) + sizeof "d"];
-  time_t seconds_idle;
 
   if (now == 0)
     time (&now);
 
-  seconds_idle = now - when;
+  time_t seconds_idle = now - when;
   if (seconds_idle < 60)	/* One minute. */
     return "     ";
   if (seconds_idle < (24 * 60 * 60))	/* One day. */
@@ -201,10 +199,6 @@ time_string (STRUCT_UTMP const *utmp_ent)
 static void
 print_entry (STRUCT_UTMP const *utmp_ent)
 {
-  struct stat stats;
-  time_t last_change;
-  char mesg;
-
   /* If ut_line contains a space, the device name starts after the space.  */
   char *line = utmp_ent->ut_line;
   char *space = strchr (line, ' ');
@@ -225,6 +219,9 @@ print_entry (STRUCT_UTMP const *utmp_ent)
       dirfd = dev_dirfd;
     }
 
+  struct stat stats;
+  time_t last_change;
+  char mesg;
   if (AT_FDCWD <= dirfd && fstatat (dirfd, line, &stats, 0) == 0)
     {
       mesg = (stats.st_mode & S_IWGRP) ? ' ' : '*';
@@ -251,12 +248,11 @@ print_entry (STRUCT_UTMP const *utmp_ent)
       else
         {
           char *const comma = strchr (pw->pw_gecos, ',');
-          char *result;
 
           if (comma)
             *comma = '\0';
 
-          result = create_fullname (pw->pw_gecos, pw->pw_name);
+          char *result = create_fullname (pw->pw_gecos, pw->pw_name);
           printf (" %-19.19s", result);
           free (result);
         }
@@ -283,15 +279,14 @@ print_entry (STRUCT_UTMP const *utmp_ent)
 #ifdef HAVE_STRUCT_XTMP_UT_HOST
   if (include_where && utmp_ent->ut_host[0])
     {
-      char *host = NULL;
-      char *display = NULL;
       char *ut_host = utmp_ent->ut_host;
 
       /* Look for an X display.  */
-      display = strchr (ut_host, ':');
+      char *display = strchr (ut_host, ':');
       if (display)
         *display++ = '\0';
 
+      char *host = NULL;
       if (*ut_host && do_lookup)
         /* See if we can canonicalize it.  */
         host = canon_host (ut_host);
@@ -349,9 +344,7 @@ cat_file (char const *header, char const *home, char const *file)
 static void
 print_long_entry (const char name[])
 {
-  struct passwd *pw;
-
-  pw = getpwnam (name);
+  struct passwd *pw = getpwnam (name);
 
   printf (_("Login name: "));
   printf ("%-28s", name);
@@ -366,12 +359,11 @@ print_long_entry (const char name[])
   else
     {
       char *const comma = strchr (pw->pw_gecos, ',');
-      char *result;
 
       if (comma)
         *comma = '\0';
 
-      result = create_fullname (pw->pw_gecos, pw->pw_name);
+      char *result = create_fullname (pw->pw_gecos, pw->pw_name);
       printf (" %s", result);
       free (result);
     }
@@ -538,9 +530,6 @@ The utmp file will be %s.\n\
 int
 main (int argc, char **argv)
 {
-  int optc;
-  int n_users;
-
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -549,6 +538,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
+  int optc;
   while ((optc = getopt_long (argc, argv, "sfwiqbhlp", longopts, NULL))
          != -1)
     {
@@ -610,7 +600,7 @@ main (int argc, char **argv)
         }
     }
 
-  n_users = argc - optind;
+  int n_users = argc - optind;
 
   if (!do_short_format && n_users == 0)
     {
