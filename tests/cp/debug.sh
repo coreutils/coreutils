@@ -29,4 +29,7 @@ touch file.cp || framework_failure_
 cp --debug --update=none file file.cp >cp.out || fail=1
 grep 'skipped' cp.out || fail=1
 
+returns_ 1 cp file exist --debug > /dev/full || fail=1
+test -e exist || fail=1
+
 Exit $fail
