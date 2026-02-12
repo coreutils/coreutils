@@ -29,4 +29,9 @@ touch file.cp || framework_failure_
 cp --debug --update=none file file.cp >cp.out || fail=1
 grep 'skipped' cp.out || fail=1
 
+if test -w /dev/full && test -c /dev/full; then
+  returns_ 1 cp file file.cp2 --debug >/dev/full || fail=1
+  test -e file.cp2 || fail=1
+fi
+
 Exit $fail
