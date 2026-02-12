@@ -20,8 +20,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ coreutils
 
-test -s "$abs_top_builddir/src/coreutils.h" \
- || skip_ 'multicall binary is disabled'
+cp -s "$(command -v coreutils)" blah || skip_ 'multicall binary is disabled'
 
 # Yes outputs all its params so is good to verify argv manipulations
 echo 'y' > exp &&
@@ -34,7 +33,6 @@ echo "coreutils: unknown program 'blah'" > exp || framework_failure_
 returns_ 1 coreutils --coreutils-prog='blah' --help 2>err || fail=1
 compare exp err || fail=1
 
-ln -s "$(command -v coreutils)" blah || framework_failure_
 returns_ 1 ./blah 2>err || fail=1
 compare exp err || fail=1
 returns_ 1 ./blah --version 2>err || fail=1
