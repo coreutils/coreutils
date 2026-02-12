@@ -21,7 +21,9 @@ print_ver_ arch
 
 arch > out || fail=1
 uname -m > exp || fail=1
+compare exp out || fail=1
 
+arch -- > out || fail=1
 compare exp out || fail=1
 
 Exit $fail
