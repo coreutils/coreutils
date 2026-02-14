@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ sync
+getlimits_
 
 touch file || framework_failure_
 
@@ -52,8 +53,8 @@ chmod 0 norw || framework_failure_
 if ! test -r norw; then
   returns_ 1 sync norw 2>errt || fail=1
   # AIX gives "Is a directory"
-  sed 's/Is a directory/Permission denied/' <errt >err || framework_failure_
-  printf "sync: error opening 'norw': Permission denied\n" >exp
+  sed "s/$EISDIR/$EACCES/" <errt >err || framework_failure_
+  printf "sync: error opening 'norw': $EACCES\n" >exp
   compare exp err || fail=1
 fi
 

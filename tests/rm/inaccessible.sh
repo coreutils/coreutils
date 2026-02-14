@@ -19,11 +19,12 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm
+skip_if_root_
+getlimits_
 
 # Skip this test if your system has neither the openat-style functions
 # nor /proc/self/fd support with which to emulate them.
 require_openat_support_
-skip_if_root_
 
 p=$(pwd)
 mkdir abs1 abs2 no-access || framework_failure_
@@ -34,15 +35,9 @@ set +x
 test -d "$p/abs1" && fail=1
 test -d "$p/abs2" && fail=1
 
-cat <<\EOF > exp || framework_failure_
-rm: cannot remove 'rel': Permission denied
+cat <<EOF > exp || framework_failure_
+rm: cannot remove 'rel': $EACCES
 EOF
-
-# AIX 4.3.3 fails with a different diagnostic.
-# Transform their diagnostic
-#   ...: The file access permissions do not allow the specified action.
-# to the expected one:
-sed 's/: The file access permissions.*/: Permission denied/'<out>o1;mv o1 out
 
 compare exp out || fail=1
 
