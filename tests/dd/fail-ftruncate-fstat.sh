@@ -19,6 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ dd
 require_gcc_shared_
+getlimits_
 
 cat > k.c <<'EOF' || framework_failure_
 #include <sys/stat.h>
@@ -58,20 +59,14 @@ yes | head -n 2048 | tr -d '\n' > out || framework_failure_
 cp out exp-out || framework_failure_
 
 LD_PRELOAD=$LD_PRELOAD:./k.so dd if=/dev/zero of=out count=1 \
-                              seek=1 status=none 2>errt
+                              seek=1 status=none 2>err
 ret=$?
 
 test -f x && test -f y \
   || skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
 
-# EPERM='Not owner'               on Solaris 11.4.0.15.0 (2018)
-# EPERM='Insufficient privileges' on Solaris 11.4.89.207 (2026)
-sed -e 's/Insufficient privileges/Operation not permitted/' \
-    -e 's/Not owner/Operation not permitted/' \
-    < errt > err || framework_failure_
-
 # After ftruncate fails, we use fstat to get the file type.
-echo "dd: cannot fstat 'out': Operation not permitted" > exp
+echo "dd: cannot fstat 'out': $EPERM" > exp
 compare exp err || fail=1
 
 # coreutils 9.1 to 9.9 would mistakenly continue copying after ftruncate
