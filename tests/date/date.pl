@@ -351,6 +351,10 @@ my @Tests =
      ['paren-5', "-d '((nested))2026-01-05' -u +'%Y-%m-%d'",
       {OUT=>"2026-01-05"}],
      ['paren-6', "-d '((nested)2026-01-05)' +'%H:%M:%S'", {OUT=>"00:00:00"}],
+
+     # Test timezone conversion with -u -d flag
+     # "10:30 EST" should convert to "15:30 UTC", not "10:30 UTC"
+     ['tz-conversion-est', "-u -d '10:30 EST' +'%H:%M'", {OUT=>"15:30"}],
     );
 
 # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
