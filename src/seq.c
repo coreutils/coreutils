@@ -244,9 +244,6 @@ long_double_format (char const *fmt, struct layout *layout)
 {
   size_t i;
   size_t prefix_len = 0;
-  size_t suffix_len = 0;
-  size_t length_modifier_offset;
-  bool has_L;
 
   for (i = 0; ! (fmt[i] == '%' && fmt[i + 1] != '%'); i += (fmt[i] == '%') + 1)
     {
@@ -265,8 +262,8 @@ long_double_format (char const *fmt, struct layout *layout)
       i += strspn (fmt + i, "0123456789");
     }
 
-  length_modifier_offset = i;
-  has_L = (fmt[i] == 'L');
+  size_t length_modifier_offset = i;
+  bool has_L = (fmt[i] == 'L');
   i += has_L;
   if (fmt[i] == '\0')
     error (EXIT_FAILURE, 0, _("format %s ends in %%"), quote (fmt));
@@ -274,6 +271,7 @@ long_double_format (char const *fmt, struct layout *layout)
     error (EXIT_FAILURE, 0,
            _("format %s has unknown %%%c directive"), quote (fmt), fmt[i]);
 
+  size_t suffix_len = 0;
   for (i++; ; i += (fmt[i] == '%') + 1)
     if (fmt[i] == '%' && fmt[i + 1] != '%')
       error (EXIT_FAILURE, 0, _("format %s has too many %% directives"),
@@ -331,18 +329,17 @@ print_numbers (char const *fmt, struct layout layout,
                  of stopping at 0.000002.  */
 
               bool print_extra_number = false;
-              long double x_val;
-              char *x_str;
-              int x_strlen;
               if (locale_ok)
                 setlocale (LC_NUMERIC, "C");
-              x_strlen = asprintf (&x_str, fmt, x);
+              char *x_str;
+              int x_strlen = asprintf (&x_str, fmt, x);
               if (locale_ok)
                 setlocale (LC_NUMERIC, "");
               if (x_strlen < 0)
                 xalloc_die ();
               x_str[x_strlen - layout.suffix_len] = '\0';
 
+              long double x_val;
               if (xstrtold (x_str + layout.prefix_len, NULL,
                             &x_val, cl_strtold)
                   && x_val == last)
@@ -551,12 +548,6 @@ all_digits_p (char const *s)
 int
 main (int argc, char **argv)
 {
-  int optc;
-  operand first = { 1, 1, 0 };
-  operand step = { 1, 1, 0 };
-  operand last;
-  struct layout layout = { 0, 0 };
-
   /* The printf(3) format used for output.  */
   char const *format_str = NULL;
 
@@ -576,6 +567,7 @@ main (int argc, char **argv)
      whether the next argument looks like a negative number.  */
   while (optind < argc)
     {
+      int optc;
       if (argv[optind][0] == '-'
           && ((optc = argv[optind][1]) == '.' || c_isdigit (optc)))
         {
@@ -623,6 +615,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  struct layout layout = { 0, 0 };
   if (format_str)
     format_str = long_double_format (format_str, &layout);
 
@@ -642,6 +635,7 @@ main (int argc, char **argv)
      - integer increment <= SEQ_FAST_STEP_LIMIT
      then use the much more efficient integer-only code,
      operating on arbitrarily large numbers.  */
+  operand step = { 1, 1, 0 };
   bool fast_step_ok = false;
   if (n_args != 3
       || (all_digits_p (argv[optind + 1])
@@ -660,7 +654,8 @@ main (int argc, char **argv)
       seq_fast (s1, s2, step.value);
     }
 
-  last = scan_arg (argv[optind++]);
+  operand first = { 1, 1, 0 };
+  operand last = scan_arg (argv[optind++]);
 
   if (optind < argc)
     {
