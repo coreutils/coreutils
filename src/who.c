@@ -35,6 +35,7 @@
 #include "readutmp.h"
 #include "hard-locale.h"
 #include "quote.h"
+#include "xvasprintf.h"
 
 #ifdef TTY_GROUP_NAME
 # include <grp.h>
@@ -233,7 +234,6 @@ print_line (char const *user, const char state,
   char x_idle[1 + IDLESTR_LEN + 1];
   char x_pid[1 + INT_STRLEN_BOUND (pid_t) + 1];
   char *x_exitstr;
-  int err;
 
   mesg[1] = state;
 
@@ -253,32 +253,29 @@ print_line (char const *user, const char state,
   else
     *x_exitstr = '\0';
 
-  err = asprintf (&buf,
-                  "%-8s"
-                  "%s"
-                  " %-12s"
-                  " %-*s"
-                  "%s"
-                  "%s"
-                  " %-8s"
-                  "%s"
-                  ,
-                  user ? user : "   .",
-                  include_mesg ? mesg : "",
-                  line,
-                  time_format_width,
-                  time_str,
-                  x_idle,
-                  x_pid,
-                  /* FIXME: it's not really clear whether the following
-                     field should be in the short_output.  A strict reading
-                     of SUSv2 would suggest not, but I haven't seen any
-                     implementations that actually work that way... */
-                  comment,
-                  x_exitstr
+  buf = xasprintf ("%-8s"
+                   "%s"
+                   " %-12s"
+                   " %-*s"
+                   "%s"
+                   "%s"
+                   " %-8s"
+                   "%s"
+                   ,
+                   user ? user : "   .",
+                   include_mesg ? mesg : "",
+                   line,
+                   time_format_width,
+                   time_str,
+                   x_idle,
+                   x_pid,
+                   /* FIXME: it's not really clear whether the following
+                      field should be in the short_output.  A strict reading
+                      of SUSv2 would suggest not, but I haven't seen any
+                      implementations that actually work that way... */
+                   comment,
+                   x_exitstr
                   );
-  if (err == -1)
-    xalloc_die ();
 
   {
     /* Remove any trailing spaces.  */

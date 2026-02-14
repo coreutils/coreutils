@@ -27,6 +27,7 @@
 #include "full-write.h"
 #include "quote.h"
 #include "xstrtod.h"
+#include "xvasprintf.h"
 
 /* Roll our own isfinite/isnan rather than using <math.h>, so that we don't
    have to worry about linking -lm just for isfinite.  */
@@ -683,16 +684,11 @@ main (int argc, char **argv)
       && 0 < step.value && step.value <= SEQ_FAST_STEP_LIMIT
       && !equal_width && !format_str && strlen (separator) == 1)
     {
-      char *s1;
-      char *s2;
-      if (all_digits_p (user_start))
-        s1 = xstrdup (user_start);
-      else if (asprintf (&s1, "%0.Lf", first.value) < 0)
-        xalloc_die ();
-      if (! isfinite (last.value))
-        s2 = xstrdup ("inf"); /* Ensure "inf" is used.  */
-      else if (asprintf (&s2, "%0.Lf", last.value) < 0)
-        xalloc_die ();
+      char *s1 = (all_digits_p (user_start)
+                  ? xstrdup (user_start) : xasprintf ("%0.Lf", first.value));
+      /* Ensure "inf" is used.  */
+      char *s2 = (! isfinite (last.value)
+                  ? xstrdup ("inf") : xasprintf ("%0.Lf", last.value));
 
       if (*s1 != '-' && *s2 != '-')
         seq_fast (s1, s2, step.value);
