@@ -19,6 +19,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ touch
+getlimits_
 
 if env -- test -w /; then
   skip_ you have write access to /.
@@ -36,12 +37,9 @@ skip_if_root_
 # touch: creating '/': Is a directory
 touch / > out 2>&1 && fail=1
 
-# On SunOS4, EPERM is 'Not owner'.
-# On some *BSD systems it's 'Operation not permitted'.
 # On a system where root file system is mounted read-only
 # it's 'Read-only file system'.
-for msg in 'Not owner' 'Operation not permitted' 'Permission denied' \
-           'Read-only file system'; do
+for msg in "$EACCES" "$EPERM" "$EROFS"; do
   cat > exp <<EOF
 touch: setting times of '/': $msg
 EOF

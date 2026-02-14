@@ -20,6 +20,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm
 require_root_
+getlimits_
 
 # The containing directory must be owned by the user who eventually runs rm.
 chown $NON_ROOT_USERNAME .
@@ -49,12 +50,10 @@ for file in 'a/b' 'a'; do
   returns_ 1 chroot --skip-chdir --user=$NON_ROOT_USERNAME / \
    env PATH="$PATH" rm $recurse -f "$file" 2> out-t || fail=1
 
-  # On some systems, we get 'Not owner'.  Convert it.
-  # On other systems (HPUX), we get 'Permission denied'.  Convert it, too.
-  onp='Operation not permitted'
-  sed "s/Not owner/$onp/;s/Permission denied/$onp/" out-t > out
+  # On some systems (HPUX), we get 'Permission denied'.  Convert it.
+  sed "s/$EACCES/$EPERM/" out-t > out
 
-  echo "rm: cannot remove 'a/b': Operation not permitted" > exp
+  echo "rm: cannot remove 'a/b': $EPERM" > exp
   compare exp out || fail=1
 done
 

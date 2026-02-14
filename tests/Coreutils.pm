@@ -80,8 +80,6 @@ defined $ENV{TERM}
 # {ERR_SUBST => 's/variable_output/expected_output/'}
 #   Transform actual stderr output before comparing it against expected.
 #   This is useful when verifying that we get a meaningful diagnostic.
-#   For example, in rm/fail-2eperm, we have to account for three different
-#   diagnostics: Operation not permitted, Not owner, and Permission denied.
 # {EXIT => N} expect exit status of cmd to be N
 # {ENV => 'VAR=val ...'}
 #   Prepend 'VAR=val ...' to the command that we execute via 'system'.

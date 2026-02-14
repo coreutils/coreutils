@@ -22,6 +22,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ mv
 require_root_
+getlimits_
 
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_srcdir/tests/other-fs-tmpdir"
@@ -54,21 +55,19 @@ esac
 chroot --skip-chdir --user=$NON_ROOT_USERNAME / env PATH="$PATH" \
   mv t/root-owned "$other_partition_tmpdir" 2> out-t && fail=1
 
-# On some systems, we get 'Not owner'.  Convert it.
-# On other systems (HPUX), we get 'Permission denied'.  Convert it, too.
-onp='Operation not permitted'
-sed "s/Not owner/$onp/;s/Permission denied/$onp/" out-t > out
+# On some systems (HPUX), we get 'Permission denied'.  Convert it.
+sed "s/$EACCES/$EPERM/;" out-t > out
 
 # On some systems (OpenBSD 7.5), the initial rename fails with EPERM,
 # which is arguably better than the Linux kernel's EXDEV.
 cat <<EOF >exp1 || framework_failure_
-mv: cannot move 't/root-owned' to '$other_partition_tmpdir/root-owned': $onp
+mv: cannot move 't/root-owned' to '$other_partition_tmpdir/root-owned': $EPERM
 EOF
 
 compare exp1 out >/dev/null || {
 
   cat <<EOF >exp || framework_failure_
-mv: cannot remove 't/root-owned': $onp
+mv: cannot remove 't/root-owned': $EPERM
 EOF
 
   compare exp out || fail=1
