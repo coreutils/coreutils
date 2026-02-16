@@ -18,6 +18,8 @@
 
 use strict;
 
+my $limits = getlimits ();
+
 (my $program_name = $0) =~ s|.*/||;
 
 # Turn off localization of executable's output.
@@ -38,7 +40,7 @@ my @Tests =
      ['unreadable-2', '-rf', $d,
       {EXIT => $uid == 0 ? 0 : 1},
       {ERR => $uid == 0 ? ''
-                        : "$prog: cannot remove '$d': Permission denied\n"},
+                        : "$prog: cannot remove '$d': $limits->{EACCES}\n"},
       {PRE => sub { (mkdir $d,0700 and mkdir "$d/x",0700 and chmod 0100,$d)
                     or die "$d: $!\n"}} ],
     );

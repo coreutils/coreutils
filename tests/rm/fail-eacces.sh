@@ -22,6 +22,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm
 skip_if_root_
+getlimits_
 
 ok=0
 mkdir d           &&
@@ -39,15 +40,15 @@ test $ok = 1 || framework_failure_
 
 
 rm -rf d/f 2> out && fail=1
-cat <<\EOF > exp
-rm: cannot remove 'd/f': Permission denied
+cat <<EOF > exp
+rm: cannot remove 'd/f': $EACCES
 EOF
 compare exp out || fail=1
 
 # This used to fail with ELOOP.
 rm -rf e 2> out && fail=1
-cat <<\EOF > exp
-rm: cannot remove 'e/slink': Permission denied
+cat <<EOF > exp
+rm: cannot remove 'e/slink': $EACCES
 EOF
 compare exp out || fail=1
 

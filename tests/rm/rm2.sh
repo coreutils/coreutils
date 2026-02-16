@@ -19,6 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm
 skip_if_root_
+getlimits_
 
 mkdir -p a/0 || framework_failure_
 mkdir -p a/1/2 b/3 || framework_failure_
@@ -30,14 +31,14 @@ chmod u-x a/1 b || framework_failure_
 # in the same sort of diagnostic.
 # Both of these should fail.
 rm -rf a b > out 2>&1 && fail=1
-cat <<\EOF > exp
-rm: cannot remove 'a/1': Permission denied
-rm: cannot remove 'b': Permission denied
+cat <<EOF > exp
+rm: cannot remove 'a/1': $EACCES
+rm: cannot remove 'b': $EACCES
 EOF
 
-cat <<\EOF > exp-solaris
-rm: cannot remove 'a/1/2': Permission denied
-rm: cannot remove 'b/3': Permission denied
+cat <<EOF > exp-solaris
+rm: cannot remove 'a/1/2': $EACCES
+rm: cannot remove 'b/3': $EACCES
 EOF
 
 cmp out exp > /dev/null 2>&1 \

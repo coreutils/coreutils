@@ -20,6 +20,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ chmod
 skip_if_root_
+getlimits_
 
 mkdir -p d/no-x/y a/b || framework_failure_
 chmod u=rw d/no-x || framework_failure_
@@ -41,7 +42,7 @@ sed "s/^$prog: cannot read directory /$prog: /" out > t && mv t out
 sed 's,d/no-x/y,d/no-x,' out > t && mv t out
 
 cat <<EOF > exp
-$prog: 'd/no-x': Permission denied
+$prog: 'd/no-x': $EACCES
 EOF
 
 compare exp out || fail=1

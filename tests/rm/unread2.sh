@@ -19,6 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm
 skip_if_root_
+getlimits_
 
 mkdir -p a/b || framework_failure_
 chmod u-r a
@@ -26,8 +27,8 @@ chmod u-r a
 
 # This should fail.
 rm -rf a > out 2>&1 && fail=1
-cat <<\EOF > exp
-rm: cannot remove 'a': Permission denied
+cat <<EOF > exp
+rm: cannot remove 'a': $EACCES
 EOF
 
 compare exp out || fail=1

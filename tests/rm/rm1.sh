@@ -19,6 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm
 skip_if_root_
+getlimits_
 
 mkdir -p b/a/p b/c b/d || framework_failure_
 chmod ug-w b/a || framework_failure_
@@ -26,14 +27,14 @@ chmod ug-w b/a || framework_failure_
 
 # This should fail.
 rm -rf b > out 2>&1 && fail=1
-cat <<\EOF > exp
-rm: cannot remove directory 'b/a/p': Permission denied
+cat <<EOF > exp
+rm: cannot remove directory 'b/a/p': $EACCES
 EOF
 
 # On some systems, rm doesn't have enough information to
 # say it's a directory.
-cat <<\EOF > exp2
-rm: cannot remove 'b/a/p': Permission denied
+cat <<EOF > exp2
+rm: cannot remove 'b/a/p': $EACCES
 EOF
 
 cmp out exp > /dev/null 2>&1 || {

@@ -18,7 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ nohup
-
+getlimits_
 
 nohup sh -c 'echo stdout; echo stderr 1>&2' 2>err || fail=1
 
@@ -108,9 +108,9 @@ if test -t 1; then
   compare /dev/null nohup.out || fail=1
 fi
 
-cat <<\EOF > exp || framework_failure_
+cat <<EOF > exp || framework_failure_
 nohup: appending output to 'nohup.out'
-nohup: cannot run command './k': Permission denied
+nohup: cannot run command './k': $EACCES
 EOF
 # Disable these comparisons.  Too much variation in 2nd line.
 # compare exp err || fail=1

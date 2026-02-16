@@ -20,6 +20,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ du
 skip_if_root_
+getlimits_
 
 mkdir f && cd f && mkdir a b c d e && touch c/j && chmod a-x c \
     || framework_failure_
@@ -33,14 +34,14 @@ du > ../t 2>&1 && fail=1
 # /proc support, nor native openat support.
 
 sed 's/^[0-9][0-9]*	//' ../t | sort -u > out
-cat <<\EOF > exp || framework_failure_
+cat <<EOF > exp || framework_failure_
 .
 ./a
 ./b
 ./c
 ./d
 ./e
-du: cannot read directory './c': Permission denied
+du: cannot read directory './c': $EACCES
 EOF
 
 # Map a diagnostic like this

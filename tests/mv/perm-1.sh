@@ -20,14 +20,15 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ mv
 skip_if_root_
+getlimits_
 
 mkdir -p no-write/dir || framework_failure_
 chmod ug-w no-write || framework_failure_
 
 
 mv no-write/dir . > out 2>&1 && fail=1
-cat <<\EOF > exp
-mv: cannot move 'no-write/dir' to './dir': Permission denied
+cat <<EOF > exp
+mv: cannot move 'no-write/dir' to './dir': $EACCES
 EOF
 
 compare exp out || fail=1
