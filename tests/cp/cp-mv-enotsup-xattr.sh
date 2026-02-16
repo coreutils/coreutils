@@ -20,7 +20,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp mv
-
+getlimits_
 require_root_
 
 cwd=$(pwd)
@@ -97,8 +97,8 @@ rm -f err noxattr/a
 # This should fail with corresponding diagnostics
 cp -a --preserve=xattr xattr/a noxattr/ 2>err && fail=1
 if grep '^#define USE_XATTR 1' $CONFIG_HEADER > /dev/null; then
-cat <<\EOF > exp
-cp: setting attributes for 'noxattr/a': Operation not supported
+cat <<EOF > exp
+cp: setting attributes for 'noxattr/a': $ENOTSUP
 EOF
 else
 cat <<\EOF > exp
