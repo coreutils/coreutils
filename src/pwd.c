@@ -112,7 +112,7 @@ file_name_prepend (struct file_name *p, char const *s, size_t s_len)
          copy it only once.  */
       idx_t n_used = p->n_alloc - n_free;
       char *buf = xpalloc (NULL, &p->n_alloc, 1 + s_len - n_free, -1, 1);
-      p->start = memcpy (buf + p->n_alloc - n_free, p->start, n_used);
+      p->start = memcpy (buf + p->n_alloc - n_used, p->start, n_used);
       free (p->buf);
       p->buf = buf;
     }
