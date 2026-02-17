@@ -21,6 +21,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tac
 require_root_
+getlimits_
 
 cwd=$(pwd)
 cleanup_() { cd /; umount "$cwd/full_tmp"; }
@@ -37,7 +38,7 @@ seq 5 > five && seq 5 -1 1 > exp || framework_failure_
 
 # Make sure we diagnose the failure but continue to subsequent files
 yes | TMPDIR=$cwd/full_tmp timeout 10 tac - five >out 2>err && fail=1
-{ test $? = 124 || ! grep 'space' err >/dev/null; } && fail=1
+{ test $? = 124 || ! grep "$ENOSPC" err >/dev/null; } && fail=1
 compare exp out || fail=1
 
 Exit $fail

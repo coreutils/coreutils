@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ env
+getlimits_
 
 if ! test -w /dev/full || ! test -c /dev/full; then
   skip_ '/dev/full is required'
@@ -80,7 +81,7 @@ while read writer; do
   rm -f full.err || framework_failure_
   timeout 10 env --default-signal=PIPE $SHELL -c \
     "(env $writer 2>full.err >/dev/full)"
-  { test $? = 124 || ! grep -E 'write error|space' full.err >/dev/null; } &&
+  { test $? = 124 || ! grep -E "write error|$ENOSPC" full.err >/dev/null; } &&
    { fail=1; cat full.err; echo "$writer: failed to exit" >&2; }
 
   # Check closed pipe handling

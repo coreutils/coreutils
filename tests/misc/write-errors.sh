@@ -82,7 +82,7 @@ while read writer; do
   rm -f full.err || framework_failure_
   timeout 10 env --default-signal=PIPE $SHELL -c \
     "($ulimit && $writer 2>full.err >/dev/full)"
-  { test $? = 124 || ! grep 'space' full.err >/dev/null; } &&
+  { test $? = 124 || ! grep "$ENOSPC" full.err >/dev/null; } &&
    { fail=1; cat full.err; echo "$writer: failed to exit" >&2; }
 
   # Check closed pipe handling

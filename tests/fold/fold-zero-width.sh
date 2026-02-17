@@ -33,8 +33,11 @@ test $(wc -l < out) -eq $(($IO_BUFSIZE_TIMES2 / 80)) || fail=1
 
 test "$LOCALE_FR_UTF8" != none || skip_ "French UTF-8 locale not available"
 
-LC_ALL=$LOCALE_FR_UTF8
-export LC_ALL
+# Only set LC_CTYPE so messages are not translated
+# as we're verifying $ENOSPC below
+unset LC_ALL
+LC_CTYPE=$LOCALE_FR_UTF8
+export LC_CTYPE
 
 test $(env printf '\u200B' | wc -L) -eq 0 ||
   skip_ "character width mismatch"
@@ -58,7 +61,7 @@ vm=$(get_min_ulimit_v_ fold /dev/null) && {
      "(ulimit -v $(($vm+12000)) && fold 2>err >/dev/full)"
     ret=$?
     test -f err || skip_ 'shell ulimit failure'
-    { test $ret = 124 || ! grep 'space' err >/dev/null; } &&
+    { test $ret = 124 || ! grep "$ENOSPC" err >/dev/null; } &&
      { fail=1; cat err; echo "fold didn't diagnose ENOSPC" >&2; }
   done
 }

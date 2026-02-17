@@ -18,15 +18,12 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ split
+getlimits_
 
 cp -sf /dev/full xaa || skip_ '/dev/full is required'
 
-# Get the wording of the OS-dependent ENOSPC message
-returns_ 1 seq 1 >/dev/full 2>msgt || framework_failure_
-sed 's/seq: write error: //' msgt > msg || framework_failure_
-
 # Create the expected error message
-{ printf "%s" "split: xaa: " ; cat msg ; } > exp || framework_failure_
+printf '%s\n' "split: xaa: $ENOSPC" > exp || framework_failure_
 
 # the 'split' command should fail with exit code 1
 seq 2 | returns_ 1 split -b 1 2> err || fail=1
