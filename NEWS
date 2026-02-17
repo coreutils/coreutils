@@ -7,6 +7,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'kill --help' now has links to valid anchors in the html manual.
   [bug introduced in coreutils-9.10]
 
+  'pwd' on ancient systems will no longer overflow a buffer
+  when operating in deep paths longer than twice the system PATH_MAX.
+  [bug introduced in coreutils-9.6]
+
 ** New Features
 
   'date --date' now parses dot delimited dd.mm.yy format common in Europe.

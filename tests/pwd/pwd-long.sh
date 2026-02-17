@@ -19,6 +19,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ pwd
+uses_strace_
 
 require_readable_root_
 require_perl_
@@ -26,9 +27,18 @@ require_perl_
 ARGV_0=$0
 export ARGV_0
 
+# Disable the getcwd syscall if possible, so more of our code is exercised.
+if strace -f -o /dev/null -e 'getcwd' -e fault=all:error=ENOSYS true; then
+  no_sys_getcwd() {
+    strace -f -o /dev/null -e 'getcwd' -e fault=all:error=ENOSYS "$@"
+  }
+else
+  no_sys_getcwd() { "$@"; }
+fi
+
 # Don't use CuTmpdir here, since File::Temp's use of rmtree can't
 # remove the deep tree we create.
-$PERL -Tw -I"$abs_srcdir/tests" -MCuSkip -- - <<\EOF
+no_sys_getcwd $PERL -Tw -I"$abs_srcdir/tests" -MCuSkip -- - <<\EOF
 
 # Show that pwd works even when the length of the resulting
 # directory name is longer than PATH_MAX.
