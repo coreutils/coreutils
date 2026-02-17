@@ -19,6 +19,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ head
+getlimits_
 
 if ! test -w /dev/full || ! test -c /dev/full; then
   skip_ '/dev/full is required'
@@ -29,21 +30,18 @@ fi
 yes | head -c10M > bigseek || framework_failure_
 
 # This is the single output diagnostic expected,
-# (without the possibly varying :strerror(ENOSPC) suffix).
-printf '%s\n' "head: error writing 'standard output'" > exp
+printf '%s\n' "head: error writing 'standard output': $ENOSPC" > exp
 
 # Memory is bounded in these cases
 for item in lines bytes; do
   for N in 0 1; do
     # pipe case
-    yes | returns_ 1 timeout 10s head --$item=-$N > /dev/full 2> errt || fail=1
-    sed 's/\(head:.*\):.*/\1/' errt > err
+    yes | returns_ 1 timeout 10s head --$item=-$N > /dev/full 2> err || fail=1
     compare exp err || fail=1
 
     # seekable case
-    returns_ 1 timeout 10s head --$item=-$N bigseek > /dev/full 2> errt \
+    returns_ 1 timeout 10s head --$item=-$N bigseek > /dev/full 2> err \
         || fail=1
-    sed 's/\(head:.*\):.*/\1/' errt > err
     compare exp err || fail=1
   done
 done

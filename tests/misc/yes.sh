@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ yes
+getlimits_
 
 # Check basic operation
 test "$(yes | head -n1)" = 'y' || fail=1
@@ -47,11 +48,10 @@ fi
 if test -w /dev/full && test -c /dev/full; then
   # The single output diagnostic expected,
   # (without the possibly varying :strerror(ENOSPC) suffix).
-  printf '%s\n' "yes: standard output" > exp
+  printf '%s\n' "yes: standard output: $ENOSPC" > exp
 
   for size in 1 16384; do
-    returns_ 1 yes "$(printf %${size}s '')" >/dev/full 2>errt || fail=1
-    sed 's/\(yes:.*\):.*/\1/' errt > err
+    returns_ 1 yes "$(printf %${size}s '')" >/dev/full 2>err || fail=1
     compare exp err || fail=1
   done
 fi
