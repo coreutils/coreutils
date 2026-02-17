@@ -18,15 +18,14 @@
 
 use strict;
 
+my $limits = getlimits ();
+
 (my $program_name = $0) =~ s|.*/||;
 
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my $prog = 'od';
-
-use Errno qw(ERANGE);
-my $ERANGE = do { local $! = ERANGE; "$!" };
 
 # Use a file in /proc whose size is not likely to
 # change between the wc and od invocations.
@@ -79,11 +78,11 @@ my @Tests =
 
      # Overflowing traditional offsets should be diagnosed.
      ['overflow-off-1', '-', '7' x 255, {IN_PIPE=>""}, {EXIT=>1},
-      {ERR=>"od: ".('7' x 255).": $ERANGE\n"}],
+      {ERR=>"od: ".('7' x 255).": $limits->{ERANGE}\n"}],
      ['overflow-off-2', '-', ('9' x 254).'.', {IN_PIPE=>""}, {EXIT=>1},
-      {ERR=>"od: ".('9' x 254).".: $ERANGE\n"}],
+      {ERR=>"od: ".('9' x 254).".: $limits->{ERANGE}\n"}],
      ['overflow-off-3', '-', '0x'.('f' x 253), {IN_PIPE=>""}, {EXIT=>1},
-      {ERR=>"od: 0x".('f' x 253).": $ERANGE\n"}],
+      {ERR=>"od: 0x".('f' x 253).": $limits->{ERANGE}\n"}],
 
      # Ensure that a large width does not cause trouble.
      # From coreutils-7.0 through coreutils-8.21, these would print

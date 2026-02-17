@@ -18,8 +18,9 @@
 
 use strict;
 
+my $limits = getlimits ();
+
 (my $program_name = $0) =~ s|.*/||;
-my $normalize_strerror = "s/': .*/'/";
 
 my @Tests =
     (
@@ -27,11 +28,10 @@ my @Tests =
       {IN=> "ça\nçb\n"},
       {OUT=>"ça b\n"}],
      ['wide-1', '-w 32768',
-      {ERR => "fmt: invalid width: '32768'\n"}, {EXIT => 1},
-      {ERR_SUBST => $normalize_strerror}],
+      {ERR => "fmt: invalid width: '32768': $limits->{ERANGE}\n"}, {EXIT => 1}],
      ['wide-2', '-w 2147483647',
-      {ERR => "fmt: invalid width: '2147483647'\n"}, {EXIT => 1},
-      {ERR_SUBST => $normalize_strerror}],
+      {ERR => "fmt: invalid width: '2147483647': $limits->{ERANGE}\n"},
+      {EXIT => 1}],
      ['bad-suffix', '-72x',	{IN=> ''},
       {ERR => "fmt: invalid width: '72x'\n"}, {EXIT => 1}],
      ['no-file', 'no-such-file',
