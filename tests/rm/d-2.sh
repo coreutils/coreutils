@@ -19,17 +19,17 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm
+getlimits_
 
 mkdir d || framework_failure_
 > d/a || framework_failure_
 
 rm -d d 2> out && fail=1
 
-# Accept any of these: EEXIST, ENOTEMPTY
-sed 's/: File exists/: Directory not empty/' out > out2
+sed "s/: $EEXIST/: $ENOTEMPTY/" out > out2
 
 printf "%s\n" \
-    "rm: cannot remove 'd': Directory not empty" \
+    "rm: cannot remove 'd': $ENOTEMPTY" \
     > exp || framework_failure_
 
 compare exp out2 || fail=1

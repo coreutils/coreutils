@@ -19,6 +19,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ mv
+getlimits_
 
 mkdir -p a/t b/t || framework_failure_
 touch a/t/f || framework_failure_
@@ -29,12 +30,11 @@ touch a/t/f || framework_failure_
 # diagnostic about moving one directory to a subdirectory of itself.
 mv b/t a 2> out && fail=1
 
-# Accept any of these: EEXIST, ENOTEMPTY, EBUSY.
-sed             's/: File exists/: Directory not empty/'<out>o1;mv o1 out
-sed 's/: Device or resource busy/: Directory not empty/'<out>o1;mv o1 out
+sed "s/: $EEXIST/: $ENOTEMPTY/"<out>o1;mv o1 out
+sed "s/: $EBUSY/: $ENOTEMPTY/"<out>o1;mv o1 out
 
-cat <<\EOF > exp || framework_failure_
-mv: cannot overwrite 'a/t': Directory not empty
+cat <<EOF > exp || framework_failure_
+mv: cannot overwrite 'a/t': $ENOTEMPTY
 EOF
 
 compare exp out || fail=1
