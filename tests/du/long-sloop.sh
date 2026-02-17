@@ -20,6 +20,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ du
+getlimits_
 
 # Create lots of directories, each containing a single symlink
 # pointing at the next directory in the list.
@@ -46,18 +47,9 @@ echo foo > $i || framework_failure_
 
 # If a system can handle this many symlinks in a file name,
 # just skip this test.
-
-# The following also serves to record in 'err' the string
-# corresponding to strerror (ELOOP).  This is necessary because while
-# Linux/libc gives 'Too many levels of symbolic links', Solaris
-# renders it as "Number of symbolic links encountered during path
-# name traversal exceeds MAXSYMLINKS".
-
 cat $file > /dev/null 2> err &&
     skip_ 'Your system appears to be able to handle more than $n symlinks
 in file name resolution'
-too_many=$(sed 's/.*: //' err)
-
 
 # With coreutils-5.93 there was no failure.
 # With coreutils-5.94 we get the desired diagnostic:
@@ -66,7 +58,7 @@ du -L 1 > /dev/null 2> out1 && fail=1
 sed "s, .1/s/s/s/[/s]*',," out1 > out2 || framework_failure_
 sed "s/cannot read directory/cannot access/" out2 > out || framework_failure_
 
-echo "du: cannot access: $too_many" > exp || framework_failure_
+echo "du: cannot access: $ELOOP" > exp || framework_failure_
 
 compare exp out || fail=1
 
