@@ -20,6 +20,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   'nl' now supports multi-byte --section-delimiter characters.
 
+  'wc -l' now operates up to three times faster on hosts that support Neon
+  instructions.
+
 ** Build-related
 
   ./configure --enable-single-binary=hardlinks is now supported on systems

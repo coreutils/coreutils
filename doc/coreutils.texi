@@ -1599,6 +1599,7 @@ time using various configure variables, which currently include:
 @item utils_cv_avx2_intrinsic_exists
 @item utils_cv_avx2_pclmul_intrinsic_exists
 @item utils_cv_avx512_pclmul_intrinsic_exists
+@item utils_cv_neon_intrinsic_exists
 @item utils_cv_pclmul_intrinsic_exists
 @item utils_cv_vmull_intrinsic_exists
 @end table
@@ -1623,7 +1624,7 @@ ARM, and AArch64 platforms:
 @example
 export OPENSSL_ia32cap='0x0'
 export OPENSSL_armcap='0x0'
-export GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX512F,-AVX2,-AVX,-PMULL'
+export GLIBC_TUNABLES='glibc.cpu.hwcaps=-ASIMD,-AVX512F,-AVX2,-AVX,-PMULL'
 @end example
 
 The @option{--debug} option is available on all utilities supporting

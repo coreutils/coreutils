@@ -509,6 +509,13 @@ wc_avx2_ldadd = src/libwc_avx2.a
 src_wc_LDADD += $(wc_avx2_ldadd)
 src_libwc_avx2_a_CFLAGS = -mavx2 $(AM_CFLAGS)
 endif
+if USE_NEON_WC_LINECOUNT
+noinst_LIBRARIES += src/libwc_neon.a
+src_libwc_neon_a_SOURCES = src/wc_neon.c
+wc_neon_ldadd = src/libwc_neon.a
+src_wc_LDADD += $(wc_neon_ldadd)
+src_libwc_neon_a_CFLAGS = -march=armv8-a+simd $(AM_CFLAGS)
+endif
 
 # Ensure we don't link against libcoreutils.a as that lib is
 # not compiled with -fPIC which causes issues on 64 bit at least

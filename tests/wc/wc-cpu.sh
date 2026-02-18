@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ wc
 
-GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX2,-AVX512F' \
+GLIBC_TUNABLES='glibc.cpu.hwcaps=-ASIMD,-AVX2,-AVX512F' \
  wc -l --debug /dev/null 2>debug || fail=1
 grep 'using.*hardware support' debug && fail=1
 
@@ -32,7 +32,7 @@ wc_accelerated_no_avx512=$(
           wc -l < lines
          ) || fail=1
 wc_base=$(
-          GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX2,-AVX512F' \
+          GLIBC_TUNABLES='glibc.cpu.hwcaps=-ASIMD,-AVX2,-AVX512F' \
           wc -l < lines
          ) || fail=1
 

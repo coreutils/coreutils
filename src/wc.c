@@ -31,6 +31,11 @@
 #include <stat-size.h>
 #include <xbinary-io.h>
 
+#ifdef USE_NEON_WC_LINECOUNT
+# include <sys/auxv.h>
+# include <asm/hwcap.h>
+#endif
+
 #include "system.h"
 #include "cpu-supports.h"
 #include "ioblksize.h"
@@ -156,6 +161,21 @@ avx512_supported (void)
                   : _("avx512 support not detected")));
 
   return avx512_enabled;
+}
+#endif
+
+#ifdef USE_NEON_WC_LINECOUNT
+static bool
+neon_supported (void)
+{
+  bool neon_enabled = (cpu_may_support ("asimd")
+                       && 0 < (getauxval (AT_HWCAP) & HWCAP_ASIMD));
+  if (debug)
+    error (0, 0, (neon_enabled
+                  ? _("using neon hardware support")
+                  : _("neon support not detected")));
+
+  return neon_enabled;
 }
 #endif
 
@@ -297,6 +317,13 @@ wc_lines (int fd)
     use_avx2 = avx2_supported () ? 1 : -1;
   if (0 < use_avx2)
     return wc_lines_avx2 (fd);
+#endif
+#ifdef USE_NEON_WC_LINECOUNT
+  static signed char use_neon;
+  if (!use_neon)
+    use_neon = neon_supported () ? 1 : -1;
+  if (0 < use_neon)
+    return wc_lines_neon (fd);
 #endif
 
   intmax_t lines = 0, bytes = 0;
