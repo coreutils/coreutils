@@ -115,14 +115,13 @@ static void printv (VALUE *v);
 static size_t
 mbs_logical_cspn (char const *s, char const *accept)
 {
-  size_t idx = 0;
-
   if (accept[0] == '\0')
     return 0;
 
   /* General case.  */
   if (MB_CUR_MAX > 1)
     {
+      size_t idx = 0;
       for (char const *p = s; *p; )
         {
           ++idx;
@@ -306,8 +305,6 @@ or 0, 2 if EXPRESSION is syntactically invalid, and 3 if an error occurred.\n\
 int
 main (int argc, char **argv)
 {
-  VALUE *v;
-
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -336,7 +333,7 @@ main (int argc, char **argv)
 
   args = argv + 1;
 
-  v = eval (true);
+  VALUE *v = eval (true);
   if (!nomoreargs ())
     error (EXPR_INVALID, 0, _("syntax error: unexpected argument %s"),
            quotearg_n_style (0, locale_quoting_style, *args));
@@ -554,10 +551,8 @@ require_more_args (void)
 static void
 trace (char const *fxn)
 {
-  char **a;
-
   printf ("%s:", fxn);
-  for (a = args; *a; a++)
+  for (char **a = args; *a; a++)
     printf (" %s", *a);
   putchar ('\n');
 }
@@ -570,32 +565,31 @@ trace (char const *fxn)
 static VALUE *
 docolon (VALUE *sv, VALUE *pv)
 {
-  VALUE *v;
-  char const *errmsg;
-  struct re_pattern_buffer re_buffer;
-  char fastmap[UCHAR_MAX + 1];
-  struct re_registers re_regs;
-  regoff_t matchlen;
-
   tostring (sv);
   tostring (pv);
 
+  struct re_registers re_regs;
   re_regs.num_regs = 0;
   re_regs.start = NULL;
   re_regs.end = NULL;
 
+  struct re_pattern_buffer re_buffer;
+  char fastmap[UCHAR_MAX + 1];
   re_buffer.buffer = NULL;
   re_buffer.allocated = 0;
   re_buffer.fastmap = fastmap;
   re_buffer.translate = NULL;
-  re_syntax_options =
-    RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP & ~RE_NO_EMPTY_RANGES;
-  errmsg = re_compile_pattern (pv->u.s, strlen (pv->u.s), &re_buffer);
+  re_syntax_options = (RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP
+                       & ~RE_NO_EMPTY_RANGES);
+  char const *errmsg = re_compile_pattern (pv->u.s, strlen (pv->u.s),
+                                           &re_buffer);
   if (errmsg)
     error (EXPR_INVALID, 0, "%s", (errmsg));
   re_buffer.newline_anchor = 0;
 
-  matchlen = re_match (&re_buffer, sv->u.s, strlen (sv->u.s), 0, &re_regs);
+  VALUE *v;
+  regoff_t matchlen = re_match (&re_buffer, sv->u.s, strlen (sv->u.s), 0,
+                                &re_regs);
   if (0 <= matchlen)
     {
       /* Were \(...\) used? */
@@ -647,8 +641,6 @@ docolon (VALUE *sv, VALUE *pv)
 static VALUE *
 eval7 (bool evaluate)
 {
-  VALUE *v;
-
 #ifdef EVAL_TRACE
   trace ("eval7");
 #endif
@@ -656,7 +648,7 @@ eval7 (bool evaluate)
 
   if (nextarg ("("))
     {
-      v = eval (evaluate);
+      VALUE *v = eval (evaluate);
       if (nomoreargs ())
         error (EXPR_INVALID, 0, _("syntax error: expecting ')' after %s"),
                quotearg_n_style (0, locale_quoting_style, *(args - 1)));
@@ -677,12 +669,6 @@ eval7 (bool evaluate)
 static VALUE *
 eval6 (bool evaluate)
 {
-  VALUE *l;
-  VALUE *r;
-  VALUE *v;
-  VALUE *i1;
-  VALUE *i2;
-
 #ifdef EVAL_TRACE
   trace ("eval6");
 #endif
@@ -693,16 +679,17 @@ eval6 (bool evaluate)
     }
   else if (nextarg ("length"))
     {
-      r = eval6 (evaluate);
+      VALUE *r = eval6 (evaluate);
       tostring (r);
-      v = int_value (mbslen (r->u.s));
+      VALUE *v = int_value (mbslen (r->u.s));
       freev (r);
       return v;
     }
   else if (nextarg ("match"))
     {
-      l = eval6 (evaluate);
-      r = eval6 (evaluate);
+      VALUE *l = eval6 (evaluate);
+      VALUE *r = eval6 (evaluate);
+      VALUE *v;
       if (evaluate)
         {
           v = docolon (l, r);
@@ -715,25 +702,24 @@ eval6 (bool evaluate)
     }
   else if (nextarg ("index"))
     {
-      size_t pos;
-
-      l = eval6 (evaluate);
-      r = eval6 (evaluate);
+      VALUE *l = eval6 (evaluate);
+      VALUE *r = eval6 (evaluate);
       tostring (l);
       tostring (r);
-      pos = mbs_logical_cspn (l->u.s, r->u.s);
-      v = int_value (pos);
+      size_t pos = mbs_logical_cspn (l->u.s, r->u.s);
+      VALUE *v = int_value (pos);
       freev (l);
       freev (r);
       return v;
     }
   else if (nextarg ("substr"))
     {
-      l = eval6 (evaluate);
-      i1 = eval6 (evaluate);
-      i2 = eval6 (evaluate);
+      VALUE *l = eval6 (evaluate);
+      VALUE *i1 = eval6 (evaluate);
+      VALUE *i2 = eval6 (evaluate);
       tostring (l);
 
+      VALUE *v;
       if (!toarith (i1) || !toarith (i2))
         v = str_value ("");
       else
@@ -760,22 +746,18 @@ eval6 (bool evaluate)
 static VALUE *
 eval5 (bool evaluate)
 {
-  VALUE *l;
-  VALUE *r;
-  VALUE *v;
-
 #ifdef EVAL_TRACE
   trace ("eval5");
 #endif
-  l = eval6 (evaluate);
+  VALUE *l = eval6 (evaluate);
   while (true)
     {
       if (nextarg (":"))
         {
-          r = eval6 (evaluate);
+          VALUE *r = eval6 (evaluate);
           if (evaluate)
             {
-              v = docolon (l, r);
+              VALUE *v = docolon (l, r);
               freev (l);
               l = v;
             }
@@ -791,16 +773,14 @@ eval5 (bool evaluate)
 static VALUE *
 eval4 (bool evaluate)
 {
-  VALUE *l;
-  VALUE *r;
-  enum { multiply, divide, mod } fxn;
-
 #ifdef EVAL_TRACE
   trace ("eval4");
 #endif
-  l = eval5 (evaluate);
+  VALUE *l = eval5 (evaluate);
   while (true)
     {
+      enum { multiply, divide, mod } fxn;
+
       if (nextarg ("*"))
         fxn = multiply;
       else if (nextarg ("/"))
@@ -809,7 +789,7 @@ eval4 (bool evaluate)
         fxn = mod;
       else
         return l;
-      r = eval5 (evaluate);
+      VALUE *r = eval5 (evaluate);
       if (evaluate)
         {
           if (!toarith (l) || !toarith (r))
@@ -830,23 +810,21 @@ eval4 (bool evaluate)
 static VALUE *
 eval3 (bool evaluate)
 {
-  VALUE *l;
-  VALUE *r;
-  enum { plus, minus } fxn;
-
 #ifdef EVAL_TRACE
   trace ("eval3");
 #endif
-  l = eval4 (evaluate);
+  VALUE *l = eval4 (evaluate);
   while (true)
     {
+      enum { plus, minus } fxn;
+
       if (nextarg ("+"))
         fxn = plus;
       else if (nextarg ("-"))
         fxn = minus;
       else
         return l;
-      r = eval4 (evaluate);
+      VALUE *r = eval4 (evaluate);
       if (evaluate)
         {
           if (!toarith (l) || !toarith (r))
@@ -862,20 +840,16 @@ eval3 (bool evaluate)
 static VALUE *
 eval2 (bool evaluate)
 {
-  VALUE *l;
-
 #ifdef EVAL_TRACE
   trace ("eval2");
 #endif
-  l = eval3 (evaluate);
+  VALUE *l = eval3 (evaluate);
   while (true)
     {
-      VALUE *r;
       enum
         {
           less_than, less_equal, equal, not_equal, greater_equal, greater_than
         } fxn;
-      bool val = false;
 
       if (nextarg ("<"))
         fxn = less_than;
@@ -891,14 +865,15 @@ eval2 (bool evaluate)
         fxn = greater_than;
       else
         return l;
-      r = eval3 (evaluate);
+      VALUE *r = eval3 (evaluate);
 
+      bool val = false;
       if (evaluate)
         {
-          int cmp;
           tostring (l);
           tostring (r);
 
+          int cmp;
           if (looks_like_integer (l->u.s) && looks_like_integer (r->u.s))
             cmp = strintcmp (l->u.s, r->u.s);
           else
@@ -940,18 +915,15 @@ eval2 (bool evaluate)
 static VALUE *
 eval1 (bool evaluate)
 {
-  VALUE *l;
-  VALUE *r;
-
 #ifdef EVAL_TRACE
   trace ("eval1");
 #endif
-  l = eval2 (evaluate);
+  VALUE *l = eval2 (evaluate);
   while (true)
     {
       if (nextarg ("&"))
         {
-          r = eval2 (evaluate && !null (l));
+          VALUE *r = eval2 (evaluate && !null (l));
           if (null (l) || null (r))
             {
               freev (l);
@@ -971,18 +943,15 @@ eval1 (bool evaluate)
 static VALUE *
 eval (bool evaluate)
 {
-  VALUE *l;
-  VALUE *r;
-
 #ifdef EVAL_TRACE
   trace ("eval");
 #endif
-  l = eval1 (evaluate);
+  VALUE *l = eval1 (evaluate);
   while (true)
     {
       if (nextarg ("|"))
         {
-          r = eval1 (evaluate && null (l));
+          VALUE *r = eval1 (evaluate && null (l));
           if (null (l))
             {
               freev (l);
