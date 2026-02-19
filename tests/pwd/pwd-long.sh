@@ -28,13 +28,10 @@ ARGV_0=$0
 export ARGV_0
 
 # Disable the getcwd syscall if possible, so more of our code is exercised.
-if strace -f -o /dev/null -e 'getcwd' -e fault=all:error=ENOSYS true; then
-  no_sys_getcwd() {
-    strace -f -o /dev/null -e 'getcwd' -e fault=all:error=ENOSYS "$@"
-  }
-else
-  no_sys_getcwd() { "$@"; }
-fi
+no_sys_getcwd() {
+  strace -f -o /dev/null -e 'getcwd' -e fault=all:error=ENOSYS "$@"
+}
+no_sys_getcwd true || no_sys_getcwd() { "$@"; }
 
 # Don't use CuTmpdir here, since File::Temp's use of rmtree can't
 # remove the deep tree we create.
