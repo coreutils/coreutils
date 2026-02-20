@@ -857,10 +857,6 @@ main (int argc, char **argv)
 
   cp_option_init (&x);
 
-  owner_name = NULL;
-  group_name = NULL;
-  strip_files = false;
-  dir_arg = false;
   umask (0);
 
   int optc;
