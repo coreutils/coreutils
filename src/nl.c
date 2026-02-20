@@ -509,8 +509,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  have_read_stdin = false;
-
   while ((c = getopt_long (argc, argv, "h:b:f:v:i:pl:s:w:n:d:", longopts,
                            NULL))
          != -1)
