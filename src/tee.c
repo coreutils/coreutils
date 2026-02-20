@@ -136,9 +136,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  append = false;
-  ignore_interrupts = false;
-
   int optc;
   while ((optc = getopt_long (argc, argv, "aip", long_options, NULL)) != -1)
     {
