@@ -177,7 +177,7 @@ static bool reopen_inaccessible_files;
 
 /* If true, interpret the numeric argument as the number of lines.
    Otherwise, interpret it as the number of bytes.  */
-static bool count_lines;
+static bool count_lines = true;
 
 /* Whether we follow the name of each file or the file descriptor
    that is initially associated with each name.  */
@@ -196,7 +196,7 @@ static bool from_start;
 static bool print_headers;
 
 /* Character to split lines by. */
-static char line_end;
+static char line_end = '\n';
 
 /* When to print the filename banners.  */
 enum header_mode
@@ -2376,11 +2376,6 @@ main (int argc, char **argv)
     page_size = p;
   }
 
-  have_read_stdin = false;
-
-  count_lines = true;
-  forever = from_start = print_headers = false;
-  line_end = '\n';
   obsolete_option = parse_obsolete_option (argc, argv, &n_units);
   argc -= obsolete_option;
   argv += obsolete_option;
