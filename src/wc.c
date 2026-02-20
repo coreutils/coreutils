@@ -813,10 +813,6 @@ main (int argc, char **argv)
 
   posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
 
-  print_lines = print_words = print_chars = print_bytes = false;
-  print_linelength = false;
-  total_lines = total_words = total_chars = total_bytes = max_line_length = 0;
-
   while ((optc = getopt_long (argc, argv, "clLmw", longopts, NULL)) != -1)
     switch (optc)
       {
