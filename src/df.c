@@ -69,7 +69,7 @@ static bool show_local_fs;
 static bool show_listed_fs;
 
 /* Human-readable options for output.  */
-static int human_output_opts;
+static int human_output_opts = -1;
 
 /* The units to use when printing sizes.  */
 static uintmax_t output_block_size;
@@ -122,7 +122,7 @@ static bool print_type;
 static bool print_grand_total;
 
 /* Grand total data.  */
-static struct fs_usage grand_fsu;
+static struct fs_usage grand_fsu = { .fsu_blocksize = 1 };
 
 /* Display modes.  */
 static enum
@@ -1595,17 +1595,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  fs_select_list = NULL;
-  fs_exclude_list = NULL;
-  show_all_fs = false;
-  show_listed_fs = false;
-  human_output_opts = -1;
-  print_type = false;
-  file_systems_processed = false;
-  exit_status = EXIT_SUCCESS;
-  print_grand_total = false;
-  grand_fsu.fsu_blocksize = 1;
 
   /* If true, use the POSIX output format.  */
   bool posix_format = false;
