@@ -205,8 +205,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  remove_empty_parents = false;
-
   int optc;
   while ((optc = getopt_long (argc, argv, "pv", longopts, NULL)) != -1)
     {
