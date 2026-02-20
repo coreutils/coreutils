@@ -517,6 +517,7 @@ all_tests =					\
   tests/chmod/ignore-symlink.sh			\
   tests/chmod/inaccessible.sh			\
   tests/chmod/octal.sh				\
+  tests/chmod/only-op.sh			\
   tests/chmod/partial-fail.sh			\
   tests/chmod/setgid.sh				\
   tests/chmod/silent.sh				\
