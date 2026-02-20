@@ -63,19 +63,19 @@ tac -r -s '.\|
 #define WRITESIZE 8192
 
 /* The string that separates the records of the file. */
-static char const *separator;
+static char const *separator = "\n";
 
 /* True if we have ever read standard input.  */
 static bool have_read_stdin = false;
 
 /* If true, print 'separator' along with the record preceding it
    in the file; otherwise with the record following it. */
-static bool separator_ends_record;
+static bool separator_ends_record = true;
 
 /* 0 if 'separator' is to be matched as a regular expression;
    otherwise, the length of 'separator', used as a sentinel to
    stop the search. */
-static size_t sentinel_length;
+static size_t sentinel_length = 1;
 
 /* The length of a match with 'separator'.  If 'sentinel_length' is 0,
    'match_length' is computed every time a match succeeds;
@@ -503,10 +503,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  separator = "\n";
-  sentinel_length = 1;
-  separator_ends_record = true;
 
   while ((optc = getopt_long (argc, argv, "brs:", longopts, NULL)) != -1)
     {
