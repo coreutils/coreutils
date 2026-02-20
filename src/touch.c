@@ -289,9 +289,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  change_times = 0;
-  no_create = use_ref = false;
-
   while ((c = getopt_long (argc, argv, "acd:fhmr:t:", longopts, NULL)) != -1)
     {
       switch (c)
