@@ -494,8 +494,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  recurse = force_silent = diagnose_surprises = false;
-
   while ((c = getopt_long (argc, argv,
                            ("HLPRcfhvr::w::x::X::s::t::u::g::o::a::,::+::=::"
                             "0::1::2::3::4::5::6::7::"),
