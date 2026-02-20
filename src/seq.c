@@ -55,7 +55,7 @@ static bool locale_ok;
 static bool equal_width;
 
 /* The string used to separate two numbers.  */
-static char const *separator;
+static char const *separator = "\n";
 
 /* The string output after all numbers have been output.
    Usually "\n" or "\0".  */
@@ -559,9 +559,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  equal_width = false;
-  separator = "\n";
 
   /* We have to handle negative numbers in the command line but this
      conflicts with the command line arguments.  So explicitly check first
