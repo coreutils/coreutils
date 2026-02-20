@@ -66,7 +66,7 @@ static int n_open_pipes;
 static bool default_SIGPIPE;
 
 /* Base name of output files.  */
-static char const *outbase;
+static char const *outbase = "x";
 
 /* Name of output files.  */
 static char *outfile;
@@ -91,7 +91,7 @@ static char const *numeric_suffix_start;
 static char const *additional_suffix;
 
 /* Name of input file.  May be "-".  */
-static char const *infile;
+static char const *infile = "-";
 
 /* stat buf for input file.  */
 static struct stat in_stat_buf;
@@ -1425,9 +1425,6 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   /* Parse command line options.  */
-
-  infile = "-";
-  outbase = "x";
 
   while (true)
     {
