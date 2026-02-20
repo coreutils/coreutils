@@ -58,7 +58,7 @@ static bool presume_input_pipe;
 static bool print_headers;
 
 /* Character to split lines by. */
-static char line_end;
+static char line_end = '\n';
 
 /* When to print the filename banners. */
 enum header_mode
@@ -942,12 +942,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  have_read_stdin = false;
-
-  print_headers = false;
-
-  line_end = '\n';
 
   if (1 < argc && argv[1][0] == '-' && c_isdigit (argv[1][1]))
     {
