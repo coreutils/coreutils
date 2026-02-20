@@ -4483,7 +4483,6 @@ main (int argc, char **argv)
       thousands_sep = NON_CHAR;
   }
 
-  have_read_stdin = false;
   inittables ();
 
   {
