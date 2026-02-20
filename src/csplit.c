@@ -132,7 +132,7 @@ static bool have_read_eof = false;
 static char *volatile filename_space = NULL;
 
 /* Prefix part of output file names. */
-static char const *volatile prefix = NULL;
+static char const *volatile prefix = DEFAULT_PREFIX;
 
 /* Suffix part of output file names. */
 static char *volatile suffix = NULL;
@@ -159,7 +159,7 @@ static char **global_argv;
 static bool suppress_count;
 
 /* If true, remove output files on error. */
-static bool volatile remove_files;
+static bool volatile remove_files = true;
 
 /* If true, remove all output files which have a zero length. */
 static bool elide_empty_files;
@@ -1292,12 +1292,6 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   global_argv = argv;
-  controls = NULL;
-  control_used = 0;
-  suppress_count = false;
-  remove_files = true;
-  suppress_matched = false;
-  prefix = DEFAULT_PREFIX;
 
   while ((optc = getopt_long (argc, argv, "f:b:kn:sqz", longopts, NULL))
          != -1)
