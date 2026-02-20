@@ -501,9 +501,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  have_read_stdin = false;
-  serial_merge = false;
-
   while ((optc = getopt_long (argc, argv, "d:sz", longopts, NULL)) != -1)
     {
       switch (optc)
