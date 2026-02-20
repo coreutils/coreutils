@@ -22,6 +22,8 @@ print_ver_ wc
 GLIBC_TUNABLES='glibc.cpu.hwcaps=-ASIMD,-AVX2,-AVX512F' \
  wc -l --debug /dev/null 2>debug || fail=1
 grep 'using.*hardware support' debug && fail=1
+# wc should not fail by I/O error caused by --debug
+wc --debug /dev/null 2> /dev/full || fail=1
 
 lines=$(shuf -i 0-1000 | head -n1)  || framework_failure_
 seq 1000 | head -n "$lines" > lines || framework_failure_
