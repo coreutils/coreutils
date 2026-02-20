@@ -700,8 +700,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  exit_status = EXIT_SUCCESS;
-
   posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
 
   /* We directly parse options, rather than use parse_long_options, in
