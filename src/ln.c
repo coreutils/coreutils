@@ -532,9 +532,6 @@ main (int argc, char **argv)
 
   atexit (close_stdin);
 
-  symbolic_link = remove_existing_files = interactive = verbose
-    = hard_dir_link = false;
-
   while ((c = getopt_long (argc, argv, "bdfinrst:vFLPS:T",
                            long_options, NULL))
          != -1)
