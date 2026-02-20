@@ -300,8 +300,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  break_spaces = have_read_stdin = false;
-
   while ((optc = getopt_long (argc, argv, shortopts, longopts, NULL)) != -1)
     {
       char optargbuf[2];
