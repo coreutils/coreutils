@@ -40,13 +40,13 @@
 static bool hard_LC_COLLATE;
 
 /* If true, print lines that are found only in file 1. */
-static bool only_file_1;
+static bool only_file_1 = true;
 
 /* If true, print lines that are found only in file 2. */
-static bool only_file_2;
+static bool only_file_2 = true;
 
 /* If true, print lines that are found in both files. */
-static bool both;
+static bool both = true;
 
 /* If nonzero, we have seen at least one unpairable line. */
 static bool seen_unpairable;
@@ -433,15 +433,6 @@ main (int argc, char **argv)
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
 
   atexit (close_stdout);
-
-  only_file_1 = true;
-  only_file_2 = true;
-  both = true;
-
-  seen_unpairable = false;
-  issued_disorder_warning[0] = issued_disorder_warning[1] = false;
-  check_input_order = CHECK_ORDER_DEFAULT;
-  total_option = false;
 
   while ((c = getopt_long (argc, argv, "123z", long_options, NULL)) != -1)
     switch (c)
