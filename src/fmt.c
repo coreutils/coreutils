@@ -182,11 +182,11 @@ static bool split;
 static bool uniform;
 
 /* Prefix minus leading and trailing spaces (default "").  */
-static char const *prefix;
+static char const *prefix = "";
 
 /* User-supplied maximum line width (default WIDTH).  The only output
    lines longer than this will each comprise a single word.  */
-static int max_width;
+static int max_width = WIDTH;
 
 /* Values derived from the option values.  */
 
@@ -343,11 +343,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  crown = tagged = split = uniform = false;
-  max_width = WIDTH;
-  prefix = "";
-  prefix_length = prefix_lead_space = prefix_full_length = 0;
 
   if (argc > 1 && argv[1][0] == '-' && c_isdigit (argv[1][1]))
     {
