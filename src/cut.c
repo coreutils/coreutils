@@ -508,12 +508,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  /* By default, all non-delimited lines are printed.  */
-  suppress_non_delimited = false;
-
-  delim = '\0';
-  have_read_stdin = false;
-
   while ((optc = getopt_long (argc, argv, "b:c:d:f:nsz", longopts, NULL))
          != -1)
     {
