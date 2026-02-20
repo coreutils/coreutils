@@ -107,7 +107,7 @@ static bool hard_LC_COLLATE;
 static bool print_unpairables_1, print_unpairables_2;
 
 /* If nonzero, print pairable lines.  */
-static bool print_pairables;
+static bool print_pairables = true;
 
 /* If nonzero, we have seen at least one unpairable line. */
 static bool seen_unpairable;
@@ -1045,11 +1045,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
   atexit (free_spareline);
-
-  print_pairables = true;
-  seen_unpairable = false;
-  issued_disorder_warning[0] = issued_disorder_warning[1] = false;
-  check_input_order = CHECK_ORDER_DEFAULT;
 
   while ((optc = getopt_long (argc, argv, "-a:e:i1:2:j:o:t:v:z",
                               longopts, NULL))
