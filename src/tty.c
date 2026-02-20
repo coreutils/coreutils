@@ -92,8 +92,6 @@ main (int argc, char **argv)
   initialize_exit_failure (TTY_WRITE_ERROR);
   atexit (close_stdout);
 
-  silent = false;
-
   while ((optc = getopt_long (argc, argv, "s", longopts, NULL)) != -1)
     {
       switch (optc)
