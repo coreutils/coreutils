@@ -325,7 +325,9 @@ write_permuted_numbers (size_t n_lines, size_t lo_input,
   for (size_t i = 0; i < n_lines; i++)
     {
       unsigned long int n = lo_input + permutation[i];
-      if (printf ("%lu%c", n, eolbyte) < 0)
+      char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+      if (fputs (umaxtostr (n, buf), stdout) < 0
+          || fputc (eolbyte, stdout) < 0)
         return -1;
     }
 
@@ -343,7 +345,9 @@ write_random_numbers (struct randint_source *s, size_t count,
   for (size_t i = 0; i < count; i++)
     {
       unsigned long int j = lo_input + randint_choose (s, range);
-      if (printf ("%lu%c", j, eolbyte) < 0)
+      char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+      if (fputs (umaxtostr (j, buf), stdout) < 0
+          || fputc (eolbyte, stdout) < 0)
         return -1;
     }
 
