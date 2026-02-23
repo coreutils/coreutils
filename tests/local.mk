@@ -176,6 +176,7 @@ all_tests =					\
   tests/tail/inotify-race.sh			\
   tests/tail/inotify-race2.sh			\
   tests/misc/invalid-opt.pl			\
+  tests/misc/user.sh				\
   tests/rm/ext3-perf.sh				\
   tests/rm/cycle.sh				\
   tests/cp/link-heap.sh				\

@@ -28,7 +28,7 @@ sanitizer_build_ df && skip_ 'Sanitizer not supported'
 # Protect against inaccessible remote mounts etc.
 timeout 10 df || skip_ "df fails"
 
-unshare -rm true || skip_ 'User namespace sandbox is disabled'
+unshare -rm unshare --version || skip_ 'User namespace sandbox is disabled'
 
 # mask /proc
 df() {
