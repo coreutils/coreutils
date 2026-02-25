@@ -343,6 +343,7 @@ all_tests =					\
   tests/expr/expr.pl				\
   tests/expr/expr-multibyte.pl			\
   tests/factor/factor.pl			\
+  tests/factor/factor-misc.sh		\
   tests/factor/factor-parallel.sh		\
   tests/misc/false-status.sh			\
   tests/fold/fold-characters.sh			\
