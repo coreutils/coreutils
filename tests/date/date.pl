@@ -287,6 +287,23 @@ my @Tests =
      ['fill-1', '-d 1999-12-08 +%_3d', {OUT=>'  8'}],
      ['fill-2', '-d 1999-12-08 +%03d', {OUT=>'008'}],
 
+     # Test modifier edge cases: flags without explicit width
+     ['underscore-no-width-1', '-d 1999-06-01 +%_d', {OUT=>' 1'}],
+     ['underscore-no-width-2', '-d 1999-06-15 +%_m', {OUT=>' 6'}],
+     ['underscore-no-width-3', '-d "1999-06-01 05:00:00" +%_H', {OUT=>' 5'}],
+     ['underscore-no-width-4', '-d 1999-06-01 +%_Y', {OUT=>'1999'}],
+     ['underscore-no-width-5', '-d 1999-06-01 +%_C', {OUT=>'19'}],
+     ['underscore-no-width-6', '-d 1999-01-01 +%_j', {OUT=>'  1'}],
+
+     # Test zero flag overriding space-padded specifiers
+     ['zero-override-space-1', '-d 1999-06-05 +%0e', {OUT=>'05'}],
+     ['zero-override-space-2', '-d "1999-06-01 05:00:00" +%0k', {OUT=>'05'}],
+     ['zero-override-space-3', '-d "1999-06-01 05:00:00" +%0l', {OUT=>'05'}],
+
+     # Test plus flag without explicit width (should not add sign for 4-digit year)
+     ['plus-no-width-1', '-d 1999-06-01 +%+Y', {OUT=>'1999'}],
+     ['plus-no-width-2', '-d 1999-06-01 +%+6Y', {OUT=>'+01999'}],
+
      # Test the combination of the to-upper-case modifier (^) and a conversion
      # specifier that expands to a string containing lower case characters.
      ['subfmt-up1', '-d "1999-12-08 7:30" "+%^c"',
