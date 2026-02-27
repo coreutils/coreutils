@@ -37,6 +37,11 @@ esac
 # write separately.
 mkfifo_or_skip_ fifo
 
+# libstdbuf on the same path with stdbuf should be detected even if /proc/self/exe is masked
+# not sure how to mask system libstdbuf path... /usr/{local,}/lib{exec,}/*coreutils can be used...
+unshare -rm unshare --version &&
+ unshare -rm $SHELL -c \
+  "mount -t tmpfs tmpfs /proc && mount -t tmpfs tmpfs /usr/libexec/coreutils && stdbuf -oL true" || fail=1
 
 # Verify input parameter checking
 stdbuf -o1 true || fail=1 # verify size syntax
