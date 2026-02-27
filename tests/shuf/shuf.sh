@@ -19,6 +19,12 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ shuf
 getlimits_
+uses_strace_
+
+# Ensure we handle unsupported getrandom syscall gracefully
+strace -o /dev/null -e inject=getrandom:error=ENOSYS shuf -i 1-9
+ret=$?
+test $? = 0 || test $? = 1 || fail=1
 
 # ensure randomization doesn't depend solely on ASLR
 # This is a probabilistic test :-)
