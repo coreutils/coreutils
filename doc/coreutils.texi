@@ -4130,7 +4130,11 @@ By default, for each valid line, one line is written to standard
 output indicating whether the named file passed the test.
 After all checks have been performed, if there were any failures,
 a warning is issued to standard error.
-Use the @option{--status} option to inhibit that output.
+If file names contain problematic characters,
+they will be quoted in a way suitable for POSIX-compatible shells,
+so that any file name is represented unambiguously and safely.
+
+Use the @option{--status} option to inhibit the output described above.
 If any listed file cannot be opened or read, if any valid line has
 a checksum inconsistent with the associated file, or if no valid
 line is found, @command{cksum} exits with nonzero status.  Otherwise,

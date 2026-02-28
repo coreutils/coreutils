@@ -23,6 +23,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   'date --date' now parses dot delimited dd.mm.yy format common in Europe.
   This is in addition to the already supported mm/dd/yy and yy-mm-dd formats.
 
+** Changes in behavior
+
+  'cksum --check' now uses shell quoting when required, to more robustly
+  escape file names output in diagnostics.
+  This also affects md5sum, sha*sum, and b2sum.
+
 ** Improvements
 
   'df --local' recognises more file system types as remote.

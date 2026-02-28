@@ -705,6 +705,7 @@ or equivalent standalone program.\
   exit (status);
 }
 
+#if !HASH_ALGO_SUM
 /* Given a string S, return TRUE if it contains problematic characters
    that need escaping.  Note we escape '\' itself to provide some forward
    compat to introduce escaping of other characters.  */
@@ -716,6 +717,7 @@ problematic_chars (char const *s)
   idx_t length = strcspn (s, "\\\n\r");
   return s[length] != '\0';
 }
+#endif
 
 /* Given a file name, S of length S_LEN, that is not NUL-terminated,
    modify it in place, performing the equivalent of this sed substitution:
@@ -1128,6 +1130,7 @@ split_3 (char *s, idx_t s_len,
   return true;
 }
 
+#if !HASH_ALGO_SUM
 /* If ESCAPE is true, then translate each:
    NEWLINE byte to the string, "\\n",
    CARRIAGE RETURN byte to the string, "\\r",
@@ -1164,6 +1167,7 @@ print_filename (char const *file, bool escape)
       file++;
     }
 }
+#endif
 
 /* An interface to the function, DIGEST_STREAM.
    Operate on FILENAME (it may be "-").
@@ -1444,7 +1448,6 @@ digest_check (char const *checkfile_name)
         {
           bool ok;
           bool missing;
-          bool needs_escape = ! status_only && problematic_chars (filename);
 
           properly_formatted_lines = true;
 
@@ -1455,12 +1458,7 @@ digest_check (char const *checkfile_name)
             {
               ++n_open_or_read_failures;
               if (!status_only)
-                {
-                  if (needs_escape)
-                    putchar ('\\');
-                  print_filename (filename, needs_escape);
-                  printf (": %s\n", _("FAILED open or read"));
-                }
+                printf ("%s: %s\n", quotef (filename),_("FAILED open or read"));
             }
           else if (ignore_missing && missing)
             {
@@ -1486,11 +1484,7 @@ digest_check (char const *checkfile_name)
               if (!status_only)
                 {
                   if (! match || ! quiet)
-                    {
-                      if (needs_escape)
-                        putchar ('\\');
-                      print_filename (filename, needs_escape);
-                    }
+                    fputs (quotef (filename), stdout);
 
                   if (! match)
                     printf (": %s\n", _("FAILED"));
