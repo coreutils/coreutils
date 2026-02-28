@@ -661,6 +661,7 @@ all_tests =					\
   tests/install/strip-program.sh		\
   tests/install/trap.sh				\
   tests/ln/backup-1.sh				\
+  tests/ln/backup-suffix-traversal.sh		\
   tests/ln/hard-backup.sh			\
   tests/ln/hard-to-sym.sh			\
   tests/ln/misc.sh				\
