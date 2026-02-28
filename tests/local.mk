@@ -562,6 +562,7 @@ all_tests =					\
   tests/cp/link-preserve.sh			\
   tests/cp/link-symlink.sh			\
   tests/cp/nfs-removal-race.sh			\
+  tests/cp/non-utf8-name.sh			\
   tests/cp/no-deref-link1.sh			\
   tests/cp/no-deref-link2.sh			\
   tests/cp/no-deref-link3.sh			\
