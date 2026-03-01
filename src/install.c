@@ -406,17 +406,18 @@ process_dir (char *dir, struct savewd *wd, void *options)
   return ret;
 }
 
-/* Copy file FROM onto file TO aka TO_DIRFD+TO_RELNAME, creating TO if
-   necessary.  Return true if successful.  */
+enum copy_status { COPY_FAILED, COPY_OK, COPY_SKIPPED };
 
-static bool
+/* Copy file FROM onto file TO aka TO_DIRFD+TO_RELNAME, creating TO if
+   necessary.  Return COPY_OK if successful or COPY_SKIPPED if the copy
+   was skipped.  */
+
+static enum copy_status
 copy_file (char const *from, char const *to,
            int to_dirfd, char const *to_relname, const struct cp_options *x)
 {
-  bool copy_into_self;
-
   if (copy_only_if_needed && !need_copy (from, to, to_dirfd, to_relname, x))
-    return true;
+    return COPY_SKIPPED;
 
   /* Allow installing from non-regular files like /dev/null.
      Charles Karney reported that some Sun version of install allows that
@@ -424,7 +425,9 @@ copy_file (char const *from, char const *to,
      However, since !x->recursive, the call to "copy" will fail if FROM
      is a directory.  */
 
-  return copy (from, to, to_dirfd, to_relname, 0, x, &copy_into_self, NULL);
+  bool copy_into_self;
+  return (copy (from, to, to_dirfd, to_relname, 0, x, &copy_into_self, NULL)
+          ? COPY_OK : COPY_FAILED);
 }
 
 /* Set the attributes of file or directory NAME aka DIRFD+RELNAME.
@@ -721,16 +724,17 @@ install_file_in_file (char const *from, char const *to,
       error (0, errno, _("cannot stat %s"), quoteaf (from));
       return false;
     }
-  if (! copy_file (from, to, to_dirfd, to_relname, x))
+  enum copy_status copy_status = copy_file (from, to, to_dirfd, to_relname, x);
+  if (copy_status == COPY_FAILED)
     return false;
-  if (strip_files)
-    if (! strip (to))
-      {
-        if (unlinkat (to_dirfd, to_relname, 0) != 0)  /* Cleanup.  */
-          error (EXIT_FAILURE, errno, _("cannot unlink %s"), quoteaf (to));
-        return false;
-      }
-  if (x->preserve_timestamps && (strip_files || ! S_ISREG (from_sb.st_mode))
+  if (copy_status == COPY_OK && strip_files && ! strip (to))
+    {
+      if (unlinkat (to_dirfd, to_relname, 0) != 0)  /* Cleanup.  */
+        error (EXIT_FAILURE, errno, _("cannot unlink %s"), quoteaf (to));
+      return false;
+    }
+  if (x->preserve_timestamps && (copy_status == COPY_SKIPPED || strip_files
+                                 || ! S_ISREG (from_sb.st_mode))
       && ! change_timestamps (&from_sb, to, to_dirfd, to_relname))
     return false;
   return change_attributes (to, to_dirfd, to_relname);
@@ -1050,13 +1054,6 @@ main (int argc, char **argv)
   if (strip_program_specified && !strip_files)
     error (0, 0, _("WARNING: ignoring --strip-program option as -s option was "
                    "not specified"));
-
-  if (copy_only_if_needed && x.preserve_timestamps)
-    {
-      error (0, 0, _("options --compare (-C) and --preserve-timestamps are "
-                     "mutually exclusive"));
-      usage (EXIT_FAILURE);
-    }
 
   if (copy_only_if_needed && strip_files)
     {
