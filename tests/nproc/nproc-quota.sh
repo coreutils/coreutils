@@ -83,7 +83,7 @@ ROOT=cgroup
   echo 'max 100000' > $ROOT/sys/fs/cgroup/foo/cpu.max  # ignored
 } || framework_failure_
 
-nproc=$abs_top_builddir/src/nproc$EXEEXT
+nproc="$(command -v nproc)"
 cp --parents $(ldd $nproc | grep -o '/[^ ]*') $ROOT ||
   skip_ 'Failed to copy nproc libs to chroot'
 cp $nproc $ROOT || framework_failure_
