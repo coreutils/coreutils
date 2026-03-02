@@ -77,6 +77,9 @@ shuf --zero-terminated -i 1-1 > out || fail=1
 printf '1\0' > exp || framework_failure_
 cmp out exp || { fail=1; echo "missing NUL terminator?" 1>&2; }
 
+# Ensure shuf exits with 1 if memory exhausted
+{ ulimit -v 8192 && returns_ 1 shuf -i1-1000000 || fail=1; }
+
 # Ensure shuf -n operates efficiently for small n. Before coreutils-8.13
 # this would try to allocate $SIZE_MAX * sizeof(size_t)
 timeout 10 shuf -i1-$SIZE_MAX -n2 >/dev/null ||
