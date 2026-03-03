@@ -48,27 +48,16 @@ sort -k 1b,1 > built_programs || framework_failure_
 
 join all_writers built_programs > built_writers || framework_failure_
 
-# If 'cksum --debug' does not have an optimized CRC32 implementation, no
-# warning will be printed to standard error and the command will succeed.
-grep -E '^#define (GL_CRC_X86_64_PCLMUL|USE_AVX2_CRC32|USE_AVX512_CRC32'\
-'|USE_PCLMUL_CRC32|USE_VMULL_CRC32) 1' "$CONFIG_HEADER" > /dev/null \
-  || expected_failure_status_cksum=0
-
-# Likewise for 'wc -l --debug'.
-grep -E '^#define (USE_AVX2_WC_LINECOUNT|USE_AVX512_WC_LINECOUNT'\
-'|USE_NEON_WC_LINECOUNT) 1' "$CONFIG_HEADER" > /dev/null \
-  || expected_failure_status_wc=0
-
 expected_failure_status_sort=2
 expected_failure_status_env=0  # env's exec resets default exit handlers
 
 while read writer; do
   cmd=$(printf '%s\n' "$writer" | cut -d ' ' -f1) || framework_failure_
-  # We don't close standard error with sanitizers, which may need to print.
-  # Therefore, these programs may succeed when they otherwise wouldn't.
-  sanitizer_build_ $cmd && continue
+  sanitizer_build_ $cmd && continue  # standard error not closed/checked
   eval "expected=\$expected_failure_status_$cmd"
   test x$expected = x && expected=1
+  $SHELL -c "env $writer" 2>err || fail=1
+  test -s err || { echo "no standard error output from: $writer"; continue; }
   returns_ $expected \
    $SHELL -c "env $writer" 2>/dev/full || fail=1
 done < built_writers
