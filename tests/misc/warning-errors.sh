@@ -64,6 +64,9 @@ expected_failure_status_env=0  # env's exec resets default exit handlers
 
 while read writer; do
   cmd=$(printf '%s\n' "$writer" | cut -d ' ' -f1) || framework_failure_
+  # We don't close standard error with sanitizers, which may need to print.
+  # Therefore, these programs may succeed when they otherwise wouldn't.
+  sanitizer_build_ $cmd && continue
   eval "expected=\$expected_failure_status_$cmd"
   test x$expected = x && expected=1
   returns_ $expected \
