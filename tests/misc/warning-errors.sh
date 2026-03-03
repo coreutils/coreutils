@@ -48,6 +48,16 @@ sort -k 1b,1 > built_programs || framework_failure_
 
 join all_writers built_programs > built_writers || framework_failure_
 
+# If 'cksum --debug' does not have an optimized CRC32 implementation, no
+# warning will be printed to standard error and the command will succeed.
+grep -E '^#define (GL_CRC_X86_64_PCLMUL|USE_AVX2_CRC32|USE_AVX512_CRC32'\
+'|USE_PCLMUL_CRC32|USE_VMULL_CRC32) 1' "$CONFIG_HEADER" > /dev/null \
+  || expected_failure_status_cksum=0
+
+# Likewise for 'wc -l --debug'.
+grep -E '^#define (USE_AVX2_WC_LINECOUNT|USE_AVX512_WC_LINECOUNT'\
+'|USE_NEON_WC_LINECOUNT) 1' "$CONFIG_HEADER" > /dev/null \
+  || expected_failure_status_wc=0
 
 expected_failure_status_sort=2
 expected_failure_status_env=0  # env's exec resets default exit handlers
