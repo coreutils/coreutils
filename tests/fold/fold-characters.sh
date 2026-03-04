@@ -87,11 +87,12 @@ compare exp3 out3 || fail=1
 bad_unicode_with_nul ()
 {
   # invalid UTF8|unpaired surrogate|NUL|C1 control|noncharacter
-  env printf '\xC3|\xED\xBA\xAD|\u0000|\u0089|\xED\xA6\xBF\xED\xBF\xBF\n'
+  env printf '\xFF|\xED\xBA\xAD|\u0000|\u0089|\xED\xA6\xBF\xED\xBF\xBF\n'
 }
-bad_unicode_with_nul > /dev/null || framework_failure_
-test $({ bad_unicode_with_nul | fold; \
-         bad_unicode_with_nul; } | uniq | wc -l) = 1 || fail=1
+bad_unicode_with_nul > exp4 || framework_failure_
+bad_unicode_with_nul | fold > out4 || fail=1
+compare exp4 out4 || fail=1
+
 # Check bad character at EOF
 test $(env printf '\xC3' | fold | wc -c) = 1 || fail=1
 
