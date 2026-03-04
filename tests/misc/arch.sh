@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ arch
+uses_strace_
 
 arch > out || fail=1
 uname -m > exp || fail=1
@@ -25,5 +26,9 @@ compare exp out || fail=1
 
 arch -- > out || fail=1
 compare exp out || fail=1
+
+# Ensure we don't use unneccesary syscalls for restricted containers
+# todo: should we add tests/misc/true.sh for more syscalls?
+strace -o /dev/null -e inject=/sigaction:error=EPERM uname -m || fail=1
 
 Exit $fail
