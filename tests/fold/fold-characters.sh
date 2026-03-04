@@ -83,12 +83,7 @@ env printf '\naaaa\n' >> exp3 || framework_failure_
 fold --characters input3 | tail -n 4 > out3 || fail=1
 compare exp3 out3 || fail=1
 
-# Sequence derived from <https://datatracker.ietf.org/doc/rfc9839>.
-bad_unicode_with_nul ()
-{
-  # invalid UTF8|unpaired surrogate|NUL|C1 control|noncharacter
-  env printf '\xFF|\xED\xBA\xAD|\u0000|\u0089|\xED\xA6\xBF\xED\xBF\xBF\n'
-}
+bad_unicode_with_nul () { env printf '%s|\u0000\n' "$(bad_unicode)"; }
 bad_unicode_with_nul > exp4 || framework_failure_
 bad_unicode_with_nul | fold > out4 || fail=1
 compare exp4 out4 || fail=1

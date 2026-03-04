@@ -38,8 +38,7 @@ export LC_ALL=$LOCALE_FR_UTF8
 if test "$(locale charmap 2>/dev/null)" = UTF-8; then
   check_separator '\u0434'  # д
   check_separator '\u0434\u0436'  # дж
-  # invalid UTF8|unpaired surrogate|C1 control|noncharacter
-  check_separator '\xC3|\xED\xBA\xAD|\u0089|\xED\xA6\xBF\xED\xBF\xBF'
+  check_separator "$(bad_unicode)"
 fi
 
 Exit $fail
