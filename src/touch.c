@@ -276,9 +276,7 @@ change the times of the file associated with standard output.\n\
 int
 main (int argc, char **argv)
 {
-  int c;
   bool date_set = false;
-  bool ok = true;
   char const *flex_date = NULL;
 
   initialize_main (&argc, &argv);
@@ -289,6 +287,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
+  int c;
   while ((c = getopt_long (argc, argv, "acd:fhmr:t:", longopts, NULL)) != -1)
     {
       switch (c)
@@ -446,6 +445,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  bool ok = true;
   for (; optind < argc; ++optind)
     ok &= touch (argv[optind]);
 
