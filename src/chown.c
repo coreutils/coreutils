@@ -179,9 +179,6 @@ main (int argc, char **argv)
 {
   bool preserve_root = false;
 
-  uid_t uid = -1;	/* Specified uid; -1 if not to be changed. */
-  gid_t gid = -1;	/* Specified gid; -1 if not to be changed. */
-
   /* Change the owner (group) of a file only if it has this uid (gid).
      -1 means there's no restriction.  */
   uid_t required_uid = -1;
@@ -195,8 +192,6 @@ main (int argc, char **argv)
   int dereference = -1;
 
   struct Chown_option chopt;
-  bool ok;
-  int optc;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -208,6 +203,7 @@ main (int argc, char **argv)
 
   chopt_init (&chopt);
 
+  int optc;
   while ((optc = getopt_long (argc, argv, "HLPRcfhv", long_options, NULL))
          != -1)
     {
@@ -305,6 +301,9 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  uid_t uid = -1;	/* Specified uid; -1 if not to be changed.  */
+  gid_t gid = -1;	/* Specified gid; -1 if not to be changed.  */
+
   if (reference_file)
     {
       struct stat ref_stats;
@@ -359,9 +358,9 @@ main (int argc, char **argv)
     }
 
   bit_flags |= FTS_DEFER_STAT;
-  ok = chown_files (argv + optind, bit_flags,
-                    uid, gid,
-                    required_uid, required_gid, &chopt);
+  bool ok = chown_files (argv + optind, bit_flags,
+                         uid, gid,
+                         required_uid, required_gid, &chopt);
 
   main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }

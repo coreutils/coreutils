@@ -153,10 +153,6 @@ describe_change (char const *file, enum Change_status changed,
                  char const *old_user, char const *old_group,
                  char const *user, char const *group)
 {
-  char const *fmt;
-  char *old_spec;
-  char *spec;
-
   if (changed == CH_NOT_APPLIED)
     {
       printf (_("neither symbolic link %s nor referent has been changed\n"),
@@ -164,10 +160,11 @@ describe_change (char const *file, enum Change_status changed,
       return;
     }
 
-  spec = user_group_str (user, group);
-  old_spec = user_group_str (user ? old_user : NULL,
-                             group ? old_group : NULL);
+  char *spec = user_group_str (user, group);
+  char *old_spec = user_group_str (user ? old_user : NULL,
+                                   group ? old_group : NULL);
 
+  char const *fmt;
   switch (changed)
     {
     case CH_SUCCEEDED:
@@ -232,14 +229,10 @@ restricted_chown (int cwd_fd, char const *file,
                   uid_t uid, gid_t gid,
                   uid_t required_uid, gid_t required_gid)
 {
-  enum RCH_status status = RC_ok;
-  struct stat st;
-  int open_flags = O_NONBLOCK | O_NOCTTY;
-  int fd;
-
   if (required_uid == (uid_t) -1 && required_gid == (gid_t) -1)
     return RC_do_ordinary_chown;
 
+  int open_flags = O_NONBLOCK | O_NOCTTY;
   if (! S_ISREG (orig_st->st_mode))
     {
       if (S_ISDIR (orig_st->st_mode))
@@ -248,12 +241,14 @@ restricted_chown (int cwd_fd, char const *file,
         return RC_do_ordinary_chown;
     }
 
-  fd = openat (cwd_fd, file, O_RDONLY | open_flags);
+  int fd = openat (cwd_fd, file, O_RDONLY | open_flags);
   if (! (0 <= fd
          || (errno == EACCES && S_ISREG (orig_st->st_mode)
              && 0 <= (fd = openat (cwd_fd, file, O_WRONLY | open_flags)))))
     return (errno == EACCES ? RC_do_ordinary_chown : RC_error);
 
+  enum RCH_status status = RC_ok;
+  struct stat st;
   if (fstat (fd, &st) != 0)
     status = RC_error;
   else if (! psame_inode (orig_st, &st))
@@ -288,11 +283,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
 {
   char const *file_full_name = ent->fts_path;
   char const *file = ent->fts_accpath;
-  struct stat const *file_stats;
-  struct stat stat_buf;
   bool ok = true;
-  bool do_chown;
-  bool symlink_changed = true;
 
   switch (ent->fts_info)
     {
@@ -364,6 +355,9 @@ change_file_owner (FTS *fts, FTSENT *ent,
       break;
     }
 
+  bool do_chown;
+  struct stat stat_buf;
+  struct stat const *file_stats;
   if (!ok)
     {
       do_chown = false;
@@ -412,6 +406,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
       return false;
     }
 
+  bool symlink_changed = true;
   if (do_chown)
     {
       if ( ! chopt->affect_symlink_referent)
@@ -551,9 +546,8 @@ chown_files (char **files, int bit_flags,
 
   while (true)
     {
-      FTSENT *ent;
+      FTSENT *ent = fts_read (fts);
 
-      ent = fts_read (fts);
       if (ent == NULL)
         {
           if (errno != 0)
