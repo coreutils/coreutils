@@ -1188,7 +1188,7 @@ iwrite (int fd, char const *buf, idx_t size)
       o_nocache_eof = true;
       invalidate_cache (STDOUT_FILENO, 0);
 
-      /* Attempt to ensure that that final block is committed
+      /* Attempt to ensure that the final block is committed
          to stable storage as quickly as possible.  */
       conversions_mask |= C_FSYNC;
 
