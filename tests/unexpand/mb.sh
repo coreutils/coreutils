@@ -1,0 +1,163 @@
+#!/bin/sh
+
+# Copyright (C) 2012-2015 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
+print_ver_ unexpand printf
+
+export LC_ALL=en_US.UTF-8
+
+#input containing multibyte characters
+cat > in <<\EOF
+1234567812345678123456781
+.       .       .       .
+a       b       c       d
+.       .       .       .
+ä       ö       ü       ß
+.       .       .       .
+   äöü  .    öüä.       ä xx
+EOF
+
+cat > exp <<\EOF
+1234567812345678123456781
+.	.	.	.
+a	b	c	d
+.	.	.	.
+ä	ö	ü	ß
+.	.	.	.
+   äöü	.    öüä.	ä xx
+EOF
+
+unexpand -a < in > out || fail=1
+compare exp out > /dev/null 2>&1 || fail=1
+
+
+#multiple files as an input
+cat >> exp <<\EOF
+1234567812345678123456781
+.	.	.	.
+a	b	c	d
+.	.	.	.
+ä	ö	ü	ß
+.	.	.	.
+   äöü	.    öüä.	ä xx
+EOF
+
+
+unexpand -a ./in ./in > out || fail=1
+compare exp out > /dev/null 2>&1 || fail=1
+
+#test characters with a display width larger than 1
+
+env printf '12345678
+e       |ascii(1)
+\u00E9       |composed(1)
+e\u0301       |decomposed(1)
+\u3000      |ideo-space(2)
+\u3000\u3000\u3000\u3000|ideo-space(2) * 4
+\uFF0D      |full-hypen(2)
+' > in || framework_failure_
+
+env printf '12345678
+e\t|ascii(1)
+\u00E9\t|composed(1)
+e\u0301\t|decomposed(1)
+\t|ideo-space(2)
+\t|ideo-space(2) * 4
+\uFF0D\t|full-hypen(2)
+' > exp || framework_failure_
+
+unexpand -a < in > out || fail=1
+compare exp out > /dev/null 2>&1 || fail=1
+
+#test input where a blank of width > 1 is not being substituted
+in="$(LC_ALL=en_US.UTF-8 env printf ' \u3000  ö       ü       ß')"
+exp=' 　  ö	     ü	     ß'
+
+unexpand -a < in > out || fail=1
+compare exp out > /dev/null 2>&1 || fail=1
+
+#non-Unicode characters interspersed between Unicode ones
+env printf '12345678
+        \xFF|
+\xFF       |
+        \xFFä|
+ä\xFF      |
+        ä\xFF|
+\xFF       ä|
+äbcde\xFF  |
+' > in || framework_failure_
+
+env printf '12345678
+\t\xFF|
+\xFF\t|
+\t\xFFä|
+ä\xFF\t|
+\tä\xFF|
+\xFF\tä|
+äbcde\xFF\t|
+' > exp || framework_failure_
+
+unexpand -a < in > out || fail=1
+compare exp out > /dev/null 2>&1 || fail=1
+
+#BOM header test 1
+env printf "\xEF\xBB\xBF" > in; cat <<\EOF >> in || framework_failure_
+1234567812345678123456781
+.       .       .       .
+a       b       c       d
+.       .       .       .
+ä       ö       ü       ß
+.       .       .       .
+   äöü  .    öüä.       ä xx
+EOF
+
+env printf "\xEF\xBB\xBF" > exp; cat <<\EOF >> exp || framework_failure_
+1234567812345678123456781
+.	.	.	.
+a	b	c	d
+.	.	.	.
+ä	ö	ü	ß
+.	.	.	.
+   äöü	.    öüä.	ä xx
+EOF
+
+unexpand -a < in > out || fail=1
+compare exp out > /dev/null 2>&1 || fail=1
+
+env printf "\xEF\xBB\xBF" > exp; cat <<\EOF >> exp || framework_failure_
+1234567812345678123456781
+.	.	.	.
+a	b	c	d
+.	.	.	.
+ä	ö	ü	ß
+.	.	.	.
+   äöü	.    öüä.	ä xx
+EOF
+env printf "\xEF\xBB\xBF" >> exp; cat <<\EOF >> exp || framework_failure_
+1234567812345678123456781
+.	.	.	.
+a	b	c	d
+.	.	.	.
+ä	ö	ü	ß
+.	.	.	.
+   äöü	.    öüä.	ä xx
+EOF
+
+unexpand -a ./in ./in > out || fail=1
+compare exp out > /dev/null 2>&1 || fail=1
+
+Exit $fail

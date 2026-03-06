@@ -342,6 +342,7 @@ all_tests =					\
   tests/env/env-S-script.sh			\
   tests/expand/expand.pl			\
   tests/expand/bounded-memory.sh		\
+  tests/expand/mb.sh				\
   tests/expr/expr.pl				\
   tests/expr/expr-multibyte.pl			\
   tests/factor/factor.pl			\
@@ -504,6 +505,7 @@ all_tests =					\
   tests/misc/usage_vs_refs.sh			\
   tests/unexpand/unexpand.pl			\
   tests/unexpand/bounded-memory.sh		\
+  tests/unexpand/mb.sh				\
   tests/uniq/uniq.pl				\
   tests/uniq/uniq-perf.sh			\
   tests/uniq/uniq-collate.sh			\

@@ -34,6 +34,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   'df --local' recognises more file system types as remote.
   Specifically: autofs, ncpfs, smb, smb2, gfs, gfs2, userlandfs.
 
+  'expand' and 'unexpand' now support multi-byte characters.
+
   'groups' and 'id' will now exit sooner after a write error,
   which is significant when listing information for many users.
 

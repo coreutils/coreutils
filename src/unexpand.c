@@ -38,7 +38,11 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
 #include "system.h"
+#include "ioblksize.h"
+#include "mbbuf.h"
+#include "mcel.h"
 #include "expand-common.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -120,15 +124,19 @@ unexpand (void)
   if (!fp)
     return;
 
+  static char line_in[IO_BUFSIZE];
+  mbbuf_t mbbuf;
+  mbbuf_init (&mbbuf, line_in, sizeof line_in, fp);
+
   /* The worst case is a non-blank character, then one blank, then a
      tab stop, then MAX_COLUMN_WIDTH - 1 blanks, then a non-blank; so
      allocate MAX_COLUMN_WIDTH bytes to store the blanks.  */
-  pending_blank = ximalloc (max_column_width);
+  pending_blank = ximalloc (max_column_width * sizeof (char) * MB_LEN_MAX);
 
   while (true)
     {
       /* Input character, or EOF.  */
-      int c;
+      mcel_t g;
 
       /* If true, perform translations.  */
       bool convert = true;
@@ -139,6 +147,9 @@ unexpand (void)
 
       /* Column of next input character.  */
       colno column = 0;
+
+      /* Column the next input tab stop is on.  */
+      colno next_tab_column = 0;
 
       /* Index in TAB_LIST of next tab stop to examine.  */
       idx_t tab_index = 0;
@@ -159,28 +170,27 @@ unexpand (void)
 
       do
         {
-          while ((c = getc (fp)) < 0 && (fp = next_file (fp)))
-            continue;
+          while ((g = mbbuf_get_char (&mbbuf)).ch == MBBUF_EOF
+                 && (fp = next_file (fp)))
+            mbbuf_init (&mbbuf, line_in, sizeof line_in, fp);
 
           if (convert)
             {
-              bool blank = !! isblank (c);
+              bool blank = !! (c32isblank (g.ch) && ! c32isnbspace (g.ch));
 
               if (blank)
                 {
                   bool last_tab;
 
-                  /* Column the next input tab stop is on.  */
-                  colno next_tab_column = get_next_tab_column (column,
-                                                               &tab_index,
-                                                               &last_tab);
+                  next_tab_column = get_next_tab_column (column, &tab_index,
+                                                         &last_tab);
 
                   if (last_tab)
                     convert = false;
 
                   if (convert)
                     {
-                      if (c == '\t')
+                      if (g.ch == '\t')
                         {
                           column = next_tab_column;
 
@@ -189,7 +199,7 @@ unexpand (void)
                         }
                       else
                         {
-                          column++;
+                          column += c32width (g.ch);
 
                           if (! (prev_blank && column == next_tab_column))
                             {
@@ -197,13 +207,18 @@ unexpand (void)
                                  will be replaced by tabs.  */
                               if (column == next_tab_column)
                                 one_blank_before_tab_stop = true;
-                              pending_blank[pending++] = c;
+                              memcpy (pending_blank + pending,
+                                      mbbuf_char_offset (&mbbuf, g), g.len);
+                              pending += g.len;
                               prev_blank = true;
                               continue;
                             }
 
                           /* Replace the pending blanks by a tab or two.  */
-                          pending_blank[0] = c = '\t';
+                          g.len = 0;
+                          if (putc ('\t', stdout) < 0)
+                            write_error ();
+                          pending_blank[0] = '\t';
                         }
 
                       /* Discard pending blanks, unless it was a single
@@ -211,17 +226,18 @@ unexpand (void)
                       pending = one_blank_before_tab_stop;
                     }
                 }
-              else if (c == '\b')
+              else if (g.ch == '\b')
                 {
                   /* Go back one column, and force recalculation of the
                      next tab stop.  */
                   column -= !!column;
+                  next_tab_column = column;
                   tab_index -= !!tab_index;
                 }
               else
                 {
-                  column++;
-                  if (!column)
+                  int width = c32width (g.ch);
+                  if (ckd_add (&column, column, width < 0 ? 1 : width))
                     error (EXIT_FAILURE, 0, _("input line is too long"));
                 }
 
@@ -239,16 +255,17 @@ unexpand (void)
               convert &= convert_entire_line || blank;
             }
 
-          if (c < 0)
+          if (g.ch == MBBUF_EOF)
             {
               free (pending_blank);
               return;
             }
 
-          if (putchar (c) < 0)
+          fwrite (mbbuf_char_offset (&mbbuf, g), sizeof (char), g.len, stdout);
+          if (ferror (stdout))
             write_error ();
         }
-      while (c != '\n');
+      while (g.ch != '\n');
     }
 }
 

@@ -37,7 +37,11 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
 #include "system.h"
+#include "ioblksize.h"
+#include "mcel.h"
+#include "mbbuf.h"
 #include "expand-common.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -103,10 +107,14 @@ expand (void)
   if (!fp)
     return;
 
+  static char line_in[IO_BUFSIZE];
+  mbbuf_t mbbuf;
+  mbbuf_init (&mbbuf, line_in, sizeof line_in, fp);
+
   while (true)
     {
       /* Input character, or EOF.  */
-      int c;
+      mcel_t g;
 
       /* If true, perform translations.  */
       bool convert = true;
@@ -126,12 +134,16 @@ expand (void)
 
       do
         {
-          while ((c = getc (fp)) < 0 && (fp = next_file (fp)))
-            continue;
+          while ((g = mbbuf_get_char (&mbbuf)).ch == MBBUF_EOF
+                 && (fp = next_file (fp)))
+            mbbuf_init (&mbbuf, line_in, sizeof line_in, fp);
 
           if (convert)
             {
-              if (c == '\t')
+              convert &= convert_entire_line
+                         || !! (c32isblank (g.ch) && ! c32isnbspace (g.ch));
+
+              if (g.ch == '\t')
                 {
                   /* Column the next input tab stop is on.  */
                   bool last_tab;
@@ -142,9 +154,12 @@ expand (void)
                     if (putchar (' ') < 0)
                       write_error ();
 
-                  c = ' ';
+                  if (putchar (' ') < 0)
+                    write_error ();
+
+                  continue;
                 }
-              else if (c == '\b')
+              else if (g.ch == '\b')
                 {
                   /* Go back one column, and force recalculation of the
                      next tab stop.  */
@@ -153,20 +168,21 @@ expand (void)
                 }
               else
                 {
-                  if (ckd_add (&column, column, 1))
+                  int width = c32width (g.ch);
+                  if (ckd_add (&column, column, width < 0 ? 1 : width))
                     error (EXIT_FAILURE, 0, _("input line is too long"));
                 }
 
-              convert &= convert_entire_line || !! isblank (c);
             }
 
-          if (c < 0)
+          if (g.ch == MBBUF_EOF)
             return;
 
-          if (putchar (c) < 0)
+          fwrite (mbbuf_char_offset (&mbbuf, g), sizeof (char), g.len, stdout);
+          if (ferror (stdout))
             write_error ();
         }
-      while (c != '\n');
+      while (g.ch != '\n');
     }
 }
 
