@@ -54,6 +54,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'wc -l' now operates up to three times faster on hosts that support Neon
   instructions.
 
+  'yes' now uses zero-copy I/O on Linux to significantly increase throughput.
+  E.g., increases from 12GiB/s to 175GiB/s were seen on some systems.
+
 ** Build-related
 
   ./configure --enable-single-binary=hardlinks is now supported on systems

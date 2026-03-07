@@ -70,6 +70,7 @@ AC_DEFUN([coreutils_MACROS],
     setgroups
     sethostname
     siginterrupt
+    splice
     sync
     sysinfo
     tcgetpgrp
