@@ -445,7 +445,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
   char const *previous_human_offset;
 
   /* As a performance tweak, avoid direct I/O for small sizes,
-     as it's just a performance rather then security consideration,
+     as it's just a performance rather than security consideration,
      and direct I/O can often be unsupported for small non aligned sizes.  */
   bool try_without_directio = 0 < size && size < output_size;
   if (! try_without_directio)
