@@ -153,7 +153,7 @@ static int
 randread_free_body (struct randread_source *s)
 {
   FILE *source = s->source;
-  explicit_bzero (s, sizeof *s);
+  memset_explicit (s, 0, sizeof *s);
   free (s);
   return source ? fclose (source) : 0;
 }

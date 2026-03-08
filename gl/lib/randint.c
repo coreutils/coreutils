@@ -198,7 +198,7 @@ randint_genmax (struct randint_source *s, randint genmax)
 void
 randint_free (struct randint_source *s)
 {
-  explicit_bzero (s, sizeof *s);
+  memset_explicit (s, 0, sizeof *s);
   free (s);
 }
 
