@@ -140,8 +140,7 @@ expand (void)
 
           if (convert)
             {
-              convert &= convert_entire_line
-                         || !! (c32isblank (g.ch) && ! c32isnbspace (g.ch));
+              convert &= convert_entire_line || c32issep (g.ch);
 
               if (g.ch == '\t')
                 {

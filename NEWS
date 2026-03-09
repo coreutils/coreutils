@@ -42,6 +42,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'install' now allows the combination of the --compare and
   --preserve-timestamps options.
 
+  'fold', 'join', 'numfmt', 'uniq' now use more consistent blank character
+  determination on non GLIBC platforms.  For example \u3000 (ideographic space)
+  will be considered a blank character on all platforms.
+
   'nl' now supports multi-byte --section-delimiter characters.
 
   'shuf -i' now operates up to two times faster on systems with unlocked stdio

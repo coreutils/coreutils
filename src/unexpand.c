@@ -176,7 +176,7 @@ unexpand (void)
 
           if (convert)
             {
-              bool blank = !! (c32isblank (g.ch) && ! c32isnbspace (g.ch));
+              bool blank = c32issep (g.ch);
 
               if (blank)
                 {

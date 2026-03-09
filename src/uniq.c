@@ -254,7 +254,7 @@ size_opt (char const *opt, char const *msgid)
 static bool
 newline_or_blank (mcel_t g)
 {
-  return g.ch == '\n' || c32isblank (g.ch);
+  return g.ch == '\n' || c32issep (g.ch);
 }
 
 /* Given a linebuffer LINE,

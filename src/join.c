@@ -308,7 +308,7 @@ eq_tab (mcel_t g)
 static bool
 newline_or_blank (mcel_t g)
 {
-  return g.ch == '\n' || c32isblank (g.ch);
+  return g.ch == '\n' || c32issep (g.ch);
 }
 
 /* Fill in the 'fields' structure in LINE.  */
@@ -918,7 +918,7 @@ decode_field_spec (char const *s, int *file_index, idx_t *field_index)
 static bool
 comma_or_blank (mcel_t g)
 {
-  return g.ch == ',' || c32isblank (g.ch);
+  return g.ch == ',' || c32issep (g.ch);
 }
 
 /* Add the comma or blank separated field spec(s) in STR to 'outlist'.  */

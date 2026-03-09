@@ -215,8 +215,7 @@ static bool dev_debug = false;
 static bool
 newline_or_blank (mcel_t g)
 {
-  return g.ch == '\n'
-         || (c32isblank (g.ch) && ! c32isnbspace (g.ch));
+  return g.ch == '\n' || c32issep (g.ch);
 }
 
 static inline int
@@ -673,7 +672,7 @@ simple_strtod_human (char const *input_str,
       if (!matched_unit_sep)
         {
           mcel_t g = mcel_scanz (*endptr);
-          if (c32isblank (g.ch) || c32isnbspace (g.ch))
+          if (c32issep (g.ch) || c32isnbspace (g.ch))
             (*endptr) += g.len;
         }
 
