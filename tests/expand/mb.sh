@@ -18,7 +18,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ expand printf
 
-export LC_ALL=en_US.UTF-8
+test "$LOCALE_FR_UTF8" != none || skip_ "French UTF-8 locale not available"
+export LC_ALL="$LOCALE_FR_UTF8"
 
 #input containing multibyte characters
 cat <<\EOF > in || framework_failure_

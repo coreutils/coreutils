@@ -18,7 +18,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ unexpand printf
 
-export LC_ALL=en_US.UTF-8
+test "$LOCALE_FR_UTF8" != none || skip_ "French UTF-8 locale not available"
+export LC_ALL="$LOCALE_FR_UTF8"
 
 #input containing multibyte characters
 cat > in <<\EOF
@@ -84,7 +85,7 @@ unexpand -a < in > out || fail=1
 compare exp out > /dev/null 2>&1 || fail=1
 
 #test input where a blank of width > 1 is not being substituted
-in="$(LC_ALL=en_US.UTF-8 env printf ' \u3000  ö       ü       ß')"
+in="$(env printf ' \u3000  ö       ü       ß')"
 exp=' 　  ö	     ü	     ß'
 
 unexpand -a < in > out || fail=1
