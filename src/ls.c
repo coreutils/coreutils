@@ -3249,7 +3249,7 @@ file_has_aclinfo_cache (char const *file, struct fileinfo *f,
   if (f->stat_ok && unsupported_scontext
       && f->stat.st_dev == unsupported_device)
     {
-      ai->buf = ai->u.__gl_acl_ch;
+      ai->buf = ai->u._gl_acl_ch;
       ai->size = 0;
       ai->scontext = unsupported_scontext;
       ai->scontext_err = unsupported_scontext_err;
