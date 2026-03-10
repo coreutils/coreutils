@@ -1273,20 +1273,20 @@ output_file (char const *file, int binary_file, void const *digest,
     {
 # if HASH_ALGO_CKSUM
       if (cksum_algorithm == sha2)
-        printf ("SHA%jd", digest_length);
+        printf ("SHA%u", (unsigned int) digest_length);
       else
 # endif
       fputs (DIGEST_TYPE_STRING, stdout);
 # if HASH_ALGO_BLAKE2
       if (digest_length < DIGEST_MAX_LEN * 8)
-        printf ("-%jd", digest_length);
+        printf ("-%u", (unsigned int) digest_length);
 # elif HASH_ALGO_CKSUM
       if (cksum_algorithm == sha3)
-        printf ("-%jd", digest_length);
+        printf ("-%u", (unsigned int) digest_length);
       if (cksum_algorithm == blake2b)
         {
           if (digest_length < DIGEST_MAX_LEN * 8)
-            printf ("-%jd", digest_length);
+            printf ("-%u", (unsigned int) digest_length);
         }
 # endif
       fputs (" (", stdout);
