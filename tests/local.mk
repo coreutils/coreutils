@@ -200,6 +200,7 @@ all_tests =					\
   tests/chmod/no-x.sh				\
   tests/chgrp/basic.sh				\
   tests/rm/dangling-symlink.sh			\
+  tests/rm/dash-hint.sh				\
   tests/ls/ls-time.sh				\
   tests/rm/d-1.sh				\
   tests/rm/d-2.sh				\
