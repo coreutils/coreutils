@@ -821,15 +821,17 @@ AC_LINK_IFELSE(
     int
     main (void)
     {
-      char buffer[128] = {0};
-      uint8x16_t v = vld1q_u8 (buffer);
-      uint8x16_t m = vceqq_u8 (v, v);
-      uint8x16_t s = vandq_u8 (m, m);
-      uint16x8_t a = vpaddlq_u8 (s);
-      uint32x4_t b = vpaddlq_u16 (a);
-      uint64x2_t c = vpaddlq_u32 (b);
-      int value = vgetq_lane_u64 (c, 0) + vgetq_lane_u64 (c, 1);
-      return value && 0 < (getauxval (AT_HWCAP) & HWCAP_ASIMD);
+      unsigned char buffer[128] = {0};
+      const uint8x16_t endlines = vdupq_n_u8 ('\n');
+      int8x16_t acc0 = vdupq_n_s8 (0);
+      uint8x16_t v0 = vld1q_u8 (buffer);
+      int8x16_t c0 = vreinterpretq_s8_u8 (vceqq_u8 (v0, endlines));
+      acc0 = vaddq_s8 (acc0, c0);
+      int16x8_t a0 = vpaddlq_s8 (acc0);
+      int32x4_t b0 = vpaddlq_s16 (a0);
+      int64x2_t c1 = vpaddlq_s32 (b0);
+      int lines = vgetq_lane_s64 (c1, 0) + vgetq_lane_s64 (c1, 1);
+      return lines && 0 < (getauxval (AT_HWCAP) & HWCAP_ASIMD);
     }
   ]])
   ],[

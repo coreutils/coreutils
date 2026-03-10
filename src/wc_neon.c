@@ -31,8 +31,7 @@ wc_lines_neon (int fd)
   intmax_t lines = 0;
   intmax_t bytes = 0;
 
-  uint8x16_t endlines = vdupq_n_u8 ('\n');
-  uint8x16_t ones = vdupq_n_u8 (1);
+  const uint8x16_t endlines = vdupq_n_u8 ('\n');
 
   while (true)
     {
@@ -44,61 +43,62 @@ wc_lines_neon (int fd)
       bytes += bytes_read;
       unsigned char *datap = neon_buf;
 
-      while (64 <= bytes_read)
+      while (8192 <= bytes_read)
         {
-          /* Load 64 bytes from NEON_BUF.  */
-          uint8x16_t v0 = vld1q_u8 (datap);
-          uint8x16_t v1 = vld1q_u8 (datap + 16);
-          uint8x16_t v2 = vld1q_u8 (datap + 32);
-          uint8x16_t v3 = vld1q_u8 (datap + 48);
+          /* Accumulator.  */
+          int8x16_t acc0 = vdupq_n_s8 (0);
+          int8x16_t acc1 = vdupq_n_s8 (0);
+          int8x16_t acc2 = vdupq_n_s8 (0);
+          int8x16_t acc3 = vdupq_n_s8 (0);
 
-          /* Bitwise equal with ENDLINES.  */
-          uint8x16_t m0 = vceqq_u8 (v0, endlines);
-          uint8x16_t m1 = vceqq_u8 (v1, endlines);
-          uint8x16_t m2 = vceqq_u8 (v2, endlines);
-          uint8x16_t m3 = vceqq_u8 (v3, endlines);
+          /* Process all 8192 bytes in 64 byte chunks.  */
+          for (int i = 0; i < 128; ++i)
+            {
+              /* Load 64 bytes from DATAP.  */
+              uint8x16_t v0 = vld1q_u8 (datap);
+              uint8x16_t v1 = vld1q_u8 (datap + 16);
+              uint8x16_t v2 = vld1q_u8 (datap + 32);
+              uint8x16_t v3 = vld1q_u8 (datap + 48);
 
-          /* Bitwise and with ONES.  */
-          uint8x16_t s0 = vandq_u8 (m0, ones);
-          uint8x16_t s1 = vandq_u8 (m1, ones);
-          uint8x16_t s2 = vandq_u8 (m2, ones);
-          uint8x16_t s3 = vandq_u8 (m3, ones);
+              /* Bitwise equal with ENDLINES.  We use a reinterpret cast to
+                 convert the 0xff if a newline is found into -1.  */
+              int8x16_t c0 = vreinterpretq_s8_u8 (vceqq_u8 (v0, endlines));
+              int8x16_t c1 = vreinterpretq_s8_u8 (vceqq_u8 (v1, endlines));
+              int8x16_t c2 = vreinterpretq_s8_u8 (vceqq_u8 (v2, endlines));
+              int8x16_t c3 = vreinterpretq_s8_u8 (vceqq_u8 (v3, endlines));
 
-          /* Sum the vectors.  */
-          uint16x8_t a0 = vpaddlq_u8 (s0);
-          uint16x8_t a1 = vpaddlq_u8 (s1);
-          uint16x8_t a2 = vpaddlq_u8 (s2);
-          uint16x8_t a3 = vpaddlq_u8 (s3);
-          uint32x4_t b0 = vpaddlq_u16 (a0);
-          uint32x4_t b1 = vpaddlq_u16 (a1);
-          uint32x4_t b2 = vpaddlq_u16 (a2);
-          uint32x4_t b3 = vpaddlq_u16 (a3);
-          uint64x2_t c0 = vpaddlq_u32 (b0);
-          uint64x2_t c1 = vpaddlq_u32 (b1);
-          uint64x2_t c2 = vpaddlq_u32 (b2);
-          uint64x2_t c3 = vpaddlq_u32 (b3);
+              /* Increment the accumulator.  */
+              acc0 = vaddq_s8 (acc0, c0);
+              acc1 = vaddq_s8 (acc1, c1);
+              acc2 = vaddq_s8 (acc2, c2);
+              acc3 = vaddq_s8 (acc3, c3);
 
-          /* Extract the vectors.  */
-          lines += (vgetq_lane_u64 (c0, 0) + vgetq_lane_u64 (c0, 1)
-                    + vgetq_lane_u64 (c1, 0) + vgetq_lane_u64 (c1, 1)
-                    + vgetq_lane_u64 (c2, 0) + vgetq_lane_u64 (c2, 1)
-                    + vgetq_lane_u64 (c3, 0) + vgetq_lane_u64 (c3, 1));
+              datap += 64;
+            }
 
-          datap += 64;
-          bytes_read -= 64;
-        }
+          /* Pairwise sum the vectors.  */
+          int16x8_t a0 = vpaddlq_s8 (acc0);
+          int16x8_t a1 = vpaddlq_s8 (acc1);
+          int16x8_t a2 = vpaddlq_s8 (acc2);
+          int16x8_t a3 = vpaddlq_s8 (acc3);
+          int32x4_t b0 = vpaddlq_s16 (a0);
+          int32x4_t b1 = vpaddlq_s16 (a1);
+          int32x4_t b2 = vpaddlq_s16 (a2);
+          int32x4_t b3 = vpaddlq_s16 (a3);
+          int64x2_t c0 = vpaddlq_s32 (b0);
+          int64x2_t c1 = vpaddlq_s32 (b1);
+          int64x2_t c2 = vpaddlq_s32 (b2);
+          int64x2_t c3 = vpaddlq_s32 (b3);
 
-      while (16 <= bytes_read)
-        {
-          uint8x16_t v = vld1q_u8 (datap);
-          uint8x16_t m = vceqq_u8 (v, endlines);
-          uint8x16_t s = vandq_u8 (m, ones);
-          uint16x8_t a = vpaddlq_u8 (s);
-          uint32x4_t b = vpaddlq_u16 (a);
-          uint64x2_t c = vpaddlq_u32 (b);
-          lines += vgetq_lane_u64 (c, 0) + vgetq_lane_u64 (c, 1);
-          datap += 16;
-          bytes_read -= 16;
+          /* Extract the lane sums.  Since each newline was counted as -1, we
+             subtract the sum of them from LINES to get the total number of
+             lines.  */
+          lines -= (vgetq_lane_s64 (c0, 0) + vgetq_lane_s64 (c0, 1)
+                    + vgetq_lane_s64 (c1, 0) + vgetq_lane_s64 (c1, 1)
+                    + vgetq_lane_s64 (c2, 0) + vgetq_lane_s64 (c2, 1)
+                    + vgetq_lane_s64 (c3, 0) + vgetq_lane_s64 (c3, 1));
+
+          bytes_read -= 8192;
         }
 
       /* Finish up any left over bytes.  */
