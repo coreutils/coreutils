@@ -179,8 +179,9 @@ c32issep (char32_t wc)
 {
 #if defined __GLIBC__
   return !! c32isblank (wc);
-#endif
+#else
   return !! (c32isspace (wc) && ! c32isvertspace (wc) && ! c32isnbspace (wc));
+#endif
 }
 
 #include <locale.h>
