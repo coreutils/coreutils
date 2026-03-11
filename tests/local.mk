@@ -612,6 +612,7 @@ all_tests =					\
   tests/dd/nocache_eof.sh			\
   tests/dd/nocache_fail.sh			\
   tests/dd/not-rewound.sh			\
+  tests/dd/partial-write.sh			\
   tests/dd/reblock.sh				\
   tests/dd/skip-seek.pl				\
   tests/dd/skip-seek2.sh			\

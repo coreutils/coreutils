@@ -2264,6 +2264,8 @@ dd_copy (void)
           if (nwritten != n_bytes_read)
             {
               diagnose (errno, _("error writing %s"), quoteaf (output_file));
+              if (nwritten != 0)
+                w_partial++;
               return EXIT_FAILURE;
             }
           else if (n_bytes_read == input_blocksize)
