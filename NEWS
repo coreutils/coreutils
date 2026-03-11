@@ -51,8 +51,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   'shuf -i' now operates up to two times faster on systems with unlocked stdio
   functions.
 
-  'wc -l' now operates up to three times faster on hosts that support Neon
-  instructions.
+  'wc -l' now operates up to four and a half times faster on hosts that support
+  Neon instructions.
 
   'yes' now uses zero-copy I/O on Linux to significantly increase throughput.
   E.g., increases from 12GiB/s to 175GiB/s were seen on some systems.
