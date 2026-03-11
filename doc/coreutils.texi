@@ -6163,8 +6163,7 @@ string between ranges of selected bytes.
 @optItem{cut,-c,@w{ }@var{character-list}}
 @optItemx{cut,--characters,=@var{character-list}}
 Select for printing only the characters in positions listed in
-@var{character-list}.  The same as @option{-b} for now, but
-internationalization will change that.  Tabs and backspaces are
+@var{character-list}.  Tabs and backspaces are
 treated like any other character; they take up 1 character.  If an
 output delimiter is specified, (see the description of
 @option{--output-delimiter}), then output that string between ranges
