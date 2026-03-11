@@ -141,11 +141,11 @@ Print selected parts of lines from each FILE to standard output.\n\
 
       oputs (_("\
   -b, --bytes=LIST\n\
-         select only these bytes\n\
+         select only these byte positions\n\
 "));
       oputs (_("\
   -c, --characters=LIST\n\
-         select only these characters\n\
+         select only these character positions\n\
 "));
       oputs (_("\
   -d, --delimiter=DELIM\n\
