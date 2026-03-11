@@ -36,6 +36,7 @@ my $inval_pos = "$prog: invalid byte or character range\n$try";
 my $no_endpoint = "$prog: invalid range with no endpoint: -\n$try";
 my $nofield = "$prog: an input delimiter may be specified only when " .
               "operating on fields\n$try";
+my $mutual_dw = "$prog: -d and -w are mutually exclusive\n$try";
 
 my @Tests =
  (
@@ -133,6 +134,13 @@ my @Tests =
   # Prior to 1.22i, you couldn't use a delimiter that would sign-extend.
   ['8bit-delim', '-d', "\255", '--out=_', '-f2,3', {IN=>"a\255b\255c\n"},
    {OUT=>"b_c\n"}],
+
+  ['w-delim-1', '-w', '-f2,3', {IN=>"a\tb  c\n"}, {OUT=>"b\tc\n"}],
+  ['w-delim-2', '-w', '-f1,2', {IN=>"  a b\n"}, {OUT=>"\ta\n"}],
+  ['w-delim-3', '-s', '-w', '-f2', {IN=>"abc\n"}, {OUT=>""}],
+  ['w-delim-4', '-s', '-w', '-f1', {IN=>"a b c\n"}, {OUT=>"a\n"}],
+  ['w-delim-5', '-w', '-d:', '-f1', {EXIT=>1}, {ERR=>$mutual_dw}],
+  ['w-delim-6', '-w', '-f1,2', {IN=>"a  \n"}, {OUT=>"a\t\n"}],
 
   # newline processing for fields
   ['newline-1', '-f1-', {IN=>"a\nb"}, {OUT=>"a\nb\n"}],
@@ -266,6 +274,10 @@ if ($mb_locale ne 'C')
        {ENV => "LC_ALL=$mb_locale"}],
       ['mb-delim-3', '-s', '-d', "\xc3\xa9", '-f2',
        {IN=>"abc\n"}, {OUT=>""},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-w-delim-1', '-w', '-f2', {IN=>"a\xe2\x80\x83b\n"}, {OUT=>"b\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-w-delim-2', '-sw', '-f2', {IN=>"a\xc2\xa0b\n"}, {OUT=>""},
        {ENV => "LC_ALL=$mb_locale"}];
   }
 
