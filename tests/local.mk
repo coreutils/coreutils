@@ -294,6 +294,7 @@ all_tests =					\
   tests/chcon/chcon-fail.sh			\
   tests/misc/coreutils.sh			\
   tests/cut/cut.pl				\
+  tests/cut/mb-non-utf8.sh			\
   tests/cut/bounded-memory.sh			\
   tests/cut/cut-huge-range.sh			\
   tests/wc/wc.pl				\

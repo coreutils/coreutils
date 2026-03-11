@@ -249,7 +249,8 @@ is_range_start_index (uintmax_t k)
 static inline bool
 single_byte_field_delim_ok (void)
 {
-  return delim_length == 1 && (MB_CUR_MAX <= 1 || mcel_isbasic (delim_bytes[0]));
+  return delim_length == 1
+         && (MB_CUR_MAX <= 1 || to_uchar (delim_bytes[0]) < 0x30);
 }
 
 static inline bool
