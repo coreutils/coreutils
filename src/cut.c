@@ -246,6 +246,18 @@ is_range_start_index (uintmax_t k)
   return k == current_rp->lo;
 }
 
+static inline bool
+single_byte_field_delim_ok (void)
+{
+  return delim_length == 1 && (MB_CUR_MAX <= 1 || mcel_isbasic (delim_bytes[0]));
+}
+
+static inline bool
+field_delim_eq (mcel_t g)
+{
+  return delim_mcel.err ? g.err == delim_mcel.err : mcel_eq (g, delim_mcel);
+}
+
 static void
 write_bytes (char const *buf, size_t n_bytes)
 {
@@ -435,7 +447,7 @@ cut_fields_mb (FILE *stream)
                   break;
                 }
 
-              if (!g.err && mcel_eq (g, delim_mcel))
+              if (field_delim_eq (g))
                 {
                   terminator = FIELD_DELIMITER;
                   break;
@@ -485,8 +497,7 @@ cut_fields_mb (FILE *stream)
               g = mbbuf_get_char (&mbbuf);
               if (g.ch != MBBUF_EOF)
                 have_pending_line = true;
-              if (g.ch == MBBUF_EOF || g.ch == line_delim
-                  || (!g.err && mcel_eq (g, delim_mcel)))
+              if (g.ch == MBBUF_EOF || g.ch == line_delim || field_delim_eq (g))
                 break;
               write_bytes (mbbuf_char_offset (&mbbuf, g), g.len);
             }
@@ -498,13 +509,12 @@ cut_fields_mb (FILE *stream)
               g = mbbuf_get_char (&mbbuf);
               if (g.ch != MBBUF_EOF)
                 have_pending_line = true;
-              if (g.ch == MBBUF_EOF || g.ch == line_delim
-                  || (!g.err && mcel_eq (g, delim_mcel)))
+              if (g.ch == MBBUF_EOF || g.ch == line_delim || field_delim_eq (g))
                 break;
             }
         }
 
-      if (!g.err && mcel_eq (g, delim_mcel))
+      if (field_delim_eq (g))
         next_item (&field_idx);
       else if (g.ch == line_delim || g.ch == MBBUF_EOF)
         {
@@ -869,7 +879,7 @@ main (int argc, char **argv)
       break;
 
     case CUT_MODE_FIELDS:
-      cut_stream = delim_length == 1 ? cut_fields : cut_fields_mb;
+      cut_stream = single_byte_field_delim_ok () ? cut_fields : cut_fields_mb;
       break;
     }
   affirm (cut_stream);
