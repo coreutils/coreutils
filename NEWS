@@ -55,7 +55,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   Neon instructions.
 
   'yes' now uses zero-copy I/O on Linux to significantly increase throughput.
-  E.g., increases from 12GiB/s to 175GiB/s were seen on some systems.
+  E.g., throughput improved 15x from 11.6GiB/s to 175GiB/s on a Power10 system.
 
 ** Build-related
 
