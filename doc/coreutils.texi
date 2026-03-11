@@ -6168,7 +6168,7 @@ internationalization will change that.  Tabs and backspaces are
 treated like any other character; they take up 1 character.  If an
 output delimiter is specified, (see the description of
 @option{--output-delimiter}), then output that string between ranges
-of selected bytes.
+of selected characters.
 
 @optItem{cut,--complement,}
 This option is a GNU extension.

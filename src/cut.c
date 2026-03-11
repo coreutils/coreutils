@@ -32,6 +32,8 @@
 #include "assure.h"
 #include "fadvise.h"
 #include "getndelim2.h"
+#include "ioblksize.h"
+#include "mbbuf.h"
 
 #include "set-fields.h"
 
@@ -52,9 +54,9 @@
   while (0)
 
 
-/* Pointer inside RP.  When checking if a byte or field is selected
+/* Pointer inside RP.  When checking if a -b,-c,-f is selected
    by a finite range, we check if it is between CURRENT_RP.LO
-   and CURRENT_RP.HI.  If the byte or field index is greater than
+   and CURRENT_RP.HI.  If the index is greater than
    CURRENT_RP.HI then we make CURRENT_RP to point to the next range pair.  */
 static struct field_range_pair *current_rp;
 
@@ -97,6 +99,15 @@ static char output_delimiter_default[1];
 
 /* True if we have ever read standard input.  */
 static bool have_read_stdin;
+
+/* Whether to cut bytes, characters, or fields.  */
+static enum
+{
+  CUT_MODE_NONE,
+  CUT_MODE_BYTES,
+  CUT_MODE_CHARACTERS,
+  CUT_MODE_FIELDS
+} cut_mode = CUT_MODE_NONE;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -287,6 +298,66 @@ cut_bytes (FILE *stream)
                 }
 
               if (putchar (c) < 0)
+                write_error ();
+            }
+        }
+    }
+}
+
+/* Read from STREAM, printing to standard output any selected characters.  */
+
+static void
+cut_characters (FILE *stream)
+{
+  uintmax_t char_idx = 0;
+  bool print_delimiter = false;
+  static char line_in[IO_BUFSIZE];
+  mbbuf_t mbbuf;
+
+  current_rp = frp;
+  mbbuf_init (&mbbuf, line_in, sizeof line_in, stream);
+
+  while (true)
+    {
+      mcel_t g = mbbuf_get_char (&mbbuf);
+
+      if (g.ch == line_delim)
+        {
+          if (putchar (line_delim) < 0)
+            write_error ();
+          char_idx = 0;
+          print_delimiter = false;
+          current_rp = frp;
+        }
+      else if (g.ch == MBBUF_EOF)
+        {
+          if (char_idx > 0)
+            {
+              if (putchar (line_delim) < 0)
+                write_error ();
+            }
+          break;
+        }
+      else
+        {
+          next_item (&char_idx);
+          if (print_kth (char_idx))
+            {
+              if (output_delimiter_string != output_delimiter_default)
+                {
+                  if (print_delimiter && is_range_start_index (char_idx))
+                    {
+                      if (fwrite (output_delimiter_string, sizeof (char),
+                                  output_delimiter_length, stdout)
+                          != output_delimiter_length)
+                        write_error ();
+                    }
+                  print_delimiter = true;
+                }
+
+              if (fwrite (mbbuf_char_offset (&mbbuf, g), sizeof (char), g.len,
+                          stdout)
+                  != g.len)
                 write_error ();
             }
         }
@@ -491,7 +562,6 @@ main (int argc, char **argv)
   int optc;
   bool ok;
   bool delim_specified = false;
-  bool byte_mode = false;
   char *spec_list_string = NULL;
 
   initialize_main (&argc, &argv);
@@ -508,12 +578,15 @@ main (int argc, char **argv)
       switch (optc)
         {
         case 'b':
+          cut_mode = CUT_MODE_BYTES;
+          FALLTHROUGH;
         case 'c':
-          /* Build the byte list.  */
-          byte_mode = true;
+          if (optc == 'c')
+            cut_mode = CUT_MODE_CHARACTERS;
           FALLTHROUGH;
         case 'f':
-          /* Build the field list.  */
+          if (optc == 'f')
+            cut_mode = CUT_MODE_FIELDS;
           if (spec_list_string)
             FATAL_ERROR (_("only one list may be specified"));
           spec_list_string = optarg;
@@ -561,7 +634,7 @@ main (int argc, char **argv)
   if (!spec_list_string)
     FATAL_ERROR (_("you must specify a list of bytes, characters, or fields"));
 
-  if (byte_mode)
+  if (cut_mode == CUT_MODE_BYTES || cut_mode == CUT_MODE_CHARACTERS)
     {
       if (delim_specified)
         FATAL_ERROR (_("an input delimiter may be specified only\
@@ -573,7 +646,9 @@ main (int argc, char **argv)
     }
 
   set_fields (spec_list_string,
-              ((byte_mode ? SETFLD_ERRMSG_USE_POS : 0)
+              (((cut_mode == CUT_MODE_BYTES
+                 || cut_mode == CUT_MODE_CHARACTERS)
+                ? SETFLD_ERRMSG_USE_POS : 0)
                | (complement ? SETFLD_COMPLEMENT : 0)));
 
   if (!delim_specified)
@@ -586,7 +661,25 @@ main (int argc, char **argv)
       output_delimiter_length = 1;
     }
 
-  void (*cut_stream) (FILE *) = byte_mode ? cut_bytes : cut_fields;
+  void (*cut_stream) (FILE *) = NULL;
+  switch (cut_mode)
+    {
+    case CUT_MODE_NONE:
+      unreachable ();
+
+    case CUT_MODE_BYTES:
+      cut_stream = cut_bytes;
+      break;
+
+    case CUT_MODE_CHARACTERS:
+      cut_stream = MB_CUR_MAX <= 1 ? cut_bytes : cut_characters;
+      break;
+
+    case CUT_MODE_FIELDS:
+      cut_stream = cut_fields;
+      break;
+    }
+  affirm (cut_stream);
   if (optind == argc)
     ok = cut_file ("-", cut_stream);
   else

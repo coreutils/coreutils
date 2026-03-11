@@ -247,6 +247,17 @@ if ($mb_locale ne 'C')
         push @new, ["$test_name-mb", @new_t, {ENV => "LC_ALL=$mb_locale"}];
       }
     push @Tests, @new;
+
+    push @Tests,
+      ['mb-char-1', '-c1', {IN=>"\xc3\xa9x\n"}, {OUT=>"\xc3\xa9\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-char-2', '-c2', {IN=>"\xc3\xa9x\n"}, {OUT=>"x\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-char-3', '-c1,3', '--output-d=:',
+       {IN=>"\xc3\xa9a\xe2\x82\xacb\n"}, {OUT=>"\xc3\xa9:\xe2\x82\xac\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-char-4', '-c1-2', {IN=>"\xc3x\n"}, {OUT=>"\xc3x\n"},
+       {ENV => "LC_ALL=$mb_locale"}];
   }
 
 
