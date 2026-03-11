@@ -70,7 +70,7 @@ static struct field_range_pair *current_rp;
 static char *field_1_buffer;
 
 /* The number of bytes allocated for FIELD_1_BUFFER.  */
-static size_t field_1_bufsize;
+static idx_t field_1_bufsize;
 
 /* If true, do not output lines containing no delimiter characters.
    Otherwise, all such lines are printed.  This option is valid only
@@ -81,8 +81,17 @@ static bool suppress_non_delimited;
    those that were specified.  */
 static bool complement;
 
-/* The delimiter character for field mode.  */
+/* The delimiter byte for single-byte field mode.  */
 static unsigned char delim;
+
+/* The delimiter character for multibyte field mode.  */
+static mcel_t delim_mcel;
+
+/* The delimiter bytes.  */
+static char delim_bytes[MB_LEN_MAX];
+
+/* The length of DELIM_BYTES.  */
+static size_t delim_length = 1;
 
 /* The delimiter for each line/record.  */
 static unsigned char line_delim = '\n';
@@ -95,7 +104,7 @@ static size_t output_delimiter_length;
 static char *output_delimiter_string;
 
 /* The output delimiter string contents, if the default.  */
-static char output_delimiter_default[1];
+static char output_delimiter_default[MB_LEN_MAX];
 
 /* True if we have ever read standard input.  */
 static bool have_read_stdin;
@@ -364,6 +373,160 @@ cut_characters (FILE *stream)
     }
 }
 
+/* Read from STREAM, printing to standard output any selected fields,
+   using a multibyte field delimiter.  */
+
+static void
+cut_fields_mb (FILE *stream)
+{
+  enum field_terminator
+  {
+    FIELD_DELIMITER,
+    FIELD_LINE_DELIMITER,
+    FIELD_EOF
+  };
+
+  static char line_in[IO_BUFSIZE];
+  mbbuf_t mbbuf;
+  uintmax_t field_idx = 1;
+  bool found_any_selected_field = false;
+  bool buffer_first_field;
+  bool have_pending_line = false;
+
+  current_rp = frp;
+  mbbuf_init (&mbbuf, line_in, sizeof line_in, stream);
+
+  buffer_first_field = (suppress_non_delimited ^ !print_kth (1));
+
+  while (true)
+    {
+      if (field_idx == 1 && buffer_first_field)
+        {
+          size_t n_bytes = 0;
+          enum field_terminator terminator;
+
+          while (true)
+            {
+              mcel_t g = mbbuf_get_char (&mbbuf);
+
+              if (g.ch == MBBUF_EOF)
+                {
+                  if (n_bytes == 0)
+                    return;
+                  terminator = FIELD_EOF;
+                  break;
+                }
+
+              if (field_1_bufsize - n_bytes < g.len)
+                {
+                  field_1_buffer = xpalloc (field_1_buffer, &field_1_bufsize,
+                                            g.len, -1,
+                                            sizeof *field_1_buffer);
+                }
+
+              memcpy (field_1_buffer + n_bytes, mbbuf_char_offset (&mbbuf, g),
+                      g.len);
+              n_bytes += g.len;
+              have_pending_line = true;
+
+              if (g.ch == line_delim)
+                {
+                  terminator = FIELD_LINE_DELIMITER;
+                  break;
+                }
+
+              if (!g.err && mcel_eq (g, delim_mcel))
+                {
+                  terminator = FIELD_DELIMITER;
+                  break;
+                }
+            }
+
+          if (terminator != FIELD_DELIMITER)
+            {
+              if (!suppress_non_delimited)
+                {
+                  write_bytes (field_1_buffer, n_bytes);
+                  if (terminator == FIELD_EOF)
+                    {
+                      if (putchar (line_delim) < 0)
+                        write_error ();
+                    }
+                }
+
+              if (terminator == FIELD_EOF)
+                break;
+
+              field_idx = 1;
+              current_rp = frp;
+              found_any_selected_field = false;
+              have_pending_line = false;
+              continue;
+            }
+
+          if (print_kth (1))
+            {
+              write_bytes (field_1_buffer, n_bytes - delim_length);
+              found_any_selected_field = true;
+            }
+          next_item (&field_idx);
+        }
+
+      mcel_t g;
+
+      if (print_kth (field_idx))
+        {
+          if (found_any_selected_field)
+            write_bytes (output_delimiter_string, output_delimiter_length);
+          found_any_selected_field = true;
+
+          while (true)
+            {
+              g = mbbuf_get_char (&mbbuf);
+              if (g.ch != MBBUF_EOF)
+                have_pending_line = true;
+              if (g.ch == MBBUF_EOF || g.ch == line_delim
+                  || (!g.err && mcel_eq (g, delim_mcel)))
+                break;
+              write_bytes (mbbuf_char_offset (&mbbuf, g), g.len);
+            }
+        }
+      else
+        {
+          while (true)
+            {
+              g = mbbuf_get_char (&mbbuf);
+              if (g.ch != MBBUF_EOF)
+                have_pending_line = true;
+              if (g.ch == MBBUF_EOF || g.ch == line_delim
+                  || (!g.err && mcel_eq (g, delim_mcel)))
+                break;
+            }
+        }
+
+      if (!g.err && mcel_eq (g, delim_mcel))
+        next_item (&field_idx);
+      else if (g.ch == line_delim || g.ch == MBBUF_EOF)
+        {
+          if (g.ch == MBBUF_EOF && !have_pending_line)
+            break;
+          if (found_any_selected_field
+              || !(suppress_non_delimited && field_idx == 1))
+            {
+              if (putchar (line_delim) < 0)
+                write_error ();
+            }
+          if (g.ch == MBBUF_EOF)
+            break;
+
+          field_idx = 1;
+          current_rp = frp;
+          found_any_selected_field = false;
+          have_pending_line = false;
+        }
+    }
+}
+
 /* Read from stream STREAM, printing to standard output any selected fields.  */
 
 static void
@@ -397,13 +560,16 @@ cut_fields (FILE *stream)
         {
           ssize_t len;
           size_t n_bytes;
+          size_t field_1_bufsize_s = field_1_bufsize;
 
-          len = getndelim2 (&field_1_buffer, &field_1_bufsize, 0,
+          len = getndelim2 (&field_1_buffer, &field_1_bufsize_s, 0,
                             GETNLINE_NO_LIMIT, delim, line_delim, stream);
+          field_1_bufsize = field_1_bufsize_s;
           if (len < 0)
             {
               free (field_1_buffer);
               field_1_buffer = NULL;
+              field_1_bufsize = 0;
               if (ferror (stream) || feof (stream))
                 break;
               xalloc_die ();
@@ -595,9 +761,31 @@ main (int argc, char **argv)
         case 'd':
           /* New delimiter.  */
           /* Interpret -d '' to mean 'use the NUL byte as the delimiter.'  */
-          if (optarg[0] != '\0' && optarg[1] != '\0')
-            FATAL_ERROR (_("the delimiter must be a single character"));
-          delim = optarg[0];
+          if (optarg[0] == '\0')
+            {
+              delim = '\0';
+              delim_bytes[0] = '\0';
+              delim_length = 1;
+            }
+          else if (MB_CUR_MAX <= 1)
+            {
+              if (optarg[1] != '\0')
+                FATAL_ERROR (_("the delimiter must be a single character"));
+              delim = optarg[0];
+              delim_bytes[0] = optarg[0];
+              delim_length = 1;
+            }
+          else
+            {
+              mcel_t g = mcel_scanz (optarg);
+              if (optarg[g.len] != '\0')
+                FATAL_ERROR (_("the delimiter must be a single character"));
+              memcpy (delim_bytes, optarg, g.len);
+              delim_length = g.len;
+              delim_mcel = g;
+              if (g.len == 1)
+                delim = optarg[0];
+            }
           delim_specified = true;
           break;
 
@@ -652,13 +840,18 @@ main (int argc, char **argv)
                | (complement ? SETFLD_COMPLEMENT : 0)));
 
   if (!delim_specified)
-    delim = '\t';
+    {
+      delim = '\t';
+      delim_bytes[0] = '\t';
+      delim_length = 1;
+      delim_mcel = mcel_ch ('\t', 1);
+    }
 
   if (output_delimiter_string == NULL)
     {
-      output_delimiter_default[0] = delim;
+      memcpy (output_delimiter_default, delim_bytes, delim_length);
       output_delimiter_string = output_delimiter_default;
-      output_delimiter_length = 1;
+      output_delimiter_length = delim_length;
     }
 
   void (*cut_stream) (FILE *) = NULL;
@@ -676,7 +869,7 @@ main (int argc, char **argv)
       break;
 
     case CUT_MODE_FIELDS:
-      cut_stream = cut_fields;
+      cut_stream = delim_length == 1 ? cut_fields : cut_fields_mb;
       break;
     }
   affirm (cut_stream);

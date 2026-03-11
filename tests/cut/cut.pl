@@ -257,6 +257,15 @@ if ($mb_locale ne 'C')
        {IN=>"\xc3\xa9a\xe2\x82\xacb\n"}, {OUT=>"\xc3\xa9:\xe2\x82\xac\n"},
        {ENV => "LC_ALL=$mb_locale"}],
       ['mb-char-4', '-c1-2', {IN=>"\xc3x\n"}, {OUT=>"\xc3x\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-delim-1', '-d', "\xc3\xa9", '-f2',
+       {IN=>"a\xc3\xa9b\xc3\xa9c\n"}, {OUT=>"b\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-delim-2', '-d', "\xc3\xa9", '-f1,3',
+       {IN=>"a\xc3\xa9b\xc3\xa9c\n"}, {OUT=>"a\xc3\xa9c\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-delim-3', '-s', '-d', "\xc3\xa9", '-f2',
+       {IN=>"abc\n"}, {OUT=>""},
        {ENV => "LC_ALL=$mb_locale"}];
   }
 
