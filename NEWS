@@ -32,6 +32,19 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New Features
 
+  'cut' now supports multi-byte input and delimiters.  Consequently
+  the -c option is now honored, and no longer an alias for -b, and
+  the -n option is now honored, and no longer ignored.
+  Also the -d option supports multi-byte delimiters.
+
+  'cut' adds new options for better compatibility:
+  The -w,--whitespace-delimited option was added to support blank aligned fields
+  and for better compatibility with FreeBSD/macOS.
+  The -O option was added as an alias for the --output-delimiter option,
+  for better compatibility with busybox/toybox.
+  The -F option was added as an alias for -w -O ' '
+  for better compatibility with busybox/toybox.
+
   'date --date' now parses dot delimited dd.mm.yy format common in Europe.
   This is in addition to the already supported mm/dd/yy and yy-mm-dd formats.
 
