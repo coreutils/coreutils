@@ -109,6 +109,9 @@ static char output_delimiter_default[MB_LEN_MAX];
 /* True if we have ever read standard input.  */
 static bool have_read_stdin;
 
+/* If true, don't split multibyte characters in byte mode.  */
+static bool no_split;
+
 /* If true, interpret each run of whitespace as one field delimiter.  */
 static bool whitespace_delimited;
 
@@ -135,6 +138,7 @@ static struct option const longopts[] =
   {"characters", required_argument, NULL, 'c'},
   {"fields", required_argument, NULL, 'f'},
   {"delimiter", required_argument, NULL, 'd'},
+  {"no-partial", no_argument, NULL, 'n'},
   {"whitespace-delimited", no_argument, NULL, 'w'},
   {"only-delimited", no_argument, NULL, 's'},
   {"output-delimiter", required_argument, NULL, OUTPUT_DELIMITER_OPTION},
@@ -185,8 +189,8 @@ Print selected parts of lines from each FILE to standard output.\n\
          no delimiter character, unless the -s option is specified\n\
 "));
       oputs (_("\
-  -n\n\
-         (ignored)\n\
+  -n, --no-partial\n\
+         with -b, don't output partial multi-byte characters\n\
 "));
       oputs (_("\
   -s, --only-delimited\n\
@@ -366,6 +370,79 @@ cut_bytes (FILE *stream)
 
               if (putchar (c) < 0)
                 write_error ();
+            }
+        }
+    }
+}
+
+/* Read from STREAM, printing selected bytes without splitting
+   multibyte characters.  */
+
+static void
+cut_bytes_no_split (FILE *stream)
+{
+  uintmax_t byte_idx = 0;
+  bool print_delimiter = false;
+  static char line_in[IO_BUFSIZE];
+  mbbuf_t mbbuf;
+
+  current_rp = frp;
+  mbbuf_init (&mbbuf, line_in, sizeof line_in, stream);
+
+  while (true)
+    {
+      mcel_t g = mbbuf_get_char (&mbbuf);
+
+      if (g.ch == line_delim)
+        {
+          if (putchar (line_delim) < 0)
+            write_error ();
+          byte_idx = 0;
+          print_delimiter = false;
+          current_rp = frp;
+        }
+      else if (g.ch == MBBUF_EOF)
+        {
+          if (byte_idx > 0)
+            {
+              if (putchar (line_delim) < 0)
+                write_error ();
+            }
+          break;
+        }
+      else
+        {
+          bool first_selected_is_range_start = false;
+          bool seen_selected = false;
+          bool suffix_selected = true;
+
+          for (idx_t i = 0; i < g.len; i++)
+            {
+              next_item (&byte_idx);
+              if (print_kth (byte_idx))
+                {
+                  if (!seen_selected)
+                    {
+                      seen_selected = true;
+                      first_selected_is_range_start
+                        = is_range_start_index (byte_idx);
+                    }
+                }
+              else if (seen_selected)
+                suffix_selected = false;
+            }
+
+          if (seen_selected && suffix_selected)
+            {
+              if (output_delimiter_string != output_delimiter_default)
+                {
+                  if (print_delimiter && first_selected_is_range_start)
+                    write_bytes (output_delimiter_string,
+                                 output_delimiter_length);
+                  print_delimiter = true;
+                }
+
+              write_bytes (mbbuf_char_offset (&mbbuf, g), g.len);
             }
         }
     }
@@ -1042,6 +1119,7 @@ main (int argc, char **argv)
           break;
 
         case 'n':
+          no_split = true;
           break;
 
         case 's':
@@ -1108,7 +1186,8 @@ main (int argc, char **argv)
       unreachable ();
 
     case CUT_MODE_BYTES:
-      cut_stream = cut_bytes;
+      cut_stream = MB_CUR_MAX <= 1 || !no_split
+                   ? cut_bytes : cut_bytes_no_split;
       break;
 
     case CUT_MODE_CHARACTERS:

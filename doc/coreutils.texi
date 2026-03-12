@@ -6215,7 +6215,10 @@ With @option{-f}, use the first byte of @var{input_delim_byte} as
 the input fields separator (default is TAB).
 
 @optItem{cut,-n,}
-Do not split multi-byte characters (no-op for now).
+@optItemx{cut,--no-partial,}
+With @option{--bytes}, do not split multi-byte characters.
+A byte range must encompass the end of a multi-byte character
+for it to be selected.
 
 @optItem{cut,-s,}
 @optItemx{cut,--only-delimited,}
