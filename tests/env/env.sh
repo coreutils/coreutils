@@ -21,13 +21,13 @@
 print_ver_ env pwd nice
 
 # A simple shebang program to call "echo" from symlinks like "./-u" or "./--".
-echo "#!$abs_top_builddir/src/echo simple_echo" > simple_echo \
+echo '#!'"$(command -v env | sed 's|/env|/echo|')"' foo' > show_args \
   || framework_failure_
-chmod a+x simple_echo || framework_failure_
+chmod a+x show_args || framework_failure_
 
 # Verify we can run the shebang which is not the case if
 # there are spaces in $abs_top_builddir.
-./simple_echo || skip_ "Error running simple_echo script"
+./show_args || skip_ "Error running show_args script"
 
 # Verify clearing the environment
 a=1
@@ -117,9 +117,9 @@ export PATH
 # On some systems, execve("-i") invokes a shebang script ./-i on PATH as
 # '/bin/sh -i', rather than '/bin/sh -- -i', which doesn't do what we want.
 # Avoid the issue by using a shebang to 'echo' passing a second parameter
-# before the '-i'. See the definition of simple_echo before.
+# before the '-i'. See the definition of show_args before.
 # Test -u, rather than -i, to minimize PATH problems.
-ln -s "simple_echo" ./-u || framework_failure_
+ln -s "show_args" ./-u || framework_failure_
 case $(env -u echo echo good) in
   good) ;;
   *) fail=1 ;;
@@ -135,7 +135,7 @@ esac
 
 # After options have ended, the first argument not containing = is a program.
 returns_ 127 env a=b -- true || fail=1
-ln -s "simple_echo" ./-- || framework_failure_
+ln -s "show_args" ./-- || framework_failure_
 case $(env a=b -- true || echo fail) in
   *true) ;;
   *) fail=1 ;;
