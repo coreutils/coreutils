@@ -1069,8 +1069,8 @@ main (int argc, char **argv)
   if (cut_mode == CUT_MODE_BYTES || cut_mode == CUT_MODE_CHARACTERS)
     {
       if (delim_specified || whitespace_delimited)
-        FATAL_ERROR (_("an input delimiter may be specified only\
- when operating on fields"));
+        FATAL_ERROR (_("an input delimiter makes sense\n\
+\tonly when operating on fields"));
 
       if (suppress_non_delimited)
         FATAL_ERROR (_("suppressing non-delimited lines makes sense\n\

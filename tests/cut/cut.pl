@@ -34,7 +34,7 @@ my $from_pos1 =   "$prog: byte/character positions are numbered from 1\n$try";
 my $inval_fld = "$prog: invalid field range\n$try";
 my $inval_pos = "$prog: invalid byte or character range\n$try";
 my $no_endpoint = "$prog: invalid range with no endpoint: -\n$try";
-my $nofield = "$prog: an input delimiter may be specified only when " .
+my $nofield = "$prog: an input delimiter makes sense\n\tonly when " .
               "operating on fields\n$try";
 my $mutual_dw = "$prog: -d and -w are mutually exclusive\n$try";
 
