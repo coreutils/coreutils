@@ -29,6 +29,7 @@
 #include <sys/types.h>
 #include "system.h"
 
+#include "argmatch.h"
 #include "assure.h"
 #include "fadvise.h"
 #include "getndelim2.h"
@@ -115,6 +116,26 @@ static bool no_split;
 /* If true, interpret each run of whitespace as one field delimiter.  */
 static bool whitespace_delimited;
 
+/* If true, ignore leading and trailing whitespace in -w mode.  */
+static bool trim_outer_whitespace;
+
+enum whitespace_option
+{
+  WHITESPACE_OPTION_TRIMMED
+};
+
+static char const *const whitespace_option_args[] =
+{
+  "trimmed", NULL
+};
+
+static enum whitespace_option const whitespace_option_types[] =
+{
+  WHITESPACE_OPTION_TRIMMED
+};
+
+ARGMATCH_VERIFY (whitespace_option_args, whitespace_option_types);
+
 /* Whether to cut bytes, characters, or fields.  */
 static enum
 {
@@ -138,7 +159,7 @@ static struct option const longopts[] =
   {"fields", required_argument, NULL, 'f'},
   {"delimiter", required_argument, NULL, 'd'},
   {"no-partial", no_argument, NULL, 'n'},
-  {"whitespace-delimited", no_argument, NULL, 'w'},
+  {"whitespace-delimited", optional_argument, NULL, 'w'},
   {"only-delimited", no_argument, NULL, 's'},
   {"output-delimiter", required_argument, NULL, 'O'},
   {"complement", no_argument, NULL, COMPLEMENT_OPTION},
@@ -201,8 +222,9 @@ Print selected parts of lines from each FILE to standard output.\n\
          do not print lines not containing delimiters\n\
 "));
       oputs (_("\
-  -w, --whitespace-delimited\n\
-         use runs of whitespace as the field delimiter\n\
+  -w, --whitespace-delimited[=trimmed]\n\
+         use runs of whitespace as the field delimiter;\n\
+         with 'trimmed', ignore leading and trailing whitespace\n\
 "));
       oputs (_("\
   -z, --zero-terminated\n\
@@ -281,6 +303,8 @@ enum field_terminator
 struct mbfield_parser
 {
   bool whitespace_delimited;
+  bool trim_outer_whitespace;
+  bool at_line_start;
   bool have_saved;
   mcel_t saved_g;
 };
@@ -297,8 +321,9 @@ mbbuf_get_saved_char (mbbuf_t *mbbuf, bool *have_saved, mcel_t *saved_g)
 }
 
 static inline enum field_terminator
-skip_whitespace_delim (mbbuf_t *mbuf, bool *have_saved, mcel_t *saved_g,
-                       bool *have_pending_line)
+skip_whitespace_run (mbbuf_t *mbuf, struct mbfield_parser *parser,
+                     bool *have_pending_line,
+                     bool have_initial_whitespace)
 {
   mcel_t g;
 
@@ -310,9 +335,17 @@ skip_whitespace_delim (mbbuf_t *mbuf, bool *have_saved, mcel_t *saved_g,
     }
   while (g.ch != MBBUF_EOF && g.ch != line_delim && c32issep (g.ch));
 
-  *saved_g = g;
-  *have_saved = true;
-  return FIELD_DELIMITER;
+  bool trim_start = parser->trim_outer_whitespace && parser->at_line_start;
+
+  if (parser->trim_outer_whitespace
+      && (g.ch == MBBUF_EOF || g.ch == line_delim))
+    {
+      return g.ch == MBBUF_EOF ? FIELD_EOF : FIELD_LINE_DELIMITER;
+    }
+
+  parser->saved_g = g;
+  parser->have_saved = true;
+  return trim_start && !have_initial_whitespace ? FIELD_DATA : FIELD_DELIMITER;
 }
 
 static void
@@ -376,8 +409,7 @@ mbfield_terminator (mbbuf_t *mbbuf, struct mbfield_parser *parser, mcel_t g,
 
   if (parser->whitespace_delimited)
     return (c32issep (g.ch)
-            ? skip_whitespace_delim (mbbuf, &parser->have_saved,
-                                     &parser->saved_g, have_pending_line)
+            ? skip_whitespace_run (mbbuf, parser, have_pending_line, true)
             : FIELD_DATA);
 
   return field_delim_eq (g) ? FIELD_DELIMITER : FIELD_DATA;
@@ -400,6 +432,18 @@ static enum field_terminator
 read_mb_field_to_buffer (mbbuf_t *mbbuf, struct mbfield_parser *parser,
                          bool *have_pending_line, size_t *n_bytes)
 {
+  if (parser->whitespace_delimited
+      && parser->trim_outer_whitespace
+      && parser->at_line_start)
+    {
+      enum field_terminator terminator
+        = skip_whitespace_run (mbbuf, parser, have_pending_line, false);
+      if (terminator != FIELD_DATA)
+        return terminator;
+    }
+
+  parser->at_line_start = false;
+
   while (true)
     {
       mcel_t g = mbfield_get_char (mbbuf, parser);
@@ -421,6 +465,18 @@ static enum field_terminator
 scan_mb_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
                bool *have_pending_line, bool write_field)
 {
+  if (parser->whitespace_delimited
+      && parser->trim_outer_whitespace
+      && parser->at_line_start)
+    {
+      enum field_terminator terminator
+        = skip_whitespace_run (mbbuf, parser, have_pending_line, false);
+      if (terminator != FIELD_DATA)
+        return terminator;
+    }
+
+  parser->at_line_start = false;
+
   while (true)
     {
       mcel_t g = mbfield_get_char (mbbuf, parser);
@@ -441,12 +497,14 @@ scan_mb_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
 
 static inline void
 reset_field_line (uintmax_t *field_idx, bool *found_any_selected_field,
-                  bool *have_pending_line)
+                  bool *have_pending_line, struct mbfield_parser *parser)
 {
   *field_idx = 1;
   current_rp = frp;
   *found_any_selected_field = false;
   *have_pending_line = false;
+  parser->have_saved = false;
+  parser->at_line_start = true;
 }
 
 /* Read from stream STREAM, printing to standard output any selected bytes.  */
@@ -588,6 +646,8 @@ cut_fields_mb_any (FILE *stream, bool whitespace_mode)
   struct mbfield_parser parser =
     {
       .whitespace_delimited = whitespace_mode,
+      .trim_outer_whitespace = trim_outer_whitespace,
+      .at_line_start = true,
       .saved_g = { .ch = MBBUF_EOF }
     };
   uintmax_t field_idx = 1;
@@ -623,7 +683,7 @@ cut_fields_mb_any (FILE *stream, bool whitespace_mode)
                 break;
 
               reset_field_line (&field_idx, &found_any_selected_field,
-                                &have_pending_line);
+                                &have_pending_line, &parser);
               continue;
             }
 
@@ -661,7 +721,7 @@ cut_fields_mb_any (FILE *stream, bool whitespace_mode)
             break;
 
           reset_field_line (&field_idx, &found_any_selected_field,
-                            &have_pending_line);
+                            &have_pending_line, &parser);
         }
     }
 }
@@ -746,12 +806,12 @@ cut_fields (FILE *stream)
                 {
                   /* Empty.  */
                 }
-	              else
-	                {
-	                  write_bytes (field_1_buffer, n_bytes);
-	                  /* Make sure the output line is newline terminated.  */
-	                  if (field_1_buffer[n_bytes - 1] != line_delim)
-	                    {
+              else
+                {
+                  write_bytes (field_1_buffer, n_bytes);
+                  /* Make sure the output line is newline terminated. */
+                  if (field_1_buffer[n_bytes - 1] != line_delim)
+                    {
                       if (putchar (line_delim) < 0)
                         write_error ();
                     }
@@ -760,13 +820,13 @@ cut_fields (FILE *stream)
               continue;
             }
 
-	          if (print_kth (1))
-	            {
-	              /* Print the field, but not the trailing delimiter.  */
-	              write_bytes (field_1_buffer, n_bytes - 1);
+          if (print_kth (1))
+            {
+              /* Print the field, but not the trailing delimiter.  */
+              write_bytes (field_1_buffer, n_bytes - 1);
 
-	              /* With -d$'\n' don't treat the last '\n' as a delimiter.  */
-	              if (delim == line_delim)
+              /* With -d$'\n' don't treat the last '\n' as a delim.  */
+              if (delim == line_delim)
                 {
                   int last_c = getc (stream);
                   if (last_c != EOF)
@@ -948,6 +1008,12 @@ main (int argc, char **argv)
 
         case 'w':
           whitespace_delimited = true;
+          trim_outer_whitespace
+            = (optarg
+               && XARGMATCH ("--whitespace-delimited", optarg,
+                             whitespace_option_args,
+                             whitespace_option_types)
+                  == WHITESPACE_OPTION_TRIMMED);
           break;
 
         case 'O':

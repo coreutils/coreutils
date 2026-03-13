@@ -140,6 +140,12 @@ my @Tests =
   ['w-delim-4', '-s', '-w', '-f1', {IN=>"a b c\n"}, {OUT=>"a\n"}],
   ['w-delim-5', '-w', '-d:', '-f1', {EXIT=>1}, {ERR=>$mutual_dw}],
   ['w-delim-6', '-w', '-f1,2', {IN=>"a  \n"}, {OUT=>"a\t\n"}],
+  ['w-delim-7', '--whitespace-delimited', '-f1,2',
+   {IN=>"  a b\n"}, {OUT=>"\ta\n"}],
+  ['w-trim-1', '--whitespace-delimited=trimmed', '-f1,2',
+   {IN=>"  a b  \n"}, {OUT=>"a\tb\n"}],
+  ['w-trim-2', '-s', '--whitespace-delimited=trimmed', '-f1',
+   {IN=>"  a  \n"}, {OUT=>""}],
 
   # newline processing for fields
   ['newline-1', '-f1-', {IN=>"a\nb"}, {OUT=>"a\nb\n"}],
