@@ -148,6 +148,10 @@ Print selected parts of lines from each FILE to standard output.\n\
          select only these character positions\n\
 "));
       oputs (_("\
+      --complement\n\
+         complement the set of selected bytes, characters or fields\n\
+"));
+      oputs (_("\
   -d, --delimiter=DELIM\n\
          use DELIM instead of TAB for field delimiter\n\
 "));
@@ -159,10 +163,6 @@ Print selected parts of lines from each FILE to standard output.\n\
       oputs (_("\
   -n\n\
          (ignored)\n\
-"));
-      oputs (_("\
-      --complement\n\
-         complement the set of selected bytes, characters or fields\n\
 "));
       oputs (_("\
   -s, --only-delimited\n\

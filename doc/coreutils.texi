@@ -6170,6 +6170,14 @@ output delimiter is specified, (see the description of
 @option{--output-delimiter}), then output that string between ranges
 of selected bytes.
 
+@optItem{cut,--complement,}
+This option is a GNU extension.
+Select for printing the complement of the bytes, characters or fields
+selected with the @option{-b}, @option{-c} or @option{-f} options.
+In other words, do @emph{not} print the bytes, characters or fields
+specified via those options.  This option is useful when you have
+many fields and want to print all but a few of them.
+
 @optItem{cut,-f,@w{ }@var{field-list}}
 @optItemx{cut,--fields,=@var{field-list}}
 Select for printing only the fields listed in @var{field-list}.
@@ -6221,14 +6229,6 @@ When using @option{-b} or @option{-c} to select ranges of byte or
 character offsets (as opposed to ranges of fields),
 output @var{output_delim_string} between non-overlapping
 ranges of selected bytes.
-
-@optItem{cut,--complement,}
-This option is a GNU extension.
-Select for printing the complement of the bytes, characters or fields
-selected with the @option{-b}, @option{-c} or @option{-f} options.
-In other words, do @emph{not} print the bytes, characters or fields
-specified via those options.  This option is useful when you have
-many fields and want to print all but a few of them.
 
 @optZeroTerminated{cut}
 
