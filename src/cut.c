@@ -429,41 +429,8 @@ append_field_1_bytes (mbbuf_t *mbbuf, mcel_t g, size_t *n_bytes)
 }
 
 static enum field_terminator
-read_mb_field_to_buffer (mbbuf_t *mbbuf, struct mbfield_parser *parser,
-                         bool *have_pending_line, size_t *n_bytes)
-{
-  if (parser->whitespace_delimited
-      && parser->trim_outer_whitespace
-      && parser->at_line_start)
-    {
-      enum field_terminator terminator
-        = skip_whitespace_run (mbbuf, parser, have_pending_line, false);
-      if (terminator != FIELD_DATA)
-        return terminator;
-    }
-
-  parser->at_line_start = false;
-
-  while (true)
-    {
-      mcel_t g = mbfield_get_char (mbbuf, parser);
-      if (g.ch == MBBUF_EOF)
-        return FIELD_EOF;
-
-      *have_pending_line = true;
-
-      enum field_terminator terminator
-        = mbfield_terminator (mbbuf, parser, g, have_pending_line);
-      if (terminator != FIELD_DATA)
-        return terminator;
-
-      append_field_1_bytes (mbbuf, g, n_bytes);
-    }
-}
-
-static enum field_terminator
 scan_mb_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
-               bool *have_pending_line, bool write_field)
+               bool *have_pending_line, bool write_field, size_t *n_bytes)
 {
   if (parser->whitespace_delimited
       && parser->trim_outer_whitespace
@@ -490,7 +457,9 @@ scan_mb_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
       if (terminator != FIELD_DATA)
         return terminator;
 
-      if (write_field)
+      if (n_bytes)
+        append_field_1_bytes (mbbuf, g, n_bytes);
+      else if (write_field)
         write_bytes (mbbuf_char_offset (mbbuf, g), g.len);
     }
 }
@@ -666,8 +635,8 @@ cut_fields_mb_any (FILE *stream, bool whitespace_mode)
         {
           size_t n_bytes = 0;
           enum field_terminator terminator
-            = read_mb_field_to_buffer (&mbbuf, &parser, &have_pending_line,
-                                       &n_bytes);
+            = scan_mb_field (&mbbuf, &parser, &have_pending_line, false,
+                             &n_bytes);
           if (terminator == FIELD_EOF && n_bytes == 0)
             return;
 
@@ -706,7 +675,7 @@ cut_fields_mb_any (FILE *stream, bool whitespace_mode)
         }
 
       terminator = scan_mb_field (&mbbuf, &parser, &have_pending_line,
-                                  write_field);
+                                  write_field, NULL);
 
       if (terminator == FIELD_DELIMITER)
         next_item (&field_idx);
