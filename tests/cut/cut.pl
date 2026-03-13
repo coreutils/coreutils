@@ -123,8 +123,7 @@ my @Tests =
   ['o-delim', qw(-d: --out=_), '-f2,3', {IN=>"a:b:c\n"}, {OUT=>"b_c\n"}],
   ['nul-idelim', qw(-d '' --out=_), '-f2,3', {IN=>"a\0b\0c\n"}, {OUT=>"b_c\n"}],
   ['nul-odelim', qw(-d: --out=), '-f2,3', {IN=>"a:b:c\n"}, {OUT=>"b\0c\n"}],
-  ['multichar-od', qw(-d: --out=_._), '-f2,3', {IN=>"a:b:c\n"},
-   {OUT=>"b_._c\n"}],
+  ['multichar-od', qw(-d: -O _._), '-f2,3', {IN=>"a:b:c\n"}, {OUT=>"b_._c\n"}],
 
   # Ensure delim is not allowed without a field
   # Prior to 8.21, a NUL delim was allowed without a field

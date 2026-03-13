@@ -6224,7 +6224,8 @@ for it to be selected.
 For @option{-f}, do not print lines that do not contain the field separator
 character.  Normally, any line without a field separator is printed verbatim.
 
-@optItem{cut,--output-delimiter,=@var{string}}
+@optItem{cut,-O,@w{ }@var{string}}
+@optItemx{cut,--output-delimiter,=@var{string}}
 With @option{-f}, output fields are separated by @var{string}.
 The default with @option{-f} is to use the input delimiter.
 When using @option{-b} or @option{-c} to select ranges of byte or

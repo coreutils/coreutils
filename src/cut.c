@@ -128,8 +128,7 @@ static enum
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  OUTPUT_DELIMITER_OPTION = CHAR_MAX + 1,
-  COMPLEMENT_OPTION
+  COMPLEMENT_OPTION = CHAR_MAX + 1
 };
 
 static struct option const longopts[] =
@@ -141,7 +140,7 @@ static struct option const longopts[] =
   {"no-partial", no_argument, NULL, 'n'},
   {"whitespace-delimited", no_argument, NULL, 'w'},
   {"only-delimited", no_argument, NULL, 's'},
-  {"output-delimiter", required_argument, NULL, OUTPUT_DELIMITER_OPTION},
+  {"output-delimiter", required_argument, NULL, 'O'},
   {"complement", no_argument, NULL, COMPLEMENT_OPTION},
   {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
@@ -193,13 +192,13 @@ Print selected parts of lines from each FILE to standard output.\n\
          with -b, don't output partial multi-byte characters\n\
 "));
       oputs (_("\
-  -s, --only-delimited\n\
-         do not print lines not containing delimiters\n\
-"));
-      oputs (_("\
-      --output-delimiter=STRING\n\
+  -O, --output-delimiter=STRING\n\
          use STRING as the output delimiter;\n\
          the default is to use the input delimiter\n\
+"));
+      oputs (_("\
+  -s, --only-delimited\n\
+         do not print lines not containing delimiters\n\
 "));
       oputs (_("\
   -w, --whitespace-delimited\n\
@@ -896,7 +895,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "b:c:d:f:nszw", longopts, NULL))
+  while ((optc = getopt_long (argc, argv, "b:c:d:f:nO:szw", longopts, NULL))
          != -1)
     {
       switch (optc)
@@ -951,7 +950,7 @@ main (int argc, char **argv)
           whitespace_delimited = true;
           break;
 
-        case OUTPUT_DELIMITER_OPTION:
+        case 'O':
           /* Interpret --output-delimiter='' to mean
              'use the NUL byte as the delimiter.'  */
           output_delimiter_length = (optarg[0] == '\0'
