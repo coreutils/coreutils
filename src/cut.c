@@ -226,6 +226,13 @@ is_range_start_index (uintmax_t k)
   return k == current_rp->lo;
 }
 
+static void
+write_bytes (char const *buf, size_t n_bytes)
+{
+  if (fwrite (buf, sizeof (char), n_bytes, stdout) != n_bytes)
+    write_error ();
+}
+
 /* Read from stream STREAM, printing to standard output any selected bytes.  */
 
 static void
@@ -345,14 +352,12 @@ cut_fields (FILE *stream)
                 {
                   /* Empty.  */
                 }
-              else
-                {
-                  if (fwrite (field_1_buffer, sizeof (char), n_bytes, stdout)
-                      != n_bytes)
-                    write_error ();
-                  /* Make sure the output line is newline terminated.  */
-                  if (field_1_buffer[n_bytes - 1] != line_delim)
-                    {
+	              else
+	                {
+	                  write_bytes (field_1_buffer, n_bytes);
+	                  /* Make sure the output line is newline terminated.  */
+	                  if (field_1_buffer[n_bytes - 1] != line_delim)
+	                    {
                       if (putchar (line_delim) < 0)
                         write_error ();
                     }
@@ -361,15 +366,13 @@ cut_fields (FILE *stream)
               continue;
             }
 
-          if (print_kth (1))
-            {
-              /* Print the field, but not the trailing delimiter.  */
-              if (fwrite (field_1_buffer, sizeof (char), n_bytes - 1, stdout)
-                  != n_bytes - 1)
-                write_error ();
+	          if (print_kth (1))
+	            {
+	              /* Print the field, but not the trailing delimiter.  */
+	              write_bytes (field_1_buffer, n_bytes - 1);
 
-              /* With -d$'\n' don't treat the last '\n' as a delimiter.  */
-              if (delim == line_delim)
+	              /* With -d$'\n' don't treat the last '\n' as a delimiter.  */
+	              if (delim == line_delim)
                 {
                   int last_c = getc (stream);
                   if (last_c != EOF)
@@ -387,29 +390,20 @@ cut_fields (FILE *stream)
         }
 
       int prev_c = c;
+      bool write_field = print_kth (field_idx);
 
-      if (print_kth (field_idx))
+      if (write_field)
         {
           if (found_any_selected_field)
-            {
-              if (fwrite (output_delimiter_string, sizeof (char),
-                          output_delimiter_length, stdout)
-                  != output_delimiter_length)
-                write_error ();
-            }
+            write_bytes (output_delimiter_string, output_delimiter_length);
           found_any_selected_field = true;
-
-          while ((c = getc (stream)) != delim && c != line_delim && c != EOF)
-            {
-              if (putchar (c) < 0)
-                write_error ();
-              prev_c = c;
-            }
         }
-      else
+
+      while ((c = getc (stream)) != delim && c != line_delim && c != EOF)
         {
-          while ((c = getc (stream)) != delim && c != line_delim && c != EOF)
-            prev_c = c;
+          if (write_field && putchar (c) < 0)
+            write_error ();
+          prev_c = c;
         }
 
       /* With -d$'\n' don't treat the last '\n' as a delimiter.  */
