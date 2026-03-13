@@ -2913,7 +2913,7 @@ the maximum line length.  If the line contains no such blanks, the line
 is broken at the maximum line length as usual.
 
 @optItem{fold,-w,@w{ }@var{width}}
-@optItemx{fold,--width,@var{width}}
+@optItemx{fold,--width,=@var{width}}
 Use a maximum line length of @var{width} columns instead of 80.
 
 For compatibility @command{fold} supports an obsolete option syntax
@@ -6171,7 +6171,7 @@ output delimiter is specified, (see the description of
 of selected bytes.
 
 @optItem{cut,-f,@w{ }@var{field-list}}
-@optItemx{cut,--fields,@var{field-list}}
+@optItemx{cut,--fields,=@var{field-list}}
 Select for printing only the fields listed in @var{field-list}.
 Fields are separated by a TAB character by default.  Also print any
 line that contains no delimiter character, unless the
