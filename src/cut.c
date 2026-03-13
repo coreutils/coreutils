@@ -119,6 +119,9 @@ static bool whitespace_delimited;
 /* If true, ignore leading and trailing whitespace in -w mode.  */
 static bool trim_outer_whitespace;
 
+/* If true, default the output delimiter to a single space.  */
+static bool space_output_delimiter_default;
+
 enum whitespace_option
 {
   WHITESPACE_OPTION_TRIMMED
@@ -209,6 +212,10 @@ Print selected parts of lines from each FILE to standard output.\n\
          no delimiter character, unless the -s option is specified\n\
 "));
       oputs (_("\
+  -F LIST\n\
+         like -f, but also implies -w and -O ' '\n\
+"));
+      oputs (_("\
   -n, --no-partial\n\
          with -b, don't output partial multi-byte characters\n\
 "));
@@ -234,7 +241,7 @@ Print selected parts of lines from each FILE to standard output.\n\
       oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
-Use one, and only one of -b, -c or -f.  Each LIST is made up of one\n\
+Use one, and only one of -b, -c, -f or -F.  Each LIST is made up of one\n\
 range, or many ranges separated by commas.  Selected input is written\n\
 in the same order that it is read, and is written exactly once.\n\
 "), stdout);
@@ -914,6 +921,7 @@ main (int argc, char **argv)
   int optc;
   bool ok;
   bool delim_specified = false;
+  bool whitespace_delimited_specified = false;
   char *spec_list_string = NULL;
 
   initialize_main (&argc, &argv);
@@ -924,7 +932,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "b:c:d:f:nO:szw", longopts, NULL))
+  while ((optc = getopt_long (argc, argv, "b:c:d:f:F:nO:szw", longopts, NULL))
          != -1)
     {
       switch (optc)
@@ -937,8 +945,14 @@ main (int argc, char **argv)
             cut_mode = CUT_MODE_CHARACTERS;
           FALLTHROUGH;
         case 'f':
-          if (optc == 'f')
+        case 'F':
+          if (optc == 'f' || optc == 'F')
             cut_mode = CUT_MODE_FIELDS;
+          if (optc == 'F')
+            {
+              whitespace_delimited = true;
+              space_output_delimiter_default = true;
+            }
           if (spec_list_string)
             FATAL_ERROR (_("only one list may be specified"));
           spec_list_string = optarg;
@@ -977,6 +991,7 @@ main (int argc, char **argv)
 
         case 'w':
           whitespace_delimited = true;
+          whitespace_delimited_specified = true;
           trim_outer_whitespace
             = (optarg
                && XARGMATCH ("--whitespace-delimited", optarg,
@@ -1030,8 +1045,11 @@ main (int argc, char **argv)
 \tonly when operating on fields"));
     }
 
-  if (delim_specified && whitespace_delimited)
+  if (delim_specified && whitespace_delimited_specified)
     FATAL_ERROR (_("-d and -w are mutually exclusive"));
+
+  if (delim_specified && !whitespace_delimited_specified)
+    whitespace_delimited = false;
 
   set_fields (spec_list_string,
               (((cut_mode == CUT_MODE_BYTES
@@ -1049,9 +1067,17 @@ main (int argc, char **argv)
 
   if (output_delimiter_string == NULL)
     {
-      memcpy (output_delimiter_default, delim_bytes, delim_length);
       output_delimiter_string = output_delimiter_default;
-      output_delimiter_length = delim_length;
+      if (space_output_delimiter_default)
+        {
+          output_delimiter_default[0] = ' ';
+          output_delimiter_length = 1;
+        }
+      else
+        {
+          memcpy (output_delimiter_default, delim_bytes, delim_length);
+          output_delimiter_length = delim_length;
+        }
     }
 
   void (*cut_stream) (FILE *) = NULL;

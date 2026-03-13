@@ -6208,10 +6208,11 @@ join -a1 -o 1.2,1.1 - /dev/null # reorder the first two fields
 @end verbatim
 @end example
 
-@optItem{cut,-d,@w{ }@var{input_delim_byte}}
-@optItemx{cut,--delimiter,=@var{input_delim_byte}}
-With @option{-f}, use the first byte of @var{input_delim_byte} as
-the input fields separator (default is TAB).
+@optItem{cut,-F,}
+Like the @option{-f,--fields} option, but also implies
+@option{-w} and @option{--output-delimitor=' '}.
+I.e., fields are separated by runs of blank characters,
+and output fields are separated by a single ASCII space.
 
 @optItem{cut,-n,}
 @optItemx{cut,--no-partial,}
