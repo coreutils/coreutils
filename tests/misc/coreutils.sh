@@ -38,4 +38,13 @@ compare exp err || fail=1
 returns_ 1 ./blah --version 2>err || fail=1
 compare exp err || fail=1
 
+# Ensure utility name is detected at shebang
+# This fails if utility name is taken from AT_EXECFN only
+echo '#!'"$(command -v coreutils|sed "s|/coreutils|/yes --version|")" > success \
+  || framework_failure_
+# disallow checking #! by read(2) from AT_EXECFN
+chmod a-r success || :
+chmod a+x success || framework_failure_
+./success || fail=1
+
 Exit $fail
