@@ -484,6 +484,7 @@ all_tests =					\
   tests/test/test-diag.pl			\
   tests/test/test-file.sh			\
   tests/misc/time-style.sh			\
+  tests/timeout/init-parent.sh			\
   tests/timeout/timeout.sh			\
   tests/timeout/timeout-blocked.pl		\
   tests/timeout/timeout-group.sh		\

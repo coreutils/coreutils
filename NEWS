@@ -22,6 +22,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   environment variable.
   [bug introduced in coreutils-8.26]
 
+  'timeout' no longer exits abruptly when its parent is the init process, e.g.,
+  when started by the entrypoint of a container.
+  [bug introduced in coreutils-9.10]
+
 ** New Features
 
   'date --date' now parses dot delimited dd.mm.yy format common in Europe.
@@ -54,6 +58,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   'shuf -i' now operates up to two times faster on systems with unlocked stdio
   functions.
+
+  'timeout' now properly detects when it is reparented by a subreaper process on
+  Linux instead of init, e.g., the 'systemd --user' process.
 
   'wc -l' now operates up to four and a half times faster on hosts that support
   Neon instructions.

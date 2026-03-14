@@ -586,6 +586,12 @@ main (int argc, char **argv)
   sigset_t orig_set;
   block_cleanup_and_chld (term_signal, &orig_set);
 
+  /* Get the parent process ID so we can check if we are reparented later.
+     Traditionally processes would be reparented to init.  On Linux a process
+     can be come a subreaper using PR_SET_CHILD_SUBREAPER to fulfill the role
+     of init for child processes, as is done by systemd(1).  */
+  pid_t timeout_pid = getpid ();
+
   /* We cannot use posix_spawn here since the child will have an exit status of
      127 for any failure.  If implemented through fork and exec, posix_spawn
      will return successfully and 'timeout' will have no way to determine if it
@@ -603,8 +609,10 @@ main (int argc, char **argv)
       /* Add protection if the parent dies without signaling child.  */
       prctl (PR_SET_PDEATHSIG, term_signal);
 #endif
-      /* If we're already reparented to init, don't proceed.  */
-      if (getppid () == 1)
+      /* If we're already reparented to init, don't proceed.  Be aware that
+         'timeout' may actually be started by the init process.  E.g., when
+         the shell is the entrypoint to a container.  */
+      if (getppid () != timeout_pid)
         return EXIT_CANCELED;
 
       /* Restore signal mask for child.  */
