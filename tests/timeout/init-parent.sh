@@ -21,12 +21,12 @@ print_ver_ timeout
 
 newpids () { unshare --pid --fork --map-root-user "$@"; }
 
-newpids true || skip_ 'unshare --pid --fork --map-root-user is unavailable'
+newpids unshare --version || skip_ 'unshare --pid --fork --map-root-user is unavailable'
 
 # In coreutils-9.10 'timeout' would exit immediately if its parent was the init
 # process.  This was discovered because Docker entrypoints have a process ID
 # of 1.
-newpids timeout .1 sleep 10
-test $? = 124 || fail=1
+newpids timeout 10 sleep 2 || fail=1
+returns_ 124 newpids timeout .1 sleep 10 || fail=1
 
 Exit $fail
