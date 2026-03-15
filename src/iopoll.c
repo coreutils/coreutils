@@ -177,62 +177,53 @@ iopoll_output_ok (int fdout)
    Return true, if EAGAIN has been successfully handled. */
 
 static bool
-fwait_for_nonblocking_write (FILE *f)
+wait_for_nonblocking_write (int fd)
 {
   if (! IS_EAGAIN (errno))
     /* non-recoverable write error */
     return false;
 
-  int fd = fileno (f);
-  if (fd == -1)
-    goto fail;
-
   /* wait for the file descriptor to become writable */
   if (iopoll_internal (-1, fd, true, false) != 0)
-    goto fail;
-
-  /* successfully waited for the descriptor to become writable */
-  clearerr (f);
-  return true;
-
-fail:
-  errno = EAGAIN;
-  return false;
-}
-
-
-/* wrapper for fclose() that also waits for F if non blocking.  */
-
-extern bool
-fclose_wait (FILE *f)
-{
-  for (;;)
     {
-      if (fflush (f) == 0)
-        break;
-
-      if (! fwait_for_nonblocking_write (f))
-        break;
+      errno = EAGAIN;
+      return false;
     }
 
-  return fclose (f) == 0;
+  /* successfully waited for the descriptor to become writable */
+  return true;
+}
+
+/* wrapper for close() that also waits for FD if non blocking.  */
+
+extern bool
+close_wait (int fd)
+{
+  while (wait_for_nonblocking_write (fd))
+    ;
+  return close (fd) == 0;
 }
 
 
-/* wrapper for fwrite() that also waits for F if non blocking.  */
+/* wrapper for write() that also waits for FD if non blocking.  */
 
 extern bool
-fwrite_wait (char const *buf, ssize_t size, FILE *f)
+write_wait (int fd, void const *buffer, size_t size)
 {
-  for (;;)
+  unsigned char const *buf = buffer;
+
+  while (true)
     {
-      const size_t written = fwrite (buf, 1, size, f);
+      ssize_t written = write (fd, buf, size);
+      if (written < 0)
+        written = 0;
+
       size -= written;
       affirm (size >= 0);
       if (size <= 0)  /* everything written */
         return true;
 
-      if (! fwait_for_nonblocking_write (f))
+      if (! wait_for_nonblocking_write (fd))
         return false;
 
       buf += written;
