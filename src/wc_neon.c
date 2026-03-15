@@ -35,7 +35,7 @@ wc_lines_neon (int fd)
 
   while (true)
     {
-      unsigned char neon_buf[IO_BUFSIZE];
+      unsigned char alignas (16) neon_buf[IO_BUFSIZE];
       ssize_t bytes_read = read (fd, neon_buf, sizeof neon_buf);
       if (bytes_read <= 0)
         return (struct wc_lines) { bytes_read == 0 ? 0 : errno, lines, bytes };
