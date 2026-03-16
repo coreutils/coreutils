@@ -27,6 +27,7 @@ print_ver_ dd
 ret=$?
 
 if test $ret = 1; then
+  test -s f || skip_ 'The system disallowed all writes'
   grep -F '+1 records out' err || { cat err; fail=1; }
 elif test $ret = 0; then
   skip_ 'The system did not limit the file fize'
