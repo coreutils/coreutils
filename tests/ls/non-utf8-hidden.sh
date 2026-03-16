@@ -35,13 +35,13 @@ for loc in C "$LOCALE_FR" "$LOCALE_FR_UTF8"; do
   export LC_ALL="$loc"
 
   # Test 1: Without -a flag, only visible file should appear
-  ls d > out1 || fail=1
+  ls -U d > out1 || fail=1
   echo 'visible' > exp1
   compare exp1 out1 || fail=1
 
   # Test 2: With -a flag, all files including hidden ones should appear
   # The invalid UTF-8 filename will be shown in some escaped form
-  ls -a d > out2 || fail=1
+  ls -a -U d > out2 || fail=1
 
   # Check that we have at least 5 entries (., .., visible, and 2 hidden files)
   line_count=$(wc -l < out2)
