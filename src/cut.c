@@ -122,12 +122,6 @@ static bool trim_outer_whitespace;
 /* If true, default the output delimiter to a single space.  */
 static bool space_output_delimiter_default;
 
-/* Buffer for record-oriented UTF-8 field splitting.  */
-static char *line_buffer;
-
-/* The number of bytes allocated for LINE_BUFFER.  */
-static idx_t line_bufsize;
-
 enum whitespace_option
 {
   WHITESPACE_OPTION_TRIMMED
@@ -449,21 +443,27 @@ mbfield_terminator (mbbuf_t *mbbuf, struct mbfield_parser *parser, mcel_t g,
 }
 
 static inline void
-append_field_1_bytes (mbbuf_t *mbbuf, mcel_t g, size_t *n_bytes)
+append_field_1_chunk (char const *buf, idx_t len, idx_t *n_bytes)
 {
-  if (field_1_bufsize - *n_bytes < g.len)
+  if (field_1_bufsize - *n_bytes < len)
     {
       field_1_buffer = xpalloc (field_1_buffer, &field_1_bufsize,
-                                g.len, -1, sizeof *field_1_buffer);
+                                len, -1, sizeof *field_1_buffer);
     }
 
-  memcpy (field_1_buffer + *n_bytes, mbbuf_char_offset (mbbuf, g), g.len);
-  *n_bytes += g.len;
+  memcpy (field_1_buffer + *n_bytes, buf, len);
+  *n_bytes += len;
+}
+
+static inline void
+append_field_1_bytes (mbbuf_t *mbbuf, mcel_t g, idx_t *n_bytes)
+{
+  append_field_1_chunk (mbbuf_char_offset (mbbuf, g), g.len, n_bytes);
 }
 
 static enum field_terminator
 scan_mb_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
-               bool *have_pending_line, bool write_field, size_t *n_bytes)
+               bool *have_pending_line, bool write_field, idx_t *n_bytes)
 {
   if (parser->whitespace_delimited
       && parser->trim_outer_whitespace
@@ -505,34 +505,45 @@ ATTRIBUTE_PURE
 static char *
 find_utf8_field_delim (char const *buf, size_t len)
 {
+#if 0
   unsigned char delim_0 = delim_bytes[0];
   if (delim_0 < 0x80)
     return memchr ((void *) buf, delim_0, len);
-
-#if MEMMEM_IS_FASTER /* Surprisingly not on glibc-2.42  */
+#endif
   return memmem (buf, len, delim_bytes, delim_length);
-#else
-  char const *p = buf;
-  char const *end = buf + len;
+}
 
-  while (p < end)
+static inline char *
+find_utf8_field_terminator (char const *buf, idx_t len, bool *is_delim)
+{
+  char *line_end = memchr ((void *) buf, line_delim, len);
+  idx_t line_len = line_end ? line_end - buf : len;
+  char *field_end = find_utf8_field_delim (buf, line_len);
+
+  if (field_end)
     {
-      char const *nul = memchr (p, '\0', end - p);
-      if (!nul)
-        return (char *) strstr (p, delim_bytes);
-
-      if (p < nul)
-        {
-          char *match = strstr (p, delim_bytes);
-          if (match)
-            return match;
-        }
-
-      p = nul + 1;
+      *is_delim = true;
+      return field_end;
     }
 
-  return NULL;
-#endif
+  *is_delim = false;
+  return line_end;
+}
+
+static inline bool
+begin_utf8_field (uintmax_t field_idx, bool buffer_first_field,
+                  bool *found_any_selected_field)
+{
+  bool write_field = print_kth (field_idx);
+
+  if (write_field && ! (field_idx == 1 && buffer_first_field))
+    {
+      if (*found_any_selected_field)
+        write_bytes (output_delimiter_string, output_delimiter_length);
+      *found_any_selected_field = true;
+    }
+
+  return write_field;
 }
 
 static inline void
@@ -704,7 +715,7 @@ cut_fields_mb_any (FILE *stream, bool whitespace_mode)
     {
       if (field_idx == 1 && buffer_first_field)
         {
-          size_t n_bytes = 0;
+          idx_t n_bytes = 0;
           enum field_terminator terminator
             = scan_mb_field (&mbbuf, &parser, &have_pending_line, false,
                              &n_bytes);
@@ -781,60 +792,117 @@ cut_fields_mb (FILE *stream)
 static void
 cut_fields_mb_utf8 (FILE *stream)
 {
+  static char line_in[IO_BUFSIZE];
+  mbbuf_t mbbuf;
+  bool buffer_first_field;
+  uintmax_t field_idx = 1;
+  bool found_any_selected_field = false;
+  bool have_pending_line = false;
+  bool write_field;
+  idx_t field_1_n_bytes = 0;
+  idx_t overlap = delim_length - 1;
+
+  current_rp = frp;
+  buffer_first_field = suppress_non_delimited ^ !print_kth (1);
+  mbbuf_init (&mbbuf, line_in, sizeof line_in, stream);
+  write_field = begin_utf8_field (field_idx, buffer_first_field,
+                                  &found_any_selected_field);
+
   while (true)
     {
-      size_t line_bufsize_s = line_bufsize;
-      ssize_t len = getndelim2 (&line_buffer, &line_bufsize_s, 0,
-                                GETNLINE_NO_LIMIT, line_delim, EOF, stream);
-      line_bufsize = line_bufsize_s;
+      idx_t safe = mbbuf_utf8_safe_prefix (&mbbuf, overlap);
+      idx_t processed = 0;
 
-      if (len < 0)
-        return;
-
-      size_t n_bytes = len;
-      bool have_line_delim = 0 < n_bytes && line_buffer[n_bytes - 1] == line_delim;
-      size_t data_len = n_bytes - have_line_delim;
-      char *field_start = line_buffer;
-      char *field_end = find_utf8_field_delim (field_start, data_len);
-
-      if (!field_end)
+      if (safe == 0)
         {
-          if (!suppress_non_delimited)
-            {
-              write_bytes (line_buffer, data_len);
-              write_line_delim ();
-            }
+          if (mbbuf_avail (&mbbuf) == 0)
+            break;
           continue;
         }
 
-      uintmax_t field_idx = 1;
-      bool found_any_selected_field = false;
-      current_rp = frp;
+      char *chunk = mbbuf.buffer + mbbuf.offset;
 
-      while (true)
+      while (processed < safe)
         {
-          size_t field_len = (field_end
-                              ? field_end - field_start
-                              : line_buffer + data_len - field_start);
+          bool is_delim = false;
+          char *terminator
+            = find_utf8_field_terminator (chunk + processed, safe - processed,
+                                          &is_delim);
+          idx_t field_len = terminator ? terminator - (chunk + processed)
+                                       : safe - processed;
 
-          if (print_kth (field_idx))
-            {
-              if (found_any_selected_field)
-                write_bytes (output_delimiter_string, output_delimiter_length);
-              write_bytes (field_start, field_len);
-              found_any_selected_field = true;
-            }
+          if (field_len != 0 || terminator)
+            have_pending_line = true;
 
-          if (!field_end)
+          if (field_idx == 1 && buffer_first_field)
+            append_field_1_chunk (chunk + processed, field_len,
+                                  &field_1_n_bytes);
+          else if (write_field)
+            write_bytes (chunk + processed, field_len);
+          processed += field_len;
+
+          if (!terminator)
             break;
 
-          next_item (&field_idx);
-          field_start = field_end + delim_length;
-          field_end = find_utf8_field_delim (field_start,
-                                             line_buffer + data_len
-                                             - field_start);
+          if (is_delim)
+            {
+              if (field_idx == 1 && buffer_first_field)
+                {
+                  if (print_kth (1))
+                    {
+                      write_bytes (field_1_buffer, field_1_n_bytes);
+                      found_any_selected_field = true;
+                    }
+                  field_1_n_bytes = 0;
+                }
+
+              processed += delim_length;
+              next_item (&field_idx);
+              write_field = begin_utf8_field (field_idx, buffer_first_field,
+                                              &found_any_selected_field);
+            }
+          else
+            {
+              processed++;
+
+              if (field_idx == 1 && buffer_first_field)
+                {
+                  if (!suppress_non_delimited)
+                    {
+                      write_bytes (field_1_buffer, field_1_n_bytes);
+                      write_line_delim ();
+                    }
+                  field_1_n_bytes = 0;
+                }
+              else if (found_any_selected_field
+                       || !(suppress_non_delimited && field_idx == 1))
+                write_line_delim ();
+
+              field_idx = 1;
+              current_rp = frp;
+              found_any_selected_field = false;
+              have_pending_line = false;
+              write_field = begin_utf8_field (field_idx, buffer_first_field,
+                                              &found_any_selected_field);
+            }
         }
 
+      mbbuf_advance (&mbbuf, processed);
+    }
+
+  if (!have_pending_line)
+    return;
+
+  if (field_idx == 1 && buffer_first_field)
+    {
+      if (field_1_n_bytes != 0 && !suppress_non_delimited)
+        {
+          write_bytes (field_1_buffer, field_1_n_bytes);
+          write_line_delim ();
+        }
+    }
+  else if (field_idx != 1 || found_any_selected_field)
+    {
       if (found_any_selected_field
           || !(suppress_non_delimited && field_idx == 1))
         write_line_delim ();
