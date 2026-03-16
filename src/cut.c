@@ -122,6 +122,12 @@ static bool trim_outer_whitespace;
 /* If true, default the output delimiter to a single space.  */
 static bool space_output_delimiter_default;
 
+/* Buffer for record-oriented UTF-8 field splitting.  */
+static char *line_buffer;
+
+/* The number of bytes allocated for LINE_BUFFER.  */
+static idx_t line_bufsize;
+
 enum whitespace_option
 {
   WHITESPACE_OPTION_TRIMMED
@@ -291,6 +297,26 @@ single_byte_field_delim_ok (void)
 {
   return delim_length == 1
          && (MB_CUR_MAX <= 1 || to_uchar (delim_bytes[0]) < 0x30);
+}
+
+/* Return true if the current charset is UTF-8.  */
+static bool
+is_utf8_charset (void)
+{
+  static int is_utf8 = -1;
+  if (is_utf8 == -1)
+    {
+      char32_t w;
+      mbstate_t mbs = {0};
+      is_utf8 = mbrtoc32 (&w, "\xe2\x9f\xb8", 3, &mbs) == 3 && w == 0x27F8;
+    }
+  return is_utf8;
+}
+
+static inline bool
+utf8_field_delim_ok (void)
+{
+  return ! delim_mcel.err && is_utf8_charset ();
 }
 
 static inline bool
@@ -469,6 +495,44 @@ scan_mb_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
       else if (write_field)
         write_bytes (mbbuf_char_offset (mbbuf, g), g.len);
     }
+}
+
+/* Return a pointer to the next field delimiter in the UTF-8 record BUF,
+   searching LEN bytes.  Return NULL if none is found.  DELIM_BYTES must
+   represent a valid UTF-8 character.
+   Like mbsmbchr() in numfmt but handles NUL bytes.  */
+ATTRIBUTE_PURE
+static char *
+find_utf8_field_delim (char const *buf, size_t len)
+{
+  unsigned char delim_0 = delim_bytes[0];
+  if (delim_0 < 0x80)
+    return memchr ((void *) buf, delim_0, len);
+
+#if MEMMEM_IS_FASTER /* Surprisingly not on glibc-2.42  */
+  return memmem (buf, len, delim_bytes, delim_length);
+#else
+  char const *p = buf;
+  char const *end = buf + len;
+
+  while (p < end)
+    {
+      char const *nul = memchr (p, '\0', end - p);
+      if (!nul)
+        return (char *) strstr (p, delim_bytes);
+
+      if (p < nul)
+        {
+          char *match = strstr (p, delim_bytes);
+          if (match)
+            return match;
+        }
+
+      p = nul + 1;
+    }
+
+  return NULL;
+#endif
 }
 
 static inline void
@@ -709,6 +773,72 @@ static void
 cut_fields_mb (FILE *stream)
 {
   cut_fields_mb_any (stream, false);
+}
+
+/* Read from STREAM, printing to standard output any selected fields,
+   using UTF-8-aware byte searches for the field delimiter.  */
+
+static void
+cut_fields_mb_utf8 (FILE *stream)
+{
+  while (true)
+    {
+      size_t line_bufsize_s = line_bufsize;
+      ssize_t len = getndelim2 (&line_buffer, &line_bufsize_s, 0,
+                                GETNLINE_NO_LIMIT, line_delim, EOF, stream);
+      line_bufsize = line_bufsize_s;
+
+      if (len < 0)
+        return;
+
+      size_t n_bytes = len;
+      bool have_line_delim = 0 < n_bytes && line_buffer[n_bytes - 1] == line_delim;
+      size_t data_len = n_bytes - have_line_delim;
+      char *field_start = line_buffer;
+      char *field_end = find_utf8_field_delim (field_start, data_len);
+
+      if (!field_end)
+        {
+          if (!suppress_non_delimited)
+            {
+              write_bytes (line_buffer, data_len);
+              write_line_delim ();
+            }
+          continue;
+        }
+
+      uintmax_t field_idx = 1;
+      bool found_any_selected_field = false;
+      current_rp = frp;
+
+      while (true)
+        {
+          size_t field_len = (field_end
+                              ? field_end - field_start
+                              : line_buffer + data_len - field_start);
+
+          if (print_kth (field_idx))
+            {
+              if (found_any_selected_field)
+                write_bytes (output_delimiter_string, output_delimiter_length);
+              write_bytes (field_start, field_len);
+              found_any_selected_field = true;
+            }
+
+          if (!field_end)
+            break;
+
+          next_item (&field_idx);
+          field_start = field_end + delim_length;
+          field_end = find_utf8_field_delim (field_start,
+                                             line_buffer + data_len
+                                             - field_start);
+        }
+
+      if (found_any_selected_field
+          || !(suppress_non_delimited && field_idx == 1))
+        write_line_delim ();
+    }
 }
 
 /* Read from STREAM, printing to standard output any selected fields,
@@ -1098,6 +1228,7 @@ main (int argc, char **argv)
     case CUT_MODE_FIELDS:
       cut_stream = whitespace_delimited ? cut_fields_ws
                    : single_byte_field_delim_ok () ? cut_fields
+                   : utf8_field_delim_ok () ? cut_fields_mb_utf8
                    : cut_fields_mb;
       break;
     }
