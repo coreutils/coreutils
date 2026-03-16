@@ -287,10 +287,9 @@ is_range_start_index (uintmax_t k)
 }
 
 static inline bool
-single_byte_field_delim_ok (void)
+field_delim_is_line_delim (void)
 {
-  return delim_length == 1
-         && (MB_CUR_MAX <= 1 || to_uchar (delim_bytes[0]) < 0x30);
+  return delim_length == 1 && delim_bytes[0] == line_delim;
 }
 
 /* Return true if the current charset is UTF-8.  */
@@ -311,6 +310,15 @@ static inline bool
 utf8_field_delim_ok (void)
 {
   return ! delim_mcel.err && is_utf8_charset ();
+}
+
+static inline bool
+bytesearch_field_delim_ok (void)
+{
+  return ! field_delim_is_line_delim ()
+         && (delim_length == 1
+             ? MB_CUR_MAX <= 1 || to_uchar (delim_bytes[0]) < 0x30
+             : utf8_field_delim_ok ());
 }
 
 static inline bool
@@ -497,13 +505,13 @@ scan_mb_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
     }
 }
 
-/* Return a pointer to the next field delimiter in the UTF-8 record BUF,
-   searching LEN bytes.  Return NULL if none is found.  DELIM_BYTES must
+/* Return a pointer to the next field delimiter in BUF, searching LEN bytes.
+   Return NULL if none is found.  DELIM_BYTES must be a single byte or
    represent a valid UTF-8 character.  BUF can contain invalid/NUL bytes,
-   but must be NUL terminated.  */
+   and must have room for a trailing NUL byte at BUF[LEN].  */
 ATTRIBUTE_PURE
 static char *
-find_utf8_field_delim (char *buf, size_t len)
+find_bytesearch_field_delim (char *buf, size_t len)
 {
 #if ! __GLIBC__  /* Only S390 has optimized memmem on glibc-2.42  */
   return memmem (buf, len, delim_bytes, delim_length);
@@ -547,11 +555,11 @@ find_utf8_field_delim (char *buf, size_t len)
 }
 
 static inline char *
-find_utf8_field_terminator (char *buf, idx_t len, bool *is_delim)
+find_bytesearch_field_terminator (char *buf, idx_t len, bool *is_delim)
 {
   char *line_end = memchr ((void *) buf, line_delim, len);
   idx_t line_len = line_end ? line_end - buf : len;
-  char *field_end = find_utf8_field_delim (buf, line_len);
+  char *field_end = find_bytesearch_field_delim (buf, line_len);
 
   if (field_end)
     {
@@ -564,8 +572,8 @@ find_utf8_field_terminator (char *buf, idx_t len, bool *is_delim)
 }
 
 static inline bool
-begin_utf8_field (uintmax_t field_idx, bool buffer_first_field,
-                  bool *found_any_selected_field)
+begin_field_output (uintmax_t field_idx, bool buffer_first_field,
+                    bool *found_any_selected_field)
 {
   bool write_field = print_kth (field_idx);
 
@@ -577,6 +585,19 @@ begin_utf8_field (uintmax_t field_idx, bool buffer_first_field,
     }
 
   return write_field;
+}
+
+static inline idx_t
+bytesearch_safe_prefix (mbbuf_t *mbbuf, idx_t overlap)
+{
+  idx_t available = mbbuf_fill (mbbuf, overlap + 1);
+  if (available == 0)
+    return 0;
+
+  if (feof (mbbuf->fp))
+    return available;
+
+  return overlap < available ? available - overlap : 0;
 }
 
 static inline void
@@ -780,14 +801,8 @@ cut_fields_mb_any (FILE *stream, bool whitespace_mode)
         }
 
       enum field_terminator terminator;
-      bool write_field = print_kth (field_idx);
-
-      if (write_field)
-        {
-          if (found_any_selected_field)
-            write_bytes (output_delimiter_string, output_delimiter_length);
-          found_any_selected_field = true;
-        }
+      bool write_field = begin_field_output (field_idx, buffer_first_field,
+                                             &found_any_selected_field);
 
       terminator = scan_mb_field (&mbbuf, &parser, &have_pending_line,
                                   write_field, NULL);
@@ -820,10 +835,10 @@ cut_fields_mb (FILE *stream)
 }
 
 /* Read from STREAM, printing to standard output any selected fields,
-   using UTF-8-aware byte searches for the field delimiter.  */
+   using byte searches for a single-byte or valid UTF-8 field delimiter.  */
 
 static void
-cut_fields_mb_utf8 (FILE *stream)
+cut_fields_bytesearch (FILE *stream)
 {
   /* Leave 1 byte unused so space to NUL terminate (for strstr).  */
   static char line_in[IO_BUFSIZE+1];
@@ -839,12 +854,12 @@ cut_fields_mb_utf8 (FILE *stream)
   current_rp = frp;
   buffer_first_field = suppress_non_delimited ^ !print_kth (1);
   mbbuf_init (&mbbuf, line_in, sizeof line_in - 1, stream);
-  write_field = begin_utf8_field (field_idx, buffer_first_field,
-                                  &found_any_selected_field);
+  write_field = begin_field_output (field_idx, buffer_first_field,
+                                    &found_any_selected_field);
 
   while (true)
     {
-      idx_t safe = mbbuf_utf8_safe_prefix (&mbbuf, overlap);
+      idx_t safe = bytesearch_safe_prefix (&mbbuf, overlap);
       idx_t processed = 0;
 
       if (safe == 0)
@@ -860,8 +875,8 @@ cut_fields_mb_utf8 (FILE *stream)
         {
           bool is_delim = false;
           char *terminator
-            = find_utf8_field_terminator (chunk + processed, safe - processed,
-                                          &is_delim);
+            = find_bytesearch_field_terminator (chunk + processed,
+                                                safe - processed, &is_delim);
           idx_t field_len = terminator ? terminator - (chunk + processed)
                                        : safe - processed;
 
@@ -892,8 +907,8 @@ cut_fields_mb_utf8 (FILE *stream)
 
               processed += delim_length;
               next_item (&field_idx);
-              write_field = begin_utf8_field (field_idx, buffer_first_field,
-                                              &found_any_selected_field);
+              write_field = begin_field_output (field_idx, buffer_first_field,
+                                                &found_any_selected_field);
             }
           else
             {
@@ -916,8 +931,8 @@ cut_fields_mb_utf8 (FILE *stream)
               current_rp = frp;
               found_any_selected_field = false;
               have_pending_line = false;
-              write_field = begin_utf8_field (field_idx, buffer_first_field,
-                                              &found_any_selected_field);
+              write_field = begin_field_output (field_idx, buffer_first_field,
+                                                &found_any_selected_field);
             }
         }
 
@@ -952,10 +967,11 @@ cut_fields_ws (FILE *stream)
   cut_fields_mb_any (stream, true);
 }
 
-/* Read from stream STREAM, printing to standard output any selected fields.  */
+/* Read from stream STREAM, printing to standard output any selected fields,
+   using the line delimiter as the field delimiter.  */
 
 static void
-cut_fields (FILE *stream)
+cut_fields_line_delim (FILE *stream)
 {
   int c;	/* Each character from the file.  */
   uintmax_t field_idx = 1;
@@ -1329,8 +1345,8 @@ main (int argc, char **argv)
 
     case CUT_MODE_FIELDS:
       cut_stream = whitespace_delimited ? cut_fields_ws
-                   : single_byte_field_delim_ok () ? cut_fields
-                   : utf8_field_delim_ok () ? cut_fields_mb_utf8
+                   : field_delim_is_line_delim () ? cut_fields_line_delim
+                   : bytesearch_field_delim_ok () ? cut_fields_bytesearch
                    : cut_fields_mb;
       break;
     }
