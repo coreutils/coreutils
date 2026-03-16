@@ -499,22 +499,55 @@ scan_mb_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
 
 /* Return a pointer to the next field delimiter in the UTF-8 record BUF,
    searching LEN bytes.  Return NULL if none is found.  DELIM_BYTES must
-   represent a valid UTF-8 character.
-   Like mbsmbchr() in numfmt but handles NUL bytes.  */
+   represent a valid UTF-8 character.  BUF can contain invalid/NUL bytes,
+   but must be NUL terminated.  */
 ATTRIBUTE_PURE
 static char *
-find_utf8_field_delim (char const *buf, size_t len)
+find_utf8_field_delim (char *buf, size_t len)
 {
-#if 0
+#if ! __GLIBC__  /* Only S390 has optimized memmem on glibc-2.42  */
+  return memmem (buf, len, delim_bytes, delim_length);
+#else
   unsigned char delim_0 = delim_bytes[0];
   if (delim_0 < 0x80)
     return memchr ((void *) buf, delim_0, len);
+
+  char const *p = buf;
+  char const *end = buf + len;
+
+  char saved = buf[len];
+  buf[len] = '\0'; /* for strstr.  */
+
+  while (p < end)
+    {
+      char const *nul = memchr (p, '\0', end - p);
+      if (!nul)
+        {
+          char *match = strstr (p, delim_bytes);
+          buf[len] = saved;
+          return match;
+        }
+
+      if (p < nul)
+        {
+          char *match = strstr (p, delim_bytes);
+          if (match)
+            {
+              buf[len] = saved;
+              return match;
+            }
+        }
+
+      p = nul + 1;
+    }
+
+  buf[len] = saved;
+  return NULL;
 #endif
-  return memmem (buf, len, delim_bytes, delim_length);
 }
 
 static inline char *
-find_utf8_field_terminator (char const *buf, idx_t len, bool *is_delim)
+find_utf8_field_terminator (char *buf, idx_t len, bool *is_delim)
 {
   char *line_end = memchr ((void *) buf, line_delim, len);
   idx_t line_len = line_end ? line_end - buf : len;
@@ -792,7 +825,8 @@ cut_fields_mb (FILE *stream)
 static void
 cut_fields_mb_utf8 (FILE *stream)
 {
-  static char line_in[IO_BUFSIZE];
+  /* Leave 1 byte unused so space to NUL terminate (for strstr).  */
+  static char line_in[IO_BUFSIZE+1];
   mbbuf_t mbbuf;
   bool buffer_first_field;
   uintmax_t field_idx = 1;
@@ -804,7 +838,7 @@ cut_fields_mb_utf8 (FILE *stream)
 
   current_rp = frp;
   buffer_first_field = suppress_non_delimited ^ !print_kth (1);
-  mbbuf_init (&mbbuf, line_in, sizeof line_in, stream);
+  mbbuf_init (&mbbuf, line_in, sizeof line_in - 1, stream);
   write_field = begin_utf8_field (field_idx, buffer_first_field,
                                   &found_any_selected_field);
 
