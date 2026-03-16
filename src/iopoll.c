@@ -219,7 +219,6 @@ write_wait (int fd, void const *buffer, size_t size)
         written = 0;
 
       size -= written;
-      affirm (size >= 0);
       if (size <= 0)  /* everything written */
         return true;
 
