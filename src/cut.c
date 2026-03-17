@@ -315,8 +315,11 @@ utf8_field_delim_ok (void)
 static inline bool
 bytesearch_field_delim_ok (void)
 {
+  unsigned char delim_0 = delim_bytes[0];
+
   return (delim_length == 1
-          ? MB_CUR_MAX <= 1 || to_uchar (delim_bytes[0]) < 0x30
+          ? (MB_CUR_MAX <= 1
+             || (is_utf8_charset () ? delim_0 < 0x80 : delim_0 < 0x30))
           : utf8_field_delim_ok ());
 }
 
