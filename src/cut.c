@@ -315,10 +315,9 @@ utf8_field_delim_ok (void)
 static inline bool
 bytesearch_field_delim_ok (void)
 {
-  return ! field_delim_is_line_delim ()
-         && (delim_length == 1
-             ? MB_CUR_MAX <= 1 || to_uchar (delim_bytes[0]) < 0x30
-             : utf8_field_delim_ok ());
+  return (delim_length == 1
+          ? MB_CUR_MAX <= 1 || to_uchar (delim_bytes[0]) < 0x30
+          : utf8_field_delim_ok ());
 }
 
 static inline bool
@@ -332,6 +331,7 @@ enum field_terminator
   FIELD_DATA,
   FIELD_DELIMITER,
   FIELD_LINE_DELIMITER,
+  FIELD_FINAL_DELIMITER,
   FIELD_EOF
 };
 
@@ -554,21 +554,33 @@ find_bytesearch_field_delim (char *buf, size_t len)
 #endif
 }
 
-static inline char *
-find_bytesearch_field_terminator (char *buf, idx_t len, bool *is_delim)
+static inline enum field_terminator
+find_bytesearch_field_terminator (char *buf, idx_t len, bool at_eof,
+                                  char **terminator)
 {
+  if (field_delim_is_line_delim ())
+    {
+      *terminator = memchr ((void *) buf, line_delim, len);
+      if (!*terminator)
+        return FIELD_DATA;
+
+      return (at_eof && *terminator + 1 == buf + len
+              ? FIELD_FINAL_DELIMITER
+              : FIELD_DELIMITER);
+    }
+
   char *line_end = memchr ((void *) buf, line_delim, len);
   idx_t line_len = line_end ? line_end - buf : len;
   char *field_end = find_bytesearch_field_delim (buf, line_len);
 
   if (field_end)
     {
-      *is_delim = true;
-      return field_end;
+      *terminator = field_end;
+      return FIELD_DELIMITER;
     }
 
-  *is_delim = false;
-  return line_end;
+  *terminator = line_end;
+  return line_end ? FIELD_LINE_DELIMITER : FIELD_DATA;
 }
 
 static inline bool
@@ -873,10 +885,12 @@ cut_fields_bytesearch (FILE *stream)
 
       while (processed < safe)
         {
-          bool is_delim = false;
-          char *terminator
+          enum field_terminator terminator_kind;
+          char *terminator = NULL;
+          terminator_kind
             = find_bytesearch_field_terminator (chunk + processed,
-                                                safe - processed, &is_delim);
+                                                safe - processed,
+                                                feof (mbbuf.fp), &terminator);
           idx_t field_len = terminator ? terminator - (chunk + processed)
                                        : safe - processed;
 
@@ -890,10 +904,10 @@ cut_fields_bytesearch (FILE *stream)
             write_bytes (chunk + processed, field_len);
           processed += field_len;
 
-          if (!terminator)
+          if (terminator_kind == FIELD_DATA)
             break;
 
-          if (is_delim)
+          if (terminator_kind == FIELD_DELIMITER)
             {
               if (field_idx == 1 && buffer_first_field)
                 {
@@ -910,7 +924,7 @@ cut_fields_bytesearch (FILE *stream)
               write_field = begin_field_output (field_idx, buffer_first_field,
                                                 &found_any_selected_field);
             }
-          else
+          else if (terminator_kind == FIELD_LINE_DELIMITER)
             {
               processed++;
 
@@ -933,6 +947,26 @@ cut_fields_bytesearch (FILE *stream)
               have_pending_line = false;
               write_field = begin_field_output (field_idx, buffer_first_field,
                                                 &found_any_selected_field);
+            }
+          else
+            {
+              affirm (terminator_kind == FIELD_FINAL_DELIMITER);
+              processed++;
+
+              if (field_idx == 1 && buffer_first_field)
+                {
+                  if (print_kth (1))
+                    write_bytes (field_1_buffer, field_1_n_bytes);
+                  field_1_n_bytes = 0;
+                  next_item (&field_idx);
+                }
+
+              if (found_any_selected_field
+                  || !(suppress_non_delimited && field_idx == 1))
+                write_line_delim ();
+
+              mbbuf_advance (&mbbuf, processed);
+              return;
             }
         }
 
@@ -965,159 +999,6 @@ static void
 cut_fields_ws (FILE *stream)
 {
   cut_fields_mb_any (stream, true);
-}
-
-/* Read from stream STREAM, printing to standard output any selected fields,
-   using the line delimiter as the field delimiter.  */
-
-static void
-cut_fields_line_delim (FILE *stream)
-{
-  int c;	/* Each character from the file.  */
-  uintmax_t field_idx = 1;
-  bool found_any_selected_field = false;
-  bool buffer_first_field;
-
-  current_rp = frp;
-
-  c = getc (stream);
-  if (c == EOF)
-    return;
-
-  ungetc (c, stream);
-  c = 0;
-
-  /* To support the semantics of the -s flag, we may have to buffer
-     all of the first field to determine whether it is 'delimited.'
-     But that is unnecessary if all non-delimited lines must be printed
-     and the first field has been selected, or if non-delimited lines
-     must be suppressed and the first field has *not* been selected.
-     That is because a non-delimited line has exactly one field.  */
-  buffer_first_field = (suppress_non_delimited ^ !print_kth (1));
-
-  while (true)
-    {
-      if (field_idx == 1 && buffer_first_field)
-        {
-          ssize_t len;
-          size_t n_bytes;
-          size_t field_1_bufsize_s = field_1_bufsize;
-
-          len = getndelim2 (&field_1_buffer, &field_1_bufsize_s, 0,
-                            GETNLINE_NO_LIMIT, delim, line_delim, stream);
-          field_1_bufsize = field_1_bufsize_s;
-          if (len < 0)
-            {
-              free (field_1_buffer);
-              field_1_buffer = NULL;
-              field_1_bufsize = 0;
-              if (ferror (stream) || feof (stream))
-                break;
-              xalloc_die ();
-            }
-
-          n_bytes = len;
-          affirm (n_bytes != 0);
-
-          c = 0;
-
-          /* If the first field extends to the end of line (it is not
-             delimited) and we are printing all non-delimited lines,
-             print this one.  */
-          if (to_uchar (field_1_buffer[n_bytes - 1]) != delim)
-            {
-              if (suppress_non_delimited)
-                {
-                  /* Empty.  */
-                }
-              else
-                {
-                  write_bytes (field_1_buffer, n_bytes);
-                  /* Make sure the output line is newline terminated. */
-                  if (field_1_buffer[n_bytes - 1] != line_delim)
-                    {
-                      if (putchar (line_delim) < 0)
-                        write_error ();
-                    }
-                  c = line_delim;
-                }
-              continue;
-            }
-
-          if (print_kth (1))
-            {
-              /* Print the field, but not the trailing delimiter.  */
-              write_bytes (field_1_buffer, n_bytes - 1);
-
-              /* With -d$'\n' don't treat the last '\n' as a delim.  */
-              if (delim == line_delim)
-                {
-                  int last_c = getc (stream);
-                  if (last_c != EOF)
-                    {
-                      ungetc (last_c, stream);
-                      found_any_selected_field = true;
-                    }
-                }
-              else
-                {
-                  found_any_selected_field = true;
-                }
-            }
-          next_item (&field_idx);
-        }
-
-      int prev_c = c;
-      bool write_field = print_kth (field_idx);
-
-      if (write_field)
-        {
-          if (found_any_selected_field)
-            write_bytes (output_delimiter_string, output_delimiter_length);
-          found_any_selected_field = true;
-        }
-
-      while ((c = getc (stream)) != delim && c != line_delim && c != EOF)
-        {
-          if (write_field && putchar (c) < 0)
-            write_error ();
-          prev_c = c;
-        }
-
-      /* With -d$'\n' don't treat the last '\n' as a delimiter.  */
-      if (delim == line_delim && c == delim)
-        {
-          int last_c = getc (stream);
-          if (last_c != EOF)
-            ungetc (last_c, stream);
-          else
-            c = last_c;
-        }
-
-      if (c == delim)
-        next_item (&field_idx);
-      else if (c == line_delim || c == EOF)
-        {
-          if (found_any_selected_field
-              || !(suppress_non_delimited && field_idx == 1))
-            {
-              /* Make sure the output line is newline terminated.  */
-              if (c == line_delim || prev_c != line_delim
-                  || delim == line_delim)
-                {
-                  if (putchar (line_delim) < 0)
-                    write_error ();
-                }
-            }
-          if (c == EOF)
-            break;
-
-          /* Start processing the next input line.  */
-          field_idx = 1;
-          current_rp = frp;
-          found_any_selected_field = false;
-        }
-    }
 }
 
 /* Process file FILE to standard output, using CUT_STREAM.
@@ -1345,7 +1226,6 @@ main (int argc, char **argv)
 
     case CUT_MODE_FIELDS:
       cut_stream = whitespace_delimited ? cut_fields_ws
-                   : field_delim_is_line_delim () ? cut_fields_line_delim
                    : bytesearch_field_delim_ok () ? cut_fields_bytesearch
                    : cut_fields_mb;
       break;

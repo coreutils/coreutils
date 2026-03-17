@@ -176,6 +176,8 @@ my @Tests =
   ['newline-22', "-d'\n'", '-f1-', {IN=>"\nb"}, {OUT=>"\nb\n"}],
   ['newline-23', "-d'\n'", '-f1-', '--ou=:', {IN=>"a\nb\n"}, {OUT=>"a:b\n"}],
   ['newline-24', "-d'\n'", '-f1,2', '--ou=:', {IN=>"a\nb\n"}, {OUT=>"a:b\n"}],
+  ['newline-26', "-d'\n'", '-f2', {IN=>"a\n"}, {OUT=>"\n"}],
+  ['newline-27', '-s', "-d'\n'", '-f2', {IN=>"a\n"}, {OUT=>""}],
 
   # input without delimiter and -s flag
   ['newline-25', '-s', "-d'\n'", '-f1', {IN=>"abc"}, {OUT=>""}],
