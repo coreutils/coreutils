@@ -91,4 +91,11 @@ if ln file1 hardlink1 && ln file2 hardlink2; then
   returns_ 1 env test hardlink2 -ef hardlink1 || fail=1
 fi
 
+# Check that executable file descriptors are detected
+test -e /proc/self/fd/3 && env test -x /proc/self/fd/3 3<$(command -v env) || fail=1
+test -e /dev/stdin && env test -x /dev/stdin <$(command -v env) || fail=1
+
+# Check that size of stdin is detected
+returns_ 1 env test -s /dev/stdin && env test -s /dev/stdin <$(command -v env)  || fail=1
+
 Exit $fail
