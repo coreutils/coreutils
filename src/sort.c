@@ -51,6 +51,7 @@
 #include "stdlib--.h"
 #include "strnumcmp.h"
 #include "term-sig.h"
+#include "unistd--.h"
 #include "xmemcoll.h"
 #include "xnanosleep.h"
 #include "xstrtol.h"

@@ -40,6 +40,7 @@
 #include "sig2str.h"
 #include "sys-limits.h"
 #include "temp-stream.h"
+#include "unistd--.h"
 #include "xbinary-io.h"
 #include "xdectoint.h"
 #include "xstrtol.h"

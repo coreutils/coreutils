@@ -27,6 +27,7 @@
 #include "full-write.h"
 #include "isapipe.h"
 #include "long-options.h"
+#include "unistd--.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "yes"

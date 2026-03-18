@@ -603,6 +603,19 @@ sc_require_stdlib_safer:
 	else :;								\
 	fi
 
+# Ensure that "unistd--.h" is used where appropriate.
+sc_require_unistd_safer:
+	@if $(VC_LIST_EXCEPT) | grep -l '\.[ch]$$' > /dev/null; then	\
+	  files=$$(grep -El '$(begword)(pipe2?|dup[23]?) ?\('		\
+		   $$($(VC_LIST_EXCEPT)					\
+	      | grep '\.[ch]$$'));					\
+	  test -n "$$files" && grep -LE 'include "unistd--.h"' $$files	\
+	      | grep . &&						\
+	  { echo '$(ME): the above files should use "unistd--.h"'	\
+		1>&2; exit 1; } || :;					\
+	else :;								\
+	fi
+
 sc_prohibit_perl_hash_quotes:
 	@prohibit="\{'[A-Z_]+' *[=}]"					\
 	halt="in Perl code, write \$$hash{KEY}, not \$$hash{'K''EY'}"	\
