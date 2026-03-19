@@ -158,6 +158,10 @@ my @Tests =
 
   # Up to coreutils-6.9, this would provoke a failed assertion.
   ['no-abort-1', qw(-c a '[b*256]'), {IN=>'abc'}, {OUT=>'abb'}],
+
+  # Reject unknown character class name.
+  ['invalid-class', qw('[:fooclass:]' x), {IN=>'abc'}, {OUT=>''}, {EXIT=>1},
+   {ERR=>"$prog: invalid character class 'fooclass'\n"}],
 );
 
 @Tests = triple_test \@Tests;
