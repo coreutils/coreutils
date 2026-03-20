@@ -659,6 +659,12 @@ bytesearch_safe_prefix (mbbuf_t *mbbuf, idx_t overlap)
   return overlap < available ? available - overlap : 0;
 }
 
+static inline bool
+field_selection_exhausted (uintmax_t field_idx)
+{
+  return !print_kth (field_idx) && current_rp->lo == UINTMAX_MAX;
+}
+
 static inline void
 reset_field_line (uintmax_t *field_idx, bool *found_any_selected_field,
                   bool *have_pending_line, struct mbfield_parser *parser)
@@ -906,6 +912,7 @@ cut_fields_bytesearch (FILE *stream)
   uintmax_t field_idx = 1;
   bool found_any_selected_field = false;
   bool have_pending_line = false;
+  bool skip_line_remainder = false;
   bool write_field;
   idx_t field_1_n_bytes = 0;
   idx_t overlap = delim_length - 1;
@@ -932,6 +939,39 @@ cut_fields_bytesearch (FILE *stream)
 
       while (processed < safe)
         {
+          if (skip_line_remainder)
+            {
+              char *line_end = memchr ((void *) (chunk + processed), line_delim,
+                                       safe - processed);
+              if (line_end)
+                {
+                  processed = line_end - chunk + 1;
+                  if (found_any_selected_field
+                      || !(suppress_non_delimited && field_idx == 1))
+                    write_line_delim ();
+                  field_idx = 1;
+                  current_rp = frp;
+                  found_any_selected_field = false;
+                  have_pending_line = false;
+                  skip_line_remainder = false;
+                  write_field = begin_field_output (field_idx,
+                                                    buffer_first_field,
+                                                    &found_any_selected_field);
+                  continue;
+                }
+
+              processed = safe;
+              if (feof (mbbuf.fp))
+                {
+                  if (found_any_selected_field
+                      || !(suppress_non_delimited && field_idx == 1))
+                    write_line_delim ();
+                  mbbuf_advance (&mbbuf, processed);
+                  return;
+                }
+              break;
+            }
+
           enum field_terminator terminator_kind;
           char *terminator = NULL;
           terminator_kind
@@ -970,6 +1010,19 @@ cut_fields_bytesearch (FILE *stream)
               next_item (&field_idx);
               write_field = begin_field_output (field_idx, buffer_first_field,
                                                 &found_any_selected_field);
+              if (field_selection_exhausted (field_idx))
+                {
+                  if (field_delim_is_line_delim ())
+                    {
+                      if (found_any_selected_field
+                          || !(suppress_non_delimited && field_idx == 1))
+                        write_line_delim ();
+                      mbbuf_advance (&mbbuf, processed);
+                      return;
+                    }
+
+                  skip_line_remainder = true;
+                }
             }
           else if (terminator_kind == FIELD_LINE_DELIMITER)
             {
