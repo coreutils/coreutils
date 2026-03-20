@@ -6220,11 +6220,6 @@ With @option{--bytes}, do not split multi-byte characters.
 A byte range must encompass the end of a multi-byte character
 for it to be selected.
 
-@optItem{cut,-s,}
-@optItemx{cut,--only-delimited,}
-For @option{-f}, do not print lines that do not contain the field separator
-character.  Normally, any line without a field separator is printed verbatim.
-
 @optItem{cut,-O,@w{ }@var{string}}
 @optItemx{cut,--output-delimiter,=@var{string}}
 With @option{-f}, output fields are separated by @var{string}.
@@ -6233,6 +6228,11 @@ When using @option{-b} or @option{-c} to select ranges of byte or
 character offsets (as opposed to ranges of fields),
 output @var{output_delim_string} between non-overlapping
 ranges of selected bytes.
+
+@optItem{cut,-s,}
+@optItemx{cut,--only-delimited,}
+For @option{-f}, do not print lines that do not contain the field separator
+character.  Normally, any line without a field separator is printed verbatim.
 
 @optItem{cut,-w,}
 @optItemx{cut,--whitespace-delimited,[=trimmed]}
