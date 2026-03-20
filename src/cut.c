@@ -31,10 +31,12 @@
 
 #include "argmatch.h"
 #include "assure.h"
+#include "c-ctype.h"
 #include "fadvise.h"
 #include "getndelim2.h"
 #include "ioblksize.h"
 #include "mbbuf.h"
+#include "memchr2.h"
 
 #include "set-fields.h"
 
@@ -347,6 +349,7 @@ enum bytesearch_mode
 struct bytesearch_context
 {
   enum bytesearch_mode mode;
+  bool blank_delimited;
   char *line_end;
   bool line_end_known;
 };
@@ -606,7 +609,9 @@ find_bytesearch_field_terminator (char *buf, idx_t len, bool at_eof,
 
   idx_t field_len = ctx->line_end ? ctx->line_end - buf : len;
 
-  char *field_end = find_bytesearch_field_delim (buf, field_len);
+  char *field_end = (ctx->blank_delimited
+                     ? memchr2 (buf, ' ', '\t', field_len)
+                     : find_bytesearch_field_delim (buf, field_len));
 
   if (field_end)
     {
@@ -901,9 +906,10 @@ cut_fields_bytesearch (FILE *stream)
   bool found_any_selected_field = false;
   bool have_pending_line = false;
   bool skip_line_remainder = false;
+  bool skip_blank_run = false;
   bool write_field;
   idx_t field_1_n_bytes = 0;
-  idx_t overlap = delim_length - 1;
+  idx_t overlap = whitespace_delimited ? 0 : delim_length - 1;
 
   current_rp = frp;
   buffer_first_field = suppress_non_delimited ^ !print_kth (1);
@@ -924,11 +930,26 @@ cut_fields_bytesearch (FILE *stream)
         }
 
       char *chunk = mbbuf.buffer + mbbuf.offset;
-      struct bytesearch_context search = { .mode = BYTESEARCH_FIELDS };
+      struct bytesearch_context search =
+        {
+          .mode = BYTESEARCH_FIELDS,
+          .blank_delimited = whitespace_delimited
+        };
 
       while (processed < safe)
         {
           char *terminator = NULL;
+
+          if (skip_blank_run)
+            {
+              while (processed < safe && c_isblank (chunk[processed]))
+                processed++;
+
+              if (processed == safe)
+                break;
+
+              skip_blank_run = false;
+            }
 
           if (skip_line_remainder)
             {
@@ -1005,7 +1026,7 @@ cut_fields_bytesearch (FILE *stream)
                   field_1_n_bytes = 0;
                 }
 
-              processed += delim_length;
+              processed += whitespace_delimited ? 1 : delim_length;
               next_item (&field_idx);
               write_field = begin_field_output (field_idx, buffer_first_field,
                                                 &found_any_selected_field);
@@ -1022,6 +1043,8 @@ cut_fields_bytesearch (FILE *stream)
 
                   skip_line_remainder = true;
                 }
+              else if (whitespace_delimited)
+                skip_blank_run = true;
             }
           else if (terminator_kind == FIELD_LINE_DELIMITER)
             {
@@ -1099,7 +1122,10 @@ cut_fields_bytesearch (FILE *stream)
 static void
 cut_fields_ws (FILE *stream)
 {
-  cut_fields_mb_any (stream, true);
+  if (MB_CUR_MAX <= 1 && !trim_outer_whitespace)
+    cut_fields_bytesearch (stream);
+  else
+    cut_fields_mb_any (stream, true);
 }
 
 /* Process file FILE to standard output, using CUT_STREAM.
