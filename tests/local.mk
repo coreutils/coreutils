@@ -680,6 +680,7 @@ all_tests =					\
   tests/ls/a-option.sh				\
   tests/ls/acl.sh				\
   tests/ls/abmon-align.sh			\
+  tests/ls/across-one-row.sh                    \
   tests/ls/birthtime.sh				\
   tests/ls/block-size.sh			\
   tests/ls/classify.sh				\
