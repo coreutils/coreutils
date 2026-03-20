@@ -37,6 +37,19 @@ my $no_endpoint = "$prog: invalid range with no endpoint: -\n$try";
 my $nofield = "$prog: an input delimiter makes sense\n\tonly when " .
               "operating on fields\n$try";
 my $mutual_dw = "$prog: -d and -w are mutually exclusive\n$try";
+my $single_char = "$prog: the delimiter must be a single character\n$try";
+my $single_byte_locale = 'C';
+
+{
+  my $codeset = qx(LC_ALL=C locale charmap 2>/dev/null);
+  chomp $codeset;
+  if ($codeset eq 'UTF-8')
+    {
+      my $fr_locale = $ENV{LOCALE_FR};
+      $single_byte_locale
+        = defined $fr_locale && $fr_locale ne 'none' ? $fr_locale : undef;
+    }
+}
 
 my @Tests =
  (
@@ -328,6 +341,12 @@ if ($mb_locale ne 'C')
       ['mb-w-delim-2', '-sw', '-f2', {IN=>"a\xc2\xa0b\n"}, {OUT=>""},
        {ENV => "LC_ALL=$mb_locale"}];
   }
+
+defined $single_byte_locale
+  and push @Tests,
+    ['mb-delim-C', '-d', "\xc3\xa9", '-f1',
+     {EXIT=>1}, {ERR=>$single_char},
+     {ENV => "LC_ALL=$single_byte_locale"}];
 
 
 @Tests = triple_test \@Tests;
