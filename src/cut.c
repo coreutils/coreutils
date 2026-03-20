@@ -34,6 +34,7 @@
 #include "fadvise.h"
 #include "getndelim2.h"
 #include "ioblksize.h"
+#include "memchr2.h"
 #include "mbbuf.h"
 
 #include "set-fields.h"
@@ -53,6 +54,10 @@
       usage (EXIT_FAILURE);						\
     }									\
   while (0)
+
+#ifndef BYTESEARCH_MEMCHR2_THRESHOLD
+# define BYTESEARCH_MEMCHR2_THRESHOLD 1024
+#endif
 
 
 /* Pointer inside RP.  When checking if a -b,-c,-f is selected
@@ -570,6 +575,45 @@ find_bytesearch_field_terminator (char *buf, idx_t len, bool at_eof,
       return (at_eof && *terminator + 1 == buf + len
               ? FIELD_FINAL_DELIMITER
               : FIELD_DELIMITER);
+    }
+
+  if (delim_length == 1)
+    {
+      /* On this platform, glibc's memchr beats gnulib's memchr2 on
+         short spans, while memchr2 wins once fields/lines get larger.
+         So first probe a short prefix with memchr, and only fall back
+         to memchr2 if that prefix contains neither byte.  */
+      idx_t probe = MIN (len, BYTESEARCH_MEMCHR2_THRESHOLD);
+      char *field_end = memchr ((void *) buf, delim, probe);
+      if (field_end)
+        {
+          char *line_end = memchr ((void *) buf, line_delim, field_end - buf);
+          if (line_end)
+            {
+              *terminator = line_end;
+              return FIELD_LINE_DELIMITER;
+            }
+
+          *terminator = field_end;
+          return FIELD_DELIMITER;
+        }
+
+      *terminator = memchr ((void *) buf, line_delim, probe);
+      if (*terminator)
+        return FIELD_LINE_DELIMITER;
+
+      if (probe < len)
+        {
+          *terminator = memchr2 (buf + probe, delim, line_delim, len - probe);
+          return (*terminator
+                  ? (to_uchar (**terminator) == line_delim
+                     ? FIELD_LINE_DELIMITER
+                     : FIELD_DELIMITER)
+                  : FIELD_DATA);
+        }
+
+      *terminator = NULL;
+      return *terminator ? FIELD_LINE_DELIMITER : FIELD_DATA;
     }
 
   char *line_end = memchr ((void *) buf, line_delim, len);
