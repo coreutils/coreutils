@@ -492,6 +492,7 @@ all_tests =					\
   tests/timeout/timeout-parameters.sh		\
   tests/tr/tr.pl				\
   tests/tr/tr-case-class.sh			\
+  tests/truncate/multiple-files.sh		\
   tests/truncate/truncate-dangling-symlink.sh	\
   tests/truncate/truncate-dir-fail.sh		\
   tests/truncate/truncate-fail-diag.sh		\
