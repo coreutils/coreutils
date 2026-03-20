@@ -343,6 +343,12 @@ enum field_terminator
   FIELD_EOF
 };
 
+enum bytesearch_mode
+{
+  BYTESEARCH_FIELDS,
+  BYTESEARCH_LINE_ONLY
+};
+
 struct mbfield_parser
 {
   bool whitespace_delimited;
@@ -564,8 +570,15 @@ find_bytesearch_field_delim (char *buf, size_t len)
 
 static inline enum field_terminator
 find_bytesearch_field_terminator (char *buf, idx_t len, bool at_eof,
+                                  enum bytesearch_mode mode,
                                   char **terminator)
 {
+  if (mode == BYTESEARCH_LINE_ONLY)
+    {
+      *terminator = memchr ((void *) buf, line_delim, len);
+      return *terminator ? FIELD_LINE_DELIMITER : FIELD_DATA;
+    }
+
   if (field_delim_is_line_delim ())
     {
       *terminator = memchr ((void *) buf, line_delim, len);
@@ -939,13 +952,19 @@ cut_fields_bytesearch (FILE *stream)
 
       while (processed < safe)
         {
+          char *terminator = NULL;
+
           if (skip_line_remainder)
             {
-              char *line_end = memchr ((void *) (chunk + processed), line_delim,
-                                       safe - processed);
-              if (line_end)
+              enum field_terminator terminator_kind
+                = find_bytesearch_field_terminator (chunk + processed,
+                                                    safe - processed,
+                                                    feof (mbbuf.fp),
+                                                    BYTESEARCH_LINE_ONLY,
+                                                    &terminator);
+              if (terminator_kind == FIELD_LINE_DELIMITER)
                 {
-                  processed = line_end - chunk + 1;
+                  processed = terminator - chunk + 1;
                   if (found_any_selected_field
                       || !(suppress_non_delimited && field_idx == 1))
                     write_line_delim ();
@@ -961,7 +980,7 @@ cut_fields_bytesearch (FILE *stream)
                 }
 
               processed = safe;
-              if (feof (mbbuf.fp))
+              if (terminator_kind == FIELD_DATA && feof (mbbuf.fp))
                 {
                   if (found_any_selected_field
                       || !(suppress_non_delimited && field_idx == 1))
@@ -973,11 +992,12 @@ cut_fields_bytesearch (FILE *stream)
             }
 
           enum field_terminator terminator_kind;
-          char *terminator = NULL;
           terminator_kind
             = find_bytesearch_field_terminator (chunk + processed,
                                                 safe - processed,
-                                                feof (mbbuf.fp), &terminator);
+                                                feof (mbbuf.fp),
+                                                BYTESEARCH_FIELDS,
+                                                &terminator);
           idx_t field_len = terminator ? terminator - (chunk + processed)
                                        : safe - processed;
 
