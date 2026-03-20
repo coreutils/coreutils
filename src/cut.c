@@ -230,8 +230,8 @@ Print selected parts of lines from each FILE to standard output.\n\
 "));
       oputs (_("\
   -w, --whitespace-delimited[=trimmed]\n\
-         use runs of whitespace as the field delimiter;\n\
-         with 'trimmed', ignore leading and trailing whitespace\n\
+         use a run of blank characters as the field delimiter;\n\
+         with 'trimmed', ignore leading and trailing blanks\n\
 "));
       oputs (_("\
   -z, --zero-terminated\n\

@@ -6234,6 +6234,13 @@ character offsets (as opposed to ranges of fields),
 output @var{output_delim_string} between non-overlapping
 ranges of selected bytes.
 
+@optItem{cut,-w,}
+@optItemx{cut,--whitespace-delimited,[=trimmed]}
+With @option{-f}, separate fields with a run of blank characters
+(usually space or TAB).  With @samp{trimmed} do not consider
+leading and trailing blanks as field separators.
+@option{-w} is implied with the @option{-F} option.
+
 @optZeroTerminated{cut}
 
 @end table
