@@ -374,6 +374,7 @@ all_tests =					\
   tests/nice/nice-fail.sh			\
   tests/nl/nl.sh				\
   tests/nl/multibyte.sh				\
+  tests/nl/multiple-files.sh			\
   tests/misc/nohup.sh				\
   tests/nproc/nproc-avail.sh			\
   tests/nproc/nproc-positive.sh			\
