@@ -170,6 +170,7 @@ my @Tests =
   ['newline-4', '-d:', '-f1', {IN=>"a:1\nb:2"}, {OUT=>"a\nb\n"}],
   ['newline-5', '-d:', '-f2', {IN=>"a:1\nb:2\n"}, {OUT=>"1\n2\n"}],
   ['newline-6', '-d:', '-f2', {IN=>"a:1\nb:2"}, {OUT=>"1\n2\n"}],
+  ['newline-6a', '-d:', '-f2', {IN=>"a\nb"}, {OUT=>"a\nb\n"}],
   ['newline-7', '-s', '-d:', '-f1', {IN=>"a:1\nb:2"}, {OUT=>"a\nb\n"}],
   ['newline-8', '-s', '-d:', '-f1', {IN=>"a:1\nb:2\n"}, {OUT=>"a\nb\n"}],
   ['newline-9', '-s', '-d:', '-f1', {IN=>"a1\nb2"}, {OUT=>""}],

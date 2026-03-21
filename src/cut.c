@@ -936,6 +936,31 @@ cut_fields_bytesearch (FILE *stream)
           .blank_delimited = whitespace_delimited
         };
 
+      /* Shortcut the case were there is no delimiter in input,
+         as directly outputting without parsing is 20x faster.  */
+      if (field_idx == 1
+          && !suppress_non_delimited && !whitespace_delimited
+          && !field_delim_is_line_delim ()
+          && !have_pending_line
+          && field_1_n_bytes == 0
+          && !skip_line_remainder
+          && !find_bytesearch_field_delim (chunk, safe))
+        {
+          char *last_line_delim = feof (mbbuf.fp) ? chunk + safe - 1
+                                  : memrchr ((void *) chunk, line_delim, safe);
+          if (last_line_delim)
+            {
+              idx_t n = last_line_delim - chunk + 1;
+              write_bytes (chunk, n);
+              if (feof (mbbuf.fp) && chunk[n - 1] != line_delim)
+                write_line_delim ();
+              mbbuf_advance (&mbbuf, n);
+              if (feof (mbbuf.fp))
+                return;
+              continue;
+            }
+        }
+
       while (processed < safe)
         {
           char *terminator = NULL;
