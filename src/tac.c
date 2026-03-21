@@ -45,6 +45,7 @@ tac -r -s '.\|
 
 #include "filenamecat.h"
 #include "full-read.h"
+#include "full-write.h"
 #include "temp-stream.h"
 #include "xbinary-io.h"
 
@@ -158,7 +159,8 @@ output (char const *start, char const *past_end)
 
   if (!start)
     {
-      if (fwrite (buffer, 1, bytes_in_buffer, stdout) != bytes_in_buffer)
+      if (full_write (STDOUT_FILENO, buffer, bytes_in_buffer)
+          != bytes_in_buffer)
         write_error ();
       bytes_in_buffer = 0;
       return;
@@ -170,7 +172,7 @@ output (char const *start, char const *past_end)
       memcpy (buffer + bytes_in_buffer, start, bytes_available);
       bytes_to_add -= bytes_available;
       start += bytes_available;
-      if (fwrite (buffer, 1, WRITESIZE, stdout) != WRITESIZE)
+      if (full_write (STDOUT_FILENO, buffer, WRITESIZE) != WRITESIZE)
         write_error ();
       bytes_in_buffer = 0;
       bytes_available = WRITESIZE;
