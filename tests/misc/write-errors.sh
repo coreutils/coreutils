@@ -35,6 +35,9 @@ cksum --version; yes '${dev_null_hash}' | cksum --check
 comm -z /dev/zero /dev/zero
 cut -z -c1- /dev/zero
 cut -z -f1- /dev/zero
+cut -f1 /dev/zero
+cut -b1- /dev/zero
+cut -c1- /dev/zero
 date +%${OFF64_T_MAX}c
 date --version; yes 0 | date -f-
 dd if=/dev/zero
