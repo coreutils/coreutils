@@ -22,7 +22,7 @@ print_ver_ rm
 # Check that the hint is not shown when there isn't file named "-foo".
 returns_ 1 rm -foo > out 2> err || fail=1
 compare /dev/null out || fail=1
-grep 'to remove the file' && fail=1
+grep -F 'to remove the file' err && fail=1
 
 # Check that the hint is shown when there is file named "-foo".
 echo a > -foo || framework_failure_
