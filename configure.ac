@@ -105,7 +105,7 @@ AC_DEFUN([gl_GCC_VERSION_IFELSE],
 )
 
 AC_ARG_ENABLE([single-binary],
-  [AS_HELP_STRING([--enable-single-binary=[shebangs|symlinks|hardlinks]],
+  [AS_HELP_STRING([--enable-single-binary@<:@=shebangs|symlinks|hardlinks@:>@],
      [Compile all the tools in a single binary, reducing the overall size.
       When compiled this way, shebangs (default when enabled), symlinks, or
       hardlinks are installed for each tool, which point to a single binary])],
