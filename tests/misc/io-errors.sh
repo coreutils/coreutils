@@ -28,7 +28,8 @@ echo foo > foo || framework_failure_
 
 # Specific write paths to check in addition to --version.
 # Note writers that may output data indefinitely
-# are handled in write-errors.sh
+# are handled in write-errors.sh.
+# Commands tagged with $generic are not checked for a specific error.
 # First word in command line is checked against built programs
 {
 printf '%s' "\
@@ -60,7 +61,7 @@ tr . . < foo
 unexpand foo
 uniq foo
 ";
-printf '%s --version\n' $built_programs;
+printf '%s --version $generic\n' $built_programs;
 } |
 sort -k 1b,1 > all_writers || framework_failure_
 
@@ -80,10 +81,14 @@ while read writer; do
   # but that's not guaranteed in the generic close_stream() handling.
   # For e.g. with _IOLBF etc, stdio will discard pending data at each line,
   # thus only giving a generic error upon ferror() in close_stream().
+  error_re="$ENOSPC"
+  printf '%s' "$writer" | grep 'generic' >/dev/null &&
+    { error_re="write error|$error_re"; }
+
   rm -f full.err || framework_failure_
   timeout 10 env --default-signal=PIPE $SHELL -c \
     "(env $writer 2>full.err >/dev/full)"
-  { test $? = 124 || ! grep -E "write error|$ENOSPC" full.err >/dev/null; } &&
+  { test $? = 124 || ! grep -E "$error_re" full.err >/dev/null; } &&
    { fail=1; cat full.err; echo "$writer: failed to exit" >&2; }
 
   # Check closed pipe handling
