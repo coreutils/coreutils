@@ -158,7 +158,8 @@ output (char const *start, char const *past_end)
 
   if (!start)
     {
-      fwrite (buffer, 1, bytes_in_buffer, stdout);
+      if (fwrite (buffer, 1, bytes_in_buffer, stdout) != bytes_in_buffer)
+        write_error ();
       bytes_in_buffer = 0;
       return;
     }
@@ -169,7 +170,8 @@ output (char const *start, char const *past_end)
       memcpy (buffer + bytes_in_buffer, start, bytes_available);
       bytes_to_add -= bytes_available;
       start += bytes_available;
-      fwrite (buffer, 1, WRITESIZE, stdout);
+      if (fwrite (buffer, 1, WRITESIZE, stdout) != WRITESIZE)
+        write_error ();
       bytes_in_buffer = 0;
       bytes_available = WRITESIZE;
     }

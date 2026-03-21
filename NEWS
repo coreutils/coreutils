@@ -59,6 +59,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'shuf -i' now operates up to two times faster on systems with unlocked stdio
   functions.
 
+  'tac' will now exit sooner after a write error, which is significant when
+  operating on a file with many lines.
+
   'timeout' now properly detects when it is reparented by a subreaper process on
   Linux instead of init, e.g., the 'systemd --user' process.
 

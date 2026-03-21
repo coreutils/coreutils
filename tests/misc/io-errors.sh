@@ -55,6 +55,7 @@ od -v foo
 paste foo
 pr foo
 seq 1
+tac --version; seq 10000 | tac
 tail -n1 foo
 tee < foo
 tr . . < foo
