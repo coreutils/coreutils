@@ -659,6 +659,13 @@ field_selection_exhausted (uintmax_t field_idx)
 }
 
 static inline void
+sync_byte_selection (uintmax_t byte_idx)
+{
+  while (current_rp->hi <= byte_idx)
+    current_rp++;
+}
+
+static inline void
 reset_field_line (uintmax_t *field_idx, bool *found_any_selected_field,
                   bool *have_pending_line, struct mbfield_parser *parser)
 {
@@ -675,35 +682,58 @@ reset_field_line (uintmax_t *field_idx, bool *found_any_selected_field,
 static void
 cut_bytes (FILE *stream)
 {
-  uintmax_t byte_idx;	/* Number of bytes in the line so far.  */
-  /* Whether to begin printing delimiters between ranges for the current line.
-     Set after we've begun printing data corresponding to the first range.  */
-  bool print_delimiter;
+  uintmax_t byte_idx = 0;
+  bool print_delimiter = false;
+  static char line_in[IO_BUFSIZE];
 
-  byte_idx = 0;
-  print_delimiter = false;
   current_rp = frp;
+
   while (true)
     {
-      int c;		/* Each character from the file.  */
-
-      c = getc (stream);
-
-      if (c == line_delim)
-        reset_item_line (&byte_idx, &print_delimiter);
-      else if (c == EOF)
+      idx_t available = fread (line_in, sizeof *line_in, sizeof line_in,
+                               stream);
+      if (available == 0)
         {
           write_pending_line_delim (byte_idx);
           break;
         }
-      else
+
+      idx_t processed = 0;
+
+      while (processed < available)
         {
-          next_item (&byte_idx);
-          if (print_kth (byte_idx))
+          char *line = line_in + processed;
+          char *line_end = memchr ((void *) line, line_delim,
+                                   available - processed);
+          char *end = line + (line_end ? line_end - line : available - processed);
+          char *p = line;
+
+          while (p < end)
             {
-              char ch = c;
-              write_selected_item (&print_delimiter,
-                                   is_range_start_index (byte_idx), &ch, 1);
+              sync_byte_selection (byte_idx);
+
+              if (byte_idx + 1 < current_rp->lo)
+                {
+                  idx_t skip = MIN (end - p, current_rp->lo - (byte_idx + 1));
+                  p += skip;
+                  byte_idx += skip;
+                }
+              else
+                {
+                  idx_t n = MIN (end - p, current_rp->hi - byte_idx);
+                  write_selected_item (&print_delimiter,
+                                       is_range_start_index (byte_idx + 1),
+                                       p, n);
+                  p += n;
+                  byte_idx += n;
+                }
+            }
+
+          processed += end - line;
+          if (line_end)
+            {
+              processed++;
+              reset_item_line (&byte_idx, &print_delimiter);
             }
         }
     }
