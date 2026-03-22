@@ -171,6 +171,7 @@ my @Tests =
   ['zerot-4', '-z -d:', '-f1', {IN=>"a:1\0b:2"}, {OUT=>"a\0b\0"}],
   ['zerot-5', '-z -d:', '-f1-', {IN=>"a1:\0:"}, {OUT=>"a1:\0:\0"}],
   ['zerot-6', "-z -d ''", '-f1,2', '--ou=:', {IN=>"a\0b\0"}, {OUT=>"a:b\0"}],
+  ['zerot-7', "-z -d '' -s", '-f1', {IN=>"abc"}, {OUT=>""}],
 
   # New functionality:
   ['out-delim1', '-c1-3,5-', '--output-d=:', {IN=>"abcdefg\n"},
