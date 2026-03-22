@@ -289,6 +289,7 @@ all_tests =					\
   tests/misc/arch.sh				\
   tests/pr/bounded-memory.sh			\
   tests/pr/pr-tests.pl				\
+  tests/pwd/argument.sh				\
   tests/pwd/pwd-option.sh			\
   tests/chcon/chcon-fail.sh			\
   tests/misc/coreutils.sh			\
