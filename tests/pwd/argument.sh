@@ -1,5 +1,5 @@
 #!/bin/sh
-# Test that 'pwd' with an argument.
+# Test that 'pwd' works when given an argument.
 
 # Copyright (C) 2026 Free Software Foundation, Inc.
 
