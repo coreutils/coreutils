@@ -405,6 +405,16 @@ skip_whitespace_run (mbbuf_t *mbuf, struct mbfield_parser *parser,
 static void
 write_bytes (char const *buf, size_t n_bytes)
 {
+  /* Avoid a function call for smaller amounts,
+     using instead the macro to directly interact with the stdio buffer.  */
+  if (n_bytes <= 4)
+    {
+      for (size_t i = 0; i < n_bytes; i++)
+        if (putchar (buf[i]) < 0)
+          write_error ();
+      return;
+    }
+
   if (fwrite (buf, sizeof (char), n_bytes, stdout) != n_bytes)
     write_error ();
 }
