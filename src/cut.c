@@ -464,29 +464,6 @@ write_selected_item (bool *print_delimiter, bool range_start,
   write_bytes (buf, n_bytes);
 }
 
-static inline mcel_t
-mbfield_get_char (mbbuf_t *mbbuf, struct mbfield_parser *parser)
-{
-  return (parser->whitespace_delimited
-          ? mbbuf_get_saved_char (mbbuf, &parser->have_saved, &parser->saved_g)
-          : mbbuf_get_char (mbbuf));
-}
-
-static inline enum field_terminator
-mbfield_terminator (mbbuf_t *mbbuf, struct mbfield_parser *parser, mcel_t g,
-                    bool *have_pending_line)
-{
-  if (g.ch == line_delim)
-    return FIELD_LINE_DELIMITER;
-
-  if (parser->whitespace_delimited)
-    return (mcel_isblank(g)
-            ? skip_whitespace_run (mbbuf, parser, have_pending_line, true)
-            : FIELD_DATA);
-
-  return field_delim_eq (g) ? FIELD_DELIMITER : FIELD_DATA;
-}
-
 static inline void
 append_field_1_chunk (char const *buf, idx_t len, idx_t *n_bytes)
 {
@@ -507,12 +484,11 @@ append_field_1_bytes (mbbuf_t *mbbuf, mcel_t g, idx_t *n_bytes)
 }
 
 static enum field_terminator
-scan_mb_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
-               bool *have_pending_line, bool write_field, idx_t *n_bytes)
+scan_mb_blank_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
+                     bool *have_pending_line, bool write_field,
+                     idx_t *n_bytes)
 {
-  if (parser->whitespace_delimited
-      && parser->trim_outer_whitespace
-      && parser->at_line_start)
+  if (parser->trim_outer_whitespace && parser->at_line_start)
     {
       enum field_terminator terminator
         = skip_whitespace_run (mbbuf, parser, have_pending_line, false);
@@ -524,22 +500,60 @@ scan_mb_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
 
   while (true)
     {
-      mcel_t g = mbfield_get_char (mbbuf, parser);
+      mcel_t g = mbbuf_get_saved_char (mbbuf, &parser->have_saved,
+                                      &parser->saved_g);
       if (g.ch == MBBUF_EOF)
         return FIELD_EOF;
 
       *have_pending_line = true;
 
-      enum field_terminator terminator
-        = mbfield_terminator (mbbuf, parser, g, have_pending_line);
-      if (terminator != FIELD_DATA)
-        return terminator;
+      if (g.ch == line_delim)
+        return FIELD_LINE_DELIMITER;
+
+      if (mcel_isblank (g))
+        return skip_whitespace_run (mbbuf, parser, have_pending_line, true);
 
       if (n_bytes)
         append_field_1_bytes (mbbuf, g, n_bytes);
       else if (write_field)
         write_bytes (mbbuf_char_offset (mbbuf, g), g.len);
     }
+}
+
+static enum field_terminator
+scan_mb_delim_field (mbbuf_t *mbbuf, bool *have_pending_line,
+                     bool write_field, idx_t *n_bytes)
+{
+  while (true)
+    {
+      mcel_t g = mbbuf_get_char (mbbuf);
+      if (g.ch == MBBUF_EOF)
+        return FIELD_EOF;
+
+      *have_pending_line = true;
+
+      if (g.ch == line_delim)
+        return FIELD_LINE_DELIMITER;
+
+      if (field_delim_eq (g))
+        return FIELD_DELIMITER;
+
+      if (n_bytes)
+        append_field_1_bytes (mbbuf, g, n_bytes);
+      else if (write_field)
+        write_bytes (mbbuf_char_offset (mbbuf, g), g.len);
+    }
+}
+
+static inline enum field_terminator
+scan_mb_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
+               bool *have_pending_line, bool write_field, idx_t *n_bytes)
+{
+  return (parser->whitespace_delimited
+          ? scan_mb_blank_field (mbbuf, parser, have_pending_line,
+                                 write_field, n_bytes)
+          : scan_mb_delim_field (mbbuf, have_pending_line, write_field,
+                                 n_bytes));
 }
 
 /* Return a pointer to the next field delimiter in BUF, searching LEN bytes.
