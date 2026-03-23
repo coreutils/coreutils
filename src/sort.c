@@ -1725,8 +1725,8 @@ begfield (struct line const *line, struct keyfield const *key)
   if (tab != TAB_DEFAULT)
     while (ptr < lim && sword--)
       {
-        while (ptr < lim && *ptr != tab)
-          ++ptr;
+        char *sep = memchr (ptr, tab, (size_t) (lim - ptr));
+        ptr = sep ? sep : lim;
         if (ptr < lim)
           ++ptr;
       }
@@ -1778,8 +1778,8 @@ limfield (struct line const *line, struct keyfield const *key)
   if (tab != TAB_DEFAULT)
     while (ptr < lim && eword--)
       {
-        while (ptr < lim && *ptr != tab)
-          ++ptr;
+        char *sep = memchr (ptr, tab, (size_t) (lim - ptr));
+        ptr = sep ? sep : lim;
         if (ptr < lim && (eword || echar))
           ++ptr;
       }
