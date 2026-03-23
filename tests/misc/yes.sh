@@ -63,10 +63,19 @@ if timeout 10 true; then
   test $? = 124 || fail=1
 fi
 
-# Ensure we fallback to write() if there is an issue with vmsplice
-no_vmsplice() { strace -f -o /dev/null -e inject=vmsplice:error=ENOSYS "$@"; }
-if no_vmsplice true; then
-  test "$(no_vmsplice yes | head -n2 | paste -s -d '')" = 'yy' || fail=1
+# Ensure we fallback to write() if there is an issue with (async) zero-copy
+zc_syscalls='io_uring_setup io_uring_enter io_uring_register memfd_create
+             sendfile splice tee vmsplice'
+syscalls=$(
+  for s in $zc_syscalls; do
+    strace -qe "$s" true >/dev/null 2>&1 && echo "$s"
+  done | paste -s -d,)
+
+no_zero_copy() {
+  strace -f -o /dev/null -e inject=${syscalls}:error=ENOSYS "$@"
+}
+if no_zero_copy true; then
+  test "$(no_zero_copy yes | head -n2 | paste -s -d '')" = 'yy' || fail=1
 fi
 # Ensure we fallback to write() if there is an issue with pipe2()
 # For example if we don't have enough file descriptors available.
