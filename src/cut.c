@@ -314,6 +314,14 @@ utf8_field_delim_ok (void)
   return ! delim_mcel.err && is_utf8_charset ();
 }
 
+static bool
+mcel_isblank (mcel_t g)
+{
+  /* This is faster than calling c32issep directly.
+     Assume all unibyte locales match c_isblank.  */
+  return (g.len == 1 && c_isblank (g.ch)) || (g.len > 1 && c32issep (g.ch));
+}
+
 static inline bool
 bytesearch_field_delim_ok (void)
 {
@@ -387,7 +395,7 @@ skip_whitespace_run (mbbuf_t *mbuf, struct mbfield_parser *parser,
       if (g.ch != MBBUF_EOF)
         *have_pending_line = true;
     }
-  while (g.ch != MBBUF_EOF && g.ch != line_delim && c32issep (g.ch));
+  while (g.ch != MBBUF_EOF && g.ch != line_delim && mcel_isblank (g));
 
   bool trim_start = parser->trim_outer_whitespace && parser->at_line_start;
 
@@ -472,7 +480,7 @@ mbfield_terminator (mbbuf_t *mbbuf, struct mbfield_parser *parser, mcel_t g,
     return FIELD_LINE_DELIMITER;
 
   if (parser->whitespace_delimited)
-    return (c32issep (g.ch)
+    return (mcel_isblank(g)
             ? skip_whitespace_run (mbbuf, parser, have_pending_line, true)
             : FIELD_DATA);
 
