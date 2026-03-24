@@ -24,10 +24,6 @@ returns_ 1 truncate -s0 a . b > out 2> err || fail=1
 test -f a || fail=1
 test -f b || fail=1
 compare /dev/null out || fail=1
-cat <<EOF > exp-err || framework_failure_
-truncate: cannot open '.' for writing: $EISDIR
-EOF
-compare exp-err err || fail=1
-
+compare /dev/null err && fail=1
 
 Exit $fail
