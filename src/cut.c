@@ -567,6 +567,9 @@ ATTRIBUTE_PURE
 static char *
 find_bytesearch_field_delim (char *buf, size_t len)
 {
+  if (len < delim_length)
+    return NULL;
+
 #if ! __GLIBC__  /* Only S390 has optimized memmem on glibc-2.42  */
   return memmem (buf, len, delim_bytes, delim_length);
 #else
