@@ -56,6 +56,9 @@
     }									\
   while (0)
 
+/* Above this function call overhead becomes less of a concern.
+   At this and below we avoid fwrite(), memchr() etc.  */
+#define SMALL_BYTE_THRESHOLD 3
 
 /* Pointer inside RP.  When checking if a -b,-c,-f is selected
    by a finite range, we check if it is between CURRENT_RP.LO
@@ -415,7 +418,7 @@ write_bytes (char const *buf, size_t n_bytes)
 {
   /* Avoid a function call for smaller amounts,
      using instead the macro to directly interact with the stdio buffer.  */
-  if (n_bytes <= 4)
+  if (n_bytes <= SMALL_BYTE_THRESHOLD)
     {
       for (size_t i = 0; i < n_bytes; i++)
         if (putchar (buf[i]) < 0)
@@ -709,16 +712,14 @@ reset_field_line (uintmax_t *field_idx, bool *found_any_selected_field,
   parser->at_line_start = true;
 }
 
-/* Read from stream STREAM, printing to standard output any selected bytes.  */
+/* Read from STREAM using buffered block reads, printing selected bytes.
+   BYTE_IDX and PRINT_DELIMITER track the current line state and allow
+   callers to hand off mid-line.  */
 
 static void
-cut_bytes (FILE *stream)
+cut_bytes_buffered (FILE *stream, uintmax_t *byte_idx, bool *print_delimiter)
 {
-  uintmax_t byte_idx = 0;
-  bool print_delimiter = false;
   static char line_in[IO_BUFSIZE];
-
-  current_rp = frp;
 
   while (true)
     {
@@ -726,7 +727,7 @@ cut_bytes (FILE *stream)
                                stream);
       if (available == 0)
         {
-          write_pending_line_delim (byte_idx);
+          write_pending_line_delim (*byte_idx);
           break;
         }
 
@@ -737,27 +738,28 @@ cut_bytes (FILE *stream)
           char *line = line_in + processed;
           char *line_end = memchr ((void *) line, line_delim,
                                    available - processed);
-          char *end = line + (line_end ? line_end - line : available - processed);
+          char *end = line + (line_end ? line_end - line
+                                       : available - processed);
           char *p = line;
 
           while (p < end)
             {
-              sync_byte_selection (byte_idx);
+              sync_byte_selection (*byte_idx);
 
-              if (byte_idx + 1 < current_rp->lo)
+              if (*byte_idx + 1 < current_rp->lo)
                 {
-                  idx_t skip = MIN (end - p, current_rp->lo - (byte_idx + 1));
+                  idx_t skip = MIN (end - p, current_rp->lo - (*byte_idx + 1));
                   p += skip;
-                  byte_idx += skip;
+                  *byte_idx += skip;
                 }
               else
                 {
-                  idx_t n = MIN (end - p, current_rp->hi - byte_idx);
-                  write_selected_item (&print_delimiter,
-                                       is_range_start_index (byte_idx + 1),
+                  idx_t n = MIN (end - p, current_rp->hi - *byte_idx);
+                  write_selected_item (print_delimiter,
+                                       is_range_start_index (*byte_idx + 1),
                                        p, n);
                   p += n;
-                  byte_idx += n;
+                  *byte_idx += n;
                 }
             }
 
@@ -765,7 +767,49 @@ cut_bytes (FILE *stream)
           if (line_end)
             {
               processed++;
-              reset_item_line (&byte_idx, &print_delimiter);
+              reset_item_line (byte_idx, print_delimiter);
+            }
+        }
+    }
+}
+
+/* Read from stream STREAM, printing to standard output any selected bytes.
+   This avoids data copies and function calls for short lines,
+   and will defer to cut_bytes_buffered() once a longer line is encountered.  */
+
+static void
+cut_bytes (FILE *stream)
+{
+  uintmax_t byte_idx = 0;
+  bool print_delimiter = false;
+
+  current_rp = frp;
+
+  while (true)
+    {
+      int c = getc (stream);
+
+      if (c == line_delim)
+        reset_item_line (&byte_idx, &print_delimiter);
+      else if (c == EOF)
+        {
+          write_pending_line_delim (byte_idx);
+          break;
+        }
+      else
+        {
+          next_item (&byte_idx);
+          if (print_kth (byte_idx))
+            {
+              char ch = c;
+              write_selected_item (&print_delimiter,
+                                   is_range_start_index (byte_idx), &ch, 1);
+            }
+
+          if (SMALL_BYTE_THRESHOLD < byte_idx)
+            {
+              cut_bytes_buffered (stream, &byte_idx, &print_delimiter);
+              break;
             }
         }
     }
