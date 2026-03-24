@@ -1050,8 +1050,6 @@ cut_fields_bytesearch (FILE *stream)
       if (field_idx == 1
           && !suppress_non_delimited && !whitespace_delimited
           && !field_delim_is_line_delim ()
-          && !have_pending_line
-          && field_1_n_bytes == 0
           && !skip_line_remainder
           && !find_bytesearch_field_delim (chunk, safe))
         {
@@ -1059,11 +1057,19 @@ cut_fields_bytesearch (FILE *stream)
                                   : memrchr ((void *) chunk, line_delim, safe);
           if (last_line_delim)
             {
+              /* Flush any buffered field 1 data from a prior
+                 partial chunk that had no delimiter.  */
+              if (field_1_n_bytes > 0)
+                {
+                  write_bytes (field_1_buffer, field_1_n_bytes);
+                  field_1_n_bytes = 0;
+                }
               idx_t n = last_line_delim - chunk + 1;
               write_bytes (chunk, n);
               if (feof (mbbuf.fp) && chunk[n - 1] != line_delim)
                 write_line_delim ();
               mbbuf_advance (&mbbuf, n);
+              have_pending_line = false;
               if (feof (mbbuf.fp))
                 return;
               continue;
