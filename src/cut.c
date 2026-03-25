@@ -431,6 +431,19 @@ write_bytes (char const *buf, size_t n_bytes)
 }
 
 static inline void
+copy_bytes (char *dst, char const *src, size_t n_bytes)
+{
+  if (n_bytes <= SMALL_BYTE_THRESHOLD)
+    {
+      for (size_t i = 0; i < n_bytes; i++)
+        dst[i] = src[i];
+      return;
+    }
+
+  memcpy (dst, src, n_bytes);
+}
+
+static inline void
 write_line_delim (void)
 {
   if (putchar (line_delim) < 0)
@@ -476,7 +489,7 @@ append_field_1_chunk (char const *buf, idx_t len, idx_t *n_bytes)
                                 len, -1, sizeof *field_1_buffer);
     }
 
-  memcpy (field_1_buffer + *n_bytes, buf, len);
+  copy_bytes (field_1_buffer + *n_bytes, buf, len);
   *n_bytes += len;
 }
 
@@ -1348,7 +1361,7 @@ main (int argc, char **argv)
               mcel_t g = mcel_scanz (optarg);
               if (optarg[g.len] != '\0')
                 FATAL_ERROR (_("the delimiter must be a single character"));
-              memcpy (delim_bytes, optarg, g.len);
+              copy_bytes (delim_bytes, optarg, g.len);
               delim_length = g.len;
               delim_mcel = g;
               if (g.len == 1)
@@ -1443,7 +1456,7 @@ main (int argc, char **argv)
         }
       else
         {
-          memcpy (output_delimiter_default, delim_bytes, delim_length);
+          copy_bytes (output_delimiter_default, delim_bytes, delim_length);
           output_delimiter_length = delim_length;
         }
     }
