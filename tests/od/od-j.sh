@@ -19,6 +19,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ od
 
+od -j1 /dev/null || fail=1
+
 for file in ${srcdir=.}/tests/init.sh /proc/version /sys/kernel/profiling; do
   test -r $file || continue
 
