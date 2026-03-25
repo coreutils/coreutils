@@ -1022,7 +1022,6 @@ cut_fields_bytesearch (FILE *stream)
   uintmax_t field_idx = 1;
   bool found_any_selected_field = false;
   bool have_pending_line = false;
-  bool skip_line_remainder = false;
   bool skip_blank_run = false;
   bool write_field;
   idx_t field_1_n_bytes = 0;
@@ -1051,7 +1050,6 @@ cut_fields_bytesearch (FILE *stream)
       if (field_idx == 1
           && !suppress_non_delimited && !whitespace_delimited
           && !field_delim_is_line_delim ()
-          && !skip_line_remainder
           && !find_bytesearch_field_delim (chunk, safe))
         {
           char *last_line_delim = feof (mbbuf.fp)
@@ -1097,8 +1095,15 @@ cut_fields_bytesearch (FILE *stream)
               skip_blank_run = false;
             }
 
-          if (skip_line_remainder)
+          if (field_selection_exhausted (field_idx))
             {
+              if (field_delim_is_line_delim ())
+                {
+                  maybe_write_line_delim (found_any_selected_field,
+                                          field_idx);
+                  mbbuf_advance (&mbbuf, processed);
+                  return;
+                }
               search.mode = BYTESEARCH_LINE_ONLY;
               enum field_terminator terminator_kind
                 = find_bytesearch_field_terminator (chunk + processed,
@@ -1110,22 +1115,12 @@ cut_fields_bytesearch (FILE *stream)
                   processed = terminator - chunk + 1;
                   maybe_write_line_delim (found_any_selected_field,
                                           field_idx);
-                  skip_line_remainder = false;
                   goto reset_line;
                 }
-
               processed = safe;
-              if (terminator_kind == FIELD_DATA && feof (mbbuf.fp))
-                {
-                  maybe_write_line_delim (found_any_selected_field,
-                                          field_idx);
-                  mbbuf_advance (&mbbuf, processed);
-                  return;
-                }
               break;
             }
 
-          search.mode = BYTESEARCH_FIELDS;
           enum field_terminator terminator_kind
             = find_bytesearch_field_terminator (chunk + processed,
                                                 safe - processed,
@@ -1165,18 +1160,7 @@ cut_fields_bytesearch (FILE *stream)
               next_item (&field_idx);
               write_field = begin_field_output (field_idx, buffer_first_field,
                                                 &found_any_selected_field);
-              if (field_selection_exhausted (field_idx))
-                {
-                  if (field_delim_is_line_delim ())
-                    {
-                      maybe_write_line_delim (found_any_selected_field,
-                                              field_idx);
-                      mbbuf_advance (&mbbuf, processed);
-                      return;
-                    }
-                  skip_line_remainder = true;
-                }
-              else if (whitespace_delimited)
+              if (whitespace_delimited)
                 skip_blank_run = true;
             }
           else if (terminator_kind == FIELD_LINE_DELIMITER)
