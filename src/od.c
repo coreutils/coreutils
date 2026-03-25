@@ -1561,7 +1561,8 @@ dump (void)
       current_offset += n_bytes_read;
     }
 
-  format_address (current_offset, '\n');
+  if (ok || current_offset)
+    format_address (current_offset, '\n');
 
   if (0 <= end_offset && end_offset <= current_offset)
     ok &= check_and_close (0);
