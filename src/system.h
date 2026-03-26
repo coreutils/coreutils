@@ -184,6 +184,20 @@ c32issep (char32_t wc)
 #endif
 }
 
+/* Return true if the current charset is UTF-8.  */
+static inline bool
+is_utf8_charset (void)
+{
+  static int is_utf8 = -1;
+  if (is_utf8 == -1)
+    {
+      char32_t w;
+      mbstate_t mbs; mbszero (&mbs);
+      is_utf8 = mbrtoc32 (&w, "\xe2\x9f\xb8", 3, &mbs) == 3 && w == 0x27F8;
+    }
+  return is_utf8;
+}
+
 #include <locale.h>
 
 /* Take care of NLS matters.  */

@@ -1387,20 +1387,6 @@ process_suffixed_number (char *text, long double *result,
     }
 }
 
-/* Return true if the current charset is UTF-8.  */
-static bool
-is_utf8_charset (void)
-{
-  static int is_utf8 = -1;
-  if (is_utf8 == -1)
-    {
-      char32_t w;
-      mbstate_t mbs; mbszero (&mbs);
-      is_utf8 = mbrtoc32 (&w, "\xe2\x9f\xb8", 3, &mbs) == 3 && w == 0x27F8;
-    }
-  return is_utf8;
-}
-
 /* Search for multi-byte character C in multi-byte string S.
    Return a pointer to the character, or NULL if not found.  */
 ATTRIBUTE_PURE
