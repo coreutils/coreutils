@@ -19,6 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ sync
 getlimits_
+uses_strace_
 
 touch file || framework_failure_
 
@@ -35,6 +36,10 @@ sync file || fail=1
 # support to sync in coreutils-8.24.
 chmod 0200 file || framework_failure_
 sync file || fail=1
+
+# ensure we diagnose fcntl failure
+returns_ 1 strace -o /dev/null -e inject=fcntl:error=EIO sync -f /dev/null || fail=1
+returns_ 1 strace -o /dev/null -e inject=fcntl:error=EIO sync -f /dev/null 2>/dev/full || fail=1
 
 # Ensure multiple args are processed and diagnosed
 returns_ 1 sync file nofile || fail=1
