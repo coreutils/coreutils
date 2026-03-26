@@ -685,19 +685,6 @@ begin_field_output (uintmax_t field_idx, bool buffer_first_field,
   return write_field;
 }
 
-static inline idx_t
-bytesearch_safe_prefix (mbbuf_t *mbbuf, idx_t overlap)
-{
-  idx_t available = mbbuf_fill (mbbuf, overlap + 1);
-  if (available == 0)
-    return 0;
-
-  if (feof (mbbuf->fp))
-    return available;
-
-  return overlap < available ? available - overlap : 0;
-}
-
 static inline bool
 field_selection_exhausted (uintmax_t field_idx)
 {
@@ -1024,7 +1011,6 @@ cut_fields_bytesearch (FILE *stream)
   bool skip_blank_run = false;
   bool write_field;
   idx_t field_1_n_bytes = 0;
-  idx_t overlap = whitespace_delimited ? 0 : delim_length - 1;
 
   current_rp = frp;
   bool buffer_first_field = suppress_non_delimited ^ !print_kth (1);
@@ -1034,13 +1020,9 @@ cut_fields_bytesearch (FILE *stream)
 
   while (true)
     {
-      idx_t safe = bytesearch_safe_prefix (&mbbuf, overlap);
+      idx_t safe = mbbuf_fill (&mbbuf);
       if (safe == 0)
-        {
-          if (mbbuf_avail (&mbbuf) == 0)
-            break;
-          continue;
-        }
+        break;
 
       char *chunk = mbbuf.buffer + mbbuf.offset;
       idx_t processed = 0;

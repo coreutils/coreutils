@@ -70,17 +70,14 @@ mbbuf_init (mbbuf_t *mbbuf, char *buffer, idx_t size, FILE *fp)
   mbbuf->offset = 0;
 }
 
-/* Fill the input buffer with at least MIN_AVAILABLE bytes if possible.
+/* Fill the input buffer with at least MCEL_LEN_MAX bytes if possible.
    Return the number of bytes available from the current offset.  */
 MBBUF_INLINE idx_t
-mbbuf_fill (mbbuf_t *mbbuf, idx_t min_available)
+mbbuf_fill (mbbuf_t *mbbuf)
 {
   idx_t available = mbbuf_avail (mbbuf);
 
-  if (mbbuf->size < min_available)
-    min_available = mbbuf->size;
-
-  if (available < min_available && ! feof (mbbuf->fp))
+  if (available < MCEL_LEN_MAX && ! feof (mbbuf->fp))
     {
       idx_t start;
       if (!(0 < available))
@@ -108,48 +105,13 @@ mbbuf_advance (mbbuf_t *mbbuf, idx_t n)
   mbbuf->offset += n;
 }
 
-/* Return the largest prefix of the current contents that is safe to process
-   with byte searches, while leaving at least OVERLAP bytes unprocessed unless
-   EOF has been seen.  The returned prefix never ends in the middle of a UTF-8
-   sequence, but it may include invalid bytes.  */
-MBBUF_INLINE idx_t
-mbbuf_utf8_safe_prefix (mbbuf_t *mbbuf, idx_t overlap)
-{
-  idx_t available = mbbuf_fill (mbbuf, overlap + 4);
-  if (available == 0)
-    return 0;
-
-  if (feof (mbbuf->fp))
-    return available;
-
-  if (available <= overlap)
-    return 0;
-
-  idx_t end = available - overlap;
-  char const *buf = mbbuf->buffer + mbbuf->offset;
-  idx_t start = end - 1;
-
-  while (0 < start
-         && ((unsigned char) buf[start] & 0xC0) == 0x80)
-    start--;
-
-  unsigned char lead = buf[start];
-  idx_t len = (lead < 0x80 ? 1
-               : (lead & 0xE0) == 0xC0 ? 2
-               : (lead & 0xF0) == 0xE0 ? 3
-               : (lead & 0xF8) == 0xF0 ? 4
-               : 1);
-
-  return start + len <= end ? end : start;
-}
-
 /* Get the next character in the buffer, filling it from FP if necessary.
    If an invalid multi-byte character is seen, we assume the program wants to
    fall back to the read byte.  */
 MBBUF_INLINE mcel_t
 mbbuf_get_char (mbbuf_t *mbbuf)
 {
-  idx_t available = mbbuf_fill (mbbuf, MCEL_LEN_MAX);
+  idx_t available = mbbuf_fill (mbbuf);
   if (available <= 0)
     return (mcel_t) { .ch = MBBUF_EOF };
   mcel_t g = mcel_scan (mbbuf->buffer + mbbuf->offset,
