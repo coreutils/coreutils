@@ -311,6 +311,9 @@ mcel_isblank (mcel_t g)
   return (g.len == 1 && c_isblank (g.ch)) || (g.len > 1 && c32issep (g.ch));
 }
 
+/* Return TRUE if it's valid to do a simple byte search
+   for the delimiter bytes.  */
+
 static inline bool
 bytesearch_field_delim_ok (void)
 {
@@ -318,7 +321,8 @@ bytesearch_field_delim_ok (void)
 
   return (delim_length == 1
           ? (MB_CUR_MAX <= 1
-             || (is_utf8_charset () ? delim_0 < 0x80 : delim_0 < 0x30))
+             || (is_utf8_charset ()
+                 ? (delim_0 < 0x80 || delim_0 > 0xF4) : delim_0 < 0x30))
           : utf8_field_delim_ok ());
 }
 

@@ -337,6 +337,9 @@ if ($mb_locale ne 'C')
       ['mb-delim-7', '-d', "\xc3\xa9", '-f2',
        {IN=>"a\0b\xc3\xa9c\n"}, {OUT=>"c\n"},
        {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-delim-8', '-d', "\xff", '-f2',  # Note 0xF5-0xFF is efficient
+       {IN=>"a\xffb\n"}, {OUT=>"b\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
       ['mb-w-delim-1', '-w', '-f2', {IN=>"a\xe2\x80\x83b\n"}, {OUT=>"b\n"},
        {ENV => "LC_ALL=$mb_locale"}],
       ['mb-w-delim-2', '-sw', '-f2', {IN=>"a\xc2\xa0b\n"}, {OUT=>""},
