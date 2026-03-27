@@ -21,7 +21,8 @@
 print_ver_ env pwd nice
 
 # A simple shebang program to call "echo" from symlinks like "./-u" or "./--".
-echo "#!$abs_top_builddir/src/echo simple_echo" > simple_echo \
+echo "#!/bin/sh" > simple_echo
+echo "echo simple_echo" >> simple_echo
   || framework_failure_
 chmod a+x simple_echo || framework_failure_
 
