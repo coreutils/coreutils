@@ -6232,8 +6232,10 @@ ranges of selected bytes.
 
 @optItem{cut,-s,}
 @optItemx{cut,--only-delimited,}
-For @option{-f}, do not print lines that do not contain the field separator
-character.  Normally, any line without a field separator is printed verbatim.
+For @option{-f}, do not print lines that do not contain field separators.
+Normally, any line without a field separator is printed verbatim.
+With @option{--whitespace-delimited=trimmed}, lines that contain
+only leading or trailing blanks will be suppressed.
 
 @optItem{cut,-w,}
 @optItemx{cut,--whitespace-delimited,[=trimmed]}
