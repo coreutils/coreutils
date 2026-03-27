@@ -6223,7 +6223,8 @@ for it to be selected.
 @optItem{cut,-O,@w{ }@var{string}}
 @optItemx{cut,--output-delimiter,=@var{string}}
 With @option{-f}, output fields are separated by @var{string}.
-The default with @option{-f} is to use the input delimiter.
+The default with @option{-f} is to use the input delimiter,
+or with @option{-w} the TAB character.
 When using @option{-b} or @option{-c} to select ranges of byte or
 character offsets (as opposed to ranges of fields),
 output @var{output_delim_string} between non-overlapping
