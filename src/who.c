@@ -515,8 +515,6 @@ print_runlevel (STRUCT_UTMP const *utmp_ent)
 
   print_line ("", ' ', runlevline, time_string (utmp_ent),
               "", "", c_isprint (last) ? comment : "", "");
-
-  return;
 }
 
 /* Print the username of each valid entry and the number of valid entries

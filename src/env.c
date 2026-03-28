@@ -756,8 +756,6 @@ initialize_signals (void)
 
   for (int i = 0 ; i <= SIGNUM_BOUND; i++)
     signals[i] = UNCHANGED;
-
-  return;
 }
 
 int
