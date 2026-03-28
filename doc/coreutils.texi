@@ -6164,8 +6164,9 @@ string between ranges of selected bytes.
 @optItemx{cut,--characters,=@var{character-list}}
 Select for printing only the characters in positions listed in
 @var{character-list}.  Tabs and backspaces are
-treated like any other character; they take up 1 character.  If an
-output delimiter is specified, (see the description of
+treated like any other character; they take up 1 character.
+Combining characters are considered as separate characters.
+If an output delimiter is specified, (see the description of
 @option{--output-delimiter}), then output that string between ranges
 of selected characters.
 
