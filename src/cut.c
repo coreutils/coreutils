@@ -297,17 +297,12 @@ field_delim_is_line_delim (void)
   return delim_length == 1 && delim_bytes[0] == line_delim;
 }
 
-static inline bool
-utf8_field_delim_ok (void)
-{
-  return ! delim_mcel.err && is_utf8_charset ();
-}
+/* This is equivalent to but faster than calling c32issep directly.
+   It assumes all unibyte locales match c_isblank.  */
 
 static bool
 mcel_isblank (mcel_t g)
 {
-  /* This is faster than calling c32issep directly.
-     Assume all unibyte locales match c_isblank.  */
   return (g.len == 1 && c_isblank (g.ch)) || (g.len > 1 && c32issep (g.ch));
 }
 
@@ -323,14 +318,9 @@ bytesearch_field_delim_ok (void)
           ? (MB_CUR_MAX <= 1
              || (is_utf8_charset ()
                  ? (delim_0 < 0x80 || delim_0 > 0xF4) : delim_0 < 0x30))
-          : utf8_field_delim_ok ());
+          : is_utf8_charset () && ! delim_mcel.err);
 }
 
-static inline bool
-field_delim_eq (mcel_t g)
-{
-  return delim_mcel.err ? g.err == delim_mcel.err : mcel_eq (g, delim_mcel);
-}
 
 enum field_terminator
 {
@@ -412,11 +402,12 @@ skip_whitespace_run (mbbuf_t *mbuf, struct mbfield_parser *parser,
   return trim_start && !have_initial_whitespace ? FIELD_DATA : FIELD_DELIMITER;
 }
 
+/* Like fwrite, but avoid a function call for smaller amounts,
+   and exit immediately upon error.  */
+
 static void
 write_bytes (char const *buf, size_t n_bytes)
 {
-  /* Avoid a function call for smaller amounts,
-     using instead the macro to directly interact with the stdio buffer.  */
   if (n_bytes <= SMALL_BYTE_THRESHOLD)
     {
       for (size_t i = 0; i < n_bytes; i++)
@@ -428,6 +419,8 @@ write_bytes (char const *buf, size_t n_bytes)
   if (fwrite (buf, sizeof (char), n_bytes, stdout) != n_bytes)
     write_error ();
 }
+
+/* Like memcpy, but avoid a function call for smaller amounts.  */
 
 static inline void
 copy_bytes (char *dst, char const *src, size_t n_bytes)
@@ -550,7 +543,7 @@ scan_mb_delim_field (mbbuf_t *mbbuf, bool *have_pending_line,
       if (g.ch == line_delim)
         return FIELD_LINE_DELIMITER;
 
-      if (field_delim_eq (g))
+      if (delim_mcel.err ? g.err == delim_mcel.err : mcel_eq (g, delim_mcel))
         return FIELD_DELIMITER;
 
       if (n_bytes)
@@ -575,9 +568,10 @@ scan_mb_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
    Return NULL if none is found.  DELIM_BYTES must be a single byte or
    represent a valid UTF-8 character.  BUF can contain invalid/NUL bytes,
    and must have room for a trailing NUL byte at BUF[LEN].  */
+
 ATTRIBUTE_PURE
 static char *
-find_bytesearch_field_delim (char *buf, size_t len)
+find_field_delim (char *buf, size_t len)
 {
   if (len < delim_length)
     return NULL;
@@ -623,10 +617,12 @@ find_bytesearch_field_delim (char *buf, size_t len)
 #endif
 }
 
+/* Byte search for line end or delimiter in BUF,
+   returning results in CTX.  */
+
 static inline enum field_terminator
-find_bytesearch_field_terminator (char *buf, idx_t len,
-                                  struct bytesearch_context *ctx,
-                                  char **terminator)
+find_field_terminator (char *buf, idx_t len,
+                       struct bytesearch_context *ctx, char **terminator)
 {
   if (ctx->mode == BYTESEARCH_LINE_ONLY)
     {
@@ -661,7 +657,7 @@ find_bytesearch_field_terminator (char *buf, idx_t len,
 
   char *field_end = (ctx->blank_delimited
                      ? memchr2 (buf, ' ', '\t', field_len)
-                     : find_bytesearch_field_delim (buf, field_len));
+                     : find_field_delim (buf, field_len));
 
   if (field_end)
     {
@@ -674,6 +670,7 @@ find_bytesearch_field_terminator (char *buf, idx_t len,
 }
 
 /* Write the end-of-line delimiter if appropriate for the current line.  */
+
 static inline void
 maybe_write_line_delim (bool found_any_selected_field, uintmax_t field_idx)
 {
@@ -681,6 +678,9 @@ maybe_write_line_delim (bool found_any_selected_field, uintmax_t field_idx)
       || !(suppress_non_delimited && field_idx == 1))
     write_line_delim ();
 }
+
+/* Return TRUE if FIELD_IDX is selected,
+   and write the output delimiter if appropriate.  */
 
 static inline bool
 begin_field_output (uintmax_t field_idx, bool buffer_first_field,
@@ -1049,7 +1049,7 @@ cut_fields_bytesearch (FILE *stream)
       if (field_idx == 1
           && !whitespace_delimited
           && !field_delim_is_line_delim ()
-          && !find_bytesearch_field_delim (chunk, safe))
+          && !find_field_delim (chunk, safe))
         {
           char *last_line_delim = search.at_eof
                                   ? chunk + safe - 1
@@ -1104,9 +1104,8 @@ cut_fields_bytesearch (FILE *stream)
                 }
               search.mode = BYTESEARCH_LINE_ONLY;
               enum field_terminator terminator_kind
-                = find_bytesearch_field_terminator (chunk + processed,
-                                                    safe - processed,
-                                                    &search, &terminator);
+                = find_field_terminator (chunk + processed, safe - processed,
+                                         &search, &terminator);
               if (terminator_kind == FIELD_LINE_DELIMITER)
                 {
                   processed = terminator - chunk + 1;
@@ -1119,9 +1118,8 @@ cut_fields_bytesearch (FILE *stream)
             }
 
           enum field_terminator terminator_kind
-            = find_bytesearch_field_terminator (chunk + processed,
-                                                safe - processed,
-                                                &search, &terminator);
+            = find_field_terminator (chunk + processed, safe - processed,
+                                     &search, &terminator);
           idx_t field_len = terminator ? terminator - (chunk + processed)
                                        : safe - processed;
 
