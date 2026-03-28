@@ -15403,6 +15403,8 @@ The program accepts the following option.  Also see @ref{Common options}.
 @optItemx{tty,--quiet,}
 Print nothing; only return an exit status.
 
+POSIX.1-2001 removed the @option{-s} option.  Portable shell scripts
+should redirect standard output to @file{/dev/null} instead.
 @end table
 
 @cindex exit status of @command{tty}
