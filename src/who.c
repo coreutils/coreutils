@@ -525,7 +525,6 @@ static void
 list_entries_who (idx_t n, STRUCT_UTMP const *utmp_buf)
 {
   idx_t entries = 0;
-  char const *separator = "";
 
   while (n--)
     {
@@ -535,9 +534,10 @@ list_entries_who (idx_t n, STRUCT_UTMP const *utmp_buf)
 
           trimmed_name = extract_trimmed_name (utmp_buf);
 
-          printf ("%s%s", separator, trimmed_name);
+          if (entries)
+            putchar (' ');
+          fputs (trimmed_name, stdout);
           free (trimmed_name);
-          separator = " ";
           entries++;
         }
       utmp_buf++;
