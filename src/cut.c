@@ -830,9 +830,9 @@ cut_bytes (FILE *stream)
    multibyte characters.  */
 
 static void
-cut_bytes_no_split (FILE *stream)
+cut_characters_mode (FILE *stream, bool byte_mode)
 {
-  uintmax_t byte_idx = 0;
+  uintmax_t idx = 0;
   bool print_delimiter = false;
   static char line_in[IO_BUFSIZE];
   mbbuf_t mbbuf;
@@ -845,13 +845,13 @@ cut_bytes_no_split (FILE *stream)
       mcel_t g = mbbuf_get_char (&mbbuf);
 
       if (g.ch == line_delim)
-        reset_item_line (&byte_idx, &print_delimiter);
+        reset_item_line (&idx, &print_delimiter);
       else if (g.ch == MBBUF_EOF)
         {
-          write_pending_line_delim (byte_idx);
+          write_pending_line_delim (idx);
           break;
         }
-      else
+      else if (byte_mode)
         {
           bool first_selected_is_range_start = false;
           bool seen_selected = false;
@@ -859,14 +859,14 @@ cut_bytes_no_split (FILE *stream)
 
           for (idx_t i = 0; i < g.len; i++)
             {
-              next_item (&byte_idx);
-              if (print_kth (byte_idx))
+              next_item (&idx);
+              if (print_kth (idx))
                 {
                   if (!seen_selected)
                     {
                       seen_selected = true;
                       first_selected_is_range_start
-                        = is_range_start_index (byte_idx);
+                        = is_range_start_index (idx);
                     }
                 }
               else if (seen_selected)
@@ -877,42 +877,27 @@ cut_bytes_no_split (FILE *stream)
             write_selected_item (&print_delimiter,first_selected_is_range_start,
                                  mbbuf_char_offset (&mbbuf, g), g.len);
         }
+      else
+        {
+          next_item (&idx);
+          if (print_kth (idx))
+            write_selected_item (&print_delimiter,
+                                 is_range_start_index (idx),
+                                 mbbuf_char_offset (&mbbuf, g), g.len);
+        }
     }
 }
 
-/* Read from STREAM, printing to standard output any selected characters.  */
+static void
+cut_bytes_no_split (FILE *stream)
+{
+  cut_characters_mode (stream, true);
+}
 
 static void
 cut_characters (FILE *stream)
 {
-  uintmax_t char_idx = 0;
-  bool print_delimiter = false;
-  static char line_in[IO_BUFSIZE];
-  mbbuf_t mbbuf;
-
-  current_rp = frp;
-  mbbuf_init (&mbbuf, line_in, sizeof line_in, stream);
-
-  while (true)
-    {
-      mcel_t g = mbbuf_get_char (&mbbuf);
-
-      if (g.ch == line_delim)
-        reset_item_line (&char_idx, &print_delimiter);
-      else if (g.ch == MBBUF_EOF)
-        {
-          write_pending_line_delim (char_idx);
-          break;
-        }
-      else
-        {
-          next_item (&char_idx);
-          if (print_kth (char_idx))
-            write_selected_item (&print_delimiter,
-                                 is_range_start_index (char_idx),
-                                 mbbuf_char_offset (&mbbuf, g), g.len);
-        }
-    }
+  cut_characters_mode (stream, false);
 }
 
 /* Read from STREAM, printing to standard output any selected fields,
