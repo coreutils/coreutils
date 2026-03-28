@@ -1045,9 +1045,9 @@ cut_fields_bytesearch (FILE *stream)
       char *chunk = mbbuf.buffer + mbbuf.offset;
       idx_t processed = 0;
 
-      /* Fast path: no delimiter in chunk — output lines directly.  */
+      /* Fast path: no field delimiter in chunk — output or skip lines.  */
       if (field_idx == 1
-          && !suppress_non_delimited && !whitespace_delimited
+          && !whitespace_delimited
           && !field_delim_is_line_delim ()
           && !find_bytesearch_field_delim (chunk, safe))
         {
@@ -1056,17 +1056,22 @@ cut_fields_bytesearch (FILE *stream)
                                   : memrchr ((void *) chunk, line_delim, safe);
           if (last_line_delim)
             {
-              /* Flush any buffered field 1 data from a prior
-                 partial chunk that had no delimiter.  */
-              if (field_1_n_bytes > 0)
-                {
-                  write_bytes (field_1_buffer, field_1_n_bytes);
-                  field_1_n_bytes = 0;
-                }
               idx_t n = last_line_delim - chunk + 1;
-              write_bytes (chunk, n);
-              if (search.at_eof && chunk[n - 1] != line_delim)
-                write_line_delim ();
+              if (! suppress_non_delimited)
+                {
+                  /* Flush any buffered field 1 data from a prior
+                     partial chunk that had no delimiter.  */
+                  if (field_1_n_bytes > 0)
+                    {
+                      write_bytes (field_1_buffer, field_1_n_bytes);
+                      field_1_n_bytes = 0;
+                    }
+                  write_bytes (chunk, n);
+                  if (search.at_eof && chunk[n - 1] != line_delim)
+                    write_line_delim ();
+                }
+              else
+                field_1_n_bytes = 0;
               mbbuf_advance (&mbbuf, n);
               have_pending_line = false;
               if (search.at_eof)
