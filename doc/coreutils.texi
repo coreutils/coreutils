@@ -6177,6 +6177,17 @@ In other words, do @emph{not} print the bytes, characters or fields
 specified via those options.  This option is useful when you have
 many fields and want to print all but a few of them.
 
+@optItem{cut,-d,@w{ }@var{character}}
+@optItemx{cut,--delimiter,=@var{character}}
+With @option{-f}, use @var{character} as
+the input field separator (default is TAB).
+If an empty delimiter @var{character} is specified then the ASCII NUL
+character is used to delimit the fields.
+Note the delimiter @var{character} can be the same as the
+line terminator character, which can be used to select ranges of lines.
+In this case the last line terminator in the input is not treated
+as a field separator, which is significant with the @option{-s} option.
+
 @optItem{cut,-f,@w{ }@var{field-list}}
 @optItemx{cut,--fields,=@var{field-list}}
 Select for printing only the fields listed in @var{field-list}.
