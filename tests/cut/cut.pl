@@ -343,6 +343,79 @@ if ($mb_locale ne 'C')
       ['mb-w-delim-1', '-w', '-f2', {IN=>"a\xe2\x80\x83b\n"}, {OUT=>"b\n"},
        {ENV => "LC_ALL=$mb_locale"}],
       ['mb-w-delim-2', '-sw', '-f2', {IN=>"a\xc2\xa0b\n"}, {OUT=>""},
+       {ENV => "LC_ALL=$mb_locale"}],
+
+      # --complement with multi-byte
+      ['mb-compl-c1', '--complement', '-c1',
+       {IN=>"\xc3\xa9x\n"}, {OUT=>"x\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-compl-c2', '--complement', '-c2',
+       {IN=>"\xc3\xa9x\n"}, {OUT=>"\xc3\xa9\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-compl-f1', '--complement', '-d', "\xc3\xa9", '-f1',
+       {IN=>"a\xc3\xa9b\xc3\xa9c\n"}, {OUT=>"b\xc3\xa9c\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-compl-bn1', '--complement', qw(-b1 -n),
+       {IN=>"\xc3\xa9x\n"}, {OUT=>"\xc3\xa9x\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+
+      # -z with multi-byte
+      ['mb-zerot-c1', '-z', '-c1',
+       {IN=>"\xc3\xa9x\0\xc3\xa9y\0"}, {OUT=>"\xc3\xa9\0\xc3\xa9\0"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-zerot-f1', '-z', '-d', "\xc3\xa9", '-f2',
+       {IN=>"a\xc3\xa9b\0c\xc3\xa9d\0"}, {OUT=>"b\0d\0"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-zerot-f2', '-z', '-d', "\xc3\xa9", '-f1',
+       {IN=>"a\xc3\xa9b\0c\xc3\xa9d"}, {OUT=>"a\0c\0"},
+       {ENV => "LC_ALL=$mb_locale"}],
+
+      # empty fields with multi-byte delimiter
+      ['mb-empty-f1', '-d', "\xc3\xa9", '-f1',
+       {IN=>"\xc3\xa9\xc3\xa9c\n"}, {OUT=>"\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-empty-f2', '-d', "\xc3\xa9", '-f2',
+       {IN=>"\xc3\xa9\xc3\xa9c\n"}, {OUT=>"\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-empty-f3', '-d', "\xc3\xa9", '-f3',
+       {IN=>"\xc3\xa9\xc3\xa9c\n"}, {OUT=>"c\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-empty-f1-3', '-d', "\xc3\xa9", '-f1-3', '--output-d=:',
+       {IN=>"\xc3\xa9\xc3\xa9c\n"}, {OUT=>"::c\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+
+      # multi-byte output delimiter with -f
+      ['mb-odelim-f1', '-d', "\xc3\xa9", '-f1,3',
+       "--output-d=\xe2\x82\xac",
+       {IN=>"a\xc3\xa9b\xc3\xa9c\n"}, {OUT=>"a\xe2\x82\xacc\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+
+      # multi-line, multi-byte delimiter, no trailing newline
+      ['mb-multiline-1', '-d', "\xc3\xa9", '-f2',
+       {IN=>"a\xc3\xa9b\nc\xc3\xa9d"}, {OUT=>"b\nd\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+
+      # -w with multi-byte field content
+      ['mb-w-content-1', '-w', '-f1,2', {IN=>"\xc3\xa9\t\xc3\xbc\n"},
+       {OUT=>"\xc3\xa9\t\xc3\xbc\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+
+      # -b -n with output delimiter
+      ['mb-bn-odelim', qw(-b1,3 -n), '--output-d=:',
+       {IN=>"\xc3\xa9x\n"}, {OUT=>"x\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-bn-odelim-2', qw(-b1-2,4 -n), '--output-d=:',
+       {IN=>"\xc3\xa9\xc3\xbcx\n"}, {OUT=>"\xc3\xa9:\xc3\xbc\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+
+      # -b -n with --complement
+      ['mb-compl-bn2', '--complement', qw(-b3 -n),
+       {IN=>"\xc3\xa9x\n"}, {OUT=>"\xc3\xa9\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+
+      # -F in multi-byte locale
+      ['mb-F-1', '-F', '2', {IN=>"\xc3\xa9\t\xc3\xbc\n"},
+       {OUT=>"\xc3\xbc\n"},
        {ENV => "LC_ALL=$mb_locale"}];
   }
 
