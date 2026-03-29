@@ -483,6 +483,7 @@ main (int argc, char **argv)
   char *reference = NULL;
   bool discarded_datestr = false;
   bool discarded_set_datestr = false;
+  bool utc = false;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -559,18 +560,23 @@ main (int argc, char **argv)
           set_date = true;
           break;
         case 'u':
-          /* POSIX says that 'date -u' is equivalent to setting the TZ
-             environment variable, so this option should do nothing other
-             than setting TZ.  */
-          if (putenv (bad_cast ("TZ=UTC0")) != 0)
-            xalloc_die ();
-          TZSET;
+          utc = true;
           break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
         default:
           usage (EXIT_FAILURE);
         }
+    }
+
+  if (utc)
+    {
+      /* POSIX says that 'date -u' is equivalent to setting the TZ
+         environment variable, so this option should do nothing other
+         than setting TZ.  */
+      if (putenv (bad_cast ("TZ=UTC0")) != 0)
+        xalloc_die ();
+      TZSET;
     }
 
   int option_specified_date = (!!datestr + !!batch_file + !!reference
