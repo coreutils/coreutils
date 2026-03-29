@@ -56,6 +56,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  'cat' now uses zero-copy I/O on Linux when appropriate, to improve throughput.
+  E.g., throughput improved 6x from 12.9GiB/s to 81.8GiB/s on a Power10 system.
+
   'df --local' recognises more file system types as remote.
   Specifically: autofs, ncpfs, smb, smb2, gfs, gfs2, userlandfs.
 

@@ -309,6 +309,7 @@ all_tests =					\
   tests/cat/cat-proc.sh				\
   tests/cat/cat-buf.sh				\
   tests/cat/cat-self.sh				\
+  tests/cat/splice.sh				\
   tests/misc/basename.pl			\
   tests/basenc/base64.pl			\
   tests/basenc/basenc.pl			\

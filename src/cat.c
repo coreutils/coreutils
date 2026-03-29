@@ -37,6 +37,9 @@
 #include "ioblksize.h"
 #include "fadvise.h"
 #include "full-write.h"
+#include "isapipe.h"
+#include "splice.h"
+#include "unistd--.h"
 #include "xbinary-io.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -545,6 +548,107 @@ copy_cat (void)
       }
 }
 
+/* Copy data from input to output using splice if possible.
+   Return 1 if successful, 0 if ordinary read+write should be tried,
+   -1 if a serious problem has been diagnosed.  */
+
+static int
+splice_cat (void)
+{
+  bool some_copied = false;
+  bool in_ok = true;
+  bool out_ok = true;
+
+#if HAVE_SPLICE
+
+  static int stdout_is_pipe = -1;
+  static idx_t stdout_pipe_size = 0;
+  if (stdout_is_pipe == -1)
+    {
+      stdout_is_pipe = 0 < isapipe (STDOUT_FILENO);
+      if (stdout_is_pipe)
+        stdout_pipe_size = increase_pipe_size (STDOUT_FILENO);
+    }
+
+  bool input_is_pipe = 0 < isapipe (input_desc);
+
+  idx_t pipe_size = stdout_pipe_size;
+  if (input_is_pipe)
+    pipe_size = MAX (pipe_size, increase_pipe_size (input_desc));
+
+  int pipefd[2] = { -1, -1 };
+
+  /* Create an intermediate pipe.
+     Even if both input and output are pipes,
+     so that read and write errors can be distinguished.  */
+  if (pipe (pipefd) < 0)
+    return false;
+  pipe_size = MAX (pipe_size, increase_pipe_size (pipefd[1]));
+
+  while (true)
+    {
+      ssize_t bytes_read = splice (input_desc, NULL, pipefd[1], NULL,
+                                   pipe_size, 0);
+      /* If we successfully splice'd input previously, assume that any
+         subsequent error is fatal.  If not, then fall back to read
+         and write.  */
+      in_ok = 0 <= bytes_read || ! some_copied;
+      if (bytes_read <= 0)
+        goto done;
+      /* We need to drain the intermediate pipe to standard output.  */
+      while (0 < bytes_read)
+        {
+          ssize_t bytes_written = splice (pipefd[0], NULL, STDOUT_FILENO, NULL,
+                                          pipe_size, 0);
+          /* If we successfully splice'd output, assume any subsequent
+             error is fatal.  If not, than drain the intermediate pipe and
+             continue using read and write.  */
+          if (bytes_written < 0)
+            {
+              if (some_copied)
+                out_ok = false;
+              else
+                {
+                  char buf[BUFSIZ];
+                  while (0 < bytes_read)
+                    {
+                      ssize_t count = MIN (bytes_read, sizeof buf);
+                      ssize_t n_read = read (pipefd[0], buf, count);
+                      /* Failure not associated with in or out.  */
+                      in_ok = out_ok = 0 <= n_read;
+                      if (n_read <= 0)
+                        goto done;
+                      if (full_write (STDOUT_FILENO, buf, n_read) != n_read)
+                        write_error ();
+                      bytes_read -= n_read;
+                    }
+                }
+            }
+          if (bytes_written <= 0)
+            goto done;
+          some_copied = true;
+          bytes_read -= bytes_written;
+        }
+    }
+
+ done:
+  if (! in_ok && ! out_ok)
+    error (0, errno, "%s", _("splice error"));
+  else if (! in_ok)
+    error (0, errno, "%s", quotef (infile));
+  else if (! out_ok)
+    write_error ();
+  if (0 <= pipefd[0])
+    {
+      int saved_errno = errno;
+      close (pipefd[0]);
+      close (pipefd[1]);
+      errno = saved_errno;
+    }
+#endif
+
+  return (in_ok && out_ok) ? some_copied : -1;
+}
 
 int
 main (int argc, char **argv)
@@ -760,9 +864,24 @@ main (int argc, char **argv)
             }
           else
             {
-              insize = MAX (insize, outsize);
-              inbuf = xalignalloc (page_size, insize);
-              ok &= simple_cat (inbuf, insize);
+              /* Note 32768 was determined as the limit when splice
+                 starts to have a performance advantage.
+                 It also excludes zero length files which may not
+                 be compatible with splice in some edge cases.  */
+              int splice_cat_status = ((usable_st_size (&istat_buf)
+                                        && istat_buf.st_size <= 32768)
+                                       ? 0 : splice_cat ());
+              if (splice_cat_status != 0)
+                {
+                  inbuf = NULL;
+                  ok &= 0 < splice_cat_status;
+                }
+              else
+                {
+                  insize = MAX (insize, outsize);
+                  inbuf = xalignalloc (page_size, insize);
+                  ok &= simple_cat (inbuf, insize);
+                }
             }
         }
       else

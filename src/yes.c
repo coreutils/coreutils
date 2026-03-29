@@ -27,6 +27,7 @@
 #include "full-write.h"
 #include "isapipe.h"
 #include "long-options.h"
+#include "splice.h"
 #include "unistd--.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -76,10 +77,6 @@ repeat_pattern (char *dest, char const *src, idx_t srcsize, idx_t bufsize)
 
 #if HAVE_SPLICE
 
-/* Empirically determined pipe size for best throughput.
-   Needs to be <= /proc/sys/fs/pipe-max-size  */
-enum { SPLICE_PIPE_SIZE = 512 * 1024 };
-
 /* Enlarge a pipe towards SPLICE_PIPE_SIZE and return the actual
    capacity as a quarter of the pipe size (the empirical sweet spot
    for vmsplice throughput), rounded down to a multiple of COPYSIZE.
@@ -88,15 +85,7 @@ enum { SPLICE_PIPE_SIZE = 512 * 1024 };
 static idx_t
 pipe_splice_size (int fd, idx_t copysize)
 {
-  int pipe_cap = 0;
-# if defined F_SETPIPE_SZ && defined F_GETPIPE_SZ
-  if ((pipe_cap = fcntl (fd, F_SETPIPE_SZ, SPLICE_PIPE_SIZE)) < 0)
-    pipe_cap = fcntl (fd, F_GETPIPE_SZ);
-# endif
-  if (pipe_cap <= 0)
-    pipe_cap = 64 * 1024;
-
-  size_t buf_cap = pipe_cap / 4;
+  size_t buf_cap = increase_pipe_size (fd) / 4;
   return buf_cap / copysize * copysize;
 }
 

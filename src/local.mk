@@ -61,6 +61,7 @@ noinst_HEADERS =		\
   src/remove.h			\
   src/set-fields.h		\
   src/show-date.h		\
+  src/splice.h			\
   src/statx.h			\
   src/system.h			\
   src/temp-stream.h		\
