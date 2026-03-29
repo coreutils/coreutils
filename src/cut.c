@@ -33,7 +33,6 @@
 #include "assure.h"
 #include "c-ctype.h"
 #include "fadvise.h"
-#include "getndelim2.h"
 #include "ioblksize.h"
 #include "mbbuf.h"
 #include "memchr2.h"
