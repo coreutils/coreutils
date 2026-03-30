@@ -27,6 +27,9 @@ echo 'y' > exp &&
 coreutils --coreutils-prog=yes | head -n10 | uniq > out || framework_failure_
 compare exp out || fail=1
 
+# Ensure empty arg is rejected
+returns_ 1 coreutils $unset_command || fail=1
+
 # Ensure if incorrect program passed, we diagnose
 echo "coreutils: unknown program 'blah'" > exp || framework_failure_
 
