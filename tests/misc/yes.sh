@@ -75,7 +75,8 @@ no_zero_copy() {
   strace -f -o /dev/null -e inject=${syscalls}:error=ENOSYS "$@"
 }
 if no_zero_copy true; then
-  test "$(no_zero_copy yes | head -n2 | paste -s -d '')" = 'yy' || fail=1
+  # Use 3 byte input no\n which is impossible to extend to multiple of page size
+  test "$(no_zero_copy yes no | head -n2 | paste -s -d '')" = 'no' || fail=1
 fi
 # Ensure we fallback to write() if there is an issue with pipe2()
 # For example if we don't have enough file descriptors available.
