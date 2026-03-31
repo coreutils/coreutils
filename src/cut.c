@@ -729,11 +729,11 @@ reset_field_line (uintmax_t *field_idx, bool *found_any_selected_field,
 static void
 cut_bytes_buffered (FILE *stream, uintmax_t *byte_idx, bool *print_delimiter)
 {
-  static char line_in[IO_BUFSIZE];
+  static char bytes_in[IO_BUFSIZE];
 
   while (true)
     {
-      idx_t available = fread (line_in, sizeof *line_in, sizeof line_in,
+      idx_t available = fread (bytes_in, sizeof *bytes_in, sizeof bytes_in,
                                stream);
       if (available == 0)
         {
@@ -745,7 +745,7 @@ cut_bytes_buffered (FILE *stream, uintmax_t *byte_idx, bool *print_delimiter)
 
       while (processed < available)
         {
-          char *line = line_in + processed;
+          char *line = bytes_in + processed;
           char *line_end = memchr ((void *) line, line_delim,
                                    available - processed);
           char *end = line + (line_end ? line_end - line
@@ -833,11 +833,11 @@ cut_characters_mode (FILE *stream, bool byte_mode)
 {
   uintmax_t idx = 0;
   bool print_delimiter = false;
-  static char line_in[IO_BUFSIZE];
+  static char bytes_in[IO_BUFSIZE];
   mbbuf_t mbbuf;
 
   current_rp = frp;
-  mbbuf_init (&mbbuf, line_in, sizeof line_in, stream);
+  mbbuf_init (&mbbuf, bytes_in, sizeof bytes_in, stream);
 
   while (true)
     {
@@ -905,7 +905,7 @@ cut_characters (FILE *stream)
 static void
 cut_fields_mb_any (FILE *stream, bool whitespace_mode)
 {
-  static char line_in[IO_BUFSIZE];
+  static char bytes_in[IO_BUFSIZE];
   mbbuf_t mbbuf;
   struct mbfield_parser parser =
     {
@@ -920,7 +920,7 @@ cut_fields_mb_any (FILE *stream, bool whitespace_mode)
   bool have_pending_line = false;
 
   current_rp = frp;
-  mbbuf_init (&mbbuf, line_in, sizeof line_in, stream);
+  mbbuf_init (&mbbuf, bytes_in, sizeof bytes_in, stream);
 
   buffer_first_field = (suppress_non_delimited ^ !print_kth (1));
 
@@ -1000,7 +1000,7 @@ static void
 cut_fields_bytesearch (FILE *stream)
 {
   /* Leave 1 byte unused so space to NUL terminate (for strstr).  */
-  static char line_in[IO_BUFSIZE+1];
+  static char bytes_in[IO_BUFSIZE+1];
   mbbuf_t mbbuf;
   uintmax_t field_idx = 1;
   bool found_any_selected_field = false;
@@ -1011,7 +1011,7 @@ cut_fields_bytesearch (FILE *stream)
 
   current_rp = frp;
   bool buffer_first_field = suppress_non_delimited ^ !print_kth (1);
-  mbbuf_init (&mbbuf, line_in, sizeof line_in - 1, stream);
+  mbbuf_init (&mbbuf, bytes_in, sizeof bytes_in - 1, stream);
   write_field = begin_field_output (field_idx, buffer_first_field,
                                     &found_any_selected_field);
 
