@@ -124,4 +124,10 @@ dd if=$tmp_in of=$tmp_out count=00x$big status=noxfer 2>err || fail=1
 compare /dev/null $tmp_out || fail=1
 compare err_ok err || fail=1
 
+# Ensure of=/dev/tty is possible
+if test -c /dev/tty && test -w /dev/tty; then
+  dd if=/dev/null of=/dev/tty || fail=1
+fi
+
+
 Exit $fail
