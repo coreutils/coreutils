@@ -25,7 +25,9 @@
 
 #include <stdio.h>
 #include <stddef.h>
+#include <unistd.h>
 
+#include "fseterr.h"
 #include "mcel.h"
 #include "idx.h"
 
@@ -47,6 +49,7 @@ typedef struct
   idx_t size;      /* Number of bytes allocated for BUFFER.  */
   idx_t length;    /* Number of bytes with data in BUFFER.  */
   idx_t offset;    /* Current position in BUFFER.  */
+  bool eof;        /* Whether at End Of File.  */
 } mbbuf_t;
 
 MBBUF_INLINE idx_t
@@ -68,16 +71,19 @@ mbbuf_init (mbbuf_t *mbbuf, char *buffer, idx_t size, FILE *fp)
   mbbuf->size = size;
   mbbuf->length = 0;
   mbbuf->offset = 0;
+  mbbuf->eof = false;
 }
 
 /* Fill the input buffer with at least MCEL_LEN_MAX bytes if possible.
-   Return the number of bytes available from the current offset.  */
+   Return the number of bytes available from the current offset.
+   At end of file, MBBUF.EOF is set, and zero will eventually be returned.
+   Note feof() will _NOT_ be set on the MBBUF.FP.  */
 MBBUF_INLINE idx_t
 mbbuf_fill (mbbuf_t *mbbuf)
 {
   idx_t available = mbbuf_avail (mbbuf);
 
-  if (available < MCEL_LEN_MAX && ! feof (mbbuf->fp))
+  if (available < MCEL_LEN_MAX && ! mbbuf->eof)
     {
       idx_t start;
       if (!(0 < available))
@@ -87,8 +93,20 @@ mbbuf_fill (mbbuf_t *mbbuf)
           memmove (mbbuf->buffer, mbbuf->buffer + mbbuf->offset, available);
           start = available;
         }
-      mbbuf->length = fread (mbbuf->buffer + start, 1, mbbuf->size - start,
-                             mbbuf->fp) + start;
+      ssize_t  read_ret = read (fileno (mbbuf->fp), mbbuf->buffer + start,
+                                mbbuf->size - start);
+      if (read_ret < 0)
+        {
+          fseterr (mbbuf->fp);
+          mbbuf->eof = true;  /* Avoid any more reads().  */
+          mbbuf->length = start;
+        }
+      else
+        {
+          mbbuf->eof = read_ret == 0;
+          mbbuf->length = read_ret + start;
+        }
+
       mbbuf->offset = 0;
       available = mbbuf_avail (mbbuf);
     }

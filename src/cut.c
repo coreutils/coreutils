@@ -727,17 +727,22 @@ reset_field_line (uintmax_t *field_idx, bool *found_any_selected_field,
    callers to hand off mid-line.  */
 
 static void
-cut_bytes_buffered (FILE *stream, uintmax_t *byte_idx, bool *print_delimiter)
+cut_bytes (FILE *stream)
 {
   static char bytes_in[IO_BUFSIZE];
+  uintmax_t byte_idx = 0;
+  bool print_delimiter = false;
+
+  current_rp = frp;
 
   while (true)
     {
-      idx_t available = fread (bytes_in, sizeof *bytes_in, sizeof bytes_in,
-                               stream);
-      if (available == 0)
+      idx_t available = read (fileno (stream), bytes_in, sizeof bytes_in);
+      if (available <= 0)
         {
-          write_pending_line_delim (*byte_idx);
+          if (available < 0)
+            fseterr (stream);
+          write_pending_line_delim (byte_idx);
           break;
         }
 
@@ -754,22 +759,22 @@ cut_bytes_buffered (FILE *stream, uintmax_t *byte_idx, bool *print_delimiter)
 
           while (p < end)
             {
-              sync_byte_selection (*byte_idx);
+              sync_byte_selection (byte_idx);
 
-              if (*byte_idx + 1 < current_rp->lo)
+              if (byte_idx + 1 < current_rp->lo)
                 {
-                  idx_t skip = MIN (end - p, current_rp->lo - (*byte_idx + 1));
+                  idx_t skip = MIN (end - p, current_rp->lo - (byte_idx + 1));
                   p += skip;
-                  *byte_idx += skip;
+                  byte_idx += skip;
                 }
               else
                 {
-                  idx_t n = MIN (end - p, current_rp->hi - *byte_idx);
-                  write_selected_item (print_delimiter,
-                                       is_range_start_index (*byte_idx + 1),
+                  idx_t n = MIN (end - p, current_rp->hi - byte_idx);
+                  write_selected_item (&print_delimiter,
+                                       is_range_start_index (byte_idx + 1),
                                        p, n);
                   p += n;
-                  *byte_idx += n;
+                  byte_idx += n;
                 }
             }
 
@@ -777,49 +782,7 @@ cut_bytes_buffered (FILE *stream, uintmax_t *byte_idx, bool *print_delimiter)
           if (line_end)
             {
               processed++;
-              reset_item_line (byte_idx, print_delimiter);
-            }
-        }
-    }
-}
-
-/* Read from stream STREAM, printing to standard output any selected bytes.
-   This avoids data copies and function calls for short lines,
-   and will defer to cut_bytes_buffered() once a longer line is encountered.  */
-
-static void
-cut_bytes (FILE *stream)
-{
-  uintmax_t byte_idx = 0;
-  bool print_delimiter = false;
-
-  current_rp = frp;
-
-  while (true)
-    {
-      int c = getc (stream);
-
-      if (c == line_delim)
-        reset_item_line (&byte_idx, &print_delimiter);
-      else if (c == EOF)
-        {
-          write_pending_line_delim (byte_idx);
-          break;
-        }
-      else
-        {
-          next_item (&byte_idx);
-          if (print_kth (byte_idx))
-            {
-              char ch = c;
-              write_selected_item (&print_delimiter,
-                                   is_range_start_index (byte_idx), &ch, 1);
-            }
-
-          if (SMALL_BYTE_THRESHOLD < byte_idx)
-            {
-              cut_bytes_buffered (stream, &byte_idx, &print_delimiter);
-              break;
+              reset_item_line (&byte_idx, &print_delimiter);
             }
         }
     }
@@ -1023,7 +986,7 @@ cut_fields_bytesearch (FILE *stream)
       idx_t safe = mbbuf_fill (&mbbuf);
       if (safe == 0)
         break;
-      search.at_eof = feof (mbbuf.fp);
+      search.at_eof = mbbuf.eof;
       search.line_end_known = false;
 
       char *chunk = mbbuf.buffer + mbbuf.offset;
