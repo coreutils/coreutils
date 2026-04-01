@@ -326,7 +326,6 @@ enum field_terminator
   FIELD_DATA,
   FIELD_DELIMITER,
   FIELD_LINE_DELIMITER,
-  FIELD_FINAL_DELIMITER,
   FIELD_EOF
 };
 
@@ -580,7 +579,7 @@ find_field_delim (char *buf, size_t len)
 #else
   unsigned char delim_0 = delim_bytes[0];
   if (delim_length == 1)
-    return memchr ((void *) buf, delim_0, len);
+    return memchr (buf, delim_0, len);
 
   char const *p = buf;
   char const *end = buf + len;
@@ -627,7 +626,7 @@ find_field_terminator (char *buf, idx_t len,
     {
       if (!ctx->line_end_known)
         {
-          ctx->line_end = memchr ((void *) buf, line_delim, len);
+          ctx->line_end = memchr (buf, line_delim, len);
           ctx->line_end_known = true;
         }
 
@@ -637,18 +636,13 @@ find_field_terminator (char *buf, idx_t len,
 
   if (field_delim_is_line_delim ())
     {
-      *terminator = memchr ((void *) buf, line_delim, len);
-      if (!*terminator)
-        return FIELD_DATA;
-
-      return (ctx->at_eof && *terminator + 1 == buf + len
-              ? FIELD_FINAL_DELIMITER
-              : FIELD_DELIMITER);
+      *terminator = memchr (buf, line_delim, len);
+      return *terminator ? FIELD_DELIMITER : FIELD_DATA;
     }
 
   if (!ctx->line_end_known)
     {
-      ctx->line_end = memchr ((void *) buf, line_delim, len);
+      ctx->line_end = memchr (buf, line_delim, len);
       ctx->line_end_known = true;
     }
 
@@ -698,9 +692,60 @@ begin_field_output (uintmax_t field_idx, bool buffer_first_field,
 }
 
 static inline bool
+handle_field_1 (uintmax_t field_idx, bool buffer_first_field,
+                idx_t *field_1_n_bytes)
+{
+  bool field_1_selected = false;
+
+  if (field_idx == 1 && buffer_first_field)
+    {
+      if ((field_1_selected = print_kth (1)))
+        write_bytes (field_1_buffer, *field_1_n_bytes);
+      *field_1_n_bytes = 0;
+    }
+
+  return field_1_selected;
+}
+
+static inline void
+handle_field_delimiter (uintmax_t *field_idx, bool buffer_first_field,
+                        idx_t *field_1_n_bytes,
+                        bool *found_any_selected_field, bool *write_field,
+                        bool blank_delimited, bool *skip_blank_run)
+{
+  if (handle_field_1 (*field_idx, buffer_first_field, field_1_n_bytes))
+    *found_any_selected_field = true;
+
+  next_item (field_idx);
+  *write_field = begin_field_output (*field_idx, buffer_first_field,
+                                     found_any_selected_field);
+  if (blank_delimited)
+    *skip_blank_run = true;
+}
+
+static inline bool
 field_selection_exhausted (uintmax_t field_idx)
 {
   return !print_kth (field_idx) && current_rp->lo == UINTMAX_MAX;
+}
+
+static inline void
+finish_current_line (uintmax_t field_idx, bool buffer_first_field,
+                     idx_t *field_1_n_bytes,
+                     bool found_any_selected_field, bool line_terminated)
+{
+  if (field_idx == 1 && buffer_first_field)
+    {
+      if (!suppress_non_delimited
+          && (line_terminated || *field_1_n_bytes != 0))
+        {
+          write_bytes (field_1_buffer, *field_1_n_bytes);
+          write_line_delim ();
+        }
+      *field_1_n_bytes = 0;
+    }
+  else if (field_idx != 1 || found_any_selected_field)
+    maybe_write_line_delim (found_any_selected_field, field_idx);
 }
 
 static inline void
@@ -751,8 +796,7 @@ cut_bytes (FILE *stream)
       while (processed < available)
         {
           char *line = bytes_in + processed;
-          char *line_end = memchr ((void *) line, line_delim,
-                                   available - processed);
+          char *line_end = memchr (line, line_delim, available - processed);
           char *end = line + (line_end ? line_end - line
                                        : available - processed);
           char *p = line;
@@ -969,6 +1013,7 @@ cut_fields_bytesearch (FILE *stream)
   bool found_any_selected_field = false;
   bool have_pending_line = false;
   bool skip_blank_run = false;
+  bool pending_line_delim_field = false;
   bool write_field;
   idx_t field_1_n_bytes = 0;
 
@@ -983,11 +1028,31 @@ cut_fields_bytesearch (FILE *stream)
 
   while (true)
     {
-      idx_t safe = mbbuf_fill (&mbbuf);
-      if (safe == 0)
-        break;
+      idx_t n_avail = mbbuf_fill (&mbbuf);
       search.at_eof = mbbuf.eof;
       search.line_end_known = false;
+
+      if (pending_line_delim_field)
+        {
+          pending_line_delim_field = false;
+
+          if (n_avail == 0)
+            {
+              if (handle_field_1 (field_idx, buffer_first_field,
+                                  &field_1_n_bytes))
+                next_item (&field_idx);
+              maybe_write_line_delim (found_any_selected_field, field_idx);
+              return;
+            }
+
+          handle_field_delimiter (&field_idx, buffer_first_field,
+                                  &field_1_n_bytes,
+                                  &found_any_selected_field, &write_field,
+                                  whitespace_delimited, &skip_blank_run);
+        }
+
+      if (n_avail == 0)
+        break;
 
       char *chunk = mbbuf.buffer + mbbuf.offset;
       idx_t processed = 0;
@@ -996,29 +1061,22 @@ cut_fields_bytesearch (FILE *stream)
       if (field_idx == 1
           && !whitespace_delimited
           && !field_delim_is_line_delim ()
-          && !find_field_delim (chunk, safe))
+          && !find_field_delim (chunk, n_avail))
         {
           char *last_line_delim = search.at_eof
-                                  ? chunk + safe - 1
-                                  : memrchr ((void *) chunk, line_delim, safe);
+                                  ? chunk + n_avail - 1
+                                  : memrchr (chunk, line_delim, n_avail);
           if (last_line_delim)
             {
               idx_t n = last_line_delim - chunk + 1;
               if (! suppress_non_delimited)
                 {
-                  /* Flush any buffered field 1 data from a prior
-                     partial chunk that had no delimiter.  */
-                  if (field_1_n_bytes > 0)
-                    {
-                      write_bytes (field_1_buffer, field_1_n_bytes);
-                      field_1_n_bytes = 0;
-                    }
+                  write_bytes (field_1_buffer, field_1_n_bytes);
                   write_bytes (chunk, n);
                   if (search.at_eof && chunk[n - 1] != line_delim)
                     write_line_delim ();
                 }
-              else
-                field_1_n_bytes = 0;
+              field_1_n_bytes = 0;
               mbbuf_advance (&mbbuf, n);
               have_pending_line = false;
               if (search.at_eof)
@@ -1027,15 +1085,15 @@ cut_fields_bytesearch (FILE *stream)
             }
         }
 
-      while (processed < safe)
+      while (processed < n_avail)
         {
           char *terminator = NULL;
 
           if (skip_blank_run)
             {
-              while (processed < safe && c_isblank (chunk[processed]))
+              while (processed < n_avail && c_isblank (chunk[processed]))
                 processed++;
-              if (processed == safe)
+              if (processed == n_avail)
                 break;
               skip_blank_run = false;
             }
@@ -1051,7 +1109,7 @@ cut_fields_bytesearch (FILE *stream)
                 }
               search.mode = BYTESEARCH_LINE_ONLY;
               enum field_terminator terminator_kind
-                = find_field_terminator (chunk + processed, safe - processed,
+                = find_field_terminator (chunk + processed, n_avail - processed,
                                          &search, &terminator);
               if (terminator_kind == FIELD_LINE_DELIMITER)
                 {
@@ -1060,15 +1118,15 @@ cut_fields_bytesearch (FILE *stream)
                                           field_idx);
                   goto reset_line;
                 }
-              processed = safe;
+              processed = n_avail;
               break;
             }
 
           enum field_terminator terminator_kind
-            = find_field_terminator (chunk + processed, safe - processed,
+            = find_field_terminator (chunk + processed, n_avail - processed,
                                      &search, &terminator);
           idx_t field_len = terminator ? terminator - (chunk + processed)
-                                       : safe - processed;
+                                       : n_avail - processed;
 
           if (field_len || terminator)
             have_pending_line = true;
@@ -1086,40 +1144,26 @@ cut_fields_bytesearch (FILE *stream)
 
           if (terminator_kind == FIELD_DELIMITER)
             {
-              if (field_idx == 1 && buffer_first_field)
+              if (field_delim_is_line_delim () && processed + 1 == n_avail)
                 {
-                  if (print_kth (1))
-                    {
-                      write_bytes (field_1_buffer, field_1_n_bytes);
-                      found_any_selected_field = true;
-                    }
-                  field_1_n_bytes = 0;
+                  processed++;
+                  pending_line_delim_field = true;
+                  break;
                 }
 
               processed += whitespace_delimited ? 1 : delim_length;
-
-              next_item (&field_idx);
-              write_field = begin_field_output (field_idx, buffer_first_field,
-                                                &found_any_selected_field);
-              if (whitespace_delimited)
-                skip_blank_run = true;
+              handle_field_delimiter (&field_idx, buffer_first_field,
+                                      &field_1_n_bytes,
+                                      &found_any_selected_field, &write_field,
+                                      whitespace_delimited, &skip_blank_run);
             }
-          else if (terminator_kind == FIELD_LINE_DELIMITER)
+          else
             {
+              affirm (terminator_kind == FIELD_LINE_DELIMITER);
               processed++;
-
-              if (field_idx == 1 && buffer_first_field)
-                {
-                  if (!suppress_non_delimited)
-                    {
-                      write_bytes (field_1_buffer, field_1_n_bytes);
-                      write_line_delim ();
-                    }
-                  field_1_n_bytes = 0;
-                }
-              else
-                maybe_write_line_delim (found_any_selected_field,
-                                        field_idx);
+              finish_current_line (field_idx, buffer_first_field,
+                                   &field_1_n_bytes,
+                                   found_any_selected_field, true);
 
             reset_line:
               field_idx = 1;
@@ -1130,23 +1174,6 @@ cut_fields_bytesearch (FILE *stream)
               write_field = begin_field_output (field_idx, buffer_first_field,
                                                 &found_any_selected_field);
             }
-          else
-            {
-              affirm (terminator_kind == FIELD_FINAL_DELIMITER);
-              processed++;
-
-              if (field_idx == 1 && buffer_first_field)
-                {
-                  if (print_kth (1))
-                    write_bytes (field_1_buffer, field_1_n_bytes);
-                  field_1_n_bytes = 0;
-                  next_item (&field_idx);
-                }
-
-              maybe_write_line_delim (found_any_selected_field, field_idx);
-              mbbuf_advance (&mbbuf, processed);
-              return;
-            }
         }
 
       mbbuf_advance (&mbbuf, processed);
@@ -1155,16 +1182,8 @@ cut_fields_bytesearch (FILE *stream)
   if (!have_pending_line)
     return;
 
-  if (field_idx == 1 && buffer_first_field)
-    {
-      if (field_1_n_bytes != 0 && !suppress_non_delimited)
-        {
-          write_bytes (field_1_buffer, field_1_n_bytes);
-          write_line_delim ();
-        }
-    }
-  else if (field_idx != 1 || found_any_selected_field)
-    maybe_write_line_delim (found_any_selected_field, field_idx);
+  finish_current_line (field_idx, buffer_first_field, &field_1_n_bytes,
+                       found_any_selected_field, false);
 }
 
 /* Read from STREAM, printing to standard output any selected fields,

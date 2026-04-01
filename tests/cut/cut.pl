@@ -18,6 +18,9 @@
 
 use strict;
 
+my $limits = getlimits ();
+my $IO_BUFSIZE = $limits->{IO_BUFSIZE};
+
 (my $ME = $0) =~ s|.*/||;
 
 # Turn off localization of executable's output.
@@ -192,6 +195,8 @@ my @Tests =
   ['newline-24', "-d'\n'", '-f1,2', '--ou=:', {IN=>"a\nb\n"}, {OUT=>"a:b\n"}],
   ['newline-26', "-d'\n'", '-f2', {IN=>"a\n"}, {OUT=>"\n"}],
   ['newline-27', '-s', "-d'\n'", '-f2', {IN=>"a\n"}, {OUT=>""}],
+  ['newline-28', '-s', "-d'\n'", '-f2',
+   {IN=>('a' x ($IO_BUFSIZE - 1)) . "\n"}, {OUT=>""}],
 
   # input without delimiter and -s flag
   ['newline-25', '-s', "-d'\n'", '-f1', {IN=>"abc"}, {OUT=>""}],
