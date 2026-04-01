@@ -25,6 +25,13 @@ vm=$(get_min_ulimit_v_ timeout 10 dd if=f of=f2 status=none) \
   || skip_ 'shell lacks ulimit, or ASAN enabled'
 rm f f2 || framework_failure_
 
+# Ensure dd exits with 1 if memory exhausted
+returns_ 1 dd if=/dev/null of=/dev/null bs=$(($SSIZE_MAX-1)) || fail=1  # alloc fail
+returns_ 1 dd if=/dev/null of=/dev/null bs=$SIZE_OFLOW || fail=1  # numeric fail
+
+# Ensure dd exits with 1 if there is nothing to allocate
+returns_ 1 dd if=/dev/null of=/dev/null bs=0 || fail=1
+
 # count and skip are zero, we don't need to allocate memory
 (ulimit -v $vm && dd  bs=30M count=0) || fail=1
 (ulimit -v $vm && dd ibs=30M count=0) || fail=1
