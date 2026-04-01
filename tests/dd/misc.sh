@@ -125,7 +125,7 @@ compare /dev/null $tmp_out || fail=1
 compare err_ok err || fail=1
 
 # Ensure of=/dev/tty is possible
-if test -c /dev/tty && test -w /dev/tty; then
+if test -c /dev/tty && >/dev/tty; then
   dd if=/dev/null of=/dev/tty || fail=1
 fi
 
