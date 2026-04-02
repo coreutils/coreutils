@@ -628,6 +628,25 @@ find_field_delim (char *buf, size_t len)
 #endif
 }
 
+/* Return the number of trailing bytes in BUF that could be the initial
+   bytes of a delimiter split across buffers.  */
+
+ATTRIBUTE_PURE
+static idx_t
+field_delim_overlap (char const *buf, idx_t len)
+{
+  idx_t overlap = MIN (len, delim_length - 1);
+
+  while (0 < overlap)
+    {
+      if (memcmp (buf + len - overlap, delim_bytes, overlap) == 0)
+        return overlap;
+      overlap--;
+    }
+
+  return 0;
+}
+
 /* Byte search for line end or delimiter in BUF,
    returning results in CTX.  */
 
@@ -1141,6 +1160,12 @@ cut_fields_bytesearch (FILE *stream)
                                      &search, &terminator);
           idx_t field_len = terminator ? terminator - (chunk + processed)
                                        : n_avail - processed;
+
+          if (terminator_kind == FIELD_DATA
+              && !search.at_eof
+              && !whitespace_delimited
+              && !field_delim_is_line_delim ())
+            field_len -= field_delim_overlap (chunk + processed, field_len);
 
           if (field_len || terminator)
             have_pending_line = true;
