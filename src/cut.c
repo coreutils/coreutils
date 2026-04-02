@@ -1042,7 +1042,7 @@ cut_fields_bytesearch (FILE *stream)
 
   while (true)
     {
-      idx_t n_avail = mbbuf_fill (&mbbuf);
+      idx_t n_avail = mbbuf_topup (&mbbuf);
       search.at_eof = mbbuf.eof;
       search.line_end_known = false;
 

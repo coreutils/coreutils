@@ -79,7 +79,7 @@ mbbuf_init (mbbuf_t *mbbuf, char *buffer, idx_t size, FILE *fp)
    At end of file, MBBUF.EOF is set, and zero will eventually be returned.
    Note feof() will _NOT_ be set on the MBBUF.FP.  */
 MBBUF_INLINE idx_t
-mbbuf_fill (mbbuf_t *mbbuf)
+mbbuf_topup (mbbuf_t *mbbuf)
 {
   idx_t available = mbbuf_avail (mbbuf);
 
@@ -109,6 +109,27 @@ mbbuf_fill (mbbuf_t *mbbuf)
 
       mbbuf->offset = 0;
       available = mbbuf_avail (mbbuf);
+    }
+
+  return available;
+}
+
+/* Fill the input buffer enough to scan the next character if possible.
+   Return the number of bytes available from the current offset.  */
+MBBUF_INLINE idx_t
+mbbuf_fill (mbbuf_t *mbbuf)
+{
+  idx_t available = mbbuf_avail (mbbuf);
+
+  if (available == 0)
+    return mbbuf_topup (mbbuf);
+
+  if (available < MCEL_LEN_MAX && ! mbbuf->eof)
+    {
+      mcel_t g = mcel_scan (mbbuf->buffer + mbbuf->offset,
+                            mbbuf->buffer + mbbuf->length);
+      if (g.err)
+        return mbbuf_topup (mbbuf);
     }
 
   return available;

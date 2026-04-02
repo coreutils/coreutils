@@ -11,6 +11,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'fold' will no longer truncate output when encountering 0xFF bytes.
   [bug introduced in coreutils-9.8]
 
+  'fold' is again responsive to its input.  Previously it would have delayed
+  processing until 256KiB was read from the input.
+  [bug introduced in coreutils-9.8]
+
   'kill --help' now has links to valid anchors in the html manual.
   [bug introduced in coreutils-9.10]
 
