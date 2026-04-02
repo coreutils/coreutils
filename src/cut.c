@@ -433,6 +433,19 @@ copy_bytes (char *dst, char const *src, size_t n_bytes)
   memcpy (dst, src, n_bytes);
 }
 
+/* Like memchr, but avoid a function call for smaller amounts.  */
+
+static inline void*
+search_bytes (char const *buf, int c, size_t n_bytes)
+{
+  if (n_bytes != 0 && to_uchar (buf[0]) == c)
+    return (char *) buf;
+  if (1 < n_bytes && to_uchar (buf[1]) == c)
+    return (char *) buf + 1;
+
+  return 2 < n_bytes ? memchr (buf + 2, c, n_bytes - 2) : NULL;
+}
+
 static inline void
 write_line_delim (void)
 {
@@ -777,12 +790,13 @@ cut_bytes (FILE *stream)
   static char bytes_in[IO_BUFSIZE];
   uintmax_t byte_idx = 0;
   bool print_delimiter = false;
+  int fd = fileno (stream);
 
   current_rp = frp;
 
   while (true)
     {
-      idx_t available = read (fileno (stream), bytes_in, sizeof bytes_in);
+      idx_t available = read (fd, bytes_in, sizeof bytes_in);
       if (available <= 0)
         {
           if (available < 0)
@@ -796,12 +810,12 @@ cut_bytes (FILE *stream)
       while (processed < available)
         {
           char *line = bytes_in + processed;
-          char *line_end = memchr (line, line_delim, available - processed);
-          char *end = line + (line_end ? line_end - line
-                                       : available - processed);
+          idx_t to_process = available - processed;
+          char *line_end = search_bytes (line, line_delim, to_process);
+          char *end = line + (line_end ? line_end - line : to_process);
           char *p = line;
 
-          while (p < end)
+          while (0 < end - p)
             {
               sync_byte_selection (byte_idx);
 
