@@ -18,6 +18,10 @@
 
 use strict;
 
+my $limits = getlimits ();
+my $large_year = $limits->{INT_MAX} + 1900;
+my $large_year_out_of_range = $large_year + 1;
+
 (my $ME = $0) =~ s|.*/||;
 
 # Turn off localization of executable's output.
@@ -372,7 +376,20 @@ my @Tests =
      # Test timezone conversion with -u -d flag
      # "10:30 UTC-05" should convert to "15:30 UTC", not "10:30 UTC"
      ['tz-conversion-est', "-u -d '10:30 UTC-05' +'%H:%M'", {OUT=>"15:30"}],
+
     );
+
+$limits->{TIME_T_MAX} == $limits->{INTMAX_MAX}
+  and push @Tests,
+    ['large-year', "-d '$large_year-01-01' +'%Y-%m-%d'",
+     {OUT=>"$large_year-01-01"}];
+
+push @Tests,
+  ['large-year-out-of-range',
+   "-d '$large_year_out_of_range-01-01' +'%Y-%m-%d'",
+   {ERR => "date: invalid date '$large_year_out_of_range-01-01'\n"},
+   {EXIT => 1},
+  ];
 
 # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
 foreach my $i (1..364)
