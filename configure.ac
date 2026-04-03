@@ -291,54 +291,6 @@ AC_CHECK_FUNCS([sigsuspend],
 
 gl_WINSIZE_IN_PTEM
 
-AC_MSG_CHECKING([whether localtime caches TZ])
-AC_CACHE_VAL([utils_cv_localtime_cache],
-[if test x$ac_cv_func_tzset = xyes; then
-AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <time.h>
-#if STDC_HEADERS
-# include <stdlib.h>
-#endif
-extern char **environ;
-void unset_TZ (void)
-{
-  char **from, **to;
-  for (to = from = environ; (*to = *from); from++)
-    if (! (to[0][0] == 'T' && to[0][1] == 'Z' && to[0][2] == '='))
-      to++;
-}
-int
-main ()
-{
-  time_t now = time ((time_t *) 0);
-  int hour_GMT0, hour_unset;
-  if (putenv ("TZ=GMT0") != 0)
-    return 1;
-  hour_GMT0 = localtime (&now)->tm_hour;
-  unset_TZ ();
-  hour_unset = localtime (&now)->tm_hour;
-  if (putenv ("TZ=PST8") != 0)
-    return 1;
-  if (localtime (&now)->tm_hour == hour_GMT0)
-    return 1;
-  unset_TZ ();
-  if (localtime (&now)->tm_hour != hour_unset)
-    return 1;
-  return 0;
-}]])],
-[utils_cv_localtime_cache=no],
-[utils_cv_localtime_cache=yes],
-[# If we have tzset, assume the worst when cross-compiling.
-utils_cv_localtime_cache=yes])
-else
-        # If we lack tzset, report that localtime does not cache TZ,
-        # since we can't invalidate the cache if we don't have tzset.
-        utils_cv_localtime_cache=no
-fi])dnl
-AC_MSG_RESULT([$utils_cv_localtime_cache])
-if test $utils_cv_localtime_cache = yes; then
-  AC_DEFINE([LOCALTIME_CACHE], [1], [FIXME])
-fi
-
 # Find the library for dynamic loading of shared libraries.
 AC_SEARCH_LIBS([dlopen], [dl])
 AS_CASE([$ac_cv_search_dlopen],
