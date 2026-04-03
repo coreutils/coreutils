@@ -41,4 +41,8 @@ compare exp err || fail=1
 returns_ 1 ./blah --version 2>err || fail=1
 compare exp err || fail=1
 
+# Ensure coreutils works with memfd_create on the system execution from fd is allowed
+env -a coreutils /proc/self/fd/3 --coreutils-prog=yes --version 3<"$(command -v coreutils)" \
+  && { env -a yes /proc/self/fd/3 --version 3<"$(command -v coreutils)" || fail=1;}
+
 Exit $fail
