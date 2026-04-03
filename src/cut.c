@@ -86,17 +86,11 @@ static bool suppress_non_delimited;
    those that were specified.  */
 static bool complement;
 
-/* The delimiter byte for single-byte field mode.  */
-static unsigned char delim;
-
 /* The delimiter character for multibyte field mode.  */
 static mcel_t delim_mcel;
 
 /* The delimiter bytes.  */
 static char delim_bytes[MB_LEN_MAX];
-
-/* The length of DELIM_BYTES.  */
-static size_t delim_length = 1;
 
 /* The delimiter for each line/record.  */
 static unsigned char line_delim = '\n';
@@ -293,7 +287,7 @@ is_range_start_index (uintmax_t k)
 static inline bool
 field_delim_is_line_delim (void)
 {
-  return delim_length == 1 && delim_bytes[0] == line_delim;
+  return delim_mcel.len == 1 && delim_bytes[0] == line_delim;
 }
 
 /* This is equivalent to but faster than calling c32issep directly.
@@ -313,7 +307,7 @@ bytesearch_field_delim_ok (void)
 {
   unsigned char delim_0 = delim_bytes[0];
 
-  return (delim_length == 1
+  return (delim_mcel.len == 1
           ? (MB_CUR_MAX <= 1
              || (is_utf8_charset ()
                  ? (delim_0 < 0x80 || delim_0 > 0xF4) : delim_0 < 0x30))
@@ -584,15 +578,14 @@ ATTRIBUTE_PURE
 static char *
 find_field_delim (char *buf, size_t len)
 {
-  if (len < delim_length)
+  if (len < delim_mcel.len)
     return NULL;
 
 #if ! __GLIBC__  /* Only S390 has optimized memmem on glibc-2.42  */
-  return memmem (buf, len, delim_bytes, delim_length);
+  return memmem (buf, len, delim_bytes, delim_mcel.len);
 #else
-  unsigned char delim_0 = delim_bytes[0];
-  if (delim_length == 1)
-    return memchr (buf, delim_0, len);
+  if (delim_mcel.len == 1)
+    return memchr (buf, delim_bytes[0], len);
 
   char const *p = buf;
   char const *end = buf + len;
@@ -635,7 +628,7 @@ ATTRIBUTE_PURE
 static idx_t
 field_delim_overlap (char const *buf, idx_t len)
 {
-  idx_t overlap = MIN (len, delim_length - 1);
+  idx_t overlap = MIN (len, delim_mcel.len - 1);
 
   while (0 < overlap)
     {
@@ -1190,7 +1183,7 @@ cut_fields_bytesearch (FILE *stream)
                   break;
                 }
 
-              processed += whitespace_delimited ? 1 : delim_length;
+              processed += whitespace_delimited ? 1 : delim_mcel.len;
               handle_field_delimiter (&field_idx, buffer_first_field,
                                       &field_1_n_bytes,
                                       &found_any_selected_field, &write_field,
@@ -1326,31 +1319,10 @@ main (int argc, char **argv)
         case 'd':
           /* New delimiter.  */
           /* Interpret -d '' to mean 'use the NUL byte as the delimiter.'  */
-          if (optarg[0] == '\0')
-            {
-              delim = '\0';
-              delim_bytes[0] = '\0';
-              delim_length = 1;
-            }
-          else if (MB_CUR_MAX <= 1)
-            {
-              if (optarg[1] != '\0')
-                FATAL_ERROR (_("the delimiter must be a single character"));
-              delim = optarg[0];
-              delim_bytes[0] = optarg[0];
-              delim_length = 1;
-            }
-          else
-            {
-              mcel_t g = mcel_scanz (optarg);
-              if (optarg[g.len] != '\0')
-                FATAL_ERROR (_("the delimiter must be a single character"));
-              copy_bytes (delim_bytes, optarg, g.len);
-              delim_length = g.len;
-              delim_mcel = g;
-              if (g.len == 1)
-                delim = optarg[0];
-            }
+          mcel_t g = delim_mcel = mcel_scanz (optarg);
+          if (optarg[0] && optarg[g.len])
+            FATAL_ERROR (_("the delimiter must be a single character"));
+          copy_bytes (delim_bytes, optarg, g.len);
           delim_specified = true;
           break;
 
@@ -1424,9 +1396,7 @@ main (int argc, char **argv)
 
   if (!delim_specified)
     {
-      delim = '\t';
       delim_bytes[0] = '\t';
-      delim_length = 1;
       delim_mcel = mcel_ch ('\t', 1);
     }
 
@@ -1440,8 +1410,8 @@ main (int argc, char **argv)
         }
       else
         {
-          copy_bytes (output_delimiter_default, delim_bytes, delim_length);
-          output_delimiter_length = delim_length;
+          copy_bytes (output_delimiter_default, delim_bytes, delim_mcel.len);
+          output_delimiter_length = delim_mcel.len;
         }
     }
 
