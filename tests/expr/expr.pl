@@ -69,6 +69,12 @@ my @Tests =
      ['andand', '0 \& 1 / 0', {OUT => '0'}, {EXIT => 1}],
      ['oror', '1 \| 1 / 0', {OUT => '1'}, {EXIT => 0}],
 
+     # Short-circuit must also skip parenthesized dead branches.
+     ['or-paren', '1 \| \( 1 / 0 \)', {OUT => '1'}, {EXIT => 0}],
+     ['and-paren', '0 \& \( 1 / 0 \)', {OUT => '0'}, {EXIT => 1}],
+     ['or-nested', '1 \| \( 0 \& \( 1 / 0 \) \)', {OUT => '1'}, {EXIT => 0}],
+     ['and-nested', '0 \& \( 1 \| \( 1 / 0 \) \)', {OUT => '0'}, {EXIT => 1}],
+
      # In 5.1.3 and earlier, this would output the empty string.
      ['orempty', '"" \| ""', {OUT => '0'}, {EXIT => 1}],
 
