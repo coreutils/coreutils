@@ -676,6 +676,7 @@ all_tests =					\
   tests/ln/hard-backup.sh			\
   tests/ln/hard-to-sym.sh			\
   tests/ln/misc.sh				\
+  tests/ln/non-utf8-src.sh			\
   tests/ln/relative.sh				\
   tests/ln/sf-1.sh				\
   tests/ln/slash-decorated-nonexistent-dest.sh	\
