@@ -460,6 +460,7 @@ all_tests =					\
   tests/split/record-sep.sh			\
   tests/split/numeric.sh			\
   tests/split/guard-input.sh			\
+  tests/split/non-utf8.sh			\
   tests/split/split-io-err.sh			\
   tests/stat/stat-birthtime.sh			\
   tests/stat/stat-fmt.sh			\
