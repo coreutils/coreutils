@@ -88,10 +88,10 @@ Examples:\n\
    consists entirely of SUFFIX.  */
 
 static void
-remove_suffix (char *name, char const *suffix)
+remove_suffix (char *name, char const *suffix, idx_t suffix_len)
 {
   char *np = name + strlen (name);
-  char const *sp = suffix + strlen (suffix);
+  char const *sp = suffix + suffix_len;
 
   while (np > name && sp > suffix)
     if (*--np != *--sp)
@@ -100,11 +100,13 @@ remove_suffix (char *name, char const *suffix)
     *np = '\0';
 }
 
-/* Perform the basename operation on STRING.  If SUFFIX is non-null, remove
-   the trailing SUFFIX.  Finally, output the result string.  */
+/* Perform the basename operation on STRING.  If SUFFIX has a positive
+   length of SUFFIX_LEN bytes, remove the trailing SUFFIX.
+   Finally, output the result string.  */
 
 static void
-perform_basename (char const *string, char const *suffix, bool use_nuls)
+perform_basename (char const *string, char const *suffix, idx_t suffix_len,
+                  bool use_nuls)
 {
   char *name = base_name (string);
   strip_trailing_slashes (name);
@@ -115,8 +117,9 @@ perform_basename (char const *string, char const *suffix, bool use_nuls)
      skipping suffix stripping if base_name returned an absolute path
      or a drive letter (only possible if name is a file-system
      root).  */
-  if (suffix && IS_RELATIVE_FILE_NAME (name) && ! FILE_SYSTEM_PREFIX_LEN (name))
-    remove_suffix (name, suffix);
+  if (0 < suffix_len && IS_RELATIVE_FILE_NAME (name)
+      && ! FILE_SYSTEM_PREFIX_LEN (name))
+    remove_suffix (name, suffix, suffix_len);
 
   fputs (name, stdout);
   putchar (use_nuls ? '\0' : '\n');
@@ -174,21 +177,24 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (!multiple_names && optind + 2 < argc)
+  if (! multiple_names)
     {
-      error (0, 0, _("extra operand %s"), quote (argv[optind + 2]));
-      usage (EXIT_FAILURE);
+      if (optind + 2 == argc)
+        suffix = argv[optind + 1];
+      else if (optind + 2 < argc)
+        {
+          error (0, 0, _("extra operand %s"), quote (argv[optind + 2]));
+          usage (EXIT_FAILURE);
+        }
     }
 
-  if (multiple_names)
-    {
-      for (; optind < argc; optind++)
-        perform_basename (argv[optind], suffix, use_nuls);
-    }
-  else
-    perform_basename (argv[optind],
-                      optind + 2 == argc ? argv[optind + 1] : NULL,
-                      use_nuls);
+  idx_t suffix_len = suffix ? strlen (suffix) : 0;
+
+  char **file = argv + optind;
+  int n_files = multiple_names ? argc - optind : 1;
+
+  for (int i = 0; i < n_files; ++i)
+    perform_basename (file[i], suffix, suffix_len, use_nuls);
 
   return EXIT_SUCCESS;
 }
