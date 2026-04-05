@@ -372,6 +372,15 @@ my @Tests =
      # Test timezone conversion with -u -d flag
      # "10:30 UTC-05" should convert to "15:30 UTC", not "10:30 UTC"
      ['tz-conversion-est', "-u -d '10:30 UTC-05' +'%H:%M'", {OUT=>"15:30"}],
+
+     # Large year values should be accepted
+     ['large-year', "-d '18978-01-01' +'%Y-%m-%d'", {OUT=>"18978-01-01"}],
+
+     # Year beyond max should be rejected
+     ['large-year-out-of-range', "-d '2147485548-01-01' +'%Y-%m-%d'",
+      {ERR => "date: invalid date '2147485548-01-01'\n"},
+      {EXIT => 1},
+     ],
     );
 
 # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
