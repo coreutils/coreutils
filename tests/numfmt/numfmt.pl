@@ -890,6 +890,44 @@ my @Tests =
              {OUT => "A 1000 x\nB Foo y\nC 2.8G z\n"},
              {ERR => "$prog: invalid number: 'Foo'\n"},
              {EXIT => 2}],
+
+     # A leading '-9...' must be treated as an invalid short option, not as
+     # a negative positional argument.
+     ['neg-arg-not-option', '--to=iec -9923868',
+             {ERR => "$prog: invalid option -- '9'\n" .
+                     "Try '$prog --help' for more information.\n"},
+             {EXIT => 1}],
+
+     # Large integers beyond 2^53 must be preserved exactly
+     # (no f64 round-trip).
+     ['large-int-precision', '--from=iec 9153396227555392131',
+             {OUT => "9153396227555392131"}],
+
+     # Scientific notation ('1e9') is not accepted as numeric input;
+     # it is reported as an invalid suffix.
+     ['reject-sci-notation', '1e9',
+             {ERR => "$prog: invalid suffix in input: '1e9'\n"},
+             {EXIT => 2}],
+
+     # '--from-unit' scaling must preserve fractional precision of the input
+     # rather than rounding to an integer.
+     ['from-unit-fraction', '--from=iec --from-unit=959 -- -615484.454',
+             {OUT => "-590249591.386"}],
+
+     # Zero-padded '--format' must place the sign before the padding zeros
+     # for negative numbers (matches C printf).
+     ['zero-pad-neg-sign', '--from=none --format=%018.2f -- -9869647',
+             {OUT => "-00000009869647.00"}],
+
+     # '--to-unit=N' must select the output prefix based on the scaled value
+     # (value / N), not the unscaled input.
+     ['to-unit-prefix', '--to=iec-i --to-unit=885 100000',
+             {OUT => "113"}],
+
+     # '--format=%.0f' combined with '--to=<scale>' must honor the '.0'
+     # precision specifier (no fractional digit).
+     ['fmt-zero-prec-scale', '--to=iec --format=%.0f 5183776',
+             {OUT => "5M"}],
     );
 
 # test null-terminated lines
