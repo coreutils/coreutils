@@ -99,6 +99,17 @@ my @Tests =
       {ERR=>"$prog: invalid -w argument '-1'\n"}],
      ['invalid-w-3',   '-ww -An', {IN=>""}, {EXIT=>1},
       {ERR=>"$prog: invalid -w argument 'w'\n"}],
+
+     # Ensure -t f defaults to double precision (8 bytes), not float (4 bytes).
+     ['tf-default', '-An -t f',
+      {IN_PIPE=>"\x00\x00\x80\x3f\x00\x00\x00\x40"},
+      {OUT=>"        2.000000473111868\n"}],
+     ['tf-double', '-An -t fD',
+      {IN_PIPE=>"\x00\x00\x80\x3f\x00\x00\x00\x40"},
+      {OUT=>"        2.000000473111868\n"}],
+     ['tf-float', '-An -t fF',
+      {IN_PIPE=>"\x00\x00\x80\x3f\x00\x00\x00\x40"},
+      {OUT=>"               1               2\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
