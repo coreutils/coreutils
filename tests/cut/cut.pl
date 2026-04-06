@@ -37,6 +37,7 @@ my $from_pos1 =   "$prog: byte/character positions are numbered from 1\n$try";
 my $inval_fld = "$prog: invalid field range\n$try";
 my $inval_pos = "$prog: invalid byte or character range\n$try";
 my $no_endpoint = "$prog: invalid range with no endpoint: -\n$try";
+my $one_list = "$prog: only one list may be specified\n$try";
 my $nofield = "$prog: an input delimiter makes sense\n\tonly when " .
               "operating on fields\n$try";
 my $mutual_dw = "$prog: -d and -w are mutually exclusive\n$try";
@@ -81,6 +82,7 @@ my @Tests =
   ['7', '-c4', {IN=>"123"}, {OUT=>"\n"}],
   ['8', '-c4', {IN=>"123\n1"}, {OUT=>"\n\n"}],
   ['9', '-c4', {IN=>""}, {OUT=>""}],
+  ['byte-newline-1', '-b1', {IN=>"a\n"}, {OUT=>"a\n"}],
   ['a', qw(-s -d:), '-f3-', {IN=>"a:b:c\n"}, {OUT=>"c\n"}],
   ['b', qw(-s -d:), '-f2,3', {IN=>"a:b:c\n"}, {OUT=>"b:c\n"}],
   ['c', qw(-s -d:), '-f1,3', {IN=>"a:b:c\n"}, {OUT=>"a:c\n"}],
@@ -130,6 +132,7 @@ my @Tests =
   # Missing byte list
   ['missing-bl', qw(-b --), {IN=>":\n"}, {OUT=>""}, {EXIT=>1},
    {ERR=>$inval_pos}],
+  ['multi-list-1', qw(-f 1 -F 2), {EXIT=>1}, {ERR=>$one_list}],
 
   # This test fails with cut from textutils-1.22.
   ['empty-f1', '-f1', {IN=>""}, {OUT=>""}],
@@ -197,9 +200,15 @@ my @Tests =
   ['newline-27', '-s', "-d'\n'", '-f2', {IN=>"a\n"}, {OUT=>""}],
   ['newline-28', '-s', "-d'\n'", '-f2',
    {IN=>('a' x ($IO_BUFSIZE - 1)) . "\n"}, {OUT=>""}],
+  ['newline-29', '-s', "-d'\n'", '-f2',
+   {IN=>('a' x ($IO_BUFSIZE - 1)) . "\nb"}, {OUT=>"b\n"}],
 
   # input without delimiter and -s flag
   ['newline-25', '-s', "-d'\n'", '-f1', {IN=>"abc"}, {OUT=>""}],
+
+  # Ensure we can skip the remainder of a long line after the selected field.
+  ['line-only-1', '-d:', '-f1',
+   {IN=>"a:" . ('b' x $IO_BUFSIZE) . "\n"}, {OUT=>"a\n"}],
 
   # --zero-terminated
   ['zerot-1', "-z", '-c1', {IN=>"ab\0cd\0"}, {OUT=>"a\0c\0"}],
@@ -348,9 +357,14 @@ if ($mb_locale ne 'C')
       ['mb-delim-9', '-d', "\xc3\xa9", '-f2',
        {IN=>('a' x ($IO_BUFSIZE - 1)) . "\xc3\xa9b\n"}, {OUT=>"b\n"},
        {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-delim-10', '-s', '-d', "\xc3\xa9", '-f2',
+       {IN=>"a\0b\0"}, {OUT=>""},
+       {ENV => "LC_ALL=$mb_locale"}],
       ['mb-w-delim-1', '-w', '-f2', {IN=>"a\xe2\x80\x83b\n"}, {OUT=>"b\n"},
        {ENV => "LC_ALL=$mb_locale"}],
       ['mb-w-delim-2', '-sw', '-f2', {IN=>"a\xc2\xa0b\n"}, {OUT=>""},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-w-nodelim-1', '-w', '-f2', {IN=>"abc"}, {OUT=>"abc\n"},
        {ENV => "LC_ALL=$mb_locale"}],
 
       # --complement with multi-byte
