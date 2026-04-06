@@ -1317,14 +1317,16 @@ main (int argc, char **argv)
           break;
 
         case 'd':
-          /* New delimiter.  */
-          /* Interpret -d '' to mean 'use the NUL byte as the delimiter.'  */
-          mcel_t g = delim_mcel = mcel_scanz (optarg);
-          if (optarg[0] && optarg[g.len])
-            FATAL_ERROR (_("the delimiter must be a single character"));
-          copy_bytes (delim_bytes, optarg, g.len);
-          delim_specified = true;
-          break;
+          {
+            /* New delimiter.  */
+            /* Interpret -d '' to mean 'use the NUL byte as the delimiter.'  */
+            mcel_t g = delim_mcel = mcel_scanz (optarg);
+            if (optarg[0] && optarg[g.len])
+              FATAL_ERROR (_("the delimiter must be a single character"));
+            copy_bytes (delim_bytes, optarg, g.len);
+            delim_specified = true;
+            break;
+          }
 
         case 'w':
           whitespace_delimited = true;
