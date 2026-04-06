@@ -90,4 +90,19 @@ else
   compare exp_err err || fail=1
 fi
 
+# Ensure -t f defaults to double precision (8 bytes), not float (4 bytes).
+env printf '\x00\x00\x80\x3f\x00\x00\x00\x40' |
+od -An -t f --endian=little > out || fail=1
+printf '        2.000000473111868\n' > exp || framework_failure_
+compare exp out || fail=1
+
+env printf '\x00\x00\x80\x3f\x00\x00\x00\x40' |
+od -An -t fD --endian=little > out || fail=1
+compare exp out || fail=1
+
+env printf '\x00\x00\x80\x3f\x00\x00\x00\x40' |
+od -An -t fF --endian=little > out || fail=1
+printf '               1               2\n' > exp || framework_failure_
+compare exp out || fail=1
+
 Exit $fail
