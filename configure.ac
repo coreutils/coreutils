@@ -69,8 +69,6 @@ AC_DEFINE([GNULIB_EXCLUDE_SINGLE_THREAD], [1],
   [Define to 1 if apps call 'exclude' functions from a single thread.])
 AC_DEFINE([GNULIB_REGEX_SINGLE_THREAD], [1],
   [Define to 1 if apps call 'regex' functions from a single thread.])
-AC_DEFINE([GNULIB_SIGACTION_SINGLE_THREAD], [1],
-  [Define to 1 if programs call 'sigaction' functions from a single thread.])
 # Although 'sort' is multithreaded and can use these functions,
 # it uses them only from the main thread.
 AC_DEFINE([GNULIB_MBRTOWC_SINGLE_THREAD], [1],
