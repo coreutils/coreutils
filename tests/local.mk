@@ -707,6 +707,7 @@ all_tests =					\
   tests/ls/non-utf8-hidden.sh			\
   tests/ls/selinux-segfault.sh			\
   tests/ls/quote-align.sh			\
+  tests/ls/quoting-utf8.sh			\
   tests/ls/size-align.sh			\
   tests/ls/readdir-mountpoint-inode.sh		\
   tests/ls/recursive.sh				\
