@@ -19,8 +19,10 @@
 use strict;
 
 my $limits = getlimits ();
-my $large_year = $limits->{INT_MAX} + 1900;
-my $large_year_out_of_range = $large_year + 1;
+# Most systems support INT_MAX + 1900, but OpenBSD 7.8
+# limits tm_year in mktime to INT_MAX.
+my $large_year = $limits->{INT_MAX};
+my $large_year_out_of_range = $large_year + 1900 + 1;
 
 (my $ME = $0) =~ s|.*/||;
 
