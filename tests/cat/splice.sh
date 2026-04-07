@@ -27,9 +27,16 @@ if timeout 10 true; then
   test $? = 124 || fail=1
 fi
 
+# Verify splice is called multiple times,
+# and doesn't just fall back after the first EINVAL.
+# This also implicitly handles systems without splice at all.
+strace -o splice_count -e splice cat /dev/zero | head -c1M >/dev/null
+splice_count=$(grep '^splice' splice_count | wc -l)
+
 # Test that splice errors are diagnosed.
 # Odd numbers are for input, even for output
-if strace -o /dev/null -e inject=splice:error=EIO:when=3 true; then
+if test "$splice_count" -gt 1 &&
+   strace -o /dev/null -e inject=splice:error=EIO:when=3 true; then
   for when in 3 4; do
     test "$when" = 4 && efile='write error' || efile='/dev/zero'
     printf 'cat: %s: %s\n' "$efile" "$EIO" > exp || framework_failure_
