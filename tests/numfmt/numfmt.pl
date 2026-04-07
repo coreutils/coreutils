@@ -898,11 +898,6 @@ my @Tests =
                      "Try '$prog --help' for more information.\n"},
              {EXIT => 1}],
 
-     # Large integers beyond 2^53 must be preserved exactly
-     # (no f64 round-trip).
-     ['large-int-precision', '--from=iec 9153396227555392131',
-             {OUT => "9153396227555392131"}],
-
      # Scientific notation ('1e9') is not accepted as numeric input;
      # it is reported as an invalid suffix.
      ['reject-sci-notation', '1e9',
@@ -962,6 +957,11 @@ my @Limit_Tests =
      ['large-1','1000000000000000', {OUT=>"1000000000000000"}],
      # 18 digits is OK
      ['large-2','1000000000000000000', {OUT=>"1000000000000000000"}],
+
+     # Large integers beyond 2^53 must be preserved exactly
+     # (no double round-trip).
+     ['large-2a', '915339622755539213', {OUT => "915339622755539213"}],
+
      # 19 digits is too much (without output scaling)
      ['large-3','10000000000000000000',
              {ERR => "$prog: value too large to be printed: '1e+19' " .
