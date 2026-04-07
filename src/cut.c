@@ -437,7 +437,7 @@ search_bytes (char const *buf, int c, size_t n_bytes)
   if (1 < n_bytes && to_uchar (buf[1]) == c)
     return (char *) buf + 1;
 
-  return 2 < n_bytes ? memchr (buf + 2, c, n_bytes - 2) : NULL;
+  return 2 < n_bytes ? (char *) memchr (buf + 2, c, n_bytes - 2) : NULL;
 }
 
 static inline void
@@ -598,18 +598,18 @@ find_field_delim (char *buf, size_t len)
       char const *nul = memchr (p, '\0', end - p);
       if (!nul)
         {
-          char *match = strstr (p, delim_bytes);
+          char const *match = strstr (p, delim_bytes);
           buf[len] = saved;
-          return match;
+          return (char *) match;
         }
 
       if (p < nul)
         {
-          char *match = strstr (p, delim_bytes);
+          char const *match = strstr (p, delim_bytes);
           if (match)
             {
               buf[len] = saved;
-              return match;
+              return (char *) match;
             }
         }
 
