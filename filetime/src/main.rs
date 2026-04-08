@@ -19,7 +19,14 @@ use std::path::Path;
     name = "filetime",
     version,
     about = "Display or manipulate file timestamps with sub-second precision.\n\n\
-             Without an action option, displays the timestamps of each FILE.\n\n\
+             Without an action option, displays all timestamps of each FILE.\n\
+             Selection flags (-a/-m/-c/-b) filter which timestamps are shown\n\
+             or, for write actions, which writable timestamps are changed.\n\n\
+             Readable timestamps (always):\n  \
+               access   (-a)  last read\n  \
+               modify   (-m)  last content write\n  \
+               change   (-c)  last metadata change  [kernel-managed, read-only]\n  \
+               birth    (-b)  creation time         [kernel-managed, read-only]\n\n\
              TIME formats:\n  \
                @SECONDS[.FRAC]               Unix epoch seconds\n  \
                'YYYY-MM-DD HH:MM:SS[.FRAC]'  local date-time\n\n\
@@ -27,13 +34,22 @@ use std::path::Path;
 )]
 #[command(group(ArgGroup::new("action").args(["set", "copy_from", "adjust"])))]
 struct Cli {
-    /// Act on access time only
-    #[arg(short = 'a')]
+    /// Show/act on access time
+    #[arg(short = 'a', long)]
     atime: bool,
 
-    /// Act on modification time only
-    #[arg(short = 'm')]
+    /// Show/act on modification time
+    #[arg(short = 'm', long)]
     mtime: bool,
+
+    /// Show change (metadata) time — read-only, kernel-managed
+    #[arg(short = 'c', long)]
+    ctime: bool,
+
+    /// Show birth (creation) time — read-only, may be unavailable on some
+    /// filesystems
+    #[arg(short = 'b', long)]
+    btime: bool,
 
     /// Set timestamps to TIME
     #[arg(short = 's', long, value_name = "TIME")]
@@ -66,7 +82,7 @@ struct Cli {
 
 // ─── Timestamp type ───────────────────────────────────────────────────────────
 
-/// A timestamp represented as (seconds, nanoseconds) since the Unix epoch.
+/// A timestamp as (seconds, nanoseconds) since the Unix epoch.
 #[derive(Clone, Copy, Debug)]
 struct Ts {
     sec: i64,
@@ -74,7 +90,6 @@ struct Ts {
 }
 
 impl Ts {
-    /// Return the current wall-clock time.
     fn now() -> Self {
         let d = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
@@ -82,32 +97,75 @@ impl Ts {
         Ts { sec: d.as_secs() as i64, nsec: d.subsec_nanos() as i64 }
     }
 
-    /// Return `self ± delta`.
     fn add(self, delta: Ts, negative: bool) -> Ts {
         if !negative {
             let mut nsec = self.nsec + delta.nsec;
             let mut sec = self.sec + delta.sec;
-            if nsec >= 1_000_000_000 {
-                sec += 1;
-                nsec -= 1_000_000_000;
-            }
+            if nsec >= 1_000_000_000 { sec += 1; nsec -= 1_000_000_000; }
             Ts { sec, nsec }
         } else {
             let mut nsec = self.nsec - delta.nsec;
             let mut sec = self.sec - delta.sec;
-            if nsec < 0 {
-                sec -= 1;
-                nsec += 1_000_000_000;
-            }
+            if nsec < 0 { sec -= 1; nsec += 1_000_000_000; }
             Ts { sec, nsec }
         }
     }
 }
 
+// ─── All timestamps for one file ─────────────────────────────────────────────
+
+/// Every timestamp associated with a file.
+struct FileTimes {
+    /// Last access (read).
+    atime: Ts,
+    /// Last data modification (write).
+    mtime: Ts,
+    /// Last metadata change (chmod, chown, link, rename, …).
+    /// Always present; cannot be set via any user-space API.
+    ctime: Ts,
+    /// File creation / birth time.
+    /// `None` when the filesystem or kernel does not report it.
+    btime: Option<Ts>,
+}
+
+/// Read all four timestamps via `statx(2)`.
+///
+/// `statx` is used (rather than plain `stat`) because it is the only POSIX-ish
+/// syscall on Linux that exposes the birth time (`stx_btime`).
+fn get_all_times(path: &str, no_deref: bool) -> Result<FileTimes> {
+    let cpath = CString::new(path).with_context(|| format!("invalid path '{path}'"))?;
+    let flags = if no_deref { libc::AT_SYMLINK_NOFOLLOW } else { 0 };
+    let mask  = libc::STATX_ATIME | libc::STATX_MTIME
+              | libc::STATX_CTIME | libc::STATX_BTIME;
+
+    // SAFETY: statx writes into the zeroed buffer; all fields are plain data.
+    let mut stx: libc::statx = unsafe { std::mem::zeroed() };
+    let ret = unsafe {
+        libc::statx(libc::AT_FDCWD, cpath.as_ptr(), flags, mask, &mut stx)
+    };
+    if ret != 0 {
+        bail!("cannot stat '{}': {}", path, std::io::Error::last_os_error());
+    }
+
+    let from = |t: libc::statx_timestamp| Ts { sec: t.tv_sec, nsec: t.tv_nsec as i64 };
+
+    // Birth time is only valid when the kernel sets STATX_BTIME in stx_mask.
+    let btime = if stx.stx_mask & libc::STATX_BTIME != 0 {
+        Some(from(stx.stx_btime))
+    } else {
+        None
+    };
+
+    Ok(FileTimes {
+        atime: from(stx.stx_atime),
+        mtime: from(stx.stx_mtime),
+        ctime: from(stx.stx_ctime),
+        btime,
+    })
+}
+
 // ─── Parsing ─────────────────────────────────────────────────────────────────
 
-/// Parse fractional seconds from the digits after '.'.
-/// Pads or truncates to exactly 9 digits (nanoseconds).
 fn parse_frac(s: &str) -> i64 {
     let digits: String = s.chars().take(9).collect();
     let len = digits.len();
@@ -115,35 +173,25 @@ fn parse_frac(s: &str) -> i64 {
     val * 10i64.pow((9 - len) as u32)
 }
 
-/// Split `"INTEGRAL[.FRAC]"` into `(integral_str, nanoseconds)`.
 fn split_frac(s: &str) -> (&str, i64) {
     match s.find('.') {
         Some(dot) => (&s[..dot], parse_frac(&s[dot + 1..])),
-        None => (s, 0),
+        None      => (s, 0),
     }
 }
 
-/// Parse the argument to `--set`.
-///
-/// Accepts:
-/// - `@SECONDS[.FRAC]` — Unix epoch with optional fractional part
-/// - `'YYYY-MM-DD HH:MM:SS[.FRAC]'` (and ISO-8601 variants) via chrono
 fn parse_set_time(s: &str) -> Result<Ts> {
     if let Some(rest) = s.strip_prefix('@') {
         let (sec_str, nsec) = split_frac(rest);
-        let sec: i64 = sec_str
-            .parse()
-            .with_context(|| format!("invalid time '{s}'"))?;
+        let sec: i64 = sec_str.parse().with_context(|| format!("invalid time '{s}'"))?;
         Ok(Ts { sec, nsec })
     } else {
         parse_datetime_str(s)
     }
 }
 
-/// Parse a date-time string into a Ts using chrono.
 fn parse_datetime_str(s: &str) -> Result<Ts> {
     use chrono::{Local, NaiveDateTime, TimeZone};
-
     let formats = [
         "%Y-%m-%d %H:%M:%S%.f",
         "%Y-%m-%dT%H:%M:%S%.f",
@@ -154,7 +202,7 @@ fn parse_datetime_str(s: &str) -> Result<Ts> {
         if let Ok(ndt) = NaiveDateTime::parse_from_str(s, fmt) {
             if let Some(dt) = Local.from_local_datetime(&ndt).single() {
                 return Ok(Ts {
-                    sec: dt.timestamp(),
+                    sec:  dt.timestamp(),
                     nsec: dt.timestamp_subsec_nanos() as i64,
                 });
             }
@@ -163,42 +211,28 @@ fn parse_datetime_str(s: &str) -> Result<Ts> {
     bail!("invalid date/time '{s}'")
 }
 
-/// Parse the argument to `--adjust`.
-/// Format: `[+-]SECONDS[.FRAC]`
-///
-/// Returns `(delta, is_negative)`.
 fn parse_adjust(s: &str) -> Result<(Ts, bool)> {
     let (negative, rest) = if let Some(r) = s.strip_prefix('-') {
         (true, r)
     } else {
         (false, s.strip_prefix('+').unwrap_or(s))
     };
-
     let (sec_str, nsec) = split_frac(rest);
-    let sec: i64 = sec_str
-        .parse()
-        .with_context(|| format!("invalid adjustment '{s}'"))?;
-    if sec < 0 {
-        bail!("invalid adjustment '{s}'");
-    }
+    let sec: i64 = sec_str.parse().with_context(|| format!("invalid adjustment '{s}'"))?;
+    if sec < 0 { bail!("invalid adjustment '{s}'"); }
     Ok((Ts { sec, nsec }, negative))
 }
 
 // ─── Display ─────────────────────────────────────────────────────────────────
 
-/// Format a timestamp for display, using `precision` fractional digits.
-/// Uses epoch output if `use_epoch` is set, otherwise local ISO format.
 fn format_ts(ts: Ts, precision: u32, use_epoch: bool) -> String {
     let divisor = 10i64.pow(9 - precision);
     let frac = ts.nsec / divisor;
     let w = precision as usize;
 
     if use_epoch {
-        return if precision == 0 {
-            format!("{}", ts.sec)
-        } else {
-            format!("{}.{frac:0>w$}", ts.sec)
-        };
+        return if precision == 0 { format!("{}", ts.sec) }
+               else              { format!("{}.{frac:0>w$}", ts.sec) };
     }
 
     use chrono::{Local, TimeZone};
@@ -206,27 +240,21 @@ fn format_ts(ts: Ts, precision: u32, use_epoch: bool) -> String {
         Some(dt) => {
             let base = dt.format("%Y-%m-%d %H:%M:%S");
             let tz   = dt.format("%z");
-            if precision == 0 {
-                format!("{base} {tz}")
-            } else {
-                format!("{base}.{frac:0>w$} {tz}")
-            }
+            if precision == 0 { format!("{base} {tz}") }
+            else               { format!("{base}.{frac:0>w$} {tz}") }
         }
-        // Fallback for out-of-range timestamps
         None => format!("{}.{:09}", ts.sec, ts.nsec),
     }
 }
 
 // ─── File operations ─────────────────────────────────────────────────────────
 
-/// Stat a file, following (or not) symlinks.
 fn get_meta(path: &str, no_deref: bool) -> Result<std::fs::Metadata> {
     let p = Path::new(path);
     (if no_deref { std::fs::symlink_metadata(p) } else { std::fs::metadata(p) })
         .with_context(|| format!("cannot stat '{path}'"))
 }
 
-/// Extract `(atime, mtime)` from metadata with nanosecond precision.
 fn meta_times(m: &std::fs::Metadata) -> (Ts, Ts) {
     (
         Ts { sec: m.atime(), nsec: m.atime_nsec() },
@@ -234,8 +262,6 @@ fn meta_times(m: &std::fs::Metadata) -> (Ts, Ts) {
     )
 }
 
-/// Set file timestamps via `utimensat(2)`.
-/// Pass `None` for a time to leave it unchanged (becomes `UTIME_OMIT`).
 fn set_file_times(path: &str, atime: Option<Ts>, mtime: Option<Ts>, no_deref: bool) -> Result<()> {
     let make_ts = |opt: Option<Ts>| -> libc::timespec {
         match opt {
@@ -246,7 +272,6 @@ fn set_file_times(path: &str, atime: Option<Ts>, mtime: Option<Ts>, no_deref: bo
     let times = [make_ts(atime), make_ts(mtime)];
     let cpath = CString::new(path).with_context(|| format!("invalid path '{path}'"))?;
     let flags = if no_deref { libc::AT_SYMLINK_NOFOLLOW } else { 0 };
-
     // SAFETY: times is a valid [timespec; 2], cpath is a valid C string.
     let ret = unsafe { libc::utimensat(libc::AT_FDCWD, cpath.as_ptr(), times.as_ptr(), flags) };
     if ret != 0 {
@@ -257,50 +282,67 @@ fn set_file_times(path: &str, atime: Option<Ts>, mtime: Option<Ts>, no_deref: bo
 
 // ─── Core action ─────────────────────────────────────────────────────────────
 
+/// Flags controlling which timestamps to show in display mode.
+struct ShowFlags {
+    atime: bool,
+    mtime: bool,
+    ctime: bool,
+    btime: bool,
+}
+
 /// The resolved operation to perform on each file.
 enum Action {
     Display,
     Set(Ts),
-    CopyFrom(Ts, Ts), // (atime, mtime) already read from the source
+    CopyFrom(Ts, Ts), // (atime, mtime) pre-read from source
     Adjust(Ts, bool), // (delta, is_negative)
 }
 
-/// Process one file according to the resolved action and display settings.
 fn process_file(
     file: &str,
     action: &Action,
-    do_atime: bool,
-    do_mtime: bool,
+    show: &ShowFlags,
+    // For write actions, only atime/mtime are writable.
+    write_atime: bool,
+    write_mtime: bool,
     no_dereference: bool,
     epoch: bool,
     precision: u32,
 ) -> Result<()> {
     match action {
         Action::Display => {
-            let m = get_meta(file, no_dereference)?;
-            let (at, mt) = meta_times(&m);
+            // Use statx so we always get ctime and btime in one call.
+            let ft = get_all_times(file, no_dereference)?;
             println!("{file}:");
-            if do_atime {
-                println!("  access: {}", format_ts(at, precision, epoch));
+            if show.atime {
+                println!("  access: {}", format_ts(ft.atime, precision, epoch));
             }
-            if do_mtime {
-                println!("  modify: {}", format_ts(mt, precision, epoch));
+            if show.mtime {
+                println!("  modify: {}", format_ts(ft.mtime, precision, epoch));
+            }
+            if show.ctime {
+                println!("  change: {}", format_ts(ft.ctime, precision, epoch));
+            }
+            if show.btime {
+                match ft.btime {
+                    Some(bt) => println!("   birth: {}", format_ts(bt, precision, epoch)),
+                    None     => println!("   birth: -"),
+                }
             }
         }
         Action::Set(ts) => {
-            let _ = Ts::now(); // ensure clock is available (no-op)
             set_file_times(
                 file,
-                if do_atime { Some(*ts) } else { None },
-                if do_mtime { Some(*ts) } else { None },
+                if write_atime { Some(*ts) } else { None },
+                if write_mtime { Some(*ts) } else { None },
                 no_dereference,
             )?;
         }
         Action::CopyFrom(src_at, src_mt) => {
             set_file_times(
                 file,
-                if do_atime { Some(*src_at) } else { None },
-                if do_mtime { Some(*src_mt) } else { None },
+                if write_atime { Some(*src_at) } else { None },
+                if write_mtime { Some(*src_mt) } else { None },
                 no_dereference,
             )?;
         }
@@ -309,8 +351,8 @@ fn process_file(
             let (cur_at, cur_mt) = meta_times(&m);
             set_file_times(
                 file,
-                if do_atime { Some(cur_at.add(*delta, *neg)) } else { None },
-                if do_mtime { Some(cur_mt.add(*delta, *neg)) } else { None },
+                if write_atime { Some(cur_at.add(*delta, *neg)) } else { None },
+                if write_mtime { Some(cur_mt.add(*delta, *neg)) } else { None },
                 no_dereference,
             )?;
         }
@@ -327,11 +369,33 @@ fn run() -> Result<()> {
         bail!("invalid precision {} (must be 0, 3, 6, or 9)", cli.precision);
     }
 
-    // When neither -a nor -m is given, act on both.
-    let do_atime = cli.atime || !cli.mtime;
-    let do_mtime = cli.mtime || !cli.atime;
+    // ── Display selection ────────────────────────────────────────────────────
+    // If no selection flag is given, show all four timestamps.
+    // If any flag is given, show only the flagged ones.
+    let any_show_flag = cli.atime || cli.mtime || cli.ctime || cli.btime;
+    let show = ShowFlags {
+        atime: cli.atime || !any_show_flag,
+        mtime: cli.mtime || !any_show_flag,
+        ctime: cli.ctime || !any_show_flag,
+        btime: cli.btime || !any_show_flag,
+    };
 
-    // Resolve the action once, before the file loop.
+    // ── Write selection (action modes) ───────────────────────────────────────
+    // ctime and btime are kernel-managed and cannot be written.
+    // Default: both atime and mtime; -a / -m narrow the selection.
+    let write_atime = cli.atime || !cli.mtime;
+    let write_mtime = cli.mtime || !cli.atime;
+
+    // Warn if user asks to change a read-only timestamp.
+    let is_action = cli.set.is_some() || cli.copy_from.is_some() || cli.adjust.is_some();
+    if is_action && (cli.ctime || cli.btime) {
+        eprintln!(
+            "filetime: warning: change time and birth time are kernel-managed \
+             and cannot be set; -c/-b ignored for write operations"
+        );
+    }
+
+    // ── Resolve action ───────────────────────────────────────────────────────
     let action = if let Some(ref s) = cli.set {
         Action::Set(parse_set_time(s)?)
     } else if let Some(ref src) = cli.copy_from {
@@ -350,8 +414,9 @@ fn run() -> Result<()> {
         if let Err(e) = process_file(
             file,
             &action,
-            do_atime,
-            do_mtime,
+            &show,
+            write_atime,
+            write_mtime,
             cli.no_dereference,
             cli.epoch,
             cli.precision,
@@ -361,9 +426,7 @@ fn run() -> Result<()> {
         }
     }
 
-    if !ok {
-        std::process::exit(1);
-    }
+    if !ok { std::process::exit(1); }
     Ok(())
 }
 
