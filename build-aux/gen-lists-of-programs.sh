@@ -77,6 +77,7 @@ normal_progs='
     expr
     factor
     false
+    filetime
     fmt
     fold
     ginstall
