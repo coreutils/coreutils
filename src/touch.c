@@ -66,6 +66,10 @@ static bool no_dereference;
    we have neither read nor write access to it.  */
 static bool amtime_now;
 
+/* (--microseconds) If >= 0, override the sub-second part of the timestamp
+   with this many microseconds (0-999999).  */
+static long microseconds = -1;
+
 /* New access and modification times to use when setting time.  */
 static struct timespec newtime[2];
 
@@ -76,7 +80,8 @@ static char *ref_file;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  TIME_OPTION = CHAR_MAX + 1
+  TIME_OPTION = CHAR_MAX + 1,
+  MICROSECONDS_OPTION
 };
 
 static struct option const longopts[] =
@@ -84,6 +89,7 @@ static struct option const longopts[] =
   {"time", required_argument, NULL, TIME_OPTION},
   {"no-create", no_argument, NULL, 'c'},
   {"date", required_argument, NULL, 'd'},
+  {"microseconds", required_argument, NULL, MICROSECONDS_OPTION},
   {"reference", required_argument, NULL, 'r'},
   {"no-dereference", no_argument, NULL, 'h'},
   {GETOPT_HELP_OPTION_DECL},
@@ -252,6 +258,11 @@ change the times of the file associated with standard output.\n\
          change only the modification time\n\
 "));
       oputs (_("\
+      --microseconds=N\n\
+         set the sub-second part of the timestamp to N microseconds (0-999999);\n\
+         applies to the time set by -t, -d, -r, or the current time\n\
+"));
+      oputs (_("\
   -r, --reference=FILE\n\
          use this file's times instead of current time\n\
 "));
@@ -334,6 +345,18 @@ main (int argc, char **argv)
           change_times |= XARGMATCH ("--time", optarg,
                                      time_args, time_masks);
           break;
+
+        case MICROSECONDS_OPTION:
+          {
+            char *endp;
+            errno = 0;
+            long val = strtol (optarg, &endp, 10);
+            if (errno || *endp || val < 0 || 999999 < val)
+              error (EXIT_FAILURE, 0,
+                     _("invalid microseconds value %s"), quote (optarg));
+            microseconds = val;
+            break;
+          }
 
         case_GETOPT_HELP_CHAR;
 
@@ -437,6 +460,40 @@ main (int argc, char **argv)
         amtime_now = true;
       else
         newtime[1].tv_nsec = newtime[0].tv_nsec = UTIME_NOW;
+    }
+
+  if (0 <= microseconds)
+    {
+      long const nsec = microseconds * 1000;
+      if (amtime_now)
+        {
+          /* Can no longer pass NULL to fdutimensat; get the current time
+             explicitly so we can apply the microseconds override.  */
+          struct timespec now = current_timespec ();
+          newtime[0].tv_sec = newtime[1].tv_sec = now.tv_sec;
+          newtime[0].tv_nsec = newtime[1].tv_nsec = nsec;
+          amtime_now = false;
+        }
+      else
+        {
+          /* For any slot still set to UTIME_NOW, substitute the current
+             second so the caller gets a real timespec with the chosen nsec.  */
+          struct timespec now;
+          bool got_now = false;
+          for (int i = 0; i < 2; i++)
+            {
+              if (newtime[i].tv_nsec == UTIME_NOW)
+                {
+                  if (!got_now)
+                    {
+                      now = current_timespec ();
+                      got_now = true;
+                    }
+                  newtime[i].tv_sec = now.tv_sec;
+                }
+              newtime[i].tv_nsec = nsec;
+            }
+        }
     }
 
   if (optind == argc)
