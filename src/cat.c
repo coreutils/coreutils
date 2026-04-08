@@ -652,6 +652,21 @@ splice_cat (void)
   return (in_ok && out_ok) ? some_copied : -1;
 }
 
+/* Reuse an aligned buffer across inputs, growing it only as needed.  */
+
+static char *
+ensure_buf_size (char *buf, idx_t *buf_alloc, idx_t alignment, idx_t size)
+{
+  if (*buf_alloc < size)
+    {
+      alignfree (buf);
+      buf = xalignalloc (alignment, size);
+      *buf_alloc = size;
+    }
+
+  return buf;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -783,6 +798,10 @@ main (int argc, char **argv)
   int argind = optind;
   bool ok = true;
   idx_t page_size = getpagesize ();
+  char *inbuf = NULL;
+  char *outbuf = NULL;
+  idx_t inbuf_alloc = 0;
+  idx_t outbuf_alloc = 0;
 
   do
     {
@@ -847,9 +866,6 @@ main (int argc, char **argv)
             }
         }
 
-      /* Pointer to the input buffer.  */
-      char *inbuf;
-
       /* Select which version of 'cat' to use.  If any format-oriented
          options were given use 'cat'; if not, use 'copy_cat' if it
          works, 'simple_cat' otherwise.  */
@@ -860,10 +876,7 @@ main (int argc, char **argv)
           int copy_cat_status =
             out_isreg && S_ISREG (istat_buf.st_mode) ? copy_cat () : 0;
           if (copy_cat_status != 0)
-            {
-              inbuf = NULL;
-              ok &= 0 < copy_cat_status;
-            }
+            ok &= 0 < copy_cat_status;
           else
             {
               /* Note 32768 was determined as the limit when splice
@@ -874,14 +887,12 @@ main (int argc, char **argv)
                                         && istat_buf.st_size <= 32768)
                                        ? 0 : splice_cat ());
               if (splice_cat_status != 0)
-                {
-                  inbuf = NULL;
-                  ok &= 0 < splice_cat_status;
-                }
+                ok &= 0 < splice_cat_status;
               else
                 {
                   insize = MAX (insize, outsize);
-                  inbuf = xalignalloc (page_size, insize);
+                  inbuf = ensure_buf_size (inbuf, &inbuf_alloc,
+                                           page_size, insize);
                   ok &= simple_cat (inbuf, insize);
                 }
             }
@@ -889,7 +900,8 @@ main (int argc, char **argv)
       else
         {
           /* Allocate, with an extra byte for a newline sentinel.  */
-          inbuf = xalignalloc (page_size, insize + 1);
+          inbuf = ensure_buf_size (inbuf, &inbuf_alloc,
+                                   page_size, insize + 1);
 
           /* Why are
              (OUTSIZE - 1 + INSIZE * 4 + LINE_COUNTER_BUF_LEN)
@@ -917,16 +929,13 @@ main (int argc, char **argv)
               || ckd_add (&bufsize, bufsize, outsize)
               || ckd_add (&bufsize, bufsize, LINE_COUNTER_BUF_LEN - 1))
             xalloc_die ();
-          char *outbuf = xalignalloc (page_size, bufsize);
+          outbuf = ensure_buf_size (outbuf, &outbuf_alloc,
+                                    page_size, bufsize);
 
           ok &= cat (inbuf, insize, outbuf, outsize, show_nonprinting,
                      show_tabs, number, number_nonblank, show_ends,
                      squeeze_blank);
-
-          alignfree (outbuf);
         }
-
-      alignfree (inbuf);
 
     contin:
       if (!reading_stdin && close (input_desc) < 0)
@@ -942,6 +951,11 @@ main (int argc, char **argv)
       if (full_write (STDOUT_FILENO, "\r", 1) != 1)
         write_error ();
     }
+
+#ifdef lint
+  alignfree (outbuf);
+  alignfree (inbuf);
+#endif
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, _("closing standard input"));
