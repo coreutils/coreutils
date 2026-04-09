@@ -593,6 +593,8 @@ splice_cat (void)
          subsequent error is fatal.  If not, then fall back to read
          and write.  */
       in_ok = 0 <= bytes_read || ! some_copied;
+      if (bytes_read == 0)
+        some_copied = true;  /* Indicate splice complete.  */
       if (bytes_read <= 0)
         goto done;
       /* We need to drain the intermediate pipe to standard output.  */
