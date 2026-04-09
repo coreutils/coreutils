@@ -36,7 +36,6 @@ $@
     base64
     cat
     cksum
-    dd
     expand
     fmt
     fold
@@ -63,8 +62,13 @@ $@
     uniq
     wc
   );
-  my @commands = (@stdin_reading_commands, 'basenc --z85', 'cut -f2',
-                  'numfmt --invalid=ignore');
+  my @commands = (@stdin_reading_commands,
+   'basenc --z85',
+   'cut -d " " -f2',
+   'cut -b1-3',
+   'dd status=none',
+   'numfmt --invalid=ignore'
+  );
   my $stderr = 'tty-eof.err';
   foreach my $with_input (1, 0)
     {
@@ -82,7 +86,7 @@ $@
           my $found;
           if ($with_input)
             {
-              my $input = $cmd =~ /^cut/ ? "a\tb\n" : "a b\n";
+              my $input = "a b\n";
               my $echo = quotemeta $input;
               $echo =~ s/\n$//;
 
@@ -111,10 +115,6 @@ $@
                      . " ($mode)\n"),
                $fail=1;
           $exp->hard_close();
-
-          # dd normally writes to stderr.  If it exits successfully, we're done.
-          $cmd eq 'dd' && $s == 0
-            and next;
 
           if (-s $stderr)
             {
