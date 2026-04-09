@@ -1071,7 +1071,7 @@ bytes_chunk_extract (intmax_t k, intmax_t n, char *buf, idx_t bufsize,
   off_t start;
   off_t end;
 
-  assert (0 < k && k <= n);
+  affirm (0 < k && k <= n);
 
   start = (k - 1) * (file_size / n) + MIN (k - 1, file_size % n);
   end = k == n ? file_size : k * (file_size / n) + MIN (k, file_size % n);
