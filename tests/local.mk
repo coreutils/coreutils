@@ -181,7 +181,7 @@ all_tests =					\
   tests/rm/cycle.sh				\
   tests/cp/link-heap.sh				\
   tests/cp/no-ctx.sh				\
-  tests/tty/tty-eof.pl				\
+  tests/misc/tty-eof.pl				\
   tests/misc/io-errors.sh			\
   tests/misc/read-errors.sh			\
   tests/misc/warning-errors.sh			\
