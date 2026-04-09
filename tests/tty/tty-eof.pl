@@ -63,55 +63,71 @@ $@
     uniq
     wc
   );
+  my @commands = (@stdin_reading_commands, 'basenc --z85', 'cut -f2',
+                  'numfmt --invalid=ignore');
   my $stderr = 'tty-eof.err';
-  foreach my $cmd ((@stdin_reading_commands), 'basenc --z85', 'cut -f2',
-                   'numfmt --invalid=ignore')
+  foreach my $with_input (1, 0)
     {
-      my $exp = new Expect;
-      $exp->log_user(0);
-      my $cmd_name = (split(' ', $cmd))[0];
-      $ENV{built_programs} =~ /\b$cmd_name\b/ || next;
-      $exp->spawn("$cmd 2> $stderr")
-        or (warn "$ME: cannot run '$cmd': $!\n"), $fail=1, next;
-      # Test cut in a different mode, even though it supports the standard flow
-      # Ensure that it exits with no input as it used to not do so
-      $cmd =~ /^cut/
-        or $exp->send("a b\n");
-      $exp->send("\cD");  # This is Control-D.  FIXME: what if that's not EOF?
-      $cmd =~ /^cut/
-        or $exp->expect (0, '-re', "^a b\\r?\$");
-      $cmd =~ /^cut/
-        or my $found = $exp->expect (1, '-re', "^.+\$");
-      $found and warn "F: $found: " . $exp->exp_match () . "\n";
-      $exp->expect(10, 'eof');
-      # Expect no output from cut, since we gave it no input.
-      defined $found || $cmd =~ /^cut/
-        or (warn "$ME: $cmd didn't produce expected output\n"),
-          $fail=1, next;
-      defined $exp->exitstatus
-        or (warn "$ME: $cmd didn't exit after ^D from standard input\n"),
-          $fail=1, next;
-      my $s = $exp->exitstatus;
-      $s == 0
-        or (warn "$ME: $cmd exited with status $s (expected 0)\n"),
-          $fail=1;
-      $exp->hard_close();
-
-      # dd normally writes to stderr.  If it exits successfully, we're done.
-      $cmd eq 'dd' && $s == 0
-        and next;
-
-      if (-s $stderr)
+      foreach my $cmd (@commands)
         {
-          warn "$ME: $cmd wrote to stderr:\n";
-          system "cat $stderr";
-          $fail = 1;
+          my $exp = new Expect;
+          $exp->log_user(0);
+          my $cmd_name = (split(' ', $cmd))[0];
+          my $mode = $with_input ? 'with input' : 'without input';
+          $ENV{built_programs} =~ /\b$cmd_name\b/ || next;
+          $exp->spawn("$cmd 2> $stderr")
+            or (warn "$ME: cannot run '$cmd' ($mode): $!\n"),
+               $fail=1, next;
+
+          my $found;
+          if ($with_input)
+            {
+              my $input = $cmd =~ /^cut/ ? "a\tb\n" : "a b\n";
+              my $echo = quotemeta $input;
+              $echo =~ s/\n$//;
+
+              $exp->send($input);
+              $exp->send("\cD");  # This is Control-D.  FIXME: what if not EOF?
+              $exp->expect (0, '-re', "^$echo\\r?\$");
+              $found = $exp->expect (1, '-re', "^.+\$");
+              $found and warn "F: $found: " . $exp->exp_match () . "\n";
+              defined $found
+                or (warn "$ME: $cmd ($mode) didn't produce expected output\n"),
+                   $fail=1, next;
+            }
+          else
+            {
+              $exp->send("\cD");  # This is Control-D.  FIXME: what if not EOF?
+            }
+
+          $exp->expect(10, 'eof');
+          defined $exp->exitstatus
+            or (warn "$ME: $cmd didn't exit after ^D from standard input"
+                     . " ($mode)\n"),
+               $fail=1, next;
+          my $s = $exp->exitstatus;
+          $s == 0
+            or (warn "$ME: $cmd exited with status $s (expected 0)"
+                     . " ($mode)\n"),
+               $fail=1;
+          $exp->hard_close();
+
+          # dd normally writes to stderr.  If it exits successfully, we're done.
+          $cmd eq 'dd' && $s == 0
+            and next;
+
+          if (-s $stderr)
+            {
+              warn "$ME: $cmd wrote to stderr ($mode):\n";
+              system "cat $stderr";
+              $fail = 1;
+            }
         }
     }
   continue
     {
       unlink $stderr
-        or warn "$ME: failed to remove stderr file from $cmd, $stderr: $!\n";
+        or warn "$ME: failed to remove stderr file $stderr: $!\n";
     }
 
   exit $fail
