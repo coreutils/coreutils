@@ -21,6 +21,11 @@ print_ver_ tee
 
 echo line >sample || framework_failure_
 
+# Ensure tee detects EOF correctly
+printf "1\n2\n" > exp || framework_failure_
+(echo 1;sleep .1;echo 2) | tee > out || fail=1
+compare exp out || fail=1
+
 # POSIX says: "Processing of at least 13 file operands shall be supported."
 for n in 0 1 2 12 13; do
   files=$(seq $n)
