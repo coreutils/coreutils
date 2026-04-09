@@ -34,6 +34,7 @@
 
 #include "system.h"
 #include "alignalloc.h"
+#include "assure.h"
 #include "ioblksize.h"
 #include "fadvise.h"
 #include "full-write.h"
@@ -657,6 +658,8 @@ splice_cat (void)
 static char *
 ensure_buf_size (char *buf, idx_t *buf_alloc, idx_t alignment, idx_t size)
 {
+  affirm (buf != NULL || *buf_alloc < size);
+
   if (*buf_alloc < size)
     {
       alignfree (buf);
