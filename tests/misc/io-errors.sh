@@ -83,6 +83,15 @@ while read writer; do
   # For e.g. with _IOLBF etc, stdio will discard pending data at each line,
   # thus only giving a generic error upon ferror() in close_stream().
   error_re="$ENOSPC"
+
+  # musl writes the first line immediately when it should be fully buffered.
+  # As a result, when we print a single line there is no bytes buffered when
+  # we close the stream and errno is not set.  See:
+  # <https://www.openwall.com/lists/musl/2026/04/02/1>.
+  case $host_triplet in
+    *-musl*) error_re="$error_re|" ;;
+  esac
+
   printf '%s' "$writer" | grep 'generic' >/dev/null &&
     { error_re="write error|$error_re"; }
 
