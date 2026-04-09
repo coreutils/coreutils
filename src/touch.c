@@ -385,8 +385,7 @@ main (int argc, char **argv)
              it were absent; this lets "touch" succeed more often in
              the presence of restrictive permissions.  */
           if (change_times == (CH_ATIME | CH_MTIME)
-              && newtime[0].tv_sec == now.tv_sec
-              && newtime[0].tv_nsec == now.tv_nsec)
+              && timespec_cmp (newtime[0], now) == 0)
             {
               /* Check that it really was "-d now", and not a timestamp
                  that just happens to be the current time.  */
@@ -394,8 +393,7 @@ main (int argc, char **argv)
               notnow.tv_sec = now.tv_sec ^ 1;
               notnow.tv_nsec = now.tv_nsec;
               notnow1 = date_relative (flex_date, notnow);
-              if (notnow1.tv_sec == notnow.tv_sec
-                  && notnow1.tv_nsec == notnow.tv_nsec)
+              if (timespec_cmp (notnow1, notnow) == 0)
                 date_set = false;
             }
         }
