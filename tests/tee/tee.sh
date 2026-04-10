@@ -68,8 +68,8 @@ if test -w /dev/full && test -c /dev/full; then
   test $(wc -l < err) = 1 || { cat err; fail=1; }
 fi
 
-case $host_triplet in
-  *aix*) echo  'avoiding due to no way to detect closed outputs on AIX' ;;
+case $host_os in
+  aix*) echo  'avoiding due to no way to detect closed outputs on AIX' ;;
   *)
 # Test iopoll-powered early exit for closed pipes
 tee_exited() { sleep $1; test -f tee.exited; }

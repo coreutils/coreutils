@@ -41,8 +41,8 @@ compare exp out || fail=1
 # Also check tail exits if SIGPIPE is being ignored.
 # Note 'trap - SIGPIPE' is ineffective if the initiating shell
 # has ignored SIGPIPE, but that's not the normal case.
-case $host_triplet in
-  *aix*) echo  'avoiding due to no way to detect closed outputs on AIX' ;;
+case $host_os in
+  aix*) echo  'avoiding due to no way to detect closed outputs on AIX' ;;
   *)
 for disposition in '' '-'; do
   (trap "$disposition" PIPE;

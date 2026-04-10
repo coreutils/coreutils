@@ -41,8 +41,8 @@ unset CU_TEST_SKIP_EXIT
 USE_GDB=1
 
 if test $USE_GDB = 1; then
-  case $host_triplet in
-    *darwin*) skip_ 'avoiding due to potentially non functioning gdb' ;;
+  case $host_os in
+    darwin*) skip_ 'avoiding due to potentially non functioning gdb' ;;
     *) ;;
   esac
 

@@ -30,8 +30,8 @@ test -f touch-target || fail=1
 rm -f touch-target t-symlink
 
 if test $fail = 1; then
-  case $host_triplet in
-    *linux-gnu*)
+  case $host_os in
+    linux-gnu*)
       case "$(uname -r)" in
         2.3.9[0-9]*)
           skip_ \

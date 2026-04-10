@@ -98,9 +98,9 @@ chgrp $g1 f
 chgrp '' f
 test "$(ls -C -c -t f g)" = 'f  g' || \
   {
-    case $host_triplet in
-      *openbsd*) echo ignoring known OpenBSD-specific chgrp failure 1>&2 ;;
-      *darwin7.9.*|*darwin8.*)
+    case $host_os in
+      openbsd*) echo ignoring known OpenBSD-specific chgrp failure 1>&2 ;;
+      darwin7.9.*|darwin8.*)
         echo ignoring known MacOS X-specific chgrp failure 1>&2 ;;
       *) echo $host_triplet: no-change chgrp failed to update ctime 1>&2;
             fail=1 ;;
