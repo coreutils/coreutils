@@ -25,4 +25,9 @@ case "$stat_mnt" in
   *) fail=1;;
 esac
 
+# Ensure stat works without mounting /proc
+if unshare -rm true; then
+  unshare -rm bash -c "mount -t tmpfs tmpfs /proc && stat -c '0%#a' /" || fail=1
+fi
+
 Exit $fail
