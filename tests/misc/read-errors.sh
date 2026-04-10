@@ -45,7 +45,7 @@ cksum -a sysv .
 cksum -a md5 /dev/null | sed 's|/dev/null|.|' | cksum --check
 comm . .
 csplit . 1
-cut -c1 .
+cut -b1 .
 cut -f1 .
 date -f .
 dd if=.
