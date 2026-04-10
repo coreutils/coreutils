@@ -111,7 +111,10 @@ main (int argc, char **argv)
   if (optind >= argc)
     {
       for (char **env = environ; *env != NULL; ++env)
-        printf ("%s%c", *env, opt_nul_terminate_output ? '\0' : '\n');
+        {
+          fputs (*env, stdout);
+          putchar (opt_nul_terminate_output ? '\0' : '\n');
+        }
       ok = true;
     }
   else
@@ -134,8 +137,8 @@ main (int argc, char **argv)
                 {
                   if (*ep == '=' && *ap == '\0')
                     {
-                      printf ("%s%c", ep + 1,
-                              opt_nul_terminate_output ? '\0' : '\n');
+                      fputs (ep + 1, stdout);
+                      putchar (opt_nul_terminate_output ? '\0' : '\n');
                       matched = true;
                       break;
                     }
