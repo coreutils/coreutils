@@ -1,5 +1,5 @@
 #!/bin/sh
-# Test stat -c%m
+# Test stat interactions with mounts
 
 # Copyright (C) 2010-2026 Free Software Foundation, Inc.
 
@@ -24,5 +24,13 @@ case "$stat_mnt" in
   /*) ;;
   *) fail=1;;
 esac
+
+# Ensure stat works without mounting /proc
+hide_proc() {
+  unshare -rm $SHELL -c 'mount -t tmpfs tmpfs /proc && "$@"' -- "$@"
+}
+if hide_proc true; then
+  hide_proc stat -c '0%#a' / || fail=1
+fi
 
 Exit $fail
