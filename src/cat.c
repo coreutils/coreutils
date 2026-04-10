@@ -562,6 +562,25 @@ splice_cat (void)
 
 #if HAVE_SPLICE
 
+  /* If PIPEFD[0] is a non-negative value, we have an open pipe from a
+     previous call to this function.  At the start of this function the
+     pipe will always be empty.  */
+  static int pipefd[2] = { -1, -1 };
+
+  /* The size of the pipe referred to by PIPEFD.  */
+  static idx_t pipefd_pipe_size = 0;
+
+  /* Create an intermediate pipe if it is not already open.
+     Even if both input and output are pipes,
+     so that read and write errors can be distinguished.  */
+  if (pipefd[0] < 0)
+    {
+      if (pipe (pipefd) < 0)
+        return false;
+      pipefd_pipe_size = increase_pipe_size (pipefd[1]);
+    }
+
+  /* Increase the size of the pipe referred to by standard output.  */
   static int stdout_is_pipe = -1;
   static idx_t stdout_pipe_size = 0;
   if (stdout_is_pipe == -1)
@@ -571,20 +590,7 @@ splice_cat (void)
         stdout_pipe_size = increase_pipe_size (STDOUT_FILENO);
     }
 
-  bool input_is_pipe = 0 < isapipe (input_desc);
-
-  idx_t pipe_size = stdout_pipe_size;
-  if (input_is_pipe)
-    pipe_size = MAX (pipe_size, increase_pipe_size (input_desc));
-
-  int pipefd[2] = { -1, -1 };
-
-  /* Create an intermediate pipe.
-     Even if both input and output are pipes,
-     so that read and write errors can be distinguished.  */
-  if (pipe (pipefd) < 0)
-    return false;
-  pipe_size = MAX (pipe_size, increase_pipe_size (pipefd[1]));
+  idx_t pipe_size = MAX (pipefd_pipe_size, stdout_pipe_size);
 
   while (true)
     {
@@ -636,18 +642,20 @@ splice_cat (void)
 
  done:
   if (! in_ok && ! out_ok)
-    error (0, errno, "%s", _("splice error"));
-  else if (! in_ok)
-    error (0, errno, "%s", quotef (infile));
-  else if (! out_ok)
-    write_error ();
-  if (0 <= pipefd[0])
     {
+      /* Recreate the pipe on internal error.  */
       int saved_errno = errno;
       close (pipefd[0]);
       close (pipefd[1]);
       errno = saved_errno;
+      pipefd[0] = pipefd[1] = -1;
+      pipefd_pipe_size = 0;
+      error (0, errno, "%s", _("splice error"));
     }
+  else if (! in_ok)
+    error (0, errno, "%s", quotef (infile));
+  else if (! out_ok)
+    write_error ();
 #endif
 
   return (in_ok && out_ok) ? some_copied : -1;
