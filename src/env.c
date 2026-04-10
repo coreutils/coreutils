@@ -884,9 +884,11 @@ main (int argc, char **argv)
   if (! program_specified)
     {
       /* Print the environment and exit.  */
-      char *const *e = environ;
-      while (*e)
-        printf ("%s%c", *e++, opt_nul_terminate_output ? '\0' : '\n');
+      for (char *const *e = environ; *e; ++e)
+        {
+          fputs (*e, stdout);
+          putchar (opt_nul_terminate_output ? '\0' : '\n');
+        }
       return EXIT_SUCCESS;
     }
 
