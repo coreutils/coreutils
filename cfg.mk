@@ -971,8 +971,9 @@ exclude_file_name_regexp--sc_prohibit_continued_string_alpha_in_column_1 = \
   ^src/(system\.h|od\.c|printf\.c|getlimits\.c)$$
 
 _cksum = ^tests/cksum/cksum-base64\.pl$$
+_tb_misc = misc/(stdbuf|responsive)
 exclude_file_name_regexp--sc_prohibit_test_backticks = \
-  ^tests/(local\.mk|(init|misc/stdbuf|factor/create-test)\.sh)$$|$(_cksum)
+  ^tests/(local\.mk|(init|$(_tb_misc)|factor/create-test)\.sh)$$|$(_cksum)
 
 # Exempt test.c, since it's nominally shared, and relatively static.
 exclude_file_name_regexp--sc_prohibit_operator_at_end_of_line = \

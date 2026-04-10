@@ -184,6 +184,7 @@ all_tests =					\
   tests/misc/tty-eof.pl				\
   tests/misc/io-errors.sh			\
   tests/misc/read-errors.sh			\
+  tests/misc/responsive.sh			\
   tests/misc/warning-errors.sh			\
   tests/misc/write-errors.sh			\
   tests/tail/basic-seek.sh			\
