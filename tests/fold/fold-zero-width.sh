@@ -54,13 +54,12 @@ test $(wc -l < out) -eq $(($IO_BUFSIZE_TIMES2 / 80)) || fail=1
 
 # Ensure bounded memory operation.
 test -w /dev/full && test -c /dev/full &&
-vm=$(get_min_ulimit_v_ fold /dev/null) && {
+vm=$(get_min_ulimit_v_ timeout 10 fold /dev/null) && {
   # \303 results in EILSEQ on input
   for c in '\n' '\0' '\303'; do
-    tr '\0' "$c" < /dev/zero | timeout 10 $SHELL -c \
-     "(ulimit -v $(($vm+12000)) && fold 2>err >/dev/full)"
+    tr '\0' "$c" < /dev/zero |
+     (ulimit -v $(($vm+12000)) && timeout 10 fold 2>err >/dev/full)
     ret=$?
-    test -f err || skip_ 'shell ulimit failure'
     { test $ret = 124 || ! grep "$ENOSPC" err >/dev/null; } &&
      { fail=1; cat err; echo "fold didn't diagnose ENOSPC" >&2; }
   done
