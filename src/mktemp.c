@@ -347,7 +347,7 @@ main (int argc, char **argv)
       if (!dry_run && ((stdout_closed = true), close_stream (stdout) != 0))
         {
           int saved_errno = errno;
-          remove (dest_name);
+          (create_directory ? rmdir : unlink) (dest_name);
           if (!suppress_file_err)
             error (0, saved_errno, _("write error"));
           status = EXIT_FAILURE;
