@@ -37,4 +37,17 @@ case $ls_l in
   *) fail=1; ;;
 esac
 
+# Verify that the presence of ACLs doesn't break the display
+mkdir pad || framework_failure_
+for i in 1 2 3 4 5; do
+  touch pad/f$i || framework_failure_
+  setfacl -m "u:$(id -u):rw" pad/f$i 2>/dev/null || framework_failure_
+done
+
+# The gap between the '+' indicator and the link count must be the same
+# whether the listing contains one or several ACL entries.
+gap1=$(ls -l pad/f1 | sed -n 's/^[^+]*+\( *\)[0-9].*/\1/p')
+gap5=$(ls -l pad    | sed -n 's/^[^+]*+\( *\)[0-9].*/\1/p' | head -n1)
+test "x$gap1" = "x$gap5" || fail=1
+
 Exit $fail
