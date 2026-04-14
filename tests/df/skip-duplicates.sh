@@ -138,6 +138,8 @@ struct mntent *getmntent (FILE *fp)
     {.mnt_fsname="rem:ote1",.mnt_dir="/REMOTE",                  .mnt_opts=""},
     {.mnt_fsname="rem:ote1",.mnt_dir="/REMOTE",                  .mnt_opts=""},
     {.mnt_fsname="rem:ote2",.mnt_dir="/REMOTE",                  .mnt_opts=""},
+    {.mnt_fsname="rem:ote1",.mnt_dir="/REMOTE",                  .mnt_opts=""},
+    {.mnt_fsname="rem:ote2",.mnt_dir="/REMOTE",                  .mnt_opts=""},
   };
 
   if (done == 1)
@@ -152,7 +154,7 @@ struct mntent *getmntent (FILE *fp)
   if (done == 1 && !getenv ("CU_TEST_DUPE_INVALID"))
     done++;  /* skip the first entry.  */
 
-  while (done++ <= 10)
+  while (done++ <= 12)
     {
       if (!mntents[done-2].mnt_type)
         mntents[done-2].mnt_type = "-";
@@ -210,7 +212,7 @@ test $(grep -c 'virtfs2.*t2' <out) -eq 1 || { fail=1; cat out; }
 
 # Ensure that filtering duplicates does not affect -a processing.
 LD_PRELOAD=$LD_PRELOAD:./k.so df -a >out || fail=1
-total_fs=6; test "$CU_REMOTE_FS" && total_fs=$(expr $total_fs + 3)
+total_fs=6; test "$CU_REMOTE_FS" && total_fs=$(expr $total_fs + 5)
 test $(wc -l <out) -eq $total_fs || { fail=1; cat out; }
 # Ensure placeholder "-" values used for the eclipsed "virtfs"
 test $(grep -c 'virtfs *-' <out) -eq 1 || { fail=1; cat out; }

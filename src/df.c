@@ -50,6 +50,7 @@ struct devlist
   dev_t dev_num;
   struct mount_entry *me;
   struct devlist *next;
+  struct devlist *next_same_dev;
   struct devlist *seen_last; /* valid for hashed devlist entries only */
 };
 
@@ -720,6 +721,7 @@ filter_mount_list (bool devices_only)
     {
       struct stat buf;
       struct mount_entry *discard_me = NULL;
+      struct devlist *last_seen_dev = NULL, *seen_dev = NULL;
 
       /* Avoid stating remote file systems as that may hang.
          On Linux we probably have me_dev populated from /proc/self/mountinfo,
@@ -737,9 +739,9 @@ filter_mount_list (bool devices_only)
       else
         {
           /* If we've already seen this device...  */
-          struct devlist *seen_dev = devlist_for_dev (buf.st_dev);
+          last_seen_dev = seen_dev = devlist_for_dev (buf.st_dev);
 
-          if (seen_dev)
+          for (; seen_dev && ! discard_me; seen_dev = seen_dev->next_same_dev)
             {
               bool target_nearer_root = strlen (seen_dev->me->me_mountdir)
                                         > strlen (me->me_mountdir);
@@ -796,6 +798,7 @@ filter_mount_list (bool devices_only)
           struct devlist *devlist = xmalloc (sizeof *devlist);
           devlist->me = me;
           devlist->dev_num = buf.st_dev;
+          devlist->next_same_dev = last_seen_dev;
           devlist->next = device_list;
           device_list = devlist;
 

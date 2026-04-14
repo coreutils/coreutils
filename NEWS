@@ -62,6 +62,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'df --local' recognises more file system types as remote.
   Specifically: autofs, ncpfs, smb, smb2, gfs, gfs2, userlandfs.
 
+  'df' improves duplicate mount suppression, by checking each mount against
+  all previously kept entries for the same device, not just the latest one.
+
   'expand' and 'unexpand' now support multi-byte characters.
 
   'groups' and 'id' will now exit sooner after a write error,
