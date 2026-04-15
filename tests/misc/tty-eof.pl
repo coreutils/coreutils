@@ -55,6 +55,16 @@ set_tty_eof_char ($$)
     };
 }
 
+sub
+normalize_tty_output ($)
+{
+  my ($output) = @_;
+
+  $output =~ s/\r\n/\n/g;
+  $output =~ s/\r/\n/g;
+  return $output;
+}
+
 {
   my $fail = 0;
   my $eof_char = "\cD";
@@ -113,37 +123,41 @@ set_tty_eof_char ($$)
                $fail=1, next;
           set_tty_eof_char ($exp->slave, $eof_char);
 
-          my $found;
+          my $input = "a b\n";
           if ($with_input)
             {
-              my $input = "a b\n";
-              my $echo = quotemeta $input;
-              $echo =~ s/\n$//;
-
               $exp->send($input);
-              $exp->send($eof_char);
-              $exp->expect (0, '-re', "^$echo\\r?\$");
-              $found = $exp->expect (1, '-re', "^.+\$");
-              $found and warn "F: $found: " . $exp->exp_match () . "\n";
-              defined $found
-                or (warn "$ME: $cmd ($mode) didn't produce expected output\n"),
-                   $fail=1, next;
+            }
+          $exp->send($eof_char);
+
+          $exp->expect(10, 'eof');
+          if (! defined $exp->exitstatus)
+            {
+              warn "$ME: $cmd didn't exit after $eof_name from standard input"
+                   . " ($mode)\n";
+              $fail = 1;
             }
           else
             {
-              $exp->send($eof_char);
+              my $output = normalize_tty_output ($exp->before ());
+
+              if ($with_input)
+                {
+                  $output =~ s/\Q$input\E//
+                   or (warn "$ME: $cmd ($mode) didn't echo expected input\n"),
+                       $fail = 1;
+                  $output =~ /\S/
+                   or (warn "$ME: $cmd ($mode) didn't write expected output\n"),
+                       $fail = 1;
+                }
+
+              my $s = $exp->exitstatus;
+              $s == 0
+                or (warn "$ME: $cmd exited with status $s (expected 0)"
+                         . " ($mode)\n"),
+                   $fail = 1;
             }
 
-          $exp->expect(10, 'eof');
-          defined $exp->exitstatus
-            or (warn "$ME: $cmd didn't exit after $eof_name from standard input"
-                     . " ($mode)\n"),
-               $fail=1, next;
-          my $s = $exp->exitstatus;
-          $s == 0
-            or (warn "$ME: $cmd exited with status $s (expected 0)"
-                     . " ($mode)\n"),
-               $fail=1;
           $exp->hard_close();
 
           if (-s $stderr)
