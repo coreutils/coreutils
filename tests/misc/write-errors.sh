@@ -89,6 +89,9 @@ while read writer; do
   { test $? = 124 || ! grep "$ENOSPC" full.err >/dev/null; } &&
    { fail=1; cat full.err; echo "$writer: failed to exit" >&2; }
 
+  # https://github.com/ksh93/ksh/issues/741
+  $SHELL -c 'test -n "$KSH_VERSION"' && continue
+
   # Check closed pipe handling
   rm -f pipe.err || framework_failure_
   timeout 10 env --default-signal=PIPE $SHELL -c \
