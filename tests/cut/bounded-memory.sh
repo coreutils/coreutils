@@ -19,17 +19,15 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cut
 
-vm=$(get_min_ulimit_v_ cut -b1 /dev/null) ||
+vm=$(get_min_ulimit_v_ timeout 10 cut -b1 /dev/null) ||
   skip_ 'failed to determine memory limit'
 
 # There is no way to implement '-s -f1' without allocating unbounded memory.
 # Check the rest.
 for opts in '-c1' '-b1' '-s -f2' '-f1'; do
-  timeout 0.5 $SHELL -c \
-    "(ulimit -v $(($vm+6000)) \
-      && cut $opts </dev/zero >/dev/null 2>err)"
+  (ulimit -v $(($vm+6000)) \
+    && timeout 0.5 cut $opts </dev/zero >/dev/null 2>err)
   ret=$?
-  test -f err || skip_ 'shell ulimit failure'
   test $ret = 124 || {
     fail=1
     cat err

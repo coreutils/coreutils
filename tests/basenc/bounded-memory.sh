@@ -19,17 +19,15 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ basenc
 
-vm=$(get_min_ulimit_v_ basenc --base64 /dev/null) ||
+vm=$(get_min_ulimit_v_ timeout 10 basenc --base64 /dev/null) ||
   skip_ 'failed to determine memory limit'
 
 # Check all except for --base58.
 for algorithm in '--base64' '--base64url' '--base32' '--base32hex' '--base16' \
                  '--base2msbf' '--base2lsbf' '--z85'; do
-  timeout 0.5 $SHELL -c \
-    "(ulimit -v $(($vm+6000)) \
-      && basenc $algorithm </dev/zero >/dev/null 2>err)"
+  (ulimit -v $(($vm+6000)) \
+    && timeout 0.5 basenc $algorithm </dev/zero >/dev/null 2>err)
   ret=$?
-  test -f err || skip_ 'shell ulimit failure'
   test $ret = 124 || {
     fail=1
     cat err

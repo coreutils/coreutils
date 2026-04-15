@@ -58,7 +58,7 @@ vm=$(get_min_ulimit_v_ timeout 10 fold /dev/null) && {
   # \303 results in EILSEQ on input
   for c in '\n' '\0' '\303'; do
     tr '\0' "$c" < /dev/zero |
-     (ulimit -v $(($vm+12000)) && timeout 10 fold 2>err >/dev/full)
+     (ulimit -v $(($vm+6000)) && timeout 10 fold 2>err >/dev/full)
     ret=$?
     { test $ret = 124 || ! grep "$ENOSPC" err >/dev/null; } &&
      { fail=1; cat err; echo "fold didn't diagnose ENOSPC" >&2; }
