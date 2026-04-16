@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
+getlimits_
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_srcdir/tests/other-fs-tmpdir"
 
@@ -30,7 +31,10 @@ truncate -s1M $other_partition_sparse || framework_failure_
 
 # cp should not disable anything by default, even for sparse files.  For e.g.
 # copy offload is an important performance improvement for sparse files on NFS.
-cp --debug $other_partition_sparse k2 >cp.out || fail=1
+cp --debug $other_partition_sparse k2 >cp.out 2>cp.err; ret=$?
+# Old Centos 7 or WSL 1 can give EINVAL erroneously
+grep -F "$EINVAL" cp.err && skip_ 'received EINVAL when copying sparse file'
+test "$ret" = 0 || { cat cp.err >&2; fail=1; }
 cmp $other_partition_sparse k2 || fail=1
 grep ': avoided' cp.out && { cat cp.out; fail=1; }
 
