@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ dd
+getlimits_
 
 # Determine basic amount of memory needed.
 echo . > f || framework_failure_
@@ -26,13 +27,13 @@ vm=$(get_min_ulimit_v_ timeout 10 dd if=f of=f2 status=none) \
 rm f f2 || framework_failure_
 
 # Ensure dd exits with 1 if memory exhausted
-(ulimit -v $vm && returns_ 1 \
+(ulimit -v $(($vm+6000)) && returns_ 1 \
  dd if=/dev/null of=/dev/null bs=$(($SSIZE_MAX-1))) || fail=1
 # Ensure dd exits with 1 on numeric overflow
-(ulimit -v $vm && returns_ 1 \
+(ulimit -v $(($vm+6000)) && returns_ 1 \
  dd if=/dev/null of=/dev/null bs=$SIZE_OFLOW) || fail=1
 # Ensure dd exits with 1 on invalid number
-(ulimit -v $vm && returns_ 1 \
+(ulimit -v $(($vm+6000)) && returns_ 1 \
  dd if=/dev/null of=/dev/null bs=0) || fail=1
 
 # count and skip are zero, we don't need to allocate memory
