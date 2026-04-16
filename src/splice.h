@@ -17,7 +17,12 @@
 #ifndef SPLICE_H
 # define SPLICE_H 1
 
-# if HAVE_SPLICE
+# if HAVE_VMSPLICE
+
+/* splice() and vmsplice() were introduced at the same time,
+   so assume splice() is available.  Note AIX also has a different
+   splice() which is why we don't explicitly check for that function. */
+#  define HAVE_SPLICE 1
 
 /* Empirically determined pipe size for best throughput.
    Needs to be <= /proc/sys/fs/pipe-max-size  */
