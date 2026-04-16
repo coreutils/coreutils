@@ -287,6 +287,7 @@ all_tests =					\
   tests/mktemp/bad-unicode.sh			\
   tests/mktemp/mktemp-misc.sh			\
   tests/mktemp/mktemp.pl			\
+  tests/mktemp/write-error.sh			\
   tests/misc/arch.sh				\
   tests/pr/bounded-memory.sh			\
   tests/pr/pr-tests.pl				\
