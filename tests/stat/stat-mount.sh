@@ -30,7 +30,10 @@ hide_proc() {
   unshare -rm $SHELL -c 'mount -t tmpfs tmpfs /proc && "$@"' -- "$@"
 }
 if hide_proc true; then
-  hide_proc stat -c '0%#a' / || fail=1
+  hide_proc mount; ret=$?
+  if test "$ret" = 2; then  # Avoid segfaults under unshare on Guix
+    hide_proc stat -c '0%#a' / || fail=1
+  fi
 fi
 
 Exit $fail
