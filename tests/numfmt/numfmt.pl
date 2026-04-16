@@ -894,7 +894,8 @@ my @Tests =
      # A leading '-9...' must be treated as an invalid short option, not as
      # a negative positional argument.
      ['neg-arg-not-option', '--to=iec -9923868',
-             {ERR => "$prog: invalid option -- '9'\n" .
+             {ERR_SUBST => q!s/'9'/9/;s/unknown/invalid/!},
+             {ERR => "$prog: invalid option -- 9\n" .
                      "Try '$prog --help' for more information.\n"},
              {EXIT => 1}],
 
