@@ -68,7 +68,6 @@ TESTS_ENVIRONMENT =				\
   built_programs='$(built_programs) $(single_binary_progs)' \
   fail=0					\
   host_os=$(host_os)				\
-  host_triplet='$(host_triplet)'		\
   srcdir='$(srcdir)'				\
   top_srcdir='$(top_srcdir)'			\
   CONFIG_HEADER='$(abs_top_builddir)/$(CONFIG_INCLUDE)' \

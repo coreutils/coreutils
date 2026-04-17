@@ -88,7 +88,7 @@ while read writer; do
   # As a result, when we print a single line there is no bytes buffered when
   # we close the stream and errno is not set.  See:
   # <https://www.openwall.com/lists/musl/2026/04/02/1>.
-  case $host_triplet in
+  case $host_os in
     *-musl*) error_re="$error_re|" ;;
   esac
 
