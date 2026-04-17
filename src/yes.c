@@ -144,32 +144,32 @@ splice_write (MAYBE_UNUSED char const *buf, MAYBE_UNUSED idx_t copysize)
 
       while (iov.iov_len > 0)
         {
-         /* Use SPLICE_F_{GIFT,MOVE} to allow the kernel to take references
-            to the pages.  I.e., we're indicating we won't make changes.
-            SPLICE_F_GIFT is only appropriate for full pages.  */
+          /* Use SPLICE_F_{GIFT,MOVE} to allow the kernel to take references
+             to the pages.  I.e., we're indicating we won't make changes.
+             SPLICE_F_GIFT is only appropriate for full pages.  */
           unsigned int flags = iov.iov_len % page_size ? 0 : SPLICE_F_GIFT;
           ssize_t n = vmsplice (vmsplice_fd, &iov, 1, flags);
           if (n <= 0)
             goto done;
+
           if (stdout_is_pipe)
             output_started = true;
+          else
+            {
+              idx_t remaining = n;
+              while (remaining > 0)
+                {
+                  ssize_t s = splice (pipefd[0], NULL, STDOUT_FILENO, NULL,
+                                      remaining, SPLICE_F_MOVE);
+                  if (s <= 0)
+                    goto done;
+                  output_started = true;
+                  remaining -= s;
+                }
+            }
+
           iov.iov_base = (char *) iov.iov_base + n;
           iov.iov_len -= n;
-        }
-
-      /* For non-pipe stdout, drain intermediate pipe to stdout.  */
-      if (! stdout_is_pipe)
-        {
-          idx_t remaining = splice_bufsize;
-          while (remaining > 0)
-            {
-              ssize_t s = splice (pipefd[0], NULL, STDOUT_FILENO, NULL,
-                                  remaining, SPLICE_F_MOVE);
-              if (s <= 0)
-                goto done;
-              output_started = true;
-              remaining -= s;
-            }
         }
     }
 
