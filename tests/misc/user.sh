@@ -25,8 +25,9 @@ overflow_uid=$(cat /proc/sys/kernel/overflowuid) ||
 
 test "$(unshare -U whoami)" = "$(id -un $overflow_uid)" || fail=1
 
-# FIXME: Fails with Manjaro Linux
-#returns_ 1 unshare -U logname 2>err || fail=1
-#test "$(cat err)" = "logname: no login name" || fail=1
+# The "</dev/null" disables a fallback lookup via utmp/utmpx,
+# that existed in glibc < 2.28 and exists again in glibc >= 2.38.
+returns_ 1 unshare -U logname </dev/null 2>err || fail=1
+test "$(cat err)" = "logname: no login name" || fail=1
 
 Exit $fail
