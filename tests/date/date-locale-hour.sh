@@ -60,7 +60,7 @@ done
 # and that it uses it by default when no format string is given.
 for loc in $(locale -a | shuf -n 10); do
   fmt="$(LC_ALL=$loc locale date_fmt; printf x)"
-  fmt=${fmt%$'\n'x}  # Retain fmt newlines (seen with Serbian on Centos 7)
+  fmt=${fmt%?x}  # Retain fmt newlines (seen with Serbian on Centos 7)
   if test -n "$fmt"; then
     LC_ALL=$loc date -d '2025-10-11T13:00' +"$fmt" > $loc.exp || fail=1
     LC_ALL=$loc date -d '2025-10-11T13:00' > $loc.out || fail=1
