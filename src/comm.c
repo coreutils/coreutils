@@ -112,7 +112,7 @@ Compare sorted files FILE1 and FILE2 line by line.\n\
 "), stdout);
       fputs (_("\
 \n\
-When FILE1 or FILE2 (not both) is -, read standard input.\n\
+When FILE1 or FILE2 is -, read standard input.\n\
 "), stdout);
       fputs (_("\
 \n\
@@ -388,7 +388,9 @@ compare_files (char **infiles)
           }
     }
 
-  for (int i = 0; i < 2; i++)
+  /* Avoid closing standard input twice when invoking 'comm - -'.  */
+  const int n_streams = 2 - (streams[0] == streams[1]);
+  for (int i = 0; i < n_streams; i++)
     if (fclose (streams[i]) != 0)
       error (EXIT_FAILURE, errno, "%s", quotef (infiles[i]));
 

@@ -324,7 +324,8 @@ all_tests =					\
   tests/cksum/cksum-base64.pl			\
   tests/cksum/cksum-base64-untagged.sh		\
   tests/cksum/cksum-raw.sh			\
-  tests/misc/comm.pl				\
+  tests/comm/comm.pl				\
+  tests/comm/dash-dash.sh			\
   tests/csplit/csplit.sh			\
   tests/csplit/csplit-1000.sh			\
   tests/csplit/csplit-heap.sh			\

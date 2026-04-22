@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  'comm - -' no longer closes standard input twice.  Previously it would
+  mistakenly exit with a nonzero status.
+  [This bug was present in "the beginning".]
+
 
 * Noteworthy changes in release 9.11 (2026-04-20) [stable]
 

@@ -5502,6 +5502,12 @@ $ comm -12 file1 file2 | wc -l    # number of lines common to both files
 
 @end table
 
+POSIX leaves the behavior undefined when @var{file1} and @var{file2}
+both refer to standard input, i.e., when both are @samp{-}.  GNU
+@command{comm} reads the first line as if it came from @var{file1} and
+the second as if it were from @var{file2}, and continues alternating in
+this manner until the end of file is reached.
+
 @node ptx invocation
 @section @command{ptx}: Produce permuted indexes
 
