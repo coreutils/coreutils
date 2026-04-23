@@ -60,13 +60,20 @@ for operands in "oseek=8B" "seek=8 oflag=seek_bytes"; do
   compare expected2 out2 || fail=1
 done
 
-# Check recursive integer parsing
+# Check multiplicative integer parsing
 for oseek in '1x2x4 oflag=seek_bytes' '1Bx2x4' '1Bx8' '2Bx4B' '2x4B'; do
   # seek bytes
   echo abcdefghijklm |
     dd oseek=$oseek bs=5 > out 2> /dev/null || fail=1
   compare expected out || fail=1
 done
+
+# Check that long multiplier chains don't exhaust a restricted stack.
+if (ulimit -S -s 256 && dd if=/dev/null count=1) 2>/dev/null; then
+  long_multiplier=$(yes 1x | head -n 10000 | tr -d '\n')1 || framework_failure_
+  (ulimit -S -s 256 &&
+    dd count="$long_multiplier" if=/dev/null of=/dev/null status=none) || fail=1
+fi
 
 # Negative checks for integer parsing
 for count in B B1 Bx1 KBB BB KBb KBx x1 1x 1xx1; do

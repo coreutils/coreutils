@@ -1413,48 +1413,72 @@ parse_integer (char const *str, strtol_error *invalid)
      calling code should not rely on this function returning 0
      when *INVALID represents a non-overflow error.  */
   int indeterminate = 0;
-  uintmax_t n = indeterminate;
-  char *suffix;
   static char const suffixes[] = "bcEGkKMPQRTwYZ0";
-  strtol_error e = xstrtoumax (str, &suffix, 10, &n, suffixes);
-  intmax_t result;
+  intmax_t result = 1;
+  bool overflow = false;
+  bool warn_zero_multiplier = false;
+  strtol_error e;
 
-  if ((e & ~LONGINT_OVERFLOW) == LONGINT_INVALID_SUFFIX_CHAR
-      && *suffix == 'B' && str < suffix && suffix[-1] != 'B')
+  while (true)
     {
-      suffix++;
-      if (!*suffix)
+      uintmax_t n = indeterminate;
+      char *suffix;
+      e = xstrtoumax (str, &suffix, 10, &n, suffixes);
+
+      if ((e & ~LONGINT_OVERFLOW) == LONGINT_INVALID_SUFFIX_CHAR
+          && *suffix == 'B' && str < suffix && suffix[-1] != 'B')
+        {
+          suffix++;
+          if (!*suffix)
+            e &= ~LONGINT_INVALID_SUFFIX_CHAR;
+        }
+
+      bool multiply
+        = ((e & ~LONGINT_OVERFLOW) == LONGINT_INVALID_SUFFIX_CHAR
+           && *suffix == 'x');
+      if (multiply)
         e &= ~LONGINT_INVALID_SUFFIX_CHAR;
+
+      if ((e & ~LONGINT_OVERFLOW) != LONGINT_OK)
+        {
+          if (! (e & LONGINT_OVERFLOW) && n <= INTMAX_MAX)
+            {
+              *invalid = e;
+              return indeterminate;
+            }
+          e = LONGINT_OVERFLOW;
+        }
+
+      if (n == 0)
+        result = 0;
+      else if (result != 0)
+        {
+          intmax_t product;
+          if ((e & LONGINT_OVERFLOW)
+              || overflow
+              || ckd_mul (&product, result, n))
+            overflow = true;
+          else
+            result = product;
+        }
+
+      if (multiply && STRPREFIX (str, "0x"))
+        warn_zero_multiplier = true;
+
+      if (! multiply)
+        break;
+      str = suffix + 1;
     }
 
-  if ((e & ~LONGINT_OVERFLOW) == LONGINT_INVALID_SUFFIX_CHAR
-      && *suffix == 'x')
+  if (result == 0)
     {
-      strtol_error f = LONGINT_OK;
-      intmax_t o = parse_integer (suffix + 1, &f);
-      if ((f & ~LONGINT_OVERFLOW) != LONGINT_OK)
-        {
-          e = f;
-          result = indeterminate;
-        }
-      else if (ckd_mul (&result, n, o)
-               || (result != 0 && ((e | f) & LONGINT_OVERFLOW)))
-        {
-          e = LONGINT_OVERFLOW;
-          result = INTMAX_MAX;
-        }
-      else
-        {
-          if (result == 0 && STRPREFIX (str, "0x"))
-            diagnose (0, _("warning: %s is a zero multiplier; "
-                           "use %s if that is intended"),
-                      quote_n (0, "0x"), quote_n (1, "00x"));
-          e = LONGINT_OK;
-        }
+      if (warn_zero_multiplier)
+        diagnose (0, _("warning: %s is a zero multiplier; "
+                       "use %s if that is intended"),
+                  quote_n (0, "0x"), quote_n (1, "00x"));
+      e = LONGINT_OK;
     }
-  else if (n <= INTMAX_MAX)
-    result = n;
-  else
+  else if (overflow)
     {
       e = LONGINT_OVERFLOW;
       result = INTMAX_MAX;
