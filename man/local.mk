@@ -27,7 +27,7 @@ if HAVE_PERL
 if BOLD_MAN_REFS
 help2man_OPTS=--bold-refs
 endif
-run_help2man = env TERM=not_dumb $(PERL) -- \
+run_help2man = env IN_HELP2MAN=1 TERM=not_dumb $(PERL) -- \
 	       $(srcdir)/man/help2man --loose-indent $(help2man_OPTS)
 else
 run_help2man = $(SHELL) $(srcdir)/man/dummy-man

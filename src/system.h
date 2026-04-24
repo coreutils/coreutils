@@ -870,18 +870,6 @@ emit_ancillary_info (char const *program)
 
   emit_bug_reporting_address ();
 
-  /* Don't output this redundant message for English locales.
-     Note we still output for 'C' so that it gets included in the man page.  */
-  char const *lc_messages = setlocale (LC_MESSAGES, NULL);
-  if (lc_messages && STRNCMP_LIT (lc_messages, "en_"))
-    {
-      /* TRANSLATORS: Replace LANG_CODE in this URL with your language code
-         <https://translationproject.org/team/LANG_CODE.html> to form one of
-         the URLs at https://translationproject.org/team/.  Otherwise, replace
-         the entire URL with your translation team's email address.  */
-      fputs (_("Report any translation bugs to "
-               "<https://translationproject.org/team/>\n"), stdout);
-    }
   /* .htaccess on the coreutils web site maps programs to the appropriate page,
      however we explicitly handle "[" -> "test" here as the "[" is not
      recognized as part of a URL by default in terminals.  */

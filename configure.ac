@@ -153,6 +153,10 @@ if test "$gl_bold_manpages" != no; then
 fi
 AM_CONDITIONAL([BOLD_MAN_REFS], [test "$gl_bold_manpages" != no])
 
+# When generating manual pages, include a "Report any translation bugs" line.
+AC_DEFINE([PACKAGE_L10N_BUGREPORT], ["https://translationproject.org/team/"],
+  [Define to the URL of your translation project.])
+
 AC_ARG_ENABLE([manual-url],
   [AS_HELP_STRING([--enable-manual-url@<:@=<url>@:>@],
      [When generating man pages, or displaying --help, generate hyperlinks
