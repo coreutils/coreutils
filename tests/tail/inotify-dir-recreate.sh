@@ -37,7 +37,7 @@ cleanup_fail_ ()
 check_tail_output_ ()
 {
   local delay="$1"
-  grep $check_re $check_f > /dev/null ||
+  grep "$check_re" "$check_f" > /dev/null ||
     { sleep $delay ; return 1; }
 }
 
@@ -51,23 +51,29 @@ grep_timeout_ ()
 # Prepare the file to be watched
 mkdir dir && echo 'inotify' > dir/file || framework_failure_
 
+# Speed up the fallback-to-polling phase.
+fastpoll='-s.1 --max-unchanged-stats=1'
+
 #tail must print content of the file to stdout, verify
-timeout 60 tail --pid=$$ -F dir/file >out 2>&1 & pid=$!
-grep_timeout_ 'inotify' 'out' ||
+timeout 60 tail --debug --pid=$$ -F $fastpoll dir/file >out 2>&1 & pid=$!
+grep_timeout_ 'inotify' out ||
 { cleanup_fail_ 'file to be tailed does not exist'; }
 
 inotify_failed_re='inotify (resources exhausted|cannot be used)'
 grep -E "$inotify_failed_re" out &&
   skip_ "inotify can't be used"
 
+grep_timeout_ 'using notification mode' out ||
+{ cleanup_fail_ 'tail did not switch to notification mode'; }
+
 # Remove the directory, should get the message about the deletion
 rm -r dir || framework_failure_
-grep_timeout_ 'polling' 'out' ||
+grep_timeout_ 'polling' out ||
 { cleanup_fail_ 'tail did not switch to polling mode'; }
 
 # Recreate the dir, must get a message about recreation
 mkdir dir && touch dir/file || framework_failure_
-grep_timeout_ 'appeared' 'out' ||
+grep_timeout_ 'appeared' out ||
 { cleanup_fail_ 'previously removed file did not appear'; }
 
 cleanup_
@@ -75,9 +81,11 @@ cleanup_
 # Expected result for the whole process
 cat <<\EOF > exp || framework_failure_
 inotify
+tail: using notification mode
 tail: 'dir/file' has become inaccessible: No such file or directory
 tail: directory containing watched file was removed
 tail: inotify cannot be used, reverting to polling
+tail: using polling mode
 tail: 'dir/file' has appeared;  following new file
 EOF
 
