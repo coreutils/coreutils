@@ -69,7 +69,7 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
 "), stdout);
       fputs (_("\
   \\\\      backslash\n\
-  \\a      alert (BEL)\n\
+  \\a      alert (bell)\n\
   \\b      backspace\n\
   \\c      produce no further output\n\
   \\e      escape\n\

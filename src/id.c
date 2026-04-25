@@ -115,11 +115,11 @@ or (when USER omitted) for the current process.\n\
 "));
       oputs (_("\
   -n, --name\n\
-         print a name instead of a number, for -u,-g,-G\n\
+         print a name instead of a number, for -u, -g, -G\n\
 "));
       oputs (_("\
   -r, --real\n\
-         print the real ID instead of the effective ID, with -u,-g,-G\n\
+         print the real ID instead of the effective ID, with -u, -g, -G\n\
 "));
       oputs (_("\
   -u, --user\n\

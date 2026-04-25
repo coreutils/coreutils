@@ -119,7 +119,7 @@ Base%d encode or decode FILE, or standard input, to standard output.\n\
 #if BASE_TYPE == 42
       oputs (_("\
       --base64\n\
-         same as 'base64' program (RFC4648 section 4)\n\
+         same as base64(1) program (RFC4648 section 4)\n\
 "));
       oputs (_("\
       --base64url\n\
@@ -131,7 +131,7 @@ Base%d encode or decode FILE, or standard input, to standard output.\n\
 "));
       oputs (_("\
       --base32\n\
-         same as 'base32' program (RFC4648 section 6)\n\
+         same as base32(1) program (RFC4648 section 6)\n\
 "));
       oputs (_("\
       --base32hex\n\

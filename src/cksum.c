@@ -502,7 +502,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 Print or check %s checksums.\n\
 "), DIGEST_TYPE_STRING);
         fputs (_("\
-Legacy interface to the cksum utility.\n\
+Legacy interface to the cksum(1) utility.\n\
 "), stdout);
       }
     else
@@ -517,7 +517,7 @@ Print or check %s (%d-bit) checksums.\n\
               DIGEST_TYPE_STRING,
               DIGEST_BITS);
       fputs (_("\
-Legacy interface to the cksum utility.\n\
+Legacy interface to the cksum(1) utility.\n\
 "), stdout);
 #endif
 
