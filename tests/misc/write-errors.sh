@@ -86,8 +86,15 @@ while read writer; do
   rm -f full.err || framework_failure_
   timeout 10 env --default-signal=PIPE $SHELL -c \
     "($ulimit && $writer 2>full.err >/dev/full)"
-  { test $? = 124 || ! grep "$ENOSPC" full.err >/dev/null; } &&
-   { fail=1; cat full.err; echo "$writer: failed to exit" >&2; }
+  { test $? = 124 || test $? = 0 || ! grep "$ENOSPC" full.err >/dev/null; } &&
+   { fail=1; cat full.err; echo "$writer: failed to diagnose ENOSPC" >&2; }
+
+  # Check closed stdout handling
+  rm -f closed.err || framework_failure_
+  timeout 10 env --default-signal=PIPE $SHELL -c \
+    "($ulimit && $writer 2>closed.err >&-)"
+  { test $? = 124 || test $? = 0 || ! grep -E "$EBADF" closed.err >/dev/null; }\
+   && { fail=1; cat closed.err; echo "$writer: failed to diagnose EBADF" >&2; }
 
   # https://github.com/ksh93/ksh/issues/741
   $SHELL -c 'test -n "$KSH_VERSION"' && continue
@@ -98,6 +105,7 @@ while read writer; do
     "($ulimit && $writer 2>pipe.err | :)"
   { test $? = 0 && compare /dev/null pipe.err; } ||
    { fail=1; cat pipe.err; echo "$writer: failed to write to closed pipe" >&2; }
+
 done < built_writers
 
 Exit $fail

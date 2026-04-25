@@ -82,24 +82,31 @@ while read writer; do
   # but that's not guaranteed in the generic close_stream() handling.
   # For e.g. with _IOLBF etc, stdio will discard pending data at each line,
   # thus only giving a generic error upon ferror() in close_stream().
-  error_re="$ENOSPC"
+  ere="$ENOSPC|$EBADF"
 
   # musl writes the first line immediately when it should be fully buffered.
   # As a result, when we print a single line there is no bytes buffered when
   # we close the stream and errno is not set.  See:
   # <https://www.openwall.com/lists/musl/2026/04/02/1>.
   case $host_os in
-    *-musl*) error_re="$error_re|" ;;
+    *-musl*) ere="$ere|" ;;
   esac
 
   printf '%s' "$writer" | grep 'generic' >/dev/null &&
-    { error_re="write error|$error_re"; }
+    { ere="write error|$ere"; }
 
   rm -f full.err || framework_failure_
   timeout 10 env --default-signal=PIPE $SHELL -c \
     "(env $writer 2>full.err >/dev/full)"
-  { test $? = 124 || ! grep -E "$error_re" full.err >/dev/null; } &&
-   { fail=1; cat full.err; echo "$writer: failed to exit" >&2; }
+  { test $? = 124 || test $? = 0 || ! grep -E "$ere" full.err >/dev/null; } &&
+   { fail=1; cat full.err; echo "$writer: failed to diagose ENOSPC" >&2; }
+
+  # Check closed stdout handling
+  rm -f closed.err || framework_failure_
+  timeout 10 env --default-signal=PIPE $SHELL -c \
+    "(env $writer 2>closed.err >&-)"
+  { test $? = 124 || test $? = 0 || ! grep -E "$ere" closed.err >/dev/null; } &&
+   { fail=1; cat closed.err; echo "$writer: failed to diagnose EBADF" >&2; }
 
   # https://github.com/ksh93/ksh/issues/741
   $SHELL -c 'test -n "$KSH_VERSION"' && continue
@@ -110,6 +117,7 @@ while read writer; do
     "(env $writer 2>pipe.err | :)"
   { test $? = 0 && compare /dev/null pipe.err; } ||
    { fail=1; cat pipe.err; echo "$writer: failed writing to closed pipe" >&2; }
+
 done < built_writers
 
 Exit $fail
