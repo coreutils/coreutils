@@ -49,6 +49,8 @@ sub program_basename;
 sub get_option_value;
 sub convert_option;
 sub fix_italic_spacing;
+sub generic_indented_tag_line;
+sub indented_tag_line;
 sub set_indent;
 sub visual_length;
 
@@ -277,6 +279,10 @@ my $program = program_basename $ARGV[0];
 my $package = $program;
 my $version;
 
+# Normalize help text that embeds argv[0], so examples are formatted
+# using the displayed program name rather than a temporary build path.
+$help_text =~ s/\Q$ARGV[0]\E/$program/g if $ARGV[0] ne $program;
+
 if ($opt_output)
 {
     unlink $opt_output or kark N_("%s: can't unlink %s (%s)"),
@@ -448,27 +454,33 @@ s/([^\n])\n($PAT_BUGS|$PAT_AUTHOR|$PAT_SEE_ALSO) /$1\n\n$2 /og;
 s/^Copyright +(?:\xa9|\([Cc]\))/Copyright \\(co/mg;
 
 my $require_mono = 0;
+my $compact_indented_tags = 0;
+my $blank_before_paragraph = 0;
 while (length)
 {
     # Convert some standard paragraph names.
     if (s/^($PAT_OPTIONS): *\n+//o)
     {
 	$sect = _('OPTIONS');
+	$blank_before_paragraph = 0;
 	next;
     }
     if (s/^($PAT_ENVIRONMENT): *\n+//o)
     {
 	$sect = _('ENVIRONMENT');
+	$blank_before_paragraph = 0;
 	next;
     }
     if (s/^($PAT_FILES): *\n+//o)
     {
 	$sect = _('FILES');
+	$blank_before_paragraph = 0;
 	next;
     }
     elsif (s/^($PAT_EXAMPLES): *\n+//o)
     {
 	$sect = _('EXAMPLES');
+	$blank_before_paragraph = 0;
 	next;
     }
 
@@ -478,6 +490,7 @@ while (length)
 	$sect = uc $1;
 	$sect =~ tr/*/ /;  # also accept *Section*Name*
 	push @sections, $sect;
+	$blank_before_paragraph = 0;
 	next;
     }
 
@@ -533,6 +546,8 @@ while (length)
 
     my $indent = 0;
     my $content = '';
+    my $tag_line_indent;
+    my $tag_line_width;
 
     # Option with description.
     if (s/^( {1,10}([+-]\S.*?))(?:(  +(?!-))|\n( {7,}))(\S.*)\n//)
@@ -556,11 +571,14 @@ while (length)
     }
 
     # Indented paragraph with tag.
-    elsif (s/^( +(\S.*?)  +)(\S.*)\n//)
+    elsif (s/^(( +)(\S.*?)  +)(\S.*)\n//)
     {
 	$matched .= $& if %append_match;
-	$indent = set_indent visual_length $1;
-	$content = ".TP\n\x84$2\n\x84$3\n";
+	$tag_line_width = (visual_length $1) - (visual_length $2);
+	$tag_line_width = 1 if $tag_line_width < 1;
+	$indent = set_indent $tag_line_width;
+	$content = ".TP\n\x84$3\n\x84$4\n";
+	$tag_line_indent = $2;
     }
 
     # Indented paragraph.
@@ -587,8 +605,42 @@ while (length)
 	$content .= "\x84$1\n";
     }
 
-    # Move to next paragraph.
-    s/^\n+//;
+    # Consecutive generic tagged rows are dense tables.  Keep .TP's
+    # hanging indentation, but suppress inter-paragraph distance.
+    my $is_indented_tag = $content =~ /^\.TP\n/ && defined $tag_line_indent;
+    my $next_indented_tag = $is_indented_tag
+	&& indented_tag_line ($_, $tag_line_indent);
+    my $compact_this_tag = $is_indented_tag
+	&& ($compact_indented_tags || $next_indented_tag);
+    my $preserve_blank_after = 0;
+
+    if ($compact_this_tag)
+    {
+	$content =~ s/^\.TP\n/.TP $tag_line_width\n/;
+	unless ($compact_indented_tags)
+	{
+	    $content = ".PD 0\n$content";
+	    $content = ".PP\n$content" if $blank_before_paragraph;
+	    $compact_indented_tags = 1;
+	}
+	unless ($next_indented_tag)
+	{
+	    $content .= ".PD\n";
+	    (my $next_paragraph = $_) =~ s/^\n+//;
+	    $preserve_blank_after = /^\n/
+		&& generic_indented_tag_line $next_paragraph;
+	    $content .= ".PP\n" if $preserve_blank_after;
+	    $compact_indented_tags = 0;
+	}
+    }
+    elsif ($compact_indented_tags)
+    {
+	$content = ".PD\n$content";
+	$compact_indented_tags = 0;
+    }
+
+    $blank_before_paragraph = s/^\n+//;
+    $blank_before_paragraph = 0 if $preserve_blank_after;
 
     for ($content)
     {
@@ -857,6 +909,27 @@ sub fix_italic_spacing
     local $_ = shift;
     s!\\fI(.*?)\\f([BRP])!\\fI\\,$1\\/\\f$2!g;
     return $_;
+}
+
+# Return true if text starts with a generic indented tag row using
+# the same leading indentation.  Option rows are handled separately.
+sub generic_indented_tag_line
+{
+    my $text = shift;
+
+    return 0 unless $text =~ /^ +\S.*?  +\S.*\n/;
+    return 0 if $text
+	=~ /^( {1,10}[+-]\S.*?)(?:(  +(?!-))|\n( {7,}))(\S.*)\n/;
+    return 0 if $text =~ /^ {1,10}[+-]\S.*\n/;
+    return 1;
+}
+
+sub indented_tag_line
+{
+    my ($text, $leading_indent) = @_;
+
+    return $text =~ /^\Q$leading_indent\E/
+	&& generic_indented_tag_line $text;
 }
 
 # Return indent to use: either the value passed in, or $v,$v+4 if
