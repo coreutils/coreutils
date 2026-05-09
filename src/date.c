@@ -202,6 +202,33 @@ FORMAT  Example    Description\n\
   %%    %           a literal %\n\
 "), stdout);
       fputs (_("\
+  %n    \\n          a newline\n\
+"), stdout);
+      fputs (_("\
+  %t    \\t          a tab\n\
+"), stdout);
+
+      fputs ("\n", stdout);
+
+      fputs (_("\
+  %C    20          century; like %Y, except omit last two digits\n\
+"), stdout);
+      fputs (_("\
+  %y    99          year (last two digits; 00..99)\n\
+"), stdout);
+      fputs (_("\
+  %Y    1999        year\n\
+"), stdout);
+      fputs (_("\
+  %g    99          year of ISO week number (last 2 digits; 00-99); see %G\n\
+"), stdout);
+      fputs (_("\
+  %G    1999        year of ISO week number; normally useful only with %V\n\
+"), stdout);
+
+      fputs ("\n", stdout);
+
+      fputs (_("\
   %a    Sun         locale's abbreviated weekday name\n\
 "), stdout);
       fputs (_("\
@@ -211,43 +238,40 @@ FORMAT  Example    Description\n\
   %b    Mar         locale's abbreviated month name\n\
 "), stdout);
       fputs (_("\
+  %h    Mar         same as %b\n\
+"), stdout);
+      fputs (_("\
   %B    March       locale's full month name\n\
 "), stdout);
       fputs (_("\
-  %c    ...         locale's date and time (e.g., Thu Mar  3 23:05:25 2005)\n\
+  %m    12          month (01..12)\n\
 "), stdout);
       fputs (_("\
-  %C    20          century; like %Y, except omit last two digits\n\
-"), stdout);
-      fputs (_("\
-  %d    01          day of month\n\
-"), stdout);
-      fputs (_("\
-  %D    12/31/99    date (ambiguous); same as %m/%d/%y\n\
+  %d    31          day of month (01..31)\n\
 "), stdout);
       fputs (_("\
   %e     1          day of month, space padded; same as %_d\n\
 "), stdout);
       fputs (_("\
+  %D    12/31/99    date (ambiguous); same as %m/%d/%y\n\
+"), stdout);
+      fputs (_("\
   %F    1999-12-31  full date; like %+4Y-%m-%d\n\
 "), stdout);
       fputs (_("\
-  %g    99          year of ISO week number (last two digits; 00-99); see %G\n\
+  %x    12/31/99    locale's date (can be ambiguous)\n\
 "), stdout);
       fputs (_("\
-  %G    1999        year of ISO week number; normally useful only with %V\n\
+  %c    ...         locale's date and time (e.g., Thu Mar  3 23:05 2005)\n\
 "), stdout);
-      fputs (_("\
-  %h    Mar         same as %b\n\
-"), stdout);
+
+      fputs ("\n", stdout);
+
       fputs (_("\
   %H    23          hour (00..23)\n\
 "), stdout);
       fputs (_("\
   %I    01          hour (01..12)\n\
-"), stdout);
-      fputs (_("\
-  %j    365         day of year (001..366)\n\
 "), stdout);
       fputs (_("\
   %k     8          hour, space padded ( 0..23); same as %_H\n\
@@ -256,25 +280,22 @@ FORMAT  Example    Description\n\
   %l     9          hour, space padded ( 1..12); same as %_I\n\
 "), stdout);
       fputs (_("\
-  %m    12          month (01..12)\n\
-"), stdout);
-      fputs (_("\
   %M    59          minute (00..59)\n\
 "), stdout);
       fputs (_("\
-  %n    \\n          a newline\n\
+  %S    60          second (00..60)\n\
 "), stdout);
       fputs (_("\
   %N    123456789   nanoseconds (000000000..999999999)\n\
 "), stdout);
       fputs (_("\
+  %s    1970010100  seconds since the Epoch (1970-01-01 00:00 UTC)\n\
+"), stdout);
+      fputs (_("\
   %p    PM          locale's equivalent of AM or PM; blank if not known\n\
 "), stdout);
       fputs (_("\
-  %P    pm          like %p, but lower case\n\
-"), stdout);
-      fputs (_("\
-  %q    4           quarter of year (1..4)\n\
+  %P    am          like %p, but lower case\n\
 "), stdout);
       fputs (_("\
   %r    1:11:04 PM  locale's 12-hour clock time\n\
@@ -283,44 +304,38 @@ FORMAT  Example    Description\n\
   %R    23:59       24-hour hour and minute; same as %H:%M\n\
 "), stdout);
       fputs (_("\
-  %s    1970010100  seconds since the Epoch (1970-01-01 00:00 UTC)\n\
-"), stdout);
-      fputs (_("\
-  %S    60          second (00..60)\n\
-"), stdout);
-      fputs (_("\
-  %t    \\t          a tab\n\
-"), stdout);
-      fputs (_("\
   %T    23:59:59    time; same as %H:%M:%S\n\
+"), stdout);
+      fputs (_("\
+  %X    23:59:59    locale's time representation\n\
+"), stdout);
+
+      fputs ("\n", stdout);
+
+      fputs (_("\
+  %j    365         day of year (001..366)\n\
+"), stdout);
+      fputs (_("\
+  %q    4           quarter of year (1..4)\n\
 "), stdout);
       fputs (_("\
   %u    7           day of week (1..7); 1 is Monday\n\
 "), stdout);
       fputs (_("\
-  %U    52          week number of year; Sunday as first day of week (00..53)\n\
+  %w    6           day of week (0..6); 0 is Sunday\n\
+"), stdout);
+      fputs (_("\
+  %U    52          week of year; Sunday as first day of week (00..53)\n\
 "), stdout);
       fputs (_("\
   %V    52          ISO week number; Monday as first day of week (01..53)\n\
 "), stdout);
       fputs (_("\
-  %W    52          week number of year; Monday as first day of week (00..53)\n\
+  %W    52          week of year; Monday as first day of week (00..53)\n\
 "), stdout);
-      fputs (_("\
-  %w    6           day of week (0..6); 0 is Sunday\n\
-"), stdout);
-      fputs (_("\
-  %x    12/31/99    locale's date (can be ambiguous)\n\
-"), stdout);
-      fputs (_("\
-  %X    23:59:59    locale's time representation\n\
-"), stdout);
-      fputs (_("\
-  %y    99          year (last two digits; 00..99)\n\
-"), stdout);
-      fputs (_("\
-  %Y    1999        year\n\
-"), stdout);
+
+      fputs ("\n", stdout);
+
       fputs (_("\
   %z     +0400      +hhmm numeric time zone\n\
 "), stdout);
