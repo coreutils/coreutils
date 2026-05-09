@@ -1,0 +1,43 @@
+#!/bin/sh
+# Test that 'shred' behaves correctly on FIFOs.
+
+# Copyright (C) 2026 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
+print_ver_ shred
+
+mkfifo_or_skip_ fifo
+
+# Test 'shred' on a FIFO with no readers.
+cat <<\EOF >exp || framework_failure_
+shred: fifo: invalid file type
+EOF
+returns_ 1 timeout 10 shred fifo >out 2>err || fail=1
+compare /dev/null out || fail=1
+compare exp err || fail=1
+
+# Terminate any background processes.
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
+# Test 'shred' on a FIFO with a reader.  After the file descriptor is
+# opened, 'cat' will be unblocked.
+timeout 10 cat pipe > /dev/null & pid=$!
+returns_ 1 timeout 10 shred fifo >out 2>err || fail=1
+compare /dev/null out || fail=1
+compare exp err || fail=1
+kill -0 $pid && fail=1
+
+Exit $fail

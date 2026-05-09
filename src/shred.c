@@ -1139,21 +1139,33 @@ static bool
 wipefile (char *name, char const *qname,
           struct randint_source *s, struct Options const *flags)
 {
-  bool ok;
-  int fd;
-
-  fd = open (name, O_WRONLY | O_NOCTTY | O_BINARY);
+  int fd = open (name, O_WRONLY | O_NOCTTY | O_NONBLOCK | O_BINARY);
   if (fd < 0
       && (errno == EACCES && flags->force)
       && chmod (name, S_IWUSR) == 0)
-    fd = open (name, O_WRONLY | O_NOCTTY | O_BINARY);
+    fd = open (name, O_WRONLY | O_NOCTTY | O_NONBLOCK | O_BINARY);
   if (fd < 0)
     {
-      error (0, errno, _("%s: failed to open for writing"), qname);
+      struct stat st;
+
+      /* Try to give a more meaningful error message if we attempt to
+         open a FIFO with no readers.  */
+      if (errno == ENXIO && 0 <= stat (name, &st) && S_ISFIFO (st.st_mode))
+        error (0, 0, _("%s: invalid file type"), qname);
+      else
+        error (0, errno, _("%s: failed to open for writing"), qname);
       return false;
     }
 
-  ok = do_wipefd (fd, qname, s, flags);
+  /* We used O_NONBLOCK to prevent blocking when opening a FIFO.
+     Reset that here.  */
+  int fd_flags = fcntl (fd, F_GETFL);
+  bool ok = 0 <= fd_flags && 0 <= fcntl (fd, F_SETFL, fd_flags & ~O_NONBLOCK);
+  if (ok)
+    ok = do_wipefd (fd, qname, s, flags);
+  else
+    error (0, errno, _("couldn't reset non-blocking mode %s"), qname);
+
   if (close (fd) != 0)
     {
       error (0, errno, _("%s: failed to close"), qname);
