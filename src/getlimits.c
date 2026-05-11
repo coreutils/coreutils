@@ -159,12 +159,12 @@ main (int argc, char **argv)
                                    (char const *) NULL);
 
 #define print_int(TYPE)                                                  \
-  sprintf (limit + 1, "%ju", (uintmax_t) TYPE##_MAX);               \
+  sprintf (limit + 1, "%ju", (uintmax_t) {TYPE##_MAX});                  \
   printf (#TYPE"_MAX=%s\n", limit + 1);                                  \
   printf (#TYPE"_OFLOW=%s\n", decimal_absval_add_one (limit));           \
   if (TYPE##_MIN)                                                        \
     {                                                                    \
-      sprintf (limit + 1, "%jd", (intmax_t) TYPE##_MIN);            \
+      sprintf (limit + 1, "%jd", (intmax_t) {TYPE##_MIN});               \
       printf (#TYPE"_MIN=%s\n", limit + 1);                              \
       printf (#TYPE"_UFLOW=%s\n", decimal_absval_add_one (limit));       \
     }
@@ -199,9 +199,9 @@ main (int argc, char **argv)
   print_float (LDBL);
 
   /* Other useful constants */
-  printf ("SIGRTMIN=%jd\n", (intmax_t) SIGRTMIN);
-  printf ("SIGRTMAX=%jd\n", (intmax_t) SIGRTMAX);
-  printf ("IO_BUFSIZE=%ju\n", (uintmax_t) IO_BUFSIZE);
+  printf ("SIGRTMIN=%jd\n", (intmax_t) {SIGRTMIN});
+  printf ("SIGRTMAX=%jd\n", (intmax_t) {SIGRTMAX});
+  printf ("IO_BUFSIZE=%ju\n", (uintmax_t) {IO_BUFSIZE});
 
   /* Errnos */
   errno_iterate (print_errno, NULL);

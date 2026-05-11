@@ -1007,7 +1007,7 @@ x_timestyle_match (char const * style, bool allow_posix,
                    int fail_status)
 {
   ptrdiff_t res = argmatch (style, timestyle_args,
-                            (char const *) timestyle_types,
+                            timestyle_types,
                             timestyle_types_size);
   if (res < 0)
     {

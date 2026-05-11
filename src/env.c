@@ -304,7 +304,7 @@ splitbuf_append_byte (struct splitbuf *ss, char c)
   if (ss->half_alloc * sizeof *ss->argv <= string_bytes)
     splitbuf_grow (ss);
   ((char *) (ss->argv + ss->half_alloc))[string_bytes] = c;
-  ss->argv[ss->argc] = (char *) (intptr_t) (string_bytes + 1);
+  ss->argv[ss->argc] = (char *) (intptr_t) {string_bytes + 1};
 }
 
 /* If SS's most recent character was a separator, finish off its

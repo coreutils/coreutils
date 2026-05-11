@@ -175,6 +175,11 @@ typedef uint64_t UDItype;
 # if defined ASSERT || defined __GMP_DECLSPEC || defined __GMP_GNUC_PREREQ
 # endif
 
+/* longlong.h uses casts even when useless.  */
+# if 14 <= __GNUC__
+#  pragma GCC diagnostic ignored "-Wuseless-cast"
+# endif
+
 # if _ARCH_PPC
 #  define HAVE_HOST_CPU_FAMILY_powerpc 1
 # endif

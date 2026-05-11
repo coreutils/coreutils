@@ -72,7 +72,7 @@ cksum_pclmul (FILE *fp, uint_fast32_t *crc_out, intmax_t *length_out)
           return false;
         }
 
-      datap = (__m128i *)buf;
+      datap = buf;
 
       /* Fold in parallel eight 16-byte blocks into four 16-byte blocks */
       if (bytes_read >= 16 * 8)

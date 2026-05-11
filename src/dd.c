@@ -2376,7 +2376,7 @@ dd_copy (void)
                 {
                   diagnose (errno, _("failed to truncate to %jd bytes"
                                      " in output file %s"),
-                            (intmax_t) output_offset, quoteaf (output_file));
+                            (intmax_t) {output_offset}, quoteaf (output_file));
                   return EXIT_FAILURE;
                 }
             }

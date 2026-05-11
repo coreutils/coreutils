@@ -74,7 +74,7 @@ cksum_avx2 (FILE *fp, uint_fast32_t *crc_out, intmax_t *length_out)
           return false;
         }
 
-      datap = (__m256i *)buf;
+      datap = buf;
 
       /* Fold in parallel 16x 16-byte blocks into 8x 16-byte blocks */
       if (bytes_read >= 16 * 8 * 2)

@@ -667,7 +667,7 @@ static size_t
 devlist_hash (void const *x, size_t table_size)
 {
   struct devlist const *p = x;
-  return (uintmax_t) p->dev_num % table_size;
+  return (uintmax_t) {p->dev_num} % table_size;
 }
 
 static bool

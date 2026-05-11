@@ -55,7 +55,7 @@ src_to_dest_hash (void const *x, size_t table_size)
   /* Ignoring the device number here should be fine.  */
   /* The cast to uintmax_t prevents negative remainders
      if st_ino is negative.  */
-  return (uintmax_t) p->st_ino % table_size;
+  return (uintmax_t) {p->st_ino} % table_size;
 }
 
 /* Compare two Src_to_dest entries.
@@ -135,7 +135,7 @@ remember_copied (char const *name, ino_t ino, dev_t dev)
   if (ent_from_table != ent)
     {
       src_to_dest_free (ent);
-      return (char *) ent_from_table->name;
+      return ent_from_table->name;
     }
 
   /* New key;  insertion succeeded.  */

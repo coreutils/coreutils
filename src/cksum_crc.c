@@ -244,7 +244,7 @@ cksum_slice8 (FILE *fp, uint_fast32_t *crc_out, intmax_t *length_out)
         }
 
       /* Process multiples of 8 bytes */
-      datap = (uint32_t *)buf;
+      datap = buf;
       while (bytes_read >= 8)
         {
           uint32_t first = *datap++, second = *datap++;

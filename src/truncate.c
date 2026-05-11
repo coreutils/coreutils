@@ -190,7 +190,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
   if (ftruncate (fd, nsize) != 0)
     {
       error (0, errno, _("failed to truncate %s at %jd bytes"),
-             quoteaf (fname), (intmax_t) nsize);
+             quoteaf (fname), (intmax_t) {nsize});
       return false;
     }
 

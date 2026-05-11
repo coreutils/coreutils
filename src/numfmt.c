@@ -330,7 +330,7 @@ suffix_power_char (int power)
 
 /* Similar to 'powl(3)' but without requiring 'libm'.  */
 static long double
-powerld (long double base, int x)
+powerld (long double base, ptrdiff_t x)
 {
   long double result = base;
   if (x == 0)
@@ -588,9 +588,9 @@ simple_strtod_float (char const *input_str,
         return SSE_INVALID_NUMBER;
 
       /* number of digits in the fractions.  */
-      size_t exponent = ptr2 - *endptr;
+      ptrdiff_t exponent = ptr2 - *endptr;
 
-      val_frac = ((long double) val_frac) / powerld (10, exponent);
+      val_frac /= powerld (10, exponent);
 
       /* TODO: detect loss of precision (only really 18 digits
          of precision across all digits (before and after '.')).  */
