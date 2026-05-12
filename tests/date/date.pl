@@ -379,6 +379,14 @@ my @Tests =
      # "10:30 UTC-05" should convert to "15:30 UTC", not "10:30 UTC"
      ['tz-conversion-est', "-u -d '10:30 UTC-05' +'%H:%M'", {OUT=>"15:30"}],
 
+     # Test multiple --iso-8601 options.
+     ['multiple-iso1', "--iso-8601 --iso-8601 -d '2026-05-11'",
+      {OUT=>"2026-05-11"}],
+     ['multiple-iso2', "--iso-8601=hours --iso-8601=minutes -d '2026-05-11'",
+      {OUT=>"2026-05-11T00:00+00:00"}],
+     ['multiple-iso3', "--iso-8601=minutes --iso-8601=hours -d '2026-05-11'",
+      {OUT=>"2026-05-11T00+00:00"}],
+
     );
 
 $limits->{TIME_T_MAX} == $limits->{INTMAX_MAX}
