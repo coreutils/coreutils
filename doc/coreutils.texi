@@ -10372,6 +10372,10 @@ to destroy using @command{shred}, be sure that it is not backed up or mirrored.
 shred [@var{option}]@dots{} @var{file}[@dots{}]
 @end example
 
+If @var{file} is a FIFO, socket, or terminal, @command{shred} skips it
+and emit a diagnostic message because the contents of these file types
+do not reside on disk.
+
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp

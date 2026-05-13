@@ -220,6 +220,11 @@ If FILE is -, shred standard output.\n\
       oputs (VERSION_OPTION_DESCRIPTION);
       fputs (_("\
 \n\
+FILE will be skipped with a diagnostic message if it is a FIFO, socket, or\n\
+terminal, since its data does not reside on disk.\n\
+"), stdout);
+      fputs (_("\
+\n\
 Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n\
 the files because it is common to operate on device files like /dev/hda,\n\
 and those files usually should not be removed.\n\
