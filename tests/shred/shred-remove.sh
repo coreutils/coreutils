@@ -63,8 +63,17 @@ shred: test: removed
 EOF
 compare exp out || fail=1
 
+# Ensure with stdout, file is deallocated but not removed
+echo > $file || framework_failure_
+shred -u - > $file || fail=1
+test -e $file || fail=1
+returns_ 1 test -s $file || fail=1
+
 # Ensure renames are only retried for EEXIST
-mkdir rodir && cd rodir && touch $file && chmod a-w . || framework_failure_
+mkdir rodir && cd rodir && echo > $file && chmod a-w . || framework_failure_
 returns_ 1 timeout 10 shred -u $file || fail=1
+# Also ensure file is deallocated separately to unlink
+returns_ 1 test -s $file || fail=1
+
 
 Exit $fail
