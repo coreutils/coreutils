@@ -667,6 +667,7 @@ sc_prohibit_test_backticks:
 
 # Ensure that compare is used to check empty files
 # so that the unexpected contents are displayed
+# Use `returns_ 1 test -s ... || fail=1` to avoid this check.
 sc_prohibit_test_empty:
 	@prohibit='test -s.*&&' in_vc_files='^tests/'			\
 	halt='use `compare /dev/null ...`, not `test -s ...` in tests/'	\
