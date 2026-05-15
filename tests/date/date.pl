@@ -387,6 +387,20 @@ my @Tests =
      ['multiple-iso3', "--iso-8601=minutes --iso-8601=hours -d '2026-05-11'",
       {OUT=>"2026-05-11T00+00:00"}],
 
+     # Test that using both a format string and format option fails.
+     ['multiple-fmt1', "--iso-8601 -d '2026-05-15' +'%Y'",
+      {ERR => "date: multiple output formats specified\n"},
+      {EXIT => 1},
+     ],
+     ['multiple-fmt2', "--rfc-email -d '2026-05-15' +'%Y'",
+      {ERR => "date: multiple output formats specified\n"},
+      {EXIT => 1},
+     ],
+     ['multiple-fmt3', "--rfc-3339=date -d '2026-05-15' +'%Y'",
+      {ERR => "date: multiple output formats specified\n"},
+      {EXIT => 1},
+     ],
+
     );
 
 $limits->{TIME_T_MAX} == $limits->{INTMAX_MAX}
