@@ -174,13 +174,22 @@ my @Tests =
        check_tmp $f, 'F'; }}],
 
 
-     # Test template with subdirectory
-     ['tmp-w-slash', '--tmpdir=. a/bXXXX',
+     # Test creation of a file where the template has a subdirectory.
+     ['tmp-w-slash1', '--tmpdir=. a/bXXXX',
       {PRE => sub {mkdir 'a',0755 or die "a: $!\n"}},
       {OUT_SUBST => 's,b....$,bZZZZ,'},
       {OUT => "./a/bZZZZ\n"},
       {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
-       check_tmp $f, 'F'; unlink $f; rmdir 'a' or die "rmdir a: $!\n" }}
+       check_tmp $f, 'F'; rmdir 'a' or die "rmdir a: $!\n" }}
+     ],
+
+     # Likewise, but create a directory.
+     ['tmp-w-slash2', '--tmpdir=. -d a/bXXXX',
+      {PRE => sub {mkdir 'a',0755 or die "a: $!\n"}},
+      {OUT_SUBST => 's,b....$,bZZZZ,'},
+      {OUT => "./a/bZZZZ\n"},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       check_tmp $f, 'D'; rmdir 'a' or die "rmdir a: $!\n" }}
      ],
 
      ['priority-t-tmpdir', "-t -p $bad_dir foo.XXX",
