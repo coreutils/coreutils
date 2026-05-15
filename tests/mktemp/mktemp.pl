@@ -192,6 +192,25 @@ my @Tests =
        check_tmp $f, 'D'; rmdir 'a' or die "rmdir a: $!\n" }}
      ],
 
+     # Similar to 'tmp-w-slash1', but with a file name that starts with a
+     # period.
+     ['subdir-hidden1', '--tmpdir=. a/.XXXX',
+      {PRE => sub {mkdir 'a',0755 or die "a: $!\n"}},
+      {OUT_SUBST => 's,\.....$,.ZZZZ,'},
+      {OUT => "./a/.ZZZZ\n"},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       check_tmp $f, 'F'; rmdir 'a' or die "rmdir a: $!\n" }}
+     ],
+
+     # Likewise, but create a directory.
+     ['subdir-hidden2', '--tmpdir=. -d a/.XXXX',
+      {PRE => sub {mkdir 'a',0755 or die "a: $!\n"}},
+      {OUT_SUBST => 's,\.....$,.ZZZZ,'},
+      {OUT => "./a/.ZZZZ\n"},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       check_tmp $f, 'D'; rmdir 'a' or die "rmdir a: $!\n" }}
+     ],
+
      ['priority-t-tmpdir', "-t -p $bad_dir foo.XXX",
       {ENV=>"TMPDIR=."},
       {OUT_SUBST => 's,....$,.ZZZ,'},
