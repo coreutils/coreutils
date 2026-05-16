@@ -29,7 +29,6 @@
 #include "fadvise.h"
 #include "quote.h"
 #include "xstrtol.h"
-#include "xdectoint.h"
 #include "xbinary-io.h"
 
 #if BASE_TYPE == 42
