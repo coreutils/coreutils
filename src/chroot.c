@@ -27,7 +27,6 @@
 #include "ignore-value.h"
 #include "mgetgroups.h"
 #include "quote.h"
-#include "root-dev-ino.h"
 #include "userspec.h"
 #include "xstrtol.h"
 
