@@ -39,7 +39,6 @@
 #include "long-options.h"
 #include "mcel.h"
 #include "strnumcmp.h"
-#include "xstrtol.h"
 
 /* Various parts of this code assume size_t fits into unsigned long
    int, the widest unsigned type that GMP supports.  */
