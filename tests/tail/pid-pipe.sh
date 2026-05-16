@@ -21,16 +21,55 @@ print_ver_ tail
 
 mkfifo_or_skip_ fifo
 
+
 # Terminate any background process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_()
+{
+  for p in $pid $writer_pid; do
+    kill $p 2>/dev/null
+  done
+  for p in $pid $writer_pid; do
+    wait $p 2>/dev/null
+  done
+
+  pid=
+  writer_pid=
+}
 
 # Speedup the non inotify case
 fastpoll='-s.1 --max-unchanged-stats=1'
 
+
+# Ensure an absent FIFO writer doesn't block tail from checking --pid.
 sleep 1 & pid=$!
-
-returns_ 124 timeout 10 tail -f $fastpoll --pid=$! fifo && fail=1
-
+returns_ 124 timeout 10 tail -f $fastpoll --pid=$pid fifo && fail=1
 cleanup_
+
+
+# Ensure a silent FIFO writer doesn't block tail from checking --pid.
+rm -f writer-ready || framework_failure_
+
+writer_ready_()
+{
+  sleep $1
+  test -e writer-ready
+}
+
+# Simulate a writer that may wait a long time between writes
+silent_writer() {
+  exec 3>fifo &&
+  touch writer-ready &&
+  exec sleep 20
+}
+silent_writer & writer_pid=$!
+
+# allow fifo to open
+timeout 10 $SHELL -c ': < fifo' || framework_failure_
+retry_delay_ writer_ready_ .1 6 || framework_failure_
+
+sleep 1 & pid=$!
+returns_ 124 timeout 10 tail -f $fastpoll --pid=$pid fifo && fail=1
+cleanup_
+
 
 Exit $fail
