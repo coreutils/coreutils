@@ -77,7 +77,6 @@
 
 #include <getopt.h>
 #include <stdio.h>
-#include <setjmp.h>
 #include <sys/types.h>
 #if defined __linux__ && HAVE_SYS_MTIO_H
 # include <sys/mtio.h>
