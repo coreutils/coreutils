@@ -329,7 +329,7 @@ tee_files (int nfiles, char **files, bool pipe_check)
 
   /* Close the files, but not standard output.  */
   for (int i = 1; i <= nfiles; i++)
-    if (0 <= descriptors[i] && ! close_wait (descriptors[i]))
+    if (0 <= descriptors[i] && close (descriptors[i]) < 0)
       {
         error (0, errno, "%s", quotef (files[i]));
         ok = false;

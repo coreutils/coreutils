@@ -490,7 +490,9 @@ all_tests =					\
   tests/tac/tac-2-nonseekable.sh		\
   tests/tail/tail.pl				\
   tests/tee/append.sh				\
+  tests/tee/short-write.sh			\
   tests/tee/tee.sh				\
+  tests/tee/write-eagain.sh			\
   tests/test/test-N.sh				\
   tests/test/test-diag.pl			\
   tests/test/test-file.sh			\

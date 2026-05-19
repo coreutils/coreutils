@@ -194,17 +194,6 @@ wait_for_nonblocking_write (int fd)
   return true;
 }
 
-/* wrapper for close() that also waits for FD if non blocking.  */
-
-extern bool
-close_wait (int fd)
-{
-  while (wait_for_nonblocking_write (fd))
-    ;
-  return close (fd) == 0;
-}
-
-
 /* wrapper for write() that also waits for FD if non blocking.  */
 
 extern bool
@@ -212,19 +201,43 @@ write_wait (int fd, void const *buffer, size_t size)
 {
   unsigned char const *buf = buffer;
 
-  while (true)
+  do
     {
-      ssize_t written = write (fd, buf, size);
+      const ssize_t written = write (fd, buf, size);
+      /* POSIX says that calling write with SIZE of zero may detect and
+         return errors.  If no error occurs, or write makes no attempt
+         to detect errors, then write returns zero with no other
+         results.  write_fail will return successfully in this case.  */
+      if (written == 0)
+        {
+          if (size == 0)
+            return true;
+          else
+            {
+              /* If SIZE is greater than zero and write returns zero,
+                 treat it as an error.  Some buggy drivers behave this
+                 way.  See src/dd.c and Gnulib's lib/full-write.c for
+                 more details.  */
+              errno = ENOSPC;
+              return false;
+            }
+        }
+
       if (written < 0)
-        written = 0;
-
-      size -= written;
-      if (size <= 0)  /* everything written */
-        return true;
-
-      if (! wait_for_nonblocking_write (fd))
-        return false;
-
-      buf += written;
+        {
+          /* Return an error if write detected one with a SIZE of zero.
+             Otherwise, if SIZE is greater than zero, fail if it does
+             not become writable.  */
+          if (size == 0 || ! wait_for_nonblocking_write (fd))
+            return false;
+        }
+      else
+        {
+          buf += written;
+          size -= written;
+        }
     }
+  while (0 < size);
+
+  return true;
 }

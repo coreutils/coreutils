@@ -15,6 +15,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   'shred' no longer blocks when opening a FIFO that has no readers.
   [This bug was present in "the beginning".]
 
+  'tee' no longer loops infinitely after writing all output if a write call sets
+  errno to EAGAIN.
+  [bug introduced in coreutils-9.11]
+
+  'tee' no longer treats short writes as errors.
+  [bug introduced in coreutils-9.11]
+
   'unexpand -t' no longer overflows a heap buffer, for tab values > SIZE_MAX/16.
   [bug introduced in coreutils-9.11]
 
