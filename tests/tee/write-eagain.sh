@@ -18,12 +18,19 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tee
-require_strace_ write
+uses_strace_
+
+write_eagain() {
+  timeout 10 strace -qqq -o /dev/null -e trace-fds=3 \
+    -e inject=write:error=EAGAIN:when=1 "$@"
+}
+
+write_eagain true || skip_ No functional strace found
 
 # In coreutils-9.11 the following test would infinite loop.
+# Using 'returns_ 0' to avoid tracing impinging on stderr.
 echo a >exp || framework_failure_
-timeout 10 strace -qqq -o /dev/null -e trace-fds=3 \
-  -e inject=write:error=EAGAIN:when=1 tee file1 <exp >out 2>err || fail=1
+returns_ 0 write_eagain tee file1 <exp >out 2>err || fail=1
 compare exp file1 || fail=1
 compare exp out || fail=1
 compare /dev/null err || fail=1

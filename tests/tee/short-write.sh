@@ -18,14 +18,21 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tee
-require_strace_ write
+uses_strace_
 
 printf 'abcdef' >file1-exp || framework_failure_
 printf 'f' >out-exp || framework_failure_
 
+short_write() {
+  strace -qqq -o /dev/null --trace-fds=1 -e trace=write \
+    -e inject=write:retval=1:when=1..5 "$@"
+}
+
+short_write true || skip_ No functional strace found
+
 # In coreutils-9.11, a short write would be treated as an error.
-strace -qqq -o /dev/null --trace-fds=1 -e trace=write \
-  -e inject=write:retval=1:when=1..5 tee file1 >out 2>err <file1-exp || fail=1
+# Using 'returns_ 0' to avoid tracing impinging on stderr.
+returns_ 0 short_write tee file1 >out 2>err <file1-exp || fail=1
 compare file1-exp file1 || fail=1
 compare out-exp out || fail=1
 compare /dev/null err || fail=1
