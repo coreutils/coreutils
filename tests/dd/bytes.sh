@@ -71,8 +71,9 @@ done
 # Check that long multiplier chains don't exhaust a restricted stack.
 if (ulimit -S -s 256 && dd if=/dev/null count=1) 2>/dev/null; then
   long_multiplier=$(yes 1x | head -n 10000 | tr -d '\n')1 || framework_failure_
-  (ulimit -S -s 256 &&
-    dd count="$long_multiplier" if=/dev/null of=/dev/null status=none) || fail=1
+  (ulimit -S -s 256 && touch ulimit-worked &&
+    dd count="$long_multiplier" if=/dev/null of=/dev/null status=none) \
+      || { test -f ulimit-worked && fail=1; }
 fi
 
 # Negative checks for integer parsing
