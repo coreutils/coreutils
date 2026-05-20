@@ -29,6 +29,8 @@ rm f f2 || framework_failure_
 # Ensure dd exits with 1 if memory exhausted
 (ulimit -v $(($vm+6000)) && returns_ 1 \
  dd if=/dev/null of=/dev/null bs=$(($SSIZE_MAX-1))) || fail=1
+ (ulimit -v $(($vm+6000)) && returns_ 1 \
+ dd if=/dev/null of=/dev/null bs=$(($SSIZE_MAX-1))) skip = 1 || fail=1
 # Ensure dd exits with 1 on numeric overflow
 (ulimit -v $(($vm+6000)) && returns_ 1 \
  dd if=/dev/null of=/dev/null bs=$SIZE_OFLOW) || fail=1
