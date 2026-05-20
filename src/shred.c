@@ -1151,13 +1151,15 @@ wipefile (char *name, char const *qname,
   if (fd < 0)
     {
       struct stat st;
+      const int open_errno = errno;
 
       /* Try to give a more meaningful error message if we attempt to
          open a FIFO with no readers.  */
-      if (errno == ENXIO && 0 <= stat (name, &st) && S_ISFIFO (st.st_mode))
+      if (open_errno == ENXIO && 0 <= stat (name, &st)
+          && S_ISFIFO (st.st_mode))
         error (0, 0, _("%s: invalid file type"), qname);
       else
-        error (0, errno, _("%s: failed to open for writing"), qname);
+        error (0, open_errno, _("%s: failed to open for writing"), qname);
       return false;
     }
 

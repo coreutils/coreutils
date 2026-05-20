@@ -18,6 +18,26 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ shred
+getlimits_
+uses_strace_
+
+open_stat_fail ()
+{
+  strace --quiet=all -o /dev/null -P file -e inject=open,openat:error=ENXIO \
+    -e inject=stat,newfstatat:error=ENOSYS "$@"
+}
+
+# If open fails with ENXIO and the subsequent stat fails, e.g., because the
+# FIFO was removed or it is a character or block special associated with a
+# non-existent device, we should use the error number from open.
+if open_stat_fail true; then
+  cat <<EOF >exp-err || framework_failure_
+shred: file: failed to open for writing: $ENXIO
+EOF
+  returns_ 1 open_stat_fail shred file >out 2>err || fail=1
+  compare exp-err err || fail=1
+  compare /dev/null out || fail=1
+fi
 
 mkfifo_or_skip_ fifo
 
