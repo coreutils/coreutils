@@ -21,10 +21,18 @@ print_ver_ shred
 getlimits_
 uses_strace_
 
+stats='stat'
+# List of other _file name_ stat functions to increase coverage.
+other_stats='statx lstat stat64 lstat64 newfstatat fstatat64'
+for stat in $other_stats; do
+  strace -qe "$stat" true > /dev/null 2>&1 &&
+    stats="$stats,$stat"
+done
+
 open_stat_fail ()
 {
   strace --quiet=all -o /dev/null -P file -e inject=open,openat:error=ENXIO \
-    -e inject=stat,newfstatat:error=ENOSYS "$@"
+    -e inject=$stats:error=ENOSYS "$@"
 }
 
 # If open fails with ENXIO and the subsequent stat fails, e.g., because the
