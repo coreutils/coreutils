@@ -40,4 +40,24 @@ dir/a
 EOF
 compare exp out || fail=1
 
+# Ensure entries within each group remain alphabetically sorted, and
+# that equal-size files keep a deterministic (by-name) order when
+# combined with --sort=size.
+mkdir dir2 dir2/dir_b dir2/dir_a dir2/dir_c || framework_failure_
+touch dir2/file_c dir2/file_a dir2/file_b || framework_failure_
+
+ls --group-directories-first dir2 > out || fail=1
+cat <<\EOF > exp
+dir_a
+dir_b
+dir_c
+file_a
+file_b
+file_c
+EOF
+compare exp out || fail=1
+
+ls --group-directories-first --sort=size dir2 > out || fail=1
+compare exp out || fail=1
+
 Exit $fail
