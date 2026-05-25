@@ -31,6 +31,11 @@ my @inputs = (+(map{{IN=> {"empty$_"=> ''}}}1..3), {IN=> {foo=> "foo\n"}});
 
 my $big_input = "aaa\n" x 1024;
 
+# lines longer than the default merge read buffer must not be split
+my $long_lines_in = ('a' x 32000) . "\n" .
+                    ('b' x 32000) . "\n" .
+                    ('c' x 32000) . "\n";
+
 # don't need to check for existence, since we're running in a temp dir
 my $badtmp = 'does/not/exist';
 
@@ -75,6 +80,11 @@ my @Tests =
      # buffer size would cause the buffer size to be set to the minimum.
      ['batch-size', "--batch-size=16 -T$badtmp", {IN=> {big=> $big_input}},
         {OUT=>$big_input}],
+
+     # Merging input with lines longer than the read buffer must
+     # preserve line boundaries.
+     ['long-lines', '-m', {IN=> {long=> $long_lines_in}},
+        {OUT=>$long_lines_in}],
     );
 
 my $save_temps = $ENV{DEBUG};
