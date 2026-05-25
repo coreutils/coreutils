@@ -180,7 +180,7 @@ write_header (char const *filename)
 {
   static bool first_file = true;
 
-  printf ("%s==> %s <==\n", (first_file ? "" : "\n"), filename);
+  printf ("%s==> %s <==\n", (first_file ? "" : "\n"), quotef (filename));
   first_file = false;
 }
 

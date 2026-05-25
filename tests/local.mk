@@ -197,6 +197,7 @@ all_tests =					\
   tests/tail/inotify-rotate-resources.sh	\
   tests/tail/inotify-dir-recreate.sh		\
   tests/tail/inotify-only-regular.sh		\
+  tests/tail/quote-headers.sh			\
   tests/chmod/no-x.sh				\
   tests/chgrp/basic.sh				\
   tests/rm/dangling-symlink.sh			\
@@ -368,6 +369,7 @@ all_tests =					\
   tests/head/head-n0.sh				\
   tests/head/head-pos.sh			\
   tests/head/head-write-error.sh		\
+  tests/head/quote-headers.sh			\
   tests/misc/kill.sh				\
   tests/cksum/b2sum.sh				\
   tests/cksum/md5sum.pl				\

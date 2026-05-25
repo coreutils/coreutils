@@ -8,6 +8,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   mistakenly exit with a nonzero status.
   [This bug was present in "the beginning".]
 
+  'head' and 'tail' now quote names in file headers when needed.
+  [This bug was present in "the beginning".]
+
   'pinky -l' no longer no longer prints output in the incorrect order when
   standard output is fully buffered, e.g., when redirected to a file.
   [bug introduced in coreutils-9.10]

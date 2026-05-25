@@ -461,7 +461,7 @@ write_header (char const *prettyname)
 {
   static bool first_file = true;
 
-  printf ("%s==> %s <==\n", first_file ? "" : "\n", prettyname);
+  printf ("%s==> %s <==\n", first_file ? "" : "\n", quotef (prettyname));
   first_file = false;
 }
 
