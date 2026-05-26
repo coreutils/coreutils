@@ -29,7 +29,7 @@ echo oo > exp || framework_failure_
 echo foo | timeout 10 tail -f $mode $fastpoll -c3 > out || fail=1
 compare exp out || fail=1
 cat <<\EOF > exp || framework_failure_
-==> standard input <==
+==> 'standard input' <==
 ar
 EOF
 echo bar | returns_ 1 \
