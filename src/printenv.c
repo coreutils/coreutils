@@ -93,7 +93,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   int optc;
-  while ((optc = getopt_long (argc, argv, "+iu:0", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "+0", longopts, NULL)) != -1)
     {
       switch (optc)
         {
