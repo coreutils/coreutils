@@ -300,6 +300,7 @@ all_tests =					\
   tests/cut/bounded-memory.sh			\
   tests/cut/cut-huge-range.sh			\
   tests/wc/wc.pl				\
+  tests/wc/wc-count.sh				\
   tests/wc/wc-cpu.sh				\
   tests/wc/wc-files0-from.pl			\
   tests/wc/wc-files0.sh				\
