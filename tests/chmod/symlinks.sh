@@ -84,4 +84,15 @@ for deref in '' '--deref' '-R'; do
   returns_ 1 chmod 755 $deref a/dangle 2>err || fail=1
 done
 
+# A symlink pointing back to an ancestor forms a cycle.  With -L, chmod
+# follows symlinks while recursing, so it must detect the cycle and stop
+# rather than descend into it forever.
+mkdir -p cyc/b/c || framework_failure_
+ln -s "$(pwd)/cyc" cyc/b/c/d || framework_failure_
+chmod -vRL +r cyc > out 2>&1 || fail=1
+# The symlinked directory is visited exactly once...
+grep -F "'cyc/b/c/d'" out > /dev/null || { cat out; fail=1; }
+# ...and recursion does not re-enter it through the cycle.
+grep -F "'cyc/b/c/d/b'" out > /dev/null && { cat out; fail=1; }
+
 Exit $fail
