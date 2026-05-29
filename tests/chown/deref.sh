@@ -35,4 +35,15 @@ EOF
 
 compare exp out || fail=1
 
+# A symlink pointing back to an ancestor forms a cycle.  With -L, chown
+# follows symlinks while recursing, so it must detect the cycle and stop
+# rather than descend into it forever.
+mkdir -p cyc/b/c || framework_failure_
+ln -s "$(pwd)/cyc" cyc/b/c/d || framework_failure_
+chown -vRL $user cyc > out2 2>&1 || fail=1
+# The symlinked directory is visited exactly once...
+grep -F "'cyc/b/c/d'" out2 > /dev/null || { cat out2; fail=1; }
+# ...and recursion does not re-enter it through the cycle.
+grep -F "'cyc/b/c/d/b'" out2 > /dev/null && { cat out2; fail=1; }
+
 Exit $fail
