@@ -221,4 +221,22 @@ if strace -o /dev/null -P _ -e /read,splice -e fault=all:error=EIO true; then
   compare exp err || fail=1
 fi
 
+# A tagged line with a valid algorithm but a digest of the wrong
+# (truncated) length must be flagged as improperly formatted, not
+# reported as a checksum mismatch (FAILED).
+touch ff1 ff2 ff3 || framework_failure_
+cksum -a sha256 ff1 ff2 ff3 > trunc.sum || framework_failure_
+# Truncate the digest of the last two lines by one hex character.
+sed '2,3 s/.$//' trunc.sum > trunc-bad.sum || framework_failure_
+cksum --check trunc-bad.sum > out 2> err || fail=1
+grep 'ff1: OK' out || fail=1
+grep 'FAILED' out && fail=1
+grep 'WARNING: 2 lines are improperly formatted' err || fail=1
+# With --warn the offending lines are reported individually.
+cksum --warn --check trunc-bad.sum > out 2> err || fail=1
+grep 'trunc-bad.sum: 2: improperly formatted SHA256 checksum line' err || fail=1
+grep 'trunc-bad.sum: 3: improperly formatted SHA256 checksum line' err || fail=1
+# With --strict a malformed line makes the exit status non-zero.
+returns_ 1 cksum --strict --check trunc-bad.sum > out 2> err || fail=1
+
 Exit $fail
