@@ -63,6 +63,12 @@ shred: test: removed
 EOF
 compare exp out || fail=1
 
+# Test the behavior when the file is in a directory.
+mkdir dir || framework_failure_
+echo > dir/$file || framework_failure_
+shred -u dir/$file || fail=1
+test -e dir/$file && fail=1
+
 # Ensure with stdout, file is deallocated but not removed
 echo > $file || framework_failure_
 shred -u - > $file || fail=1
