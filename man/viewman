@@ -3,7 +3,7 @@
 # Generate and view man page with less, for passed command name
 
 # Note to get man to behave like this you can also:
-# export MANROFFOPT=-P-i
+# export MANROFFOPT='-P-i -rU1'
 # export LESS=-R
 # export MANPAGER=less
 
@@ -28,5 +28,5 @@ test "$1" = 'ginstall' && man='install'
   --loose-indent \
   "$hdir"/../src/$cmd |
 preconv | # convert utf-8 chars like in Author names to groff compat
-groff -Tutf8 -man -P-i -rLL=${MANWIDTH:-$COLUMNS}n |
+groff -Tutf8 -man -P-i -rU1 -rLL=${MANWIDTH:-$COLUMNS}n |
 less -R
