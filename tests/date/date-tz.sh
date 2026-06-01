@@ -29,4 +29,14 @@ case $? in
   *) grep '^date: invalid date' err || fail=1 ;;
 esac
 
+# A fixed-offset keyword (here 'UTC') anchors the instant before relative
+# items are applied.  With a DST-observing zone the epoch base is in winter
+# while the result lands in summer, so adding the seconds must not pick up the
+# DST hour: '1970-01-01 UTC N seconds' is always exactly N seconds past the
+# epoch, regardless of TZ.
+secs=1780318971
+TZ='Europe/Berlin' date -d "1970-01-01 UTC $secs seconds" +%s > out || fail=1
+echo "$secs" > exp
+compare exp out || fail=1
+
 Exit $fail
