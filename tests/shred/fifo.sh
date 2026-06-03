@@ -62,10 +62,10 @@ cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 
 # Test 'shred' on a FIFO with a reader.  After the file descriptor is
 # opened, 'cat' will be unblocked.
-timeout 10 cat pipe > /dev/null & pid=$!
+timeout 10 cat fifo > /dev/null & pid=$!
 returns_ 1 timeout 10 shred fifo >out 2>err || fail=1
 compare /dev/null out || fail=1
 compare exp err || fail=1
-kill -0 $pid && fail=1
+wait $pid || fail=1  # on cat timeout
 
 Exit $fail
