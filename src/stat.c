@@ -1050,6 +1050,11 @@ neg_to_zero (struct timespec ts)
 static void
 getenv_quoting_style (void)
 {
+  static bool got_quoting_style;
+  if (got_quoting_style)
+    return;
+  got_quoting_style = true;
+
   char const *q_style = getenv ("QUOTING_STYLE");
   if (q_style)
     {
@@ -1515,6 +1520,7 @@ print_stat (char *pformat, size_t prefix_len, char mod, char m,
       out_string (pformat, prefix_len, filename);
       break;
     case 'N':
+      getenv_quoting_style ();
       out_string (pformat, prefix_len, quoteN (filename));
       if (S_ISLNK (statbuf->st_mode))
         {
@@ -1970,18 +1976,6 @@ main (int argc, char *argv[])
 
   if (format)
     {
-      bool need_quoting_style = false;
-      for (char const *p = format; (p = strchr (p, '%'));
-           p += (p[1] == '%') + 1)
-        {
-          if (p[1] == 'N')
-            {
-              need_quoting_style = true;
-              break;
-            }
-        }
-      if (need_quoting_style)
-        getenv_quoting_style ();
       format2 = format;
     }
   else

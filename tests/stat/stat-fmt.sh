@@ -53,6 +53,13 @@ cat <<\EOF >exp
 EOF
 compare exp out || fail=1
 
+# ensure control characters in file names are escaped by default
+stat "$fname" | grep 'File: ' > out || fail=1
+cat <<\EOF >exp
+  File: 'a'$'\n\n''b'$'\n''c'
+EOF
+compare exp out || fail=1
+
 # Check the behavior with invalid values of QUOTING_STYLE.
 for style in '' 'abcdef'; do
   QUOTING_STYLE="$style" stat -c%%%N \' > out 2> err || fail=1
