@@ -40,6 +40,15 @@ cat <<\EOF >exp
 EOF
 compare exp out || fail=1
 
+# ensure QUOTING_STYLE is honored by %Qn
+stat -c%Qn \' > out || fail=1
+QUOTING_STYLE=locale stat -c%Qn \' >> out || fail=1
+cat <<\EOF >exp
+"'"
+'\''
+EOF
+compare exp out || fail=1
+
 # ensure control characters in file names are escaped by %N
 # using the default shell-escape quoting style.
 nl='

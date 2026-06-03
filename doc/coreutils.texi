@@ -12571,6 +12571,7 @@ The valid @var{format} directives for files with @option{--format} and
 @item %i -- Inode number
 @item %m -- Mount point (see selow)
 @item %n -- File name
+@item %Qn -- Quoted file name (see below)
 @item %N -- Quoted file name with dereference if symbolic link (see below)
 @item %o -- Optimal I/O transfer size hint
 @item %s -- Total size, in bytes
@@ -12597,7 +12598,7 @@ to control the zero padding of the output with the @samp{#} and @samp{0}
 printf flags. For example to pad to at least 3 wide while making larger
 numbers unambiguously octal, you can use @samp{%#03a}.
 
-The @samp{%N} format can be set with the environment variable
+The @samp{%N} and @samp{%Qn} formats can be set with the environment variable
 @env{QUOTING_STYLE}@.  If that environment variable is not set,
 the default value is @samp{shell-escape-always}.  Valid quoting styles are:
 @quotingStyles
@@ -12661,6 +12662,7 @@ you must use a different set of @var{format} directives:
 @item %i -- File System ID in hex
 @item %l -- Maximum length of file names
 @item %n -- File name
+@item %Qn -- Quoted file name
 @item %s -- Block size (for faster transfers)
 @item %S -- Fundamental block size (for block counts)
 @item %t -- Type in hex

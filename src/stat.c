@@ -855,6 +855,37 @@ out_file_context (char *pformat, size_t prefix_len, char const *filename)
   return fail;
 }
 
+/* Set the quoting style default if the environment variable
+   QUOTING_STYLE is set.  */
+
+static void
+getenv_quoting_style (void)
+{
+  static bool got_quoting_style;
+  if (got_quoting_style)
+    return;
+  got_quoting_style = true;
+
+  char const *q_style = getenv ("QUOTING_STYLE");
+  if (q_style)
+    {
+      int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
+      if (0 <= i)
+        set_quoting_style (NULL, quoting_style_vals[i]);
+      else
+        {
+          set_quoting_style (NULL, shell_escape_always_quoting_style);
+          error (0, 0, _("ignoring invalid value of environment "
+                         "variable QUOTING_STYLE: %s"), quote (q_style));
+        }
+    }
+  else
+    set_quoting_style (NULL, shell_escape_always_quoting_style);
+}
+
+/* Equivalent to quotearg(), but explicit to avoid syntax checks.  */
+#define quoteN(x) quotearg_style (get_quoting_style (NULL), x)
+
 /* Print statfs info.  Return zero upon success, nonzero upon failure.  */
 NODISCARD
 static bool
@@ -868,6 +899,11 @@ print_statfs (char *pformat, size_t prefix_len, MAYBE_UNUSED char mod, char m,
   switch (m)
     {
     case 'n':
+      if (mod == 'Q')
+        {
+          getenv_quoting_style ();
+          filename = quoteN (filename);
+        }
       out_string (pformat, prefix_len, filename);
       break;
 
@@ -1044,37 +1080,6 @@ neg_to_zero (struct timespec ts)
   return z;
 }
 
-/* Set the quoting style default if the environment variable
-   QUOTING_STYLE is set.  */
-
-static void
-getenv_quoting_style (void)
-{
-  static bool got_quoting_style;
-  if (got_quoting_style)
-    return;
-  got_quoting_style = true;
-
-  char const *q_style = getenv ("QUOTING_STYLE");
-  if (q_style)
-    {
-      int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
-      if (0 <= i)
-        set_quoting_style (NULL, quoting_style_vals[i]);
-      else
-        {
-          set_quoting_style (NULL, shell_escape_always_quoting_style);
-          error (0, 0, _("ignoring invalid value of environment "
-                         "variable QUOTING_STYLE: %s"), quote (q_style));
-        }
-    }
-  else
-    set_quoting_style (NULL, shell_escape_always_quoting_style);
-}
-
-/* Equivalent to quotearg(), but explicit to avoid syntax checks.  */
-#define quoteN(x) quotearg_style (get_quoting_style (NULL), x)
-
 /* Output a single-character \ escape.  */
 
 static void
@@ -1180,10 +1185,13 @@ print_it (char const *format, int fd, char const *filename,
                 break;
               case 'H':
               case 'L':
+              case 'Q':
                 mod_char = fmt_char;
                 fmt_char = *(b + 1);
-                if (print_func == print_stat
-                    && (fmt_char == 'd' || fmt_char == 'r'))
+                if ((mod_char == 'Q' && fmt_char == 'n')
+                    || (print_func == print_stat
+                        && (mod_char == 'H' || mod_char == 'L')
+                        && (fmt_char == 'd' || fmt_char == 'r')))
                   {
                     b++;
                   }
@@ -1517,6 +1525,11 @@ print_stat (char *pformat, size_t prefix_len, char mod, char m,
   switch (m)
     {
     case 'n':
+      if (mod == 'Q')
+        {
+          getenv_quoting_style ();
+          filename = quoteN (filename);
+        }
       out_string (pformat, prefix_len, filename);
       break;
     case 'N':
@@ -1827,6 +1840,7 @@ The valid format sequences for files (without --file-system):\n\
   %i   inode number\n\
   %m   mount point\n\
   %n   file name\n\
+  %Qn  quoted file name\n\
   %N   quoted file name with dereference if symbolic link\n\
   %o   optimal I/O transfer size hint\n\
   %s   total size, in bytes\n\
@@ -1864,6 +1878,7 @@ Valid format sequences for file systems:\n\
   %i   file system ID in hex\n\
   %l   maximum length of filenames\n\
   %n   file name\n\
+  %Qn  quoted file name\n\
   %s   block size (for faster transfers)\n\
   %S   fundamental block size (for block counts)\n\
   %t   file system type in hex\n\
