@@ -8494,8 +8494,10 @@ be one of the following:
 @macro quotingStyles
 @table @samp
 @item literal
-Output strings as-is; this is the same as the @option{--literal} (@option{-N})
-option.
+Output strings as-is;
+@ifset LS_COMMAND
+this is the same as the @option{--literal} (@option{-N}) option.
+@end ifset
 @item shell
 Quote strings for the shell if they contain shell metacharacters or would
 cause ambiguous output.
@@ -8509,8 +8511,10 @@ Like @samp{shell}, but also quote non-printable characters using the POSIX
 @samp{$''} syntax suitable for most shells. This is the most general format
 as any file name is represented unambiguously and safely.  I.e., the full
 quoted string can be pasted back to the shell to refer to any file.
+@ifset LS_COMMAND
 Consequently, this is the default format used when @command{ls}
 is outputting to a tty.
+@end ifset
 Note also that specifying the C locale with @code{LC_ALL=C} can be useful
 with this output format, to avoid character set conversion issues
 with some terminals; e.g., xterm always converting to unicode composed form.
@@ -8521,15 +8525,19 @@ Like @samp{shell-escape}, but quote strings even if they would
 normally not require quoting.
 @item c
 Quote strings as for C character string literals, including the
-surrounding double-quote characters; this is the same as the
-@option{--quote-name} (@option{-Q}) option.
+surrounding double-quote characters;
+@ifset LS_COMMAND
+this is the same as the @option{--quote-name} (@option{-Q}) option.
+@end ifset
 @item c-maybe
 Quote strings as for C character string literals, except omit the
 surrounding double-quote if no escaping is required.
 @item escape
 Quote strings as for C character string literals, except omit the
-surrounding double-quote
-characters; this is the same as the @option{--escape} (@option{-b}) option.
+surrounding double-quote characters;
+@ifset LS_COMMAND
+this is the same as the @option{--escape} (@option{-b}) option.
+@end ifset
 @item clocale
 Quote strings as for C character string literals, except use
 surrounding quotation marks appropriate for the
@@ -8542,7 +8550,9 @@ surrounding quotation marks appropriate for the locale, and quote
 this"} in the default C locale.  This looks nicer on many displays.
 @end table
 @end macro
+@set LS_COMMAND
 @quotingStyles
+@clear LS_COMMAND
 
 @optItem{ls,--show-control-chars,}
 Print nongraphic characters as-is in file names.
