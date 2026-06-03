@@ -36,6 +36,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   'ls' -w,--width no longer includes '\n' in the width of a line.
   I.e., the width or $COLUMNS is interpreted to be an _inclusive_ maximum.
 
+  'stat' now uses shell quoting when required, to more robustly escape
+  file names.  Previously it only quoted file names with the %N format.
+  The default quoting honors the QUOTING_STYLE env variable (like %N).
+  Also %Qn is a newly supported format combination to quote file names,
+  leaving the existing %n format for when quoting is not desired.
+
 ** Improvements
 
   'sort' will now better use available memory and parallel operation
