@@ -19,6 +19,10 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ dd
 
+# fadvise's error should be silently ignored
+echo 1 | dd iflag=nocache || fail=1
+echo 1 | dd oflag=nocache || fail=1
+
 # This should not call posix_fadvise
 dd iflag=nocache oflag=nocache if=/dev/null of=/dev/null || fail=1
 
