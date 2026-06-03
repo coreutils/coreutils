@@ -68,6 +68,14 @@ cat <<\EOF >exp
   File: 'a'$'\n\n''b'$'\n''c'
 EOF
 compare exp out || fail=1
+# likewise with --terse
+stat --terse "$fname" | cut -d ' ' -f1 > out || fail=1
+cat <<\EOF >exp
+'a'$'\n\n''b'$'\n''c'
+EOF
+compare exp out || fail=1
+stat -f --terse "$fname" | cut -d ' ' -f1 > out || fail=1
+compare exp out || fail=1
 
 # Check the behavior with invalid values of QUOTING_STYLE.
 for style in '' 'abcdef'; do

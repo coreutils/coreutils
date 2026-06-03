@@ -179,10 +179,10 @@ static char const digits[] = "0123456789";
 static char const printf_flags[] = "'-+ #0I";
 
 /* Formats for the --terse option.  */
-static char const fmt_terse_fs[] = "%n %i %l %t %s %S %b %f %a %c %d\n";
-static char const fmt_terse_regular[] = "%n %s %b %f %u %g %D %i %h %t %T"
+static char const fmt_terse_fs[] = "%Qn %i %l %t %s %S %b %f %a %c %d\n";
+static char const fmt_terse_regular[] = "%Qn %s %b %f %u %g %D %i %h %t %T"
                                         " %X %Y %Z %W %o\n";
-static char const fmt_terse_selinux[] = "%n %s %b %f %u %g %D %i %h %t %T"
+static char const fmt_terse_selinux[] = "%Qn %s %b %f %u %g %D %i %h %t %T"
                                         " %X %Y %Z %W %o %C\n";
 
 #define PROGRAM_NAME "stat"
@@ -1687,7 +1687,7 @@ default_format (bool fs, bool terse, bool device)
         {
           /* TRANSLATORS: This string uses format specifiers from
              'stat --help' with --file-system, and NOT from printf.  */
-          format = xstrdup (_("  File: \"%n\"\n"
+          format = xstrdup (_("  File: %Qn\n"
                               "    ID: %-8i Namelen: %-7l Type: %T\n"
                               "Block size: %-10s Fundamental block size: %S\n"
                               "Blocks: Total: %-10b Free: %-10f Available: %a\n"
