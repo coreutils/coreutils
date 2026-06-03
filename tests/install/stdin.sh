@@ -26,6 +26,11 @@ tty=$(readlink -f /dev/stdin)
 test -r "$tty" 2>&1 \
   || skip_ '/dev/stdin is not readable'
 
+# work around FreeBSD / macOS issue as discussed at:
+# https://lists.gnu.org/r/coreutils/2026-06/msg00004.html
+test $(stat -L -c%i /dev/stdin) = $(stat -L -c%i - </dev/stdin) ||
+  skip_ '/dev/stdin inode correlation mismatch'
+
 echo a >a || framework_failure_
 echo b >b || framework_failure_
 
