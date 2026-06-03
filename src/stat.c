@@ -874,13 +874,13 @@ getenv_quoting_style (void)
         set_quoting_style (NULL, quoting_style_vals[i]);
       else
         {
-          set_quoting_style (NULL, shell_escape_always_quoting_style);
+          set_quoting_style (NULL, shell_escape_quoting_style);
           error (0, 0, _("ignoring invalid value of environment "
                          "variable QUOTING_STYLE: %s"), quote (q_style));
         }
     }
   else
-    set_quoting_style (NULL, shell_escape_always_quoting_style);
+    set_quoting_style (NULL, shell_escape_quoting_style);
 }
 
 /* Equivalent to quotearg(), but explicit to avoid syntax checks.  */
