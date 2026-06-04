@@ -58,14 +58,46 @@ compare /dev/null out || fail=1
 compare exp err || fail=1
 
 # Terminate any background processes.
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_()
+{
+  for p in $pid $writer_pid; do
+    kill $p 2>/dev/null
+  done
+  for p in $pid $writer_pid; do
+    wait $p 2>/dev/null
+  done
 
-# Test 'shred' on a FIFO with a reader.  After the file descriptor is
-# opened, 'cat' will be unblocked.
+  pid=
+  writer_pid=
+}
+
+writer_ready_()
+{
+  sleep $1
+  test -e writer-ready
+}
+
+fifo_writer_()
+{
+  exec 3>fifo &&
+  touch writer-ready &&
+  exec sleep 20
+}
+
+# Test 'shred' on a FIFO with a reader.  Use a temporary writer to
+# prove that 'cat' opened the FIFO before 'shred' runs, and keep that
+# writer open so 'cat' blocks until we close it.
+rm -f writer-ready || framework_failure_
 timeout 10 cat fifo > /dev/null & pid=$!
+fifo_writer_ & writer_pid=$!
+retry_delay_ writer_ready_ .1 6 || framework_failure_
 returns_ 1 timeout 10 shred fifo >out 2>err || fail=1
 compare /dev/null out || fail=1
 compare exp err || fail=1
+kill $writer_pid 2>/dev/null || framework_failure_
+wait $writer_pid 2>/dev/null
+writer_pid=
 wait $pid || fail=1  # on cat timeout
+pid=
 
 Exit $fail
