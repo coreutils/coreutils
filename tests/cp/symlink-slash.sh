@@ -31,6 +31,6 @@ set -- $(ls -l s)
 # use the new --strip-trailing-slash option) causing cp to reproduce the
 # symlink.  Now, the trailing slash is interpreted by the stat library
 # call and so cp ends up dereferencing the symlink and copying the directory.
-test "$*" = 'total 0' && : || fail=1
+test "$*" = 'total 0' || fail=1
 
 Exit $fail
