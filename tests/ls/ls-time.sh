@@ -154,4 +154,12 @@ if gettext --version >/dev/null 2>&1; then
   fi
 fi
 
+# With a two-line --time-style format (FORMAT1 NEWLINE FORMAT2),
+# FORMAT1 applies to non-recent (old) files and FORMAT2 to recent files.
+touch -m recent || framework_failure_   # 'a' is dated 1998, 'recent' is now
+ls -l --time-style="+old-%Y
+new-%Y" a recent >ts_output 2>/dev/null || fail=1
+grep -E 'old-1998 a$' ts_output || { cat ts_output; fail=1; }
+grep -E "new-$(date +%Y) recent\$" ts_output || { cat ts_output; fail=1; }
+
 Exit $fail
