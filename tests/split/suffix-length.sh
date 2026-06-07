@@ -73,4 +73,13 @@ rm -f x*
 returns_ 1 split -a2 -n1000 < /dev/null || fail=1
 test -f xaa && fail=1
 
+# Ensure that an excessively large suffix length fails gracefully,
+# rather than crashing or hanging.
+rm -f x*
+vm=$(get_min_ulimit_v_ split -a 1 /dev/null)
+if test -n "$vm"; then
+  (ulimit -v $(($vm+6000)) && returns_ 1 split -a 66542562175252 in) || fail=1
+  test -f xaa && fail=1
+fi
+
 Exit $fail
