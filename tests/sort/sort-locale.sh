@@ -46,6 +46,9 @@ export LC_ALL=$LOCALE_FR_UTF8
 if test "$(locale charmap 2>/dev/null)" = UTF-8; then
   check_hard_collate 'aaé' 'aaf'  # é comes before f
   check_hard_collate 'aéY' "$(printf 'ae\314\201Z')"  # NFC/NFD é are equal
+  check_hard_collate 'file1' 'file-2'  # '-' has a minimal weight, so the
+                                       # digits decide: file1 before file-2,
+                                       # the opposite of the C/byte order
 fi
 
 Exit $fail
