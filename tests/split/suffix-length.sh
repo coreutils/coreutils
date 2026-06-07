@@ -73,4 +73,10 @@ rm -f x*
 returns_ 1 split -a2 -n1000 < /dev/null || fail=1
 test -f xaa && fail=1
 
+# Ensure that an excessively large suffix length fails gracefully,
+# rather than crashing or hanging.
+rm -f x*
+returns_ 1 split -a 66542562175252 in || fail=1
+test -f xaa && fail=1
+
 Exit $fail
