@@ -206,7 +206,10 @@ main (int argc, char **argv)
   if (ferror (stderr))
     return exit_internal_failure;
 
+  /* Windows does not support SIGHUP.  */
+#ifdef SIGHUP
   signal (SIGHUP, SIG_IGN);
+#endif
 
   char **cmd = argv + optind;
   execvp (*cmd, cmd);
