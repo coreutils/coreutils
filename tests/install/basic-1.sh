@@ -27,6 +27,21 @@ rm -rf $dir $file || framework_failure_
 mkdir -p $dir || framework_failure_
 echo foo > $file || framework_failure_
 
+# Check 'install' when the given source and destination are the same.
+# Ensure that no backups are created.
+cat <<EOF >exp || framework_failure_
+ginstall: '$file' and '$file' are the same file
+EOF
+for backup in '' off t nil never; do
+  test -n "$backup" && backup=--backup=$backup
+  returns_ 1 ginstall $backup $file $file >out 2>err || fail=1
+  compare /dev/null out || fail=1
+  compare exp err || fail=1
+  set -- "$file"*
+  test -f "$1" || set --
+  test $# -eq 1 || fail=1
+done
+
 ginstall $file $dir || fail=1
 # Make sure the source file still exists.
 test -f $file || fail=1
