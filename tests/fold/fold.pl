@@ -18,6 +18,8 @@
 
 use strict;
 
+my $limits = getlimits ();
+
 (my $program_name = $0) =~ s|.*/||;
 
 my $prog = 'fold';
@@ -36,6 +38,10 @@ my @Tests =
    ['s2', '-w4 -s', {IN=>"abcdef d\n"}, {OUT=>"abcd\nef d\n"}],
    ['s3', '-w4 -s', {IN=>"a cd fgh\n"}, {OUT=>"a \ncd \nfgh\n"}],
    ['s4', '-w4 -s', {IN=>"abc ef\n"}, {OUT=>"abc \nef\n"}],
+
+   ['zero-width', '-w0', {IN=>"a\n"}, {EXIT=>1},
+    {ERR=>"$prog: invalid number of columns: '0': $limits->{ERANGE}\n"},
+    {ERR_SUBST=>"s/‘([^’]+)’/'\$1'/g"}],
 
    # The downstream I18N patch made fold(1) exit with success for non-existing
    # files since v5.2.1-1158-g3d3030da6 (2004) changed int to bool for booleans.
