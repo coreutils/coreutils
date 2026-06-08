@@ -401,6 +401,44 @@ my @Tests =
       {EXIT => 1},
      ],
 
+     # A leading day-of-week name must not shift an explicit calendar date.
+     ['dow-prefix', "-d 'Mon, 2024-06-15 12:00:00' '+%Y-%m-%dT%T'",
+      {OUT=>"2024-06-15T12:00:00"}],
+
+     # Out-of-range zone minutes carry into the hours (99' == 1h39').
+     ['zone-min-99', "-d '2024-06-15 12:00 +05:99' '+%Y-%m-%dT%T%z'",
+      {OUT=>"2024-06-15T05:21:00+0000"}],
+
+     # Two timezone tokens in one operand is an error.
+     ['double-zone', "-d '2024-06-15 12:00 EST PST' '+%T'",
+      {ERR=>"date: invalid date '2024-06-15 12:00 EST PST'\n"},
+      {EXIT=>1}],
+
+     # A bare sign is the empty relative offset: midnight today.
+     ['bare-plus', "-d '+' '+%H:%M:%S'", {OUT=>"00:00:00"}],
+
+     # A trailing token after an \@epoch operand is an error.
+     ['epoch-trailing', "-d '\@5 UTC' '+%T'",
+      {ERR=>"date: invalid date '\@5 UTC'\n"},
+      {EXIT=>1}],
+
+     # The diagnostic reproduces the operand verbatim, surrounding blanks
+     # included.
+     ['quote-blanks', "-d '  noon  '",
+      {ERR=>"date: invalid date '  noon  '\n"},
+      {EXIT=>1}],
+
+     # Non-ASCII bytes in a rejected operand are octal-escaped (U+2212 here).
+     ['quote-nonascii', "-d '\xe2\x88\x921 day'",
+      {ERR=>"date: invalid date '\\342\\210\\2221 day'\n"},
+      {EXIT=>1}],
+
+     # '+N unit' after a complete HH:MM:SS time is not a relative addition.
+     # One needs to use "HH:MM:SS today" so that the relative portion
+     # is not interpreted as a timezone.
+     ['plus-unit-noadd', "-d '2024-06-15 12:00:00 +1 hour' '+%Y-%m-%dT%T%z'",
+      {OUT=>"2024-06-15T12:00:00+0000"}],
+
     );
 
 $limits->{TIME_T_MAX} == $limits->{INTMAX_MAX}
