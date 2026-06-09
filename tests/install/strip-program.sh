@@ -36,6 +36,15 @@ compare exp dest || fail=1
 returns_ 1 ginstall src dest2 -s --strip-program=./FOO || fail=1
 test -e dest2 && fail=1
 
+# Test the behavior when 'strip' is terminated by a signal.
+cat <<EOF > c || framework_failure_
+#!$SHELL
+kill \$\$
+EOF
+chmod a+x c || framework_failure_
+returns_ 1 ginstall src dest3 -s --strip-program=./c || fail=1
+test -e dest3 && fail=1
+
 # Ensure naked hyphens not passed
 cat <<EOF > no-hyphen || framework_failure_
 #!$SHELL
