@@ -84,5 +84,11 @@ if no_pipe true; then
   no_pipe timeout .1 yes >/dev/null
   test $? = 124 || fail=1
 fi
+# Ensure checking size of content of pipe is optional
+no_check_size() { strace -f -o /dev/null -e inject=ioctl:error=ENOSYS "$@"; }
+if no_check_size true; then
+  no_check_size timeout .1 yes >/dev/null
+  test $? = 124 || fail=1
+fi
 
 Exit $fail
