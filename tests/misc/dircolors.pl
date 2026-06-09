@@ -41,6 +41,8 @@ my @Tests =
       {OUT => "LS_COLORS='';\nexport LS_COLORS\n"}],
      ['term-4', '-b', {IN => "TERM N*match\nowt 40;33\n"},
       {OUT => "LS_COLORS='';\nexport LS_COLORS\n"}],
+     ['term-5', '-b', {IN => "TERM []\nowt 40;33\n"},
+      {OUT => "LS_COLORS='';\nexport LS_COLORS\n"}],
 
      ['colorterm-1', '-b', {ENV => 'COLORTERM=any'},
       {IN => "COLORTERM ?*\nowt 40;33\n"},
