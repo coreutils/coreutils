@@ -201,7 +201,7 @@ unexpand (void)
                         {
                           column += c32width (g.ch);
 
-                          if (! (prev_blank && column == next_tab_column))
+                          if (! (prev_blank && column >= next_tab_column))
                             {
                               /* It is not yet known whether the pending blanks
                                  will be replaced by tabs.  */

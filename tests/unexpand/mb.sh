@@ -169,4 +169,13 @@ for mb_mul in 4 6; do
   test "$ret" = 1 || test "$ret" = 0 || { cat err; fail=1; }
 done
 
+# A blank whose display width exceeds the tab distance must not overrun
+# the pending-blank buffer.  With -t1 every column is a tab stop, so a
+# width-2 ideographic space steps over the stop without landing on it;
+# the run of blanks then grew pending_blank without bound.
+ideo_space=$(env printf '\u3000')
+{ yes "$ideo_space" | head -n 40000 | tr -d '\n'; echo; } |
+  unexpand -t1 >out 2>err; ret=$?
+test "$ret" = 0 || { cat err; fail=1; }
+
 Exit $fail
