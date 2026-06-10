@@ -360,6 +360,9 @@ if ($mb_locale ne 'C')
       ['mb-delim-10', '-s', '-d', "\xc3\xa9", '-f2',
        {IN=>"a\0b\0"}, {OUT=>""},
        {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-delim-11', '-f1', '-d', "\xF0\x9F\x98\x80",  # MCEL_LEN_MAX
+       {IN=>"a\xF0\x9F\x98\x80b\n"}, {OUT=>"a\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
       ['mb-w-delim-1', '-w', '-f2', {IN=>"a\xe2\x80\x83b\n"}, {OUT=>"b\n"},
        {ENV => "LC_ALL=$mb_locale"}],
       ['mb-w-delim-2', '-sw', '-f2', {IN=>"a\xc2\xa0b\n"}, {OUT=>""},
@@ -438,6 +441,11 @@ if ($mb_locale ne 'C')
       # -F in multi-byte locale
       ['mb-F-1', '-F', '2', {IN=>"\xc3\xa9\t\xc3\xbc\n"},
        {OUT=>"\xc3\xbc\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+
+      # In coreutils-9.11 this corrupted the delimiter "string"
+      ['mb-mismatch', '-f1', '-d', "\xF0\x9F\x98\x80", '-d', "\xEF\xBC\x8C",
+       {IN=>"a\xEF\xBC\x8Cb\n"}, {OUT=>"a\n"},
        {ENV => "LC_ALL=$mb_locale"}];
   }
 

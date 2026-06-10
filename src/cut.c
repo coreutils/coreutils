@@ -89,8 +89,9 @@ static bool complement;
 /* The delimiter character for multibyte field mode.  */
 static mcel_t delim_mcel;
 
-/* The delimiter bytes.  */
-static char delim_bytes[MCEL_LEN_MAX];
+/* The delimiter bytes
+   (to be NUL terminated for strstr() optimization).  */
+static char delim_bytes[MCEL_LEN_MAX + 1];
 
 /* The delimiter for each line/record.  */
 static unsigned char line_delim = '\n';
@@ -1323,7 +1324,8 @@ main (int argc, char **argv)
             mcel_t g = delim_mcel = mcel_scanz (optarg);
             if (optarg[0] && optarg[g.len])
               FATAL_ERROR (_("the delimiter must be a single character"));
-            copy_bytes (delim_bytes, optarg, g.len);
+            /* Note NUL is copied for use with strstr.  */
+            copy_bytes (delim_bytes, optarg, g.len + 1);
             delim_specified = true;
             break;
           }

@@ -8,6 +8,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   mistakenly exit with a nonzero status.
   [This bug was present in "the beginning".]
 
+  'cut -d' with multiple multi-byte delimiter options specified
+  will correctly match the last delimiter specified.
+  [bug introduced with multi-byte support in coreutils-9.11]
+
   'head' and 'tail' now quote names in file headers when needed.
   [This bug was present in "the beginning".]
 
