@@ -89,8 +89,9 @@ static bool complement;
 /* The delimiter character for multibyte field mode.  */
 static mcel_t delim_mcel;
 
-/* The delimiter bytes.  */
-static char delim_bytes[MCEL_LEN_MAX];
+/* The delimiter bytes, with a spare byte so they stay NUL terminated for
+   use as the strstr needle in find_field_delim.  */
+static char delim_bytes[MCEL_LEN_MAX + 1];
 
 /* The delimiter for each line/record.  */
 static unsigned char line_delim = '\n';

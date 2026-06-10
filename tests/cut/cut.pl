@@ -438,6 +438,11 @@ if ($mb_locale ne 'C')
       # -F in multi-byte locale
       ['mb-F-1', '-F', '2', {IN=>"\xc3\xa9\t\xc3\xbc\n"},
        {OUT=>"\xc3\xbc\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+
+      # After coreutils-9.11 this read past the end of a buffer on glibc.
+      ['mb-overflow', '-f1', '-d', "\xF0\x9F\x98\x80",
+       {IN=>"a\xF0\x9F\x98\x80b\n"}, {OUT=>"a\n"},
        {ENV => "LC_ALL=$mb_locale"}];
   }
 
