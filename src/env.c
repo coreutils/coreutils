@@ -48,6 +48,10 @@ static bool dev_debug;
 static char *varname;
 static idx_t vnlen;
 
+/* On mingw, winbase.h defines this to zero.  Undefine it so we can use it
+   in the enum.  */
+#undef IGNORE
+
 /* Possible actions on each signal.  */
 enum SIGNAL_MODE {
   UNCHANGED = 0,
