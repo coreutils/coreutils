@@ -53,6 +53,13 @@ my @Tests =
 ["S-infloop", '-S \^', {IN=>"a\n"}, {EXIT=>1},
                        {ERR_SUBST=>'s/^.*reg.*ex.*length zero.*$/regexlzero/'},
                        {ERR=>"regexlzero\n"}],
+
+["S-bad-regex", '-S [', {IN=>"a\n"}, {EXIT=>1},
+                        {ERR=> ("$prog: Invalid regular " .
+                                "expression (for regexp '[')\n")}],
+["W-bad-regex", '-W [', {IN=>"a\n"}, {EXIT=>1},
+                        {ERR=> ("$prog: Invalid regular " .
+                                "expression (for regexp '[')\n")}],
 );
 
 @Tests = triple_test \@Tests;
