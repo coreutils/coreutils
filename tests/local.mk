@@ -290,6 +290,7 @@ all_tests =					\
   tests/mktemp/write-error.sh			\
   tests/misc/arch.sh				\
   tests/pr/bounded-memory.sh			\
+  tests/pr/options.sh				\
   tests/pr/pr-tests.pl				\
   tests/pwd/argument.sh				\
   tests/pwd/pwd-option.sh			\
