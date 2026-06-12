@@ -1,5 +1,5 @@
 #!/bin/sh
-# Test 'pr' option handling
+# Test 'pr' numeric option handling
 
 # Copyright (C) 2026 Free Software Foundation, Inc.
 
@@ -22,19 +22,39 @@ getlimits_
 
 # Ensure pr treats all invalid +page ranges as a file
 for p in +0 +0foo; do
-  returns_ 1 pr "$p" 2>err </dev/null
+  returns_ 1 pr "$p" 2>err </dev/null || fail=1
   printf '%s\n' "pr: $p: $ENOENT" >exp || framework_failure_
   compare exp err || fail=1
 done
 
 # number parsing issue
-returns_ 1 pr --pages=-0 2>err </dev/null
+returns_ 1 pr --pages=-0 2>err </dev/null || fail=1
 printf '%s\n' "pr: invalid --pages argument '-0'" >exp
 compare exp err || fail=1
 
 # number validation issue
-returns_ 1 pr --pages=0 2>err </dev/null
+returns_ 1 pr --pages=0 2>err </dev/null || fail=1
 printf '%s\n' "pr: invalid page range '0'" >exp
+compare exp err || fail=1
+
+INV='invalid number'
+
+returns_ 1 pr -l0 2>err </dev/null || fail=1
+printf '%s\n' "pr: '-l PAGE_LENGTH' $INV of lines: '0': $ERANGE" \
+ >exp || framework_failure_
+compare exp err || fail=1
+
+for w in w W; do
+  returns_ 1 pr -${w}0 2>err </dev/null || fail=1
+  printf '%s\n' "pr: '-$w PAGE_WIDTH' $INV of characters: '0': $ERANGE" \
+   >exp || framework_failure_
+  compare exp err || fail=1
+done
+
+returns_ 1 pr -e=-1 2>err </dev/null || fail=1
+printf '%s\n' "pr: '-e' extra characters or $INV in the argument: '-1'" \
+              "Try 'pr --help' for more information." \
+ >exp || framework_failure_
 compare exp err || fail=1
 
 Exit $fail
