@@ -19,6 +19,7 @@
 use strict;
 
 my $limits = getlimits ();
+my $INTMAX_OFLOW = $limits->{INTMAX_OFLOW};
 
 (my $program_name = $0) =~ s|.*/||;
 
@@ -100,6 +101,11 @@ my @Tests =
      ['invalid-w-3',   '-ww -An', {IN=>""}, {EXIT=>1},
       {ERR=>"$prog: invalid -w argument 'w'\n"}],
     );
+
+push @Tests,
+  map {["$_-overflow", "-$_$INTMAX_OFLOW",
+        {IN_PIPE=>""}, {EXIT=>1},
+        {ERR=>"od: -$_ argument '$INTMAX_OFLOW' too large\n"}]} qw(j N S w);
 
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
