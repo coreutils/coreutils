@@ -193,6 +193,7 @@ all_tests =					\
   tests/tail/F-vs-rename.sh			\
   tests/tail/F-headers.sh			\
   tests/tail/descriptor-vs-rename.sh		\
+  tests/tail/follow-symlink.sh			\
   tests/tail/inotify-rotate.sh			\
   tests/tail/inotify-rotate-resources.sh	\
   tests/tail/inotify-dir-recreate.sh		\
