@@ -20,5 +20,8 @@
 print_ver_ ls
 
 ls -x -T0x10 -w010 || fail=1
+ls -T0x10 || fail=1
+ls -T 0x10 || fail=1
+returns_ 1 ls -T=0x10 || fail=1
 
 Exit $fail
