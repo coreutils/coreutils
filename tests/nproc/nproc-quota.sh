@@ -116,7 +116,7 @@ test $(OMP_NUM_THREADS=$ncpus NPROC) -eq $ncpus || fail=1
 
 echo '100000 100000' > $ROOT/sys/fs/cgroup/cpu.max &&
 echo 'policy   :   1' > $ROOT/proc/self/sched && # No quota for SCHED_FIFO
-test $(NPROC) -eq $ncpus || fail=1
+test $(OMP_NUM_THREADS= NPROC) -eq $ncpus || fail=1
 echo 'policy   :   2' > $ROOT/proc/self/sched && # No quota for SCHED_RR
 test $(NPROC) -eq $ncpus || fail=1
 echo 'policy   :   6' > $ROOT/proc/self/sched && # No quota for SCHED_DEADLINE

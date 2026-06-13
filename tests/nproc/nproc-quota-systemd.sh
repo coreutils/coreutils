@@ -31,7 +31,10 @@ check_sched_quota()
   pct=$1; shift
 
   if systemd-run --scope -q -p CPUQuota=$pct chrt $* true; then
-    test $(systemd-run --scope -q -p CPUQuota=$pct chrt $* nproc) = $cpu ||
+    test $(systemd-run --scope -q -p CPUQuota=$pct \
+           chrt $* \
+           env OMP_NUM_THREADS=0 \
+           nproc) = $cpu ||
      return 1
   fi
   return 0
