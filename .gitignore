@@ -120,6 +120,7 @@
 /lib/strings.h
 /lib/sys/
 /lib/termios.h
+/lib/thread-creators.h
 /lib/time.h
 /lib/uchar.h
 /lib/unicase.h

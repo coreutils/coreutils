@@ -100,6 +100,13 @@ my @Tests =
       {ERR=>"$prog: invalid -w argument '-1'\n"}],
      ['invalid-w-3',   '-ww -An', {IN=>""}, {EXIT=>1},
       {ERR=>"$prog: invalid -w argument 'w'\n"}],
+
+     # Check that xstrtol_fatal calls quote to escape command line arguments.
+     # In coreutils-9.11 # and earlier this was not the case.
+     ['bad-j-quote-1', "-j 'a\t'", {IN=>""}, {EXIT=>1},
+      {ERR=>"$prog: invalid -j argument 'a\\t'\n"}],
+     ['bad-j-quote-2', "-j '1\t'", {IN=>""}, {EXIT=>1},
+      {ERR=>"$prog: invalid suffix in -j argument '1\\t'\n"}],
     );
 
 push @Tests,
