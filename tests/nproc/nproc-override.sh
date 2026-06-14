@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ nproc
+getlimits_
 
 unset OMP_NUM_THREADS
 unset OMP_THREADS_LIMIT
@@ -38,6 +39,7 @@ echo "\
  1                      2,2,1               1
  0                      2,2,1               2
  1bad                   2,2,1               2
+ -                      ${ULONG_OFLOW}      ${ULONG_MAX}
  1bad                   $(($avail+1)),2,1   $(($avail+1))
  1                      $(($avail+1))       1
  $(($avail+2))          $(($avail+1))       $(($avail+1))
