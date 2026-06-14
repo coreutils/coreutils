@@ -28,10 +28,10 @@ test ${all} != 1 || skip_ 'Single CPU detected'
 check_sched_quota()
 {
   cpu=$1; shift
-  pct=$1; shift
+  sysd_limit=$1; shift
 
-  if systemd-run --scope -q -p CPUQuota=$pct chrt $* true; then
-    test $(systemd-run --scope -q -p CPUQuota=$pct \
+  if systemd-run --scope -q -p $sysd_limit chrt $* true; then
+    test $(systemd-run --scope -q -p $sysd_limit \
            chrt $* \
            env OMP_NUM_THREADS=0 \
            nproc) = $cpu ||
@@ -40,19 +40,24 @@ check_sched_quota()
   return 0
 }
 
-check_sched_quota 1 100% --other 0 || fail=1
-check_sched_quota 1 149% --other 0 || fail=1
-check_sched_quota 2 150% --other 0 || fail=1
-check_sched_quota 2 249% --other 0 || fail=1
+check_sched_quota 1 CPUQuota=100% --other 0 || fail=1
+check_sched_quota 1 CPUQuota=149% --other 0 || fail=1
+check_sched_quota 2 CPUQuota=150% --other 0 || fail=1
+check_sched_quota 2 CPUQuota=249% --other 0 || fail=1
 
-check_sched_quota 1 100% --idle 0 || fail=1
-check_sched_quota 1 100% --batch 0 || fail=1
+check_sched_quota 1 CPUQuota=100% --idle 0 || fail=1
+check_sched_quota 1 CPUQuota=100% --batch 0 || fail=1
 
 # some schedulers should use all threads
-check_sched_quota $all 100% --fifo 1 || fail=1
-check_sched_quota $all 100% --rr 1 || fail=1
-check_sched_quota $all 100% --deadline \
+check_sched_quota $all CPUQuota=100% --fifo 1 || fail=1
+check_sched_quota $all CPUQuota=100% --rr 1 || fail=1
+check_sched_quota $all CPUQuota=100% --deadline \
  --sched-runtime 100000000 --sched-deadline 1000000000 \
  --sched-period 1000000000 0 || fail=1
+
+# Ensure affinity mask is applied
+check_sched_quota 1 AllowedCPUs=0 --other 0 || fail=1
+check_sched_quota 1 AllowedCPUs=0 --fifo 1 || fail=1
+check_sched_quota 1 AllowedCPUs=0 --rr 1 || fail=1
 
 Exit $fail
