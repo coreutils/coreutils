@@ -51,5 +51,7 @@ check_sched_quota $all 100% --rr 1 || fail=1
 check_sched_quota $all 100% --deadline \
  --sched-runtime 100000000 --sched-deadline 1000000000 \
  --sched-period 1000000000 0 || fail=1
+# but affinity mask is applied
+test $(systemd-run --scope -q -p AllowedCPUs=0 chrt --fifo 10 nproc) = 1 || fail=1
 
 Exit $fail
