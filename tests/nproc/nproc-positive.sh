@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ nproc
+getlimits_
 
 for mode in --all ''; do
     procs=$(nproc $mode)
@@ -40,5 +41,6 @@ done
 
 procs=$(OMP_NUM_THREADS=42 nproc --ignore=40)
 test "$procs" -eq 2 || fail=1
+test $(OMP_NUM_THREADS=42 nproc --ignore ${UINTMAX_OFLOW}) = 1 || fail=1
 
 Exit $fail
