@@ -46,7 +46,7 @@ check_sched_quota 1 100% --idle 0 || fail=1
 check_sched_quota 1 100% --batch 0 || fail=1
 
 # some schedulers should use all threads
-check_sched_quota $all 100% --fifo 1 || fail=1
+OMP_NUM_THREADS=NaN check_sched_quota $all 100% --fifo 1 || fail=1
 check_sched_quota $all 100% --rr 1 || fail=1
 check_sched_quota $all 100% --deadline \
  --sched-runtime 100000000 --sched-deadline 1000000000 \
