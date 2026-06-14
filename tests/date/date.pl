@@ -237,6 +237,13 @@ my @Tests =
 
      ['tz-5', '+%:z', {OUT=>"-00:01"}, {ENV=>'TZ=XXX0:01'}],
 
+     # Test time zone format strings with space padding.
+     ['tz-underscore-1', '+%_z', {OUT=>'   +0'}],
+     ['tz-underscore-2', '+%_:z', {OUT=>' +0:00'}],
+     ['tz-underscore-3', '+%_::z', {OUT=>' +0:00:00'}],
+     ['tz-underscore-4', '+%_:::z', {OUT=>' +0'}],
+     ['tz-underscore-5', '+%_::::z', {OUT=>'%_::::z'}],
+
      # Accept %:z with a field width before the ':'.
      ['tz-5w','+%8:z', {OUT=>"-0000:01"}, {ENV=>'TZ=XXX0:01'}],
      # Don't recognize %:z with a field width between the ':' and the 'z'.
