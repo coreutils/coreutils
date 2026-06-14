@@ -439,6 +439,11 @@ my @Tests =
      ['plus-unit-noadd', "-d '2024-06-15 12:00:00 +1 hour' '+%Y-%m-%dT%T%z'",
       {OUT=>"2024-06-15T12:00:00+0000"}],
 
+     # Test -d with multiple time zone abbreviations.
+     ['multiple-tz-abbrev1',  "-d 'PDT PDT'",
+      {ERR=>"date: invalid date 'PDT PDT'\n"}, {EXIT=>1}],
+     ['multiple-tz-abbrev2',  "-d '2026-06-14 PDT PDT'",
+      {ERR=>"date: invalid date '2026-06-14 PDT PDT'\n"}, {EXIT=>1}],
     );
 
 $limits->{TIME_T_MAX} == $limits->{INTMAX_MAX}
