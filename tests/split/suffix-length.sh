@@ -78,7 +78,10 @@ test -f xaa && fail=1
 rm -f x*
 vm=$(get_min_ulimit_v_ split -a 1 /dev/null)
 if test -n "$vm"; then
-  (ulimit -v $(($vm+6000)) && returns_ 1 split -a 66542562175252 in) || fail=1
+  (ulimit -v $(($vm+6000)) &&
+   touch ulimit-worked &&
+   returns_ 1 split -a 66542562175252 in) ||
+    { test -f ulimit-worked && fail=1; }
   test -f xaa && fail=1
 fi
 
