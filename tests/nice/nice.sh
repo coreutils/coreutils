@@ -106,6 +106,8 @@ if test x$(nice -n -1 nice 2> /dev/null) = x0 ; then
     mv err exp || framework_failure_
     nice --1 true 2> err || fail=1
     compare exp err || fail=1
+    nice --adj -1 true 2> err || fail=1
+    compare exp err || fail=1
     # Failure to write advisory message is fatal.  Buggy through coreutils 8.0.
     if test "$(uname)" != GNU && test -w /dev/full && test -c /dev/full; then
       returns_ 125 nice -n -1 nice > out 2> /dev/full || fail=1
