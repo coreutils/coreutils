@@ -123,4 +123,7 @@ fi
 # Ensure large values are clamped
 nice -n $UINTMAX_OFLOW nice || fail=1
 
+# incomplete arg. success with permission denied
+nice --adj -20 true || fail=1
+
 Exit $fail
