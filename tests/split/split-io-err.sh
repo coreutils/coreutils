@@ -35,6 +35,9 @@ test -e xab && fail=1
 # Ensure we got the expected error message
 compare exp err || fail=1
 
+# Ensure no file is created without input
+split < /dev/null || fail=1
+
 rm xaa || framework_failure_
 # Similar for directory
 mkdir xaa || framework_failure_
