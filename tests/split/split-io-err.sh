@@ -41,4 +41,7 @@ mkdir xaa || framework_failure_
 seq 2 | returns_ 1 split -b 1 2 || fail=1
 test -d xaa || fail=1
 
+# Ensure no file is created without input
+split < /dev/null || fail=1
+
 Exit $fail
