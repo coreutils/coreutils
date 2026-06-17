@@ -423,6 +423,7 @@ my @Tests =
 
      # A bare sign is the empty relative offset: midnight today.
      ['bare-plus', "-d '+' '+%H:%M:%S'", {OUT=>"00:00:00"}],
+     ['bare-minus', "-d '-' +%H:%M:%S", {OUT=>"00:00:00"}],
 
      # A trailing token after an \@epoch operand is an error.
      ['epoch-trailing', "-d '\@5 UTC' '+%T'",
