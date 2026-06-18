@@ -380,6 +380,7 @@ all_tests =					\
   tests/cksum/md5sum-parallel.sh		\
   tests/join/join.pl				\
   tests/join/join-utf8.sh			\
+  tests/misc/just-created.sh			\
   tests/misc/mknod.sh				\
   tests/nice/nice.sh				\
   tests/nice/nice-fail.sh			\
