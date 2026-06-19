@@ -36,6 +36,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   'uniq -w' no longer overruns the read buffer in multibyte locales.
   [bug introduced in coreutils-9.5]
 
+  'wc' no longer reads past the end of a lookup table in legacy multibyte
+  encodings like Shift-JIS, where a single input byte can decode to a
+  wide character.
+  [bug introduced in coreutils-9.5]
+
 ** Changes in behavior
 
   'ls' -w,--width no longer includes '\n' in the width of a line.

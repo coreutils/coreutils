@@ -581,7 +581,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 
                 default:;
                   bool in_word2;
-                  if (single_byte)
+                  if (single_byte && wide_char <= UCHAR_MAX)
                     {
                       linepos += wc_isprint[wide_char];
                       in_word2 = !wc_isspace[wide_char];
