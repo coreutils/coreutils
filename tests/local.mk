@@ -308,6 +308,7 @@ all_tests =					\
   tests/wc/wc-nbsp.sh				\
   tests/wc/wc-parallel.sh			\
   tests/wc/wc-proc.sh				\
+  tests/wc/wc-sjis.sh				\
   tests/wc/wc-total.sh				\
   tests/cat/cat-E.sh				\
   tests/cat/cat-proc.sh				\
