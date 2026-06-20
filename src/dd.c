@@ -181,8 +181,8 @@ static intmax_t w_bytes = 0;
 /* Last-reported number of bytes written, or negative if never reported.  */
 static intmax_t reported_w_bytes = -1;
 
-/* Time that dd started, in both monotonic and real time.  */
-static xtime_t start_time, real_start_time;
+/* Time that dd started.  */
+static xtime_t start_time;
 
 /* Next time to report periodic progress.  */
 static xtime_t next_time;
@@ -740,20 +740,12 @@ abbreviation_lacks_prefix (char const *message)
   return message[strlen (message) - 2] == ' ';
 }
 
-static xtime_t
-getrealxtime (void)
-{
-  struct timespec now = current_timespec ();
-  return xtime_make (now.tv_sec, now.tv_nsec);
-}
-
 /* Print transfer statistics.  */
 
 static void
 print_xfer_stats (xtime_t progress_time)
 {
   xtime_t now = progress_time ? progress_time : gethrxtime ();
-  xtime_t real_now = getrealxtime ();
   static char const slash_s[] = "/s";
   char hbuf[3][LONGEST_HUMAN_READABLE + sizeof slash_s];
   double delta_s;
@@ -762,19 +754,14 @@ print_xfer_stats (xtime_t progress_time)
   char const *iec = human_readable (w_bytes, hbuf[1],
                                     human_opts | human_base_1024, 1, 1);
 
-  /* Use integer arithmetic to compute the transfer rate, since that
-     makes it easy to use SI abbreviations.  Although we want the
-     elapsed monotonic time, too often the Linux kernel stops its
-     monotonic clocks during an fsync/fdatasync (coreutils bug#81269),
-     and perhaps other kernels have similar bugs.  So take the maximum
-     of the elapsed monotonic and real times, even though this can
-     overestimate if the real clock was set during our run.  */
+  /* Use integer arithmetic to compute the transfer rate,
+     since that makes it easy to use SI abbreviations.  */
   char *bpsbuf = hbuf[2];
   int bpsbufsize = sizeof hbuf[2];
-  xtime_t delta_xtime = MAX (now - start_time, real_now - real_start_time);
-  if (0 < delta_xtime)
+  if (start_time < now)
     {
       double XTIME_PRECISIONe0 = XTIME_PRECISION;
+      xtime_t delta_xtime = now - start_time;
       delta_s = delta_xtime / XTIME_PRECISIONe0;
       bytes_per_second = human_readable (w_bytes, bpsbuf, human_opts,
                                          XTIME_PRECISION, delta_xtime);
@@ -2550,7 +2537,6 @@ main (int argc, char **argv)
     }
 
   start_time = gethrxtime ();
-  real_start_time = getrealxtime ();
   next_time = start_time + XTIME_PRECISION;
 
   int copy_status = dd_copy ();
