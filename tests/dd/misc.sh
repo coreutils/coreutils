@@ -19,6 +19,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ dd
+uses_strace_
 export LC_ALL=C
 
 tmp_in=dd-in
@@ -127,6 +128,17 @@ compare err_ok err || fail=1
 # Ensure of=/dev/tty is possible
 if test -c /dev/tty && >/dev/tty; then
   dd if=/dev/null of=/dev/tty || fail=1
+fi
+
+# Ensure that the output file is opened with O_TRUNC.
+if strace -o /dev/null -e inject=truncate,ftruncate:error=EIO true; then
+  echo a > $tmp_out || framework_failure_
+  strace --quiet=all -o /dev/null \
+    -e inject=truncate,ftruncate:error=EIO -P $tmp_out \
+    dd if=/dev/null of=$tmp_out status=none skip=1B >out 2>err || fail=1
+  compare /dev/null out || fail=1
+  compare /dev/null err || fail=1
+  compare /dev/null $tmp_out || fail=1
 fi
 
 
