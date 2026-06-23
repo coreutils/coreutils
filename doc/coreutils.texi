@@ -1606,9 +1606,6 @@ time using various configure variables, which currently include:
 
 External library detection is automatic for OpenSSL, so you must use the
 @samp{--with-openssl=no} configure option to disable this if desired.
-Conversely, the Linux kernel cryptographic API is not used automatically and
-must be explicitly enabled with the @samp{--with-linux-crypto} configure
-option.
 
 @subsection Runtime Configuration
 
