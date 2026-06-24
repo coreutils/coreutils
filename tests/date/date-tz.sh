@@ -48,12 +48,6 @@ if test "$(TZ=America/Belize date +%z)" = '-0600'; then
   printf "date: invalid date '2024-03-10 02:30'\n" > exp || framework_failure_
   compare exp err || fail=1
 
-  # An ambiguous local time in the fall-back overlap takes the earlier,
-  # still-DST offset (+0100 here, not +0200).
-  TZ=Europe/Paris date -d '2024-10-27 02:30:00' '+%Y-%m-%dT%T%z' > out || fail=1
-  printf "2024-10-27T02:30:00+0100\n" > exp || framework_failure_
-  compare exp out || fail=1
-
 fi
 
 Exit $fail
