@@ -252,4 +252,16 @@ exec 1>&3 3>&-
 
 compare expected actual 1>&2 || fail=1
 
+# The "same file" check must compare inode/device, not the path string:
+# 'foo' and './foo' name the same file, so --remove-destination has to
+# refuse rather than unlink the destination (which is also the source)
+# and lose the data.
+rm -rf dir; mkdir dir; cd dir || framework_failure_
+echo "$contents" > foo || framework_failure_
+returns_ 1 cp --remove-destination foo ./foo 2> err || fail=1
+grep -F 'are the same file' err || { cat err; fail=1; }
+test -f foo || fail=1
+test "$(cat foo)" = "$contents" || fail=1
+cd ..
+
 Exit $fail
