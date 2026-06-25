@@ -80,4 +80,21 @@ compare exp out2 || fail=1
 # cd "$other_partition_tmpdir"
 # ls -l -A -R "$other_partition_tmpdir"
 
+# Moving a special file across file systems onto an existing destination
+# must replace that destination, not unlink it first and then fail,
+# leaving the user with neither file.
+source=mv-sock
+if python -c "import socket as s; \
+              s.socket(s.AF_UNIX).bind('$source'); \
+              s.socket(s.AF_UNIX).bind('$other_partition_tmpdir/test.sock') \
+              " &&
+ test -S "$source" && test -S "$other_partition_tmpdir/test.sock"; then
+
+  dest="$other_partition_tmpdir/mv-sock-dest"
+  touch "$dest" || framework_failure_
+  mv "$source" "$dest" || fail=1
+  test -S "$dest" || fail=1       # destination replaced by the socket
+  test -e "$source" && fail=1     # source removed
+fi
+
 Exit $fail
