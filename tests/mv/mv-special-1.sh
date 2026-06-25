@@ -80,4 +80,21 @@ compare exp out2 || fail=1
 # cd "$other_partition_tmpdir"
 # ls -l -A -R "$other_partition_tmpdir"
 
+# Moving a special file across file systems onto an existing destination
+# must replace that destination, not unlink it first and then fail,
+# leaving the user with neither file.
+sock=mv-sock
+if ${PERL=perl} -MSocket -e '
+    socket(S, PF_UNIX, SOCK_STREAM, 0) or exit 1;
+    unlink $ARGV[0];
+    bind(S, sockaddr_un($ARGV[0])) or exit 1;
+  ' "$sock" 2>/dev/null && test -S $sock; then
+  dest="$other_partition_tmpdir/mv-sock-dest"
+  echo precious > "$dest" || framework_failure_
+  mv $sock "$dest" || fail=1
+  test -S "$dest" || fail=1   # destination replaced by the socket
+  test -e $sock && fail=1     # source removed
+  rm -f "$dest"
+fi
+
 Exit $fail
