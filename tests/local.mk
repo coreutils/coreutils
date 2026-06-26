@@ -531,6 +531,7 @@ all_tests =					\
   tests/uniq/uniq.pl				\
   tests/uniq/uniq-perf.sh			\
   tests/uniq/uniq-collate.sh			\
+  tests/uniq/uniq-c-width.sh			\
   tests/misc/xattr.sh				\
   tests/misc/yes.sh				\
   tests/tail/wait.sh				\

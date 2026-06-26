@@ -23,6 +23,7 @@
 
 #include "system.h"
 #include "argmatch.h"
+#include "assure.h"
 #include "linebuffer.h"
 #include "fadvise.h"
 #include "mcel.h"
@@ -324,7 +325,23 @@ writeline (struct linebuffer const *line,
     return;
 
   if (count_occurrences)
-    printf ("%7jd ", linecount + 1);
+    {
+      char buf[7 + INT_BUFSIZE_BOUND (intmax_t)];
+      char *end = buf + sizeof buf;
+      char *p = end;
+      *--p = ' ';
+      intmax_t i = linecount + 1;
+      affirm (0 < i);
+      do
+        *--p = '0' + i % 10;
+      while ((i /= 10));
+      /* 7 characters, padded with spaces if LINECOUNT + 1 is too small.  */
+      while (end - p < 8)
+        *--p = ' ';
+      const idx_t nbytes = end - p;
+      if (fwrite (p, sizeof (char), nbytes, stdout) != nbytes)
+        write_error ();
+    }
 
   if (fwrite (line->buffer, sizeof (char), line->length, stdout)
       != line->length)

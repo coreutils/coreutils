@@ -59,6 +59,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'sort' will now better use available memory and parallel operation
   when reading from unknown sized inputs like pipes.
 
+  'uniq -c' now operates up to 2.5x times faster on systems with unlocked stdio
+  functions.
+
+
 ** Build-related
 
   configure no longer accepts the --with-linux-crypto option, which allowed
