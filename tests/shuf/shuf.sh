@@ -136,6 +136,16 @@ done
 { shuf -i0-9 --random-source A --random-source B || test $? -ne 1; } &&
   { fail=1; echo "shuf did not detect multiple --random-source usage.">&2 ; }
 
+# A failed run must leave an existing -o output file untouched rather than
+# truncating it before the failure is detected.
+printf 'precious\n' > exp || framework_failure_
+cp exp out || framework_failure_
+returns_ 1 shuf -o out missing-input || fail=1
+compare exp out || { fail=1; echo "shuf truncated -o on input error">&2 ; }
+cp exp out || framework_failure_
+returns_ 1 shuf -o out --random-source=missing-input in || fail=1
+compare exp out || { fail=1; echo "shuf truncated -o on random-source error">&2 ; }
+
 # Test --repeat option
 
 # --repeat without count should return an indefinite number of lines
