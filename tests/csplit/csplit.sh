@@ -110,4 +110,15 @@ csplit: '1': line number out of range
 EOF
 compare experr err || fail=1
 
+# Test that the message to standard output isn't elided after read fails.
+rm -f xx?? || framework_failure_
+echo 0 >exp-out || framework_failure_
+cat <<\EOF >exp-err || framework_failure_
+csplit: read error: Is a directory
+EOF
+returns_ 1 csplit -k . '/^a/' >out 2>err || fail=1
+compare /dev/null xx00 || fail=1
+compare exp-out out || fail=1
+compare exp-err err || fail=1
+
 Exit $fail
