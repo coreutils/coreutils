@@ -111,4 +111,14 @@ else
   test "$out" = ".$nl." || fail=1
 fi
 
+# A trailing slash only requires the operand to be a directory, which is a
+# stat-level check (search permission on the parent). A directory that is
+# searchable but not readable must still resolve, not fail with EACCES.
+if ! uid_is_privileged_; then
+  mkdir noread && chmod a-r noread || framework_failure_
+  test "$(realpath noread/)" = "$(realpath .)/noread" || fail=1
+  test "$(realpath -e noread/)" = "$(realpath .)/noread" || fail=1
+  chmod u+r noread || framework_failure_
+fi
+
 Exit $fail
