@@ -24,6 +24,10 @@ test "$(LC_ALL=en_US.UTF-8 locale charmap 2>/dev/null)" = UTF-8 ||
 
 touch 'hello world' "it's" 'say "hi"' 'tab	here' || framework_failure_
 
+# A non-ASCII (C1) control character: U+0085 NEL = \xc2\x85.
+nel=$(printf 'nel\302\205here')
+touch "$nel" || framework_failure_
+
 # Note we use en_US as there are no translations provided,
 # and so locale quoting for UTF-8 is hardcoded to these quoting characters:
 # U+2018 = \xe2\x80\x98 (LEFT SINGLE QUOTATION MARK)
@@ -56,6 +60,10 @@ for style in locale clocale; do
   # Control characters should still be C-escaped
   grep "tab\\\\there" out_${style}_utf8 > /dev/null 2>&1 \
     || { echo "$style UTF-8: tab should be escaped as \\t"; fail=1; }
+
+  # Non-ASCII (C1) control characters are octal-escaped by byte
+  grep "^${lq}nel\\\\302\\\\205here${rq}\$" out_${style}_utf8 > /dev/null 2>&1 \
+    || { echo "$style UTF-8: U+0085 should be octal-escaped"; fail=1; }
 done
 
 # In C locale, locale uses ASCII single quotes, clocale uses ASCII double quotes
