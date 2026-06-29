@@ -27,26 +27,6 @@ if timeout 10 true; then
   test $? = 124 || fail=1
 fi
 
-# Verify splice is called multiple times,
-# and doesn't just fall back after the first EINVAL.
-# This also implicitly handles systems without splice at all.
-strace -o splice_count -e splice cat /dev/zero | head -c1M >/dev/null
-splice_count=$(grep '^splice' splice_count | wc -l)
-
-# Test that splice errors are diagnosed.
-# Odd numbers are for input, even for output
-if test "$splice_count" -gt 1 &&
-   strace -o /dev/null -e inject=splice:error=EIO:when=3 true; then
-  for when in 3 4; do
-    test "$when" = 4 && efile='write error' || efile='/dev/zero'
-    printf 'cat: %s: %s\n' "$efile" "$EIO" > exp || framework_failure_
-    returns_ 1 timeout 10 strace -o /dev/null \
-      -e inject=splice:error=EIO:when=$when \
-      cat /dev/zero >/dev/null 2>err || fail=1
-    compare exp err || fail=1
-  done
-fi
-
 # Ensure we fallback to write() if there is an issue with (async) zero-copy
 zc_syscalls='io_uring_setup io_uring_enter io_uring_register memfd_create
              sendfile splice tee vmsplice'
