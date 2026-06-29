@@ -47,7 +47,7 @@ if test "$splice_count" -gt 1 &&
   done
 fi
 
-# Ensure we fallback to write() if there is an issue with (async) zero-copy
+# Ensure we fallback to non-line buffered write() if there is an issue with (async) zero-copy
 zc_syscalls='io_uring_setup io_uring_enter io_uring_register memfd_create
              sendfile splice tee vmsplice'
 syscalls=$(
@@ -59,8 +59,8 @@ no_zero_copy() {
   strace -f -o /dev/null -e inject=${syscalls}:error=ENOSYS "$@"
 }
 if no_zero_copy true; then
-  test "$(no_zero_copy cat /dev/zero | head -c 2 | tr '\0' 'y')" = 'yy' \
-    || fail=1
+  while sleep 1; do printf hello\nworld; done | no_zero_copy timeout 1 cat > out
+  test -s out || fail=1
 fi
 # Ensure we fallback to write() if there is an issue with pipe2()
 # For example if we don't have enough file descriptors available.
