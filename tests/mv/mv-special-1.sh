@@ -84,9 +84,10 @@ compare exp out2 || fail=1
 # must replace that destination, not unlink it first and then fail,
 # leaving the user with neither file.
 source=mv-sock
-if python -c "import socket as s; \
-              s.socket(s.AF_UNIX).bind('$source'); \
-              s.socket(s.AF_UNIX).bind('$other_partition_tmpdir/test.sock') \
+if python -c "import os, stat; \
+              os.mknod('$source', stat.S_IFSOCK | 0o600); \
+              os.mknod('$other_partition_tmpdir/test.sock', \
+                       stat.S_IFSOCK | 0o600) \
               " &&
  test -S "$source" && test -S "$other_partition_tmpdir/test.sock"; then
 

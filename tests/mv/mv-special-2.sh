@@ -65,8 +65,9 @@ mv --verbose broken_symlink xdev &&
 returns_ 1 test -L broken_symlink &&
 test -L xdev/broken_symlink || fail=1
 
-if python -c "import socket as s; s.socket(s.AF_UNIX).bind('test.sock')" &&
-   test -S 'test.sock'; then
+if python -c "import os, stat; \
+              os.mknod('test.sock', stat.S_IFSOCK | 0o600); \
+              " && test -S 'test.sock'; then
   mv --verbose test.sock xdev &&
   returns_ 1 test -S test.sock &&
   test -S xdev/test.sock || fail=1
