@@ -111,16 +111,18 @@ EOF
 compare experr err || fail=1
 
 # Test that the message to standard output isn't elided after read fails.
-echo 0 >exp-out || framework_failure_
-cat <<\EOF >exp-err || framework_failure_
+if ! cat . >/dev/null 2>&1; then
+  echo 0 >exp-out || framework_failure_
+  cat <<\EOF >exp-err || framework_failure_
 csplit: read error: Is a directory
 EOF
-for opt in '' '-k'; do
-  rm -f xx?? || framework_failure_
-  returns_ 1 csplit $opt . '/^a/' >out 2>err || fail=1
-  compare /dev/null xx00 || fail=1
-  compare exp-out out || fail=1
-  compare exp-err err || fail=1
-done
+  for opt in '' '-k'; do
+    rm -f xx?? || framework_failure_
+    returns_ 1 csplit $opt . '/^a/' >out 2>err || fail=1
+    compare /dev/null xx00 || fail=1
+    compare exp-out out || fail=1
+    compare exp-err err || fail=1
+  done
+fi
 
 Exit $fail
