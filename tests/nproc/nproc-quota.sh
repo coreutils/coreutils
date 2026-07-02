@@ -19,53 +19,14 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ nproc
 require_root_
-require_gcc_shared_
+uses_strace_
 
-# Replace sched_getscheduler()
-cat > k.c <<'EOF' || framework_failure_
-#include <stdio.h>
-#include <errno.h>
-#define __USE_GNU  /* For SCHED_DEADLINE.  */
-#include <sched.h>
-
-int
-sched_getscheduler (pid_t pid)
-{
-  fclose (fopen ("preloaded","w")); /* marker for preloaded interception */
-  FILE *policyf = fopen ("/proc/self/sched", "r");
-  int policy;
-  #define fscanfmt fscanf  /* Avoid syntax check.  */
-  if (pid == 0 && fscanfmt (policyf, "policy : %d", &policy) == 1)
-  {
-     switch (policy)
-       {
-         case 0:  return SCHED_OTHER;
-         case 1:  return SCHED_FIFO;
-         case 2:  return SCHED_RR;
-         case 6:  return SCHED_DEADLINE;
-         case -1: errno = EINVAL; return -1;
-         default: return SCHED_OTHER;
-       }
-  }
-  else
-    {
-      errno = ENOSYS;
-      return -1;
-    }
-}
-EOF
-
-# compile/link the interception shared library:
-gcc_shared_ k.c k.so \
-  || skip_ 'failed to build sched_getscheduler shared library'
-
-(export LD_PRELOAD=$LD_PRELOAD:./k.so
- nproc) || fail=1
-
-# Ensure our wrapper is in place and is called
-# I.e., this test is restricted to new enough Linux systems
+# Ensure new enough Linux systems
 # as otherwise cpu_quota() will not call sched_getscheduler()
-test -e preloaded || skip_ 'LD_PRELOAD interception failed'
+strace -o getsched_count -e sched_getscheduler nproc
+getsched_count=$(grep '^sched_getscheduler' getsched_count | wc -l)
+test "$getsched_count" -ge 1 ||
+  skip_ 'sched_getscheduler() call not detected'
 
 # We could look for modifiable cgroup quotas on the current system,
 # but that would be dangerous to modify and restore robustly.
@@ -87,9 +48,12 @@ nproc=$abs_top_builddir/src/nproc$EXEEXT
 cp --parents $(ldd $nproc | grep -o '/[^ ]*') $ROOT ||
   skip_ 'Failed to copy nproc libs to chroot'
 cp $nproc $ROOT || framework_failure_
-cp k.so $ROOT || framework_failure_
 
-NPROC() { LD_PRELOAD=$LD_PRELOAD:./k.so chroot $ROOT /nproc "$@"; }
+NPROC() {
+  IFS=': ' read key policy < $ROOT/proc/self/sched
+  strace -o /dev/null -qqq -e inject=sched_getscheduler:retval=$policy \
+  chroot $ROOT /nproc "$@"
+}
 NPROC --version ||
   skip_ 'Failed to execute nproc in chroot'
 
