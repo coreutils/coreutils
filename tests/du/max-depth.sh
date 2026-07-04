@@ -36,4 +36,15 @@ cut -f2- out > k && mv k out
 compare exp out || fail=1
 compare /dev/null err || fail=1
 
+# Repeat, but use -d -1 and check for an error.
+# coreutils 9.4 to 9.11 would mistakenly behave as if --max-depth=0 were
+# specified when given a negative value.
+cat <<\EOF >exp || framework_failure_
+du: invalid maximum depth '-1'
+Try 'du --help' for more information.
+EOF
+returns_ 1 du -d -1 a >out 2>err || fail=1
+compare /dev/null out || fail=1
+compare exp err || fail=1
+
 Exit $fail

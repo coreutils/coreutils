@@ -860,11 +860,8 @@ main (int argc, char **argv)
           {
             intmax_t tmp;
             if (xstrtoimax (optarg, NULL, 0, &tmp, "") == LONGINT_OK
-                && tmp <= IDX_MAX)
-              {
-                max_depth_specified = true;
-                max_depth = tmp;
-              }
+                && ! ckd_add (&max_depth, tmp, 0) && 0 <= max_depth)
+              max_depth_specified = true;
             else
               {
                 error (0, 0, _("invalid maximum depth %s"),
