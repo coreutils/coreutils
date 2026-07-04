@@ -349,6 +349,12 @@ my @Tests =
       $rmdir_reg,
       {EXIT => 2},
      ],
+
+     # Negative, non-numeric and fractional --tabsize values are invalid.
+     (map { ["tabsize-invalid-$_", "--tabsize=$_",
+             {ERR => "$prog: invalid tab size: '$_'\n"},
+             {EXIT => 2},
+            ] } qw(-9 zz 0.5)),
     );
 
 umask 022;
