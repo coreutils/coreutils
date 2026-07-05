@@ -507,6 +507,11 @@ my @Tests =
              {IN_PIPE=>"hello\nworld\n"},
              {OUT=>"hello\nworld"}],
 
+     # --header takes an argument only via '=': a following operand
+     # must not be swallowed as the option's value.
+     ['header-10', '--header 7 8',
+             {OUT=>"7\n8"}],
+
 
      ## human_strtod testing
 
