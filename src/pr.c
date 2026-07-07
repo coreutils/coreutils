@@ -2732,7 +2732,10 @@ char_to_clump (char c)
   else if (width < 0 && input_position <= -width)
     input_position = 0;
   else
-    input_position += width;
+    {
+      if (ckd_add (&input_position, input_position, width))
+        integer_overflow ();
+    }
 
   return chars;
 }

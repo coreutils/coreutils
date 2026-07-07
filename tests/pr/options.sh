@@ -57,4 +57,15 @@ printf '%s\n' "pr: '-e' extra characters or $INV in the argument: '-1'" \
  >exp || framework_failure_
 compare exp err || fail=1
 
+# Ensure we exit gracefully upon internal overflow limits
+# Tag as expensive as it uses little mem, but about 10s on a 2020 class machine.
+if { test "$RUN_VERY_EXPENSIVE_TESTS" = yes ||
+     test "$RUN_EXPENSIVE_TESTS" = yes; } &&
+   test "$INT_MAX" = 2147483647; then  # restrict to usual 32 bit limits
+  head -c1M /dev/zero | tr '\0' '\t' |
+  returns_ 1 pr -t -e$(($INT_MAX/(1024*1024) + 1)) 2>err >/dev/null || fail=1
+  printf '%s\n' "pr: integer overflow" > exp || framework_failure_
+  compare exp err || fail=1
+fi
+
 Exit $fail
