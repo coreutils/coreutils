@@ -288,7 +288,7 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
 "));
       oputs (_("\
   -n, --no-clobber\n\
-         do not overwrite an existing file\n\
+         (deprecated) silently skip existing files.  See also --update\n\
 "));
       fputs (_("\
 If you specify more than one of -i, -f, -n, only the final one takes effect.\n\

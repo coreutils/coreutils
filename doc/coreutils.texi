@@ -8875,15 +8875,24 @@ to cause @command{cp} write to arbitrary target directories.
 @optItemx{cp,--link,}
 Make hard links instead of copies of non-directories.
 
-@optItem{cp,-n,}
-@optItemx{cp,--no-clobber,}
+@macro noClobberOption{cmd}
+@optItem{\cmd\,-n,}
+@optItemx{\cmd\,--no-clobber,}
+@cindex prompts, omitting
 Do not overwrite an existing file; silently skip instead.
+@ifset MV_COMMAND
+@mvOptsIfn
+@end ifset
+@ifclear MV_COMMAND
 This option overrides a previous @option{-i} option.
+@end ifclear
 This option is mutually exclusive with @option{-b} or @option{--backup} option.
 This option is deprecated due to having a different exit status from
 other platforms.  See also the @option{--update} option which will
 give more control over how to deal with existing files in the destination,
 and over the exit status in particular.
+@end macro
+@noClobberOption{cp}
 
 @optItem{cp,-p,}
 @optItemx{cp,--preserve,[=@var{attribute_list}]}
@@ -10015,14 +10024,9 @@ Prompt whether to overwrite each existing destination file, regardless
 of its permissions, and fail if the response is not affirmative.
 @mvOptsIfn
 
-@optItem{mv,-n,}
-@optItemx{mv,--no-clobber,}
-@cindex prompts, omitting
-Do not overwrite an existing file; silently fail instead.
-@mvOptsIfn
-This option is mutually exclusive with @option{-b} or @option{--backup} option.
-See also the @option{--update=none} option which will
-skip existing files but not fail.
+@set MV_COMMAND
+@noClobberOption{mv}
+@clear MV_COMMAND
 
 @optItem{mv,--no-copy,}
 @cindex renaming files without copying them
