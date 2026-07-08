@@ -10054,7 +10054,7 @@ using @code{--no-copy} will prevent future versions of @command{mv}
 from implementing the exchange by copying.
 
 @optItem{mv,-u,}
-@optItemx{mv,--update,}
+@optItemx{mv,--update,[=@var{which}]}
 @cindex newer files, moving only
 Do not move a non-directory that has an existing destination with the
 same or newer modification timestamp;
