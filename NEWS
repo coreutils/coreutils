@@ -84,6 +84,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'install -C' will now avoid updating file metadata when the destination
   already has the appropriate ownership and permissions.
 
+  'ls -m' now quotes files names containing commas when appropriate,
+  so users can better distinguish separating commas.
+
   'sort' will now better use available memory and parallel operation
   when reading from unknown sized inputs like pipes.
 

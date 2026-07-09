@@ -2359,6 +2359,12 @@ decode_switches (int argc, char **argv)
       for (char const *p = &"*=>@|"[indicator_style - file_type]; *p; p++)
         set_char_quoting (filename_quoting_options, *p, 1);
     }
+  if (format == with_commas
+      && (qs == shell_quoting_style
+          || qs == shell_escape_quoting_style
+          || qs == c_maybe_quoting_style
+          || qs == escape_quoting_style))
+    set_char_quoting (filename_quoting_options, ',', 1);
 
   dirname_quoting_options = clone_quoting_options (NULL);
   set_char_quoting (dirname_quoting_options, ':', 1);

@@ -50,4 +50,26 @@ printf '%s\n' 'a, bb' > exp || framework_failure_
 ls -w5 -m a bb > out || fail=1
 compare exp out || fail=1
 
+# Ensure commas in names are quoted appropriately for all quoting styles.
+# Without this quoting, interactive output could become confusing,
+# especially in the presence of NBSP etc.
+touch 'com,ma' || framework_failure_
+cat <<\EOF > exp || framework_failure_
+literal: com,ma
+shell: 'com,ma'
+shell-always: 'com,ma'
+shell-escape: 'com,ma'
+shell-escape-always: 'com,ma'
+c: "com,ma"
+c-maybe: "com,ma"
+escape: com\,ma
+locale: 'com,ma'
+clocale: "com,ma"
+EOF
+for qs in $(cut -d: -f1 exp); do
+  printf '%s: ' "$qs"
+  ls -m --quoting-style="$qs" 'com,ma' || fail=1
+done > out
+compare exp out || fail=1
+
 Exit $fail
