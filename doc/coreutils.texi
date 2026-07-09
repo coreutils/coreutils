@@ -11737,12 +11737,32 @@ Do not warn about or create files that do not exist.
 @optItem{touch,-d,@w{ }@var{time}}
 @optItemx{touch,--date,=@var{time}}
 @opindex time
-Use @var{time} instead of the current time.  It can contain month names,
+Use @var{time} instead of the current time.
+The standard format for @var{time} is:
+
+@example
+@var{YYYY}-@var{MM}-@var{DD}T@var{hh}:@var{mm}:@var{SS}[.@var{frac}][Z]
+@end example
+
+giving the year, month, day, hours, minutes, seconds,
+along with optional fractional seconds and trailing
+letter @samp{Z} denoting UTC rather than local time;
+also, @samp{,} can separate @var{SS} from @var{frac} instead of @samp{.}.
+@var{YYYY} must have at least four digits;
+@var{frac}, if present, must have at least one digit;
+and the other numbers must have exactly two digits
+and must be in their usual ranges.
+GNU @command{touch} allows @var{SS} to be 60 only for a leap second
+on the rare non-POSIX platforms where @code{time_t} counts leap seconds.
+
+As a GNU extension, @var{time} can use a space rather than @samp{T},
+and can also contain month names, other
 time zones, @samp{am} and @samp{pm}, @samp{yesterday}, etc.  For
 example, @option{--date="2020-07-21 14:19:13.489392193 +0530"}
 specifies the instant of time that is 489,392,193 nanoseconds after
 July 21, 2020 at 2:19:13 PM in a time zone that is 5 hours and 30
 minutes east of UTC@.  @xref{Date input formats}.
+
 File systems that do not support high-resolution timestamps
 silently ignore any excess precision here.
 
