@@ -11741,18 +11741,18 @@ Use @var{time} instead of the current time.
 The standard format for @var{time} is:
 
 @example
-@var{YYYY}-@var{MM}-@var{DD}T@var{hh}:@var{mm}:@var{SS}[.@var{frac}][Z]
+@var{yyyy}-@var{mm}-@var{dd}T@var{hh}:@var{mm}:@var{ss}[.@var{frac}][Z]
 @end example
 
 giving the year, month, day, hours, minutes, seconds,
 along with optional fractional seconds and trailing
 letter @samp{Z} denoting UTC rather than local time;
-also, @samp{,} can separate @var{SS} from @var{frac} instead of @samp{.}.
-@var{YYYY} must have at least four digits;
+also, @samp{,} can separate @var{ss} from @var{frac} instead of @samp{.}.
+@var{yyyy} must have at least four digits;
 @var{frac}, if present, must have at least one digit;
 and the other numbers must have exactly two digits
 and must be in their usual ranges.
-GNU @command{touch} allows @var{SS} to be 60 only for a leap second
+GNU @command{touch} allows @var{ss} to be 60 only for a leap second
 on the rare non-POSIX platforms where @code{time_t} counts leap seconds.
 
 As a GNU extension, @var{time} can use a space rather than @samp{T},
