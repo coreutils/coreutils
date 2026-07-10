@@ -453,6 +453,10 @@ defined $single_byte_locale
   and push @Tests,
     ['mb-delim-C', '-d', "\xc3\xa9", '-f1',
      {EXIT=>1}, {ERR=>$single_char},
+     {ENV => "LC_ALL=$single_byte_locale"}],
+    ['c-locale-byte', '-c2', {IN=>"a\xC3\xA9b\n"}, {OUT=>"\xC3\n"},
+     {ENV => "LC_ALL=$single_byte_locale"}],
+    ['c-locale-nosplit', qw(-b2 -n), {IN=>"a\xC3\xA9b\n"}, {OUT=>"\xC3\n"},
      {ENV => "LC_ALL=$single_byte_locale"}];
 
 
