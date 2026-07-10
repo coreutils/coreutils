@@ -137,7 +137,7 @@ int blake2sp_stream( FILE *stream, void *resstream, size_t outbytes )
   int ret = -1;
   size_t sum, n;
   blake2sp_state S[1];
-  static const size_t buffer_length = 16 * ( 1UL << 20 );
+  static const size_t buffer_length = ( 1UL << 24 );
   uint8_t *buffer = ( uint8_t * )malloc( buffer_length );
 
   if( !buffer ) return -1;
@@ -188,7 +188,7 @@ int blake2bp_stream( FILE *stream, void *resstream, size_t outbytes )
   int ret = -1;
   size_t sum, n;
   blake2bp_state S[1];
-  static const size_t buffer_length = 16 * ( 1UL << 20 );
+  static const size_t buffer_length = ( 1UL << 24 );
   uint8_t *buffer = ( uint8_t * )malloc( buffer_length );
 
   if( !buffer ) return -1;
