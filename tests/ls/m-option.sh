@@ -72,4 +72,17 @@ for qs in $(cut -d: -f1 exp); do
 done > out
 compare exp out || fail=1
 
+# Newlines are preserved with unlimited width, where -m does not wrap,
+newline='n
+l'
+touch "$newline" || framework_failure_
+printf '%s\n' "$newline" > exp || framework_failure_
+ls -m -w0 "$newline" > out || fail=1
+compare exp out || fail=1
+
+# Otherwise protect newlines that could be confused with separators.
+printf '%s\n' 'n?l' > exp || framework_failure_
+ls -m "$newline" > out || fail=1
+compare exp out || fail=1
+
 Exit $fail

@@ -741,6 +741,11 @@ static struct ignore_pattern *hide_patterns;
    quoting methods pass through control chars as-is.  */
 static bool qmark_funny_chars;
 
+/* True means extra replacement of newline with '?'
+   in cases where a newline in a file name would be
+   ambiguous with newline separators.  */
+static bool qmark_newline;
+
 /* Quoting options for file and dir name output.  */
 
 static struct quoting_options *filename_quoting_options;
@@ -2334,6 +2339,12 @@ decode_switches (int argc, char **argv)
   qmark_funny_chars = (hide_control_chars_opt < 0
                        ? ls_mode == LS_LS && stdout_isatty ()
                        : hide_control_chars_opt);
+
+  qmark_newline = hide_control_chars_opt != false && eolbyte == '\n'
+                  && ((line_length
+                       && (format == with_commas
+                           || format == many_per_line || format == horizontal))
+                      || format == one_per_line || format == long_format);
 
   int qs = quoting_style_opt;
   if (qs < 0)
@@ -4498,10 +4509,21 @@ quote_name_buf (char **inbuf, size_t bufsize, char *name,
   bool quoted;
 
   enum quoting_style qs = get_quoting_style (options);
-  bool needs_further_quoting = qmark_funny_chars
-                               && (qs == shell_quoting_style
-                                   || qs == shell_always_quoting_style
-                                   || qs == literal_quoting_style);
+  bool partial_quoting = qs == shell_quoting_style
+                         || qs == shell_always_quoting_style
+                         || qs == literal_quoting_style;
+  bool needs_further_quoting = qmark_funny_chars && partial_quoting;
+
+  /* Note we provide extra protection only for newline separators.
+     I.e., we don't bother protecting "double space" or "comma space"
+     separated entries, as for interactive output, shell escape quoting
+     is best to disambiguate, and for programmatic, --zero is best.
+     Extra processing to mark ', ' and '  ' would be overkill
+     as interactively there will still be ambiguities with multi-byte spaces,
+     and marked characters impact programmatic processing anyway.  */
+  bool extra_newline_protection = (!needs_further_quoting
+                                   && qmark_newline && partial_quoting
+                                   && !dired && strchr (name, '\n'));
 
   if (needs_general_quoting != 0)
     {
@@ -4514,7 +4536,7 @@ quote_name_buf (char **inbuf, size_t bufsize, char *name,
 
       quoted = (*name != *buf) || strlen (name) != len;
     }
-  else if (needs_further_quoting)
+  else if (needs_further_quoting || extra_newline_protection)
     {
       len = strlen (name);
       if (bufsize <= len)
@@ -4529,6 +4551,13 @@ quote_name_buf (char **inbuf, size_t bufsize, char *name,
       buf = name;
       quoted = false;
     }
+
+  /* It's safe to replace newlines without multi-byte iteration, as newlines
+     do not appear as part of any multi-byte encoded character.  */
+  if (extra_newline_protection)
+    for (char *p = buf; p < buf + len; p++)
+      if (eolbyte && *p == '\n')
+        *p = '?';
 
   if (needs_further_quoting)
     {

@@ -8466,8 +8466,10 @@ backslash sequences like those used in C.
 @opindex --quoting-style
 Do not quote file names.  However, with @command{ls} nongraphic
 characters are still printed as question marks if the output is a
-terminal and you do not specify the @option{--show-control-chars}
-option.
+terminal and you do not specify the @option{--show-control-chars} option.
+Also newline characters in file names are printed as question marks
+if ambiguous with separators, irrespective of whether output
+is a terminal or not.
 
 @optItem{ls,-q,}
 @optItemx{ls,--hide-control-chars,}

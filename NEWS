@@ -87,6 +87,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'ls -m' now quotes files names containing commas when appropriate,
   so users can better distinguish separating commas.
 
+  'ls' now replaces newlines in file names if ambiguous with separators.
+  Previously newlines were protected only when outputting to a terminal.
+
   'sort' will now better use available memory and parallel operation
   when reading from unknown sized inputs like pipes.
 

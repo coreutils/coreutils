@@ -29,12 +29,11 @@ disallowed_options='-l --dired'  # dired only enabled with -l
 returns_ 2 ls $disallowed_options --zero dir || fail=1
 
 disabled_options='--color=always -x -m -C -Q -q'
+newline='n
+l'
+touch dir/'com,ma' "dir/$newline" || framework_failure_
 LC_ALL=C ls $disabled_options --zero dir >out || fail=1
-tr '\n' '\0' <<EOF >exp
-a
-b
-cc
-EOF
+printf '%s\0' a b cc 'com,ma' "$newline" >exp || framework_failure_
 
 compare exp out || fail=1
 
