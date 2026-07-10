@@ -83,6 +83,8 @@ my @Tests =
   ['8', '-c4', {IN=>"123\n1"}, {OUT=>"\n\n"}],
   ['9', '-c4', {IN=>""}, {OUT=>""}],
   ['byte-newline-1', '-b1', {IN=>"a\n"}, {OUT=>"a\n"}],
+  ['c-locale-byte', '-c2', {IN=>"a\xC3\xA9b\n"}, {OUT=>"\xC3\n"}],
+  ['c-locale-nosplit', qw(-b2 -n), {IN=>"a\xC3\xA9b\n"}, {OUT=>"\xC3\n"}],
   ['a', qw(-s -d:), '-f3-', {IN=>"a:b:c\n"}, {OUT=>"c\n"}],
   ['b', qw(-s -d:), '-f2,3', {IN=>"a:b:c\n"}, {OUT=>"b:c\n"}],
   ['c', qw(-s -d:), '-f1,3', {IN=>"a:b:c\n"}, {OUT=>"a:c\n"}],
