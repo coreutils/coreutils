@@ -885,6 +885,8 @@ factor_using_division (struct factors *factors, mp_limb_t t1, mp_limb_t t0,
       t0 = divblock (factors, t0, pd, i, 6);
       t0 = divblock (factors, t0, pd, i, 7);
 
+      if (PRIMES_PTAB_ENTRIES <= i + 8)
+        break;
       int_least32_t p = primes_ptab[i + 8];
       if (p * p > t0)
         break;
