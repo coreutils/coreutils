@@ -317,7 +317,8 @@ AS_IF([test "$USE_SELINUX_SELINUX_H" = 1],
   [LIB_SELINUX_DLOPEN=])
 AC_SUBST([LIB_SELINUX_DLOPEN])
 
-# Should 'sort' link libcrypto dynamically?
+# Should 'sort' load libcrypto dynamically?
+LIB_CRYPTO_SORT=$LIB_CRYPTO
 AS_CASE([$LIB_CRYPTO],
   [-lcrypto],
     [# Check for dlopen and libcrypto dynamic linking in one program,
@@ -351,7 +352,9 @@ AS_CASE([$LIB_CRYPTO],
                      linked dynamically.])
           AC_DEFINE_UNQUOTED([LIBCRYPTO_SONAME], ["$utils_cv_libcrypto_soname"],
                              [versioned libcrypto])
+          LIB_CRYPTO_SORT=
          ])])
+AC_SUBST([LIB_CRYPTO_SORT])
 
 # macOS >= 10.12
 AC_CHECK_FUNCS([fclonefileat])
