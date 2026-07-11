@@ -2374,6 +2374,14 @@ getmonth (char const *month, char **ea)
 #  pragma GCC diagnostic pop
 # endif
 # include <dlfcn.h>
+# if HAVE_SYSTEMD_SD_DLOPEN_H
+#  include <systemd/sd-dlopen.h>
+
+SD_ELF_NOTE_DLOPEN ("random-sort",
+                    "Support for random sorting",
+                    SD_ELF_NOTE_DLOPEN_PRIORITY_SUGGESTED,
+                    LIBCRYPTO_SONAME);
+# endif
 
 /* Diagnose a dynamic linking failure.  */
 static void
