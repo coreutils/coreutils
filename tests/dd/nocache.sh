@@ -25,6 +25,10 @@ dd iflag=nocache oflag=nocache if=/dev/null of=/dev/null || fail=1
 # We should get an error for trying to process a pipe
 dd count=0 | returns_ 1 dd iflag=nocache count=0 || fail=1
 
+# We should not get an error unless count=0.  I.e., no error unless
+# dropping cache is the only operation being requested.
+dd count=0 | dd iflag=nocache oflag=nocache || fail=1
+
 # O_DIRECT is orthogonal to drop cache so mutually exclusive
 returns_ 1 dd iflag=nocache,direct if=/dev/null || fail=1
 
