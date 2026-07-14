@@ -29,10 +29,11 @@ if test -w /dev/full && test -c /dev/full; then
 fi
 
 # read error
-if test -e /proc/self/mem &&
-   returns_ 1 dd if=/proc/self/mem bs=1 count=1; then
-  echo "cat: /proc/self/mem: $EIO" >exp || framework_failure_
-  returns_ 1 cat /proc/self/mem 2>err || fail=1
+errf='/proc/self/mem'
+if returns_ 1 dd if=$errf bs=1 count=1 status=none 2>errt; then
+  err_mem=$(sed 's/dd: .*: //' <errt) || framework_failure_
+  echo "cat: $errf: $err_mem" >exp || framework_failure_
+  returns_ 1 cat $errf 2>err || fail=1
   compare exp err || fail=1
 fi
 
