@@ -311,6 +311,12 @@ my @tv = (
 ['z6', '-z -t ""',
  ["a\n1\n\0", "a\n1\n\0"], "a\n1\n\0"],
 
+# Test multiple -e options.
+['ee1', '-a1 -e "d" -e "d" -o 1.1,1.2,2.2',
+ ["1 a\n2 b\n", "1 c\n"], "1 a c\n2 b d\n"],
+['ee2', '-a1 -e "d" -e "e" -o 1.1,1.2,2.2',
+ ["1 a\n2 b\n", "1 c\n"], "", 1,
+ "$prog: conflicting empty-field replacement strings\n"],
 );
 
 # Convert the above old-style test vectors to the newer
