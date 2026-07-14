@@ -261,7 +261,7 @@ Output of parts of files
 
 Summarizing files
 
-* wc invocation::                Print newline, word, and byte counts
+* wc invocation::                Print line, word, and character counts
 * sum invocation::               Print checksum and block counts
 * cksum invocation::             Print CRC checksum and byte counts
 * md5sum invocation::            Print or check MD5 digests
@@ -3693,7 +3693,7 @@ These commands generate just a few numbers representing entire
 contents of files.
 
 @menu
-* wc invocation::               Print newline, word, and byte counts.
+* wc invocation::               Print line, word, and character counts.
 * sum invocation::              Print checksum and block counts.
 * cksum invocation::            Print CRC checksum and byte counts.
 * md5sum invocation::           Print or check MD5 digests.
@@ -3704,7 +3704,7 @@ contents of files.
 
 
 @node wc invocation
-@section @command{wc}: Print newline, word, and byte counts
+@section @command{wc}: Print newline, word, and byte or character counts
 
 @pindex wc
 @cindex byte count
