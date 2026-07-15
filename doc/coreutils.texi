@@ -9835,7 +9835,9 @@ This option is best used in conjunction with @option{--user},
 incorrectly determines the default attributes that installed files would have
 (as it doesn't consider setgid directories and POSIX default ACLs for example).
 This could result in redundant copies or attributes that are not reset to the
-correct defaults.
+correct defaults.  Note the @option{--preserve-timestamps} option may
+lose some of the speed benefits with repeated builds, as timestamps
+would be updated for each build.
 
 @optItem{install,-c,}
 Ignored; for compatibility with old Unix versions of @command{install}.
