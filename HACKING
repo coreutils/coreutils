@@ -22,12 +22,15 @@ a copy of the latest with this command:
     git clone https://git.savannah.gnu.org/git/coreutils.git
     cd coreutils
 
-That downloads the entire repository, including revision control history
-dating back to 1991.  The repository (the part you download, and which
-resides in coreutils/.git) currently weighs in at about 30MB.  So you
-don't want to download it more often than necessary.  Once downloaded,
-you can get incremental updates by running one of these commands from
-inside your new coreutils/ directory:
+You can also interact with the project through the github mirror at:
+
+    https://github.com/coreutils/coreutils
+
+The entire repository, including revision control history
+dating back to 1991, currently weighs in at about 50MB.
+So you don't want to download it more often than necessary.
+Once downloaded, you can get incremental updates by running one of these commands
+from inside your new coreutils/ directory:
 
 If you have made *no* changes:
     git pull
