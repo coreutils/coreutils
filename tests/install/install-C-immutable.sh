@@ -43,6 +43,8 @@ g1=1
 
 echo test > a || framework_failure_
 
+cleanup_() { chattr -i b; }
+
 # Install once to create the destination, then make it immutable.
 ginstall -Cv -m0644 -o$u1 -g$g1 a b || framework_failure_
 chattr +i b || framework_failure_
@@ -52,7 +54,5 @@ chattr +i b || framework_failure_
 # since that would fail on an immutable file even though nothing about
 # it would actually change.
 ginstall -Cv -m0644 -o$u1 -g$g1 a b || fail=1
-
-chattr -i b
 
 Exit $fail

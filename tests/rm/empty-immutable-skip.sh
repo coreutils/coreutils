@@ -36,11 +36,12 @@ if test $chattr_i_works = 0; then
   skip_ "chattr +i doesn't work on this file system"
 fi
 
+cleanup_() { chattr -i empty; }
+
 mkdir empty || framework_failure_
 touch x y || framework_failure_
 chattr +i empty || framework_failure_
 rm -rf empty x y
 { test -f x || test -f y; } && fail=1
-chattr -i empty
 
 Exit $fail
