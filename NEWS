@@ -67,6 +67,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'df', 'du', 'ls', 'od', 'pr', and 'sort' now escape invalid arguments in error
   messages for options expecting an integer.
 
+  'install -C' will now avoid updating file metadata when the destination
+  already has the appropriate ownership and permissions.
+
   'sort' will now better use available memory and parallel operation
   when reading from unknown sized inputs like pipes.
 

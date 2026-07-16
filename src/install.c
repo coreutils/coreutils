@@ -737,7 +737,9 @@ install_file_in_file (char const *from, char const *to,
                                  || ! S_ISREG (from_sb.st_mode))
       && ! change_timestamps (&from_sb, to, to_dirfd, to_relname))
     return false;
-  return change_attributes (to, to_dirfd, to_relname);
+
+  return copy_status == COPY_SKIPPED
+         || change_attributes (to, to_dirfd, to_relname);
 }
 
 /* Create any missing parent directories of TO,
