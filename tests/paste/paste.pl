@@ -69,6 +69,11 @@ my @Tests =
    # \0 allows cycling through an empty delimiter (while "-d ''" does not)
    ['delim-empty-1', q{-s -d '\0,'}, {IN=>"1\n2\n3\n"}, {OUT=>"12,3\n"}],
 
+   # POSIX says that when -s is specified, the delimiter should reset to
+   # the first element of the list after each file is processed.
+   ['s-file-reset-1', '-s -d abc', {IN=>"0\n1\n"}, {IN=>"2\n3\n4\n5\n6\n"},
+    {IN=>"7\n8\n9\n"}, {OUT=>"0a1\n2a3b4c5a6\n7a8b9\n"}],
+
    # POSIX escapes
    ['delim-esc-0', q{-s -d '\0'},   {IN=>"1\n2\n"}, {OUT=>"12\n"}],
    ['delim-esc-n', q{-s -d '\n'},   {IN=>"1\n2\n"}, {OUT=>"1\n2\n"}],
