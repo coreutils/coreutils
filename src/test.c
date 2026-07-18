@@ -26,16 +26,8 @@
 
 #define TEST_STANDALONE 1
 
-#ifndef LBRACKET
-# define LBRACKET 0
-#endif
-
 /* The official name of this program (e.g., no 'g' prefix).  */
-#if LBRACKET
-# define PROGRAM_NAME "["
-#else
-# define PROGRAM_NAME "test"
-#endif
+#define PROGRAM_NAME (test_mode == TEST_TEST ? "test" : "[")
 
 #include "system.h"
 #include "assure.h"
@@ -44,6 +36,7 @@
 #include "quote.h"
 #include "stat-time.h"
 #include "strnumcmp.h"
+#include "test.h"
 
 #include <stdarg.h>
 
@@ -864,7 +857,7 @@ main (int margc, char **margv)
 
   argv = margv;
 
-  if (LBRACKET)
+  if (test_mode == TEST_LBRACKET)
     {
       /* Recognize --help or --version, but only when invoked in the
          "[" form, when the last argument is not "]".  Use direct

@@ -79,6 +79,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Build-related
 
+  The multi-call binary built with configure --enable-single-binary
+  in size by around 9KB through the more efficient reuse of the 'test' utility
+  by '['.
+
   configure no longer accepts the --with-linux-crypto option, which allowed
   cksum, md5sum, and sha*sum to use the Linux AF_ALG API.  This API will be
   deprecated in Linux 7.2 and is less performant than OpenSSL.

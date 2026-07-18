@@ -66,6 +66,7 @@ noinst_HEADERS =		\
   src/system.h			\
   src/temp-stream.h		\
   src/term-sig.h		\
+  src/test.h			\
   src/uname.h			\
   src/wc.h
 
@@ -381,7 +382,8 @@ src_ginstall_SOURCES = src/install.c src/prog-fprintf.c $(copy_sources) \
 		       $(selinux_sources)
 
 # This is for the '[' program.  Automake transliterates '[' and '/' to '_'.
-src___SOURCES = src/lbracket.c
+src___SOURCES = src/test.c src/test-lbracket.c
+src_test_SOURCES = src/test.c src/test-test.c
 
 nodist_src_coreutils_SOURCES = src/coreutils.h
 src_coreutils_SOURCES = src/coreutils.c
@@ -768,7 +770,7 @@ src/speedlist.h: src/termios.c lib/config.h src/speedgen
 #   SINGLE_BINARY_PROGRAM(program_name_str, main_name)
 # once for each program list on $(single_binary_progs). Note that
 # for [ the macro invocation is:
-#   SINGLE_BINARY_PROGRAM("[", _)
+#   SINGLE_BINARY_PROGRAM("[", lbracket)
 DISTCLEANFILES += src/coreutils.h
 src/coreutils.h: Makefile
 	$(AM_V_GEN)rm -f $@
@@ -776,7 +778,11 @@ src/coreutils.h: Makefile
 	$(AM_V_at)for prog in x $(single_binary_progs); do	\
 	  test $$prog = x && continue;				\
 	  prog=`basename $$prog`;				\
-	  main=`echo $$prog | tr '[' '_'`;			\
+	  main=`if test $$prog = '['; then			\
+		  echo lbracket;				\
+		else						\
+		  echo $$prog;					\
+		fi`;						\
 	  echo "SINGLE_BINARY_PROGRAM(\"$$prog\", $$main)";	\
 	done | sort > $@t
 	$(AM_V_at)chmod a-w $@t
