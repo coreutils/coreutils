@@ -76,6 +76,7 @@ override_single() {
 }
 # This is for the '[' program.  Automake transliterates '[' and '/' to '_'.
 override_single _ test
+override_single false true
 override_single dir ls
 override_single vdir ls
 override_single arch uname

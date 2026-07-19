@@ -18,17 +18,10 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include "system.h"
+#include "true.h"
 
-/* Act like "true" by default; false.c overrides this.  */
-#ifndef EXIT_STATUS
-# define EXIT_STATUS EXIT_SUCCESS
-#endif
-
-#if EXIT_STATUS == EXIT_SUCCESS
-# define PROGRAM_NAME "true"
-#else
-# define PROGRAM_NAME "false"
-#endif
+#define EXIT_STATUS (true_mode != TRUE_TRUE)
+#define PROGRAM_NAME (true_mode == TRUE_TRUE ? "true" : "false")
 
 #define AUTHORS proper_name ("Jim Meyering")
 

@@ -67,6 +67,7 @@ noinst_HEADERS =		\
   src/temp-stream.h		\
   src/term-sig.h		\
   src/test.h			\
+  src/true.h			\
   src/uname.h			\
   src/wc.h
 
@@ -141,7 +142,7 @@ src_env_LDADD = $(LDADD)
 src_expand_LDADD = $(LDADD)
 src_expr_LDADD = $(LDADD)
 src_factor_LDADD = $(LDADD)
-src_false_LDADD = $(LDADD)
+# See src_false_LDADD below
 src_fmt_LDADD = $(LDADD)
 src_fold_LDADD = $(LDADD)
 src_getlimits_LDADD = $(LDADD)
@@ -224,6 +225,7 @@ src_yes_LDADD = $(LDADD)
 
 # Synonyms.  Recall that Automake transliterates '[' and '/' to '_'.
 src___LDADD = $(src_test_LDADD)
+src_false_LDADD = $(src_true_LDADD)
 src_dir_LDADD = $(src_ls_LDADD)
 src_vdir_LDADD = $(src_ls_LDADD)
 src_chgrp_LDADD = $(src_chown_LDADD)
@@ -420,6 +422,9 @@ src_mknod_SOURCES = src/mknod.c $(selinux_sources)
 
 src_df_SOURCES = src/df.c src/find-mount-point.c
 src_stat_SOURCES = src/stat.c src/find-mount-point.c
+
+src_true_SOURCES = src/true.c src/true-true.c
+src_false_SOURCES = src/true.c src/true-false.c
 
 src_uname_SOURCES = src/uname.c src/uname-uname.c
 src_arch_SOURCES = src/uname.c src/uname-arch.c

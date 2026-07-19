@@ -931,7 +931,7 @@ exclude_file_name_regexp--sc_system_h_headers = \
 
 _src := (false|chown-(chgrp|chown)
 _src := $(_src)|ls-(dir|ls|vdir)|make-prime-list|tac-pipe|test-(lbracket|test)
-_src := $(_src)|uname-(arch|uname))
+_src := $(_src)|true-(false|true)|uname-(arch|uname))
 _gl_src = (xdecto.max|cl-strtold)
 exclude_file_name_regexp--sc_require_config_h_first = \
   (^lib/buffer-lcm\.c|gl/lib/$(_gl_src)\.c|src/$(_src)\.c)$$
