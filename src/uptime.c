@@ -91,7 +91,7 @@ print_uptime (idx_t n, STRUCT_UTMP const *utmp_buf)
                           select_plural (updays)),
                 updays, uphours, upmins);
       else
-        printf (_("up  %2d:%02d,  "), uphours, upmins);
+        printf (_("up %2d:%02d,  "), uphours, upmins);
     }
 
   printf (ngettext ("%td user", "%td users", select_plural (entries)),
