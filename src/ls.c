@@ -3464,7 +3464,10 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
                         _("cannot access %s"), full_name);
 
           if (command_line_arg)
-            return 0;
+            {
+              free_ent (f);
+              return 0;
+            }
 
           f->name = xstrdup (name);
           cwd_n_used++;
