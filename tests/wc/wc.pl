@@ -23,6 +23,20 @@ my $prog = 'wc';
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+my $mb_locale = $ENV{LOCALE_FR_UTF8};
+my $single_byte_locale = 'C';
+
+{
+  my $codeset = qx(LC_ALL=C locale charmap 2>/dev/null);
+  chomp $codeset;
+  if ($codeset eq 'UTF-8')
+    {
+      my $fr_locale = $ENV{LOCALE_FR};
+      $single_byte_locale
+        = defined $fr_locale && $fr_locale ne 'none' ? $fr_locale : undef;
+    }
+}
+
 my @Tests =
     (
      ['a0', '-c',  {IN_PIPE=>''},            {OUT=>"0\n"}],
@@ -43,6 +57,51 @@ my @Tests =
      ['c2', '-L',  {IN_PIPE=>"\n123456"},    {OUT=>"6\n"}],
      ['d1', '-w',  {IN_PIPE=>"\1\n"},        {OUT=>"1\n"}],
     );
+
+# Test the behavior of -m with a multi-byte locale.
+my @mbTests =
+    (
+     # LATIN SMALL LETTER A
+     ['mb-m-1byte-1', '-m', {IN_PIPE=>"\x61"}, {OUT=>"1\n"},
+      {ENV=>"LC_ALL=$mb_locale"}],
+     # NO-BREAK SPACE
+     ['mb-m-2byte-1', '-m', {IN_PIPE=>"\xC2\xA0"}, {OUT=>"1\n"},
+      {ENV=>"LC_ALL=$mb_locale"}],
+     # SAMARITAN LETTER ALAF
+     ['mb-m-3byte-1', '-m', {IN_PIPE=>"\xE0\xA0\x80"}, {OUT=>"1\n"},
+      {ENV=>"LC_ALL=$mb_locale"}],
+     # LINEAR B SYLLABLE B008 A
+     ['mb-m-4byte-1', '-m', {IN_PIPE=>"\xF0\x90\x80\x80"}, {OUT=>"1\n"},
+      {ENV=>"LC_ALL=$mb_locale"}],
+    );
+
+defined $mb_locale && $mb_locale ne 'none' and push @Tests, @mbTests;
+
+# Make sure -m counts bytes in single-byte locales.
+if (defined $single_byte_locale)
+  {
+    my @new;
+    my $in_len;
+    for my $t (@mbTests)
+      {
+        my @new_t = map { ref $_ eq 'HASH' ? { %$_ } : $_ } @$t;
+        (my $test_name = shift @new_t) =~ s/^mb/c/;
+        for my $e (@new_t)
+          {
+            next unless ref $e eq 'HASH';
+            $e->{ENV} = "LC_ALL=$single_byte_locale" if exists $e->{ENV};
+            $in_len = length $e->{IN_PIPE} if exists $e->{IN_PIPE};
+          }
+        for my $e (@new_t)
+          {
+            next unless ref $e eq 'HASH';
+            $e->{OUT} = "$in_len\n" if exists $e->{OUT};
+          }
+        unshift @new_t, $test_name;
+        push @new, \@new_t;
+      }
+    push @Tests, @new;
+  };
 
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
