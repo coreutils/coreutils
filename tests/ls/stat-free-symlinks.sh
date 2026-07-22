@@ -20,13 +20,7 @@
 print_ver_ ls
 require_strace_ stat
 
-stats='stat'
-# List of other _file name_ stat functions to increase coverage.
-other_stats='statx lstat stat64 lstat64 newfstatat fstatat64'
-for stat in $other_stats; do
-  strace -qe "$stat" true > /dev/null 2>&1 &&
-    stats="$stats,$stat"
-done
+stats=$(get_stat_syscalls_)
 
 # The system may perform additional stat-like calls before main.
 # Furthermore, underlying library functions may also implicitly

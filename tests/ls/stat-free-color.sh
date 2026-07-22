@@ -21,13 +21,7 @@ print_ver_ ls
 require_strace_ stat
 require_dirent_d_type_
 
-stats='stat'
-# List of other _file name_ stat functions to increase coverage.
-other_stats='statx lstat stat64 lstat64 newfstatat fstatat64'
-for stat in $other_stats; do
-  strace -qe "$stat" true > /dev/null 2>&1 &&
-    stats="$stats,$stat"
-done
+stats=$(get_stat_syscalls_)
 
 # Disable enough features via LS_COLORS so that ls --color
 # can do its job without calling stat (other than the obligatory
