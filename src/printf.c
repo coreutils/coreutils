@@ -86,14 +86,39 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
   \\UHHHHHHHH  Unicode character with hex value HHHHHHHH (8 digits)\n\
 "), stdout);
       fputs (_("\
+\n\
   %%      a single %\n\
   %b      ARGUMENT as a string with '\\' escapes interpreted,\n\
           except that octal escapes should have a leading 0 like \\0NNN\n\
   %q      ARGUMENT is printed in a format that can be reused as shell input,\n\
           escaping non-printable characters with the POSIX $'' syntax\
 \n\n\
-and all C format specifications ending with one of diouxXfeEgGcs, with\n\
-ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
+and all C printf(3) format specifications ending with one of diouxXfaAeEgGcs,\n\
+with ARGUMENTs converted to proper type first.\n\
+"), stdout);
+      fputs (_("\
+FORMAT is reused to convert all specified arguments.\n\
+"), stdout);
+      fputs (_("\
+The following table shows supported conversion specifiers,\n\
+with examples including usage of width, precision, and flags.\n\
+\n\
+  CONVERSION  Shell format example        Output\n\
+  %s          '[%10s]' 'left pad'         [  left pad]\n\
+  %s          '[%-10s]' 'right pad'       [right pad ]\n\
+  %c %s       '%c %.3s' un unibyte        u uni\n\
+\n\
+  %d %i       \"%'d ;%i04i\" 1234 '-1'      1,234 ;-001\n\
+  %o          '%#o' $((2#110100100))      0644\n\
+  %u          '%u' 0xFFFFFFFF             4294967295\n\
+  %x          '0x%08x' 11259375           0x00abcdef\n\
+\n\
+  %a %f       '%1$a %1$f' 0.0009765625    0x8p-13 0.000977\n\
+  %e %f       '%1$e %1$f' 123.45678       1.234568e+02 123.456789\n\
+  %g          '%1$g %1$.2g' 1.2345678e3   1234.57 1.2e+03\n\
+\n\
+  %b          '%bfoo' 'bar\\cbaz' qux      bar\n\
+  %q          '%q ' 'a' ';b' $'c\\n'       a ';b' 'c'$'\\n'\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       emit_ancillary_info (PROGRAM_NAME);

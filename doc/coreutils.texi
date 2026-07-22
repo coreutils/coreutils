@@ -12951,11 +12951,38 @@ and C language escape sequence processing.
 @xref{Output Conversion Syntax,, @command{printf} format directives,
 libc, The GNU C Library Reference Manual}, for details.
 See also @uref{https://en.cppreference.com/w/c/language/escape,
-C99 string escapes:}.  The differences are listed below.
+C99 string escapes:}.
+
+Examples of supported conversion specifiers and flags are:
+
+@example
+CONVERSION  Shell format example        Output
+
+%s          '[%10s]' 'left pad'         [  left pad]
+%s          '[%-10s]' 'right pad'       [right pad ]
+%c %s       '%c %.3s' un unibyte        u uni
+
+%d %i       "%'d ;%i04i" 1234 '-1'      1,234 ;-001
+%o          '%#o' $((2#110100100))      0644
+%u          '%u' 0xFFFFFFFF             4294967295
+%x          '0x%08x' 11259375           0x00abcdef
+
+%a %f       '%1$a %1$f' 0.0009765625    0x8p-13 0.000977
+%e %f       '%1$e %1$f' 123.45678       1.234568e+02 123.456789
+%g          '%1$g %1$.2g' 1.2345678e3   1234.57 1.2e+03
+
+%b          '%bfoo' 'bar\cbaz' qux      bar
+%q          '%q ' 'a' ';b' $'c\n'       a ';b' 'c'$'\n'
+@end example
 
 @mayConflictWithShellBuiltIn{printf}
 
+The differences from the C @samp{printf} function are:
+
 @itemize @bullet
+
+@item
+Only the @samp{diouxXfaAeEgGcs} conversion specifiers are supported.
 
 @item
 The @var{format} argument is reused as necessary to convert all the
