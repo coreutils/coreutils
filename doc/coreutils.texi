@@ -12873,39 +12873,54 @@ Do not output the trailing newline.
 Enable interpretation of the following backslash-escaped characters in
 each @var{string}:
 
+@macro escapeSequences
 @table @samp
-@item \a
-alert (bell)
-@item \b
-backspace
-@item \c
-produce no further output
-@item \e
-escape
-@item \f
-form feed
-@item \n
-newline
-@item \r
-carriage return
-@item \t
-horizontal tab
-@item \v
-vertical tab
-@item \\
+@item \\\\
 backslash
-@item \0@var{nnn}
+@ifset PRINTF_COMMAND
+@item \\"
+double quote
+@end ifset
+@item \\a
+alert (bell)
+@item \\b
+backspace
+@item \\c
+produce no further output
+@item \\e
+escape
+@item \\f
+form feed
+@item \\n
+newline
+@item \\r
+carriage return
+@item \\t
+horizontal tab
+@item \\v
+vertical tab
+@ifclear PRINTF_COMMAND
+@item \\0@var{nnn}
 the eight-bit value that is the octal number @var{nnn}
 (zero to three octal digits), if @var{nnn} is
 a nine-bit value, the ninth bit is ignored
-@item \@var{nnn}
+@end ifclear
+@item \\@var{nnn}
 the eight-bit value that is the octal number @var{nnn}
 (one to three octal digits), if @var{nnn} is
 a nine-bit value, the ninth bit is ignored
-@item \x@var{hh}
+@item \\x@var{hh}
 the eight-bit value that is the hexadecimal number @var{hh}
 (one or two hexadecimal digits)
+@ifset PRINTF_COMMAND
+@item \\u@var{hhhh}
+Unicode (ISO/IEC 10646) character with hex value HHHH (4 digits)
+@item \\U@var{hhhhhhhh}
+Unicode character with hex value HHHHHHHH (8 digits)
+@end ifset
 @end table
+@end macro
+@escapeSequences
 
 @optItem{echo,-E,}
 @cindex backslash escapes
@@ -12950,10 +12965,18 @@ in a way that is mostly similar to the C @samp{printf} function,
 and C language escape sequence processing.
 @xref{Output Conversion Syntax,, @command{printf} format directives,
 libc, The GNU C Library Reference Manual}, for details.
-See also @uref{https://en.cppreference.com/w/c/language/escape,
-C99 string escapes:}.
 
-Examples of supported conversion specifiers and flags are:
+@mayConflictWithShellBuiltIn{printf}
+
+Supported escape sequences are:
+
+@indentedblock
+@set PRINTF_COMMAND
+@escapeSequences
+@clear PRINTF_COMMAND
+@end indentedblock
+
+Supported conversion specifiers with examples are:
 
 @example
 CONVERSION  Shell format example        Output
@@ -12974,8 +12997,6 @@ CONVERSION  Shell format example        Output
 %b          '%bfoo' 'bar\cbaz' qux      bar
 %q          '%q ' 'a' ';b' $'c\n'       a ';b' 'c'$'\n'
 @end example
-
-@mayConflictWithShellBuiltIn{printf}
 
 The differences from the C @samp{printf} function are:
 
