@@ -22,6 +22,7 @@
 
 #include "system.h"
 #include "dev-ino.h"
+#include "fts-missing.h"
 #include "ignore-value.h"
 #include "quote.h"
 #include "root-dev-ino.h"
@@ -137,7 +138,7 @@ compute_context_from_mask (char const *context, context_t *ret)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_file_context (int fd, char const *file)
+change_file_context (int fd, char const *file, bool ignore_missing)
 {
   char *file_context = NULL;
   context_t context IF_LINT (= NULL);
@@ -152,6 +153,8 @@ change_file_context (int fd, char const *file)
 
       if (status < 0 && errno != ENODATA)
         {
+          if (ignore_missing && ignorable_traversal_errno (errno))
+            return 0;
           error (0, errno, _("failed to get security context of %s"),
                  quoteaf (file));
           return 1;
@@ -188,9 +191,12 @@ change_file_context (int fd, char const *file)
 
       if (fail)
         {
-          errors = 1;
-          error (0, errno, _("failed to change context of %s to %s"),
-                 quoteaf_n (0, file), quote_n (1, context_string));
+          if (! (ignore_missing && ignorable_traversal_errno (errno)))
+            {
+              errors = 1;
+              error (0, errno, _("failed to change context of %s to %s"),
+                     quoteaf_n (0, file), quote_n (1, context_string));
+            }
         }
     }
 
@@ -214,6 +220,10 @@ process_file (FTS *fts, FTSENT *ent)
   char const *file = ent->fts_accpath;
   const struct stat *file_stats = ent->fts_statp;
   bool ok = true;
+  bool ignore_missing = ignore_missing_fts_entry (ent);
+
+  if (ignore_missing && ignorable_fts_error (ent))
+    return true;
 
   switch (ent->fts_info)
     {
@@ -295,7 +305,7 @@ process_file (FTS *fts, FTSENT *ent)
         printf (_("changing security context of %s\n"),
                 quoteaf (file_full_name));
 
-      if (change_file_context (fts->fts_cwd_fd, file) != 0)
+      if (change_file_context (fts->fts_cwd_fd, file, ignore_missing) != 0)
         ok = false;
     }
 

@@ -25,6 +25,7 @@
 #include "system.h"
 #include "assure.h"
 #include "chown-core.h"
+#include "fts-missing.h"
 #include "ignore-value.h"
 #include "root-dev-ino.h"
 #include "xfts.h"
@@ -284,6 +285,10 @@ change_file_owner (FTS *fts, FTSENT *ent,
   char const *file_full_name = ent->fts_path;
   char const *file = ent->fts_accpath;
   bool ok = true;
+  bool ignore_missing = ignore_missing_fts_entry (ent);
+
+  if (ignore_missing && ignorable_fts_error (ent))
+    return true;
 
   switch (ent->fts_info)
     {
@@ -381,6 +386,9 @@ change_file_owner (FTS *fts, FTSENT *ent,
         {
           if (fstatat (fts->fts_cwd_fd, file, &stat_buf, 0) != 0)
             {
+              if (ignore_missing
+                  && ignorable_traversal_errno (errno))
+                return true;
               if (! chopt->force_silent)
                 error (0, errno, _("cannot dereference %s"),
                        quoteaf (file_full_name));
@@ -469,11 +477,17 @@ change_file_owner (FTS *fts, FTSENT *ent,
          by some other user and operating on files in a directory
          where M has write access.  */
 
-      if (do_chown && !ok && ! chopt->force_silent)
-        error (0, errno, (uid != (uid_t) -1
-                          ? _("changing ownership of %s")
-                          : _("changing group of %s")),
-               quoteaf (file_full_name));
+      if (do_chown && !ok)
+        {
+          if (ignore_missing
+              && ignorable_traversal_errno (errno))
+            return true;
+          if (! chopt->force_silent)
+            error (0, errno, (uid != (uid_t) -1
+                              ? _("changing ownership of %s")
+                              : _("changing group of %s")),
+                   quoteaf (file_full_name));
+        }
     }
 
   if (chopt->verbosity != V_off)

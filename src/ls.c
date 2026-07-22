@@ -279,7 +279,7 @@ static void attach (char *dest, char const *dirname, char const *name);
 static void clear_files (void);
 static void extract_dirs_from_files (char const *dirname,
                                      bool command_line_arg);
-static void get_link_name (char const *filename, struct fileinfo *f,
+static bool get_link_name (char const *filename, struct fileinfo *f,
                            bool command_line_arg);
 static void indent (size_t from, size_t to);
 static idx_t calculate_columns (bool by_columns);
@@ -2961,7 +2961,8 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
   dirp = opendir (name);
   if (!dirp)
     {
-      file_failure (command_line_arg, _("cannot open directory %s"), name);
+      if (command_line_arg || ! ignorable_traversal_errno (errno))
+        file_failure (command_line_arg, _("cannot open directory %s"), name);
       return;
     }
 
@@ -2975,8 +2976,9 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
            ? fstat_for_ino (fd, &dir_stat)
            : stat_for_ino (name, &dir_stat)) < 0)
         {
-          file_failure (command_line_arg,
-                        _("cannot determine device and inode of %s"), name);
+          if (! ignorable_traversal_errno (errno))
+            file_failure (command_line_arg,
+                          _("cannot determine device and inode of %s"), name);
           closedir (dirp);
           return;
         }
@@ -3008,7 +3010,8 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
       if (print_hyperlink)
         {
           absolute_name = canonicalize_filename_mode (name, CAN_MISSING);
-          if (! absolute_name)
+          if (! absolute_name
+              && ! ignorable_traversal_errno (errno))
             file_failure (command_line_arg,
                           _("error canonicalizing %s"), name);
         }
@@ -3064,12 +3067,9 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
           int err = errno;
           if (err == 0)
             break;
-          /* Some readdir()s do not absorb ENOENT (dir deleted but open).
-             This bug was fixed in glibc 2.3 (2002).  */
-#if ! (2 < __GLIBC__ + (3 <= __GLIBC_MINOR__))
-          if (err == ENOENT)
+          /* Ignore errors indicating that the directory was removed.  */
+          if (ignorable_traversal_errno (err))
             break;
-#endif
           file_failure (command_line_arg, _("reading directory %s"), name);
           if (err != EOVERFLOW)
             break;
@@ -3391,7 +3391,9 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
         {
           f->absolute_name = canonicalize_filename_mode (full_name,
                                                          CAN_MISSING);
-          if (! f->absolute_name)
+          if (! f->absolute_name
+              && (command_line_arg
+                  || ! ignorable_traversal_errno (errno)))
             file_failure (command_line_arg,
                           _("error canonicalizing %s"), full_name);
         }
@@ -3439,6 +3441,22 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
       if (err != 0)
         {
+          if (! command_line_arg && ignorable_traversal_errno (errno))
+            {
+              int stat_errno = errno;
+              struct stat linkstat;
+              bool dangling_link = (do_deref
+                                    && (type == symbolic_link
+                                        || type == unknown)
+                                    && do_lstat (full_name, &linkstat) == 0);
+              errno = stat_errno;
+              if (! dangling_link)
+                {
+                  free_ent (f);
+                  return 0;
+                }
+            }
+
           /* Failure to stat a command line argument leads to
              an exit status of 2.  For other files, stat failure
              provokes an exit status of 1.  */
@@ -3483,7 +3501,8 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
          Also if a file is removed while we're reading ACL info,
          ACL_T_UNKNOWN is sufficient indication for that edge case.  */
       bool cannot_access_acl = n < 0
-           && (errno == EACCES || errno == ENOENT);
+           && (errno == EACCES
+               || ignorable_traversal_errno (errno));
 
       f->acl_type = (!have_scontext && !have_acl
                      ? (cannot_access_acl ? ACL_T_UNKNOWN : ACL_T_NONE)
@@ -3501,6 +3520,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
              isn't on the right type of file system.  I.e., a getfilecon
              failure isn't in the same class as a stat failure.  */
           if (print_scontext && ai.scontext_err
+              && ! ignorable_traversal_errno (ai.scontext_err)
               && (! (is_ENOTSUP (ai.scontext_err)
                      || ai.scontext_err == ENODATA)))
             error (0, ai.scontext_err, "%s", quotef (full_name));
@@ -3522,7 +3542,11 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
     {
       struct stat linkstats;
 
-      get_link_name (full_name, f, command_line_arg);
+      if (! get_link_name (full_name, f, command_line_arg))
+        {
+          free_ent (f);
+          return 0;
+        }
 
       /* Use the slower quoting path for this entry, though
          don't update CWD_SOME_QUOTED since alignment not affected.  */
@@ -3648,13 +3672,19 @@ is_linked_directory (const struct fileinfo *f)
    into the LINKNAME field of 'f'.  COMMAND_LINE_ARG indicates whether
    FILENAME is a command-line argument.  */
 
-static void
+static bool
 get_link_name (char const *filename, struct fileinfo *f, bool command_line_arg)
 {
   f->linkname = areadlink_with_size (filename, f->stat.st_size);
   if (f->linkname == NULL)
-    file_failure (command_line_arg, _("cannot read symbolic link %s"),
-                  filename);
+    {
+      if (! command_line_arg
+          && ignorable_traversal_errno (errno))
+        return false;
+      file_failure (command_line_arg, _("cannot read symbolic link %s"),
+                    filename);
+    }
+  return true;
 }
 
 /* Return true if the last component of NAME is '.' or '..'

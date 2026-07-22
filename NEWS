@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  'chcon', 'chgrp', 'chmod', 'chown', 'du', 'ls' which traverse hierarchies with
+  -R,  no longer fail merely because files may be being removed in parallel.
+  [This bug was present in "the beginning".]
+
   'comm - -' no longer closes standard input twice.  Previously it would
   mistakenly exit with a nonzero status.
   [This bug was present in "the beginning".]

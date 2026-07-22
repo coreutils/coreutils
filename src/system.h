@@ -83,6 +83,11 @@
 # define ENODATA (-1)
 #endif
 
+/* Return true if ERRNUM indicates that a file disappeared during a
+   directory traversal.  */
+static inline bool
+ignorable_traversal_errno (int errnum) { return errnum == ENOENT; }
+
 #include <stdlib.h>
 #include "version.h"
 

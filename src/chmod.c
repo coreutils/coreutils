@@ -25,6 +25,7 @@
 #include "assure.h"
 #include "dev-ino.h"
 #include "filemode.h"
+#include "fts-missing.h"
 #include "ignore-value.h"
 #include "modechange.h"
 #include "quote.h"
@@ -125,8 +126,10 @@ static struct option const long_options[] =
 
 static bool
 mode_changed (int dir_fd, char const *file, char const *file_full_name,
-              mode_t old_mode, mode_t new_mode)
+              mode_t old_mode, mode_t new_mode, bool ignore_missing,
+              bool *file_missing)
 {
+  *file_missing = false;
   if (new_mode & (S_ISUID | S_ISGID | S_ISVTX))
     {
       /* The new mode contains unusual bits that the call to chmod may
@@ -136,7 +139,9 @@ mode_changed (int dir_fd, char const *file, char const *file_full_name,
 
       if (fstatat (dir_fd, file, &new_stats, 0) != 0)
         {
-          if (! force_silent)
+          *file_missing = (ignore_missing
+                           && ignorable_traversal_errno (errno));
+          if (! *file_missing && ! force_silent)
             error (0, errno, _("getting new attributes of %s"),
                    quoteaf (file_full_name));
           return false;
@@ -215,6 +220,10 @@ process_file (FTS *fts, FTSENT *ent)
   struct change_status ch = {0};
   ch.status = CH_NO_STAT;
   struct stat stat_buf;
+  bool ignore_missing = ignore_missing_fts_entry (ent);
+
+  if (ignore_missing && ignorable_fts_error (ent))
+    return true;
 
   switch (ent->fts_info)
     {
@@ -267,6 +276,9 @@ process_file (FTS *fts, FTSENT *ent)
         {
           if (fstatat (fts->fts_cwd_fd, file, &stat_buf, 0) != 0)
             {
+              if (ignore_missing
+                  && ignorable_traversal_errno (errno))
+                return true;
               if (! force_silent)
                 error (0, errno, _("cannot dereference %s"),
                        quoteaf (file_full_name));
@@ -314,6 +326,9 @@ process_file (FTS *fts, FTSENT *ent)
         ch.status = CH_SUCCEEDED;
       else
         {
+          if (ignore_missing
+              && ignorable_traversal_errno (errno))
+            return true;
           if (! is_ENOTSUP (errno))
             {
               if (! force_silent)
@@ -328,10 +343,16 @@ process_file (FTS *fts, FTSENT *ent)
 
   if (verbosity != V_off)
     {
+      bool file_missing;
       if (ch.status == CH_SUCCEEDED
           && !mode_changed (fts->fts_cwd_fd, file, file_full_name,
-                            ch.old_mode, ch.new_mode))
-        ch.status = CH_NO_CHANGE_REQUESTED;
+                            ch.old_mode, ch.new_mode, ignore_missing,
+                            &file_missing))
+        {
+          if (file_missing)
+            return true;
+          ch.status = CH_NO_CHANGE_REQUESTED;
+        }
 
       if (ch.status == CH_SUCCEEDED || verbosity == V_high)
         describe_change (file_full_name, &ch);

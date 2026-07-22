@@ -185,6 +185,7 @@ all_tests =					\
   tests/misc/io-errors.sh			\
   tests/misc/read-errors.sh			\
   tests/misc/responsive.sh			\
+  tests/misc/traversal-missing.sh		\
   tests/misc/warning-errors.sh			\
   tests/misc/write-errors.sh			\
   tests/tail/basic-seek.sh			\
@@ -297,6 +298,7 @@ all_tests =					\
   tests/pwd/argument.sh				\
   tests/pwd/pwd-option.sh			\
   tests/chcon/chcon-fail.sh			\
+  tests/chcon/traversal-missing.sh		\
   tests/misc/coreutils.sh			\
   tests/cut/cut.pl				\
   tests/cut/mb-non-utf8.sh			\

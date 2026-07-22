@@ -32,6 +32,7 @@
 #include "assure.h"
 #include "di-set.h"
 #include "exclude.h"
+#include "fts-missing.h"
 #include "human.h"
 #include "mountlist.h"
 #include "quote.h"
@@ -554,6 +555,10 @@ process_file (FTS *fts, FTSENT *ent)
   char const *file = ent->fts_path;
   const struct stat *sb = ent->fts_statp;
   int info = ent->fts_info;
+  bool ignore_missing = ignore_missing_fts_entry (ent);
+
+  if (ignore_missing && ignorable_fts_error (ent))
+    return true;
 
   if (info == FTS_DNR)
     {
@@ -574,6 +579,9 @@ process_file (FTS *fts, FTSENT *ent)
               MAYBE_UNUSED FTSENT const *e = fts_read (fts);
               affirm (e == ent);
               info = ent->fts_info;
+
+              if (ignore_missing && ignorable_fts_error (ent))
+                return true;
             }
 
           if (info == FTS_NS || info == FTS_SLNONE)

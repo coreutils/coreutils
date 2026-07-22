@@ -50,6 +50,7 @@ noinst_HEADERS =		\
   src/find-mount-point.h	\
   src/fs.h			\
   src/fs-is-local.h		\
+  src/fts-missing.h		\
   src/group-list.h		\
   src/ioblksize.h		\
   src/iopoll.h			\
