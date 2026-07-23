@@ -1,4 +1,5 @@
 Please see the file INSTALL for generic build and installation instructions.
+Please see the file DEPENDENCIES for coreutils specific prerequisites.
 This file details coreutils and system specific build instructions.
 
 

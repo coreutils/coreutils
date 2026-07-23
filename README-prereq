@@ -1,4 +1,5 @@
 This gives some notes on obtaining the tools required for development.
+Also note the build prerequisites in the DEPENDENCIES file.
 These tools can be used by the 'bootstrap' and 'configure' scripts,
 as well as by 'make'.  They include:
 

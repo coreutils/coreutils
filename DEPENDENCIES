@@ -1,0 +1,215 @@
+# build and runtime dependencies
+
+* systemd libraries
+  * Mandatory on Linux systems that use systemd (version 254 or newer).
+    Needed for the multi-user programs ('who', 'users', 'pinky', and
+    - if built - 'uptime'), so that they can access the database of
+    user logins from systemd-logind.
+    Related 'configure' option: --enable-systemd.
+  * Homepage:
+    https://systemd.io/
+  + Download:
+    https://github.com/systemd/systemd
+  + Pre-built package name:
+    - On Debian and Debian-based systems: libsystemd-dev,
+    - On Red Hat distributions: systemd-devel.
+    - Other: https://repology.org/project/systemd/versions
+
+* libselinux
+  + Mandatory on Linux systems that support SELinux.
+    Needed so that the file utilities respect the security contexts,
+    and for the 'runcon' and 'chcon' programs.
+  + Homepage:
+    https://github.com/SELinuxProject
+  + Download:
+    https://github.com/SELinuxProject/selinux
+  + Pre-built package name:
+    - On Debian and Debian-based systems: libselinux1-dev,
+    - On Red Hat distributions: libselinux-devel.
+    - Other: https://repology.org/project/libselinux/versions
+
+* libacl
+  + Recommended on Linux systems.
+    Needed so that the file utilities respect the access control lists (ACLs)
+    set on the original files.
+  + Homepage:
+    https://savannah.nongnu.org/projects/acl/
+  + Download:
+    https://download.savannah.nongnu.org/releases/acl/
+  + Pre-built package name:
+    - On Debian and Debian-based systems: libacl1-dev,
+    - On Red Hat distributions: libacl-devel.
+    - Other: https://repology.org/project/acl/versions
+
+* libattr
+  + Recommended on Linux systems.
+    Needed so that the file utilities respect the access control lists (ACLs)
+    set on the original files, with fewer system calls.
+  + Homepage:
+    https://savannah.nongnu.org/projects/attr/
+  + Download:
+    https://download.savannah.nongnu.org/releases/attr/
+  + Pre-built package name:
+    - On Debian and Debian-based systems: libattr1-dev,
+    - On Red Hat distributions: libattr-devel.
+    - Other: https://repology.org/project/attr/versions
+
+* libcap
+  + Recommended on Linux systems.
+    Needed so that 'ls' can display capabilities.
+  + Homepage:
+    https://sites.google.com/site/fullycapable/
+  + Download:
+    https://git.kernel.org/pub/scm/libs/libcap/libcap.git/
+  + Pre-built package name:
+    - On Debian and Debian-based systems: libcap-dev,
+    - On Red Hat distributions: libcap-devel.
+    - Other: https://repology.org/project/libcap/versions
+
+* GNU libiconv
+  + Not needed on systems with glibc and on NetBSD.
+    But highly recommended on all other systems.
+    Needed for character set conversion from/to Unicode.
+  + Homepage:
+    https://www.gnu.org/software/libiconv/
+  + Download:
+    https://ftp.gnu.org/gnu/libiconv/
+  + Pre-built package name:
+    - On Debian and Debian-based systems: --,
+    - On Red Hat distributions: --.
+    - Other: https://repology.org/project/libiconv/versions
+  + If it is installed in a nonstandard directory, pass the option
+    --with-libiconv-prefix=DIR to 'configure'.
+  + On mingw, a slim alternative is the 'win-iconv' package version 0.0.8
+    from https://github.com/win-iconv/win-iconv .
+
+* libintl, part of GNU gettext
+  + Not needed on systems with glibc.
+    But highly recommended on all other systems.
+    Needed for localization (translation) of messages to the user's
+    native language.
+  + Homepage:
+    https://www.gnu.org/software/gettext/
+  + Download:
+    https://ftp.gnu.org/gnu/gettext/
+  + Pre-built package name:
+    - On Debian and Debian-based systems: --,
+    - On Red Hat distributions: --.
+    - Other: https://repology.org/project/gettext/versions
+  + If it is installed in a nonstandard directory, pass the option
+    --with-libintl-prefix=DIR to 'configure'.
+
+* OpenSSL.
+  + Optional.
+    Needed for optimized crypto hash sums.
+    Related 'configure' option: --with-openssl.
+  + Homepage:
+    https://www.openssl.org/
+  + Download:
+    https://www.openssl.org/source/
+  + Pre-built package name:
+    - On Debian and Debian-based systems: libssl-dev,
+    - On Red Hat distributions: openssl-devel.
+    - Other: https://repology.org/project/openssl/versions
+
+* GNU gmp.
+  + Optional.
+    Needed for optimized multiprecision computations in the programs
+    'expr', 'basenc', 'factor'.
+  + Homepage:
+    https://www.gnu.org/software/gmp/
+  + Download:
+    https://ftp.gnu.org/gnu/gmp/
+  + Pre-built package name:
+    - On Debian and Debian-based systems: libgmp-dev,
+    - On Red Hat distributions: gmp-devel.
+    - Other: https://repology.org/project/gmp/versions
+  + If it is installed in a nonstandard directory, pass the option
+    --with-libgmp-prefix to 'configure'.
+
+* libsmack
+  + Optional on Linux systems.
+    Needed for supporting the "Simplified Mandatory Access Control Kernel"
+    Linux security module.
+  + Homepage:
+    https://schaufler-ca.com/
+  + Download:
+    https://github.com/smack-team/smack
+  + Pre-built package name:
+    - On Debian and Debian-based systems: --,
+    - On Red Hat distributions: --.
+    - Other: https://repology.org/project/smack-utils/versions
+
+
+# runtime only dependencies
+
+None.
+
+
+# build only dependencies
+
+* A C runtime, compiler, linker, etc.
+  + Mandatory.
+    Either the platform's native 'cc', or GCC 4.4 or newer.
+  + GCC Homepage:
+    https://gcc.gnu.org/
+  + Download:
+    https://ftp.gnu.org/gnu/gcc/
+  + Pre-built package name:
+    - On Debian and Debian-based systems: gcc,
+    - On Red Hat distributions: gcc,
+    - On Alpine Linux: gcc, linux-headers.
+    - Other: https://repology.org/project/gcc/versions
+
+* A 'make' utility.
+  + Mandatory.
+    Either the platform's native 'make' (on *BSD systems, and for in-tree
+    builds only), or GNU Make 4.0 or newer.
+  + GNU Make Homepage:
+    https://www.gnu.org/software/make/
+  + Download:
+    https://ftp.gnu.org/gnu/make/
+
+* A shell
+  + Mandatory.
+    Either the platform's native 'sh', or Bash.
+  + Homepage:
+    https://www.gnu.org/software/bash/
+  + Download:
+    https://ftp.gnu.org/gnu/bash/
+
+* Core POSIX utilities, including:
+    [ basename cat chgrp chmod chown cp dd echo expand expr
+    false hostname install kill ln ls md5sum mkdir mkfifo
+    mknod mv printenv pwd rm rmdir sleep sort tee test touch
+    true uname
+  + Mandatory.
+    Either the platform's native utilities, or GNU coreutils.
+  + Homepage:
+    https://www.gnu.org/software/coreutils/
+  + Download:
+    https://ftp.gnu.org/gnu/coreutils/
+
+* The comparison utilities 'cmp' and 'diff'.
+  + Mandatory.
+    Either the platform's native utilities, or GNU diffutils.
+  + Homepage:
+    https://www.gnu.org/software/diffutils/
+  + Download:
+    https://ftp.gnu.org/gnu/diffutils/
+
+* Grep.
+  + Mandatory.
+    Either the platform's native grep, or GNU grep.
+  + Homepage:
+    https://www.gnu.org/software/grep/
+  + Download:
+    https://ftp.gnu.org/gnu/grep/
+
+* Awk.
+  + Mandatory.
+    Either the platform's native awk, mawk, or nawk, or GNU awk.
+  + Homepage:
+    https://www.gnu.org/software/gawk/
+  + Download:
+    https://ftp.gnu.org/gnu/gawk/
