@@ -1,0 +1,19 @@
+Packaging hints for binary package distributors
+===============================================
+
+Although the source of the GNU coreutils package comes as a single package,
+we recommend that for distributions that support systemd, in binary packages
+the installed files be split into two packages:
+
+   coreutils
+        Contents: Programs for most purposes.
+        Audience: Normal users, programmers, system administrators.
+        Dependencies: no libsystemd.
+
+   coreutils-multiuser
+        Contents: Programs for multi-user functionality, namely
+                  'who', 'users', 'pinky', and optionally 'uptime'.
+        Audience: System administrators.
+        Dependencies: requires libsystemd.
+
+Reference: https://bugs.debian.org/1142500

@@ -25,6 +25,7 @@ EXTRA_DIST =				\
   .version				\
   .vg-suppressions			\
   DEPENDENCIES				\
+  PACKAGING				\
   README-install			\
   THANKS.in				\
   THANKS-to-translators			\
