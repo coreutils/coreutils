@@ -310,5 +310,24 @@ sed '2s/(Y-M-D) [0-9][0-9][0-9][0-9]-/(Y-M-D) XXXX-/' out10_t >> out10 \
     || framework_failure_
 compare exp10 out10 || fail=1
 
+# Test that the weekday is ignored when explicit dates are given.
+cat<<EOF>exp11
+date: parsed day part: Tue (day ordinal=0 number=2)
+date: parsed date part: (Y-M-D) 2026-07-22
+date: input timezone: TZ="UTC0" environment value or -u
+date: warning: using midnight as starting time: 00:00:00
+date: warning: day (Tue) ignored when explicit dates are given
+date: starting date/time: '(Y-M-D) 2026-07-22 00:00:00'
+date: '(Y-M-D) 2026-07-22 00:00:00' = 1784678400 epoch-seconds
+date: timezone: Universal Time
+date: final: 1784678400.000000000 (epoch-seconds)
+date: final: (Y-M-D) 2026-07-22 00:00:00 (UTC)
+date: final: (Y-M-D) 2026-07-22 00:00:00 (UTC+00)
+date: output format: '$d_t_fmt'
+Wed Jul 22 00:00:00 UTC 2026
+EOF
+
+date -u --debug -d 'Tue, 2026-07-22' >out11 2>&1 || fail=1
+compare exp11 out11 || fail=1
 
 Exit $fail

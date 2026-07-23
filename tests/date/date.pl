@@ -466,6 +466,26 @@ push @Tests,
    {EXIT => 1},
   ];
 
+# Test that the weekday is ignored when explicit dates are given.
+# However, a invalid weekday will still result in an error.
+my @weekdays = ('Mond', 'Tuesd', 'Wedn', 'Thursd', 'Frid', 'Satu', 'Sund');
+my (@bad, @good);
+for my $i (1..$#weekdays + 1)
+  {
+    my $weekday = $weekdays[$i - 1];
+    my $iso_date = "2026-07-" . ($weekday eq 'Wedn' ? '21' : '22');
+    my $date = "$weekday, $iso_date";
+    push @bad,
+      ["bad-weekday-explict-date$i", "-u -d '$date' +'%Y-%m-%d'",
+       {ERR=>"date: invalid date '$date'\n"}, {EXIT=>1}];
+    chop $weekday;
+    my $date = "$weekday, $iso_date";
+    push @good,
+      ["good-weekday-explict-date$i", "-u -d '$date' +'%Y-%m-%d'",
+       {OUT=>"$iso_date"}];
+  }
+push @Tests, @bad, @good;
+
 # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
 foreach my $i (1..364)
   {
