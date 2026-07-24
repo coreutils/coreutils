@@ -72,6 +72,10 @@ noinst_HEADERS =		\
   src/uname.h			\
   src/wc.h
 
+if GL_COND_OBJ_GETFILECON
+lib_libcoreutils_a_SOURCES += src/selinux-dlopen.c
+endif
+
 EXTRA_DIST +=		\
   src/dcgen		\
   src/dircolors.hin	\
@@ -251,22 +255,22 @@ src_sort_LDADD += $(EUIDACCESS_LIBGEN)
 src_test_LDADD += $(EUIDACCESS_LIBGEN)
 
 # for selinux use
-copy_ldadd += $(LIB_SELINUX)
+copy_ldadd += $(LIB_SELINUX_DLOPEN)
 copy_ldadd += $(LIB_SMACK)
-src_chcon_LDADD += $(LIB_SELINUX)
-src_ginstall_LDADD += $(LIB_SELINUX)
-src_id_LDADD += $(LIB_SELINUX)
+src_chcon_LDADD += $(LIB_SELINUX_DLOPEN)
+src_ginstall_LDADD += $(LIB_SELINUX_DLOPEN)
+src_id_LDADD += $(LIB_SELINUX_DLOPEN)
 src_id_LDADD += $(LIB_SMACK)
-src_ls_LDADD += $(LIB_SELINUX)
+src_ls_LDADD += $(LIB_SELINUX_DLOPEN)
 src_ls_LDADD += $(LIB_SMACK)
-src_mkdir_LDADD += $(LIB_SELINUX)
+src_mkdir_LDADD += $(LIB_SELINUX_DLOPEN)
 src_mkdir_LDADD += $(LIB_SMACK)
-src_mkfifo_LDADD += $(LIB_SELINUX)
+src_mkfifo_LDADD += $(LIB_SELINUX_DLOPEN)
 src_mkfifo_LDADD += $(LIB_SMACK)
-src_mknod_LDADD += $(LIB_SELINUX)
+src_mknod_LDADD += $(LIB_SELINUX_DLOPEN)
 src_mknod_LDADD += $(LIB_SMACK)
-src_runcon_LDADD += $(LIB_SELINUX)
-src_stat_LDADD += $(LIB_SELINUX)
+src_runcon_LDADD += $(LIB_SELINUX_DLOPEN)
+src_stat_LDADD += $(LIB_SELINUX_DLOPEN)
 
 # for nvlist_lookup_uint64_array
 src_stat_LDADD += $(LIB_NVPAIR)
@@ -322,7 +326,7 @@ src_printf_LDADD += $(LIBICONV)
 
 # for libcrypto hash routines
 src_md5sum_LDADD += $(LIB_CRYPTO)
-src_sort_LDADD += $(LIB_DL) $(LIB_CRYPTO)
+src_sort_LDADD += $(LIB_DL) $(LIB_CRYPTO_SORT)
 src_sha1sum_LDADD += $(LIB_CRYPTO)
 src_sha224sum_LDADD += $(LIB_CRYPTO)
 src_sha256sum_LDADD += $(LIB_CRYPTO)

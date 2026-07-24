@@ -302,7 +302,23 @@ AS_CASE([$ac_cv_search_dlopen],
     [LIB_DL="$ac_cv_search_dlopen"])
 AC_SUBST([LIB_DL])
 
-# Should 'sort' link libcrypto dynamically?
+# Used to advertise optional dlopen dependencies in ELF metadata.
+AC_CHECK_HEADERS([systemd/sd-dlopen.h])
+
+AS_IF([test "$USE_SELINUX_SELINUX_H" = 1],
+  [AS_IF([test "$ac_cv_search_dlopen" = no],
+     [AC_MSG_ERROR([SELinux support requires dlopen])])
+   AS_CASE([$ac_cv_search_getfilecon_raw],
+     [-landroid-selinux], [LIBSELINUX_SONAME=libandroid-selinux.so],
+     [*], [LIBSELINUX_SONAME=libselinux.so.1])
+   AC_DEFINE_UNQUOTED([LIBSELINUX_SONAME], ["$LIBSELINUX_SONAME"],
+     [libselinux shared object name])
+   LIB_SELINUX_DLOPEN=$LIB_DL],
+  [LIB_SELINUX_DLOPEN=])
+AC_SUBST([LIB_SELINUX_DLOPEN])
+
+# Should 'sort' load libcrypto dynamically?
+LIB_CRYPTO_SORT=$LIB_CRYPTO
 AS_CASE([$LIB_CRYPTO],
   [-lcrypto],
     [# Check for dlopen and libcrypto dynamic linking in one program,
@@ -336,7 +352,9 @@ AS_CASE([$LIB_CRYPTO],
                      linked dynamically.])
           AC_DEFINE_UNQUOTED([LIBCRYPTO_SONAME], ["$utils_cv_libcrypto_soname"],
                              [versioned libcrypto])
+          LIB_CRYPTO_SORT=
          ])])
+AC_SUBST([LIB_CRYPTO_SORT])
 
 # macOS >= 10.12
 AC_CHECK_FUNCS([fclonefileat])

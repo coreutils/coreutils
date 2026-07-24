@@ -2357,6 +2357,7 @@ getmonth (char const *month, char **ea)
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
 # endif
+# define GL_OPENSSL_INLINE static inline
 # define MD5_Init (*ptr_MD5_Init)
 # define MD5_Update (*ptr_MD5_Update)
 # define MD5_Final (*ptr_MD5_Final)
@@ -2364,11 +2365,23 @@ getmonth (char const *month, char **ea)
 
 #include "md5.h"
 
+#if DLOPEN_LIBCRYPTO
+# undef GL_OPENSSL_INLINE
+#endif
+
 #if DLOPEN_LIBCRYPTO && HAVE_OPENSSL_MD5
 # if 14 <= __GNUC__
 #  pragma GCC diagnostic pop
 # endif
 # include <dlfcn.h>
+# if HAVE_SYSTEMD_SD_DLOPEN_H
+#  include <systemd/sd-dlopen.h>
+
+SD_ELF_NOTE_DLOPEN ("random-sort",
+                    "Support for random sorting",
+                    SD_ELF_NOTE_DLOPEN_PRIORITY_SUGGESTED,
+                    LIBCRYPTO_SONAME);
+# endif
 
 /* Diagnose a dynamic linking failure.  */
 static void
