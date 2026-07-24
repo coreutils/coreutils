@@ -204,6 +204,24 @@ my @Tests =
   ['greater-collate-3', "'a' '>' 'b'", {EXIT=>1}],
 );
 
+# Test the behavior of multiple adjacent binary operators.
+# These would not behave correctly in coreutils-9.11 and earlier.
+my $i = 1;
+my @operands = ('-a', '-o', "''");
+for my $b ('-a', '-o')
+  {
+    for my $a (@operands)
+      {
+        for my $c (@operands)
+          {
+            push @Tests, ["multiple-binary-" . ++$i, "$a $b $c",
+                          {EXIT=>0 + (($b eq '-o')
+                                      ? ($a eq "''" && $c eq "''")
+                                      : ($a eq "''" || $c eq "''"))}];
+          }
+      }
+  }
+
 @Tests = add_inverse_op_tests \@Tests;
 @Tests = add_pn_tests \@Tests;
 

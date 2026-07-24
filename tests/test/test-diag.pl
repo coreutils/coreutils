@@ -26,9 +26,8 @@ use strict;
 my @Tests =
     (
      # In coreutils-5.93, this diagnostic lacked the newline.
-     ['o', '-o arg', {ERR => "test: '-o': unary operator expected\n"},
-      {ERR_SUBST => 's!^.*test:!test:!'},
-      {EXIT => 2}],
+     map {[$_, "-$_ arg", {ERR => "test: '-$_': unary operator expected\n"},
+           {ERR_SUBST => 's!^.*test:!test:!'}, {EXIT => 2}]} qw(o a),
     );
 
 my $save_temps = $ENV{DEBUG};

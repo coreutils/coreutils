@@ -265,7 +265,8 @@ term (void)
     value = binary_operator (false, bop);
 
   /* It might be a switch type argument.  */
-  else if (argv[pos][0] == '-' && argv[pos][1] && argv[pos][2] == '\0')
+  else if (argv[pos][0] == '-' && argv[pos][1] && argv[pos][1] != 'a'
+           && argv[pos][1] != 'o' && argv[pos][2] == '\0')
     value = unary_operator ();
   else
     {

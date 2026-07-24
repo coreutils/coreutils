@@ -44,6 +44,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   'tee' no longer treats short writes as errors.
   [bug introduced in coreutils-9.11]
 
+  'test' no longer treats '-a' and '-o' as operators when given as strings to a
+  binary operator.  E.g., 'test -a -a -a' exits successfully instead of exiting
+  with an error.
+  [This bug was present in "the beginning".]
+
   'unexpand -t' no longer overflows a heap buffer, for tab values > SIZE_MAX/16,
   or with multi-byte blank characters longer than the tab value.
   [bugs introduced in coreutils-9.11]
