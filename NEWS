@@ -46,7 +46,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   'unexpand -t' no longer overflows a heap buffer, for tab values > SIZE_MAX/16,
   or with multi-byte blank characters longer than the tab value.
-  [bug introduced in coreutils-9.11]
+  [bugs introduced in coreutils-9.11]
 
   'uniq -w' no longer overruns the read buffer in multibyte locales.
   [bug introduced in coreutils-9.5]
@@ -83,9 +83,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Build-related
 
-  The multi-call binary built with configure --enable-single-binary
-  in size by around 10KB through the more efficient reuse of the 'test' utility
-  by '[' and the 'true' utility by 'false'.
+  The multi-call binary built with configure --enable-single-binary is reduced
+  in size by around 10KB through the more efficient reuse of the 'test' code
+  by '[', and the 'true' code by 'false'.
 
   configure no longer accepts the --with-linux-crypto option, which allowed
   cksum, md5sum, and sha*sum to use the Linux AF_ALG API.  This API will be
