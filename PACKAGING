@@ -17,3 +17,16 @@ the installed files be split into two packages:
         Dependencies: requires libsystemd.
 
 Reference: https://bugs.debian.org/1142500
+
+
+Coreutils can be built as a single multi-call binary,
+with links from the various utilities to this binary,
+resulting in a smaller storage footprint.  E.g., on Fedora
+this provides an alternative package about 1.2MB in size.
+
+   coreutils-single
+        Contents: Programs linked to a single binary
+        Audience: Embedded systems, Minimal images.
+        Dependencies: Optionally no GMP or OpenSSL.
+
+Reference: https://www.pixelbeat.org/docs/conflicting-rpms.html
