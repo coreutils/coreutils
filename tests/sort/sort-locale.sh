@@ -48,4 +48,14 @@ if test "$(locale charmap 2>/dev/null)" = UTF-8; then
   check_hard_collate 'aéY' "$(printf 'ae\314\201Z')"  # NFC/NFD é are equal
 fi
 
+# C.UTF-8 has a UTF-8 codeset but the collation rules of C,
+# so ordering must stay byte-wise there.
+export LC_ALL=C.UTF-8
+if test "$(locale charmap 2>/dev/null)" = UTF-8; then
+  printf 'aaé\naaf\nAAF\n' > in || framework_failure_
+  printf 'AAF\naaf\naaé\n' > exp || framework_failure_
+  sort in > out || fail=1
+  compare exp out || fail=1
+fi
+
 Exit $fail
