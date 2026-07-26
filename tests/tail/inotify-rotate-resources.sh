@@ -22,6 +22,11 @@ print_ver_ tail
 # Inotify not used on remote file systems
 require_local_dir_
 
+# We don't use inotify on overlayfs.
+# See the comments in human_fstype from src/stat.c.
+test "$(stat -f -c "%T" .)" != overlayfs \
+  || skip_ 'inotify is not used on overlayfs'
+
 grep '^#define HAVE_INOTIFY 1' "$CONFIG_HEADER" >/dev/null \
   || skip_ 'inotify required'
 
