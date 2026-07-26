@@ -177,6 +177,18 @@ my @Tests =
    ['mb-m7', "match \xCE\xB1bc\xCE\xB4e '\\([\xCE\xB1]\\)'", {OUT=>"\xCE\xB1"}],
    ['st-m7', "match \xCE\xB1bc\xCE\xB4e '\\([\xCE\xB1]\\)'", {OUT=>"\xCE"}],
 
+
+   ### C.UTF-8 locale ###
+
+   # C.UTF-8 names no language, but its codeset is UTF-8, so expr must
+   # still operate on characters rather than on octets there.
+   # Tests starting with 'cu' repeat a subset of the 'mb' cases above and
+   # expect the same results.
+   ['cu-l1', "length abc\xCE\xB4ef",   {OUT=>"6"}],
+   ['cu-i1', "index \xCE\xB1bc\xCE\xB4ef \xCE\xB4",   {OUT=>"4"}],
+   ['cu-s1', "substr \xCE\xB1bc\xCE\xB4ef 3 2",   {OUT=>"c\xCE\xB4"}],
+   ['cu-m1', "match \xCE\xB1bc\xCE\xB4ef .bc",   {OUT=>"3"}],
+
   );
 
 
@@ -218,6 +230,17 @@ if ($locale ne 'C')
       }
   }
 
+
+# Run the 'cu' tests in the C.UTF-8 locale, and drop them where it is
+# unavailable.
+my $c_utf8_avail = qx(LC_ALL=C.UTF-8 locale charmap 2>/dev/null) =~ /^UTF-8$/m;
+@Tests = grep {$_->[0] !~ /^cu/} @Tests
+  if ! $c_utf8_avail;
+foreach my $t (@Tests)
+  {
+    push @$t, {ENV => 'LC_ALL=C.UTF-8'}
+      if $t->[0] =~ /^cu/;
+  }
 
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
