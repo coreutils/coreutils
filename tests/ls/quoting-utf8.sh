@@ -67,4 +67,37 @@ LC_ALL=C ls --quoting-style=clocale > out_clocale_c || fail=1
 grep '^"hello world"$' out_clocale_c > /dev/null 2>&1 \
   || { echo "clocale C: expected ASCII double quotes"; fail=1; }
 
+# C.UTF-8 provides no translations either, but its codeset is UTF-8.
+# It is the codeset, not the language, that selects the quoting characters
+# and decides whether a multibyte character is printable.
+if test "$(LC_ALL=C.UTF-8 locale charmap 2>/dev/null)" = UTF-8; then
+  # U+00EF = \xc3\xaf (LATIN SMALL LETTER I WITH DIAERESIS)
+  mb=$(printf 'na\303\257ve')
+  touch "$mb" || framework_failure_
+
+  for style in locale clocale; do
+    LC_ALL=C.UTF-8 ls --quoting-style=$style "$mb" > out_cutf8 || fail=1
+    printf '%s%s%s\n' "$lq" "$mb" "$rq" > exp_cutf8 || framework_failure_
+    compare exp_cutf8 out_cutf8 || fail=1
+  done
+
+  # The character is printable here, so it is passed through unaltered.
+  printf '%s\n' "$mb" > exp_cutf8 || framework_failure_
+  for style in literal escape shell-escape; do
+    LC_ALL=C.UTF-8 ls --hide-control-chars --quoting-style=$style "$mb" \
+      > out_cutf8 || fail=1
+    compare exp_cutf8 out_cutf8 || fail=1
+  done
+
+  # Whereas in the C locale the same bytes are not printable.
+  LC_ALL=C ls --quoting-style=escape "$mb" > out_c || fail=1
+  printf 'na\\303\\257ve\n' > exp_c || framework_failure_
+  compare exp_c out_c || fail=1
+
+  LC_ALL=C ls --hide-control-chars --quoting-style=literal "$mb" > out_c \
+    || fail=1
+  printf 'na??ve\n' > exp_c || framework_failure_
+  compare exp_c out_c || fail=1
+fi
+
 Exit $fail
