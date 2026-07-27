@@ -319,6 +319,21 @@ my @tv = (
  "$prog: conflicting empty-field replacement strings\n"],
 );
 
+# Test that the format specified by -o works when separated by commas,
+# quoted whitespace, or unquoted whitespace.
+my @fields = qw(1.1 1.2 1.3 2.1 2.2 2.3);
+push @tv,
+  map {my ($name, $sep, $quote) = @$_;
+       ['o-sep-' . ($name =~ tr/_/-/r),
+        '-o ' . ($quote ? "'@{[join $sep, @fields]}'" : join $sep, @fields),
+        ["1 a x\n2 b y\n3 c z\n", "1 d u\n2 e v\n3 f w\n"],
+        "1 a x 1 d u\n2 b y 2 e v\n3 c z 3 f w\n"]}
+  [commas => ',', 0],
+  [quoted_spaces => ' ', 1],
+  [unquoted_spaces => ' ', 0],
+  [quoted_tabs => "\t", 1],
+  [unquoted_tabs => "\t", 0];
+
 # Convert the above old-style test vectors to the newer
 # format used by Coreutils.pm.
 
@@ -347,6 +362,11 @@ foreach my $t (@tv)
       and push @$new_ent, {EXIT=>$ret}, {ERR=>$err_msg};
     push @Tests, $new_ent;
   }
+
+# Test that we don't confuse the file name for part of the format given by -o.
+push @Tests,
+  ['o-sep-space-enoent', '-o 1.1 1.2 2.2 f1', {EXIT=>1},
+   {ERR=>"$prog: 2.2: $limits->{ENOENT}\n"}];
 
 if ($mb_locale ne 'C')
   {
