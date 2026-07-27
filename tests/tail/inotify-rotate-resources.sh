@@ -21,9 +21,6 @@ print_ver_ tail
 
 require_inotify_supported_
 
-grep '^#define HAVE_INOTIFY 1' "$CONFIG_HEADER" >/dev/null \
-  || skip_ 'inotify required'
-
 require_strace_ 'inotify_add_watch,inotify_rm_watch'
 
 check_tail_output()
