@@ -34,6 +34,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   like when processing large tab stops.
   [This bug was present in "the beginning".]
 
+  'ptx -G' no longer hangs when the output width is smaller than twice the
+  gap size, as with 'ptx -G -w4', or when a long reference leaves that
+  little room, as with 'ptx -G -r'.
+  [This bug was present in "the beginning".]
+
   'shred' no longer blocks when opening a FIFO that has no readers.
   [This bug was present in "the beginning".]
 

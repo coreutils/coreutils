@@ -1145,8 +1145,6 @@ fix_output_parameters (void)
          right side, or one on either side.  */
 
       before_max_width -= 2 * truncation_string_length;
-      if (before_max_width < 0)
-        before_max_width = 0;
       keyafter_max_width -= 2 * truncation_string_length;
     }
   else
@@ -1160,6 +1158,9 @@ fix_output_parameters (void)
 
       keyafter_max_width -= 2 * truncation_string_length + 1;
     }
+
+  if (before_max_width < 0)
+    before_max_width = 0;
 
   /* Compute which characters need special output processing.  Initialize
      by flagging any white space character.  Some systems do not consider

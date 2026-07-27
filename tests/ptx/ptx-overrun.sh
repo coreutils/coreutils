@@ -50,4 +50,10 @@ compare /dev/null out || fail=1
 echo a > a
 ptx -w1 -A "$PWD/a" >/dev/null || fail=1
 
+
+# Trigger an infinite loop from coreutils-9.11 and earlier.
+# This would hang with -G whenever (width >> 1) < gap size.
+printf 'qux\n' | timeout 10 ptx -G -w2 || fail=1
+
+
 Exit $fail
