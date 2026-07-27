@@ -740,6 +740,8 @@ all_tests =					\
   tests/ls/rt-1.sh				\
   tests/ls/selinux.sh				\
   tests/ls/slink-acl.sh				\
+  tests/ls/sort-collation.sh			\
+  tests/ls/sort-width-option.sh			\
   tests/ls/stat-dtype.sh			\
   tests/ls/stat-failed.sh			\
   tests/ls/stat-free-color.sh			\
@@ -749,7 +751,6 @@ all_tests =					\
   tests/ls/symlink-quote.sh			\
   tests/ls/symlink-slash.sh			\
   tests/ls/time-style-diag.sh			\
-  tests/ls/sort-width-option.sh			\
   tests/ls/x-option.sh				\
   tests/ls/zero-option.sh			\
   tests/mkdir/p-1.sh				\
