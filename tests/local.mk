@@ -655,6 +655,7 @@ all_tests =					\
   tests/du/apparent.sh				\
   tests/du/basic.sh				\
   tests/du/bigtime.sh				\
+  tests/du/block-size.sh			\
   tests/du/deref.sh				\
   tests/du/deref-args.sh			\
   tests/du/exclude.sh				\
