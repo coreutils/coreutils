@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+#include "argmatch.h"  /* argmatch($QUOTING_STYLE).  */
 #include "system.h"
 #include "canonicalize.h"
 #include "relpath.h"
@@ -39,6 +40,7 @@ enum
 static bool verbose = true;
 static bool logical;
 static bool use_nuls;
+static bool quote_output;
 static char const *can_relative_to;
 static char const *can_relative_base;
 
@@ -164,6 +166,34 @@ isdir (char const *path)
   return S_ISDIR (sb.st_mode);
 }
 
+static void
+print_path (char const *path)
+{
+  fputs (quote_output ? quoteN (path) : path, stdout);
+}
+
+/* Print CAN_FNAME relative to can_relative_to, quoting the complete
+   relative file name when appropriate.  */
+static bool
+print_relative_path (char const *can_fname)
+{
+  if (!quote_output)
+    return relpath (can_fname, can_relative_to, NULL, 0);
+
+  size_t size;
+  if (ckd_mul (&size, strlen (can_relative_to), 2)
+      || ckd_add (&size, size, strlen (can_fname))
+      || ckd_add (&size, size, 1))
+    xalloc_die ();
+
+  char *relative_path = xmalloc (size);
+  bool success = relpath (can_fname, can_relative_to, relative_path, size);
+  if (success)
+    print_path (relative_path);
+  free (relative_path);
+  return success;
+}
+
 static bool
 process_path (char const *fname, int can_mode)
 {
@@ -177,8 +207,8 @@ process_path (char const *fname, int can_mode)
 
   if (!can_relative_to
       || (can_relative_base && !path_prefix (can_relative_base, can_fname))
-      || (can_relative_to && !relpath (can_fname, can_relative_to, NULL, 0)))
-    fputs (can_fname, stdout);
+      || (can_relative_to && !print_relative_path (can_fname)))
+    print_path (can_fname);
 
   putchar (use_nuls ? '\0' : '\n');
 
@@ -260,6 +290,18 @@ main (int argc, char **argv)
     {
       error (0, 0, _("missing operand"));
       usage (EXIT_FAILURE);
+    }
+
+  if (! use_nuls && isatty (STDOUT_FILENO))
+    {
+      int qs = getenv_quoting_style ();
+      if (qs < 0)
+        qs = shell_escape_quoting_style;
+      if (qs != literal_quoting_style)
+        {
+          set_quoting_style (NULL, qs);
+          quote_output = true;
+        }
     }
 
   if (relative_base && !relative_to)

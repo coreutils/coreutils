@@ -57,6 +57,22 @@ realpath -e -E --relative-to=dir1/f --relative-base=. . || fail=1
 returns_ 1 realpath -m '' || fail=1
 returns_ 1 realpath --relative-base= --relative-to=. . || fail=1
 
+# QUOTING_STYLE does not affect redirected output.
+printf 'q name\n' > exp || framework_failure_
+for style in literal shell-always invalid; do
+  QUOTING_STYLE="$style" \
+    realpath -m --relative-to=. 'q name' > out 2> err || fail=1
+  compare exp out || fail=1
+  compare /dev/null err || fail=1
+done
+
+# --zero disables quoting, and does not inspect QUOTING_STYLE.
+QUOTING_STYLE=invalid \
+  realpath -zm --relative-to=. 'q name' > out 2> err || fail=1
+printf 'q name\0' > exp || framework_failure_
+compare exp out || fail=1
+compare /dev/null err || fail=1
+
 # symlink resolution
 this=$(realpath .)
 test "$(realpath ldir2/..)" = "$this/dir1" || fail=1

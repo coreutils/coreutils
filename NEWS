@@ -84,6 +84,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'install -C' will now avoid updating file metadata when the destination
   already has the appropriate ownership and permissions.
 
+  'realpath' now quotes output in shell-escape style when
+  standard output is a terminal.  The QUOTING_STYLE environment variable
+  can be used to adjust or disable the quoting.
+
   'ls -m' now quotes files names containing commas when appropriate,
   so users can better distinguish separating commas.
 

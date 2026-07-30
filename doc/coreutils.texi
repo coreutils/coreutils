@@ -14596,6 +14596,11 @@ only on the file name, and does not touch any actual file.
 
 @end table
 
+When standard output is a terminal, file names are quoted using
+the @samp{shell-escape} style.  The environment variable
+@env{QUOTING_STYLE} can select the quoting style.  Valid quoting styles are:
+@quotingStyles
+
 @cindex exit status of @command{realpath}
 Exit status:
 
