@@ -62,12 +62,22 @@ my @Tests =
      ['9', qw(fs ''),      {OUT => 'fs'}],
      ['10', qw(fs/ s/),    {OUT => 'fs'}],
 
+     # QUOTING_STYLE does not affect redirected output.
+     ['q-lit', q{'d/q name'}, {ENV => 'QUOTING_STYLE=literal'},
+      {OUT => 'q name'}],
+     ['q-shell', q{'d/q name'}, {ENV => 'QUOTING_STYLE=shell-always'},
+      {OUT => 'q name'}],
+     ['q-invalid', q{'d/q name'}, {ENV => 'QUOTING_STYLE=invalid'},
+      {OUT => 'q name'}],
+
      # Exercise -z option.
      ['z0', qw(-z a),       {OUT => "a\0"}],
      ['z1', qw(--zero a),   {OUT => "a\0"}],
      ['z2', qw(-za a b),    {OUT => "a\0b\0"}],
      ['z3', qw(-z ba a),    {OUT => "b\0"}],
      ['z4', qw(-z -s a ba), {OUT => "b\0"}],
+     ['z-quote', q{-z 'q name'}, {ENV => 'QUOTING_STYLE=invalid'},
+      {OUT => "q name\0"}],
    );
 
 # Append a newline to end of each expected 'OUT' string.

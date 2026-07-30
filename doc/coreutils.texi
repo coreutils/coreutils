@@ -14193,6 +14193,11 @@ This option implies the @option{-a} option.
 
 @end table
 
+When standard output is a terminal, output is quoted using the
+@samp{shell-escape} style.  The environment variable
+@env{QUOTING_STYLE} specifies the quoting style.  Valid quoting styles are:
+@quotingStyles
+
 @exitstatus
 
 Examples:

@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+#include "argmatch.h"  /* argmatch($QUOTING_STYLE).  */
 #include "system.h"
 #include "quote.h"
 
@@ -26,6 +27,8 @@
 #define PROGRAM_NAME "basename"
 
 #define AUTHORS proper_name ("David MacKenzie")
+
+static bool quote_output;
 
 static struct option const longopts[] =
 {
@@ -121,7 +124,7 @@ perform_basename (char const *string, char const *suffix, idx_t suffix_len,
       && ! FILE_SYSTEM_PREFIX_LEN (name))
     remove_suffix (name, suffix, suffix_len);
 
-  fputs (name, stdout);
+  fputs (quote_output ? quoteN (name) : name, stdout);
   putchar (use_nuls ? '\0' : '\n');
   free (name);
 }
@@ -185,6 +188,18 @@ main (int argc, char **argv)
         {
           error (0, 0, _("extra operand %s"), quote (argv[optind + 2]));
           usage (EXIT_FAILURE);
+        }
+    }
+
+  if (!use_nuls && isatty (STDOUT_FILENO))
+    {
+      int qs = getenv_quoting_style ();
+      if (qs < 0)
+        qs = shell_escape_quoting_style;
+      if (qs != literal_quoting_style)
+        {
+          set_quoting_style (NULL, qs);
+          quote_output = true;
         }
     }
 
