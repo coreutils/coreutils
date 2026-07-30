@@ -11100,6 +11100,11 @@ variable is set.
 
 @end table
 
+When standard output is a terminal, output is quoted using the
+@samp{shell-escape} style.  The environment variable
+@env{QUOTING_STYLE} can select the quoting style. Valid quoting styles are:
+@quotingStyles
+
 The @command{readlink} utility first appeared in OpenBSD 2.1.
 
 The @command{realpath} command without options, operates like

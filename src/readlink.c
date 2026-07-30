@@ -21,6 +21,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 
+#include "argmatch.h"  /* argmatch($QUOTING_STYLE).  */
 #include "system.h"
 #include "canonicalize.h"
 #include "areadlink.h"
@@ -35,6 +36,9 @@ static bool no_newline;
 
 /* If true, report error messages.  */
 static bool verbose;
+
+/* If true, quote output according to the selected quoting style.  */
+static bool quote_output;
 
 static struct option const longopts[] =
 {
@@ -170,6 +174,18 @@ main (int argc, char **argv)
       no_newline = false;
     }
 
+  if (!use_nuls && isatty (STDOUT_FILENO))
+    {
+      int qs = getenv_quoting_style ();
+      if (qs < 0)
+        qs = shell_escape_quoting_style;
+      if (qs != literal_quoting_style)
+        {
+          set_quoting_style (NULL, qs);
+          quote_output = true;
+        }
+    }
+
   /* POSIX requires a diagnostic message written to standard error and a
      non-zero exit status when given a file that is not a symbolic link.  */
   if (getenv ("POSIXLY_CORRECT") != NULL)
@@ -183,7 +199,7 @@ main (int argc, char **argv)
                      : areadlink_with_size (fname, 63));
       if (value)
         {
-          fputs (value, stdout);
+          fputs (quote_output ? quoteN (value) : value, stdout);
           if (! no_newline)
             putchar (use_nuls ? '\0' : '\n');
           free (value);

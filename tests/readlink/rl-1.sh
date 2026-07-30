@@ -23,6 +23,7 @@ mkdir subdir || framework_failure_
 touch regfile || framework_failure_
 ln -s regfile link1 || framework_failure_
 ln -s missing link2 || framework_failure_
+ln -s 'q name' qlink || framework_failure_
 
 
 v=$(readlink link1) || fail=1
@@ -30,6 +31,20 @@ test "$v" = regfile || fail=1
 
 v=$(readlink link2) || fail=1
 test "$v" = missing || fail=1
+
+# QUOTING_STYLE does not affect redirected output.
+printf 'q name\n' > exp || framework_failure_
+for style in literal shell-always invalid; do
+  QUOTING_STYLE="$style" readlink qlink > out 2> err || fail=1
+  compare exp out || fail=1
+  compare /dev/null err || fail=1
+done
+
+# --zero disables quoting, and does not inspect QUOTING_STYLE.
+QUOTING_STYLE=invalid readlink -z qlink > out 2> err || fail=1
+printf 'q name\0' > exp || framework_failure_
+compare exp out || fail=1
+compare /dev/null err || fail=1
 
 v=$(returns_ 1 readlink subdir) || fail=1
 test -z "$v" || fail=1
