@@ -855,32 +855,37 @@ out_file_context (char *pformat, size_t prefix_len, char const *filename)
   return fail;
 }
 
-/* Set the quoting style default if the environment variable
-   QUOTING_STYLE is set.  */
+/* Return the quoting style specified by the environment variable
+   QUOTING_STYLE if set and valid, -1 otherwise.  */
 
-static void
+static int
 getenv_quoting_style (void)
 {
-  static bool got_quoting_style;
-  if (got_quoting_style)
-    return;
-  got_quoting_style = true;
-
   char const *q_style = getenv ("QUOTING_STYLE");
-  if (q_style)
+  if (!q_style)
+    return -1;
+
+  int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
+  if (i < 0)
     {
-      int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
-      if (0 <= i)
-        set_quoting_style (NULL, quoting_style_vals[i]);
-      else
-        {
-          set_quoting_style (NULL, shell_escape_quoting_style);
-          error (0, 0, _("ignoring invalid value of environment "
-                         "variable QUOTING_STYLE: %s"), quote (q_style));
-        }
+      error (0, 0, _("ignoring invalid value of environment "
+                     "variable QUOTING_STYLE: %s"), quote (q_style));
+      return -1;
     }
-  else
-    set_quoting_style (NULL, shell_escape_quoting_style);
+  return quoting_style_vals[i];
+}
+
+/* Set the quoting style once it is needed.  */
+static void
+initialize_quoting_style (void)
+{
+  static bool initialized;
+  if (!initialized)
+    {
+      initialized = true;
+      int qs = getenv_quoting_style ();
+      set_quoting_style (NULL, 0 <= qs ? qs : shell_escape_quoting_style);
+    }
 }
 
 /* Equivalent to quotearg(), but explicit to avoid syntax checks.  */
@@ -901,7 +906,7 @@ print_statfs (char *pformat, size_t prefix_len, MAYBE_UNUSED char mod, char m,
     case 'n':
       if (mod == 'Q')
         {
-          getenv_quoting_style ();
+          initialize_quoting_style ();
           filename = quoteN (filename);
         }
       out_string (pformat, prefix_len, filename);
@@ -1527,13 +1532,13 @@ print_stat (char *pformat, size_t prefix_len, char mod, char m,
     case 'n':
       if (mod == 'Q')
         {
-          getenv_quoting_style ();
+          initialize_quoting_style ();
           filename = quoteN (filename);
         }
       out_string (pformat, prefix_len, filename);
       break;
     case 'N':
-      getenv_quoting_style ();
+      initialize_quoting_style ();
       out_string (pformat, prefix_len, quoteN (filename));
       if (S_ISLNK (statbuf->st_mode))
         {
