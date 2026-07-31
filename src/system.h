@@ -1002,8 +1002,30 @@ is_ENOTSUP (int err)
 #define quoteaf_n(n, arg) \
   quotearg_n_style (n, shell_escape_always_quoting_style, arg)
 
+/* Equivalent to quotearg(), but explicit to avoid syntax checks.  */
+#define quoteN(x) quotearg_style (get_quoting_style (NULL), x)
+
+#ifdef ARGMATCH
+/* Return the quoting style specified by the environment variable
+   QUOTING_STYLE if set and valid, -1 otherwise.  */
+static inline int
+getenv_quoting_style (void)
+{
+  char const *q_style = getenv ("QUOTING_STYLE");
+  if (!q_style)
+    return -1;
+
+  int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
+  if (i < 0)
+    {
+      error (0, 0, _("ignoring invalid value of environment "
+                     "variable QUOTING_STYLE: %s"), quote (q_style));
+      return -1;
+    }
+  return quoting_style_vals[i];
+}
+
 /* Used instead of XARGMATCH() to provide a custom error message.  */
-#ifdef XARGMATCH
 static inline ptrdiff_t
 x_timestyle_match (char const * style, bool allow_posix,
                    char const *const * timestyle_args,

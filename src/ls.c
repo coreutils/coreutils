@@ -306,8 +306,6 @@ static void queue_directory (char const *name, char const *realname,
 static void sort_files (void);
 static void parse_ls_color (void);
 
-static int getenv_quoting_style (void);
-
 static size_t quote_name_width (char const *name,
                                 struct quoting_options const *options,
                                 int needs_general_quoting);
@@ -2894,27 +2892,6 @@ parse_ls_color (void)
   if (color_indicator[C_LINK].len == 6
       && !STRNCMP_LIT (color_indicator[C_LINK].string, "target"))
     color_symlink_as_referent = true;
-}
-
-/* Return the quoting style specified by the environment variable
-   QUOTING_STYLE if set and valid, -1 otherwise.  */
-
-static int
-getenv_quoting_style (void)
-{
-  char const *q_style = getenv ("QUOTING_STYLE");
-  if (!q_style)
-    return -1;
-  int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
-  if (i < 0)
-    {
-      error (0, 0,
-             _("ignoring invalid value"
-               " of environment variable QUOTING_STYLE: %s"),
-             quote (q_style));
-      return -1;
-    }
-  return quoting_style_vals[i];
 }
 
 /* Set the exit status to report a failure.  If SERIOUS, it is a

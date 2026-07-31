@@ -55,10 +55,10 @@
 #include <selinux/selinux.h>
 #include <getopt.h>
 
+#include "argmatch.h"  /* argmatch($QUOTING_STYLE).  */
 #include "system.h"
 
 #include "areadlink.h"
-#include "argmatch.h"
 #include "c-ctype.h"
 #include "file-type.h"
 #include "filemode.h"
@@ -855,26 +855,6 @@ out_file_context (char *pformat, size_t prefix_len, char const *filename)
   return fail;
 }
 
-/* Return the quoting style specified by the environment variable
-   QUOTING_STYLE if set and valid, -1 otherwise.  */
-
-static int
-getenv_quoting_style (void)
-{
-  char const *q_style = getenv ("QUOTING_STYLE");
-  if (!q_style)
-    return -1;
-
-  int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
-  if (i < 0)
-    {
-      error (0, 0, _("ignoring invalid value of environment "
-                     "variable QUOTING_STYLE: %s"), quote (q_style));
-      return -1;
-    }
-  return quoting_style_vals[i];
-}
-
 /* Set the quoting style once it is needed.  */
 static void
 initialize_quoting_style (void)
@@ -887,9 +867,6 @@ initialize_quoting_style (void)
       set_quoting_style (NULL, 0 <= qs ? qs : shell_escape_quoting_style);
     }
 }
-
-/* Equivalent to quotearg(), but explicit to avoid syntax checks.  */
-#define quoteN(x) quotearg_style (get_quoting_style (NULL), x)
 
 /* Print statfs info.  Return zero upon success, nonzero upon failure.  */
 NODISCARD
