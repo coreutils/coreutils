@@ -56,16 +56,39 @@ test_unit ()
   # When there is a prefix of 1, the unit is not printed.  Setup a file
   # to compare to.
   sed 's/^\([0-9][0-9]*\)'"$upper"'/\1/g' <exp >exp1 || framework_failure_
-  for opt in BLOCK_SIZE -B --block-size=; do
-    for c in $lower $upper; do
-      for prefix in '' 1; do
-        case $opt in
-          -*) env=; arg=$opt$prefix$c ;;
-          *) arg=; env=$opt=$prefix$c ;;
-        esac
-        env $env du -A $arg 1* >out 2>err || fail=1
-        compare exp$prefix out || fail=1
-        compare /dev/null err || fail=1
+  for loc in C "$LOCALE_FR" "$LOCALE_FR_UTF8"; do
+    test -z "$loc" && continue
+    if test $loc != C; then
+      thousands_sep=$(LC_ALL=$loc locale thousands_sep)
+      grouping=$(LC_ALL=$loc locale grouping)
+      test -z "$thousands_sep" && continue
+      test "$grouping" != 3 && continue
+    fi
+    for f in exp exp1; do
+      LC_ALL=$loc \
+        sed 's/^\([0-9][0-9]*\)\([0-9]\{3\}\)/\1'"$thousands_sep"'\2/g' $f \
+          >$loc$f || framework_failure_
+    done
+    for opt in BLOCK_SIZE -B --block-size=; do
+      for c in $lower $upper; do
+        for prefix1 in '' "'"; do
+          # Without the apostrophe thousands separators aren't used,
+          # regardless of locale.
+          if test $loc = C || test -z "$prefix1"; then
+            exp=exp
+          else
+            exp="$loc"exp
+          fi
+          for prefix2 in '' 1; do
+            case $opt in
+              -*) env=; arg=$opt$prefix1$prefix2$c ;;
+              *) arg=; env=$opt=$prefix1$prefix2$c ;;
+            esac
+            env LC_ALL=$loc $env du -A $arg 1* >out 2>err || fail=1
+            compare $exp$prefix2 out || fail=1
+            compare /dev/null err || fail=1
+          done
+        done
       done
     done
   done
