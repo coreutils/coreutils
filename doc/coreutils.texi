@@ -12436,6 +12436,11 @@ the argument being processed is on.
 
 @end table
 
+When standard output is a terminal, file names are quoted using
+the @samp{shell-escape} style.  The environment variable
+@env{QUOTING_STYLE} can select the quoting style.  Valid quoting styles are:
+@quotingStyles
+
 Since @command{du} relies on information reported by the operating
 system, its output might not reflect the space consumed in the
 underlying devices.  For example;
