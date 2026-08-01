@@ -186,6 +186,7 @@ all_tests =					\
   tests/misc/read-errors.sh			\
   tests/misc/responsive.sh			\
   tests/misc/traversal-missing.sh		\
+  tests/misc/tty-quoting.sh			\
   tests/misc/warning-errors.sh			\
   tests/misc/write-errors.sh			\
   tests/tail/basic-seek.sh			\
