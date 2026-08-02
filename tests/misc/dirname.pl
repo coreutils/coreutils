@@ -59,6 +59,10 @@ my @Tests =
      ['q-invalid', q{'q name/f'}, {ENV => 'QUOTING_STYLE=invalid'},
       {OUT => 'q name'}],
 
+     # Exercise -z option.
+     ['z0', qw(-z a/b),       {OUT => "a\0"}],
+     ['z1', qw(--zero a/b),   {OUT => "a\0"}],
+     ['z2', qw(-z a/b b/a),    {OUT => "a\0b\0"}],
      ['z-quote', q{-z 'q name/f'}, {ENV => 'QUOTING_STYLE=invalid'},
       {OUT => "q name\0"}],
     );
