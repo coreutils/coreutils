@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ basename du ls readlink realpath printf test
+print_ver_ basename dirname du ls readlink realpath printf test
 require_strace_ ioctl
 
 touch 'b ar' || framework_failure_
@@ -44,15 +44,16 @@ run_tty_ env test -t 1 ||
 run_tty_ env printf foo >printf.t &&
  skip_ 'libc buffering induced a tty probe'
 
-for cmd in basename du 'ls -w0' readlink 'realpath --relative-to=.'; do
+for cmd in basename du dirname 'ls -w0' readlink 'realpath --relative-to=.'; do
   test "$cmd" = 'du' && field=2 || field=1
+  test "$cmd" = 'dirname' && file='f oo/.' || file='f oo'
 
-  run_tty_ $cmd 'f oo' >quoted.t || fail=1
+  run_tty_ $cmd "$file" >quoted.t || fail=1
   cut -f$field- quoted.t >quoted || framework_failure_
 
   # Note ls theoretically doesn't need isatty() for a specified QUOTING_STYLE
   # but it does need it to determine appropriate output format.
-  QUOTING_STYLE=literal run_tty_ $cmd 'f oo' >unquoted.t || fail=1
+  QUOTING_STYLE=literal run_tty_ $cmd "$file" >unquoted.t || fail=1
   cut -f$field- unquoted.t >unquoted || framework_failure_
 
   env printf '%q\n' "$(cat unquoted)" >printf_quoted || framework_failure_

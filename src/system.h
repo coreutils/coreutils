@@ -1004,6 +1004,8 @@ is_ENOTSUP (int err)
 
 /* Equivalent to quotearg(), but explicit to avoid syntax checks.  */
 #define quoteN(x) quotearg_style (get_quoting_style (NULL), x)
+#define quoteN_mem(x, size)                                     \
+  quotearg_style_mem (get_quoting_style (NULL), x, size)
 
 #ifdef ARGMATCH
 /* Return the quoting style specified by the environment variable

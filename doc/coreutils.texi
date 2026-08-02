@@ -11100,10 +11100,15 @@ variable is set.
 
 @end table
 
+@c This is also used by basename and dirname.
+@macro terminalQuoted
 When standard output is a terminal, output is quoted using the
 @samp{shell-escape} style.  The environment variable
-@env{QUOTING_STYLE} can select the quoting style. Valid quoting styles are:
+@env{QUOTING_STYLE} specifies the quoting style.  Valid quoting styles
+are:
 @quotingStyles
+@end macro
+@terminalQuoted
 
 The @command{readlink} utility first appeared in OpenBSD 2.1.
 
@@ -14203,10 +14208,7 @@ This option implies the @option{-a} option.
 
 @end table
 
-When standard output is a terminal, output is quoted using the
-@samp{shell-escape} style.  The environment variable
-@env{QUOTING_STYLE} specifies the quoting style.  Valid quoting styles are:
-@quotingStyles
+@terminalQuoted
 
 @exitstatus
 
@@ -14262,6 +14264,8 @@ The program accepts the following option.  Also see @ref{Common options}.
 @optZero{dirname}
 
 @end table
+
+@terminalQuoted
 
 @exitstatus
 

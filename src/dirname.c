@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+#include "argmatch.h"  /* argmatch($QUOTING_STYLE).  */
 #include "system.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -30,6 +31,8 @@
 #define AUTHORS \
   proper_name ("David MacKenzie"), \
   proper_name ("Jim Meyering")
+
+static bool quote_output;
 
 static struct option const longopts[] =
 {
@@ -114,6 +117,19 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+
+  if (!use_nuls && isatty (STDOUT_FILENO))
+    {
+      int qs = getenv_quoting_style ();
+      if (qs < 0)
+        qs = shell_escape_quoting_style;
+      if (qs != literal_quoting_style)
+        {
+          set_quoting_style (NULL, qs);
+          quote_output = true;
+        }
+    }
+
   for (; optind < argc; optind++)
     {
       char const *result = argv[optind];
@@ -125,7 +141,11 @@ main (int argc, char **argv)
           result = &dot;
           len = 1;
         }
-
+      if (quote_output)
+        {
+          result = quoteN_mem (result, len);
+          len = strlen (result);
+        }
       fwrite (result, 1, len, stdout);
       putchar (use_nuls ? '\0' :'\n');
     }

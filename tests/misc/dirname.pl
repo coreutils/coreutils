@@ -50,9 +50,21 @@ my @Tests =
      ['l', qw(///a//b/),   {OUT => '///a'}],
      ['m', qw(''),         {OUT => '.'}],
      ['n', qw(a/b c/d),    {OUT => "a\nc"}],
+
+     # QUOTING_STYLE does not affect redirected output.
+     ['q-lit', q{'q name/f'}, {ENV => 'QUOTING_STYLE=literal'},
+      {OUT => 'q name'}],
+     ['q-shell', q{'q name/f'}, {ENV => 'QUOTING_STYLE=shell-always'},
+      {OUT => 'q name'}],
+     ['q-invalid', q{'q name/f'}, {ENV => 'QUOTING_STYLE=invalid'},
+      {OUT => 'q name'}],
+
+     ['z-quote', q{-z 'q name/f'}, {ENV => 'QUOTING_STYLE=invalid'},
+      {OUT => "q name\0"}],
     );
 
 # Append a newline to end of each expected 'OUT' string.
+# Skip -z tests, i.e., those whose 'OUT' string has a trailing '\0'.
 my $t;
 foreach $t (@Tests)
   {
@@ -61,7 +73,8 @@ foreach $t (@Tests)
     foreach $e (@$t)
       {
         $e->{OUT} = "$e->{OUT}\n"
-          if ref $e eq 'HASH' and exists $e->{OUT};
+          if ref $e eq 'HASH' and exists $e->{OUT}
+            and not $e->{OUT} =~ /\0$/;
       }
   }
 
