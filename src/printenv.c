@@ -32,7 +32,9 @@
 #include <sys/types.h>
 #include <getopt.h>
 
+#include "argmatch.h"  /* argmatch($QUOTING_STYLE).  */
 #include "system.h"
+#include "printenv.h"
 
 /* Exit status for syntax errors, etc.  */
 enum { PRINTENV_FAILURE = 2 };
@@ -107,14 +109,27 @@ main (int argc, char **argv)
         }
     }
 
+  bool quote_output = false;
+
+  if (!opt_nul_terminate_output)
+    {
+      int qs = getenv_quoting_style ();
+      if (qs < 0)
+        qs = shell_escape_quoting_style;
+      if (qs != literal_quoting_style)
+        {
+          set_quoting_style (NULL, qs);
+          quote_output = true;
+        }
+    }
+
   bool ok;
+  char const terminator = opt_nul_terminate_output ? '\0' : '\n';
+
   if (optind >= argc)
     {
       for (char **env = environ; *env != NULL; ++env)
-        {
-          fputs (*env, stdout);
-          putchar (opt_nul_terminate_output ? '\0' : '\n');
-        }
+        print_envvar (*env, terminator, quote_output);
       ok = true;
     }
   else
@@ -137,8 +152,9 @@ main (int argc, char **argv)
                 {
                   if (*ep == '=' && *ap == '\0')
                     {
-                      fputs (ep + 1, stdout);
-                      putchar (opt_nul_terminate_output ? '\0' : '\n');
+                      char const *val = ep + 1;
+                      fputs (quote_output ? quoteN (val) : val, stdout);
+                      putchar (terminator);
                       matched = true;
                       break;
                     }

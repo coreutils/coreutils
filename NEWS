@@ -67,6 +67,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  'env' and 'printenv' now quote printed environment variables honoring the
+  QUOTING_STYLE environment variable, defaulting to shell-escape style. This
+  avoids printing arbitrary data to the terminal and allows the output to be
+  sourced by a POSIX shell.
+
   'ls' -w,--width no longer includes '\n' in the width of a line.
   I.e., the width or $COLUMNS is interpreted to be an _inclusive_ maximum.
 

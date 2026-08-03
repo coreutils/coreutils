@@ -15514,6 +15514,15 @@ The program accepts the following option.  Also see @ref{Common options}.
 
 @end table
 
+@macro printenvAlwaysQuoted
+The printed environment variables and their values are quoted using the
+@samp{shell-escape} style.   The environment variable
+@env{QUOTING_STYLE} specifies the quoting style.  Valid quoting styles
+are:
+@quotingStyles
+@end macro
+@printenvAlwaysQuoted
+
 @cindex exit status of @command{printenv}
 Exit status:
 
@@ -17476,6 +17485,8 @@ env sh -c 'exec "$@@"' sh prog= true # also runs 'prog='
 If no command name is specified following the environment
 specifications, the resulting environment is printed.  This is like
 specifying the @command{printenv} program.
+
+@printenvAlwaysQuoted
 
 For some examples, suppose the environment passed to @command{env}
 contains @samp{LOGNAME=rms}, @samp{EDITOR=emacs}, and

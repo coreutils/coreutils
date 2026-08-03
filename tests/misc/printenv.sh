@@ -80,4 +80,38 @@ compare exp out || fail=1
 returns_ 1 env a=b=c printenv a=b > out || fail=1
 compare /dev/null out || fail=1
 
+# QUOTING_STYLE affects redirected output.
+cat <<\EOF >exp-noargs-literal || framework_failure_
+a b=c d
+EOF
+cat <<\EOF >exp-args-literal || framework_failure_
+c d
+EOF
+cat <<\EOF >exp-noargs-shell || framework_failure_
+'a b'='c d'
+EOF
+cat <<\EOF >exp-args-shell || framework_failure_
+'c d'
+EOF
+tr "'" '"' <exp-noargs-shell >exp-noargs-c || framework_failure_
+tr "'" '"' <exp-args-shell >exp-args-c || framework_failure_
+for qs in literal shell c; do
+  env -i PATH="$PATH" QUOTING_STYLE=$qs 'a b'='c d' \
+    printenv >out-t 2>err || fail=1
+  grep -vE 'QUOTING_STYLE|PATH' out-t > out || framework_failure_
+  compare exp-noargs-$qs out || fail=1
+  compare /dev/null err || fail=1
+  env -i PATH="$PATH" QUOTING_STYLE=$qs 'a b'='c d' \
+    printenv 'a b' >out 2>err || fail=1
+  compare exp-args-$qs out || fail=1
+  compare /dev/null err || fail=1
+done
+
+# Check the behavior with an invalid value for QUOTING_STYLE.
+printf 'printenv: ignoring invalid value of environment variable %s\n' \
+  "QUOTING_STYLE: 'invalid'" >exp || framework_failure_
+env QUOTING_STYLE=invalid printenv >out 2>err || fail=1
+grep '^QUOTING_STYLE=invalid$' out || fail=1
+compare exp err || fail=1
+
 Exit $fail

@@ -58,6 +58,7 @@ noinst_HEADERS =		\
   src/ls.h			\
   src/octhexdigits.h		\
   src/operand2sig.h		\
+  src/printenv.h		\
   src/prog-fprintf.h		\
   src/remove.h			\
   src/set-fields.h		\
@@ -398,7 +399,6 @@ src_cp_SOURCES = src/cp.c $(copy_sources) $(selinux_sources)
 src_date_SOURCES = src/date.c src/show-date.c
 src_dir_SOURCES = src/ls.c src/ls-dir.c
 src_du_SOURCES = src/du.c src/show-date.c
-src_env_SOURCES = src/env.c src/operand2sig.c
 src_vdir_SOURCES = src/ls.c src/ls-vdir.c
 src_id_SOURCES = src/id.c src/group-list.c
 src_groups_SOURCES = src/groups.c src/group-list.c
@@ -420,6 +420,9 @@ src_rmdir_SOURCES = src/rmdir.c src/prog-fprintf.c
 
 src_mkfifo_SOURCES = src/mkfifo.c $(selinux_sources)
 src_mknod_SOURCES = src/mknod.c $(selinux_sources)
+
+src_env_SOURCES = src/env.c src/operand2sig.c src/printenv.h
+src_printenv_SOURCES = src/printenv.c src/printenv.h
 
 src_df_SOURCES = src/df.c src/find-mount-point.c
 src_stat_SOURCES = src/stat.c src/find-mount-point.c

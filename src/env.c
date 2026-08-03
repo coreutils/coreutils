@@ -23,8 +23,10 @@
 #include <c-ctype.h>
 #include <signal.h>
 
+#include "argmatch.h"  /* argmatch($QUOTING_STYLE).  */
 #include "system.h"
 #include "operand2sig.h"
+#include "printenv.h"
 #include "quote.h"
 #include "sig2str.h"
 
@@ -842,6 +844,22 @@ main (int argc, char **argv)
       ++optind;
     }
 
+  bool quote_output = false;
+
+  /* Get the value from QUOTING_STYLE before unsetting environment
+     variables.  */
+  if (!opt_nul_terminate_output)
+    {
+      int qs = getenv_quoting_style ();
+      if (qs < 0)
+        qs = shell_escape_quoting_style;
+      if (qs != literal_quoting_style)
+        {
+          set_quoting_style (NULL, qs);
+          quote_output = true;
+        }
+    }
+
   if (ignore_environment)
     {
       devmsg ("cleaning environ\n");
@@ -887,12 +905,11 @@ main (int argc, char **argv)
 
   if (! program_specified)
     {
+      char const terminator = opt_nul_terminate_output ? '\0' : '\n';
+
       /* Print the environment and exit.  */
       for (char *const *e = environ; *e; ++e)
-        {
-          fputs (*e, stdout);
-          putchar (opt_nul_terminate_output ? '\0' : '\n');
-        }
+        print_envvar (*e, terminator, quote_output);
       return EXIT_SUCCESS;
     }
 
