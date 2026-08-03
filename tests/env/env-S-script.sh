@@ -24,7 +24,7 @@ print_ver_ printf
 require_perl_
 
 # a shortcut to avoid long lines
-dir="$abs_top_builddir/src"
+gprintf="$abs_top_builddir/src/printf"
 
 cat <<EOF > shebang || framework_failure_
 #!$SHELL
@@ -42,7 +42,7 @@ EOF
 chmod a+x shebang || framework_failure_
 
 # A simple shebang program to call our new "env"
-printf "#!$dir/env sh\necho hello\n" > env_test || framework_failure_
+printf "#!$(command -v env) sh\necho hello\n" > env_test || framework_failure_
 chmod a+x env_test || framework_failure_
 
 # Verify we can run the shebang which is not the case if
@@ -54,7 +54,7 @@ chmod a+x env_test || framework_failure_
 # the name of the executed script, and its 3 parameters (C,D,'E F').
 # Ignoring the absolute paths, the script is:
 #     #!env -S printf x%sx\n A B
-printf "#!$dir/env -S $dir/printf "'x%%sx\\n A B\n' > env1 || framework_failure_
+printf "#!$(command -v env) -S $gprintf "'x%%sx\\n A B\n' > env1 || framework_failure_
 chmod a+x env1 || framework_failure_
 cat<<\EOF>exp1 || framework_failure_
 xAx
@@ -72,7 +72,7 @@ compare exp1 out1 || fail=1
 # 'A B' and not two parameters 'A','B'.
 # Ignoring the absolute paths, the script is:
 #     #!env -S printf x%sx\n "A B"
-printf "#!$dir/env -S $dir/printf "'x%%sx\\n "A B"\n' > env2 ||
+printf "#!$(command -v env) -S $gprintf "'x%%sx\\n "A B"\n' > env2 ||
   framework_failure_
 chmod a+x env2 || framework_failure_
 cat<<\EOF>exp2 || framework_failure_
@@ -86,7 +86,7 @@ compare exp2 out2 || fail=1
 # backslash-underscore instead of spaces.
 # Ignoring the absolute paths, the script is:
 #     #!env -Sprintf\_x%sx\n\_Y
-printf "#!$dir/env -S$dir/printf"'\\_x%%sx\\n\\_Y\n' > env3 ||
+printf "#!$(command -v env) -S$gprintf"'\\_x%%sx\\n\\_Y\n' > env3 ||
   framework_failure_
 chmod a+x env3 || framework_failure_
 cat<<\EOF>exp3 || framework_failure_
@@ -102,7 +102,7 @@ compare exp3 out3 || fail=1
 # Test comments - The "#C D" should be ignored.
 # Ignoring the absolute paths, the script is:
 #     #!env -Sprintf x%sx\n A#B #C D
-printf "#!$dir/env -S$dir/printf"' x%%sx\\n A#B #C D\n' > env4 \
+printf "#!$(command -v env) -S$gprintf"' x%%sx\\n A#B #C D\n' > env4 \
     || framework_failure_
 chmod a+x env4 || framework_failure_
 cat<<\EOF>exp4 || framework_failure_
@@ -119,7 +119,7 @@ compare exp4 out4 || fail=1
 # Ignoring the absolute paths, the script is:
 #     #!env -S perl -w -T
 #     print "hello\n";
-{ printf "#!$dir/env -S $PERL -w -T\n" ;
+{ printf "#!$(command -v env) -S $PERL -w -T\n" ;
   printf 'print "hello\\n";\n' ; } > env5 || framework_failure_
 chmod a+x env5 || framework_failure_
 cat<<\EOF>exp5 || framework_failure_
@@ -134,7 +134,7 @@ compare exp5 out5 || fail=1
 #     #!env -S perl -mFile::Basename=basename -e "print basename(\$ARGV[0]);"
 # The backslash before the '$' is required to prevent env(1) from treating
 # $ARGV as an (invalid syntax) envvar, and pass it as-is to Perl.
-{ printf "#!$dir/env -S " ;
+{ printf "#!$(command -v env) -S " ;
   printf "$PERL -mFile::Basename=basename -e " ;
   printf '"print basename(\\$ARGV[0]);"\n' ; } > env6 || framework_failure_
 chmod a+x env6 || framework_failure_
