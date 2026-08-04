@@ -15,6 +15,18 @@
     - On Red Hat distributions: systemd-devel.
     - Other: https://repology.org/project/systemd/versions
 
+* wtmpdb libraries
+  + Recommended if wtmpdb is present on the system.
+    Needed for fetching login, logout, and boot times from
+    /var/log/wtmp.db instead of from the file /var/run/wtmp.
+    Related 'configure' option: --with-wtmpdb.
+  + Homepage:
+    https://github.com/thkukuk/wtmpdb
+  + Pre-built package name:
+     - On Debian and Debian-based systems: libwtmpdb-dev,
+     - On Red Hat distributions: --.
+     - Other: https://repology.org/project/wtmpdb/versions
+
 * libselinux
   + Mandatory on Linux systems that support SELinux.
     Needed so that the file utilities respect the security contexts,

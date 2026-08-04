@@ -83,6 +83,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  When built with the configure option '--with-wtmpdb', invocations of
+  'who /var/log/wtmp' and 'users /var/log/wtmp' use the wtmpdb database
+  instead of the file /var/log/wtmp.  This makes them Y2038-safe.
+
   'df', 'du', 'ls', 'od', 'pr', and 'sort' now escape invalid arguments in error
   messages for options expecting an integer.
 
