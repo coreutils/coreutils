@@ -5,7 +5,7 @@
     Needed for the multi-user programs ('who', 'users', 'pinky', and
     - if built - 'uptime'), so that they can access the database of
     user logins from systemd-logind.
-    Related 'configure' option: --enable-systemd.
+    Related 'configure' option: --with-systemd.
   * Homepage:
     https://systemd.io/
   + Download:

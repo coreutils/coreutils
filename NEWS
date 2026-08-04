@@ -120,6 +120,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   cksum, md5sum, and sha*sum to use the Linux AF_ALG API.  This API will be
   deprecated in Linux 7.2 and is less performant than OpenSSL.
 
+  The configure option '--enable-systemd' is renamed to '--with-systemd'.
+  The option '--enable-systemd' was a misnomer and is now deprecated.
+
 
 * Noteworthy changes in release 9.11 (2026-04-20) [stable]
 
