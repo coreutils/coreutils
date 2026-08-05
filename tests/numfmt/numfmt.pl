@@ -115,6 +115,14 @@ my @Tests =
      ['unit-10', '--to-unit=0 1',
              {ERR => "$prog: invalid unit size: '0'\n"},
              {EXIT => '1'}],
+     # Ensure a unit size whose suffix multiplication overflows uintmax_t
+     # is rejected.  18014398509481984Ki is 2^54 * 2^10 = UINTMAX_MAX + 1.
+     ['unit-11', '--to-unit=18014398509481984Ki 1000',
+             {ERR => "$prog: invalid unit size: '18014398509481984Ki'\n"},
+             {EXIT => '1'}],
+     ['unit-12', '--from-unit='.$limits->{UINTMAX_MAX}.'K 1',
+             {ERR => "$prog: invalid unit size: '$limits->{UINTMAX_MAX}K'\n"},
+             {EXIT => '1'}],
 
      # Test Suffix logic
      ['suf-1', '4000',    {OUT=>'4000'}],
