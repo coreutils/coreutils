@@ -82,4 +82,9 @@ compare exp out || fail=1
 seq 1e$LONG_MIN 2> err || fail=1
 compare /dev/null err || fail=1
 
+# Ensure a large format precision is fully honored
+seq -f '%.70000f' 1 > out || fail=1
+test "$(wc -c < out)" = 70003 || fail=1
+test "$(tr -d 0 < out)" = '1.' || fail=1
+
 Exit $fail
