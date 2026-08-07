@@ -21,11 +21,11 @@ print_ver_ cat
 getlimits_
 uses_strace_
 
+# pipe size is 1 MiB
+cat /dev/zero |head -c 2M > in || fail=1
+
 # Check the non pipe output case, since that is different with splice
-if timeout 10 true; then
-  timeout .1 cat /dev/zero >/dev/null
-  test $? = 124 || fail=1
-fi
+cat in > /dev/null || fail=1
 
 # Ensure we fallback to write() if there is an issue with (async) zero-copy
 zc_syscalls='io_uring_setup io_uring_enter io_uring_register memfd_create
@@ -46,7 +46,7 @@ fi
 # For example if we don't have enough file descriptors available.
 no_pipe() { strace -f -o /dev/null -e inject=pipe,pipe2:error=EMFILE "$@"; }
 if no_pipe true; then
-  no_pipe timeout .1 cat /dev/zero >/dev/null
+  no_pipe cat in >/dev/null
   test $? = 124 || fail=1
 fi
 
