@@ -76,6 +76,8 @@ no_zero_copy() {
 }
 if no_zero_copy true; then
   test "$(no_zero_copy yes | head -n2 | paste -s -d '')" = 'yy' || fail=1
+  # however, 2nd+ error should be catched
+  returns_ 1 strace -o /dev/null -e inject=splice:error=EINTR:when=3 $SHELL -c "timeout 1 yes>/dev/null" || fail=1 
 fi
 # Ensure we fallback to write() if there is an issue with pipe2()
 # For example if we don't have enough file descriptors available.
