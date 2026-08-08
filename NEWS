@@ -39,6 +39,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   little room, as with 'ptx -G -r'.
   [This bug was present in "the beginning".]
 
+  'ptx -W' no longer loops forever with a word regular expression that can
+  match the empty string, like 'a*'.
+  [This bug was present in "the beginning".]
+
   'shred' no longer blocks when opening a FIFO that has no readers.
   [This bug was present in "the beginning".]
 

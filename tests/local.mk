@@ -280,6 +280,7 @@ all_tests =					\
   tests/date/date.pl				\
   tests/date/date-next-dow.pl			\
   tests/ptx/ptx-overrun.sh			\
+  tests/ptx/ptx-word-regex-loop.sh		\
   tests/misc/xstrtol.pl				\
   tests/tail/overlay-headers.sh			\
   tests/tail/pid.sh				\
