@@ -176,6 +176,9 @@ static BLOCK *text_buffers;	/* files to study */
   while (cursor > start && isspace (to_uchar (cursor[-1])))		\
     cursor--
 
+/* Always advance by at least one byte, lest a nullable word regexp
+   such as 'a*' match the empty string and loop forever.  */
+
 #define SKIP_SOMETHING(cursor, limit) \
   if (word_regex.string)						\
     {									\
@@ -184,7 +187,7 @@ static BLOCK *text_buffers;	/* files to study */
                         0, NULL);					\
       if (count == -2)							\
         matcher_error ();						\
-      cursor += count == -1 ? 1 : count;				\
+      cursor += count <= 0 ? 1 : count;					\
     }									\
   else if (word_fastmap[to_uchar (*cursor)])				\
     while (cursor < limit && word_fastmap[to_uchar (*cursor)])		\
