@@ -298,7 +298,12 @@ struct cp_options
      this feature.  */
   Hash_table *dest_info;
 
-  /* FIXME */
+  /* This is a set of dev/inode pairs.  This allows 'cp' to warn when the
+     same file is given multiple times on the command line. E.g., with
+     invocations like this:
+       rm -rf a b; touch a; mkdir b; cp a a ./a b
+     Use src_info_init to initialize it, or set it to NULL to disable
+     this feature.  */
   Hash_table *src_info;
 };
 
