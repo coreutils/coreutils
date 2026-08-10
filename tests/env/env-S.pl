@@ -56,6 +56,9 @@ exists $ENV{$cf} and $env .= " -u$cf";
 $cf = 'LD_ORIGIN_PATH';
 exists $ENV{$cf} and $env .= " -u$cf";
 
+# Turn off variable quoting on output
+$env = "QUOTING_STYLE=literal $env -uQUOTING_STYLE";
+
 my @Tests =
     (
      # Test combination of -S and regular arguments
