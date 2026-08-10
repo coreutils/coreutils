@@ -20,7 +20,7 @@
 print_ver_ rm
 
 # POSIX mandates rm(1) to skip '/' arguments.  This test verifies this mandated
-# behavior as well as the --preserve-root and --allow-root-delete options.
+# behavior as well as the --preserve-root and --agree-to-system-destruction options.
 # Especially the latter case is a live fire exercise as rm(1) is supposed to
 # enter the unlinkat() system call.  Therefore, limit the risk as much
 # as possible -- if there's a bug this test would wipe the system out!
@@ -123,7 +123,7 @@ clean_rm_err_()
 # which should be passed to 'rm'.
 # Paranoia mode on:
 # For the worst case where both rm(1) would fail to refuse to process the "/"
-# argument (in the cases without the --allow-root-delete option), and
+# argument (in the cases without the --agree-to-system-destruction option), and
 # intercepting the unlinkat(1) system call would fail (which actually already
 # has been proven to work above), and the current non root user has
 # write access to "/", limit the damage to the current file system via
@@ -188,11 +188,11 @@ for file in dir file ; do
          skip_ "internal test failure: maybe LD_PRELOAD or gdb doesn't work?"; }
 done
 
-# "rm -r /" without --allow-root-delete should output the following
+# "rm -r /" without --agree-to-system-destruction should output the following
 # diagnostic error message.
 cat <<EOD > exp || framework_failure_
 rm: it is dangerous to operate recursively on '/'
-rm: use --allow-root-delete to override this failsafe
+rm: use --agree-to-system-destruction to override this failsafe
 EOD
 
 #-------------------------------------------------------------------------------
@@ -228,11 +228,11 @@ for opts in           \
 done
 
 #-------------------------------------------------------------------------------
-# Exercise with --allow-root to ensure shortened equivalent is not allowed.
+# Exercise with --agree-to-system to ensure shortened equivalent is not allowed.
 cat <<EOD > exp_opt || framework_failure_
-rm: you may not abbreviate the --allow-root-delete option
+rm: you may not abbreviate the --agree-to-system-destruction option
 EOD
-returns_ 1 exercise_rm_r_root --allow-root / || fail=1
+returns_ 1 exercise_rm_r_root --agree-to-system / || fail=1
 compare exp_opt err || fail=1
 test -f x && fail=1
 
@@ -304,13 +304,13 @@ done
 
 #-------------------------------------------------------------------------------
 # Until now, it was all just fun.
-# Now exercise the --allow-root-delete option with which rm(1) should enter
+# Now exercise the --agree-to-system-destruction option with which rm(1) should enter
 # the intercepted unlinkat() system call.
 # As the interception code terminates the process immediately via _exit(0),
 # the exit status should be 0.
 # Use the option --interactive=never to bypass the following prompt:
 #   "rm: descend into write-protected directory '/'?"
-exercise_rm_r_root  --interactive=never --allow-root-delete '/' \
+exercise_rm_r_root  --interactive=never --agree-to-system-destruction '/' \
   || fail=1
 
 # The 'err' file should not contain the above error diagnostic.
@@ -323,7 +323,7 @@ test -f x || fail=1
 #-------------------------------------------------------------------------------
 # Verify --no-preserve-root remains accepted, but with a deprecation warning.
 exercise_rm_r_root --interactive=never --no-preserve-root '/' || fail=1
-grep "rm: warning: option '--no-preserve-root' is deprecated; use '--allow-root-delete'" err \
+grep "rm: warning: option '--no-preserve-root' is deprecated; use '--agree-to-system-destruction'" err \
   || fail=1
 test -f x || fail=1
 

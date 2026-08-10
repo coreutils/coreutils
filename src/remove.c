@@ -491,7 +491,7 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
                              " (same as %s)"),
                            quoteaf_n (0, ent->fts_path),
                            quoteaf_n (1, "/"));
-                  error (0, 0, _("use --allow-root-delete to override this "
+                  error (0, 0, _("use --agree-to-system-destruction to override this "
                                  "failsafe"));
                 }
               else
