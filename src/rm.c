@@ -321,10 +321,10 @@ main (int argc, char **argv)
           if (streq (argv[optind - 1], "--no-preserve-root"))
             error (0, 0, _("warning: option %s is deprecated; use %s"),
                    quoteaf_n (0, "--no-preserve-root"),
-            quoteaf_n (1, "--agree-to-system-destruction"));
+                   quoteaf_n (1, "--agree-to-system-destruction"));
           else if (! streq (argv[optind - 1], "--agree-to-system-destruction"))
             error (EXIT_FAILURE, 0,
-            _("you may not abbreviate the --agree-to-system-destruction option"));
+                   _("you may not abbreviate the --agree-to-system-destruction option"));
           preserve_root = false;
           break;
 
