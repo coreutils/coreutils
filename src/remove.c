@@ -479,7 +479,23 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
              is in effect -- default) diagnose and skip it.  */
           if (ROOT_DEV_INO_CHECK (x->root_dev_ino, ent->fts_statp))
             {
-              ROOT_DEV_INO_WARN (ent->fts_path);
+              if (STREQ (program_name, "rm"))
+                {
+                  if (streq (ent->fts_path, "/"))
+                    error (0, 0,
+                           _("it is dangerous to operate recursively on %s"),
+                           quoteaf (ent->fts_path));
+                  else
+                    error (0, 0,
+                           _("it is dangerous to operate recursively on %s"
+                             " (same as %s)"),
+                           quoteaf_n (0, ent->fts_path),
+                           quoteaf_n (1, "/"));
+                  error (0, 0, _("use --allow-root-delete to override this "
+                                 "failsafe"));
+                }
+              else
+                ROOT_DEV_INO_WARN (ent->fts_path);
               fts_skip_tree (fts, ent);
               return RM_ERROR;
             }

@@ -64,6 +64,7 @@ static struct option const long_opts[] =
   {"interactive", optional_argument, NULL, INTERACTIVE_OPTION},
 
   {"one-file-system", no_argument, NULL, ONE_FILE_SYSTEM},
+  {"allow-root-delete", no_argument, NULL, NO_PRESERVE_ROOT},
   {"no-preserve-root", no_argument, NULL, NO_PRESERVE_ROOT},
   {"preserve-root", optional_argument, NULL, PRESERVE_ROOT},
 
@@ -159,7 +160,7 @@ Remove (unlink) the FILE(s).\n\
          from that of the corresponding command line argument\n\
 "));
       oputs (_("\
-      --no-preserve-root\n\
+      --allow-root-delete\n\
          do not treat '/' specially\n\
 "));
       oputs (_("\
@@ -317,9 +318,13 @@ main (int argc, char **argv)
           break;
 
         case NO_PRESERVE_ROOT:
-          if (! streq (argv[optind - 1], "--no-preserve-root"))
+          if (streq (argv[optind - 1], "--no-preserve-root"))
+            error (0, 0, _("warning: option %s is deprecated; use %s"),
+                   quoteaf_n (0, "--no-preserve-root"),
+                   quoteaf_n (1, "--allow-root-delete"));
+          else if (! streq (argv[optind - 1], "--allow-root-delete"))
             error (EXIT_FAILURE, 0,
-                   _("you may not abbreviate the --no-preserve-root option"));
+                   _("you may not abbreviate the --allow-root-delete option"));
           preserve_root = false;
           break;
 
