@@ -204,7 +204,8 @@ tr "'" '"' <exp-noargs-shell >exp-noargs-c || framework_failure_
 for qs in literal shell c; do
   env -i PATH="$PATH" QUOTING_STYLE=$qs 'a b'='c d' \
     env >out-t 2>err || fail=1
-  grep -vE 'QUOTING_STYLE|PATH' out-t > out || framework_failure_
+  grep -vE '^["'"'"']?(__CF_USER_TEXT_ENCODING|QUOTING_STYLE|PATH)["'"'"']?=' \
+    out-t >out || framework_failure_
   compare exp-noargs-$qs out || fail=1
   compare /dev/null err || fail=1
 done
