@@ -29,6 +29,7 @@
 #include "printenv.h"
 #include "quote.h"
 #include "sig2str.h"
+#include "xbinary-io.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "env"
@@ -906,6 +907,9 @@ main (int argc, char **argv)
   if (! program_specified)
     {
       char const terminator = opt_nul_terminate_output ? '\0' : '\n';
+
+      if (opt_nul_terminate_output)
+        xset_binary_mode (STDOUT_FILENO, O_BINARY);
 
       /* Print the environment and exit.  */
       for (char *const *e = environ; *e; ++e)

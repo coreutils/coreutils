@@ -109,6 +109,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'df', 'du', 'ls', 'od', 'pr', and 'sort' now escape invalid arguments in error
   messages for options expecting an integer.
 
+  'env -0, and 'printenv -0' now explicitly set binary mode on output
+  so that no CRLF translation is done e.g., on windows.
+
   'install -C' will now avoid updating file metadata when the destination
   already has the appropriate ownership and permissions.
 

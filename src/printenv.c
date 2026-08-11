@@ -35,6 +35,7 @@
 #include "argmatch.h"  /* argmatch($QUOTING_STYLE).  */
 #include "system.h"
 #include "printenv.h"
+#include "xbinary-io.h"
 
 /* Exit status for syntax errors, etc.  */
 enum { PRINTENV_FAILURE = 2 };
@@ -125,6 +126,9 @@ main (int argc, char **argv)
 
   bool ok;
   char const terminator = opt_nul_terminate_output ? '\0' : '\n';
+
+  if (opt_nul_terminate_output)
+    xset_binary_mode (STDOUT_FILENO, O_BINARY);
 
   if (optind >= argc)
     {
