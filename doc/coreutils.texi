@@ -17568,6 +17568,19 @@ environment.
 @optItemx{env,--ignore-environment,}
 Start with an empty environment, ignoring the inherited environment.
 
+@optItem{env,--env0-from,=@var{file}}
+Read NUL-terminated @samp{@var{name}=@var{value}} assignments from
+@var{file} and add them to the environment.  If @var{file} is
+@samp{-}, read from standard input.  The final assignment must be
+terminated by a NUL byte.
+
+Assignments from @var{file} replace inherited variables with the same
+name.  A later assignment in @var{file} takes precedence over an earlier
+one.  The @option{--ignore-environment} option starts with an empty
+environment before adding these assignments.  Variables specified by
+@option{--unset} are then removed, and command-line assignments take
+final precedence.
+
 @optItem{env,-C,@w{ }@var{dir}}
 @optItemx{env,--chdir,=@var{dir}}
 Change the working directory to @var{dir} before invoking @var{command}.

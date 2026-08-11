@@ -78,6 +78,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New Features
 
+  'env' now supports --env0-from=FILE to add NUL-delimited environment variable
+  assignments read from a file.
+
   'stat' and 'tail' now know about the "nullfs" file system type.
   stat -f -c%T now reports the file system type,
   and tail -f uses inotify for this file system.

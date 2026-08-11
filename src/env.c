@@ -28,6 +28,7 @@
 #include "operand2sig.h"
 #include "printenv.h"
 #include "quote.h"
+#include "read-file.h"
 #include "sig2str.h"
 #include "xbinary-io.h"
 
@@ -43,6 +44,9 @@
 static char const **usvars;
 static idx_t usvars_alloc;
 static idx_t usvars_used;
+
+/* Storage for variables passed to putenv from --env0-from.  */
+static char *env0_from_buffer;
 
 /* Annotate the output with extra info to aid the user.  */
 static bool dev_debug;
@@ -86,7 +90,8 @@ static char const shortopts[] = "+a:C:iS:u:v0" C_ISSPACE_CHARS;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  DEFAULT_SIGNAL_OPTION = CHAR_MAX + 1,
+  ENV0_FROM_OPTION = CHAR_MAX + 1,
+  DEFAULT_SIGNAL_OPTION,
   IGNORE_SIGNAL_OPTION,
   BLOCK_SIGNAL_OPTION,
   LIST_SIGNAL_HANDLING_OPTION,
@@ -96,6 +101,7 @@ static struct option const longopts[] =
 {
   {"argv0", required_argument, NULL, 'a'},
   {"ignore-environment", no_argument, NULL, 'i'},
+  {"env0-from", required_argument, NULL, ENV0_FROM_OPTION},
   {"null", no_argument, NULL, '0'},
   {"unset", required_argument, NULL, 'u'},
   {"chdir", required_argument, NULL, 'C'},
@@ -133,6 +139,10 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
       oputs (_("\
   -i, --ignore-environment\n\
          start with an empty environment\n\
+"));
+      oputs (_("\
+      --env0-from=FILE\n\
+         set variables from NUL-delimited assignments in FILE\n\
 "));
       oputs (_("\
   -0, --null\n\
@@ -207,6 +217,53 @@ unset_envvars (void)
       if (unsetenv (usvars[i]))
         error (EXIT_CANCELED, errno, _("cannot unset %s"),
                quote (usvars[i]));
+    }
+}
+
+/* Add ASSIGNMENT to the environment.  EQ points to its '=' byte.  */
+static void
+set_envvar (char *assignment, char *eq)
+{
+  devmsg ("setenv:   %s\n", assignment);
+
+  if (putenv (assignment))
+    {
+      *eq = '\0';
+      error (EXIT_CANCELED, errno, _("cannot set %s"), quote (assignment));
+    }
+}
+
+/* Merge the NUL-delimited assignments in FILE into the environment.  */
+static void
+set_envvars_from_file (char const *file)
+{
+  size_t size;
+  if (streq (file, "-"))
+    {
+      xset_binary_mode (STDIN_FILENO, O_BINARY);
+      env0_from_buffer = fread_file (stdin, RF_BINARY, &size);
+    }
+  else
+    env0_from_buffer = read_file (file, RF_BINARY, &size);
+
+  if (! env0_from_buffer)
+    error (EXIT_CANCELED, errno, _("cannot read %s"), quoteaf (file));
+  if (size && env0_from_buffer[size - 1] != '\0')
+    error (EXIT_CANCELED, 0, _("%s: file must end with a NUL byte"),
+           quotef (file));
+
+  char *end = env0_from_buffer + size;
+  for (char *assignment = env0_from_buffer; assignment < end; )
+    {
+      char *next = assignment + strlen (assignment) + 1;
+      char *eq = strchr (assignment, '=');
+      if (! eq)
+        error (EXIT_CANCELED, 0,
+               _("invalid variable specification %s in %s"),
+               quoteaf_n (0, assignment), quoteaf_n (1, file));
+
+      set_envvar (assignment, eq);
+      assignment = next;
     }
 }
 
@@ -771,6 +828,7 @@ main (int argc, char **argv)
   bool ignore_environment = false;
   bool opt_nul_terminate_output = false;
   char const *newdir = NULL;
+  char const *env0_from_file = NULL;
   char *argv0 = NULL;
 
   initialize_main (&argc, &argv);
@@ -803,6 +861,9 @@ main (int argc, char **argv)
           break;
         case '0':
           opt_nul_terminate_output = true;
+          break;
+        case ENV0_FROM_OPTION:
+          env0_from_file = optarg;
           break;
         case DEFAULT_SIGNAL_OPTION:
           parse_signal_action_params (optarg, true);
@@ -867,20 +928,17 @@ main (int argc, char **argv)
       static char *dummy_environ[] = { NULL };
       environ = dummy_environ;
     }
-  else
+
+  if (env0_from_file)
+    set_envvars_from_file (env0_from_file);
+
+  if (! ignore_environment || env0_from_file)
     unset_envvars ();
 
   char *eq;
   while (optind < argc && (eq = strchr (argv[optind], '=')))
     {
-      devmsg ("setenv:   %s\n", argv[optind]);
-
-      if (putenv (argv[optind]))
-        {
-          *eq = '\0';
-          error (EXIT_CANCELED, errno, _("cannot set %s"),
-                 quote (argv[optind]));
-        }
+      set_envvar (argv[optind], eq);
       optind++;
     }
 
