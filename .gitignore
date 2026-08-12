@@ -53,6 +53,7 @@
 /lib/.gitignore
 /lib/alloca.h
 /lib/arg-nonnull.h
+/lib/argz.h
 /lib/arpa/inet.h
 /lib/assert.h
 /lib/byteswap.h

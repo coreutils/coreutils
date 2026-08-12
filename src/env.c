@@ -19,6 +19,7 @@
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <argz.h>
 #include <getopt.h>
 #include <c-ctype.h>
 #include <signal.h>
@@ -358,10 +359,9 @@ set_envvars_from_file (struct env_vector *env, char const *file)
   /* On native Windows, _putenv keeps _environ, _wenviron, and the process
      environment block synchronized.  Replacing environ directly would
      conflict with its ownership of those data structures.  */
-  char *end = env0_from_buffer + size;
-  for (char *assignment = env0_from_buffer; assignment < end; )
+  char *assignment = NULL;
+  while ((assignment = argz_next (env0_from_buffer, size, assignment)))
     {
-      char *next = assignment + strlen (assignment) + 1;
       char *eq = strchr (assignment, '=');
       if (! eq)
         error (EXIT_CANCELED, 0,
@@ -369,20 +369,12 @@ set_envvars_from_file (struct env_vector *env, char const *file)
                quoteaf_n (0, assignment), quoteaf_n (1, file));
 
       set_envvar (assignment, eq);
-      assignment = next;
     }
   return false;
 #else
   /* Construct and index the merged vector, rather than making putenv
      repeatedly scan the growing environment for every assignment.  */
-  char *end = env0_from_buffer + size;
-  idx_t file_count = 0;
-  for (char *assignment = env0_from_buffer; assignment < end; )
-    {
-      char *next = assignment + strlen (assignment) + 1;
-      ++file_count;
-      assignment = next;
-    }
+  idx_t file_count = argz_count (env0_from_buffer, size);
 
   if (file_count == 0)
     return false;
@@ -417,9 +409,9 @@ set_envvars_from_file (struct env_vector *env, char const *file)
     }
 
   idx_t merged_count = inherited_count;
-  for (char *assignment = env0_from_buffer; assignment < end; )
+  char *assignment = NULL;
+  while ((assignment = argz_next (env0_from_buffer, size, assignment)))
     {
-      char *next = assignment + strlen (assignment) + 1;
       char *eq = strchr (assignment, '=');
       if (! eq)
         {
@@ -441,7 +433,6 @@ set_envvars_from_file (struct env_vector *env, char const *file)
               ++merged_count;
             }
         }
-      assignment = next;
     }
 
   merged[merged_count] = NULL;
@@ -461,22 +452,12 @@ set_raw_environment_from_file (struct env_vector *env,
                                char const *file)
 {
   size_t size = read_env_file (file);
-  idx_t entry_count = 0;
-  for (size_t i = 0; i < size; ++i)
-    entry_count += env0_from_buffer[i] == '\0';
+  idx_t entry_count = argz_count (env0_from_buffer, size);
 
   env->allocated = entry_count + 1;
   env->variable = xnmalloc (env->allocated, sizeof *env->variable);
-  env->used = 0;
-
-  char *entry = env0_from_buffer;
-  for (size_t i = 0; i < size; ++i)
-    if (env0_from_buffer[i] == '\0')
-      {
-        env->variable[env->used++] = entry;
-        entry = env0_from_buffer + i + 1;
-      }
-  env->variable[env->used] = NULL;
+  argz_extract (env0_from_buffer, size, env->variable);
+  env->used = entry_count;
   environ = env->variable;
 }
 
