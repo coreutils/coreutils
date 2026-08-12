@@ -24,6 +24,8 @@
 #include <signal.h>
 
 #include "argmatch.h"  /* argmatch($QUOTING_STYLE).  */
+#include "hash.h"
+#include "hashcode-mem.h"
 #include "system.h"
 #include "operand2sig.h"
 #include "printenv.h"
@@ -237,6 +239,27 @@ entry_has_name (char const *entry, char const *name, idx_t name_length)
           && memeq (entry, name, name_length));
 }
 
+#if ! defined _WIN32 || defined __CYGWIN__
+/* Hash an environment vector slot by the name in its assignment.  */
+static size_t
+env_vector_slot_hash (void const *x, size_t table_size)
+{
+  char *const *slot = x;
+  char const *entry = *slot;
+  char const *eq = strchr (entry, '=');
+  return hash_pjw_bare (entry, eq - entry) % table_size;
+}
+
+static bool
+env_vector_slot_compare (void const *x, void const *y)
+{
+  char const *a = * (char *const *) x;
+  char const *b = * (char *const *) y;
+  char const *b_eq = strchr (b, '=');
+  return entry_has_name (a, b, b_eq - b);
+}
+#endif
+
 /* Remove the requested variables from ENV,
    directly, preserving other raw entries.  */
 static void
@@ -323,12 +346,18 @@ read_env_file (char const *file)
   return size;
 }
 
-/* Merge the NUL-delimited assignments in FILE into the environment.  */
-static void
-set_envvars_from_file (char const *file)
+/* Merge the NUL-delimited assignments in FILE into the environment.
+   Return true if ENV now owns the environment vector.  */
+static bool
+set_envvars_from_file (struct env_vector *env, char const *file)
 {
   size_t size = read_env_file (file);
 
+#if defined _WIN32 && ! defined __CYGWIN__
+  (void) env;
+  /* On native Windows, _putenv keeps _environ, _wenviron, and the process
+     environment block synchronized.  Replacing environ directly would
+     conflict with its ownership of those data structures.  */
   char *end = env0_from_buffer + size;
   for (char *assignment = env0_from_buffer; assignment < end; )
     {
@@ -342,6 +371,82 @@ set_envvars_from_file (char const *file)
       set_envvar (assignment, eq);
       assignment = next;
     }
+  return false;
+#else
+  /* Construct and index the merged vector, rather than making putenv
+     repeatedly scan the growing environment for every assignment.  */
+  char *end = env0_from_buffer + size;
+  idx_t file_count = 0;
+  for (char *assignment = env0_from_buffer; assignment < end; )
+    {
+      char *next = assignment + strlen (assignment) + 1;
+      if (! strchr (assignment, '='))
+        error (EXIT_CANCELED, 0,
+               _("invalid variable specification %s in %s"),
+               quoteaf_n (0, assignment), quoteaf_n (1, file));
+      ++file_count;
+      assignment = next;
+    }
+
+  if (file_count == 0)
+    return false;
+
+  idx_t inherited_count = 0;
+  while (environ[inherited_count])
+    ++inherited_count;
+
+  if (IDX_MAX - inherited_count <= file_count)
+    xalloc_die ();
+  idx_t max_count = inherited_count + file_count;
+  char **merged = xnmalloc (max_count + 1, sizeof *merged);
+  memcpy (merged, environ, inherited_count * sizeof *merged);
+  merged[inherited_count] = NULL;
+
+  Hash_table *slot_table
+    = hash_initialize (max_count, NULL, env_vector_slot_hash,
+                       env_vector_slot_compare, NULL);
+  if (! slot_table)
+    xalloc_die ();
+
+  /* Index only the first occurrence of each inherited name, matching
+     putenv's replacement of the first such entry.  */
+  for (idx_t i = 0; i < inherited_count; ++i)
+    {
+      char *eq = strchr (merged[i], '=');
+      if (! eq)
+        continue;
+
+      if (! hash_insert (slot_table, &merged[i]))
+        xalloc_die ();
+    }
+
+  idx_t merged_count = inherited_count;
+  for (char *assignment = env0_from_buffer; assignment < end; )
+    {
+      char *next = assignment + strlen (assignment) + 1;
+      devmsg ("setenv:   %s\n", assignment);
+
+      char **slot = hash_lookup (slot_table, &assignment);
+      if (slot)
+        *slot = assignment;
+      else
+        {
+          merged[merged_count] = assignment;
+          if (! hash_insert (slot_table, &merged[merged_count]))
+            xalloc_die ();
+          ++merged_count;
+        }
+      assignment = next;
+    }
+
+  merged[merged_count] = NULL;
+  env->variable = merged;
+  env->used = merged_count;
+  env->allocated = max_count + 1;
+  environ = merged;
+  hash_free (slot_table);
+  return true;
+#endif
 }
 
 /* Replace the environment with the NUL-delimited entries in FILE,
@@ -935,7 +1040,6 @@ main (int argc, char **argv)
   char *argv0 = NULL;
   struct env_vector env_vector;
 #ifdef lint
-  env_vector.variable = NULL;
   char **initial_environ = environ;
 #endif
 
@@ -1040,11 +1144,20 @@ main (int argc, char **argv)
   else if (ignore_environment)
     {
       devmsg ("cleaning environ\n");
+#if defined _WIN32 && ! defined __CYGWIN__
       static char *dummy_environ[] = { NULL };
       environ = dummy_environ;
+#else
+      env_vector.variable = xnmalloc (1, sizeof *env_vector.variable);
+      env_vector.variable[0] = NULL;
+      env_vector.used = 0;
+      env_vector.allocated = 1;
+      environ = env_vector.variable;
+      env_vector_active = true;
+#endif
     }
   else if (env0_from_file)
-    set_envvars_from_file (env0_from_file);
+    env_vector_active = set_envvars_from_file (&env_vector, env0_from_file);
 
   if (! ignore_environment || env0_from_file)
     {
@@ -1095,9 +1208,12 @@ main (int argc, char **argv)
       for (char *const *e = environ; *e; ++e)
         print_envvar (*e, terminator, quote_output);
 #ifdef lint
-      environ = initial_environ;
-      free (env_vector.variable);
-      free (env0_from_buffer);
+      if (env_vector_active)
+        {
+          environ = initial_environ;
+          free (env_vector.variable);
+          free (env0_from_buffer);
+        }
 #endif
       return EXIT_SUCCESS;
     }

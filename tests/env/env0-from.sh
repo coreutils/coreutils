@@ -63,13 +63,47 @@ printf '=value\0' >empty-name || framework_failure_
 env -i --env0-from=empty-name -0 >out || fail=1
 compare empty-name out || fail=1
 
-# Without -i, retain putenv behavior for duplicate names.
+# Without -i, retain putenv-style replacement for duplicate names.
 printf '%s\0' CU_ENV0_FROM_DUP=first CU_ENV0_FROM_DUP=last \
   >duplicates || framework_failure_
 QUOTING_STYLE=literal env --env0-from=duplicates >all || fail=1
 grep '^CU_ENV0_FROM_DUP=' all >out || framework_failure_
 echo CU_ENV0_FROM_DUP=last >exp || framework_failure_
 compare exp out || fail=1
+
+# Check merging into an environment that already has duplicate and
+# nonstandard entries.  Native Windows cannot pass those entries through
+# its process environment block, and retains the system putenv merge path.
+case $host_os in
+  mingw* | windows*) ;;
+  *)
+    printf 'A=old1\0opaque\0A=old2\0B=old\0' >base \
+      || framework_failure_
+    printf 'A=new1\0C=new\0A=new2\0' >merge || framework_failure_
+    printf 'A=new2\0A=old2\0B=old\0C=new\0opaque\0' >exp \
+      || framework_failure_
+    LC_ALL=C sort -z exp >exp-sorted || framework_failure_
+    env -i --env0-from=base "$abs_top_builddir/src/env$EXEEXT" \
+      --env0-from=merge -0 >all || fail=1
+    LC_ALL=C sort -z all >out || framework_failure_
+    compare exp-sorted out || fail=1
+
+    printf 'B=old\0C=operand\0D=new\0opaque\0' >exp \
+      || framework_failure_
+    LC_ALL=C sort -z exp >exp-sorted || framework_failure_
+    env -i --env0-from=base "$abs_top_builddir/src/env$EXEEXT" \
+      --env0-from=merge -u A -0 C=operand D=new >all || fail=1
+    LC_ALL=C sort -z all >out || framework_failure_
+    compare exp-sorted out || fail=1
+
+    printf 'A=one\0' >base-grow || framework_failure_
+    printf 'B=two\0' >merge-grow || framework_failure_
+    printf 'A=one\0B=two\0C=three\0' >exp || framework_failure_
+    env -i --env0-from=base-grow "$abs_top_builddir/src/env$EXEEXT" \
+      --env0-from=merge-grow -0 C=three >out || fail=1
+    compare exp out || fail=1
+    ;;
+esac
 
 # With -i, preserve all entries byte-for-byte, including duplicate names,
 # entries without '=', and empty entries.
