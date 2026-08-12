@@ -63,14 +63,33 @@ printf '=value\0' >empty-name || framework_failure_
 env -i --env0-from=empty-name -0 >out || fail=1
 compare empty-name out || fail=1
 
-# A later record for the same name takes precedence.
-printf 'A=first\0B=second\0A=last\0' >duplicates || framework_failure_
-cat <<\EOF >exp || framework_failure_
-A=last
-B=second
-EOF
-QUOTING_STYLE=literal env -i --env0-from=duplicates >all || fail=1
-LC_ALL=C sort all >out || framework_failure_
+# Without -i, retain putenv behavior for duplicate names.
+printf '%s\0' CU_ENV0_FROM_DUP=first CU_ENV0_FROM_DUP=last \
+  >duplicates || framework_failure_
+QUOTING_STYLE=literal env --env0-from=duplicates >all || fail=1
+grep '^CU_ENV0_FROM_DUP=' all >out || framework_failure_
+echo CU_ENV0_FROM_DUP=last >exp || framework_failure_
+compare exp out || fail=1
+
+# With -i, preserve all entries byte-for-byte, including duplicate names,
+# entries without '=', and empty entries.
+printf 'A=first\0opaque\0A=last\0\0=value\0B=\0' >raw \
+  || framework_failure_
+env -i --env0-from=raw -0 >out || fail=1
+compare raw out || fail=1
+env -0 --env0-from=raw - >out || fail=1
+compare raw out || fail=1
+
+# Apply -u and command-line assignments without normalizing other entries.
+printf 'opaque\0\0=value\0B=changed\0C=new\0' >exp \
+  || framework_failure_
+env -i --env0-from=raw -u A -0 B=changed C=new >out || fail=1
+compare exp out || fail=1
+
+# Appending beyond the loaded vector must update environ after reallocating.
+printf 'A=one\0' >one || framework_failure_
+printf 'A=one\0B=two\0' >exp || framework_failure_
+env -i --env0-from=one -0 B=two >out || fail=1
 compare exp out || fail=1
 
 # Read '-' in binary mode from standard input.
@@ -91,11 +110,11 @@ env -i --env0-from=path env0-from-command >out || fail=1
 compare exp out || fail=1
 
 # An empty file makes no changes, unless -i also requests an empty base.
-: >empty || framework_failure_
+printf %s '' >empty || framework_failure_
 env -i --env0-from=empty -0 >out || fail=1
 compare /dev/null out || fail=1
 
-# Every nonempty record must be a complete NUL-terminated assignment.
+# The file must end in NUL.  Without -i, every record is an assignment.
 printf 'A=unterminated' >invalid || framework_failure_
 returns_ 125 env --env0-from=invalid >out 2>err || fail=1
 printf 'not-an-assignment\0' >invalid || framework_failure_
@@ -107,5 +126,7 @@ returns_ 125 env --env0-from=does-not-exist >out 2>err || fail=1
 # Invalid -u names are still diagnosed after loading variables from a file.
 returns_ 125 env --env0-from=empty -u '' true || fail=1
 returns_ 125 env --env0-from=empty -u A=B true || fail=1
+returns_ 125 env -i --env0-from=empty -u '' true || fail=1
+returns_ 125 env -i --env0-from=empty -u A=B true || fail=1
 
 Exit $fail

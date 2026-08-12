@@ -17569,17 +17569,21 @@ environment.
 Start with an empty environment, ignoring the inherited environment.
 
 @optItem{env,--env0-from,=@var{file}}
-Read NUL-terminated @samp{@var{name}=@var{value}} assignments from
-@var{file} and add them to the environment.  If @var{file} is
-@samp{-}, read from standard input.  The final assignment must be
-terminated by a NUL byte.
+Read NUL-terminated environment entries from @var{file}.  If @var{file}
+is @samp{-}, read from standard input.  The file must either be empty or
+end with a NUL byte.
 
-Assignments from @var{file} replace inherited variables with the same
-name.  A later assignment in @var{file} takes precedence over an earlier
-one.  The @option{--ignore-environment} option starts with an empty
-environment before adding these assignments.  Variables specified by
-@option{--unset} are then removed, and command-line assignments take
-final precedence.
+Without @option{--ignore-environment}, each entry must be a
+@samp{@var{name}=@var{value}} assignment.  Assignments replace inherited
+variables with the same name, and a later assignment in @var{file} takes
+precedence over an earlier one.
+
+With @option{--ignore-environment}, the entries replace the environment
+directly.  Their order and contents are preserved, including duplicate
+names, empty entries, and entries without an @samp{=} byte.  Thus this
+mode can round-trip the output from @samp{env -0} exactly.  Variables
+specified by @option{--unset} are then removed, and command-line
+assignments are then applied.
 
 @optItem{env,-C,@w{ }@var{dir}}
 @optItemx{env,--chdir,=@var{dir}}
