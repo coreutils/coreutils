@@ -326,7 +326,8 @@ main (int argc, char **argv)
         file_size = sb.st_size;
       else
         {
-          int ref_fd = open (ref_file, O_RDONLY);
+          /* O_NONBLOCK so we do not hang forever on a FIFO with no writer.  */
+          int ref_fd = open (ref_file, O_RDONLY | O_NONBLOCK);
           if (0 <= ref_fd)
             {
               off_t file_end = lseek (ref_fd, 0, SEEK_END);

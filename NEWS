@@ -58,6 +58,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   with an error.
   [This bug was present in "the beginning".]
 
+  'truncate --reference=R' no longer hangs when R is a FIFO with no readers.
+  [bug introduced in coreutils-8.17]
+
   'unexpand -t' no longer overflows a heap buffer, for tab values > SIZE_MAX/16,
   or with multi-byte blank characters longer than the tab value.
   [bugs introduced in coreutils-9.11]

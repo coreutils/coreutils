@@ -21,7 +21,13 @@ print_ver_ truncate
 
 mkfifo_or_skip_ fifo
 
+# Output FIFO must not hang.
 timeout 10 truncate -s0 fifo
+test "$?" = 124 && fail=1
+
+# Reference FIFO must not hang either.
+touch file || framework_failure_
+timeout 10 truncate --reference=fifo file 2>/dev/null
 test "$?" = 124 && fail=1
 
 Exit $fail
