@@ -17573,10 +17573,11 @@ Read NUL-terminated environment entries from @var{file}.  If @var{file}
 is @samp{-}, read from standard input.  The file must either be empty or
 end with a NUL byte.
 
-Without @option{--ignore-environment}, each entry must be a
-@samp{@var{name}=@var{value}} assignment.  Assignments replace inherited
-variables with the same name, and a later assignment in @var{file} takes
-precedence over an earlier one.
+Without @option{--ignore-environment}, entries of the form
+@samp{@var{name}=@var{value}} replace inherited variables with the same
+name, and a later assignment in @var{file} takes precedence over an earlier
+one.  Entries without an @samp{=} byte, including empty entries, are
+appended to the environment without replacing another entry.
 
 With @option{--ignore-environment}, the entries replace the environment
 directly.  Their order and contents are preserved, including duplicate

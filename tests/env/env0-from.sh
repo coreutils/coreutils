@@ -148,12 +148,29 @@ printf %s '' >empty || framework_failure_
 env -i --env0-from=empty -0 >out || fail=1
 compare /dev/null out || fail=1
 
-# The file must end in NUL.  Without -i, every record is an assignment.
+# Without -i, append entries that have no name to look up.  Native Windows
+# rejects such entries since its environment cannot represent them.
+case $host_os in
+  mingw* | windows*)
+    printf 'not-an-assignment\0' >invalid || framework_failure_
+    returns_ 125 env --env0-from=invalid >out 2>err || fail=1
+    printf '\0' >invalid || framework_failure_
+    returns_ 125 env --env0-from=invalid >out 2>err || fail=1
+    ;;
+  *)
+    printf 'A=file1\0opaque\0\0A=file2\0B=new\0' >mixed \
+      || framework_failure_
+    printf 'A=file2\0opaque\0\0B=new\0' >exp || framework_failure_
+    LC_ALL=C sort -z exp >exp-sorted || framework_failure_
+    env -i A=old "$abs_top_builddir/src/env$EXEEXT" \
+      --env0-from=mixed -0 >all || fail=1
+    LC_ALL=C sort -z all >out || framework_failure_
+    compare exp-sorted out || fail=1
+    ;;
+esac
+
+# The file must end in NUL.
 printf 'A=unterminated' >invalid || framework_failure_
-returns_ 125 env --env0-from=invalid >out 2>err || fail=1
-printf 'not-an-assignment\0' >invalid || framework_failure_
-returns_ 125 env --env0-from=invalid >out 2>err || fail=1
-printf '\0' >invalid || framework_failure_
 returns_ 125 env --env0-from=invalid >out 2>err || fail=1
 returns_ 125 env --env0-from=does-not-exist >out 2>err || fail=1
 

@@ -346,7 +346,7 @@ read_env_file (char const *file)
   return size;
 }
 
-/* Merge the NUL-delimited assignments in FILE into the environment.
+/* Merge the NUL-delimited entries in FILE into the environment.
    Return true if ENV now owns the environment vector.  */
 static bool
 set_envvars_from_file (struct env_vector *env, char const *file)
@@ -380,10 +380,6 @@ set_envvars_from_file (struct env_vector *env, char const *file)
   for (char *assignment = env0_from_buffer; assignment < end; )
     {
       char *next = assignment + strlen (assignment) + 1;
-      if (! strchr (assignment, '='))
-        error (EXIT_CANCELED, 0,
-               _("invalid variable specification %s in %s"),
-               quoteaf_n (0, assignment), quoteaf_n (1, file));
       ++file_count;
       assignment = next;
     }
@@ -424,17 +420,26 @@ set_envvars_from_file (struct env_vector *env, char const *file)
   for (char *assignment = env0_from_buffer; assignment < end; )
     {
       char *next = assignment + strlen (assignment) + 1;
-      devmsg ("setenv:   %s\n", assignment);
-
-      char **slot = hash_lookup (slot_table, &assignment);
-      if (slot)
-        *slot = assignment;
+      char *eq = strchr (assignment, '=');
+      if (! eq)
+        {
+          devmsg ("append:   %s\n", assignment);
+          merged[merged_count++] = assignment;
+        }
       else
         {
-          merged[merged_count] = assignment;
-          if (! hash_insert (slot_table, &merged[merged_count]))
-            xalloc_die ();
-          ++merged_count;
+          devmsg ("setenv:   %s\n", assignment);
+
+          char **slot = hash_lookup (slot_table, &assignment);
+          if (slot)
+            *slot = assignment;
+          else
+            {
+              merged[merged_count] = assignment;
+              if (! hash_insert (slot_table, &merged[merged_count]))
+                xalloc_die ();
+              ++merged_count;
+            }
         }
       assignment = next;
     }
