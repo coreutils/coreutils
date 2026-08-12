@@ -16947,6 +16947,11 @@ The program accepts the following options.  Also see @ref{Common options}.
 Print all of the below information, except omit the processor type
 and the hardware platform name if they are unknown.
 
+@optItem{uname,-A,}
+@optItemx{uname,--all-labeled,}
+Like @option{-a}, print all of the below information,
+in a vertical, labeled format: @var{label}: @var{value}.
+
 @optItem{uname,-i,}
 @optItemx{uname,--hardware-platform,}
 @cindex implementation, hardware

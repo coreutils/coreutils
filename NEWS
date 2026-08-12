@@ -75,6 +75,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   stat -f -c%T now reports the file system type,
   and tail -f uses inotify for this file system.
 
+  uname adds the -A,--all-labeled option to label all output, one item per line.
+
 ** Changes in behavior
 
   'env' and 'printenv' now quote printed environment variables honoring the
