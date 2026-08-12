@@ -451,6 +451,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "nsfs";
     case S_MAGIC_NTFS: /* 0x5346544E local */
       return "ntfs";
+    case S_MAGIC_NULL_FS: /* 0x4E554C4C local */
+      return "nullfs";
     case S_MAGIC_OPENPROM: /* 0x9FA1 local */
       return "openprom";
     case S_MAGIC_OCFS2: /* 0x7461636F remote */

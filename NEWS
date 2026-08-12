@@ -69,6 +69,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   locales like SHIFT-JIS where a single byte can decode to a wide character.
   [bug introduced in coreutils-9.5]
 
+** New Features
+
+  'stat' and 'tail' now know about the "nullfs" file system type.
+  stat -f -c%T now reports the file system type,
+  and tail -f uses inotify for this file system.
+
 ** Changes in behavior
 
   'env' and 'printenv' now quote printed environment variables honoring the
