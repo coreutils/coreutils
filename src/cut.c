@@ -633,7 +633,7 @@ field_delim_overlap (char const *buf, idx_t len)
 
   while (0 < overlap)
     {
-      if (memcmp (buf + len - overlap, delim_bytes, overlap) == 0)
+      if (memeq (buf + len - overlap, delim_bytes, overlap))
         return overlap;
       overlap--;
     }

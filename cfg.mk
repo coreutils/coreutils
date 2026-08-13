@@ -797,6 +797,12 @@ sc_prohibit_strncmp:
 	halt='use STREQ_LEN or STRPREFIX instead of str''ncmp'		\
 	  $(_sc_search_regexp)
 
+# Prefer memeq() to memcmp() where appropriate
+sc_prohibit_memcmp:
+	@prohibit='^[^#].*memcmp *\(.*= 0'				\
+	halt='use memeq() instead of memcmp() =='			\
+	  $(_sc_search_regexp)
+
 # Enforce recommended preprocessor indentation style.
 sc_preprocessor_indentation:
 	@if cppi --version >/dev/null 2>&1; then			\
