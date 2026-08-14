@@ -143,13 +143,10 @@ $prog '%500000s' x > out || fail=1
 test "$(wc -c < out)" = 500000 || fail=1
 test "$(tr -d ' ' < out)" = x || fail=1
 
+# Ensure a precision beyond 1000 digits is not truncated
 $prog '%.70000f' 1 > out || fail=1
 test "$(wc -c < out)" = 70002 || fail=1
 test "$(tr -d 0 < out)" = '1.' || fail=1
 
-# Ensure a precision beyond 1000 digits is not truncated
-$prog '%.1000f' 1 > out || fail=1
-test "$(wc -c < out)" = 1002 || fail=1
-test "$(tr -d 0 < out)" = '1.' || fail=1
 
 Exit $fail
