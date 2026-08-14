@@ -700,6 +700,10 @@ my @Tests =
      ['precision-4','--format=%.1f 1.12', {OUT=>"1.2"}],
      ['precision-5','--format=%.1f 9991239123 --to-unit=G', {OUT=>"10.0"}],
      ['precision-6','--format="% .1f" 9991239123 --to-unit=G', {OUT=>"10.0"}],
+     # Solaris 11 libc can incorrectly use exponential notation for a
+     # long double value at this precision.
+     ['precision-large', '--to=si --format=%.5119f 1',
+             {OUT=>'1.' . ('0' x 5119)}],
      ['precision-7','--format=%.-1f 1.1',
              {ERR => "$prog: invalid precision in format '%.-1f'\n"},
              {EXIT => 1}],
