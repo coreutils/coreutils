@@ -184,6 +184,8 @@ optc_to_fileno (int c)
     case 'o':
       ret = STDOUT_FILENO;
       break;
+    default:
+      unreachable ();
     }
 
   return ret;
