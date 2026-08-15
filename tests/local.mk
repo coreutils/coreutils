@@ -262,6 +262,7 @@ all_tests =					\
   tests/fmt/non-space.sh			\
   tests/fmt/width.sh				\
   tests/misc/echo.sh				\
+  tests/misc/empty-backup-suffix.sh		\
   tests/env/env.sh				\
   tests/env/env-signal-handler.sh		\
   tests/ptx/ptx.pl				\
