@@ -234,12 +234,11 @@ struct cp_options
      while with 'cp --preserve=all' or 'cp -a', it is "false". */
   bool require_preserve_xattr;
 
-  /* This allows us to output warnings in cases 2 and 4 below,
+  /* This allows us to output warnings in case 2 below,
      while being quiet for case 1 (when reduce_diagnostics is true).
        1. cp -a                       try to copy xattrs with no errors
        2. cp --preserve=all           copy xattrs with all but ENOTSUP warnings
        3. cp --preserve=xattr,context copy xattrs with all errors
-       4. mv                          copy xattrs with all but ENOTSUP warnings
    */
   bool reduce_diagnostics;
 

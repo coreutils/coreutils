@@ -9981,7 +9981,8 @@ original file system.
 @cindex extended attributes, xattr
 @command{mv} always tries to copy extended attributes (xattr), which may
 include SELinux context, ACLs or Capabilities.
-Upon failure all but @samp{Operation not supported} warnings are output.
+Upon failure all warnings are emitted, but do not modify the exit
+status.
 
 @cindex prompting, and @command{mv}
 If a destination file exists but is normally unwritable, standard input

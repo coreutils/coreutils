@@ -1086,7 +1086,7 @@ copy_reg (char const *src_name, char const *dst_name,
   if (preserve_xattr)
     {
       if (!copy_attr (src_name, source_desc, dst_name, dest_desc, x)
-          && x->require_preserve_xattr)
+          && x->require_preserve_xattr && ! x->move_mode)
         return_val = false;
     }
 
@@ -2672,7 +2672,7 @@ skip:
 
   /* Set xattrs after ownership as changing owners will clear capabilities.  */
   if (x->preserve_xattr && ! copy_attr (src_name, -1, dst_name, -1, x)
-      && x->require_preserve_xattr)
+      && x->require_preserve_xattr && ! x->move_mode)
     return false;
 
   /* The operations beyond this point may dereference a symlink.  */

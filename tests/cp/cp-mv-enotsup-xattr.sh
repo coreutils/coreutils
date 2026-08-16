@@ -110,10 +110,18 @@ compare exp err     || fail=1
 
 rm -f err noxattr/a
 
-# This should pass without diagnostics
+# POSIX requires a diagnostic to be printed here without
+# modifying the exit status.
 mv xattr/a noxattr/ 2>err || fail=1
 test -s noxattr/a         || fail=1  # destination file must not be empty
-compare /dev/null err || fail=1
+if grep '^#define USE_XATTR 1' $CONFIG_HEADER > /dev/null; then
+cat <<EOF > exp || framework_failure_
+mv: setting attributes for 'noxattr/a': $ENOTSUP
+EOF
+else
+truncate -s0 exp || framework_failure_
+fi
+compare exp err || fail=1
 
 # This should pass and copy xattrs of the symlink
 # since the xattrs used here are not in the 'user.' namespace.
