@@ -43,4 +43,24 @@ test "$(stat -c %I18.10Y k)" = '  67413.0234567890'   || fail=1
 test "$(stat -c %018.10Y k)" =  0067413.0234567890    || fail=1
 test "$(stat -c %-18.10Y k)" =   '67413.0234567890  ' || fail=1
 
+# A recent timestamp needs more than the 53 bits of a double to hold
+# all nine fractional digits.
+# Use the epoch notation for '2026-05-04 03:02:01.987654321'
+# to avoid any leap second ambiguities.
+touch -d '@1777863721.987654321' recent || framework_failure_
+
+test "$(stat -c   %Y recent)" = 1777863721            || fail=1
+test "$(stat -c  %.Y recent)" = 1777863721.987654321  || fail=1
+test "$(stat -c %.3Y recent)" = 1777863721.987        || fail=1
+test "$(stat -c %.9Y recent)" = 1777863721.987654321  || fail=1
+
+# Timestamps before the Epoch truncate towards minus infinity.
+# Use epoch notation for '1969-12-31 23:59:59.123456789'
+touch -d '@-0.876543211' old || framework_failure_
+
+test "$(stat -c   %Y old)" = -1            || fail=1
+test "$(stat -c  %.Y old)" = -0.876543211  || fail=1
+test "$(stat -c %.3Y old)" = -0.876        || fail=1
+test "$(stat -c %.9Y old)" = -0.876543211  || fail=1
+
 Exit $fail
