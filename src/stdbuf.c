@@ -26,6 +26,7 @@
 #include "filenamecat.h"
 #include "quote.h"
 #include "xreadlink.h"
+#include "xstrtol-error.h"
 #include "xstrtol.h"
 #include "c-ctype.h"
 
@@ -56,28 +57,20 @@ static struct option const longopts[] =
 
 /* Set size to the value of STR, interpreted as a decimal integer,
    optionally multiplied by various values.
-   Return -1 on error, 0 on success.
+   Return LONGINT_OK on success, otherwise an error for use with
+   xstrtol_fatal.
 
    This supports dd BLOCK size suffixes.
    Note we don't support dd's b=512, c=1, w=2 or 21x512MiB formats.  */
-static int
+static enum strtol_error
 parse_size (char const *str, size_t *size)
 {
   uintmax_t tmp_size;
   enum strtol_error e = xstrtoumax (str, NULL, 10,
                                     &tmp_size, "EGkKMPQRTYZ0");
-  if (e == LONGINT_OK && SIZE_MAX < tmp_size)
+  if (e == LONGINT_OK && ckd_add (size, tmp_size, 0))
     e = LONGINT_OVERFLOW;
-
-  if (e == LONGINT_OK)
-    {
-      errno = 0;
-      *size = tmp_size;
-      return 0;
-    }
-
-  errno = (e == LONGINT_OVERFLOW ? EOVERFLOW : errno);
-  return -1;
+  return e;
 }
 
 void
@@ -329,6 +322,7 @@ main (int argc, char **argv)
 
   while ((c = getopt_long (argc, argv, "+i:o:e:", longopts, NULL)) != -1)
     {
+      int const oi = -1;
       int opt_fileno;
 
       switch (c)
@@ -352,9 +346,13 @@ main (int argc, char **argv)
               usage (EXIT_CANCELED);
             }
 
-          if (!streq (optarg, "L")
-              && parse_size (optarg, &stdbuf[opt_fileno].size) == -1)
-            error (EXIT_CANCELED, errno, _("invalid mode %s"), quote (optarg));
+          if (!streq (optarg, "L"))
+            {
+              enum strtol_error e = parse_size (optarg,
+                                                &stdbuf[opt_fileno].size);
+              if (e != LONGINT_OK)
+                xstrtol_fatal (e, oi, c, longopts, optarg);
+            }
 
           break;
 
