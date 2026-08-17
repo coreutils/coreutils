@@ -144,7 +144,7 @@ copy_debug_string (enum copy_debug_val debug_val)
 
     case COPY_DEBUG_EXTERNAL:
     case COPY_DEBUG_EXTERNAL_INTERNAL:
-    default: unreachable ();
+    default: affirm (false);
     }
 }
 
@@ -161,7 +161,7 @@ copy_debug_sparse_string (enum copy_debug_val debug_val)
 
     case COPY_DEBUG_AVOIDED:
     case COPY_DEBUG_UNSUPPORTED:
-    default: unreachable ();
+    default: affirm (false);
     }
 }
 

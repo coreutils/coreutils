@@ -1423,7 +1423,7 @@ main (int argc, char **argv)
   switch (cut_mode)
     {
     case CUT_MODE_NONE:
-      unreachable ();
+      affirm (false);
 
     case CUT_MODE_BYTES:
       cut_stream = MB_CUR_MAX <= 1 || !no_split

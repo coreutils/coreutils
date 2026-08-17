@@ -28,6 +28,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "assure.h"
 #include "fseterr.h"
 #include "mcel.h"
 #include "idx.h"
@@ -66,7 +67,7 @@ MBBUF_INLINE void
 mbbuf_init (mbbuf_t *mbbuf, char *buffer, idx_t size, FILE *fp)
 {
   if (size < MCEL_LEN_MAX)
-    unreachable ();
+    affirm (false);
   mbbuf->buffer = buffer;
   mbbuf->fp = fp;
   mbbuf->size = size;
@@ -141,7 +142,7 @@ MBBUF_INLINE void
 mbbuf_advance (mbbuf_t *mbbuf, idx_t n)
 {
   if (mbbuf_avail (mbbuf) < n)
-    unreachable ();
+    affirm (false);
   mbbuf->offset += n;
 }
 
@@ -172,7 +173,7 @@ MBBUF_INLINE char *
 mbbuf_char_offset (mbbuf_t *mbbuf, mcel_t g)
 {
   if (mbbuf->offset < g.len)
-    unreachable ();
+    affirm (false);
   return mbbuf->buffer + (mbbuf->offset - g.len);
 }
 

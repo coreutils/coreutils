@@ -419,7 +419,7 @@ is_char_class_member (enum Char_class char_class, unsigned char c)
       result = c_isxdigit (c);
       break;
     case CC_NO_CLASS: default:
-      unreachable ();
+      affirm (false);
     }
 
   return !! result;

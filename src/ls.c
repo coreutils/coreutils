@@ -2666,7 +2666,7 @@ get_funky_string (char **dest, char const **src, bool equals_end,
           break;
 
         case ST_END: case ST_ERROR: default:
-          unreachable ();
+          affirm (false);
         }
     }
 
@@ -3430,7 +3430,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
           break;
 
         case DEREF_UNDEFINED: default:
-          unreachable ();
+          affirm (false);
         }
 
       if (err != 0)

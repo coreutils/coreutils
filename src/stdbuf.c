@@ -178,7 +178,7 @@ optc_to_fileno (int c)
       ret = STDOUT_FILENO;
       break;
     default:
-      unreachable ();
+      affirm (false);
     }
 
   return ret;

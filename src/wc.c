@@ -37,6 +37,7 @@
 #endif
 
 #include "system.h"
+#include "assure.h"
 #include "cpu-supports.h"
 #include "ioblksize.h"
 #include "wc.h"
@@ -990,7 +991,7 @@ main (int argc, char **argv)
       xalloc_die ();
 
     case AI_ERR_OK: default:
-      unreachable ();
+      affirm (false);
     }
 
   /* No arguments on the command line is fine.  That means read from stdin.

@@ -847,7 +847,7 @@ decode_one_format (char const *s_orig, char const *s, char const **next,
           break;
 
         default:
-          unreachable ();
+          affirm (false);
         }
 
       /* Prefer INT, prefer LONG to longer types,

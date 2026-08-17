@@ -21,6 +21,7 @@
 #include "system.h"
 
 #include "alignalloc.h"
+#include "assure.h"
 #include "backupfile.h"
 #include "buffer-lcm.h"
 #include "copy.h"
@@ -611,7 +612,7 @@ copy_file_data (int ifd, struct stat const *ist, off_t ipos, char const *iname,
                            x->reflink_mode != REFLINK_NEVER,
                            iname, oname, &hole_size, debug);
 #else
-      unreachable ();
+      affirm (false);
 #endif
     }
   else

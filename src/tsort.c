@@ -255,7 +255,7 @@ search_item (struct item *root, char const *str)
       p = q;
     }
 
-  unreachable ();
+  affirm (false);
 }
 
 /* Record the fact that J precedes K.  */

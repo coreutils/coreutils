@@ -22,6 +22,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "assure.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "sync"
@@ -143,7 +144,7 @@ sync_arg (enum sync_mode mode, char const *file)
           break;
 #endif
         case MODE_SYNC: default:
-          unreachable ();
+          affirm (false);
         }
 
       if (sync_status < 0)

@@ -22,6 +22,7 @@
 #include <langinfo.h>
 
 #include "argmatch.h"
+#include "assure.h"
 #include "c-ctype.h"
 #include "mbswidth.h"
 #include "mcel.h"
@@ -743,7 +744,7 @@ simple_strtod_fatal (enum simple_strtod_error err, char const *input_str)
     case SSE_OK_PRECISION_LOSS:
     case SSE_OK:
       /* should never happen - this function isn't called when OK.  */
-      unreachable ();
+      affirm (false);
 
     case SSE_OVERFLOW:
       msgid = N_("value too large to be converted: %s");
