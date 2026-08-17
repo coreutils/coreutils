@@ -19,6 +19,9 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ env
 
+# reference the env(1) to test before $PATH is adjusted
+envexe=$(command -v "env$EXEEXT") || framework_failure_
+
 CU_ENV0_FROM_PARENT=parent
 CU_ENV0_FROM_REPLACE=parent
 CU_ENV0_FROM_REMOVE=parent
@@ -34,7 +37,7 @@ printf '%s\0' \
 QUOTING_STYLE=literal env --env0-from=vars -u CU_ENV0_FROM_REMOVE \
   CU_ENV0_FROM_REPLACE=operand >all || fail=1
 grep -E '^CU_ENV0_FROM_(NEW|PARENT|REMOVE|REPLACE)=' all |
-  LC_ALL=C sort >out || framework_failure_
+  sort >out || framework_failure_
 cat <<\EOF >exp || framework_failure_
 CU_ENV0_FROM_NEW=new
 CU_ENV0_FROM_PARENT=parent
@@ -44,7 +47,7 @@ compare exp out || fail=1
 
 # With -i (or a mere -), use only the assignments read from the file.
 QUOTING_STYLE=literal env --env0-from=vars -i >all || fail=1
-LC_ALL=C sort all >out || framework_failure_
+sort all >out || framework_failure_
 cat <<\EOF >exp || framework_failure_
 CU_ENV0_FROM_NEW=new
 CU_ENV0_FROM_REMOVE=file
@@ -52,7 +55,7 @@ CU_ENV0_FROM_REPLACE=file
 EOF
 compare exp out || fail=1
 QUOTING_STYLE=literal env --env0-from=vars - >all || fail=1
-LC_ALL=C sort all >out || framework_failure_
+sort all >out || framework_failure_
 compare exp out || fail=1
 
 # Preserve values containing newlines, and accept an empty variable name.
@@ -74,34 +77,39 @@ compare exp out || fail=1
 # Check merging into an environment that already has duplicate and
 # nonstandard entries.  Native Windows cannot pass those entries through
 # its process environment block, and retains the system putenv merge path.
+# Generate expected environments through an exec, since some systems add
+# entries such as __CF_USER_TEXT_ENCODING when starting a process.
 case $host_os in
   mingw* | windows*) ;;
   *)
     printf 'A=old1\0opaque\0A=old2\0B=old\0' >base \
       || framework_failure_
     printf 'A=new1\0C=new\0A=new2\0' >merge || framework_failure_
-    printf 'A=new2\0A=old2\0B=old\0C=new\0opaque\0' >exp \
-      || framework_failure_
-    LC_ALL=C sort -z exp >exp-sorted || framework_failure_
-    env -i --env0-from=base "$abs_top_builddir/src/env$EXEEXT" \
-      --env0-from=merge -0 >all || fail=1
-    LC_ALL=C sort -z all >out || framework_failure_
+    env -i --env0-from=base \
+      "$envexe" A=new2 C=new >exp || fail=1
+    sort exp >exp-sorted || framework_failure_
+    env -i --env0-from=base \
+      "$envexe" --env0-from=merge >all || fail=1
+    sort all >out || framework_failure_
     compare exp-sorted out || fail=1
 
-    printf 'B=old\0C=operand\0D=new\0opaque\0' >exp \
-      || framework_failure_
-    LC_ALL=C sort -z exp >exp-sorted || framework_failure_
-    env -i --env0-from=base "$abs_top_builddir/src/env$EXEEXT" \
-      --env0-from=merge -u A -0 C=operand D=new >all || fail=1
-    LC_ALL=C sort -z all >out || framework_failure_
+    env -i --env0-from=base \
+      "$envexe" -u A C=operand D=new >exp || fail=1
+    sort exp >exp-sorted || framework_failure_
+    env -i --env0-from=base \
+      "$envexe" --env0-from=merge -u A C=operand D=new >all || fail=1
+    sort all >out || framework_failure_
     compare exp-sorted out || fail=1
 
     printf 'A=one\0' >base-grow || framework_failure_
     printf 'B=two\0' >merge-grow || framework_failure_
-    printf 'A=one\0B=two\0C=three\0' >exp || framework_failure_
-    env -i --env0-from=base-grow "$abs_top_builddir/src/env$EXEEXT" \
-      --env0-from=merge-grow -0 C=three >out || fail=1
-    compare exp out || fail=1
+    env -i --env0-from=base-grow \
+      "$envexe" B=two C=three >exp || fail=1
+    sort exp >exp-sorted || framework_failure_
+    env -i --env0-from=base-grow \
+      "$envexe" --env0-from=merge-grow C=three >all || fail=1
+    sort all >out || framework_failure_
+    compare exp-sorted out || fail=1
     ;;
 esac
 
@@ -160,11 +168,12 @@ case $host_os in
   *)
     printf 'A=file1\0opaque\0\0A=file2\0B=new\0' >mixed \
       || framework_failure_
-    printf 'A=file2\0opaque\0\0B=new\0' >exp || framework_failure_
-    LC_ALL=C sort -z exp >exp-sorted || framework_failure_
-    env -i A=old "$abs_top_builddir/src/env$EXEEXT" \
+    env -i A=old "$envexe" -0 A=file2 B=new >exp || fail=1
+    printf 'opaque\0\0' >>exp || framework_failure_
+    sort -z exp >exp-sorted || framework_failure_
+    env -i A=old "$envexe" \
       --env0-from=mixed -0 >all || fail=1
-    LC_ALL=C sort -z all >out || framework_failure_
+    sort -z all >out || framework_failure_
     compare exp-sorted out || fail=1
     ;;
 esac
