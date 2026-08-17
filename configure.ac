@@ -231,6 +231,12 @@ if test $gl_gcc_warnings != no; then
     nw="$nw -Wsuggest-attribute=noreturn"
   fi
 
+  # Suppress warnings to add pure or const attributes,
+  # as these are currently inaccurate and dangerous.
+  # See https://gcc.gnu.org/PR115237
+  nw="$nw -Wsuggest-attribute=pure"
+  nw="$nw -Wsuggest-attribute=const"
+
   # Using -Wstrict-overflow is a pain, but the alternative is worse.
   # For an example, see the code that provoked this report:
   # https://gcc.gnu.org/PR33498
