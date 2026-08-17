@@ -39,14 +39,47 @@ setcap 'cap_net_bind_service=ep' file ||
 getcap file | grep cap_net_bind_service >/dev/null ||
   skip_ "getcap doesn't work"
 
-cp --preserve=xattr file copy1 || fail=1
+# When configured with --disable-xattr, 'cp --preserve=xattr' will fail
+# before the copy is created because it cannot preserve extended attributes.
+cp --preserve=xattr file copy1 >out 2>err
+ret=$?
+compare /dev/null out || fail=1
+if ! grep '^#define USE_XATTR 1' $CONFIG_HEADER > /dev/null; then
+  cat <<\EOF >exp || framework_failure_
+cp: cannot preserve extended attributes, cp is built without xattr support
+EOF
+  compare exp err || fail=1
+  test "$ret" = 1 || fail=1
+  returns_ 1 test -f copy1 || fail=1
+else
+  compare /dev/null err || fail=1
+  test "$ret" = 0 || fail=1
+fi
 
 # Before coreutils 8.5 the capabilities would not be preserved,
 # as the owner was set _after_ copying xattrs, thus clearing any capabilities.
-cp --preserve=all   file copy2 || fail=1
+cp --preserve=all file copy2 >out >err || fail=1
+compare /dev/null out || fail=1
+compare /dev/null err || fail=1
 
-for file in copy1 copy2; do
-  getcap $file | grep cap_net_bind_service >/dev/null || fail=1
+# When configured with --disable-xattr, 'cp --preserve=all' will exit
+# normally without extended attributes copied.
+if ! grep '^#define USE_XATTR 1' $CONFIG_HEADER > /dev/null; then
+  copies=copy2
+  check_capabilities ()
+  {
+    getcap $1 | returns_ 1 grep cap_net_bind_service >/dev/null || fail=1
+  }
+else
+  copies='copy1 copy2'
+  check_capabilities ()
+  {
+    getcap $1 | grep cap_net_bind_service >/dev/null || fail=1
+  }
+fi
+
+for file in $copies; do
+  check_capabilities $file
 done
 
 Exit $fail
