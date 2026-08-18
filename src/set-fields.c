@@ -303,6 +303,6 @@ set_fields (char const *fieldstr, unsigned int options)
      Also add a sentinel at the end of RP, to avoid out of bounds access
      and for performance reasons.  */
   ++n_frp;
-  frp = xrealloc (frp, n_frp * sizeof (struct field_range_pair));
+  frp = xreallocarray (frp, n_frp, sizeof (struct field_range_pair));
   frp[n_frp - 1].lo = frp[n_frp - 1].hi = UINTMAX_MAX;
 }
