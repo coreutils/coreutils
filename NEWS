@@ -142,6 +142,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Build-related
 
+  'logname' now builds, where getlogin() is replaced (e.g. with musl),
+  and systemd libs are being used, by linking the required libraries.
+
   The multi-call binary built with configure --enable-single-binary is reduced
   in size by around 10KB through the more efficient reuse of the 'test' code
   by '[', and the 'true' code by 'false'.

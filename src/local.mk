@@ -344,6 +344,7 @@ src_pinky_LDADD += $(READUTMP_LIB)
 src_uptime_LDADD += $(READUTMP_LIB)
 src_users_LDADD += $(READUTMP_LIB)
 src_who_LDADD += $(READUTMP_LIB)
+src_logname_LDADD += $(READUTMP_LIB)
 
 # for strsignal
 src_kill_LDADD += $(LIBTHREAD)
