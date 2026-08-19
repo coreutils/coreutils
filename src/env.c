@@ -1026,6 +1026,7 @@ main (int argc, char **argv)
   char *argv0 = NULL;
   struct env_vector env_vector;
 #ifdef lint
+  memset (&env_vector, 0, sizeof env_vector);
   char **initial_environ = environ;
 #endif
 
