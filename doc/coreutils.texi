@@ -6258,6 +6258,10 @@ With @option{-f}, separate fields with a run of blank characters
 (usually space or TAB).  With @samp{trimmed} do not consider
 leading and trailing blanks as field separators.
 @option{-w} is implied with the @option{-F} option.
+Note efficiency of this mode can be improved if the input
+fields are separated by runs of only ASCII blank characters (space or TAB).
+Even if fields contain arbitrary other characters, you can efficiently
+search for ASCII blanks by invoking @command{cut} like @samp{LC_ALL=C cut}.
 
 @optZeroTerminated{cut}
 
