@@ -141,7 +141,7 @@ sub _compare_files ($$$$$)
       warn "$program_name: test $test_name: ${info}mismatch, comparing "
         . "$expected (expected) and $actual (actual)\n";
       # Ignore any failure, discard stderr.
-      system "diff -c $expected $actual 2>/dev/null";
+      system "diff -u $expected $actual 2>/dev/null";
     }
 
   return $differ;
