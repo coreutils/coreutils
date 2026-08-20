@@ -20,7 +20,12 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ coreutils
 
-cp -s "$(command -v coreutils)" blah || skip_ 'multicall binary is disabled'
+cp -s "$(command -v coreutils)" blah || {
+  # Ensure name of individual binaries are not binary name
+  ln -s $(command -v yes) "$(command -v yes|sed "s|/yes|/no|")"
+  no --version | grep yes || fail=1
+  Exit $fail
+;}
 
 # Yes outputs all its params so is good to verify argv manipulations
 echo 'y' > exp &&
