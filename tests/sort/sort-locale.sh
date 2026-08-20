@@ -37,18 +37,26 @@ check_hard_collate() {
 
 export LC_ALL=en_US.iso8859-1  # only lowercase form works on macOS 10.15.7
 if test "$(locale charmap 2>/dev/null | sed 's/iso/ISO-/')" = ISO-8859-1; then
-  check_hard_collate 'a_a' 'a b'  # underscore and space considered equal
-  check_hard_collate 'aaa' 'BBB'  # case insensitive ordering
-  check_hard_collate "$(printf 'aa\351')" 'aaf'  # é comes before f
+  for var in LC_ALL LC_COLLATE; do
+    unset LC_ALL LC_COLLATE
+    export $var=en_US.iso8859-1
+    check_hard_collate 'a_a' 'a b'  # underscore and space considered equal
+    check_hard_collate 'aaa' 'BBB'  # case insensitive ordering
+    check_hard_collate "$(printf 'aa\351')" 'aaf'  # é comes before f
+  done
 fi
 
 export LC_ALL=$LOCALE_FR_UTF8
 if test "$(locale charmap 2>/dev/null)" = UTF-8; then
-  check_hard_collate 'aaé' 'aaf'  # é comes before f
-  check_hard_collate 'aéY' "$(printf 'ae\314\201Z')"  # NFC/NFD é are equal
-  check_hard_collate 'file1' 'file-2'  # '-' has a minimal weight, so the
-                                       # digits decide: file1 before file-2,
-                                       # the opposite of the C/byte order
+  for var in LC_ALL LC_COLLATE; do
+    unset LC_ALL LC_COLLATE
+    export $var=$LOCALE_FR_UTF8
+    check_hard_collate 'aaé' 'aaf'  # é comes before f
+    check_hard_collate 'aéY' "$(printf 'ae\314\201Z')"  # NFC/NFD é are equal
+    check_hard_collate 'file1' 'file-2'  # '-' has a minimal weight, so the
+                                         # digits decide: file1 before file-2,
+                                         # the opposite of the C/byte order
+  done
 fi
 
 # C.UTF-8 has a UTF-8 codeset but the collation rules of C,
