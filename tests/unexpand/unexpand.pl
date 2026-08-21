@@ -60,6 +60,12 @@ my @Tests =
      # Feature addition (--first-only) prompted by a report from Jie Xu.
      ['tabs-1', qw(-t 3),              {IN=> "   a  b\n"}, {OUT=>"\ta\tb\n"}],
      ['tabs-2', qw(-t 3 --first-only), {IN=> "   a  b\n"}, {OUT=>"\ta  b\n"}],
+     # A tab list is separated by commas or by blanks, and leading
+     # separators are ignored.
+     ['tabs-3', '-t "3,6"',       {IN=> "   a  b\n"}, {OUT=>"\ta\tb\n"}],
+     ['tabs-4', '-t "3 6"',       {IN=> "   a  b\n"}, {OUT=>"\ta\tb\n"}],
+     ['tabs-5', "-t \"3\t6\"",    {IN=> "   a  b\n"}, {OUT=>"\ta\tb\n"}],
+     ['tabs-6', '-t ", 3,6"',     {IN=> "   a  b\n"}, {OUT=>"\ta\tb\n"}],
 
      # blanks
      ['blanks-1', qw(-t 1), {IN=> " b  c   d\n"}, {OUT=> "\tb\t\tc\t\t\td\n"}],

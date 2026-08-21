@@ -35,6 +35,8 @@ my @Tests =
    # Leading space/commas are silently ignored; Mixing space/commas is allowed.
    # (a side-effect of allowing direct "-3,9" parameter).
    ['t4', '--tabs=", 3,6 9"', {IN=>"a\tb\tc\td\te"}, {OUT=>"a  b  c  d e"}],
+   # Any blank separates, not just a space.
+   ['t4a', "--tabs=\"3\t6\t9\"", {IN=>"a\tb\tc\td\te"}, {OUT=>"a  b  c  d e"}],
    # tab stops parameter without values
    ['t5', '--tabs=""',        {IN=>"a\tb\tc"}, {OUT=>"a       b       c"}],
    ['t6', '--tabs=","',       {IN=>"a\tb\tc"}, {OUT=>"a       b       c"}],
