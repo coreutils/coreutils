@@ -85,4 +85,9 @@ if no_pipe true; then
   test $? = 124 || fail=1
 fi
 
+# If tee() implementation tried to write seed to a pipe with small size, it would hang
+small_pipe() { strace -o /dev/null -e inject=fcntl:error=ENOSYS "$@"; }
+if small_pipe true; then
+  timeout 10 small_pipe $SHELL -c "yes|head -n 1" > /dev/null || fail=1
+fi
 Exit $fail
