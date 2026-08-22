@@ -131,6 +131,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'who /var/log/wtmp' and 'users /var/log/wtmp' use the wtmpdb database
   instead of the file /var/log/wtmp.  This makes them Y2038-safe.
 
+  'cut -w' operates more efficiently when extracting the start of a line
+  in multi-byte locales, giving 4x more throughput with typical input.
+
   'df', 'du', 'ls', 'od', 'pr', and 'sort' now escape invalid arguments in error
   messages for options expecting an integer.
 

@@ -570,6 +570,41 @@ scan_mb_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
                                  n_bytes));
 }
 
+/* Skip input through the next line delimiter without decoding characters.
+   PARSER may have saved a character beyond a whitespace delimiter.  */
+
+static enum field_terminator
+scan_mb_line_end (mbbuf_t *mbbuf, struct mbfield_parser *parser,
+                  bool *have_pending_line)
+{
+  if (parser->have_saved)
+    {
+      parser->have_saved = false;
+      if (parser->saved_g.ch == MBBUF_EOF)
+        return FIELD_EOF;
+
+      *have_pending_line = true;
+      if (parser->saved_g.ch == line_delim)
+        return FIELD_LINE_DELIMITER;
+    }
+
+  while (true)
+    {
+      idx_t available = mbbuf_topup (mbbuf);
+      if (available == 0)
+        return FIELD_EOF;
+
+      char *buffer = mbbuf->buffer + mbbuf->offset;
+      char *line_end = search_bytes (buffer, line_delim, available);
+      idx_t n = line_end ? line_end - buffer + 1 : available;
+      mbbuf_advance (mbbuf, n);
+      *have_pending_line = true;
+
+      if (line_end)
+        return FIELD_LINE_DELIMITER;
+    }
+}
+
 /* Return a pointer to the next field delimiter in BUF, searching LEN bytes.
    Return NULL if none is found.  DELIM_BYTES must be a single byte or
    represent a valid UTF-8 character.  BUF can contain invalid/NUL bytes,
@@ -960,12 +995,12 @@ cut_fields_mb_any (FILE *stream, bool whitespace_mode)
 
   while (true)
     {
+      enum field_terminator terminator;
       if (field_idx == 1 && buffer_first_field)
         {
           idx_t n_bytes = 0;
-          enum field_terminator terminator
-            = scan_mb_field (&mbbuf, &parser, &have_pending_line, false,
-                             &n_bytes);
+          terminator = scan_mb_field (&mbbuf, &parser, &have_pending_line,
+                                      false, &n_bytes);
           if (terminator == FIELD_EOF && n_bytes == 0)
             return;
 
@@ -990,31 +1025,36 @@ cut_fields_mb_any (FILE *stream, bool whitespace_mode)
               write_bytes (field_1_buffer, n_bytes);
               found_any_selected_field = true;
             }
-          next_item (&field_idx);
         }
-
-      enum field_terminator terminator;
-      bool write_field = begin_field_output (field_idx, buffer_first_field,
-                                             &found_any_selected_field);
-
-      terminator = scan_mb_field (&mbbuf, &parser, &have_pending_line,
-                                  write_field, NULL);
-
-      if (terminator == FIELD_DELIMITER)
-        next_item (&field_idx);
       else
         {
-          if (terminator == FIELD_EOF && !have_pending_line)
-            break;
-          if (found_any_selected_field
-              || !(suppress_non_delimited && field_idx == 1))
-            write_line_delim ();
-          if (terminator == FIELD_EOF)
-            break;
-
-          reset_field_line (&field_idx, &found_any_selected_field,
-                            &have_pending_line, &parser);
+          bool write_field
+            = begin_field_output (field_idx, buffer_first_field,
+                                  &found_any_selected_field);
+          terminator = scan_mb_field (&mbbuf, &parser, &have_pending_line,
+                                      write_field, NULL);
         }
+
+      if (terminator == FIELD_DELIMITER)
+        {
+          next_item (&field_idx);
+          if (! field_selection_exhausted (field_idx))
+            continue;
+
+          terminator = scan_mb_line_end (&mbbuf, &parser,
+                                         &have_pending_line);
+        }
+
+      if (terminator == FIELD_EOF && !have_pending_line)
+        break;
+      if (found_any_selected_field
+          || !(suppress_non_delimited && field_idx == 1))
+        write_line_delim ();
+      if (terminator == FIELD_EOF)
+        break;
+
+      reset_field_line (&field_idx, &found_any_selected_field,
+                        &have_pending_line, &parser);
     }
 }
 

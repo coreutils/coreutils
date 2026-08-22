@@ -425,6 +425,19 @@ if ($mb_locale ne 'C')
        {OUT=>"\xc3\xa9\t\xc3\xbc\n"},
        {ENV => "LC_ALL=$mb_locale"}],
 
+      # Stop decoding fields once the finite selection is exhausted.
+      ['mb-w-exhausted-1', '-w', '-f1',
+       {IN=>"a\xe2\x80\x83ignored\nb\xe2\x80\x83ignored"},
+       {OUT=>"a\nb\n"}, {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-w-exhausted-2', '-w', '-f1', {IN=>"a  \nb  "},
+       {OUT=>"a\nb\n"}, {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-w-exhausted-initial', '-s', '-w', '--complement', '-f1-',
+       {IN=>"a\xe2\x80\x83ignored\nplain"}, {OUT=>"\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-delim-exhausted', '-d', "\xa9", '-f1',
+       {IN=>"A\xc3\xa9B\xa9ignored\nC\xa9ignored"},
+       {OUT=>"A\xc3\xa9B\nC\n"}, {ENV => "LC_ALL=$mb_locale"}],
+
       # -b -n with output delimiter
       ['mb-bn-odelim', qw(-b1,3 -n), '--output-d=:',
        {IN=>"\xc3\xa9x\n"}, {OUT=>"x\n"},

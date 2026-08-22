@@ -35,6 +35,13 @@ for delim in ',' ':' "$delim_gb18030" "$delim_ff"; do
   test "$num_out" = "2_3" || fail=1
 done
 
+# Check skipping to the line end after a finite field selection.
+printf '1%s2%s3\n4%s5' "$delim_gb18030" "$delim_gb18030" \
+                      "$delim_gb18030" \
+  | cut -d "$delim_gb18030" -f1 > out || fail=1
+printf '1\n4\n' > exp || framework_failure_
+compare exp out || fail=1
+
 # A valid 2-byte GB18030 character.
 printf '%sx\n' "$delim_gb18030" | cut -c1 > out || fail=1
 printf '%s\n' "$delim_gb18030" > exp || framework_failure_
