@@ -55,6 +55,18 @@ my @Tests =
          {ERR=>"$prog: '%9%': invalid directive\n"}],
      ['err-2', "--printf=%9 .",        {EXIT => 1},
          {ERR=>"$prog: '%9': invalid directive\n"}],
+
+     # The format is interpreted as it is printed, so whatever precedes an
+     # invalid directive is output before the diagnostic.
+     ['err-3', "--printf=a%9 .",       {OUT=>"a"}, {EXIT => 1},
+         {ERR=>"$prog: '%9': invalid directive\n"}],
+     ['err-4', "--printf=a%9% .",      {OUT=>"a"}, {EXIT => 1},
+         {ERR=>"$prog: '%9%': invalid directive\n"}],
+     ['err-5', "--printf=%n%9 .",      {OUT=>"."}, {EXIT => 1},
+         {ERR=>"$prog: '%9': invalid directive\n"}],
+     # and --format adds no trailing newline when it stops early.
+     ['err-6', "--format=a%9 .",       {OUT=>"a"}, {EXIT => 1},
+         {ERR=>"$prog: '%9': invalid directive\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
