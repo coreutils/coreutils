@@ -63,4 +63,15 @@ cp a b || fail=1
 cp --preserve=ownership a c || fail=1
 test "$(get_mode b)" = "$(get_mode c)" || fail=1
 
+# A umask that takes away the owner write bit must not stop cp from
+# writing a new destination file: the contents go through the file
+# descriptor obtained when creating it, which stays writable even
+# though the file's mode does not include the write bit.
+rm -f a b || framework_failure_
+echo not-writable-dest > a || framework_failure_
+chmod 644 a || framework_failure_
+(umask 377 && cp a b) || fail=1
+compare a b || fail=1
+test "$(stat -c%a b)" = 400 || fail=1
+
 Exit $fail
