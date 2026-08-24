@@ -156,6 +156,17 @@ my @tv = (
  ["a,1,,2\nb,1,2\n", "a,3,4\nb,3,4\n"],
  "a,1,,2,3,4\nb,1,2,,3,4\n"],
 
+# A repeated -o accumulates the field specs of every occurrence, in order.
+# 'auto' only takes effect if all -o arguments are 'auto'.
+['multi-o-1', '-o 2.3 -o 1.2 -o 0',
+ ["k p q\n", "k y z\n"], "z p k\n", 0],
+['multi-o-2', '-t: -a1 -e X -o 1.2 -o 2.2,2.3',
+ ["k:p\nm:r\n", "k:y:z\n"], "p:y:z\nr:X:X\n", 0],
+['multi-o-auto', '-o auto -o auto',
+ ["k p q\n", "k y z\n"], "k p q y z\n", 0],
+['multi-o-auto-mixed', '-o auto -o 1.3',
+ ["k p q\n", "k y z\n"], "q\n", 0],
+
 # For -v2, print the match field correctly with the default output format,
 # when that match field is different between file 1 and file 2.  Fixed in 8.10
 ['v2-order', '-v2 -2 2', ["", "2 1\n"], "1 2\n", 0],
