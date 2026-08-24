@@ -324,7 +324,7 @@ my @tv = (
 my @fields = qw(1.1 1.2 1.3 2.1 2.2 2.3);
 push @tv,
   map {my ($name, $sep, $quote) = @$_;
-       ['o-sep-' . ($name =~ tr/_/-/r),
+       ['o-sep-' . do { my $s = $name; $s =~ tr/_/-/; $s },
         '-o ' . ($quote ? "'@{[join $sep, @fields]}'" : join $sep, @fields),
         ["1 a x\n2 b y\n3 c z\n", "1 d u\n2 e v\n3 f w\n"],
         "1 a x 1 d u\n2 b y 2 e v\n3 c z 3 f w\n"]}
