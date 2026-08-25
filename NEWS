@@ -80,6 +80,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   locales like SHIFT-JIS where a single byte can decode to a wide character.
   [bug introduced in coreutils-9.5]
 
+  Messages from Gnulib are no longer mistranslated in non-English locales.
+  [bug introduced in coreutils-9.6]
+
 ** New Features
 
   'env' now supports --env0-from=FILE to read NUL-delimited environment entries

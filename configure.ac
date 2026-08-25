@@ -63,6 +63,10 @@ gl_SET_CRYPTO_CHECK_DEFAULT([auto-gpl-compat])
 gl_INIT
 coreutils_MACROS
 
+# Translate Gnulib msgids ourselves, instead of using the gnulib-l10n module.
+AC_DEFINE([GNULIB_TEXT_DOMAIN], [PACKAGE],
+  [The text domainname for Gnulib messages.])
+
 # These are safe, since 'sort', coreutils's only multithreaded app,
 # does not use the relevant modules, or calls their code from one thread.
 AC_DEFINE([GNULIB_EXCLUDE_SINGLE_THREAD], [1],
