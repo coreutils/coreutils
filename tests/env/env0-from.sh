@@ -93,8 +93,8 @@ case $host_os in
     sort all >out || framework_failure_
     compare exp-sorted out || fail=1
 
-    env -i --env0-from=base \
-      "$envexe" -u A C=operand D=new >exp || fail=1
+    env -i --env0-from=base -u A C=operand D=new \
+      "$envexe" >exp || fail=1
     sort exp >exp-sorted || framework_failure_
     env -i --env0-from=base \
       "$envexe" --env0-from=merge -u A C=operand D=new >all || fail=1
