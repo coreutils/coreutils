@@ -37,7 +37,7 @@ medir=`dirname "$me"`
 
 # A library of shell functions for autopull.sh, autogen.sh, and bootstrap.
 
-scriptlibversion=2025-12-04.19; # UTC
+scriptlibversion=2026-08-09.13; # UTC
 
 # Copyright (C) 2003-2026 Free Software Foundation, Inc.
 #
@@ -597,8 +597,12 @@ prepare_GNULIB_SRCDIR ()
             mkdir -p "$gnulib_path"
             # Use a -c option to silence an annoying message
             # "hint: Using 'master' as the name for the initial branch."
-            # (cf. <https://stackoverflow.com/questions/65524512/>).
-            git -C "$gnulib_path" -c init.defaultBranch=master init
+            # (cf. <https://stackoverflow.com/questions/65524512/>)
+            # and another -c option to override a configuration
+            # init.defaultObjectFormat=sha256 that some users have installed.
+            git -C "$gnulib_path" -c init.defaultBranch=master \
+                                  -c init.defaultObjectFormat=sha1 \
+                                  init
             git -C "$gnulib_path" remote add origin "$gnulib_url"
             if git -C "$gnulib_path" fetch $shallow origin "$GNULIB_REVISION"
             then
