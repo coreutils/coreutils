@@ -421,6 +421,11 @@ my @Tests =
  {ERR=>"$prog: invalid --parallel argument '-1'\n"}],
 ['invalid-parallel-2', '--parallel a', {IN=>""},  {EXIT=>2},
  {ERR=>"$prog: invalid --parallel argument 'a'\n"}],
+
+# Test that non-blank spaces aren't treated as blank.
+['nonblank-sep-k1', '-k2', {IN=>"a\f\nb\n"}, {OUT=>"a\f\nb\n"}],
+['nonblank-leading-n1', '-n', {IN=>"a\n\f1\n"}, {OUT=>"\f1\na\n"}],
+['nonblank-leading-d1', '-d', {IN=>"\fb\na\n"}, {OUT=>"a\n\fb\n"}],
 );
 
 # Add _POSIX2_VERSION=199209 to the environment of each test
