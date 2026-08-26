@@ -58,9 +58,16 @@ test "$(stat -c %.9Y recent)" = 1777863721.987654321  || fail=1
 # Use epoch notation for '1969-12-31 23:59:59.123456789'
 touch -d '@-0.876543211' old || framework_failure_
 
-test "$(stat -c   %Y old)" = -1            || fail=1
-test "$(stat -c  %.Y old)" = -0.876543211  || fail=1
-test "$(stat -c %.3Y old)" = -0.876        || fail=1
-test "$(stat -c %.9Y old)" = -0.876543211  || fail=1
+# If touch before the epoch wasn't ignored,
+# and wasn't clamped to the epoch.
+# E.g. FreeBSD uses tv_sec == -1 to indicate that vnode
+# should not have it's timestamp adjusted.
+if test $(stat -c %Y old) -lt 1 &&
+   test $(stat -c %.1Y old) != '0.0'; then
+  test "$(stat -c   %Y old)" = -1            || fail=1
+  test "$(stat -c  %.Y old)" = -0.876543211  || fail=1
+  test "$(stat -c %.3Y old)" = -0.876        || fail=1
+  test "$(stat -c %.9Y old)" = -0.876543211  || fail=1
+fi
 
 Exit $fail
