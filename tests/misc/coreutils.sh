@@ -20,7 +20,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ coreutils
 
-cp -s "$(command -v coreutils)" blah || skip_ 'multicall binary is disabled'
+cp -s "$(cmd_exe coreutils)" blah || skip_ 'multicall binary is disabled'
 
 # Yes outputs all its params so is good to verify argv manipulations
 echo 'y' > exp &&

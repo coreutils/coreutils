@@ -20,7 +20,7 @@
 print_ver_ env
 
 # reference the env(1) to test before $PATH is adjusted
-envexe=$(command -v "env$EXEEXT") || framework_failure_
+envexe=$(cmd_exe 'env') || framework_failure_
 
 CU_ENV0_FROM_PARENT=parent
 CU_ENV0_FROM_REPLACE=parent

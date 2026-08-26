@@ -21,7 +21,7 @@
 print_ver_ env pwd nice
 
 # A simple shebang program to call "echo" from symlinks like "./-u" or "./--".
-echo '#!'"$(command -v env | sed 's|/env|/echo|')"' foo' > show_args \
+echo '#!'"$(cmd_exe echo)"' foo' > show_args \
   || framework_failure_
 chmod a+x show_args || framework_failure_
 
