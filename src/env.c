@@ -61,6 +61,7 @@ struct env_vector
 
 /* Annotate the output with extra info to aid the user.  */
 static bool dev_debug;
+#define vmsg devmsg
 
 /* Buffer and length of extracted envvars in -S strings.  */
 static char *varname;
@@ -223,7 +224,7 @@ unset_envvars (void)
 {
   for (idx_t i = 0; i < usvars_used; ++i)
     {
-      devmsg ("unsetting: %s\n", quote (usvars[i]));
+      vmsg (_("unsetting: %s\n"), quote (usvars[i]));
 
       if (unsetenv (usvars[i]))
         error (EXIT_CANCELED, errno, _("cannot unset %s"),
@@ -269,7 +270,7 @@ unset_envvars_in_vector (struct env_vector *env)
   for (idx_t i = 0; i < usvars_used; ++i)
     {
       char const *name = usvars[i];
-      devmsg ("unsetting: %s\n", quote (name));
+      vmsg (_("unsetting: %s\n"), quote (name));
 
       if (! *name || strchr (name, '='))
         error (EXIT_CANCELED, EINVAL, _("cannot unset %s"), quoteaf (name));
@@ -289,7 +290,7 @@ unset_envvars_in_vector (struct env_vector *env)
 static void
 set_envvar (char *assignment, char *eq)
 {
-  devmsg ("setting:   %s\n", quote (assignment));
+  vmsg (_("setting:   %s\n"), quote (assignment));
 
   if (putenv (assignment))
     {
@@ -304,7 +305,7 @@ set_envvar (char *assignment, char *eq)
 static void
 set_envvar_in_vector (struct env_vector *env, char *assignment, char *eq)
 {
-  devmsg ("setting:   %s\n", quote (assignment));
+  vmsg (_("setting:   %s\n"), quote (assignment));
 
   idx_t name_length = eq - assignment;
   for (idx_t i = 0; i < env->used; ++i)
@@ -415,12 +416,12 @@ set_envvars_from_file (struct env_vector *env, char const *file)
       char *eq = strchr (assignment, '=');
       if (! eq)
         {
-          devmsg ("adding:    %s\n", quote (assignment));
+          vmsg (_("adding:    %s\n"), quote (assignment));
           merged[merged_count++] = assignment;
         }
       else
         {
-          devmsg ("setting:   %s\n", quote (assignment));
+          vmsg (_("setting:   %s\n"), quote (assignment));
 
           char **slot = hash_lookup (slot_table, &assignment);
           if (slot)
@@ -733,12 +734,12 @@ build_argv (char const *str, int extra_argc, int *argc)
             if (v)
               {
                 check_start_new_arg (&ss);
-                devmsg ("expanding ${%s} into %s\n", n, quote (v));
+                vmsg (_("expanding ${%s} into %s\n"), n, quote (v));
                 for (; *v; v++)
                   splitbuf_append_byte (&ss, *v);
               }
             else
-              devmsg ("replacing ${%s} with empty string\n", n);
+              vmsg (_("replacing ${%s} with empty string\n"), n);
 
             str = strchr (str, '}') + 1;
             continue;
@@ -793,10 +794,10 @@ parse_split_string (char const *str, int *orig_optind,
   /* Print parsed arguments.  */
   if (dev_debug && 1 < newargc)
     {
-      devmsg ("split -S:  %s\n", quote (str));
-      devmsg (" into:     %s\n", quote (newargv[1]));
+      vmsg (_("split -S:  %s\n"), quote (str));
+      vmsg (_(" into:     %s\n"), quote (newargv[1]));
       for (int i = 2; i < newargc; i++)
-        devmsg ("     &     %s\n", quote (newargv[i]));
+        vmsg (_("     &     %s\n"), quote (newargv[i]));
     }
 
   /* Add remaining arguments and terminating null from the original
@@ -879,10 +880,10 @@ reset_signal_handlers (void)
           char signame[SIG2STR_MAX];
           if (sig2str (i, signame) != 0)
             snprintf (signame, sizeof signame, "SIG%d", i);
-          devmsg ("Reset signal %s (%d) to %s%s\n",
+          vmsg (_("Reset signal %s (%d) to %s%s\n"),
                   signame, i,
                   set_to_default ? "DEFAULT" : "IGNORE",
-                  sig_err ? " (failure ignored)" : "");
+                  sig_err ? _(" (failure ignored)") : "");
         }
     }
 }
@@ -968,7 +969,7 @@ set_signal_proc_mask (void)
           char signame[SIG2STR_MAX];
           if (sig2str (i, signame) != 0)
             snprintf (signame, sizeof signame, "SIG%d", i);
-          devmsg ("signal %s (%d) mask set to %s\n",
+          vmsg (_("signal %s (%d) mask set to %s\n"),
                   signame, i, debug_act);
         }
     }
@@ -1127,13 +1128,13 @@ main (int argc, char **argv)
   bool env_vector_active = false;
   if (ignore_environment && env0_from_file)
     {
-      devmsg ("clearing environment\n");
+      vmsg (_("clearing environment\n"));
       set_raw_environment_from_file (&env_vector, env0_from_file);
       env_vector_active = true;
     }
   else if (ignore_environment)
     {
-      devmsg ("clearing environment\n");
+      vmsg (_("clearing environment\n"));
 #if defined _WIN32 && ! defined __CYGWIN__
       static char *dummy_environ[] = { NULL };
       environ = dummy_environ;
@@ -1217,7 +1218,7 @@ main (int argc, char **argv)
 
   if (newdir)
     {
-      devmsg ("change dir: %s\n", quote (newdir));
+      vmsg (_("change dir: %s\n"), quote (newdir));
 
       if (chdir (newdir) != 0)
         error (EXIT_CANCELED, errno, _("cannot change directory to %s"),
@@ -1227,15 +1228,15 @@ main (int argc, char **argv)
   char *program = argv[optind];
   if (argv0)
     {
-      devmsg ("argv0:     %s\n", quote (argv0));
+      vmsg ("argv0:     %s\n", quote (argv0));
       argv[optind] = argv0;
     }
 
   if (dev_debug)
     {
-      devmsg ("executing: %s\n", quote (program));
+      vmsg (_("executing: %s\n"), quote (program));
       for (int i=optind; i<argc; ++i)
-        devmsg ("   arg[%d]= %s\n", i-optind, quote (argv[i]));
+        vmsg ("   arg[%d]= %s\n", i-optind, quote (argv[i]));
     }
 
   execvp (program, &argv[optind]);
