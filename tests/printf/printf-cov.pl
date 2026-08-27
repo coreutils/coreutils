@@ -25,11 +25,21 @@ my $pow_2_31 = 2**31;
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+my $ESCAPE_CHARS = q('\a\b\f\n\r\t\v\z\c');
+my $ESCAPE_OUTPUT = "\a\b\f\n\r\t\x0b\\z";
+
 my @Tests =
 (
   ['no-args', {EXIT=>1}, {ERR=>"$prog: missing operand\n$try"}],
   ['no-arg2', '--', {EXIT=>1}, {ERR=>"$prog: missing operand\n$try"}],
-  ['escape-1', q('\a\b\f\n\r\t\v\z\c'), {OUT=>"\a\b\f\n\r\t\x0b\\z"}],
+  ['escape-1', $ESCAPE_CHARS,                 {OUT=>$ESCAPE_OUTPUT}],
+  ['escape-2', $ESCAPE_CHARS . 'a',           {OUT=>$ESCAPE_OUTPUT}],
+  ['escape-3', "a$ESCAPE_CHARS",              {OUT=>"a$ESCAPE_OUTPUT"}],
+  ['escape-4', "a$ESCAPE_CHARS" . 'b',        {OUT=>"a$ESCAPE_OUTPUT"}],
+  ['b-escape-1', "'%b' $ESCAPE_CHARS",        {OUT=>$ESCAPE_OUTPUT}],
+  ['b-escape-2', "'%b' $ESCAPE_CHARS" . 'a',  {OUT=>$ESCAPE_OUTPUT}],
+  ['b-escape-3', "'%b' a$ESCAPE_CHARS",       {OUT=>"a$ESCAPE_OUTPUT"}],
+  ['b-escape-4', "'%b' a$ESCAPE_CHARS" . 'b', {OUT=>"a$ESCAPE_OUTPUT"}],
   ['hex-ucX',   '%X 999',    {OUT=>"3E7"}],
   ['hex-ucXw',  '%4X 999',   {OUT=>" 3E7"}],
   ['hex-ucXp',  '%.4X 999',  {OUT=>"03E7"}],
