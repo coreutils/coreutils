@@ -18,16 +18,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ rm
-
-p=$abs_top_builddir
-
+print_ver_ rm sleep true printf test
 
 # Ensure these exit successfully, even though stdout is closed,
 # because they generate no output.
 touch a
-cp a b >&- || fail=1
-test -f b || fail=1
+
+cp a b >&- && test -f b || fail=1
 chmod o-w . >&- || fail=1
 ln a c >&- || fail=1
 rm c >&- || fail=1
@@ -35,16 +32,16 @@ mkdir d >&- || fail=1
 mv d e >&- || fail=1
 rmdir e >&- || fail=1
 touch e >&- || fail=1
-sleep 0 >&- || fail=1
-"$p/src/true" >&- || fail=1
-"$p/src/printf" '' >&- || fail=1
+env sleep 0 >&- || fail=1
+env true >&- || fail=1
+env printf '' >&- || fail=1
 
 # If >&- works, ensure these fail, because stdout is closed and they
 # *do* generate output.  >&- apparently does not work in HP-UX 11.23.
 # This test is ineffective unless /dev/stdout also works.
-if "$p/src/test" -w /dev/stdout >/dev/null &&
-   "$p/src/test" ! -w /dev/stdout >&-; then
-  returns_ 1 "$p/src/printf" 'foo' >&- 2>/dev/null || fail=1
+if env test -w /dev/stdout >/dev/null &&
+   env test ! -w /dev/stdout >&-; then
+  returns_ 1 env printf 'foo' >&- 2>/dev/null || fail=1
   returns_ 1 cp --verbose a b >&- 2>/dev/null || fail=1
   rm -Rf tmpfile-?????? || fail=1
   returns_ 1 mktemp tmpfile-XXXXXX >&- 2>/dev/null || fail=1
@@ -54,7 +51,7 @@ fi
 
 # Likewise for /dev/full, if /dev/full works.
 if test -w /dev/full && test -c /dev/full; then
-  returns_ 1 "$p/src/printf" 'foo' >/dev/full 2>/dev/null || fail=1
+  returns_ 1 env printf 'foo' >/dev/full 2>/dev/null || fail=1
   returns_ 1 cp --verbose a b >/dev/full 2>/dev/null || fail=1
   rm -Rf tmpdir-?????? || fail=1
   returns_ 1 mktemp -d tmpdir-XXXXXX >/dev/full 2>/dev/null || fail=1
