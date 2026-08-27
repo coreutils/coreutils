@@ -313,6 +313,25 @@ my @Tests =
      ['zero-override-space-2', '-d "1999-06-01 05:00:00" +%0k', {OUT=>'05'}],
      ['zero-override-space-3', '-d "1999-06-01 05:00:00" +%0l', {OUT=>'05'}],
 
+     # Composite specifiers are atomic: the '-' (no padding) flag is
+     # ignored, as there is no whole-expansion padding to suppress and
+     # it does not reach the sub-fields they expand to.
+     ['composite-dash-D', "-d '2004-06-15 07:08:09' +%-D", {OUT=>'06/15/04'}],
+     ['composite-dash-F', "-d '2004-06-15 07:08:09' +%-F", {OUT=>'2004-06-15'}],
+     ['composite-dash-T', "-d '2004-06-15 07:08:09' +%-T", {OUT=>'07:08:09'}],
+     ['composite-dash-R', "-d '2004-06-15 07:08:09' +%-R", {OUT=>'07:08'}],
+     ['composite-dash-r', "-d '2004-06-15 07:08:09' +%-r",
+      {OUT=>'07:08:09 AM'}],
+     ['composite-dash-x', "-d '2004-06-15 07:08:09' +%-x", {OUT=>'06/15/04'}],
+     ['composite-dash-X', "-d '2004-06-15 07:08:09' +%-X", {OUT=>'07:08:09'}],
+     # Other flags and the width still apply to the whole expansion.
+     ['composite-underscore-D', "-d '2004-06-15' +%_D", {OUT=>'06/15/04'}],
+     ['composite-zero-D', "-d '2004-06-15' +%0D", {OUT=>'06/15/04'}],
+     ['composite-width-D', "-d '2004-06-15' +%10D", {OUT=>'  06/15/04'}],
+     # For comparison, '-' does suppress padding for simple specifiers.
+     ['dash-simple-m', "-d '2004-06-15' +%-m", {OUT=>'6'}],
+     ['dash-simple-d', "-d '2004-06-05' +%-d", {OUT=>'5'}],
+
      # Test plus flag without width (should not add sign for 4-digit year)
      ['plus-no-width-1', '-d 1999-06-01 +%+Y', {OUT=>'1999'}],
      ['plus-no-width-2', '-d 1999-06-01 +%+6Y', {OUT=>'+01999'}],
