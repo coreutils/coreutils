@@ -223,7 +223,7 @@ unset_envvars (void)
 {
   for (idx_t i = 0; i < usvars_used; ++i)
     {
-      devmsg ("unset:    %s\n", usvars[i]);
+      devmsg ("unsetting: %s\n", usvars[i]);
 
       if (unsetenv (usvars[i]))
         error (EXIT_CANCELED, errno, _("cannot unset %s"),
@@ -269,7 +269,7 @@ unset_envvars_in_vector (struct env_vector *env)
   for (idx_t i = 0; i < usvars_used; ++i)
     {
       char const *name = usvars[i];
-      devmsg ("unset:    %s\n", name);
+      devmsg ("unsetting: %s\n", name);
 
       if (! *name || strchr (name, '='))
         error (EXIT_CANCELED, EINVAL, _("cannot unset %s"), quoteaf (name));
@@ -289,7 +289,7 @@ unset_envvars_in_vector (struct env_vector *env)
 static void
 set_envvar (char *assignment, char *eq)
 {
-  devmsg ("setenv:   %s\n", assignment);
+  devmsg ("setting:   %s\n", assignment);
 
   if (putenv (assignment))
     {
@@ -304,7 +304,7 @@ set_envvar (char *assignment, char *eq)
 static void
 set_envvar_in_vector (struct env_vector *env, char *assignment, char *eq)
 {
-  devmsg ("setenv:   %s\n", assignment);
+  devmsg ("setting:   %s\n", assignment);
 
   idx_t name_length = eq - assignment;
   for (idx_t i = 0; i < env->used; ++i)
@@ -415,12 +415,12 @@ set_envvars_from_file (struct env_vector *env, char const *file)
       char *eq = strchr (assignment, '=');
       if (! eq)
         {
-          devmsg ("append:   %s\n", assignment);
+          devmsg ("adding:   %s\n", assignment);
           merged[merged_count++] = assignment;
         }
       else
         {
-          devmsg ("setenv:   %s\n", assignment);
+          devmsg ("setting:   %s\n", assignment);
 
           char **slot = hash_lookup (slot_table, &assignment);
           if (slot)
@@ -738,7 +738,7 @@ build_argv (char const *str, int extra_argc, int *argc)
                   splitbuf_append_byte (&ss, *v);
               }
             else
-              devmsg ("replacing ${%s} with null string\n", n);
+              devmsg ("replacing ${%s} with empty string\n", n);
 
             str = strchr (str, '}') + 1;
             continue;
@@ -794,9 +794,9 @@ parse_split_string (char const *str, int *orig_optind,
   if (dev_debug && 1 < newargc)
     {
       devmsg ("split -S:  %s\n", quote (str));
-      devmsg (" into:    %s\n", quote (newargv[1]));
+      devmsg (" into:     %s\n", quote (newargv[1]));
       for (int i = 2; i < newargc; i++)
-        devmsg ("     &    %s\n", quote (newargv[i]));
+        devmsg ("     &     %s\n", quote (newargv[i]));
     }
 
   /* Add remaining arguments and terminating null from the original
@@ -1124,13 +1124,13 @@ main (int argc, char **argv)
   bool env_vector_active = false;
   if (ignore_environment && env0_from_file)
     {
-      devmsg ("cleaning environ\n");
+      devmsg ("clearing environment\n");
       set_raw_environment_from_file (&env_vector, env0_from_file);
       env_vector_active = true;
     }
   else if (ignore_environment)
     {
-      devmsg ("cleaning environ\n");
+      devmsg ("clearing environment\n");
 #if defined _WIN32 && ! defined __CYGWIN__
       static char *dummy_environ[] = { NULL };
       environ = dummy_environ;
@@ -1214,7 +1214,7 @@ main (int argc, char **argv)
 
   if (newdir)
     {
-      devmsg ("chdir:    %s\n", quoteaf (newdir));
+      devmsg ("change dir: %s\n", quoteaf (newdir));
 
       if (chdir (newdir) != 0)
         error (EXIT_CANCELED, errno, _("cannot change directory to %s"),
