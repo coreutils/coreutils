@@ -17,10 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ dd
-
-p=$abs_top_builddir
-
+print_ver_ dd test
 
 # Ensure this exits successfully, even though stderr is closed,
 # because it generates no stderr output.
@@ -30,8 +27,8 @@ dd --help >/dev/null 2>&- || fail=1
 # *does* generate output.  2>&- apparently does not work in HP-UX 11.23.
 # This test is ineffective unless /dev/stderr also works.
 # This exposes a failure present in 6.11 through 7.5.
-if "$p/src/test" -w /dev/stderr 2>/dev/null &&
-   "$p/src/test" ! -w /dev/stderr 2>&-; then
+if env test -w /dev/stderr 2>/dev/null &&
+   env test ! -w /dev/stderr 2>&-; then
   : | returns_ 1 dd 2>&- || fail=1
 fi
 
