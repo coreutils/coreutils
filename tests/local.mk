@@ -805,6 +805,7 @@ all_tests =					\
   tests/mv/no-target-dir.sh			\
   tests/mv/part-fail.sh				\
   tests/mv/part-hardlink.sh			\
+  tests/mv/part-hardlink-symlink.sh		\
   tests/mv/part-rename.sh			\
   tests/mv/part-symlink.sh			\
   tests/mv/partition-perm.sh			\
