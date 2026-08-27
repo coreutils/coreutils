@@ -246,7 +246,7 @@ my @Tests =
             "env: use -[v]S to pass options in shebang lines\n" .
            "Try 'env --help' for more information.\n"}],
      ['err_sp3', q['-v	-S cat -n'], {EXIT=>125}, # embedded tab after -v
-      {ERR=>"env: invalid option -- '\t'\n" .
+      {ERR=>"env: invalid option -- '\\t'\n" .
             "env: use -[v]S to pass options in shebang lines\n" .
            "Try 'env --help' for more information.\n"}],
 

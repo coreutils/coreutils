@@ -187,7 +187,7 @@ for arg in 'argv0' ''; do
 env -v -a short --argv0=$arg ./truetrue 2>err || fail=1
 cat <<EOF >err_exp || framework_failure_
 argv0:     '$arg'
-executing: ./truetrue
+executing: './truetrue'
    arg[0]= '$arg'
 EOF
 compare err_exp err || fail=1

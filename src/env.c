@@ -223,7 +223,7 @@ unset_envvars (void)
 {
   for (idx_t i = 0; i < usvars_used; ++i)
     {
-      devmsg ("unsetting: %s\n", usvars[i]);
+      devmsg ("unsetting: %s\n", quote (usvars[i]));
 
       if (unsetenv (usvars[i]))
         error (EXIT_CANCELED, errno, _("cannot unset %s"),
@@ -269,7 +269,7 @@ unset_envvars_in_vector (struct env_vector *env)
   for (idx_t i = 0; i < usvars_used; ++i)
     {
       char const *name = usvars[i];
-      devmsg ("unsetting: %s\n", name);
+      devmsg ("unsetting: %s\n", quote (name));
 
       if (! *name || strchr (name, '='))
         error (EXIT_CANCELED, EINVAL, _("cannot unset %s"), quoteaf (name));
@@ -289,7 +289,7 @@ unset_envvars_in_vector (struct env_vector *env)
 static void
 set_envvar (char *assignment, char *eq)
 {
-  devmsg ("setting:   %s\n", assignment);
+  devmsg ("setting:   %s\n", quote (assignment));
 
   if (putenv (assignment))
     {
@@ -304,7 +304,7 @@ set_envvar (char *assignment, char *eq)
 static void
 set_envvar_in_vector (struct env_vector *env, char *assignment, char *eq)
 {
-  devmsg ("setting:   %s\n", assignment);
+  devmsg ("setting:   %s\n", quote (assignment));
 
   idx_t name_length = eq - assignment;
   for (idx_t i = 0; i < env->used; ++i)
@@ -415,12 +415,12 @@ set_envvars_from_file (struct env_vector *env, char const *file)
       char *eq = strchr (assignment, '=');
       if (! eq)
         {
-          devmsg ("adding:   %s\n", assignment);
+          devmsg ("adding:    %s\n", quote (assignment));
           merged[merged_count++] = assignment;
         }
       else
         {
-          devmsg ("setting:   %s\n", assignment);
+          devmsg ("setting:   %s\n", quote (assignment));
 
           char **slot = hash_lookup (slot_table, &assignment);
           if (slot)
@@ -1088,9 +1088,12 @@ main (int argc, char **argv)
              incorrect shebang usage with extraneous space, e.g.:
                 #!/usr/bin/env -i command
              In which case argv[1] == "-i command".  */
-          error (0, 0, _("invalid option -- '%c'"), optc);
-          error (0, 0, _("use -[v]S to pass options in shebang lines"));
-          usage (EXIT_CANCELED);
+          {
+            char c = optc;
+            error (0, 0, _("invalid option -- %s"), quote_mem (&c, 1));
+            error (0, 0, _("use -[v]S to pass options in shebang lines"));
+            usage (EXIT_CANCELED);
+          }
 
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -1214,7 +1217,7 @@ main (int argc, char **argv)
 
   if (newdir)
     {
-      devmsg ("change dir: %s\n", quoteaf (newdir));
+      devmsg ("change dir: %s\n", quote (newdir));
 
       if (chdir (newdir) != 0)
         error (EXIT_CANCELED, errno, _("cannot change directory to %s"),
@@ -1224,13 +1227,13 @@ main (int argc, char **argv)
   char *program = argv[optind];
   if (argv0)
     {
-      devmsg ("argv0:     %s\n", quoteaf (argv0));
+      devmsg ("argv0:     %s\n", quote (argv0));
       argv[optind] = argv0;
     }
 
   if (dev_debug)
     {
-      devmsg ("executing: %s\n", program);
+      devmsg ("executing: %s\n", quote (program));
       for (int i=optind; i<argc; ++i)
         devmsg ("   arg[%d]= %s\n", i-optind, quote (argv[i]));
     }
