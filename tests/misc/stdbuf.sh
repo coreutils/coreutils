@@ -55,9 +55,6 @@ stdbuf -i0 -o0 -e0 true || fail=1 #check all files
 returns_ 126 env . && { returns_ 126 stdbuf -o1 . || fail=1; } # invalid command
 returns_ 127 stdbuf -o1 no_such || fail=1 # no such command
 
-# Test that 'stdbuf' doesn't create a child process.
-(ulimit -u 0; exec stdbuf -oL true) || fail=1
-
 # Terminate any background processes
 cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 

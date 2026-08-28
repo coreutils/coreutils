@@ -185,6 +185,7 @@ all_tests =					\
   tests/misc/io-errors.sh			\
   tests/misc/read-errors.sh			\
   tests/misc/responsive.sh			\
+  tests/misc/no-fork.sh				\
   tests/misc/traversal-missing.sh		\
   tests/misc/tty-quoting.sh			\
   tests/misc/uname-labeled.sh			\
