@@ -44,16 +44,22 @@ run_tty_ env test -t 1 ||
 run_tty_ env printf foo >printf.t &&
  skip_ 'libc buffering induced a tty probe'
 
-for cmd in basename du dirname 'ls -w0' readlink 'realpath --relative-to=.'; do
+for cmd in basename du dirname 'ls -w0' readlink 'realpath --relative-to=.' \
+           printenv; do
   test "$cmd" = 'du' && field=2 || field=1
-  test "$cmd" = 'dirname' && file='f oo/.' || file='f oo'
+  case "$cmd" in
+    dirname) file='f oo/.' ;;
+    printenv) file=TEST_ENV1 ;;
+    *) file='f oo' ;;
+  esac
 
-  run_tty_ $cmd "$file" >quoted.t || fail=1
+  TEST_ENV1='f oo' run_tty_ $cmd "$file" >quoted.t || fail=1
   cut -f$field- quoted.t >quoted || framework_failure_
 
   # Note ls theoretically doesn't need isatty() for a specified QUOTING_STYLE
   # but it does need it to determine appropriate output format.
-  QUOTING_STYLE=literal run_tty_ $cmd "$file" >unquoted.t || fail=1
+  TEST_ENV1='f oo' QUOTING_STYLE=literal run_tty_ $cmd "$file" \
+    >unquoted.t || fail=1
   cut -f$field- unquoted.t >unquoted || framework_failure_
 
   env printf '%q\n' "$(cat unquoted)" >printf_quoted || framework_failure_

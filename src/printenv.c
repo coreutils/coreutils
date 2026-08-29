@@ -111,8 +111,9 @@ main (int argc, char **argv)
     }
 
   bool quote_output = false;
+  idx_t const n_args = argc - optind;
 
-  if (!opt_nul_terminate_output)
+  if (!opt_nul_terminate_output && (n_args <= 0 || isatty (STDOUT_FILENO)))
     {
       int qs = getenv_quoting_style ();
       if (qs < 0)
@@ -130,7 +131,7 @@ main (int argc, char **argv)
   if (opt_nul_terminate_output)
     xset_binary_mode (STDOUT_FILENO, O_BINARY);
 
-  if (optind >= argc)
+  if (n_args <= 0)
     {
       for (char **env = environ; *env != NULL; ++env)
         print_envvar (*env, terminator, quote_output);

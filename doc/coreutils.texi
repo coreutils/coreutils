@@ -15519,14 +15519,15 @@ The program accepts the following option.  Also see @ref{Common options}.
 
 @end table
 
-@macro printenvAlwaysQuoted
-The printed environment variables and their values are quoted using the
-@samp{shell-escape} style.   The environment variable
-@env{QUOTING_STYLE} specifies the quoting style.  Valid quoting styles
-are:
+If no @var{variable}s are specified, @command{printenv} quotes
+environment variables and their values using the @samp{shell-escape}
+style.  If @var{variable}s are specified, @command{printenv} only quotes
+their values using the @samp{shell-escape} style if standard output is a
+terminal.
+
+The environment variable @env{QUOTING_STYLE}
+specifies the quoting style.  Valid quoting styles are:
 @quotingStyles
-@end macro
-@printenvAlwaysQuoted
 
 @cindex exit status of @command{printenv}
 Exit status:
@@ -17496,7 +17497,11 @@ If no command name is specified following the environment
 specifications, the resulting environment is printed.  This is like
 specifying the @command{printenv} program.
 
-@printenvAlwaysQuoted
+The printed environment variables and their values are quoted using the
+@samp{shell-escape} style.   The environment variable
+@env{QUOTING_STYLE} specifies the quoting style.  Valid quoting styles
+are:
+@quotingStyles
 
 For some examples, suppose the environment passed to @command{env}
 contains @samp{LOGNAME=rms}, @samp{EDITOR=emacs}, and

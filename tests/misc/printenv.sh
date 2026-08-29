@@ -84,17 +84,21 @@ compare /dev/null out || fail=1
 cat <<\EOF >exp-noargs-literal || framework_failure_
 a b=c d
 EOF
+cat <<\EOF >exp-arg-literal || framework_failure_
+c d
+EOF
 cat <<\EOF >exp-args-literal || framework_failure_
+c d
 c d
 EOF
 cat <<\EOF >exp-noargs-shell || framework_failure_
 'a b'='c d'
 EOF
-cat <<\EOF >exp-args-shell || framework_failure_
-'c d'
-EOF
-tr "'" '"' <exp-noargs-shell >exp-noargs-c || framework_failure_
-tr "'" '"' <exp-args-shell >exp-args-c || framework_failure_
+cp exp-arg-literal exp-arg-shell &&
+cp exp-args-literal exp-args-shell || framework_failure_
+for t in noargs arg args; do
+  tr "'" '"' <exp-$t-shell >exp-$t-c || framework_failure_
+done
 for qs in literal shell c; do
   env -i PATH="$PATH" QUOTING_STYLE=$qs 'a b'='c d' \
     printenv >out-t 2>err || fail=1
@@ -104,6 +108,10 @@ for qs in literal shell c; do
   compare /dev/null err || fail=1
   env -i PATH="$PATH" QUOTING_STYLE=$qs 'a b'='c d' \
     printenv 'a b' >out 2>err || fail=1
+  compare exp-arg-$qs out || fail=1
+  compare /dev/null err || fail=1
+  env -i PATH="$PATH" QUOTING_STYLE=$qs 'a b'='c d' \
+    printenv 'a b' 'a b' >out 2>err || fail=1
   compare exp-args-$qs out || fail=1
   compare /dev/null err || fail=1
 done
