@@ -83,6 +83,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   initial reads finish, but subsequent reads might block, which was seen
   e.g. with fifos on NetBSD 10.
 
+  'tail -F' is more responsive to changes when following many file names,
+  when using inotify.
+
   'wc -m' counts ASCII up to 14x faster, and UTF-8 up to 7x faster.
 
 ** Build-related

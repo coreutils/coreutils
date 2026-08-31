@@ -1432,6 +1432,29 @@ wd_comparator (const void *e1, const void *e2)
   return spec1->wd == spec2->wd;
 }
 
+/* Hash Follow_name watches by parent directory wd + basename so directory
+   inotify events can be matched in expected O(1) instead of scanning all
+   files.  */
+static size_t
+parent_name_hasher (const void *entry, size_t tabsize)
+{
+  const struct File_spec *spec = entry;
+  char const *name = spec->name + spec->basename_start;
+  /* hash_string already reduces modulo TABSIZE; mix in parent_wd so the
+     same basename under different directories does not collide by design.  */
+  return (hash_string (name, tabsize) + (size_t) spec->parent_wd) % tabsize;
+}
+
+static bool
+parent_name_comparator (const void *e1, const void *e2)
+{
+  const struct File_spec *a = e1;
+  const struct File_spec *b = e2;
+  return (a->parent_wd == b->parent_wd
+          && streq (a->name + a->basename_start,
+                    b->name + b->basename_start));
+}
+
 /* Output (new) data for FSPEC->fd.
    PREV_FSPEC records the last File_spec for which we output.  */
 static void
@@ -1480,10 +1503,17 @@ check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
 
 /* Attempt to tail N_FILES files forever, or until killed.
    Check modifications using the inotify events system.
-   Exit if finished or on fatal error; return to revert to polling.  */
+   Exit if finished or on fatal error; return to revert to polling.
+
+   On return (to revert to polling), *WD_TO_NAMEP and *PARENT_BY_NAMEP
+   hold hash tables the caller must free.  *PARENT_BY_NAMEP is non-NULL
+   only when follow_mode == Follow_name; otherwise it is set to NULL.
+   Like WD_TO_NAME, PARENT_BY_NAME is owned by the caller so return
+   paths need not free it (and must not call hash_free (NULL)).  */
 static void
 tail_forever_inotify (int wd, struct File_spec *f, int n_files,
-                      double sleep_interval, Hash_table **wd_to_namep)
+                      double sleep_interval, Hash_table **wd_to_namep,
+                      Hash_table **parent_by_namep)
 {
 # if TAIL_TEST_SLEEP
   /* Delay between open() and inotify_add_watch()
@@ -1495,6 +1525,10 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
   /* Map an inotify watch descriptor to the name of the file it's watching.  */
   Hash_table *wd_to_name;
 
+  /* Map (parent_wd, basename) to File_spec for Follow_name
+     directory events.  */
+  Hash_table *parent_by_name = NULL;
+
   bool found_watchable_file = false;
   bool tailed_but_unwatchable = false;
   bool found_unwatchable_dir = false;
@@ -1504,11 +1538,22 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
   char *evbuf;
   idx_t evbuf_off = 0;
 
+  *parent_by_namep = NULL;
+
   wd_to_name = hash_initialize (n_files, NULL, wd_hasher, wd_comparator,
                                 NULL);
   if (! wd_to_name)
     xalloc_die ();
   *wd_to_namep = wd_to_name;
+
+  if (follow_mode == Follow_name)
+    {
+      parent_by_name = hash_initialize (n_files, NULL, parent_name_hasher,
+                                        parent_name_comparator, NULL);
+      if (! parent_by_name)
+        xalloc_die ();
+      *parent_by_namep = parent_by_name;
+    }
 
   /* The events mask used with inotify on files (not directories).  */
   uint32_t inotify_wd_mask = IN_MODIFY;
@@ -1559,6 +1604,9 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
                      of the inotify API will still be diagnosed.  */
                   break;
                 }
+
+              if (hash_insert (parent_by_name, &(f[i])) == NULL)
+                xalloc_die ();
             }
 
           f[i].wd = inotify_add_watch (wd, f[i].name, inotify_wd_mask);
@@ -1737,21 +1785,19 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
 
       if (ev->len) /* event on ev->name in watched directory.  */
         {
-          int j;
-          for (j = 0; j < n_files; j++)
-            {
-              /* With N=hundreds of frequently-changing files, this O(N^2)
-                 process might be a problem.  FIXME: use a hash table?  */
-              if (f[j].parent_wd == ev->wd
-                  && streq (ev->name, f[j].name + f[j].basename_start))
-                break;
-            }
-
-          /* It is not a watched file.  */
-          if (j == n_files)
+          struct File_spec key;
+          if (! parent_by_name)
             continue;
 
-          fspec = &(f[j]);
+          /* Probe key: basename is the whole string at KEY.NAME.  */
+          key.parent_wd = ev->wd;
+          key.name = ev->name;
+          key.basename_start = 0;
+          fspec = hash_lookup (parent_by_name, &key);
+
+          /* It is not a watched file.  */
+          if (! fspec)
+            continue;
 
           int new_wd = -1;
           bool deleting = !! (ev->mask & IN_DELETE);
@@ -1759,7 +1805,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
           if (! deleting)
             {
               /* Adding the same inode again will look up any existing wd.  */
-              new_wd = inotify_add_watch (wd, f[j].name, inotify_wd_mask);
+              new_wd = inotify_add_watch (wd, fspec->name, inotify_wd_mask);
             }
 
           if (! deleting && new_wd < 0)
@@ -1772,7 +1818,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
               else
                 {
                   /* Can get ENOENT for a dangling symlink for example.  */
-                  error (0, errno, _("cannot watch %s"), quoteaf (f[j].name));
+                  error (0, errno, _("cannot watch %s"), quoteaf (fspec->name));
                 }
               /* We'll continue below after removing the existing watch.  */
             }
@@ -2521,8 +2567,12 @@ main (int argc, char **argv)
                 write_error ();
 
               Hash_table *ht;
-              tail_forever_inotify (wd, F, n_files, sleep_interval, &ht);
+              Hash_table *parent_ht = NULL;
+              tail_forever_inotify (wd, F, n_files, sleep_interval,
+                                    &ht, &parent_ht);
               hash_free (ht);
+              if (parent_ht)
+                hash_free (parent_ht);
               close (wd);
               errno = 0;
             }

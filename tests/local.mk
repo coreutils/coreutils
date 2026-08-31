@@ -196,6 +196,7 @@ all_tests =					\
   tests/tail/basic-seek.sh			\
   tests/tail/inotify-hash-abuse.sh		\
   tests/tail/inotify-hash-abuse2.sh		\
+  tests/tail/inotify-parent-hash.sh		\
   tests/tail/F-vs-missing.sh			\
   tests/tail/F-vs-rename.sh			\
   tests/tail/F-headers.sh			\
