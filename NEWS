@@ -16,6 +16,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   will correctly match the last delimiter specified.
   [bug introduced with multi-byte support in coreutils-9.11]
 
+  'date -d '1-2-3' "+%_D"' no longer propagates flags like _ and - to the year
+  component of the %D date specifier, keeping consistent component formatting.
+  [bug introduced in coreutils-8.31]
+
   'du --max-depth=N' now exits with a nonzero exit status and an error message
   if N is negative.  Previously it behaved as if N were zero.
   [bug introduced in coreutils-9.4]
