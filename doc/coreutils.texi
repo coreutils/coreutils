@@ -11753,6 +11753,19 @@ Change the access timestamp only.  @xref{File timestamps}.
 @optItemx{touch,--no-create,}
 Do not warn about or create files that do not exist.
 
+@optItem{touch,--mode,=@var{mode}}
+@opindex mode
+Use @var{mode} as the permissions for files newly created by @command{touch}.
+The mode is interpreted as an octal file mode and is subject to the
+process's file creation mask (@code{umask}).
+
+This option does not change the permissions of files that already exist.
+For example:
+
+@example
+touch --mode=0755 script
+@end example
+
 @optItem{touch,-d,@w{ }@var{time}}
 @optItemx{touch,--date,=@var{time}}
 @opindex time
