@@ -110,6 +110,19 @@ csplit: '1': line number out of range
 EOF
 compare experr err || fail=1
 
+# Test the behavior of an empty pattern.
+rm -f xx?? || framework_failure_
+echo a >inp || framework_failure_
+cat <<\EOF >exp || framework_failure_
+0
+2
+EOF
+csplit inp '//' >out 2>err || fail=1
+compare /dev/null err || fail=1
+compare exp out || fail=1
+compare /dev/null xx00 || fail=1
+compare inp xx01 || fail=1
+
 # Test that the message to standard output isn't elided after read fails.
 if ! cat . >/dev/null 2>&1; then
   echo 0 >exp-out || framework_failure_
