@@ -55,4 +55,19 @@ test $1 = $3 || fail=1
 test -L "$dest/link1" || fail=1
 test "$(readlink "$dest/link1")" = realfile || fail=1
 
+# Test symbolic links to "." across file systems.
+(mkdir -p "$dest"/a "$dest"/b c &&
+  ln -s . "$dest"/a/symlink1 &&
+  ln -s . "$dest"/a/symlink2) || framework_failure_
+(cd c && timeout -v 10 mv "$dest"/a "$dest"/b/ >out 2>err) || fail=1
+compare /dev/null out || fail=1
+compare /dev/null err || fail=1
+returns_ 1 test -d "$dest"/a || fail=1
+test -d "$dest"/b || fail=1
+test -d "$dest"/b/a || fail=1
+test -L "$dest"/b/a/symlink1 || fail=1
+test -L "$dest"/b/a/symlink2 || fail=1
+test "$(readlink "$dest"/b/a/symlink1)" = . || fail=1
+test "$(readlink "$dest"/b/a/symlink2)" = . || fail=1
+
 Exit $fail
