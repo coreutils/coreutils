@@ -64,8 +64,11 @@ silent_writer() {
 silent_writer & writer_pid=$!
 
 # allow fifo to open
-timeout 10 $SHELL -c ': < fifo' || framework_failure_
-retry_delay_ writer_ready_ .1 6 || framework_failure_
+$SHELL -c 'read x < fifo' & pid=$!
+retry_delay_ writer_ready_ .1 7 || framework_failure_
+kill "$pid" 2>/dev/null
+wait "$pid" 2>/dev/null
+pid=
 
 sleep 1 & pid=$!
 returns_ 124 timeout 10 tail -f $fastpoll --pid=$pid fifo && fail=1
