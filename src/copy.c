@@ -139,12 +139,15 @@ copy_debug_string (enum copy_debug_val debug_val)
     case COPY_DEBUG_NO: return "no";
     case COPY_DEBUG_YES: return "yes";
     case COPY_DEBUG_AVOIDED: return "avoided";
-    case COPY_DEBUG_UNSUPPORTED: return "unsupported";
     case COPY_DEBUG_UNKNOWN: return "unknown";
 
     case COPY_DEBUG_EXTERNAL:
     case COPY_DEBUG_EXTERNAL_INTERNAL:
-    default: affirm (false);
+    case COPY_DEBUG_MAX:
+    default:
+      if (0 < debug_val)
+        return strerror (debug_val);
+      affirm (false);
     }
 }
 
@@ -160,7 +163,7 @@ copy_debug_sparse_string (enum copy_debug_val debug_val)
     case COPY_DEBUG_UNKNOWN: return "unknown";
 
     case COPY_DEBUG_AVOIDED:
-    case COPY_DEBUG_UNSUPPORTED:
+    case COPY_DEBUG_MAX:
     default: affirm (false);
     }
 }
@@ -676,7 +679,7 @@ handle_clone_fail (int dst_dirfd, char const *dst_relname,
      E.g., XFS has Allocation Groups where a clone may fail but a copy
      (to other groups) may succeed.  */
 
-  copy_debug.reflink = COPY_DEBUG_UNSUPPORTED;
+  copy_debug.reflink = errno;
 
   if (reflink_mode != REFLINK_ALWAYS)
     return true;

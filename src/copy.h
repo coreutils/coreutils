@@ -308,13 +308,18 @@ struct cp_options
 
 enum copy_debug_val
   {
-   COPY_DEBUG_UNKNOWN,
-   COPY_DEBUG_NO,
-   COPY_DEBUG_YES,
-   COPY_DEBUG_EXTERNAL,
-   COPY_DEBUG_EXTERNAL_INTERNAL,
-   COPY_DEBUG_AVOIDED,
-   COPY_DEBUG_UNSUPPORTED,
+   /* COPY_DEBUG_MAX is a dummy that ensures that any errno
+      value can be assigned to an enum copy_debug_val.
+      The other enum constants are negative,
+      so that they do not collide with errno values.  */
+   COPY_DEBUG_MAX = INT_MAX,
+
+   COPY_DEBUG_UNKNOWN = -1,
+   COPY_DEBUG_NO = -2,
+   COPY_DEBUG_YES = -3,
+   COPY_DEBUG_EXTERNAL = -4,
+   COPY_DEBUG_EXTERNAL_INTERNAL = -5,
+   COPY_DEBUG_AVOIDED = -6,
   };
 
 /* debug info about the last file copy.  */
