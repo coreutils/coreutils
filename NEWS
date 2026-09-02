@@ -12,10 +12,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   mistakenly exit with a nonzero status.
   [This bug was present in "the beginning".]
 
-  'cp`, 'install', and 'mv' will fall back to a standard copy in the case where
-  a clone fails with ENOSPC.  I.e., with --reflink=auto (enabled by default)
-  on COW supporting file systems.  E.g. with XFS, a clone can exhaust
-  metadata space in an allocation group, while a standard copy works.
+  'cp`, 'install', and 'mv' now fall back to a standard copy
+  if a --reflink=auto clone fails for any reason, including ENOSPC.
+  E.g., with XFS, a clone can exhaust metadata space in an allocation
+  group, while a standard copy works.
   [bug introduced in coreutils-9.2]
 
   'cut -d' with multiple multi-byte delimiter options specified

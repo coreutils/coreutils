@@ -212,22 +212,6 @@ follow_fstatat (int dirfd, char const *filename, struct stat *st, int flags)
   return result;
 }
 
-/* Whether an errno value ERR, set by FICLONE or copy_file_range,
-   indicates that the copying operation has terminally failed, even
-   though it was invoked correctly (so that, e.g, EBADF cannot occur)
-   and even though !is_CLONENOTSUP (ERR).
-
-   Note ENOSPC is _not_ included as that can merely mean that
-   metadata space is exhausted, while a standard copy may proceed.
-   E.g. XFS has Allocation Groups where a clone may fail, but a
-   copy (to other groups) may succeed.  */
-
-static bool
-is_terminal_error (int err)
-{
-  return err == EIO || err == ENOMEM || err == EDQUOT;
-}
-
 /* Perform the O(1) btrfs clone operation, if possible.
    Upon success, return 0.  Otherwise, return -1 and set errno.  */
 static inline int
@@ -684,34 +668,28 @@ fd_has_acl (int fd)
 static bool
 handle_clone_fail (int dst_dirfd, char const *dst_relname,
                    char const *src_name, char const *dst_name,
-                   int dest_desc, bool new_dst, enum Reflink_type reflink_mode)
+                   bool new_dst, enum Reflink_type reflink_mode)
 {
-  /* When the clone operation fails, report failure only with errno values
-     known to mean trouble when the clone is supported and called properly.
-     Do not report failure merely because !is_CLONENOTSUP (errno),
-     as systems may yield oddball errno values here with FICLONE,
-     and is_CLONENOTSUP is not appropriate for fclonefileat.  */
-  bool report_failure = is_terminal_error (errno);
+  /* Record failure for debugging, but return false only if --reflink=always.
+     No errno value is serious enough to give up on read+write copying,
+     which can succeed even if cloning fails due to ENOSPC etc.
+     E.g., XFS has Allocation Groups where a clone may fail but a copy
+     (to other groups) may succeed.  */
 
-  if (reflink_mode == REFLINK_ALWAYS || report_failure)
-    error (0, errno, _("failed to clone %s from %s"),
-           quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
+  copy_debug.reflink = COPY_DEBUG_UNSUPPORTED;
+
+  if (reflink_mode != REFLINK_ALWAYS)
+    return true;
+
+  error (0, errno, _("failed to clone %s from %s"),
+         quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
 
   /* Remove the destination if cp --reflink=always created it
      but cloned no data.  */
   if (new_dst /* currently not for fclonefileat().  */
-      && reflink_mode == REFLINK_ALWAYS
-      && ((! report_failure) || lseek (dest_desc, 0, SEEK_END) == 0)
-      && unlinkat (dst_dirfd, dst_relname, 0) != 0 && errno != ENOENT)
+      && unlinkat (dst_dirfd, dst_relname, 0) < 0 && errno != ENOENT)
     error (0, errno, _("cannot remove %s"), quoteaf (dst_name));
-
-  if (! report_failure)
-    copy_debug.reflink = COPY_DEBUG_UNSUPPORTED;
-
-  if (reflink_mode == REFLINK_ALWAYS || report_failure)
-    return false;
-
-  return true;
+  return false;
 }
 
 /* Copy a regular file from SRC_NAME to DST_NAME aka DST_DIRFD+DST_RELNAME.
@@ -928,7 +906,7 @@ copy_reg (char const *src_name, char const *dst_name,
                 }
               if (! handle_clone_fail (dst_dirfd, dst_relname, src_name,
                                        dst_name,
-                                       -1, false /* We didn't create dst  */,
+                                       false /* We didn't create dst  */,
                                        x->reflink_mode))
                 {
                   return_val = false;
@@ -1018,7 +996,7 @@ copy_reg (char const *src_name, char const *dst_name,
       else
         {
           if (! handle_clone_fail (dst_dirfd, dst_relname, src_name, dst_name,
-                                   dest_desc, *new_dst, x->reflink_mode))
+                                   *new_dst, x->reflink_mode))
            {
              return_val = false;
              goto close_src_and_dst_desc;
