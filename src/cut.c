@@ -497,7 +497,7 @@ append_field_1_bytes (mbbuf_t *mbbuf, mcel_t g, idx_t *n_bytes)
   append_field_1_chunk (mbbuf_char_offset (mbbuf, g), g.len, n_bytes);
 }
 
-static enum field_terminator
+static inline enum field_terminator
 scan_mb_blank_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
                      bool *have_pending_line, bool write_field,
                      idx_t *n_bytes)
@@ -534,7 +534,7 @@ scan_mb_blank_field (mbbuf_t *mbbuf, struct mbfield_parser *parser,
     }
 }
 
-static enum field_terminator
+static inline enum field_terminator
 scan_mb_delim_field (mbbuf_t *mbbuf, bool *have_pending_line,
                      bool write_field, idx_t *n_bytes)
 {
