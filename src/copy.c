@@ -215,12 +215,17 @@ follow_fstatat (int dirfd, char const *filename, struct stat *st, int flags)
 /* Whether an errno value ERR, set by FICLONE or copy_file_range,
    indicates that the copying operation has terminally failed, even
    though it was invoked correctly (so that, e.g, EBADF cannot occur)
-   and even though !is_CLONENOTSUP (ERR).  */
+   and even though !is_CLONENOTSUP (ERR).
+
+   Note ENOSPC is _not_ included as that can merely mean that
+   metadata space is exhausted, while a standard copy may proceed.
+   E.g. XFS has Allocation Groups where a clone may fail, but a
+   copy (to other groups) may succeed.  */
 
 static bool
 is_terminal_error (int err)
 {
-  return err == EIO || err == ENOMEM || err == ENOSPC || err == EDQUOT;
+  return err == EIO || err == ENOMEM || err == EDQUOT;
 }
 
 /* Perform the O(1) btrfs clone operation, if possible.
