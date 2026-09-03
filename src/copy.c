@@ -673,25 +673,31 @@ handle_clone_fail (int dst_dirfd, char const *dst_relname,
                    char const *src_name, char const *dst_name,
                    bool new_dst, enum Reflink_type reflink_mode)
 {
-  /* Record failure for debugging, but return false only if --reflink=always.
-     No errno value is serious enough to give up on read+write copying,
+  /* Record errno for debugging, but diagnose the failure and return
+     false only if either --reflink=always, or errno is so serious
+     that we should not fall back on read+write copying,
      which can succeed even if cloning fails due to ENOSPC etc.
      E.g., XFS has Allocation Groups where a clone may fail but a copy
-     (to other groups) may succeed.  */
+     (to other groups) may succeed.  The only known potentially
+     serious errno value is EIO, due to Linux kernel bugs reported
+     in 2023 <https://bugs.gnu.org/60489>.  */
 
   copy_debug.reflink = errno;
-
-  if (reflink_mode != REFLINK_ALWAYS)
+  if (! (reflink_mode == REFLINK_ALWAYS || errno == EIO))
     return true;
 
   error (0, errno, _("failed to clone %s from %s"),
          quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
 
-  /* Remove the destination if cp --reflink=always created it
-     but cloned no data.  */
+  /* Remove the destination if cloning created it but later failed,
+     either due to EIO, or to any error if --reflink=always.  The need
+     for removal is a Linux kernel bug, as ioctl with FICLONE is
+     supposed to be atomic.  We don't know whether currently supported
+     kernels have the problem, so play it safe.  */
   if (new_dst /* currently not for fclonefileat().  */
       && unlinkat (dst_dirfd, dst_relname, 0) < 0 && errno != ENOENT)
     error (0, errno, _("cannot remove %s"), quoteaf (dst_name));
+
   return false;
 }
 
