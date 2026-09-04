@@ -12,7 +12,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   mistakenly exit with a nonzero status.
   [This bug was present in "the beginning".]
 
-  'cp`, 'install', and 'mv' now fall back to a standard copy
+  'cp', 'install', and 'mv' now fall back to a standard copy
   if a --reflink=auto clone fails due to EDQUOT, ENOMEM, or ENOSPC.
   E.g., with XFS, a clone can exhaust metadata space in an allocation
   group, while a standard copy works.
