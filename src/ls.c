@@ -291,6 +291,8 @@ static size_t print_file_name_and_frills (const struct fileinfo *f,
 static void print_horizontal (void);
 static int format_user_width (uid_t u);
 static int format_group_width (gid_t g);
+static void update_widths_for_header (void);
+static void print_long_format_header (void);
 static void print_long_format (const struct fileinfo *f);
 static void print_many_per_line (void);
 static size_t print_name_with_quoting (const struct fileinfo *f,
@@ -519,6 +521,10 @@ static bool numeric_ids;
 /* True means mention the size in blocks of each file.  -s  */
 
 static bool print_block_size;
+
+/* True means print column headers in long format.  --header  */
+
+static bool print_header;
 
 /* Human-readable options for output, when printing block counts.  */
 static int human_output_opts;
@@ -863,6 +869,7 @@ enum
   FORMAT_OPTION,
   FULL_TIME_OPTION,
   GROUP_DIRECTORIES_FIRST_OPTION,
+  HEADER_OPTION,
   HIDE_OPTION,
   HYPERLINK_OPTION,
   INDICATOR_STYLE_OPTION,
@@ -884,6 +891,7 @@ static struct option const long_options[] =
   {"full-time", no_argument, NULL, FULL_TIME_OPTION},
   {"group-directories-first", no_argument, NULL,
    GROUP_DIRECTORIES_FIRST_OPTION},
+  {"header", no_argument, NULL, HEADER_OPTION},
   {"human-readable", no_argument, NULL, 'h'},
   {"inode", no_argument, NULL, 'i'},
   {"kibibytes", no_argument, NULL, 'k'},
@@ -2143,6 +2151,10 @@ decode_switches (int argc, char **argv)
 
         case GROUP_DIRECTORIES_FIRST_OPTION:
           directories_first = true;
+          break;
+
+        case HEADER_OPTION:
+          print_header = true;
           break;
 
         case TIME_OPTION:
@@ -4119,6 +4131,11 @@ print_current_files (void)
       break;
 
     case long_format:
+      if (print_header && cwd_n_used)
+        {
+          update_widths_for_header ();
+          print_long_format_header ();
+        }
       for (idx_t i = 0; i < cwd_n_used; i++)
         {
           set_normal_color ();
@@ -4174,6 +4191,41 @@ long_time_expected_width (void)
 
       if (width < 0)
         width = 0;
+    }
+
+  return width;
+}
+
+/* Return the expected display width of the timestamp column in a long listing.
+   If column headers are enabled, ensure it is at least wide enough for the
+   header label.  */
+
+static int
+time_column_width (void)
+{
+  int width = long_time_expected_width ();
+  struct timespec now;
+  struct tm tm;
+  char buf[TIME_STAMP_LEN_MAXIMUM + 1];
+
+  gettime (&now);
+  if (localtime_rz (localtz, &now.tv_sec, &tm))
+    {
+      ptrdiff_t len = align_nstrftime (buf, sizeof buf, true,
+                                       &tm, localtz, 0);
+      if (len > 0)
+        {
+          int w = mbsnwidth (buf, len, MBSWIDTH_FLAGS);
+          if (width < w)
+            width = w;
+        }
+    }
+
+  if (print_header)
+    {
+      int hw = mbswidth (_("Date"), MBSWIDTH_FLAGS);
+      if (width < hw)
+        width = hw;
     }
 
   return width;
@@ -4257,6 +4309,129 @@ format_inode (char buf[INT_BUFSIZE_BOUND (uintmax_t)],
   return (f->stat_ok && f->stat.st_ino != NOT_AN_INODE_NUMBER
           ? umaxtostr (f->stat.st_ino, buf)
           : (char *) "?");
+}
+
+/* Print a column header string STR padded to WIDTH columns.
+   If RIGHT_ALIGN is true, the padding precedes the string; otherwise
+   padding follows the string.  Follow the field with a space.  */
+
+static void
+print_header_field (char const *str, int width, bool right_align)
+{
+  int sw = mbswidth (str, MBSWIDTH_FLAGS);
+  int pad = MAX (0, width - (sw < 0 ? 0 : sw));
+
+  if (right_align)
+    {
+      while (pad-- > 0)
+        dired_outbyte (' ');
+      dired_outstring (str);
+    }
+  else
+    {
+      dired_outstring (str);
+      while (pad-- > 0)
+        dired_outbyte (' ');
+    }
+  dired_outbyte (' ');
+}
+
+/* Update column widths to be at least the display width of the column
+   header labels when --header is active.  */
+
+static void
+update_widths_for_header (void)
+{
+  if (print_inode)
+    {
+      int w = mbswidth (_("Inode"), MBSWIDTH_FLAGS);
+      if (inode_number_width < w)
+        inode_number_width = w;
+    }
+
+  if (print_block_size)
+    {
+      int w = mbswidth (_("Blocks"), MBSWIDTH_FLAGS);
+      if (block_size_width < w)
+        block_size_width = w;
+    }
+
+  {
+    int w = mbswidth (_("Links"), MBSWIDTH_FLAGS);
+    if (nlink_width < w)
+      nlink_width = w;
+  }
+
+  if (print_owner)
+    {
+      int w = mbswidth (_("Owner"), MBSWIDTH_FLAGS);
+      if (owner_width < w)
+        owner_width = w;
+    }
+
+  if (print_group)
+    {
+      int w = mbswidth (_("Group"), MBSWIDTH_FLAGS);
+      if (group_width < w)
+        group_width = w;
+    }
+
+  if (print_author)
+    {
+      int w = mbswidth (_("Author"), MBSWIDTH_FLAGS);
+      if (author_width < w)
+        author_width = w;
+    }
+
+  if (print_scontext)
+    {
+      int w = mbswidth (_("Context"), MBSWIDTH_FLAGS);
+      if (scontext_width < w)
+        scontext_width = w;
+    }
+
+  {
+    int w = mbswidth (_("Size"), MBSWIDTH_FLAGS);
+    if (file_size_width < w)
+      file_size_width = w;
+  }
+}
+
+/* Print the header line for a long format listing.  */
+
+static void
+print_long_format_header (void)
+{
+  dired_indent ();
+
+  if (print_inode)
+    print_header_field (_("Inode"), inode_number_width, true);
+
+  if (print_block_size)
+    print_header_field (_("Blocks"), block_size_width, true);
+
+  print_header_field (_("Mode"), any_has_acl ? 11 : 10, false);
+
+  print_header_field (_("Links"), nlink_width, true);
+
+  if (print_owner)
+    print_header_field (_("Owner"), owner_width, numeric_ids);
+
+  if (print_group)
+    print_header_field (_("Group"), group_width, numeric_ids);
+
+  if (print_author)
+    print_header_field (_("Author"), author_width, numeric_ids);
+
+  if (print_scontext)
+    print_header_field (_("Context"), scontext_width, false);
+
+  print_header_field (_("Size"), file_size_width, true);
+
+  print_header_field (_("Date"), time_column_width (), false);
+
+  dired_outstring (_("Name"));
+  dired_outbyte (eolbyte);
 }
 
 /* Print information about F in long format.  */
@@ -4435,6 +4610,12 @@ print_long_format (const struct fileinfo *f)
   if (0 <= s)
     {
       p += s;
+      if (print_header)
+        {
+          int tw = time_column_width ();
+          for (int pad = tw - s; pad > 0; pad--)
+            *p++ = ' ';
+        }
       *p++ = ' ';
     }
   else
@@ -4442,7 +4623,8 @@ print_long_format (const struct fileinfo *f)
       /* The time cannot be converted using the desired format, so
          print it as a huge integer number of seconds.  */
       char hbuf[INT_BUFSIZE_BOUND (intmax_t)];
-      p += sprintf (p, "%*s ", long_time_expected_width (),
+      p += sprintf (p, "%*s ", print_header ? time_column_width ()
+                                            : long_time_expected_width (),
                     (! f->stat_ok || ! btime_ok
                      ? "?"
                      : timetostr (when_timespec.tv_sec, hbuf)));
@@ -5492,6 +5674,10 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
       oputs (_("\
       --dereference-command-line-symlink-to-dir\n\
          follow each command line symbolic link that points to a directory\n\
+"));
+      oputs (_("\
+      --header\n\
+         in a long listing, print column headers\n\
 "));
       oputs (_("\
       --hide=PATTERN\n\
