@@ -786,39 +786,54 @@ head_bytes (char const *filename, int fd, uintmax_t bytes_to_write)
 }
 
 static bool
-head_lines (char const *filename, int fd, uintmax_t lines_to_write)
+head_lines (const char *const filename, const int fd,
+            uintmax_t lines_to_write)
 {
-  char buffer[BUFSIZ];
+  char buffer[BUFSIZ & 0xffff];
+  const char *p, *end;
+  int_fast32_t bytes_read;
 
-  while (lines_to_write)
+  if (!lines_to_write)
+    return true;
+
+  while ((bytes_read = read (fd, buffer, sizeof (buffer))))
     {
-      ssize_t bytes_read = read (fd, buffer, BUFSIZ);
-      idx_t bytes_to_write = 0;
-
       if (bytes_read < 0)
         {
           diagnose_read_failure (filename);
           return false;
         }
-      if (bytes_read == 0)
-        break;
-      while (bytes_to_write < bytes_read)
-        if (buffer[bytes_to_write++] == line_end && --lines_to_write == 0)
-          {
-            off_t n_bytes_past_EOL = bytes_read - bytes_to_write;
-            /* If we have read more data than that on the specified number
-               of lines, try to seek back to the position we would have
-               gotten to had we been reading one byte at a time.  */
-            if (lseek (fd, -n_bytes_past_EOL, SEEK_CUR) < 0)
-              {
-                struct stat st;
-                if (fstat (fd, &st) != 0 || S_ISREG (st.st_mode))
-                  elseek_diagnostic (-n_bytes_past_EOL, SEEK_CUR, filename);
-              }
-            break;
-          }
-      xwrite_stdout (buffer, bytes_to_write);
+      end = buffer + bytes_read;
+
+      p = memchr (buffer, line_end, bytes_read);
+      while (p)
+        {
+          ++p;
+
+          if (!--lines_to_write)
+            {
+              const int_fast32_t n_bytes_past_EOL = -(end - p);
+              /* If we have read more data than that on the specified number
+                 of lines, try to seek back to the position we would have
+                 gotten to had we been reading one byte at a time.  */
+              if (n_bytes_past_EOL
+                  && lseek (fd, n_bytes_past_EOL, SEEK_CUR) < 0)
+                {
+                  struct stat st;
+                  if (fstat (fd, &st) != 0 || S_ISREG (st.st_mode))
+                    elseek_diagnostic (n_bytes_past_EOL, SEEK_CUR, filename);
+                }
+              xwrite_stdout (buffer, p - buffer);
+              return true;
+            }
+
+          p = memchr (p, line_end, end - p);
+        }
+
+      assert (lines_to_write);
+      xwrite_stdout (buffer, bytes_read);
     }
+
   return true;
 }
 
