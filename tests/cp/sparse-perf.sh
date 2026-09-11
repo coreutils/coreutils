@@ -29,14 +29,15 @@ other_partition_sparse=$other_partition_tmpdir/k
 printf x > $other_partition_sparse || framework_failure_
 truncate -s1M $other_partition_sparse || framework_failure_
 
-# cp should not disable anything by default, even for sparse files.  For e.g.
-# copy offload is an important performance improvement for sparse files on NFS.
+# With SEEK_HOLE, cp should not avoid copy offload for sparse files.
+# This is an important performance improvement for sparse files on NFS.
+# Note without SEEK_HOLE copy offload may allocate holes, so is avoided.
 cp --debug $other_partition_sparse k2 >cp.out 2>cp.err; ret=$?
 # Old Centos 7 or WSL 1 can give EINVAL erroneously
 grep -F "$EINVAL" cp.err && skip_ 'received EINVAL when copying sparse file'
 test "$ret" = 0 || { cat cp.err >&2; fail=1; }
 cmp $other_partition_sparse k2 || fail=1
-grep ': avoided' cp.out && { cat cp.out; fail=1; }
+grep ': avoided.*SEEK_HOLE' cp.out && { cat cp.out; fail=1; }
 
 
 # Create a large-non-sparse-but-compressible file
@@ -47,7 +48,7 @@ mls='might-look-sparse'
 yes | head -n1M > "$mls" || framework_failure_
 cp --debug "$mls" "$mls.cp" >cp.out || fail=1
 cmp "$mls" "$mls.cp" || fail=1
-grep ': avoided' cp.out && { cat cp.out; fail=1; }
+grep ': avoided.*SEEK_HOLE' cp.out && { cat cp.out; fail=1; }
 
 
 # Create a large-but-sparse file on the current partition.
