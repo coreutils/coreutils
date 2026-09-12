@@ -786,9 +786,10 @@ head_bytes (char const *filename, int fd, uintmax_t bytes_to_write)
 }
 
 static bool
-head_lines (const char *const filename, const int fd,
+head_lines (const char filename[const static 1], const int fd,
             uintmax_t lines_to_write)
 {
+  assert (fd >= 0);
   char buffer[BUFSIZ & 0xffff];
   const char *p, *end;
   int_fast32_t bytes_read;
