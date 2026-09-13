@@ -793,6 +793,13 @@ head_lines (const char filename[const static 1], const int fd,
   char buffer[BUFSIZ & 0xffff];
   const char *p, *end;
   int_fast32_t bytes_read;
+  uintmax_t lines_to_write_last;
+  // 15 experimentally confirmed optimal in
+  // github.com/coreutils/coreutils/pull/347#issuecomment-5653011937
+  const uint_fast8_t long_line_threshold = 15;
+  // C source files and configs have 30+ on avg:
+  // github.com/coreutils/coreutils/pull/351
+  bool long_lines = true;
 
   if (!lines_to_write)
     return true;
@@ -804,35 +811,45 @@ head_lines (const char filename[const static 1], const int fd,
           diagnose_read_failure (filename);
           return false;
         }
+      p = buffer;
       end = buffer + bytes_read;
+      lines_to_write_last = lines_to_write;
 
-      p = memchr (buffer, line_end, bytes_read);
-      while (p)
+      if (long_lines)
         {
-          ++p;
-
-          if (!--lines_to_write)
+          // rawmemchr() is equally fast:
+          // github.com/coreutils/coreutils/pull/347#issuecomment-5648412043
+          while ((p = memchr (p, line_end, end - p)))
             {
-              const int_fast32_t n_bytes_past_EOL = -(end - p);
-              /* If we have read more data than that on the specified number
-                 of lines, try to seek back to the position we would have
-                 gotten to had we been reading one byte at a time.  */
-              if (n_bytes_past_EOL
-                  && lseek (fd, n_bytes_past_EOL, SEEK_CUR) < 0)
-                {
-                  struct stat st;
-                  if (fstat (fd, &st) != 0 || S_ISREG (st.st_mode))
-                    elseek_diagnostic (n_bytes_past_EOL, SEEK_CUR, filename);
-                }
-              xwrite_stdout (buffer, p - buffer);
-              return true;
+              ++p;
+              if (!--lines_to_write)
+                break;
             }
+        }
+      else
+        while ((*p++ != line_end || --lines_to_write) && p < end);
 
-          p = memchr (p, line_end, end - p);
+      if (!lines_to_write)
+        {
+          assert (p);
+          const int_fast32_t n_bytes_past_EOL = -(end - p);
+          /* If we have read more data than that on the specified number
+             of lines, try to seek back to the position we would have
+             gotten to had we been reading one byte at a time.  */
+          if (n_bytes_past_EOL && lseek (fd, n_bytes_past_EOL, SEEK_CUR) < 0)
+            {
+              struct stat st;
+              if (fstat (fd, &st) != 0 || S_ISREG (st.st_mode))
+                elseek_diagnostic (n_bytes_past_EOL, SEEK_CUR, filename);
+            }
+          xwrite_stdout (buffer, p - buffer);
+          return true;
         }
 
-      assert (lines_to_write);
       xwrite_stdout (buffer, bytes_read);
+      long_lines =
+        (uintmax_t) bytes_read >=
+        (lines_to_write_last - lines_to_write) * long_line_threshold;
     }
 
   return true;
