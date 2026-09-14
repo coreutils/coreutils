@@ -134,6 +134,21 @@ EOF
   fail=1
 fi
 
+# -u and -c only select which timestamp a long listing shows; the
+# entries are still sorted by name.  Note -l is not the only way to
+# ask for a long listing.
+for long_opt in -l -g -o -n --full-time --dired; do
+  for time_opt in -u -c; do
+    set -- $(ls $long_opt $time_opt a B c | sed -n 's/.* \([aBc]\)$/\1/p')
+    test "$*" = 'B a c' ||
+      { echo "ls $long_opt $time_opt sorted as '$*'" >&2; fail=1; }
+  done
+done
+
+# ... whereas -t does select time order in a long listing.
+set -- $(ls -lut a B c | sed -n 's/.* \([aBc]\)$/\1/p')
+test "$*" = 'c B a' || fail=1
+
 # This check is ineffective if:
 #   en_US locale is not on the system.
 #   The system en_US message catalog has a specific TIME_FMT translation,
