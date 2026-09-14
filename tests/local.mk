@@ -721,6 +721,7 @@ all_tests =					\
   tests/ls/color-norm.sh			\
   tests/ls/color-term.sh			\
   tests/ls/color-ext.sh				\
+  tests/ls/color-symlink-target.sh		\
   tests/ls/dangle.sh				\
   tests/ls/dired.sh				\
   tests/ls/file-type.sh				\
