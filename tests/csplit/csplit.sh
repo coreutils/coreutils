@@ -100,6 +100,28 @@ printf 'x%8199s\nx\n%8199s\nx\n' x x > in
 csplit in '/x\{1\}/' '{*}' > /dev/null || fail=1
 cat xx?? | compare - in || fail=1
 
+# An offset that moves the split point past the last line of input
+# consumes everything, but the final (empty) split is still created.
+rm -f in out exp xx??
+printf 'p\nq\nr\ns\nend\n' > in
+csplit in '/^s$/+2' > out || fail=1
+cat <<EOF > exp
+12
+0
+EOF
+compare exp out || fail=1
+compare in xx00 || fail=1
+compare /dev/null xx01 || fail=1
+test -f xx02 && fail=1
+# -z elides that trailing empty split
+rm -f out exp xx??
+csplit -z in '/^s$/+2' > out || fail=1
+echo 12 > exp
+compare exp out || fail=1
+compare in xx00 || fail=1
+test -f xx01 && fail=1
+rm -f in out exp xx??
+
 # Ensure file not created for empty input
 # which was the case with coreutils <= 9.5
 rm -f xx??
