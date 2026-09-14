@@ -121,6 +121,15 @@ my @csplit_tests =
   # suppress matched + elide-empty
   ["int-2", '--suppress-matched -zq - 2 4 6', {IN_PIPE => $IN_SEQ_6},
     {OUTPUTS => [ "1\n", "3\n", "5\n" ]}],
+
+  # Mixing a line number and a regexp that matches the last line.
+  # The trailing (empty) split for the remainder of the input is
+  # still created, as in the all-line-numbers case above.
+  ["mixed-1", '--suppress-matched -q - 3 /^6$/', {IN_PIPE => $IN_SEQ_6},
+    {OUTPUTS => [ "1\n2\n", "4\n5\n", "" ]}],
+  # ... and elide-empty removes just that trailing split.
+  ["mixed-2", '--suppress-matched -zq - 3 /^6$/', {IN_PIPE => $IN_SEQ_6},
+    {OUTPUTS => [ "1\n2\n", "4\n5\n" ]}],
 );
 
 
