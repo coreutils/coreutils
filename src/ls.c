@@ -5074,7 +5074,9 @@ get_color_indicator (const struct fileinfo *f, bool symlink_target)
   return s->string ? s : NULL;
 }
 
-/* Output a color indicator (which may contain nulls).  */
+/* Output a color indicator (which may contain nulls).
+   Note we don't update dired_pos here as emacs can be configured
+   to handle color codes by stripping/converting them.  */
 static void
 put_indicator (const struct bin_str *ind)
 {
