@@ -4,6 +4,14 @@ eval '(exit $?0)' && eval 'exec perl -w "$0" ${1+"$@"}'
 
 use strict;
 use warnings;
+
+# Get the process ID of our parent as soon as possible to minimize the
+# likelihood of our parent dying while we are alive.  Note that we don't
+# check that the parent is init, since on Linux a process may become a
+# subreaper using PR_SET_CHILD_SUBREAPER, e.g., as done by the
+# 'systemd --user' process.
+my $git_pid = getppid ();
+
 (my $ME = $0) =~ s|.*/||;
 
 # Emulate Git's choice of the editor for the commit message.
@@ -165,7 +173,7 @@ sub check_msg($$)
       re_edit $log_file;
 
       # Stop if our parent is killed.
-      getppid() == 1
+      getppid () != $git_pid
         and last;
     }
 }
