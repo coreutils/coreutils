@@ -2845,6 +2845,7 @@ parse_ls_color (void)
           free (e2);
         }
       print_with_color = false;
+      return;
     }
   else
     {
