@@ -19264,21 +19264,26 @@ doesn't change, nor does it modify the file, so the mtime doesn't
 change.  Yet, something about the file itself has changed, and this
 must be noted somewhere.  This is the job of the ctime field.  This is
 necessary, so that, for example, a backup program can make a fresh
-copy of the file, including the new permissions value.  Another
-operation that modifies a file's ctime without affecting the others is
-renaming.
+copy of the file, including the new permissions value.
+For ctime purposes a file's status includes its mtime but not its atime,
+which means reading updates atime but writing updates both mtime and ctime.
+It is unspecified whether merely renaming a file updates its ctime,
+though renaming does update the mtime and ctime of the parent
+directory or directories involved.
 
 Naively, a file's atime, mtime, and ctime are set to the current time
 whenever you read, write, or change the attributes of the file
-respectively, and searching a directory counts as reading it.  A
-file's atime and mtime can also be set directly, via the
+respectively.  A file's timestamps can also be set directly, via the
 @command{touch} command (@pxref{touch invocation}).  In practice,
 though, timestamps are not updated quite that way.
 
 For efficiency reasons, many systems are lazy about updating atimes:
 when a program accesses a file, they may delay updating the file's
 atime, or may not update the file's atime if the file has been
-accessed recently, or may not update the atime at all.  Similar
+accessed recently, or may not update the atime at all if the file system
+is read-only or is configured to ignore atime updates.
+When a directory is searched as part of file name resolution,
+no modern system updates the directory's atime.  Similar
 laziness, though typically not quite so extreme, applies to mtimes and
 ctimes.
 
@@ -19287,8 +19292,11 @@ and these emulations may disagree with the naive interpretation.  For
 example, a system may fake an atime or ctime by using the mtime.
 
 @cindex clock skew
-The determination of what time is ``current'' depends on the
-platform.  Platforms with network file systems often use different
+The determination of what time is ``current'' depends on the situation.
+If the file is open by any process, the ``current'' time might be any
+time before the file ceases to be open, so long as the time precedes
+any inspection of or further change to the file's timestamp.
+Also, platforms with network file systems often use different
 clocks for the operating system and for file systems; because
 updates typically uses file systems' clocks by default, clock
 skew can cause the resulting file timestamps to appear to be in a
@@ -19298,7 +19306,8 @@ program's ``future'' or ``past''.
 When the system updates a file timestamp to a desired time @var{t}
 (which is either the current time, or a time specified via the
 @command{touch} command), there are several reasons the file's
-timestamp may be set to a value that differs from @var{t}.  First,
+timestamp may be set to a value that loses low-order information
+and is therefore slightly less than @var{t}.  First,
 @var{t} may have a higher resolution than supported.  Second, a file
 system may use different resolutions for different types of times.
 Third, file timestamps may use a different resolution than operating
