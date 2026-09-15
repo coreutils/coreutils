@@ -113,7 +113,7 @@ main (int argc, char **argv)
   bool quote_output = false;
   idx_t const n_args = argc - optind;
 
-  if (!opt_nul_terminate_output && (n_args <= 0 || isatty (STDOUT_FILENO)))
+  if (!opt_nul_terminate_output && isatty (STDOUT_FILENO))
     {
       int qs = getenv_quoting_style ();
       if (qs < 0)

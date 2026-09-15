@@ -1113,7 +1113,7 @@ main (int argc, char **argv)
 
   /* Get the value from QUOTING_STYLE before unsetting environment
      variables.  */
-  if (!opt_nul_terminate_output)
+  if (!opt_nul_terminate_output && isatty (STDOUT_FILENO))
     {
       int qs = getenv_quoting_style ();
       if (qs < 0)
