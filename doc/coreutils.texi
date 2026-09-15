@@ -7775,6 +7775,11 @@ With @option{-l}, scale sizes by @var{size} before printing them
 (@pxref{Block size}).  For example,
 @option{--block-size=G} prints sizes in units of 1,073,741,824 bytes.
 
+@optItem{ls,--header,}
+@cindex column headers
+In a long format listing, print column headers at the top of the output
+identifying each column.
+
 @optHumanReadable{ls}
 
 @optItem{ls,-i,}
