@@ -474,9 +474,9 @@ Copyright assignment
 If your change is significant (i.e., if it adds more than ~10 lines),
 then you'll have to have a copyright assignment on file with the FSF.
 Since that involves first an email exchange between you and the FSF,
-and then the exchange (FSF to you, then back) of an actual sheet of paper
-with your signature on it, and finally, some administrative processing
-in Boston, the process can take a few weeks.
+and then the exchange (FSF to you, then back) of a form to sign
+(either posted paper or electronically), and finally, some
+administrative processing in Boston, the process can take a few weeks.
 
 The forms to choose from are in gnulib's doc/Copyright/ directory.
 If you want to assign a single change, you should use the file,
