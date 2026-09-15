@@ -19,6 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ od
 very_expensive_
+require_bash_as_SHELL_ # for >()
 
 export LC_ALL=C
 
@@ -29,12 +30,13 @@ EOF
 
 # Try values near sqrt(2**31) and sqrt(2**63).
 for w in 46340 46341 3037000500 3037000501; do
-  printf x | od -v -w$w -tcz 2>err | tr -s ' ' ' ' >out
+  printf x | od -v -w$w -tcz 2>err |
+    $SHELL -c 'tee >(wc -c >outbytes)' | tr -s ' ' ' ' >out
   if test -s err; then
     test ! -s out || fail=1
   else
     compare exp out || fail=1
-    outbytes=$(printf x | od -w$w -tcz | wc -c)
+    outbytes=$(cat outbytes) || framework_failure_
     expbytes=$((4*$w + 21))
     test $expbytes -eq $outbytes || fail=1
   fi
