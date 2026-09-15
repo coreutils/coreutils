@@ -455,10 +455,8 @@ Usage: %s [OPTION]... [FILE]...\n\
 "),
               program_name);
       fputs (_("\
-Write lines consisting of the sequentially corresponding lines from\n\
-each FILE, separated by TABs, to standard output.\n\
-The newline of every line except the line from the last file\n\
-is replaced with a TAB.\n\
+Write lines consisting of corresponding lines from each file joined by TABs\n\
+to standard output.\n\
 "), stdout);
 
       emit_stdin_note ();
