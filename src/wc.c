@@ -328,7 +328,7 @@ wc_lines (int fd)
 #endif
 
   intmax_t lines = 0, bytes = 0;
-  bool long_lines = false;
+  bool long_lines = true;
 
   while (true)
     {
@@ -358,9 +358,13 @@ wc_lines (int fd)
       /* If the average line length in the block is >= 15, then use
           memchr for the next block, where system specific optimizations
           may outweigh function call overhead.
+
           FIXME: This line length was determined in 2015, on both
           x86_64 and ppc64, but it's worth re-evaluating in future with
-          newer compilers, CPUs, or memchr() implementations etc.  */
+          newer compilers, CPUs, or memchr() implementations etc.
+
+          2026: 15 confirmed optimal on x64_64, gcc 15.3.0, glibc 2.43:
+          github.com/coreutils/coreutils/pull/347#issuecomment-5653011937  */
       long_lines = 15 * buflines <= bytes_read;
       lines += buflines;
     }
