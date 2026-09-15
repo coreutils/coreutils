@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ln
+getlimits_
 
 t=tln-symlink
 d=tln-subdir
@@ -95,6 +96,18 @@ af=$(pwd)/$f
 ln --no-dereference -fs "$af" $ld || fail=1
 test -f $ld || fail=1
 rm -rf $d $f $ld
+
+# Test that 'ln -f' doesn't overwrite a file with a link when the
+# target does not exist.
+cat <<EOF >exp || framework_failure_
+ln: failed to access 'missing': $ENOENT
+EOF
+echo a > $f || framework_failure_
+cp $f exp-$f || framework_failure_
+returns_ 1 ln -f missing $f >out 2>err || fail=1
+compare /dev/null out || fail=1
+compare exp err || fail=1
+compare exp-$f $f || fail=1
 
 # -f on a existing file should not generate an error
 rm -rf $d $f
