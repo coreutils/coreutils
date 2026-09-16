@@ -81,14 +81,37 @@ returns_ 1 env a=b=c printenv a=b > out || fail=1
 compare /dev/null out || fail=1
 
 # QUOTING_STYLE does not affect redirected output.
-printf '%s\n' 'a b=c d' > exp || framework_failure_
-for qs in literal shell-always invalid; do
-  env -i PATH="$PATH" QUOTING_STYLE=$qs 'a b'='c d' \
-    printenv >out-t 2>err || fail=1
+# --quoting-style affects redirected output.
+cat <<\EOF >exp-noargs-literal || framework_failure_
+a b=c d
+EOF
+cat <<\EOF >exp-arg-literal || framework_failure_
+c d
+EOF
+cat <<\EOF >exp-args-literal || framework_failure_
+c d
+c d
+EOF
+cat <<\EOF >exp-noargs-shell || framework_failure_
+'a b'='c d'
+EOF
+cp exp-arg-literal exp-arg-shell &&
+cp exp-args-literal exp-args-shell || framework_failure_
+for t in noargs arg args; do
+  tr "'" '"' <exp-$t-shell >exp-$t-c || framework_failure_
+done
+for qs in '' literal shell c; do
+  if test "$qs"; then
+    qs_opt="--quoting-style=$qs"
+  else
+    qs_opt=''; qs='literal'
+  fi
+  env -i PATH="$PATH" QUOTING_STYLE=c 'a b'='c d' \
+    printenv $qs_opt >out-t 2>err || fail=1
   grep -vE '^["'"'"']?'\
 '(__CF_USER_TEXT_ENCODING|QUOTING_STYLE|(LD_ORIGIN_)?PATH)["'"'"']?=' \
     out-t >out || framework_failure_
-  compare exp out || fail=1
+  compare exp-noargs-$qs out || fail=1
   compare /dev/null err || fail=1
 done
 

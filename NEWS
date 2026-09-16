@@ -2,6 +2,17 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New Features
+
+  'env' and 'printenv' now support the --quoting-style option
+  to control the format of printed environment variables.
+
+** Changes in behavior
+
+  'env' and 'printenv' now quote printed environment variables only when
+  outputting to a terminal.  The previous release enabled this for all
+  outputs by default, requiring setting QUOTING_STYLE=literal to disable.
+
 
 * Noteworthy changes in release 9.12 (2026-09-14) [stable]
 

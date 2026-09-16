@@ -15516,14 +15516,21 @@ The program accepts the following option.  Also see @ref{Common options}.
 @table @samp
 
 @optNull{printenv}
+This option implies @option{--quoting-style=literal}.
+
+@optItem{printenv,--quoting-style,=@var{word}}
+@cindex quoting style
+Use style @var{word} to quote names and values that might
+contain arbitrary characters.  The @var{word} should
+be one of the following:
+
+@quotingStyles
 
 @end table
 
-If standard output is a terminal @command{printenv} quotes
-environment variables and their values using the @samp{shell-escape}
-style by default. The environment variable @env{QUOTING_STYLE}
-specifies the quoting style.  Valid quoting styles are:
-@quotingStyles
+If standard output is a terminal, you can specify the default value of
+the @option{--quoting-style} option with the environment variable
+@env{QUOTING_STYLE}, which defaults to @samp{shell-escape} if not set.
 
 @cindex exit status of @command{printenv}
 Exit status:
@@ -17493,11 +17500,9 @@ If no command name is specified following the environment
 specifications, the resulting environment is printed.  This is like
 specifying the @command{printenv} program.
 
-If standard output is a terminal, the printed environment variables
-and their values are quoted using the @samp{shell-escape} style by default.
-The environment variable @env{QUOTING_STYLE} specifies the quoting style.
-Valid quoting styles are:
-@quotingStyles
+If standard output is a terminal, you can specify the default value of
+the @option{--quoting-style} option with the environment variable
+@env{QUOTING_STYLE}, which defaults to @samp{shell-escape} if not set.
 
 For some examples, suppose the environment passed to @command{env}
 contains @samp{LOGNAME=rms}, @samp{EDITOR=emacs}, and
@@ -17558,6 +17563,7 @@ Options must precede operands.
 @table @samp
 
 @optNull{env}
+This option implies @option{--quoting-style=literal}.
 
 @optItem{env,-a,@w{ }@var{arg}}
 @optItemx{env,--argv0,=@var{arg}}
@@ -17671,6 +17677,14 @@ An empty @var{sig} argument is a no-op.
 
 @optItem{env,--list-signal-handling,}
 List blocked or ignored signals to standard error, before executing a command.
+
+@optItem{env,--quoting-style,=@var{word}}
+@cindex quoting style
+Use style @var{word} to quote names and values that might
+contain arbitrary characters.  The @var{word} should
+be one of the following:
+
+@quotingStyles
 
 @optItem{env,-v,}
 @optItemx{env,--debug,}

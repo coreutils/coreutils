@@ -47,9 +47,17 @@ enum { PRINTENV_FAILURE = 2 };
   proper_name ("David MacKenzie"), \
   proper_name ("Richard Mlynarik")
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  QUOTING_STYLE_OPTION = CHAR_MAX + 1,
+};
+
 static struct option const longopts[] =
 {
   {"null", no_argument, NULL, '0'},
+  {"quoting-style", required_argument, NULL, QUOTING_STYLE_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -73,6 +81,12 @@ If no VARIABLE is specified, print name and value pairs for them all.\n\
   -0, --null\n\
          end each output line with NUL, not newline\n\
 "));
+      oputs (_("\
+      --quoting-style=WORD\n\
+         use quoting style WORD for names and values:\n\
+           literal, locale, shell, shell-always,\n\
+           shell-escape, shell-escape-always, c, escape\n\
+"));
       oputs (HELP_OPTION_DESCRIPTION);
       oputs (VERSION_OPTION_DESCRIPTION);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
@@ -85,6 +99,7 @@ int
 main (int argc, char **argv)
 {
   bool opt_nul_terminate_output = false;
+  int quoting_style_opt = -1;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -102,6 +117,12 @@ main (int argc, char **argv)
         {
         case '0':
           opt_nul_terminate_output = true;
+          quoting_style_opt = literal_quoting_style;
+          break;
+        case QUOTING_STYLE_OPTION:
+          quoting_style_opt = XARGMATCH ("--quoting-style", optarg,
+                                         quoting_style_args,
+                                         quoting_style_vals);
           break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -111,20 +132,20 @@ main (int argc, char **argv)
     }
 
   bool quote_output = false;
-  idx_t const n_args = argc - optind;
-
-  if (!opt_nul_terminate_output && isatty (STDOUT_FILENO))
+  int qs = quoting_style_opt;
+  if (qs < 0 && isatty (STDOUT_FILENO))
     {
-      int qs = getenv_quoting_style ();
+      qs = getenv_quoting_style ();
       if (qs < 0)
         qs = shell_escape_quoting_style;
-      if (qs != literal_quoting_style)
-        {
-          set_quoting_style (NULL, qs);
-          quote_output = true;
-        }
+    }
+  if (0 <= qs && qs != literal_quoting_style)
+    {
+      set_quoting_style (NULL, qs);
+      quote_output = true;
     }
 
+  idx_t const n_args = argc - optind;
   bool ok;
   char const terminator = opt_nul_terminate_output ? '\0' : '\n';
 

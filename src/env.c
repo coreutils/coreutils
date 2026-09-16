@@ -107,6 +107,7 @@ enum
   IGNORE_SIGNAL_OPTION,
   BLOCK_SIGNAL_OPTION,
   LIST_SIGNAL_HANDLING_OPTION,
+  QUOTING_STYLE_OPTION,
 };
 
 static struct option const longopts[] =
@@ -122,6 +123,7 @@ static struct option const longopts[] =
   {"block-signal",   optional_argument, NULL, BLOCK_SIGNAL_OPTION},
   {"list-signal-handling", no_argument, NULL,  LIST_SIGNAL_HANDLING_OPTION},
   {"debug", no_argument, NULL, 'v'},
+  {"quoting-style", required_argument, NULL, QUOTING_STYLE_OPTION},
   {"split-string", required_argument, NULL, 'S'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -167,6 +169,12 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
       oputs (_("\
   -C, --chdir=DIR\n\
          change working directory to DIR\n\
+"));
+      oputs (_("\
+      --quoting-style=WORD\n\
+         use quoting style WORD for names and values:\n\
+           literal, locale, shell, shell-always,\n\
+           shell-escape, shell-escape-always, c, escape\n\
 "));
       oputs (_("\
   -S, --split-string=S\n\
@@ -1022,6 +1030,7 @@ main (int argc, char **argv)
 {
   bool ignore_environment = false;
   bool opt_nul_terminate_output = false;
+  int quoting_style_opt = -1;
   char const *newdir = NULL;
   char const *env0_from_file = NULL;
   char *argv0 = NULL;
@@ -1061,6 +1070,7 @@ main (int argc, char **argv)
           break;
         case '0':
           opt_nul_terminate_output = true;
+          quoting_style_opt = literal_quoting_style;
           break;
         case ENV0_FROM_OPTION:
           env0_from_file = optarg;
@@ -1077,6 +1087,11 @@ main (int argc, char **argv)
           break;
         case LIST_SIGNAL_HANDLING_OPTION:
           report_signal_handling = true;
+          break;
+        case QUOTING_STYLE_OPTION:
+          quoting_style_opt = XARGMATCH ("--quoting-style", optarg,
+                                         quoting_style_args,
+                                         quoting_style_vals);
           break;
         case 'C':
           newdir = optarg;
@@ -1110,19 +1125,18 @@ main (int argc, char **argv)
     }
 
   bool quote_output = false;
-
-  /* Get the value from QUOTING_STYLE before unsetting environment
-     variables.  */
-  if (!opt_nul_terminate_output && isatty (STDOUT_FILENO))
+  int qs = quoting_style_opt;
+  if (qs < 0 && isatty (STDOUT_FILENO))
     {
-      int qs = getenv_quoting_style ();
+      /* Get the value from $QUOTING_STYLE before unsetting env vars.  */
+      qs = getenv_quoting_style ();
       if (qs < 0)
         qs = shell_escape_quoting_style;
-      if (qs != literal_quoting_style)
-        {
-          set_quoting_style (NULL, qs);
-          quote_output = true;
-        }
+    }
+  if (0 <= qs && qs != literal_quoting_style)
+    {
+      set_quoting_style (NULL, qs);
+      quote_output = true;
     }
 
   bool env_vector_active = false;

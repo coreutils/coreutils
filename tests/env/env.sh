@@ -190,14 +190,26 @@ compare err_exp err || fail=1
 done
 
 # QUOTING_STYLE does not affect redirected output.
-printf '%s\n' 'a b=c d' > exp || framework_failure_
-for qs in literal shell-always invalid; do
-  env -i PATH="$PATH" QUOTING_STYLE=$qs 'a b'='c d' \
-    env >out-t 2>err || fail=1
+# --quoting-style does affect redirected output.
+cat <<\EOF >exp-noargs-literal || framework_failure_
+a b=c d
+EOF
+cat <<\EOF >exp-noargs-shell || framework_failure_
+'a b'='c d'
+EOF
+tr "'" '"' <exp-noargs-shell >exp-noargs-c || framework_failure_
+for qs in '' literal shell c; do
+  if test "$qs"; then
+    qs_opt="--quoting-style=$qs"
+  else
+    qs_opt=''; qs='literal'
+  fi
+  env -i PATH="$PATH" QUOTING_STYLE=c 'a b'='c d' \
+    env $qs_opt >out-t 2>err || fail=1
   grep -vE '^["'"'"']?'\
 '(__CF_USER_TEXT_ENCODING|QUOTING_STYLE|(LD_ORIGIN_)?PATH)["'"'"']?=' \
     out-t >out || framework_failure_
-  compare exp out || fail=1
+  compare exp-noargs-$qs out || fail=1
   compare /dev/null err || fail=1
 done
 
