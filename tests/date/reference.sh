@@ -42,6 +42,12 @@ if ! test t1 -ot t1s && ! test t1 -nt t1s; then
   test "$(date -r t1)" = "$(date -r t1s)" || fail=1
 fi
 
+# A file name that is not valid in the current locale is still usable.
+nonutf8=$(bad_unicode)
+if touch -m -d "$t1" "$nonutf8" 2>/dev/null; then
+  test "$(date +%s -r "$nonutf8")" = "$(date +%s -r a)" || fail=1
+fi
+
 returns_ 1 date --reference || fail=1
 returns_ 1 date --reference= || fail=1
 returns_ 1 date --reference=missing || fail=1
