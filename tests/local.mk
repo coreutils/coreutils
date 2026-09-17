@@ -361,6 +361,7 @@ all_tests =					\
   tests/env/env-null.sh				\
   tests/env/env-S.pl				\
   tests/env/env-S-script.sh			\
+  tests/env/printenv.sh				\
   tests/expand/expand.pl			\
   tests/expand/bounded-memory.sh		\
   tests/expand/mb.sh				\
@@ -410,7 +411,6 @@ all_tests =					\
   tests/od/od-multiple-t.sh			\
   tests/od/od-x8.sh				\
   tests/misc/pathchk.sh				\
-  tests/misc/printenv.sh			\
   tests/paste/paste.pl				\
   tests/paste/multi-byte.sh			\
   tests/printf/printf.sh			\
