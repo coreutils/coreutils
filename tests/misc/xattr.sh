@@ -21,10 +21,11 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp mv ginstall
 
-# Skip this test if cp was built without xattr support:
 touch src dest || framework_failure_
 cp --preserve=xattr -n src dest \
-  || skip_ "coreutils built without xattr support"
+  || skip_ 'coreutils built without xattr support'
+cp --preserve=xattr src dest \
+  || skip_ 'failed to copy default xattrs'
 
 # this code was taken from test mv/backup-is-src
 cleanup_() { rm -rf "$other_partition_tmpdir"; }

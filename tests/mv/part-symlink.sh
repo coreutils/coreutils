@@ -27,6 +27,13 @@ cleanup_() { rm -rf "$other_partition_tmpdir"; }
 # mv: preserving permissions for 'rem_sl': Operation not supported
 require_local_dir_
 
+# With podman we get /dev/shm and / created with default SELinux context,
+# but can't explicitly set xattrs with that context, giving:
+# mv: setting attributes for 'loc_reg': Operation not supported
+touch $other_partition_tmpdir/tsup &&
+mv $other_partition_tmpdir/tsup . 2>tsup.err &&
+compare /dev/null tsup.err || skip_ 'unsupported mv warning'
+
 pwd_tmp=$(pwd)
 
 # Unset CDPATH.  Otherwise, output from the 'cd dir' command
