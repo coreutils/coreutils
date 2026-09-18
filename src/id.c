@@ -165,7 +165,8 @@ main (int argc, char **argv)
           break;
 
         case 'Z':
-          /* politely decline if we're not on a SELinux/SMACK-enabled kernel. */
+          /* politely decline if we're not on a SELinux/SMACK-enabled kernel.
+             Keep require_selinux_ in tests in sync with these messages.  */
 #ifdef HAVE_SMACK
           if (!selinux_enabled && !smack_enabled)
             error (EXIT_FAILURE, 0,
