@@ -542,7 +542,6 @@ all_tests =					\
   tests/uniq/uniq-perf.sh			\
   tests/uniq/uniq-collate.sh			\
   tests/uniq/uniq-c-width.sh			\
-  tests/misc/xattr.sh				\
   tests/misc/yes.sh				\
   tests/tail/wait.sh				\
   tests/tail/retry.sh				\
@@ -623,6 +622,7 @@ all_tests =					\
   tests/cp/src-base-dot.sh			\
   tests/cp/symlink-slash.sh			\
   tests/cp/thru-dangling.sh			\
+  tests/cp/xattr.sh				\
   tests/df/header.sh				\
   tests/df/df-P.sh				\
   tests/df/df-output.sh				\
