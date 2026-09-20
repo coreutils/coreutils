@@ -20,6 +20,7 @@
 print_ver_ cp
 require_root_
 working_umask_or_skip_
+getlimits_
 
 
 grep '^#define HAVE_CAP 1' $CONFIG_HEADER > /dev/null \
@@ -51,6 +52,15 @@ EOF
   compare exp err || fail=1
   test "$ret" = 1 || fail=1
   returns_ 1 test -f copy1 || fail=1
+elif test "$ret" = 1; then
+  # This case can be seen in a podmain container with SELinux disabled.
+  # In that case, "file" will be created with the default SELinux context,
+  # but 'cp' cannot set it on "copy1", causing it to fail when
+  # --preserve=xattr is used.
+  cat <<EOF >exp || framework_failure_
+cp: setting attributes for 'copy1': $ENOTSUP
+EOF
+  compare exp err || fail=1
 else
   compare /dev/null err || fail=1
   test "$ret" = 0 || fail=1
