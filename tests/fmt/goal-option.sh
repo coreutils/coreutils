@@ -53,4 +53,43 @@ _EOF_
 
 compare exp out || fail=1
 
+# When only -g is given, the maximum width defaults to the goal plus 10,
+# so "-g G" must lay a paragraph out exactly as "-g G -w G+10" does.
+for g in 5 20 40 60 75; do
+  fmt -g $g base > out || fail=1
+  fmt -g $g -w $(expr $g + 10) base > exp || fail=1
+  compare exp out || fail=1
+done
+
+# Check that derived maximum width directly: with -g 20 the limit is 30,
+# so a 30 character paragraph fits on one line while a 31 character one
+# does not.
+printf '%s %s\n' aaaaaaaaaaaaaa bbbbbbbbbbbbbbb | fmt -g 20 > out || fail=1
+cat <<\_EOF_ > exp || framework_failure_
+aaaaaaaaaaaaaa bbbbbbbbbbbbbbb
+_EOF_
+compare exp out || fail=1
+
+printf '%s %s\n' aaaaaaaaaaaaaa bbbbbbbbbbbbbbbb | fmt -g 20 > out || fail=1
+cat <<\_EOF_ > exp || framework_failure_
+aaaaaaaaaaaaaa
+bbbbbbbbbbbbbbbb
+_EOF_
+compare exp out || fail=1
+
+# A goal of zero is accepted, and gives a maximum width of 10.
+printf 'aaaa bbbb cccc\n' | fmt -g 0 > out || fail=1
+cat <<\_EOF_ > exp || framework_failure_
+aaaa
+bbbb cccc
+_EOF_
+compare exp out || fail=1
+
+# Without -w the goal is limited to the default maximum width of 75.
+fmt -g 75 base > /dev/null || fail=1
+returns_ 1 fmt -g 76 base > /dev/null 2>&1 || fail=1
+
+# With -w a larger goal is fine.
+fmt -g 76 -w 100 base > /dev/null || fail=1
+
 Exit $fail
