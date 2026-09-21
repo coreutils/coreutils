@@ -21,7 +21,8 @@ print_ver_ od
 very_expensive_
 require_bash_as_SHELL_ # for >()
 
-export LC_ALL=C
+# Minimize actual memory use
+export MALLOC_PERTURB_=0
 
 cat >exp <<'EOF' || framework_failure_
 0000000 x >x<
