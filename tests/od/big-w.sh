@@ -29,7 +29,7 @@ EOF
 
 # Try values near sqrt(2**31) and sqrt(2**63).
 for w in 46340 46341 3037000500 3037000501; do
-  printf x | od -w$w -tcz 2>err | tr -s ' ' ' ' >out
+  printf x | od -v -w$w -tcz 2>err | tr -s ' ' ' ' >out
   if test -s err; then
     test ! -s out || fail=1
   else
