@@ -13,6 +13,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   outputting to a terminal.  The previous release enabled this for all
   outputs by default, requiring setting QUOTING_STYLE=literal to disable.
 
+** Improvements
+
+  'od' allocates half the memory when -v,--output-duplicates is specified.
+
 
 * Noteworthy changes in release 9.12 (2026-09-14) [stable]
 

@@ -1519,8 +1519,8 @@ dump (void)
   bool ok = true;
   idx_t n_bytes_read;
 
-  block[0] = xinmalloc (2, bytes_per_block);
-  block[1] = block[0] + bytes_per_block;
+  block[0] = xinmalloc (1 + abbreviate_duplicate_blocks, bytes_per_block);
+  block[1] = block[0] + abbreviate_duplicate_blocks * bytes_per_block;
 
   intmax_t current_offset = n_bytes_to_skip;
 
