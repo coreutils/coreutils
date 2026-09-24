@@ -728,6 +728,7 @@ all_tests =					\
   tests/ls/follow-slink.sh			\
   tests/ls/getxattr-speedup.sh			\
   tests/ls/group-dirs.sh			\
+  tests/ls/header.sh				\
   tests/ls/hex-option.sh			\
   tests/ls/hyperlink.sh				\
   tests/ls/infloop.sh				\
