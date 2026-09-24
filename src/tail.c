@@ -1177,6 +1177,10 @@ tail_forever (struct File_spec *f, int n_files, double sleep_interval)
 
   static bool debugged;
 
+  /* Flush initial output, in case reading blocks below.  */
+  if (fflush (stdout) < 0)
+    write_error ();
+
   while (true)
     {
       /* Use blocking I/O as an optimization, when it's easy.  */

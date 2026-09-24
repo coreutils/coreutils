@@ -17,6 +17,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   'od' allocates half the memory when -v,--output-duplicates is specified.
 
+  'tail' ensures prompt output when inotify is not being used, and when
+  initial reads finish, but subsequent reads might block, which was seen
+  e.g. with fifos on NetBSD 10.
+
 ** Build-related
 
   gzip-compressed tarballs are no longer distributed,
