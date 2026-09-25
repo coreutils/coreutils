@@ -173,9 +173,9 @@ my @Tests =
 
      # test for RFC-822 conformance
      ['rfc822-1', "-R -d '$d1'", {OUT=>"Sun, 19 Jan 1997 08:17:48 +0000"},
-      # Solaris 5.9's /bin/sh emits this diagnostic to stderr
-      # if you don't have support for the named locale.
-      {ERR_SUBST => q!s/^couldn't set locale correctly\n//!},
+      # Solaris 5.9's /bin/sh can emit "couldn't set locale"
+      # NetBSD 12 sh can emit "setlocale failed"
+      {ERR_SUBST => q!s/.*(?:couldn't set locale|failed setlocale).*\n//!},
       {ENV => 'LC_ALL=de_DE TZ=UTC0'}],
 
      # Relative seconds, with time.  fixed in 2.0j
