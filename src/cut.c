@@ -1438,9 +1438,6 @@ main (int argc, char **argv)
   void (*cut_stream) (FILE *) = NULL;
   switch (cut_mode)
     {
-    case CUT_MODE_NONE:
-      affirm (false);
-
     case CUT_MODE_BYTES:
       cut_stream = MB_CUR_MAX <= 1 || !no_split
                    ? cut_bytes : cut_bytes_no_split;
@@ -1455,6 +1452,9 @@ main (int argc, char **argv)
                    : bytesearch_field_delim_ok () ? cut_fields_bytesearch
                    : cut_fields_mb;
       break;
+
+    case CUT_MODE_NONE:
+      affirm (false);
     }
   affirm (cut_stream);
   if (optind == argc)

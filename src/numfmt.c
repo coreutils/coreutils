@@ -741,11 +741,6 @@ simple_strtod_fatal (enum simple_strtod_error err, char const *input_str)
 
   switch (err)
     {
-    case SSE_OK_PRECISION_LOSS:
-    case SSE_OK:
-      /* should never happen - this function isn't called when OK.  */
-      affirm (false);
-
     case SSE_OVERFLOW:
       msgid = N_("value too large to be converted: %s");
       break;
@@ -766,6 +761,10 @@ simple_strtod_fatal (enum simple_strtod_error err, char const *input_str)
       msgid = N_("missing 'i' suffix in input: %s (e.g Ki/Mi/Gi)");
       break;
 
+    case SSE_OK_PRECISION_LOSS:
+    case SSE_OK:
+      /* should never happen - this function isn't called when OK.  */
+      affirm (false);
     }
 
   if (inval_style != inval_ignore)

@@ -1397,13 +1397,10 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
       char_to_repeat = p->u.repeated_char.the_repeated_char;
       break;
 
-    case RE_EQUIV_CLASS:
+    case RE_EQUIV_CLASS: default:
       /* This shouldn't happen, because validate exits with an error
          if it finds an equiv class in string2 when translating.  */
       affirm (false);
-
-    default:
-      unreachable ();
     }
 
   append_repeated_char (s2, char_to_repeat, s1->length - s2->length);
