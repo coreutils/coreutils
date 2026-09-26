@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  'realpath' no longer loops infinitely when resolving a symbolic link which
+  resolves to a path beginning with the symbolic link itself.
+  [bug introduced in coreutils-9.0]
+
 ** New Features
 
   'env' and 'printenv' now support the --quoting-style option

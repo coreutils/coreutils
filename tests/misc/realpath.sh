@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ realpath
+getlimits_
 
 stat_single=$(stat -c %d:%i /) || framework_failure_
 stat_double=$(stat -c %d:%i //) || framework_failure_
@@ -133,5 +134,18 @@ fi
 mkdir noread && chmod a-r noread || framework_failure_
 test "$(realpath noread/)" = "$(realpath .)/noread" || fail=1
 test "$(realpath -e noread/)" = "$(realpath .)/noread" || fail=1
+
+# From coreutils 9.0 to 9.12, the following would loop until the
+# system ran out of memory.
+ln -s loop/a loop || framework_failure_
+vm=$(get_min_ulimit_v_ realpath .) && {
+  (ulimit -v $(($vm+6000)) &&
+     returns_ 1 timeout 10 realpath loop >out 2>err) || fail=1
+  cat <<EOF >exp || framework_failure_
+realpath: loop: $ELOOP
+EOF
+  compare /dev/null out || fail=1
+  compare exp err || fail=1
+}
 
 Exit $fail
