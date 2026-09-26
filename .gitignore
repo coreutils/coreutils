@@ -46,6 +46,8 @@
 /coreutils-*.tar.gz.sig
 /coreutils-*.tar.xz
 /coreutils-*.tar.xz.sig
+/coreutils-*.tar.zst
+/coreutils-*.tar.zst.sig
 /doc/coverage
 /doc/manual
 /gnulib-tests
