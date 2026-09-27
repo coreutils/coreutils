@@ -5,12 +5,6 @@ longer pertinent, please search the mailing list and post your intent
 before embarking on a big project.
 
 ==================================================
-Modify chmod so that it does not change an inode's st_ctime
-  when the selected operation would have no other effect.
-  First suggested by Hans Ecke <https://hans.ecke.ws> in
-    https://lists.gnu.org/r/bug-coreutils/2004-09/msg00145.html
-  Discussed more recently on <https://bugs.debian.org/497514>.
-
 Suggestion from Paul Eggert:
   More generally, there's not that much use for imaxtostr nowadays,
   since the inttypes module and newer versions of gettext allow things
@@ -24,12 +18,6 @@ cp --recursive: use fts and *at functions to perform directory traversals
   become very long, and requires space and time that is quadratic in the
   depth of the hierarchy.  [Bo Borgerson is working on this]
 
-printf:
-  Now that gnulib supports *printf("%a"), import one of the
-  *printf-posix modules so that printf(1) will support %a even on
-  platforms where the native *printf(3) is deficient.
-  Suggestion from Eric Blake.
-
 consider adding some implementation of the "col" utility
   Suggested by Karl Berry.
 
@@ -37,7 +25,7 @@ doc/coreutils.texi:
   Address this comment: FIXME: mv's behavior in this case is system-dependent
   Better still: fix the code so it's *not* system-dependent.
 
-ls: add --format=FORMAT option that controls how each line is printed.
+ls: add --printf=FORMAT option that controls how each line is printed.
 
 copy.c: Address the FIXME-maybe comment in copy_internal.
 And once that's done, add an exclusion so that 'cp --link'
