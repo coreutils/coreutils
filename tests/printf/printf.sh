@@ -148,5 +148,10 @@ $prog '%.70000f' 1 > out || fail=1
 test "$(wc -c < out)" = 70002 || fail=1
 test "$(tr -d 0 < out)" = '1.' || fail=1
 
+# %a hex-float: round-trip rather than matching a particular hex form
+# (many valid representations of the same value exist).
+fv=0.0009765625
+test $($prog '%.10f' $($prog %a $fv)) = $fv || fail=1
+$prog %a $fv | grep '^0[xX]' || fail=1
 
 Exit $fail
