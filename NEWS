@@ -21,6 +21,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  'cut -c' is up to 10x faster in UTF-8 locales.
+
   'od' allocates half the memory when -v,--output-duplicates is specified.
 
   'tail' ensures prompt output when inotify is not being used, and when

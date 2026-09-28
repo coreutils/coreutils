@@ -907,6 +907,17 @@ cut_characters_mode (FILE *stream, bool byte_mode)
 
   while (true)
     {
+      /* Skip unselected line suffixes without decoding each character.  */
+      if (idx && field_selection_exhausted (idx))
+        {
+          idx_t available = mbbuf_topup (&mbbuf);
+          char *p = mbbuf.buffer + mbbuf.offset;
+          char *end = search_bytes (p, line_delim, available);
+          mbbuf_advance (&mbbuf, end ? end - p : available);
+          if (!end && available)
+            continue;
+        }
+
       mcel_t g = mbbuf_get_char (&mbbuf);
 
       if (g.ch == line_delim)

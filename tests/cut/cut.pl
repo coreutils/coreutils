@@ -307,6 +307,10 @@ if ($mb_locale ne 'C')
        {ENV => "LC_ALL=$mb_locale"}],
       ['mb-char-5', '-c1-2', {IN=>"\xc3x\n"}, {OUT=>"\xc3x\n"},
        {ENV => "LC_ALL=$mb_locale"}],
+      # Skip unselected suffixes across input buffers and reset at line ends.
+      ['mb-char-suffix', '-c1',
+       {IN=>"\xc3\xa9" . ("\xff" x (2 * $IO_BUFSIZE)) . "\nbignored"},
+       {OUT=>"\xc3\xa9\nb\n"}, {ENV => "LC_ALL=$mb_locale"}],
       # Note mb-byte-n-1 and mb-byte-n-4 differ from coreutils-i18n patch,
       # which outputs a character if any byte is selected.
       # I.e., the i18n patch may output more bytes that the requested range.
