@@ -307,6 +307,21 @@ if ($mb_locale ne 'C')
        {ENV => "LC_ALL=$mb_locale"}],
       ['mb-char-5', '-c1-2', {IN=>"\xc3x\n"}, {OUT=>"\xc3x\n"},
        {ENV => "LC_ALL=$mb_locale"}],
+      # Skip lines whose remaining bytes cannot reach the next selection.
+      ['mb-char-short-line', '-c4',
+       {IN=>"\xc3\xa9\n\nabcX\nab\xffY\nz"}, {OUT=>"\n\nX\nY\n\n"},
+       {ENV => "LC_ALL=$mb_locale"}],
+      # Count multibyte prefixes across buffers, including invalid bytes.
+      ['mb-char-prefix-ascii', '-c' . $IO_BUFSIZE,
+       {IN=>("a" x ($IO_BUFSIZE - 2)) . "\xc3\xa9X"},
+       {OUT=>"X\n"}, {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-char-prefix', '-c' . ($IO_BUFSIZE + 4),
+       {IN=>("\xc3\xa9" x $IO_BUFSIZE)
+            . "\xe2\x82\xac\xf0\x9f\x98\x80\xffX\nshort"},
+       {OUT=>"X\n\n"}, {ENV => "LC_ALL=$mb_locale"}],
+      ['mb-char-prefix-nul', '-z', '-c5',
+       {IN=>"\xc3\xa9\xe2\x82\xac\xf0\x9f\x98\x80\xffX\0short"},
+       {OUT=>"X\0t\0"}, {ENV => "LC_ALL=$mb_locale"}],
       # Skip unselected suffixes across input buffers and reset at line ends.
       ['mb-char-suffix', '-c1',
        {IN=>"\xc3\xa9" . ("\xff" x (2 * $IO_BUFSIZE)) . "\nbignored"},

@@ -38,6 +38,7 @@
 #include "memchr2.h"
 
 #include "set-fields.h"
+#include "unistr.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "cut"
@@ -897,6 +898,7 @@ cut_bytes (FILE *stream)
 static void
 cut_characters_mode (FILE *stream, bool byte_mode)
 {
+  bool utf8 = is_utf8_charset ();
   uintmax_t idx = 0;
   bool print_delimiter = false;
   static char bytes_in[IO_BUFSIZE];
@@ -916,6 +918,41 @@ cut_characters_mode (FILE *stream, bool byte_mode)
           mbbuf_advance (&mbbuf, end ? end - p : available);
           if (!end && available)
             continue;
+        }
+
+      /* Count unselected ASCII/UTF-8 characters directly, for efficiency.  */
+      if (!byte_mode && utf8 && idx + 1 < current_rp->lo)
+        {
+          char const *p = mbbuf.buffer + mbbuf.offset;
+          idx_t n = MIN (mbbuf_avail (&mbbuf), current_rp->lo - idx - 1);
+          char const *end = search_bytes (p, line_delim, n);
+          if (end)
+            {
+              /* Even with ASCII, this cannot reach the next selection.  */
+              mbbuf_advance (&mbbuf, end - p + 1);
+              reset_item_line (&idx, &print_delimiter);
+              continue;
+            }
+
+          /* Detect non ASCII.  */
+          unsigned char bits = n ? p[0] : 0;
+          if (!(bits & 0x80))
+            for (idx_t i = 0; i < n; i++)
+              bits |= p[i];
+          uintmax_t count = n;
+          if (bits & 0x80) /* any UTF8 */
+            {
+              uint8_t const *invalid = u8_check ((uint8_t const *) p, n);
+              if (invalid)
+                n = (char const *) invalid - p;
+              /* Count each non-continuation byte, i.e., each utf8 char.  */
+              count = 0;
+              for (idx_t i = 0; i < n; i++)
+                count += (to_uchar (p[i]) & 0xc0) != 0x80;
+            }
+
+          idx += count;
+          mbbuf_advance (&mbbuf, n);
         }
 
       mcel_t g = mbbuf_get_char (&mbbuf);
