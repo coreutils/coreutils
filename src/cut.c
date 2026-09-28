@@ -1166,9 +1166,11 @@ cut_fields_bytesearch (FILE *stream)
 
       /* Fast path: no field delimiter in chunk — output or skip lines.  */
       if (field_idx == 1
-          && !whitespace_delimited
+          && (!whitespace_delimited || !field_selection_exhausted (field_idx))
           && !field_delim_is_line_delim ()
-          && !find_field_delim (chunk, n_avail))
+          && !(whitespace_delimited
+               ? find_c_blank (chunk, n_avail)
+               : find_field_delim (chunk, n_avail)))
         {
           char *last_line_delim = search.at_eof
                                   ? chunk + n_avail - 1
