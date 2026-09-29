@@ -309,6 +309,7 @@ all_tests =					\
   tests/cut/mb-non-utf8.sh			\
   tests/cut/bounded-memory.sh			\
   tests/cut/cut-huge-range.sh			\
+  tests/wc/mb-non-utf8.sh			\
   tests/wc/wc.pl				\
   tests/wc/wc-cpu.sh				\
   tests/wc/wc-files0-from.pl			\

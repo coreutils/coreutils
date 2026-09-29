@@ -511,6 +511,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
                 }
               else
                 {
+                  idx_t prev_bytes = prev;
                   idx_t scanbytes = plim - (p + prev);
                   size_t n = mbrtoc32 (&wide_char, p + prev, scanbytes, &state);
                   prev = 0;
@@ -550,7 +551,9 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
                       continue;
                     }
 
-                  charbytes = n + !n;
+                  /* Include bytes already consumed into STATE in an earlier
+                     read, but still present at P in the buffer.  */
+                  charbytes = prev_bytes + n + !n;
                   single_byte = charbytes == !in_shift;
                   in_shift = !mbsinit (&state);
                 }

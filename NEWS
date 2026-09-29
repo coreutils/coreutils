@@ -9,6 +9,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   resolves to a path beginning with the symbolic link itself.
   [bug introduced in coreutils-9.0]
 
+  'wc' no longer miscounts characters or words when a multi-byte character
+  spans input buffers.  E.g. this could affect character counts
+  in GB18030 locales, and word counts in UTF-8 locales.
+  [bug introduced in coreutils-9.5]
+
 ** New Features
 
   'env' and 'printenv' now support the --quoting-style option
