@@ -1,0 +1,30 @@
+Description:
+UTF-8 helpers.
+
+Files:
+lib/utf8.c
+lib/utf8.h
+
+Depends-on:
+bool
+c99
+extern-inline
+idx
+mbrtoc32
+mbszero
+unistr/u8-check
+stdint-h
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += utf8.c utf8.h
+
+Include:
+"utf8.h"
+
+License:
+LGPLv2+
+
+Maintainer:
+all

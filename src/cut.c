@@ -38,7 +38,7 @@
 #include "memchr2.h"
 
 #include "set-fields.h"
-#include "unistr.h"
+#include "utf8.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "cut"
@@ -951,24 +951,7 @@ cut_characters_mode (FILE *stream, bool byte_mode)
               continue;
             }
 
-          /* Detect non ASCII.  */
-          unsigned char bits = n ? p[0] : 0;
-          if (!(bits & 0x80))
-            for (idx_t i = 0; i < n; i++)
-              bits |= p[i];
-          uintmax_t count = n;
-          if (bits & 0x80) /* any UTF8 */
-            {
-              uint8_t const *invalid = u8_check ((uint8_t const *) p, n);
-              if (invalid)
-                n = (char const *) invalid - p;
-              /* Count each non-continuation byte, i.e., each utf8 char.  */
-              count = 0;
-              for (idx_t i = 0; i < n; i++)
-                count += (to_uchar (p[i]) & 0xc0) != 0x80;
-            }
-
-          idx += count;
+          idx += u8_count (p, &n);
           mbbuf_advance (&mbbuf, n);
         }
 

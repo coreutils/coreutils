@@ -29,6 +29,7 @@
 #include "quote.h"
 #include "skipchars.h"
 #include "system.h"
+#include "utf8.h"
 #include "xstrtol.h"
 
 #include "set-fields.h"

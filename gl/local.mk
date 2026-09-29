@@ -51,6 +51,8 @@ gl/lib/strnumcmp.c \
 gl/lib/strnumcmp.h \
 gl/lib/targetdir.c \
 gl/lib/targetdir.h \
+gl/lib/utf8.c \
+gl/lib/utf8.h \
 gl/lib/xdectoimax.c \
 gl/lib/xdectoint.c \
 gl/lib/xdectoint.h \
@@ -78,6 +80,7 @@ gl/modules/skipchars \
 gl/modules/smack \
 gl/modules/strnumcmp \
 gl/modules/targetdir \
+gl/modules/utf8 \
 gl/modules/xdectoint \
 gl/modules/xfts \
 gl/tests/test-fadvise.c \
