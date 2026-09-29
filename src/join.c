@@ -74,7 +74,7 @@ struct line
     struct linebuffer buf;	/* The line itself.  */
     idx_t nfields;		/* Number of elements in 'fields'.  */
     idx_t nfields_allocated;	/* Number of elements allocated for 'fields'. */
-    struct field *fields;
+    struct field *fields COUNTED_BY (nfields_allocated);
   };
 
 /* One or more consecutive lines read from a file that all have the
@@ -83,7 +83,7 @@ struct seq
   {
     idx_t count;		/* Elements used in 'lines'.  */
     idx_t alloc;		/* Elements allocated in 'lines'.  */
-    struct line **lines;
+    struct line **lines COUNTED_BY (alloc);
   };
 
 /* The previous line read from each file.  */
@@ -348,8 +348,10 @@ freeline (struct line *line)
     return;
   free (line->fields);
   line->fields = NULL;
+  line->nfields_allocated = 0;
   free (line->buf.buffer);
   line->buf.buffer = NULL;
+  line->buf.size = 0;
 }
 
 /* Return <0 if the join field in LINE1 compares less than the one in LINE2;
