@@ -41,6 +41,7 @@
 #include "cpu-supports.h"
 #include "ioblksize.h"
 #include "wc.h"
+#include "utf8.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "wc"
@@ -479,6 +480,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
       intmax_t linepos = 0;
       mbstate_t state; mbszero (&state);
       bool in_shift = false;
+      bool count_utf8 = !count_complicated && !print_lines
+                        && is_utf8_charset ();
       idx_t prev = 0; /* Number of bytes carried over from previous round.  */
 
       for (ssize_t bytes_read;
@@ -495,8 +498,21 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
           bytes += bytes_read;
           char const *p = buf;
           char const *plim = p + prev + bytes_read;
+          bool try_count_utf8 = count_utf8;
           do
             {
+              if (try_count_utf8 && !in_shift)
+                {
+                  /* Scan at most once per buffer, to avoid repeatedly
+                     scanning ASCII after decoding errors.  */
+                  try_count_utf8 = false;
+                  idx_t n = plim - p;
+                  chars += u8_count (p, &n);
+                  p += n;
+                  if (p == plim)
+                    break;
+                }
+
               char32_t wide_char;
               idx_t charbytes;
               bool single_byte;

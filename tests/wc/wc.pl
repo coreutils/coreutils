@@ -112,6 +112,12 @@ if (defined $mb_locale && $mb_locale ne 'none')
       ['mb-split-space', '-w', '<',
        {IN=>('a' x ($bufsize - 1)) . "\xe2\x80\x83"},
        {OUT=>"1\n"}, {ENV=>"LC_ALL=$mb_locale"}];
+
+    # Ensure we handle a split character, NUL, and encoding errors.
+    push @Tests,
+      ['mb-count-buffer', '-m', '<',
+       {IN=>('a' x ($bufsize - 1)) . "\xc3\xa9\0\xffZ\xe2\x82"},
+       {OUT=>($bufsize + 2) . "\n"}, {ENV=>"LC_ALL=$mb_locale"}];
   }
 
 my $save_temps = $ENV{DEBUG};
