@@ -139,13 +139,21 @@ test "$(realpath -e noread/)" = "$(realpath .)/noread" || fail=1
 # system ran out of memory.
 ln -s loop/a loop || framework_failure_
 vm=$(get_min_ulimit_v_ realpath .) && {
-  (ulimit -v $(($vm+6000)) &&
-     returns_ 1 timeout 10 realpath loop >out 2>err) || fail=1
   cat <<EOF >exp || framework_failure_
 realpath: loop: $ELOOP
 EOF
-  compare /dev/null out || fail=1
-  compare exp err || fail=1
+  for opt in '' -E -e -m -s -L -P; do
+    (ulimit -v $(($vm+6000)) &&
+       returns_ 1 timeout 10 realpath $opt loop >out 2>err) || fail=1
+    compare /dev/null out || fail=1
+    compare exp err || fail=1
+  done
 }
+
+# This one doesn't need to touch the file.
+echo "$(realpath .)"/loop >exp || framework_failure_
+realpath -ms loop >out 2>err || fail=1
+compare exp out || fail=1
+compare /dev/null err || fail=1
 
 Exit $fail
