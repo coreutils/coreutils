@@ -55,4 +55,24 @@ test -z "$v" || fail=1
 v=$(returns_ 1 readlink missing) || fail=1
 test -z "$v" || fail=1
 
+# From coreutils 9.0 to 9.12, the following would loop until the
+# system ran out of memory.
+ln -s loop/a loop || framework_failure_
+vm=$(get_min_ulimit_v_ readlink -f link1) && {
+  echo 'loop/a' >exp || framework_failure_
+  for opt in '' -f -e -m; do
+    if test -z "$opt"; then
+      exp=exp
+      exp_rc=0
+    else
+      exp=/dev/null
+      exp_rc=1
+    fi
+    (ulimit -v $(($vm+6000)) &&
+       returns_ $exp_rc timeout 10 readlink $opt loop >out 2>err) || fail=1
+    compare $exp out || fail=1
+    compare /dev/null err || fail=1
+  done
+}
+
 Exit $fail
