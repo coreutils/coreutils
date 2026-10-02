@@ -199,7 +199,8 @@ unexpand (void)
                         }
                       else
                         {
-                          column += c32width (g.ch);
+                          int width = c32width (g.ch);
+                          column += width < 0 ? 1 : width;
 
                           if (! (prev_blank && column >= next_tab_column))
                             {

@@ -9,6 +9,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   resolves to a path beginning with the symbolic link itself.
   [bug introduced in coreutils-9.0]
 
+  'unexpand' no longer overflows a heap buffer given a blank character
+  whose display width is negative, which can happen in a multi-byte
+  locale on platforms whose c32issep() treats such a character as blank.
+  [bug introduced in coreutils-9.11]
+
 ** New Features
 
   'env' and 'printenv' now support the --quoting-style option
