@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cut, expand, fold, join, numfmt, unexpand, and uniq, no longer consider
+  the \u0085 (next line) character as a separator on non-GLIBC platforms.
+  [bug introduced in coreutils-9.11]
+
   'realpath' without -s, or 'readlink' with -e,-f,-m no longer
   loop infinitely when resolving a symbolic link which
   resolves to a path beginning with the symbolic link itself.

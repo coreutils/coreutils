@@ -167,12 +167,19 @@ c32isnbspace (char32_t wc)
 
 ATTRIBUTE_PURE
 static inline int
-c32isvertspace (char32_t wc)
+c32isnewline (char32_t wc)
 {
-  return    wc == 0x000A || wc == 0x000B || wc == 0x000C || wc == 0x000D
-         || wc == 0x2028 || wc == 0x2029;
+  return wc == 0x000A || wc == 0x0085 || wc == 0x2028 || wc == 0x2029;
 }
 
+ATTRIBUTE_PURE
+static inline int
+c32isvertspace (char32_t wc)
+{
+  /* 000D is backwards as opposed to vertical,
+     but that's fine for this grouping.  */
+  return c32isnewline (wc) || wc == 0x000B || wc == 0x000C || wc == 0x000D;
+}
 
 /* c32isblank() is too variable on non GLIBC platforms.
    E.g., does not include \u3000 ideographic space on musl.
