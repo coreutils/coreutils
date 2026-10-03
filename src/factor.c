@@ -292,11 +292,12 @@ struct mp_factor
 /* Prime factors of an mpz_t.  */
 struct mp_factors
 {
-  /* A vector of distinct prime factors, a count of the factors,
-     and the number of allocated slots in the vector.  */
-  struct mp_factor *f;
   idx_t nfactors;
   idx_t nalloc;
+
+  /* A vector of distinct prime factors, a count of the factors,
+     and the number of allocated slots in the vector.  */
+  struct mp_factor *f COUNTED_BY (nalloc);
 };
 
 static void factor (struct factors *, mp_limb_t, mp_limb_t);
@@ -664,7 +665,7 @@ static struct mp_factors mp_factor (mpz_t);
 static struct mp_factors
 mp_no_factors (void)
 {
-  return (struct mp_factors) {NULL,};
+  return (struct mp_factors) {0};
 }
 
 /* Free storage allocated for FACTORS, making it uninitialized.  */
