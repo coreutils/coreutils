@@ -2048,7 +2048,7 @@ main (int argc, char **argv)
       idx_t fields_per_block = bytes_per_block / width_bytes[spec[i].size];
       affirm (bytes_per_block % width_bytes[spec[i].size] == 0);
       affirm (1 <= spec[i].pad_width / fields_per_block);
-      printf ("%d: fmt=\"%s\" in_width=%d out_width=%d pad=%d\n",
+      printf ("%td: fmt=\"%s\" in_width=%d out_width=%d pad=%td\n",
               i, spec[i].fmt_string, width_bytes[spec[i].size],
               spec[i].field_width, spec[i].pad_width);
     }
