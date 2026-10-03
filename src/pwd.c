@@ -31,8 +31,8 @@
 
 struct file_name
 {
-  char *buf;
   idx_t n_alloc;
+  char *buf COUNTED_BY (n_alloc);
   char *start;
 };
 
