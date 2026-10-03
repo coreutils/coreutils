@@ -9,6 +9,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   resolves to a path beginning with the symbolic link itself.
   [bug introduced in coreutils-9.0]
 
+  'unexpand' no longer overflows a heap buffer on non-GLIBC platforms,
+  given whitespace characters whose display width is negative.  E.g.,
+  this edge case can occur with \u0085 (next line) characters on musl.
+  [bug introduced in coreutils-9.11]
+
   'wc' no longer miscounts characters or words when a multi-byte character
   spans input buffers.  E.g. this could affect character counts
   in GB18030 locales, and word counts in UTF-8 locales.
