@@ -283,7 +283,7 @@ static BLOCK reference;		/* reference field for input reference mode */
 
 /* Diagnose an error in the regular expression matcher.  Then exit.  */
 
-static void
+static _Noreturn void
 matcher_error (void)
 {
   error (EXIT_FAILURE, errno, _("error in regular expression matcher"));
