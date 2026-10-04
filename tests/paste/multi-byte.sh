@@ -19,7 +19,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ paste printf
 
-test "$LOCALE_FR_UTF8" != none || skip_ 'French UTF-8 locale not available'
+{ test -z "$LOCALE_FR_UTF8" || test "$LOCALE_FR_UTF8" = none; } &&
+  skip_ 'French UTF-8 locale not available'
 
 LC_ALL=$LOCALE_FR_UTF8
 export LC_ALL

@@ -31,7 +31,8 @@ test $(wc -l < out) -eq 0 || fail=1
 head -c $IO_BUFSIZE_TIMES2 /dev/zero | fold --characters > out || fail=1
 test $(wc -l < out) -eq $(($IO_BUFSIZE_TIMES2 / 80)) || fail=1
 
-test "$LOCALE_FR_UTF8" != none || skip_ "French UTF-8 locale not available"
+{ test -z "$LOCALE_FR_UTF8" || test "$LOCALE_FR_UTF8" = none; } &&
+  skip_ 'French UTF-8 locale not available'
 
 # Only set LC_CTYPE so messages are not translated
 # as we're verifying $ENOSPC below

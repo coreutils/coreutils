@@ -31,7 +31,7 @@ printf 'content\n' > d/$(printf '.hidden_invalid%s' "$(bad_unicode)") \
   || skip_ 'bad unicode not supported in shell or file system'
 
 for loc in C "$LOCALE_FR" "$LOCALE_FR_UTF8"; do
-  test -z "$loc" && continue
+  { test -z "$loc" || test "$loc" = none; } && continue
   export LC_ALL="$loc"
 
   # Test 1: Without -a flag, only visible file should appear

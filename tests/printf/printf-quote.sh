@@ -37,7 +37,7 @@ EOF
 compare exp out || fail=1
 
 unset LC_ALL
-if test "$LOCALE_FR_UTF8" != "none"; then
+if test -n "$LOCALE_FR_UTF8" && test "$LOCALE_FR_UTF8" != "none"; then
   f=$LOCALE_FR_UTF8
   (
    #printable multi-byte

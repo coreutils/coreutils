@@ -46,7 +46,7 @@ test "$fail" = 1 && dump_mount_list_
 # Ensure mount points not matching the current user encoding are output
 
 unset LC_ALL
-if test "$LOCALE_FR_UTF8" != "none"; then
+if test -n "$LOCALE_FR_UTF8" && test "$LOCALE_FR_UTF8" != "none"; then
   f=$LOCALE_FR_UTF8
 
   cleanup_ || framework_failure_

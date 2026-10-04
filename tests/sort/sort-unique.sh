@@ -33,7 +33,7 @@ cat > exp <<\EOF
 EOF
 
 for LOC in C "$LOCALE_FR" "$LOCALE_FR_UTF8"; do
-  test -z "$LOC" && continue
+  { test -z "$LOC" || test "$LOC" = none; } && continue
 
   LC_ALL=$LOC sort -u in > out || { fail=1; break; }
   compare exp out || { fail=1; break; }

@@ -41,7 +41,7 @@ returns_ 124 timeout 0.1 sleep inf || fail=1
 returns_ 124 timeout 0.1 sleep $LDBL_MAX || fail=1
 
 # Test locale decimal handling for printf, sleep, timeout
-if test "$LOCALE_FR_UTF8" != "none"; then
+if test -n "$LOCALE_FR_UTF8" && test "$LOCALE_FR_UTF8" != "none"; then
   f=$LOCALE_FR_UTF8
   locale_decimal=$(LC_ALL=$f env printf '%0.3f' 0.001) || fail=1
   locale_decimal=$(LC_ALL=$f env printf '%0.3f' "$locale_decimal") || fail=1

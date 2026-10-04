@@ -19,7 +19,8 @@
 print_ver_ unexpand printf
 getlimits_
 
-test "$LOCALE_FR_UTF8" != none || skip_ "French UTF-8 locale not available"
+{ test -z "$LOCALE_FR_UTF8" || test "$LOCALE_FR_UTF8" = none; } &&
+  skip_ 'French UTF-8 locale not available'
 export LC_ALL="$LOCALE_FR_UTF8"
 
 #input containing multibyte characters

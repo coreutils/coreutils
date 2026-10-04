@@ -22,7 +22,7 @@ print_ver_ printf
 prog='env printf'
 
 unset LC_ALL
-if test "$LOCALE_FR_UTF8" != "none"; then
+if test -n "$LOCALE_FR_UTF8" && test "$LOCALE_FR_UTF8" != "none"; then
   f=$LOCALE_FR_UTF8
   (
    #valid multi-byte

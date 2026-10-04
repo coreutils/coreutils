@@ -57,7 +57,7 @@ test_unit ()
   # to compare to.
   sed 's/^\([0-9][0-9]*\)'"$upper"'/\1/g' <exp >exp1 || framework_failure_
   for loc in C "$LOCALE_FR" "$LOCALE_FR_UTF8"; do
-    test -z "$loc" && continue
+    { test -z "$loc" || test "$loc" = none; } && continue
     if test $loc != C; then
       thousands_sep=$(LC_ALL=$loc locale thousands_sep)
       grouping=$(LC_ALL=$loc locale grouping)

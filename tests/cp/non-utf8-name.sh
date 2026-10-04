@@ -28,7 +28,7 @@ mkdir "$non_utf8_dir" target \
 touch "$non_utf8_dir"/file1 "$non_utf8_dir"/file2 || framework_failure_
 
 for loc in C "$LOCALE_FR" "$LOCALE_FR_UTF8"; do
-  test -z "$loc" && continue
+  { test -z "$loc" || test "$loc" = none; } && continue
   export LC_ALL="$loc"
 
   # Test: copy contents of non-UTF8 directory using /. syntax

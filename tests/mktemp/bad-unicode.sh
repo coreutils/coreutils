@@ -23,7 +23,7 @@ echo a > "$(bad_unicode)" \
   || skip_ 'bad unicode not supported in shell or file system'
 
 for loc in C "$LOCALE_FR" "$LOCALE_FR_UTF8"; do
-  test -z "$loc" && continue
+  { test -z "$loc" || test "$loc" = none; } && continue
   export LC_ALL="$loc"
   # Bad Unicode as a suffix.
   file1=$(mktemp --tmpdir='.' --suffix=$(bad_unicode)) || fail=1

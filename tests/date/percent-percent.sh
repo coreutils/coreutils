@@ -20,7 +20,7 @@
 print_ver_ date
 
 for loc in C "$LOCALE_FR" "$LOCALE_FR_UTF8"; do
-  test -z "$loc" && continue
+  { test -z "$loc" || test "$loc" = none; } && continue
   # Time conversion specifiers.
   fmt=$(echo HIklMNpPrRsSTXzZ | sed 's/./%%&/g') || framework_failure_
   echo $fmt | sed 's/%%/%/g' > exp || framework_failure_
