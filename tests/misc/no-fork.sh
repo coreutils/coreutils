@@ -31,7 +31,7 @@ chroot --skip-chdir / true
 env true
 nice true
 nohup true
-runcon "$(id -Z)" true
+runcon '"$(id -Z)"' true
 stdbuf -oL true
 ' |
 sort -k 1b,1 > all_executors || framework_failure_
@@ -42,7 +42,6 @@ sort -k 1b,1 > built_programs || framework_failure_
 join all_executors built_programs > built_executors || framework_failure_
 
 while read executor; do
-  executor=$(eval $executor)
   (ulimit -u 0; exec $executor) 2>err ||
     case "$executor" in
       runcon*)
