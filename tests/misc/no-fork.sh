@@ -31,7 +31,7 @@ chroot --skip-chdir / true
 env true
 nice true
 nohup true
-runcon '"$(id -Z)"' true
+runcon '"$(id -Z || echo unused)"' true
 stdbuf -oL true
 ' |
 sort -k 1b,1 > all_executors || framework_failure_
