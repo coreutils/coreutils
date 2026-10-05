@@ -288,9 +288,9 @@ struct z85_decode_context
 
 struct base58_context
 {
-  unsigned char *buf;
   idx_t size;
   idx_t capacity;
+  unsigned char *buf COUNTED_BY (capacity);
 };
 
 struct base2_decode_context
@@ -1316,6 +1316,8 @@ base58_encode_ctx_finalize (struct base_encode_context *ctx,
 
   free (ctx->ctx.base58.buf);
   ctx->ctx.base58.buf = NULL;
+  ctx->ctx.base58.size = 0;
+  ctx->ctx.base58.capacity = 0;
 
   return true;
 }
@@ -1430,6 +1432,8 @@ base58_decode_ctx_finalize (struct base_decode_context *ctx,
 
   free (ctx->ctx.base58.buf);
   ctx->ctx.base58.buf = NULL;
+  ctx->ctx.base58.size = 0;
+  ctx->ctx.base58.capacity = 0;
 
   return ret;
 }
