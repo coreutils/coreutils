@@ -14,8 +14,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   [bug introduced in coreutils-9.11]
 
   'fold' no longer prematurely wraps lines with a wide character towards
-  the start of a line, followed by multiple backspaces.
-  [bug introduced in coreutils-9.8]
+  the start of a line, followed by multiple backspaces.  Also backspaces
+  after a tab character are accounted for correctly.
+  [bugs introduced in coreutils-9.8]
 
   'realpath' without -s, or 'readlink' with -e,-f,-m no longer
   loop infinitely when resolving a symbolic link which

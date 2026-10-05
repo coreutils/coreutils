@@ -97,4 +97,22 @@ test $(env printf '\xC3' | fold | wc -c) = 1 || fail=1
 # causing premature line wrapping.
 test $(env printf 'A\uB250\b\bB\n' | fold -w80 | wc -l) = 1 || fail=1
 
+# A backspace after an initial tab must move back one column.
+env printf '\t\bX\n' > exp5 || framework_failure_
+fold -w8 exp5 > out5 || fail=1
+compare exp5 out5 || fail=1
+fold --characters -w8 exp5 > out5 || fail=1
+compare exp5 out5 || fail=1
+
+# A tab must reset the saved width after a wide character.
+env printf '\uB250\t\bXX\n' > input6 || framework_failure_
+env printf '\uB250\t\bX\nX\n' > exp6 || framework_failure_
+fold -w8 input6 > out6 || fail=1
+compare exp6 out6 || fail=1
+
+# Likewise after a zero width combining character.
+env printf 'a\u0301\t\bX\n' > exp7 || framework_failure_
+fold -w8 exp7 > out7 || fail=1
+compare exp7 out7 || fail=1
+
 Exit $fail

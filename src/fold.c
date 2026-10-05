@@ -121,7 +121,11 @@ adjust_column (size_t column, mcel_t g)
       else if (g.ch == '\r')
         column = 0;
       else if (g.ch == '\t')
-        column += TAB_WIDTH - column % TAB_WIDTH;
+        {
+          /* A backspace after a tab moves back one column.  */
+          last_character_width = 1;
+          column += TAB_WIDTH - column % TAB_WIDTH;
+        }
       else
         {
           if (counting_mode == COUNT_CHARACTERS)
