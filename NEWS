@@ -44,6 +44,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   outputting to a terminal.  The previous release enabled this for all
   outputs by default, requiring setting QUOTING_STYLE=literal to disable.
 
+  'fold' when processing backspaces characters will no longer account for the
+  whole width of a previous character, unless the --characters option is used.
+  This aligns with POSIX and terminal behavior.
+
 ** Improvements
 
   'cut -c' is up to 10x faster in UTF-8 locales, and

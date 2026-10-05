@@ -117,7 +117,8 @@ adjust_column (size_t column, mcel_t g)
   if (counting_mode != COUNT_BYTES)
     {
       if (g.ch == '\b')
-        column -= MIN (last_character_width, column);
+        column -= MIN (counting_mode == COUNT_CHARACTERS
+                       ? last_character_width : 1, column);
       else if (g.ch == '\r')
         column = 0;
       else if (g.ch == '\t')

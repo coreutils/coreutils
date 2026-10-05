@@ -95,7 +95,7 @@ test $(env printf '\xC3' | fold | wc -c) = 1 || fail=1
 # Ensure backspace clamps at position 0
 # From v9.8 to v9.12 inclusive, an internal unsigned could wrap,
 # causing premature line wrapping.
-test $(env printf 'A\uB250\b\bB\n' | fold -w80 | wc -l) = 1 || fail=1
+test $(env printf 'A\uB250\b\b\b\bB\n' | fold -w80 | wc -l) = 1 || fail=1
 
 # A backspace after an initial tab must move back one column.
 env printf '\t\bX\n' > exp5 || framework_failure_
@@ -114,5 +114,23 @@ compare exp6 out6 || fail=1
 env printf 'a\u0301\t\bX\n' > exp7 || framework_failure_
 fold -w8 exp7 > out7 || fail=1
 compare exp7 out7 || fail=1
+
+# A backspace moves one column, even after a two column character.
+env printf '\uB250\bXX\n' > input8 || framework_failure_
+env printf '\uB250\bX\nX\n' > exp8 || framework_failure_
+fold -w2 input8 > out8 || fail=1
+compare exp8 out8 || fail=1
+# In character mode, the wide character and backspace cancel out.
+fold --characters -w2 input8 > out8 || fail=1
+compare input8 out8 || fail=1
+
+# A backspace moves one column, even after a zero width character.
+env printf 'a\u0301\bXX\n' > input9 || framework_failure_
+fold -w2 input9 > out9 || fail=1
+compare input9 out9 || fail=1
+# In character mode, the combining character also counts as one.
+env printf 'a\u0301\bX\nX\n' > exp9 || framework_failure_
+fold --characters -w2 input9 > out9 || fail=1
+compare exp9 out9 || fail=1
 
 Exit $fail

@@ -2902,6 +2902,8 @@ characters.
 @optItemx{fold,--characters,}
 Count characters rather than columns, meaning that lines containing
 characters wider than one column will be visually longer.
+Also a backspace character will account for the whole width of the
+previous character rather than one column.
 
 @optItem{fold,-s,}
 @optItemx{fold,--spaces,}
