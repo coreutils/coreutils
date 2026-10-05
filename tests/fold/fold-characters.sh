@@ -92,4 +92,9 @@ compare exp4 out4 || fail=1
 # Check bad character at EOF
 test $(env printf '\xC3' | fold | wc -c) = 1 || fail=1
 
+# Ensure backspace clamps at position 0
+# From v9.8 to v9.12 inclusive, an internal unsigned could wrap,
+# causing premature line wrapping.
+test $(env printf 'A\uB250\b\bB\n' | fold -w80 | wc -l) = 1 || fail=1
+
 Exit $fail
