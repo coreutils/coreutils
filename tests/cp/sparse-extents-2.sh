@@ -68,7 +68,7 @@ f()
 
 for i in $(seq 1 2 21); do
   for j in 1 2 31 100; do
-    $PERL -e '$n = '$i' * 1024; *F = *STDOUT;' \
+    $PERL -e 'binmode STDOUT; $n = '$i' * 1024; *F = *STDOUT;' \
           -e 'for (1..'$j') { sysseek (*F, $n, 1)' \
           -e '&& syswrite (*F, chr($_)x$n) or die "$!"}' > j1 || fail=1
 
