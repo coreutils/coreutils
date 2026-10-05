@@ -50,9 +50,6 @@ static enum
 /* If nonzero, at least one of the files we read was standard input. */
 static bool have_read_stdin;
 
-/* Width of last read character.  */
-static int last_character_width = 0;
-
 static char const shortopts[] = "bcsw:0::1::2::3::4::5::6::7::8::9::";
 
 static struct option const longopts[] =
@@ -117,27 +114,17 @@ adjust_column (size_t column, mcel_t g)
   if (counting_mode != COUNT_BYTES)
     {
       if (g.ch == '\b')
-        column -= MIN (counting_mode == COUNT_CHARACTERS
-                       ? last_character_width : 1, column);
+        column -= !!column;
       else if (g.ch == '\r')
         column = 0;
       else if (g.ch == '\t')
-        {
-          /* A backspace after a tab moves back one column.  */
-          last_character_width = 1;
-          column += TAB_WIDTH - column % TAB_WIDTH;
-        }
+        column += TAB_WIDTH - column % TAB_WIDTH;
       else
         {
-          if (counting_mode == COUNT_CHARACTERS)
-            last_character_width = 1;
-          else
-            {
-              int width = c32width (g.ch);
-              /* Default to a width of 1 if there is an invalid character.  */
-              last_character_width = width < 0 ? 1 : width;
-            }
-          column += last_character_width;
+          int width = (counting_mode == COUNT_CHARACTERS
+                       ? 1 : c32width (g.ch));
+          /* Default to a width of 1 if there is an invalid character.  */
+          column += width < 0 ? 1 : width;
         }
     }
   else
