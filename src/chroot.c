@@ -228,6 +228,9 @@ main (int argc, char **argv)
   /* Parsed user and group IDs.  */
   uid_t uid = -1;
   gid_t gid = -1;
+  /* Whether GID was inferred from UID outside the chroot,
+     in which case a look-up inside the chroot takes precedence.  */
+  bool gid_inferred = false;
   GETGROUPS_T *out_gids = NULL;
   idx_t n_gids = 0;
 
@@ -308,7 +311,10 @@ main (int argc, char **argv)
           if ((pwd = getpwuid (uid)))
             {
               if (gid_unset (gid))
-                gid = pwd->pw_gid;
+                {
+                  gid = pwd->pw_gid;
+                  gid_inferred = true;
+                }
               username = pwd->pw_name;
             }
         }
@@ -362,12 +368,12 @@ main (int argc, char **argv)
 
   /* If no gid is supplied or looked up, do so now.
      Also lookup the username for use with getgroups.  */
-  if (uid_set (uid) && (! groups || gid_unset (gid)))
+  if (uid_set (uid) && (! groups || gid_unset (gid) || gid_inferred))
     {
       const struct passwd *pwd;
       if ((pwd = getpwuid (uid)))
         {
-          if (gid_unset (gid))
+          if (gid_unset (gid) || gid_inferred)
             gid = pwd->pw_gid;
           username = pwd->pw_name;
         }
