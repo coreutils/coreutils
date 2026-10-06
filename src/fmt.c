@@ -413,7 +413,7 @@ main (int argc, char **argv)
     {
       /* Limit goal_width to max_width.  */
       goal_width = xdectoumax (goal_width_option, 0, max_width, "",
-                               _("invalid width"), 0);
+                               _("invalid goal"), 0);
       if (max_width_option == NULL)
         max_width = goal_width + 10;
     }
