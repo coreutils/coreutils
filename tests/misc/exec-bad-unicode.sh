@@ -19,6 +19,15 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 
+# stdbuf fails when the absolute top build dir name contains e.g.,
+# space, TAB, NL
+lf='
+'
+case $abs_top_builddir in
+  *[\\\"\#\$\&\'\`$lf\ \	]*)
+    skip_ "unsafe absolute build directory name: $abs_top_builddir";;
+esac
+
 script="$(bad_unicode)"
 
 # Create a program with invalid Unicode in its name.

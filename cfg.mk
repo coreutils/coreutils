@@ -988,7 +988,7 @@ exclude_file_name_regexp--sc_prohibit_continued_string_alpha_in_column_1 = \
   ^src/(system\.h|od\.c|printf\.c|getlimits\.c)$$
 
 _cksum = ^tests/cksum/cksum-base64\.pl$$
-_tb_misc = misc/(stdbuf|responsive)
+_tb_misc = misc/(exec-bad-unicode|stdbuf|responsive)
 exclude_file_name_regexp--sc_prohibit_test_backticks = \
   ^tests/(local\.mk|(init|$(_tb_misc)|factor/create-test)\.sh)$$|$(_cksum)
 
