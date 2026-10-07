@@ -1,8 +1,6 @@
 #!/bin/sh
 # Show that we've eliminated most of ls' failing getxattr syscalls,
 # regardless of how many files are in a directory we list.
-# This test is skipped on systems that lack LD_PRELOAD support; that's fine.
-# Similarly, on a system that lacks getxattr altogether, skipping it is fine.
 
 # Copyright (C) 2012-2026 Free Software Foundation, Inc.
 
@@ -21,46 +19,22 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
-require_gcc_shared_
-
-# Replace each getxattr and lgetxattr call with a call to these stubs.
-# Count those and write the total number of calls to the file "x"
-# via a global destructor.
-cat > k.c <<'EOF' || framework_failure_
-#include <errno.h>
-#include <stdio.h>
-#include <sys/types.h>
-
-static unsigned long int n_calls;
-
-static void __attribute__ ((destructor))
-print_call_count (void)
-{
-  FILE *fp = fopen ("x", "w"); if (!fp) return;
-  fprintf (fp, "%lu\n", n_calls); fclose (fp);
-}
-
-static ssize_t incr () { ++n_calls; errno = ENOTSUP; return -1; }
-ssize_t getxattr (const char *path, const char *name, void *value, size_t size)
-{ return incr (); }
-ssize_t lgetxattr(const char *path, const char *name, void *value, size_t size)
-{ return incr (); }
-EOF
-
-# Then compile/link it:
-gcc_shared_ k.c k.so \
-  || framework_failure_ 'failed to build shared library'
+uses_strace_
 
 # Create a few files:
 seq 20 | xargs touch || framework_failure_
 
-# Finally, run the test:
-LD_PRELOAD=$LD_PRELOAD:./k.so ls --color=always -l . || fail=1
+# run the test:
+strace -o strace.out \
+  -e fault=getxattr,lgetxattr:error=EOPNOTSUPP \
+  ls --color=always -l .>/dev/null
+ret=$?
 
-test -f x || skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
+grep getxattr strace.out > getxattr.out &&
+test -s getxattr.out || skip_ 'getxattr or lgetxattr were not intercepted'
 
 # Ensure that there were no more than 3 *getxattr calls.
-n_calls=$(cat x)
-test "$n_calls" -le 3 || fail=1
+test $(wc -l <getxattr.out) -le 3 || fail=1
 
+test "$ret" = 0 || fail=1
 Exit $fail
