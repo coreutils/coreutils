@@ -54,6 +54,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  'basenc --base58' encoding speed is 20x faster when built without libgmp.
+
   'cut -c' is up to 10x faster in UTF-8 locales, and
   'cut -f -w' is up to 10x faster in uni-byte locales.
 

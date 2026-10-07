@@ -1289,7 +1289,6 @@ base58_encode (char const *data, size_t data_len,
   if (data_len - zeros)
     {
       mpz_import (num, data_len - zeros, 1, 1, 0, 0, data + zeros);
-      affirm (mpz_sizeinbase (num, 58) + 1 <= *outlen);
       for (p = mpz_get_str (p, 58, num); *p; p++)
         *p = gmp_to_base58[to_uchar (*p)];
     }
