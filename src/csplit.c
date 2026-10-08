@@ -31,7 +31,6 @@
 #include "fd-reopen.h"
 #include "quote.h"
 #include "safe-read.h"
-#include "stdio--.h"
 #include "term-sig.h"
 #include "xdectoint.h"
 #include "xstrtol.h"
@@ -145,6 +144,9 @@ static int volatile files_created = 0;
 
 /* Number of bytes written to current file. */
 static intmax_t bytes_written;
+
+/* Status of the input file, to refuse an output file that is the input.  */
+static struct stat in_stat_buf;
 
 /* Output file pointer. */
 static FILE *output_stream = NULL;
@@ -896,6 +898,7 @@ create_output_file (void)
   int nfiles = files_created;
   bool fopen_ok;
   int fopen_errno;
+  bool overwrites_input = false;
 
   output_filename = make_filename (nfiles);
 
@@ -909,13 +912,46 @@ create_output_file (void)
       /* Create the output file in a critical section, to avoid races.  */
       sigset_t oldset;
       sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
-      output_stream = fopen (output_filename, "w");
+      /* Don't use O_TRUNC so we check if we would overwrite input first.  */
+      int fd = open (output_filename, O_WRONLY | O_CREAT, MODE_RW_UGO);
+      if (0 <= fd)
+        {
+          struct stat out_stat_buf;
+          int err = 0;
+          if (fstat (fd, &out_stat_buf) != 0)
+            err = errno;
+          else if (psame_inode (&in_stat_buf, &out_stat_buf))
+            overwrites_input = true;  /* Reported below.  */
+          else if (ftruncate (fd, 0) != 0
+                   && (S_ISREG (out_stat_buf.st_mode)
+                       || S_TYPEISSHM (&out_stat_buf)))
+            err = errno;
+          if (err || overwrites_input)
+            {
+              close (fd);
+              fd = -1;
+              errno = err;
+            }
+        }
+      output_stream = 0 <= fd ? fdopen (fd, "w") : NULL;
+      if (0 <= fd && !output_stream)
+        {
+          int e = errno;
+          close (fd);
+          errno = e;
+        }
       fopen_ok = (output_stream != NULL);
       fopen_errno = errno;
       files_created = nfiles + fopen_ok;
       sigprocmask (SIG_SETMASK, &oldset, NULL);
     }
 
+  if (overwrites_input)
+    {
+      error (0, 0, _("%s would overwrite input; aborting"),
+             quoteaf (output_filename));
+      cleanup_fatal ();
+    }
   if (! fopen_ok)
     {
       error (0, fopen_errno, "%s", quotef (output_filename));
@@ -1354,7 +1390,10 @@ main (int argc, char **argv)
     xalloc_die ();
   filename_space = ximalloc (filename_size);
 
-  set_input_file (argv[optind++]);
+  char const *fname = argv[optind++];
+  set_input_file (fname);
+  if (fstat (STDIN_FILENO, &in_stat_buf) != 0)
+    error (EXIT_FAILURE, errno, "%s", quotef (fname));
 
   parse_patterns (argc, optind, argv);
 

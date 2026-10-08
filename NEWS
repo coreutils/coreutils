@@ -62,6 +62,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   a hole in the destination file.
   [bug introduced in coreutils-9.8]
 
+  'csplit' now ensures it doesn't overwrite the input file with generated
+  output.
+  [This bug was present in "the beginning".]
+
   'cut', 'expand', 'fold', 'join', 'numfmt', 'unexpand', and 'uniq', no longer
   consider the \u0085 (next line) character a separator on non-GLIBC platforms.
   [bug introduced in coreutils-9.11]
