@@ -27,26 +27,23 @@ for multiple in $(seq 3); do
   # Count the entire file as a sanity check.
   wc -c < file > out 2> err || fail=1
   file_size=$(($multiple * $page_size))
-  cat <<EOF > exp || framework_failure_
-$file_size
-EOF
+  echo $file_size > exp || framework_failure_
+
   compare exp out || fail=1
   compare /dev/null err || fail=1
   # Test 'wc -c' when standard input has a nonzero offset.
   # This would give an incorrect result from coreutils-8.24
   # to coreutils-9.12.
   skip=$(($multiple * 100))
-  (head -c $skip; wc -c > out 2> err) < file || fail=1
-  cat <<EOF > exp || framework_failure_
-$(($file_size - $skip))
-EOF
+  (head -c $skip >/dev/null; wc -c > out 2> err) < file || fail=1
+  echo $(($file_size - $skip)) > exp || framework_failure_
+
   compare exp out || fail=1
   compare /dev/null err || fail=1
   # Likewise.
-  (head -c $page_size; wc -c > out 2> err) < file || fail=1
-  cat <<EOF > exp || framework_failure_
-$(($file_size - $page_size))
-EOF
+  (head -c $page_size >/dev/null; wc -c > out 2> err) < file || fail=1
+  echo $(($file_size - $page_size)) > exp || framework_failure_
+
   compare exp out || fail=1
   compare /dev/null err || fail=1
 done
