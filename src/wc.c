@@ -428,7 +428,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
             ;
           else if (end_pos % page_size)
             {
-              /* We only need special handling of /proc and /sys files etc.
+              /* We need special handling of /proc and /sys files etc. only
                  when they're a multiple of PAGE_SIZE.  In the common case
                  for files with st_size not a multiple of PAGE_SIZE,
                  it's more efficient and accurate to use st_size.
@@ -436,19 +436,24 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
                  Be careful here.  The current position may actually be
                  beyond the end of the file.  As in the example above.  */
 
-              bytes = end_pos < current_pos ? 0 : end_pos - current_pos;
-              if (bytes && 0 <= lseek (fd, bytes, SEEK_CUR))
-                skip_read = true;
-              else
-                bytes = 0;
+              if (current_pos < end_pos)
+                {
+                  bytes = end_pos - current_pos;
+                  skip_read = true;
+                }
             }
-          else
+          else if (0 < end_pos)
             {
-              off_t hi_pos = (end_pos
-                              - end_pos % (STP_BLKSIZE (&fstatus->st) + 1));
-              if (0 <= current_pos && current_pos < hi_pos
-                  && 0 <= lseek (fd, hi_pos, SEEK_CUR))
+              off_t ep_1 = end_pos - 1;
+              off_t hi_pos = ep_1 - ep_1 % STP_BLKSIZE (&fstatus->st);
+              if (current_pos < hi_pos)
                 bytes = hi_pos - current_pos;
+            }
+
+          if (0 < bytes && lseek (fd, bytes, SEEK_CUR) < 0)
+            {
+              bytes = 0;
+              skip_read = false;
             }
         }
 
