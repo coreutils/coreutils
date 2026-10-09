@@ -37,6 +37,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   into a seekable file whose size is a multiple of the page size.
   [bug introduced in coreutils-8.24]
 
+  When configured with both --disable-bold-man-page-references and
+  --disable-manual-url, 'chroot', 'head', 'shred', 'sort', 'split', and 'tail'
+  no longer use an uninitialized va_list when printing --help.  Previously, they
+  would likely crash due to this undefined behavior.
+  [bug introduced in coreutils-9.10]
+
 ** New Features
 
   'env' and 'printenv' now support the --quoting-style option
