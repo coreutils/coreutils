@@ -727,7 +727,9 @@ oprintf_ (char const *program, char const *message, ...)
 
   if (buflen < 0)
     {
+      va_start (args, message);
       vprintf (message, args);
+      va_end (args);
       return;
     }
 
