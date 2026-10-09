@@ -23,7 +23,7 @@ print_ver_ wc
 page_size=$(getconf PAGESIZE || echo 4096)
 
 for multiple in $(seq 3); do
-  head -c $page_size /dev/zero >> file || framework_failure_
+  truncate -s +$page_size file || framework_failure_
   # Count the entire file as a sanity check.
   wc -c < file > out 2> err || fail=1
   file_size=$(($multiple * $page_size))
