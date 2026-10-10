@@ -1694,7 +1694,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "+AcCdst", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "+AcCdstu", long_options, NULL)) != -1)
     {
       switch (c)
         {
@@ -1719,6 +1719,11 @@ main (int argc, char **argv)
 
         case 't':
           truncate_set1 = true;
+          break;
+
+        case 'u':
+          /* Undocumented option, for compatibility with FreeBSD/macOS.  */
+          setvbuf (stdout, NULL, _IONBF, 0);
           break;
 
         case_GETOPT_HELP_CHAR;

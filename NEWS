@@ -48,6 +48,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'env' and 'printenv' now support the --quoting-style option
   to control the format of printed environment variables.
 
+  'tr' accepts the undocumented -u option to operate in unbuffered mode,
+  for compatibility with FreeBSD and macOS tr(1).
+
 ** Changes in behavior
 
   'env' and 'printenv' now quote printed environment variables only when
