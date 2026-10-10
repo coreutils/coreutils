@@ -584,20 +584,22 @@ is_nul (void const *buf, size_t length)
 static inline void
 oputs_ (MAYBE_UNUSED char const *program, char const *option)
 {
-  static int help_no_sgr =
-#if ! defined MANUAL_URL && ! defined BOLD_MAN_REFS
-    1;   /* Disable.  */
-#else
+  static int help_markup =
+#if defined MANUAL_URL || defined BOLD_MAN_REFS
     -1;  /* Lookup.  */
+#else
+    0;   /* Disable.  */
 #endif
-  if (help_no_sgr == -1)
+  if (help_markup == -1)
     {
-      /* Note we don't consult isatty() since usually you
-         would want markup when piping to grep/less etc.  */
-      char const *term = getenv ("TERM");
-      help_no_sgr = (!term || !*term || streq (term, "dumb"));
+      /* Note one generally would want markup when piping to grep/less etc.
+         but we're conservative here for now, and only markup to tty.  */
+      char const *te;
+      help_markup = (isatty (STDOUT_FILENO)
+                     ? ((te = getenv ("TERM")) && *te && !streq (te, "dumb"))
+                     : getenv ("IN_HELP2MAN") != NULL);
     }
-  if (help_no_sgr)
+  if (! help_markup)
     {
       fputs (option, stdout);
       return;

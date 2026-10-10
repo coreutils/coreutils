@@ -765,11 +765,14 @@ these programs, abbreviations of the long options are not always recognized.
 @item --help
 @opindex --help
 @vindex TERM
+@vindex IN_HELP2MAN
 @cindex help, online
 Print a usage message listing all available options, then exit successfully.
-Help output may be marked up with terminal codes for formatting or
-hyperlinks, which can be disabled by unsetting the @env{TERM} environment
-variable, or setting it to the value @samp{dumb}.
+When outputting to a tty @option{--help} output may be marked up with
+terminal codes for formatting or hyperlinks, which can be disabled by
+unsetting the @env{TERM} environment variable, or setting it to the value
+@samp{dumb}.  To force the use of markup when output is not a tty,
+e.g. when piping to a pager, set the @env{IN_HELP2MAN} environment variable.
 
 @item --version
 @opindex --version
