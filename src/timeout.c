@@ -605,7 +605,7 @@ main (int argc, char **argv)
     }
   else if (monitored_pid == 0)  /* child */
     {
-#if HAVE_PRCTL
+#if HAVE_PRCTL && defined PR_SET_PDEATHSIG
       /* Add protection if the parent dies without signaling child.  */
       prctl (PR_SET_PDEATHSIG, term_signal);
 #endif
