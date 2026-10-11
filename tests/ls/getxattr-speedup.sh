@@ -1,5 +1,5 @@
 #!/bin/sh
-# Show that we've eliminated most of ls' failing getxattr syscalls,
+# Show that we've eliminated most of ls' failing xattr syscalls,
 # regardless of how many files are in a directory we list.
 
 # Copyright (C) 2012-2026 Free Software Foundation, Inc.
@@ -21,20 +21,33 @@
 print_ver_ ls
 uses_strace_
 
+trace_ls_xattrs() {
+  strace -o strace.out \
+   -e trace=listxattr,llistxattr,getxattr,lgetxattr \
+   -e fault=listxattr,llistxattr,getxattr,lgetxattr:error=EOPNOTSUPP \
+   ls --color=always -l . >/dev/null
+}
+
+# Get a base count
+# Note there could be no getxattr calls if built without SELinux
+# but there should always be listxattr calls.
+trace_ls_xattrs; ret=$?
+grep xattr strace.out > xattr.out &&
+test -s xattr.out || skip_ 'no xattr calls were intercepted'
+test "$ret" = 0 || fail=1
+base_count=$(wc -l <xattr.out)
+
+# This should always be the case,
+# but let's not enforce to reduce coupling
+#test $base_count -le 4 || fail=1
+
 # Create a few files:
 seq 20 | xargs touch || framework_failure_
 
-# run the test:
-strace -o strace.out \
-  -e fault=getxattr,lgetxattr:error=EOPNOTSUPP \
-  ls --color=always -l .>/dev/null
-ret=$?
+# Ensure the count is independent of the number of files
+trace_ls_xattrs || fail=1
+grep xattr strace.out > xattr.out || fail=1
+new_count=$(wc -l <xattr.out)
+test $base_count = $new_count || fail=1
 
-grep getxattr strace.out > getxattr.out &&
-test -s getxattr.out || skip_ 'getxattr or lgetxattr were not intercepted'
-
-# Ensure that there were no more than 3 *getxattr calls.
-test $(wc -l <getxattr.out) -le 3 || fail=1
-
-test "$ret" = 0 || fail=1
 Exit $fail
