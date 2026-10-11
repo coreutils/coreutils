@@ -1124,9 +1124,14 @@ main (int argc, char **argv)
       ++optind;
     }
 
+  int program_index = optind;
+  while (program_index < argc && strchr (argv[program_index], '='))
+    program_index++;
+  bool program_specified = program_index < argc;
+
   bool quote_output = false;
   int qs = quoting_style_opt;
-  if (qs < 0 && isatty (STDOUT_FILENO))
+  if (! program_specified && qs < 0 && isatty (STDOUT_FILENO))
     {
       /* Get the value from $QUOTING_STYLE before unsetting env vars.  */
       qs = getenv_quoting_style ();
@@ -1181,8 +1186,6 @@ main (int argc, char **argv)
         set_envvar (argv[optind], eq);
       optind++;
     }
-
-  bool program_specified = optind < argc;
 
   if (opt_nul_terminate_output && program_specified)
     {
