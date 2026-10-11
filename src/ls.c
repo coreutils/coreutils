@@ -3480,7 +3480,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
   bool get_scontext = (format == long_format) | print_scontext;
   bool check_capability = format_needs_capability & (type == normal);
 
-  if (get_scontext | check_capability)
+  if (type != arg_directory && (get_scontext | check_capability))
     {
       struct aclinfo ai;
       int aclinfo_flags = ((do_deref ? ACL_SYMLINK_FOLLOW : 0)
