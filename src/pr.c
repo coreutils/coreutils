@@ -1169,18 +1169,20 @@ getoptnum (char const *n_str, int min, char const *err)
 static void
 getoptarg (char *arg, char switch_char, char *character, int *number)
 {
-  if (!*arg)
+  char const *num = arg;
+
+  if (!*num)
     {
-      error (0, 0, _("'-%c': Invalid argument: %s"), switch_char, quote (arg));
+      error (0, 0, _("'-%c': Invalid argument: %s"), switch_char, quote (num));
       usage (EXIT_FAILURE);
     }
 
-  if (!c_isdigit (*arg))
-    *character = *arg++;
-  if (*arg)
+  if (!c_isdigit (*num))
+    *character = *num++;
+  if (*num)
     {
       long int tmp_long;
-      strtol_error e = xstrtol (arg, NULL, 10, &tmp_long, "");
+      strtol_error e = xstrtol (num, NULL, 10, &tmp_long, "");
       if (e == LONGINT_OK)
         {
           if (tmp_long <= 0)

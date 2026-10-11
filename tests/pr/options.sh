@@ -52,7 +52,7 @@ for w in w W; do
 done
 
 returns_ 1 pr -e=-1 2>err </dev/null || fail=1
-printf '%s\n' "pr: '-e' extra characters or $INV in the argument: '-1'" \
+printf '%s\n' "pr: '-e' extra characters or $INV in the argument: '=-1'" \
               "Try 'pr --help' for more information." \
  >exp || framework_failure_
 compare exp err || fail=1
