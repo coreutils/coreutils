@@ -36,12 +36,12 @@ run_tty_ ()
   grep 'ioctl.*TCGETS' run_tty.strace >/dev/null
 }
 
-run_tty_ env test -t 1 ||
+run_tty_ test -t 1 ||
  skip_ 'strace cannot make standard output appear to be a terminal'
 
 # We're redirecting to file so this doesn't happen on glibc
 # but be defensive on systems that might probe in this case.
-run_tty_ env printf foo >printf.t &&
+run_tty_ printf foo >printf.t &&
  skip_ 'libc buffering induced a tty probe'
 
 for cmd in basename du dirname 'ls -w0' readlink 'realpath --relative-to=.' \
