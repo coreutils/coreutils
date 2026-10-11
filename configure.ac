@@ -304,15 +304,6 @@ AC_CHECK_FUNCS([sigsuspend],
 
 gl_WINSIZE_IN_PTEM
 
-# Find the library for dynamic loading of shared libraries.
-AC_SEARCH_LIBS([dlopen], [dl])
-AS_CASE([$ac_cv_search_dlopen],
-  [no | 'none required'],
-    [LIB_DL=],
-  [*],
-    [LIB_DL="$ac_cv_search_dlopen"])
-AC_SUBST([LIB_DL])
-
 # Should 'sort' link libcrypto dynamically?
 AS_CASE([$LIB_CRYPTO],
   [-lcrypto],
@@ -322,7 +313,7 @@ AS_CASE([$LIB_CRYPTO],
        [utils_cv_libcrypto_soname],
        [utils_cv_libcrypto_soname=no
         saved_LIBS=$LIBS
-        LIBS="$LIBS $LIB_DL $LIB_CRYPTO"
+        LIBS="$LIBS $LIBDL $LIB_CRYPTO"
         AC_LINK_IFELSE(
           [AC_LANG_PROGRAM(
              [[#include <dlfcn.h>
