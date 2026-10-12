@@ -3484,14 +3484,21 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
   if (type == directory && command_line_arg && !immediate_dirs)
     f->filetype = type = arg_directory;
 
-  bool get_scontext = (format == long_format) | print_scontext;
+  bool check_acl = USE_ACL && format == long_format;
+  bool get_scontext = false;
+#if HAVE_SMACK || USE_SELINUX_SELINUX_H
+  get_scontext = (format == long_format) | print_scontext;
+#endif
   bool check_capability = format_needs_capability & (type == normal);
 
-  if (type != arg_directory && (get_scontext | check_capability))
+  if (type != arg_directory && (check_acl | get_scontext | check_capability))
     {
       struct aclinfo ai;
+      /* Without ACL support, request contexts to obtain the attribute
+         names needed for capability coloring too.  */
       int aclinfo_flags = ((do_deref ? ACL_SYMLINK_FOLLOW : 0)
-                           | (get_scontext ? ACL_GET_SCONTEXT : 0)
+                           | (get_scontext || (!USE_ACL && check_capability)
+                              ? ACL_GET_SCONTEXT : 0)
                            | filetype_d_type[type]);
       int n = file_has_aclinfo_cache (full_name, f, &ai, aclinfo_flags);
       bool have_acl = 0 < n;
