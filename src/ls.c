@@ -3265,6 +3265,8 @@ file_has_aclinfo_cache (char const *file, struct fileinfo *f,
           || (ai->size < 0 && !acl_errno_valid (ai->u.err)))
       && (!(flags & ACL_GET_SCONTEXT) || !acl_errno_valid (ai->scontext_err)))
     {
+      /* FIXME: acl_errno_valid() may be a bit too broad determine file system
+         non support.  E.g. EBUSY was added for per file reasons (on cygwin). */
       unsupported_return = n;
       unsupported_scontext = ai->scontext;
       unsupported_scontext_err = ai->scontext_err;
@@ -3298,6 +3300,83 @@ has_capability_cache (char const *file, struct fileinfo *f)
       unsupported_device = f->stat.st_dev;
     }
   return b;
+}
+
+/* Get the ACL, security context, and capability information needed for F.
+   FULL_NAME names the file; DO_DEREF says whether to follow symlinks.  */
+static void
+get_extended_info (char const *full_name, struct fileinfo *f, bool do_deref)
+{
+  /* FIXME: file_has_aclinfo() conflates capability and acl xattr lookup
+     with security context attributes.  Ideally we'd have separate
+     ACL_GET_{CAPABILITY,ACL} flags to lookup just the required items,
+     simplifying the logic here.  */
+
+  enum filetype type = f->filetype;
+  bool check_acl = USE_ACL && format == long_format;
+  bool get_scontext = false;
+#if HAVE_SMACK || USE_SELINUX_SELINUX_H
+  get_scontext = (format == long_format) | print_scontext;
+#endif
+  bool check_capability = format_needs_capability & (type == normal);
+
+  if (type != arg_directory && (check_acl | get_scontext | check_capability))
+    {
+      struct aclinfo ai;
+      /* Without ACL support, request contexts to obtain the attribute
+         names needed for capability coloring too.  */
+      int aclinfo_flags = ((do_deref ? ACL_SYMLINK_FOLLOW : 0)
+                           | (get_scontext || (!USE_ACL && check_capability)
+                              ? ACL_GET_SCONTEXT : 0)
+                           | filetype_d_type[type]);
+      int n = file_has_aclinfo_cache (full_name, f, &ai, aclinfo_flags);
+      bool have_acl = 0 < n;
+      bool have_scontext = !ai.scontext_err;
+
+      /* Let the user know via '?' if errno is EACCES, which can
+         happen with Linux kernel 6.12 on an NFS file system.
+         That's better than a long-winded diagnostic.
+
+         Similarly, ignore ENOENT which may happen on some versions
+         of cygwin when processing dangling symlinks for example.
+         Also if a file is removed while we're reading ACL info,
+         ACL_T_UNKNOWN is sufficient indication for that edge case.  */
+      bool cannot_access_acl = n < 0
+           && (errno == EACCES
+               || ignorable_traversal_errno (errno));
+
+      f->acl_type = (!have_scontext && !have_acl
+                     ? (cannot_access_acl ? ACL_T_UNKNOWN : ACL_T_NONE)
+                     : (have_scontext && !have_acl
+                        ? ACL_T_LSM_CONTEXT_ONLY
+                        : ACL_T_YES));
+      any_has_acl |= f->acl_type != ACL_T_NONE;
+
+      if (format == long_format && n < 0 && !cannot_access_acl)
+        error (0, errno, "%s", quotef (full_name));
+      else
+        {
+          /* When requesting security context information, don't make
+             ls fail just because the file (even a command line argument)
+             isn't on the right type of file system.  I.e., a getfilecon
+             failure isn't in the same class as a stat failure.  */
+          if (print_scontext && ai.scontext_err
+              && ! ignorable_traversal_errno (ai.scontext_err)
+              && (! (is_ENOTSUP (ai.scontext_err)
+                     || ai.scontext_err == ENODATA)))
+            error (0, ai.scontext_err, "%s", quotef (full_name));
+        }
+
+      /* has_capability adds around 30% runtime to 'ls --color',
+         so call it only if really needed.  Note capability coloring
+         is disabled in the default color config.  */
+      if (check_capability && aclinfo_has_xattr (&ai, XATTR_NAME_CAPS))
+        f->has_capability = has_capability_cache (full_name, f);
+
+      f->scontext = ai.scontext;
+      ai.scontext = NULL;
+      aclinfo_free (&ai);
+    }
 }
 
 static bool
@@ -3484,70 +3563,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
   if (type == directory && command_line_arg && !immediate_dirs)
     f->filetype = type = arg_directory;
 
-  bool check_acl = USE_ACL && format == long_format;
-  bool get_scontext = false;
-#if HAVE_SMACK || USE_SELINUX_SELINUX_H
-  get_scontext = (format == long_format) | print_scontext;
-#endif
-  bool check_capability = format_needs_capability & (type == normal);
-
-  if (type != arg_directory && (check_acl | get_scontext | check_capability))
-    {
-      struct aclinfo ai;
-      /* Without ACL support, request contexts to obtain the attribute
-         names needed for capability coloring too.  */
-      int aclinfo_flags = ((do_deref ? ACL_SYMLINK_FOLLOW : 0)
-                           | (get_scontext || (!USE_ACL && check_capability)
-                              ? ACL_GET_SCONTEXT : 0)
-                           | filetype_d_type[type]);
-      int n = file_has_aclinfo_cache (full_name, f, &ai, aclinfo_flags);
-      bool have_acl = 0 < n;
-      bool have_scontext = !ai.scontext_err;
-
-      /* Let the user know via '?' if errno is EACCES, which can
-         happen with Linux kernel 6.12 on an NFS file system.
-         That's better than a long-winded diagnostic.
-
-         Similarly, ignore ENOENT which may happen on some versions
-         of cygwin when processing dangling symlinks for example.
-         Also if a file is removed while we're reading ACL info,
-         ACL_T_UNKNOWN is sufficient indication for that edge case.  */
-      bool cannot_access_acl = n < 0
-           && (errno == EACCES
-               || ignorable_traversal_errno (errno));
-
-      f->acl_type = (!have_scontext && !have_acl
-                     ? (cannot_access_acl ? ACL_T_UNKNOWN : ACL_T_NONE)
-                     : (have_scontext && !have_acl
-                        ? ACL_T_LSM_CONTEXT_ONLY
-                        : ACL_T_YES));
-      any_has_acl |= f->acl_type != ACL_T_NONE;
-
-      if (format == long_format && n < 0 && !cannot_access_acl)
-        error (0, errno, "%s", quotef (full_name));
-      else
-        {
-          /* When requesting security context information, don't make
-             ls fail just because the file (even a command line argument)
-             isn't on the right type of file system.  I.e., a getfilecon
-             failure isn't in the same class as a stat failure.  */
-          if (print_scontext && ai.scontext_err
-              && ! ignorable_traversal_errno (ai.scontext_err)
-              && (! (is_ENOTSUP (ai.scontext_err)
-                     || ai.scontext_err == ENODATA)))
-            error (0, ai.scontext_err, "%s", quotef (full_name));
-        }
-
-      /* has_capability adds around 30% runtime to 'ls --color',
-         so call it only if really needed.  Note capability coloring
-         is disabled in the default color config.  */
-      if (check_capability && aclinfo_has_xattr (&ai, XATTR_NAME_CAPS))
-        f->has_capability = has_capability_cache (full_name, f);
-
-      f->scontext = ai.scontext;
-      ai.scontext = NULL;
-      aclinfo_free (&ai);
-    }
+  get_extended_info (full_name, f, do_deref);
 
   if ((type == symbolic_link)
       & ((format == long_format) | check_symlink_mode))
