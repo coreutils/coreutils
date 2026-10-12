@@ -3255,7 +3255,10 @@ file_has_aclinfo_cache (char const *file, struct fileinfo *f,
   errno = 0;
   int n = file_has_aclinfo (file, ai, flags);
   int err = errno;
+  /* A security-context error does not imply that ACLs are unsupported.
+     Require an unsupported attribute listing too.  */
   if (f->stat_ok && n <= 0 && !acl_errno_valid (err)
+      && ai->size < 0 && !acl_errno_valid (ai->u.err)
       && (!(flags & ACL_GET_SCONTEXT) || !acl_errno_valid (ai->scontext_err)))
     {
       unsupported_return = n;

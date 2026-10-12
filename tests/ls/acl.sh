@@ -52,4 +52,9 @@ gap1=$(ls -l pad/f1 | sed -n 's/^[^+]*+\( *\)[0-9].*/\1/p')
 gap5=$(ls -l pad    | sed -n 's/^[^+]*+\( *\)[0-9].*/\1/p' | head -n1)
 test "x$gap1" = "x$gap5" || fail=1
 
+# A file without an ACL must not suppress ACLs on subsequent files.
+touch pad/plain && setfacl -b pad/plain || framework_failure_
+ls -l pad/f1 pad/plain pad/f1 > out || fail=1
+test "$(grep -c '^..........+' out)" = 2 || fail=1
+
 Exit $fail
