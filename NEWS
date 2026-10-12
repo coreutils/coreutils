@@ -90,6 +90,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   gzip-compressed tarballs are no longer distributed,
   instead being replaced with zstandard-compressed tarballs.
 
+  The configure option '--disable-libsmack' is consolidated to
+  '--without-libsmack'.  The option '--disable-libsmack' is now deprecated.
+
 
 * Noteworthy changes in release 9.12 (2026-09-14) [stable]
 

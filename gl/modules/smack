@@ -3,15 +3,15 @@ Include and determine the availability of smack routines
 
 Files:
 lib/smack.h
+m4/acl.m4
 
 Depends-on:
 
 configure.ac:
 # Check whether libsmack is available
 LIB_SMACK=
-AC_ARG_ENABLE([libsmack],
-  AS_HELP_STRING([--disable-libsmack], [disable libsmack support]))
-if test "X$enable_libsmack" != "Xno"; then
+AC_REQUIRE([gl_FUNC_ACL_ARG])
+if test "X$with_libsmack" != "Xno"; then
   AC_CHECK_LIB([smack], [smack_new_label_from_self],
     [AC_CHECK_LIB([smack], [smack_new_label_from_path],
       [AC_CHECK_HEADER([sys/smack.h],
@@ -19,7 +19,7 @@ if test "X$enable_libsmack" != "Xno"; then
          AC_DEFINE([HAVE_SMACK], [1], [libsmack usability])]
       )])])
   if test "X$LIB_SMACK" = "X"; then
-    if test "X$enable_libsmack" = "Xyes"; then
+    if test "X$with_libsmack" = "Xyes"; then
       AC_MSG_ERROR([libsmack library was not found or not usable])
     fi
   fi
