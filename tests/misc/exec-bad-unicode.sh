@@ -18,27 +18,18 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-
-# stdbuf fails when the absolute top build dir name contains e.g.,
-# space, TAB, NL
-lf='
-'
-case $abs_top_builddir in
-  *[\\\"\#\$\&\'\`$lf\ \	]*)
-    skip_ "unsafe absolute build directory name: $abs_top_builddir";;
-esac
+print_ver_ echo
 
 script="$(bad_unicode)"
 
 # Create a program with invalid Unicode in its name.
-cat <<EOF >"$script"
-#!$SHELL
-echo "\$@"
-EOF
-test $? = 0 || skip_ 'bad unicode not supported in shell or file system'
+printf '#!%s\n' "$(cmd_exe echo)" >"$script" ||
+  skip_ 'bad unicode not supported in shell or file system'
 chmod u+x "$script" || framework_failure_
 
-# Check that it can be executed.
+# Check that it can be executed, which is not the case if there are
+# spaces in $abs_top_builddir.  Such spaces also preclude stdbuf's
+# LD_PRELOAD from operating correctly.
 ./"$script" "$script" >exp \
   || skip_ 'cannot execute a file name with invalid unicode'
 
