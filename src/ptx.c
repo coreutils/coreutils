@@ -118,9 +118,9 @@ WORD;
 
 typedef struct
   {
-    WORD *start;		/* array of WORDs */
     idx_t alloc;		/* allocated length */
     idx_t length;		/* number of used entries */
+    WORD *start COUNTED_BY (alloc);	/* array of WORDs */
   }
 WORD_TABLE;
 

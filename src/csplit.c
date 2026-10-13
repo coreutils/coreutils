@@ -99,7 +99,7 @@ struct buffer_record
   intmax_t start_line;		/* First line number in this buffer. */
   intmax_t first_available;	/* First line that can be retrieved. */
   idx_t num_lines;		/* Number of complete lines in this buffer. */
-  char *buffer;			/* Data area. */
+  char *buffer COUNTED_BY (bytes_alloc);	/* Data area. */
   struct line *line_start;	/* Head of list of pointers to lines. */
   struct line *curr_line;	/* The line start record currently in use. */
   struct buffer_record *next;
