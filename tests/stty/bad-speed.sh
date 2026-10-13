@@ -43,9 +43,13 @@ EOF
 gcc_shared_ k.c k.so \
   || skip_ 'failed to build shared library'
 
-( export LD_PRELOAD=$LD_PRELOAD:./k.so
-  returns_ 1 stty ispeed 9600 ) || fail=1
+# Generate the witness file
+LD_PRELOAD=$LD_PRELOAD:./k.so stty ispeed 9600
 
 test -e preloaded || skip_ 'LD_PRELOAD interception failed'
+
+# Ensure failure is diagnosed
+( export LD_PRELOAD=$LD_PRELOAD:./k.so
+  returns_ 1 stty ispeed 9600 ) || fail=1
 
 Exit $fail
