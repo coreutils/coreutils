@@ -74,7 +74,7 @@ struct line
     struct linebuffer buf;	/* The line itself.  */
     idx_t nfields;		/* Number of elements in 'fields'.  */
     idx_t nfields_allocated;	/* Number of elements allocated for 'fields'. */
-    struct field *fields COUNTED_BY (nfields_allocated);
+    struct field *fields COUNTED_BY (nfields);
   };
 
 /* One or more consecutive lines read from a file that all have the
@@ -294,9 +294,9 @@ extract_field (struct line *line, char *field, idx_t len)
   if (line->nfields >= line->nfields_allocated)
     line->fields = xpalloc (line->fields, &line->nfields_allocated, 1,
                             -1, sizeof *line->fields);
-  line->fields[line->nfields].beg = field;
-  line->fields[line->nfields].len = len;
-  ++(line->nfields);
+  idx_t const field_index = line->nfields++;
+  line->fields[field_index].beg = field;
+  line->fields[field_index].len = len;
 }
 
 static bool
