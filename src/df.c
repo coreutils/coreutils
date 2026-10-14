@@ -216,11 +216,26 @@ static char const *all_args_string =
   "source,fstype,itotal,iused,iavail,ipcent,size,"
   "used,avail,pcent,file,target";
 
-/* Storage for the definition of output columns.  */
-static struct field_data_t **columns;
+static struct
+{
+  /* The current number of processed rows (including header).  */
+  idx_t nrows;
 
-/* The current and allocated number of output columns.  */
-static idx_t ncolumns, ncolumns_alloc;
+  /* The number of slots allocated for rows.  */
+  idx_t nrows_alloc;
+
+  /* Storage for pointers for each string (cell of table).  */
+  char ***rows COUNTED_BY (nrows);
+
+  /* The current number of output columns.  */
+  idx_t ncolumns;
+
+  /* The allocated number of output columns.  */
+  idx_t ncolumns_alloc;
+
+  /* Storage for the definition of output columns.  */
+  struct field_data_t **columns COUNTED_BY (ncolumns);
+} table;
 
 /* Field values.  */
 struct field_values_t
@@ -234,13 +249,6 @@ struct field_values_t
   uintmax_t used;
   bool negate_used;
 };
-
-/* Storage for pointers for each string (cell of table).  */
-static char ***table;
-
-/* The current number of processed rows (including header),
-   and the number of slots allocated for rows.  */
-static idx_t nrows, nrows_alloc;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -361,15 +369,17 @@ replace_problematic_chars (char *cell)
 }
 
 
-/* Dynamically allocate a row of pointers in TABLE, which
+/* Dynamically allocate a row of pointers in TABLE.ROWS, which
    can then be accessed with standard 2D array notation.  */
 
 static void
 alloc_table_row (void)
 {
-  if (nrows == nrows_alloc)
-    table = xpalloc (table, &nrows_alloc, 1, -1, sizeof *table);
-  table[nrows++] = xinmalloc (ncolumns, sizeof *table[0]);
+  if (table.nrows == table.nrows_alloc)
+    table.rows = xpalloc (table.rows, &table.nrows_alloc, 1, -1,
+                          sizeof *table.rows);
+  idx_t const row_idx = table.nrows++;
+  table.rows[row_idx] = xinmalloc (table.ncolumns, sizeof *table.rows[0]);
 }
 
 /* Output each cell in the table, accounting for the
@@ -378,11 +388,11 @@ alloc_table_row (void)
 static void
 print_table (void)
 {
-  for (idx_t row = 0; row < nrows; row++)
+  for (idx_t row = 0; row < table.nrows; row++)
     {
-      for (idx_t col = 0; col < ncolumns; col++)
+      for (idx_t col = 0; col < table.ncolumns; col++)
         {
-          char *cell = table[row][col];
+          char *cell = table.rows[row][col];
 
           /* Note the SOURCE_FIELD used to be displayed on it's own line
              if (!posix_format && mbswidth (cell) > 20), but that
@@ -392,12 +402,12 @@ print_table (void)
             putchar (' ');
 
           int width = mbswidth (cell, MBSWIDTH_FLAGS);
-          int fill = width < 0 ? 0 : columns[col]->width - width;
-          if (columns[col]->align_right)
+          int fill = width < 0 ? 0 : table.columns[col]->width - width;
+          if (table.columns[col]->align_right)
             for (; 0 < fill; fill--)
               putchar (' ');
           fputs (cell, stdout);
-          if (col + 1 < ncolumns)
+          if (col + 1 < table.ncolumns)
             for (; 0 < fill; fill--)
               putchar (' ');
         }
@@ -405,15 +415,17 @@ print_table (void)
     }
 }
 
-/* Dynamically allocate a struct field_t in COLUMNS, which
+/* Dynamically allocate a struct field_t in TABLE.COLUMNS, which
    can then be accessed with standard array notation.  */
 
 static void
 alloc_field (int f, char const *c)
 {
-  if (ncolumns == ncolumns_alloc)
-    columns = xpalloc (columns, &ncolumns_alloc, 1, -1, sizeof *columns);
-  columns[ncolumns++] = &field_data[f];
+  if (table.ncolumns == table.ncolumns_alloc)
+    table.columns = xpalloc (table.columns, &table.ncolumns_alloc, 1, -1,
+                             sizeof *table.columns);
+  idx_t const column_idx = table.ncolumns++;
+  table.columns[column_idx] = &field_data[f];
   if (c != NULL)
     field_data[f].caption = c;
 
@@ -550,7 +562,7 @@ get_field_list (void)
       break;
 
     case OUTPUT_MODE:
-      if (!ncolumns)
+      if (!table.ncolumns)
         {
           /* Add all fields if --output was given without a field list.  */
           decode_output_arg (all_args_string);
@@ -569,12 +581,12 @@ get_header (void)
 {
   alloc_table_row ();
 
-  for (idx_t col = 0; col < ncolumns; col++)
+  for (idx_t col = 0; col < table.ncolumns; col++)
     {
       char *cell;
-      char const *header = _(columns[col]->caption);
+      char const *header = _(table.columns[col]->caption);
 
-      if (columns[col]->field == SIZE_FIELD
+      if (table.columns[col]->field == SIZE_FIELD
           && (header_mode == DEFAULT_MODE
               || (header_mode == OUTPUT_MODE
                   && !(human_output_opts & human_autoscale))))
@@ -616,7 +628,8 @@ get_header (void)
           /* TRANSLATORS: this is the "1K-blocks" header in "df" output.  */
           cell = xasprintf (_("%s-%s"), num, header);
         }
-      else if (header_mode == POSIX_MODE && columns[col]->field == SIZE_FIELD)
+      else if (header_mode == POSIX_MODE
+               && table.columns[col]->field == SIZE_FIELD)
         {
           /* TRANSLATORS: this is the "1024-blocks" header in "df -P".  */
           cell = xasprintf (_("%ju-%s"), output_block_size, header);
@@ -626,10 +639,10 @@ get_header (void)
 
       replace_problematic_chars (cell);
 
-      table[nrows - 1][col] = cell;
+      table.rows[table.nrows - 1][col] = cell;
 
       int cell_width = mbswidth (cell, MBSWIDTH_FLAGS);
-      columns[col]->width = MAX (columns[col]->width, cell_width);
+      table.columns[col]->width = MAX (table.columns[col]->width, cell_width);
     }
 }
 
@@ -1109,13 +1122,13 @@ get_dev (char const *device, char const *mount_point, char const *file,
   if (print_grand_total && ! force_fsu)
     add_to_grand_total (&block_values, &inode_values);
 
-  for (idx_t col = 0; col < ncolumns; col++)
+  for (idx_t col = 0; col < table.ncolumns; col++)
     {
       char buf[LONGEST_HUMAN_READABLE + 2];
       char *cell;
 
       struct field_values_t *v;
-      switch (columns[col]->field_type)
+      switch (table.columns[col]->field_type)
         {
         case BLOCK_FLD:
           v = &block_values;
@@ -1130,7 +1143,7 @@ get_dev (char const *device, char const *mount_point, char const *file,
           affirm (!"bad field_type");
         }
 
-      switch (columns[col]->field)
+      switch (table.columns[col]->field)
         {
         case SOURCE_FIELD:
           cell = xstrdup (dev_name);
@@ -1227,8 +1240,8 @@ get_dev (char const *device, char const *mount_point, char const *file,
 
       replace_problematic_chars (cell);
       int cell_width = mbswidth (cell, MBSWIDTH_FLAGS);
-      columns[col]->width = MAX (columns[col]->width, cell_width);
-      table[nrows - 1][col] = cell;
+      table.columns[col]->width = MAX (table.columns[col]->width, cell_width);
+      table.rows[table.nrows - 1][col] = cell;
     }
   free (dev_name);
 }
