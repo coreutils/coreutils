@@ -28,6 +28,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   resolves to a path beginning with the symbolic link itself.
   [bug introduced in coreutils-9.0]
 
+  'stty' again rejects empty speed arguments.
+  Previously such arguments were accepted as value 0.
+  [bug introduced in coreutils-9.8]
+
   'unexpand' no longer overflows a heap buffer on non-GLIBC platforms,
   given whitespace characters whose display width is negative.  E.g.,
   this edge case can occur with \u0085 (next line) characters on musl.

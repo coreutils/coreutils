@@ -2265,6 +2265,10 @@ string_to_baud (char const *arg)
   if (*arg == '-')
     return (speed_t) -1;
 
+  /* Empty does not mean 0.  */
+  if (! *arg)
+    return (speed_t) -1;
+
   value = strtoul (arg, &ep, 10);
 
   c = *ep++;
