@@ -297,7 +297,7 @@ struct mp_factors
 
   /* A vector of distinct prime factors, a count of the factors,
      and the number of allocated slots in the vector.  */
-  struct mp_factor *f COUNTED_BY (nalloc);
+  struct mp_factor *f COUNTED_BY (nfactors);
 };
 
 static void factor (struct factors *, mp_limb_t, mp_limb_t);
