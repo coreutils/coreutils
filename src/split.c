@@ -58,10 +58,17 @@ static char const *filter_command;
 /* Process ID of the filter.  */
 static pid_t filter_pid;
 
-/* Array of open pipes.  */
-static int *open_pipes;
-static idx_t open_pipes_alloc;
-static int n_open_pipes;
+static struct
+{
+  /* The number of open pipes.  */
+  int n_pipes;
+
+  /* The number of allocated pipes.  */
+  idx_t n_pipes_alloc;
+
+  /* Array of open pipes.  */
+  int *pipes COUNTED_BY (n_pipes);
+} open_pipes;
 
 /* Whether SIGPIPE has the default action, when --filter is used.  */
 static bool default_SIGPIPE;
@@ -575,9 +582,9 @@ create (char const *name)
          earlier call, otherwise this process will be holding a
          write-pipe that will prevent the earlier process from
          reading an EOF on the corresponding read-pipe.  */
-      for (int i = 0; i < n_open_pipes; ++i)
+      for (int i = 0; i < open_pipes.n_pipes; ++i)
         if ((result = posix_spawn_file_actions_addclose (&actions,
-                                                         open_pipes[i])))
+                                                         open_pipes.pipes[i])))
           break;
 
       if (   result
@@ -610,10 +617,12 @@ create (char const *name)
       if (close (fd_pair[0]) != 0)
         error (EXIT_FAILURE, errno, _("failed to close input pipe"));
       filter_pid = child_pid;
-      if (n_open_pipes == open_pipes_alloc)
-        open_pipes = xpalloc (open_pipes, &open_pipes_alloc, 1,
-                              MIN (INT_MAX, IDX_MAX), sizeof *open_pipes);
-      open_pipes[n_open_pipes++] = fd_pair[1];
+      if (open_pipes.n_pipes == open_pipes.n_pipes_alloc)
+        open_pipes.pipes = xpalloc (open_pipes.pipes, &open_pipes.n_pipes_alloc,
+                                    1, MIN (INT_MAX, IDX_MAX),
+                                    sizeof *open_pipes.pipes);
+      idx_t const pipe_idx = open_pipes.n_pipes++;
+      open_pipes.pipes[pipe_idx] = fd_pair[1];
       return fd_pair[1];
     }
 }
@@ -630,11 +639,13 @@ closeout (FILE *fp, int fd, pid_t pid, char const *name)
     {
       if (fp == NULL && close (fd) < 0)
         error (EXIT_FAILURE, errno, "%s", quotef (name));
-      for (int j = 0; j < n_open_pipes; ++j)
+      for (int j = 0; j < open_pipes.n_pipes; ++j)
         {
-          if (open_pipes[j] == fd)
+          if (open_pipes.pipes[j] == fd)
             {
-              open_pipes[j] = open_pipes[--n_open_pipes];
+              idx_t const last_idx = open_pipes.n_pipes - 1;
+              open_pipes.pipes[j] = open_pipes.pipes[last_idx];
+              open_pipes.n_pipes--;
               break;
             }
         }
