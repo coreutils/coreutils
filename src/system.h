@@ -622,7 +622,7 @@ oputs_ (MAYBE_UNUSED char const *program, char const *option)
       char const *s = first_word;
       size_t spaces = 0;
       while (s < option_text && spaces < 2)
-        spaces += !!isspace (*s++);
+        spaces += !!isspace (to_uchar (*s++));
       if (spaces == 2)
         {
           /* Probably mismatched dd format.  */
@@ -641,9 +641,9 @@ oputs_ (MAYBE_UNUSED char const *program, char const *option)
     {
       if (*desc_text == '-' && *(desc_text + 1) == '-')
         double_space = false;
-      if (isspace (*desc_text))
+      if (isspace (to_uchar (*desc_text)))
         {
-          if (*desc_text == '\t' || isspace (*(desc_text + 1)))
+          if (*desc_text == '\t' || isspace (to_uchar (*(desc_text + 1))))
             break;
           /* With long options we restrict the match as some translations
              delimit a long option and description with a single space.  */
