@@ -323,14 +323,20 @@ static size_t sort_size;
    Also, there may be 8 threads all doing this at the same time.  */
 #define INPUT_FILE_SIZE_GUESS (128 * 1024)
 
-/* Array of directory names in which any temporary files are to be created. */
-static char const **temp_dirs;
+static struct
+{
+  /* Number of temporary directory names used.  */
+  idx_t n_dirs;
 
-/* Number of temporary directory names used.  */
-static idx_t temp_dir_count;
+  /* Number of allocated slots for temporary directories.  */
+  idx_t n_dirs_alloc;
 
-/* Number of allocated slots in temp_dirs.  */
-static idx_t temp_dir_alloc;
+  /* Array of directory names in which any temporary files are
+     to be created. */
+  char const **dirs COUNTED_BY (n_dirs);
+} temp_dirs;
+
+
 
 /* Flag to reverse the order of all comparisons. */
 static bool reverse;
@@ -895,7 +901,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
   static idx_t temp_dir_index;
   int fd;
   int saved_errno;
-  char const *temp_dir = temp_dirs[temp_dir_index];
+  char const *temp_dir = temp_dirs.dirs[temp_dir_index];
   size_t len = strlen (temp_dir);
   struct tempnode *node =
     xmalloc (FLEXSIZEOF (struct tempnode, name, len + sizeof slashbase));
@@ -905,7 +911,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
   memcpy (file, temp_dir, len);
   memcpy (file + len, slashbase, sizeof slashbase);
   node->next = NULL;
-  if (++temp_dir_index == temp_dir_count)
+  if (++temp_dir_index == temp_dirs.n_dirs)
     temp_dir_index = 0;
 
   /* Create the temporary file in a critical section, to avoid races.  */
@@ -1353,10 +1359,12 @@ open_temp (struct tempnode *temp)
 static void
 add_temp_dir (char const *dir)
 {
-  if (temp_dir_count == temp_dir_alloc)
-    temp_dirs = xpalloc (temp_dirs, &temp_dir_alloc, 1, -1, sizeof *temp_dirs);
+  if (temp_dirs.n_dirs == temp_dirs.n_dirs_alloc)
+    temp_dirs.dirs = xpalloc (temp_dirs.dirs, &temp_dirs.n_dirs_alloc, 1, -1,
+                              sizeof *temp_dirs.dirs);
 
-  temp_dirs[temp_dir_count++] = dir;
+  idx_t const dir_idx = temp_dirs.n_dirs++;
+  temp_dirs.dirs[dir_idx] = dir;
 }
 
 /* Remove NAME from the list of temporary files.  */
@@ -5080,7 +5088,7 @@ main (int argc, char **argv)
   if (need_random)
     random_md5_state_init (random_source);
 
-  if (temp_dir_count == 0)
+  if (temp_dirs.n_dirs == 0)
     {
       char const *tmp_dir = getenv ("TMPDIR");
       add_temp_dir (tmp_dir ? tmp_dir : DEFAULT_TMPDIR);
