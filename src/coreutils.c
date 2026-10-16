@@ -114,7 +114,7 @@ launch_program (char const *prog_name, int prog_argc, char **prog_argv)
 
 #if HAVE_PRCTL && defined PR_SET_NAME
   /* Not being able to set the program name is not a fatal error.  */
-  prctl (PR_SET_NAME, prog_argv[0]);
+  prctl (PR_SET_NAME, prog_name);
 #endif
 #if HAVE_PRCTL && defined PR_SET_MM_ARG_START
   /* Shift the beginning of the command line to prog_argv[0] (if set) so
