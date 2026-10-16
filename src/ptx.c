@@ -120,7 +120,7 @@ typedef struct
   {
     idx_t alloc;		/* allocated length */
     idx_t length;		/* number of used entries */
-    WORD *start COUNTED_BY (alloc);	/* array of WORDs */
+    WORD *start COUNTED_BY (length);	/* array of WORDs */
   }
 WORD_TABLE;
 
@@ -695,9 +695,9 @@ digest_word_file (char const *file_name, WORD_TABLE *table)
           if (table->length == table->alloc)
             table->start = xpalloc (table->start, &table->alloc, 1, -1,
                                     sizeof *table->start);
-          table->start[table->length].start = word_start;
-          table->start[table->length].size = cursor - word_start;
-          table->length++;
+          idx_t const table_idx = table->length++;
+          table->start[table_idx].start = word_start;
+          table->start[table_idx].size = cursor - word_start;
         }
 
       /* This test allows for an incomplete line at end of file.  */
