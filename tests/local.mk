@@ -188,6 +188,7 @@ all_tests =					\
   tests/misc/responsive.sh			\
   tests/misc/no-fork.sh				\
   tests/misc/exec-bad-unicode.sh		\
+  tests/misc/proc-self-comm.sh			\
   tests/misc/traversal-missing.sh		\
   tests/misc/tty-quoting.sh			\
   tests/misc/uname-labeled.sh			\
