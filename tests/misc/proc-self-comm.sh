@@ -33,19 +33,29 @@ if test -n "$single_binary_cat" && ! $single_binary_cat /dev/null 2>err; then
   single_binary_cat=
 fi
 
+mkdir dir || framework_failure_
+
 # If we are not using --enable-single-binary=symlinks, then set
 # up a symlink in the test directory to ensure this gets tested.
 if test -n "$single_binary" && ! test -L "$abs_cat"; then
-  mkdir dir || framework_failure_
   ln -s "$single_binary" dir/cat || framework_failure_
   symlink_cat='env PATH='"$(pwd)/dir:$PATH"' cat'
+  # If we are using --enable-single-binary=shebangs, create a
+  # binary to pretend we are using --program-prefix=g.
+  if test $(wc -l < "$abs_cat") = 1; then
+    ginstall "$abs_cat" dir/gcat || framework_failure_
+    gcat=dir/gcat
+  fi
 fi
 
-echo 'cat' >exp || framework_failure_
-for prog in cat "$abs_cat" "$single_binary_cat" "$symlink_cat"; do
+echo 'cat' >cat-exp || framework_failure_
+echo 'gcat' >gcat-exp || framework_failure_
+for prog in cat "$abs_cat" "$single_binary_cat" "$symlink_cat" "$gcat"; do
   test -z "$prog" && continue
+  exp=cat-exp
+  test "$prog" = "$gcat" && exp=gcat-exp
   $prog /proc/self/comm >out 2>err || fail=1
-  compare exp out || fail=1
+  compare $exp out || fail=1
   compare /dev/null err || fail=1
 done
 
