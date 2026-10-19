@@ -460,7 +460,7 @@ static void set_control_char (struct control_info const *info,
                               char const *arg,
                               struct termios *mode);
 static void set_speed (enum speed_setting type, char const *arg,
-                       struct termios *mode);
+                       speed_t const baud, struct termios *mode);
 static void set_window_size (int rows, int cols, char const *device_name);
 
 /* The width of the screen, for output wrapping. */
@@ -1176,12 +1176,13 @@ apply_settings (bool checking, char const *device_name,
             {
               check_argument (arg);
               ++k;
-              if (string_to_baud (settings[k]) == (speed_t) -1)
+              speed_t const ispeed = string_to_baud (settings[k]);
+              if (ispeed == (speed_t) -1)
                 {
                   error (0, 0, _("invalid ispeed %s"), quote (settings[k]));
                   usage (EXIT_FAILURE);
                 }
-              set_speed (input_speed, settings[k], mode);
+              set_speed (input_speed, settings[k], ispeed, mode);
               if (checking)
                 continue;
               *require_set_attr = true;
@@ -1190,12 +1191,13 @@ apply_settings (bool checking, char const *device_name,
             {
               check_argument (arg);
               ++k;
-              if (string_to_baud (settings[k]) == (speed_t) -1)
+              speed_t const ospeed = string_to_baud (settings[k]);
+              if (ospeed == (speed_t) -1)
                 {
                   error (0, 0, _("invalid ospeed %s"), quote (settings[k]));
                   usage (EXIT_FAILURE);
                 }
-              set_speed (output_speed, settings[k], mode);
+              set_speed (output_speed, settings[k], ospeed, mode);
               if (checking)
                 continue;
               *require_set_attr = true;
@@ -1263,21 +1265,25 @@ apply_settings (bool checking, char const *device_name,
               max_col = screen_columns ();
               display_speed (mode, false);
             }
-          else if (string_to_baud (arg) != (speed_t) -1)
-            {
-              set_speed (both_speeds, arg, mode);
-              if (checking)
-                continue;
-              *require_set_attr = true;
-            }
           else
             {
-              if (! recover_mode (arg, mode))
+              speed_t const speed = string_to_baud (arg);
+              if (speed != (speed_t) -1)
                 {
-                  error (0, 0, _("invalid argument %s"), quote (arg));
-                  usage (EXIT_FAILURE);
+                  set_speed (both_speeds, arg, speed, mode);
+                  if (checking)
+                    continue;
+                  *require_set_attr = true;
                 }
-              *require_set_attr = true;
+              else
+                {
+                  if (! recover_mode (arg, mode))
+                    {
+                      error (0, 0, _("invalid argument %s"), quote (arg));
+                      usage (EXIT_FAILURE);
+                    }
+                  *require_set_attr = true;
+                }
             }
         }
     }
@@ -1742,13 +1748,13 @@ set_control_char (struct control_info const *info, char const *arg,
 }
 
 static void
-set_speed (enum speed_setting type, char const *arg, struct termios *mode)
+set_speed (enum speed_setting type, char const *arg, speed_t const baud,
+           struct termios *mode)
 {
   /* Note cfset[io]speed(), do not check with the device,
      and only check whether the system logic supports the specified speed.
      Therefore we don't report the device name in any errors.  */
 
-  speed_t baud = string_to_baud (arg);
   affirm (baud != (speed_t) -1);
 
   if (type == input_speed || type == both_speeds)
