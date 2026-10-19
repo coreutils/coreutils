@@ -72,25 +72,30 @@ cat >> "$out" <<'EOF'
 }
 
 ATTRIBUTE_CONST
-static speed_t
+static struct speed_desc
 value_to_baud (unsigned long int value)
 {
 # ifdef TERMIOS_SPEED_T_SANE
   speed_t speed = value;
+  /* Unrepresentable (overflow?) */
   if (speed != value)
-    speed = (speed_t) -1;	/* Unrepresentable (overflow?) */
-  return speed;
+    return (struct speed_desc) { .baud = (speed_t) -1, .valid = false };
+  return (struct speed_desc) { .baud = speed, .valid = true };
 # else
   switch (value)
     {
 EOF
 
 while read n; do
-  printf '#  ifdef B%s\n      case %s: return B%s;\n#  endif\n' "$n" "$n" "$n"
+  printf '#  ifdef B%s\n'\
+'    case %s:\n'\
+'      return (struct speed_desc) { .baud = B%s, .valid = false };\n'\
+'#  endif\n' "$n" "$n" "$n"
 done < "$tmp" >> "$out"
 
 cat >> "$out" <<'EOF'
-      default: return (speed_t) -1;
+    default:
+      return (struct speed_desc) { .baud = (speed_t) -1, .valid = false };
     }
 # endif
 }

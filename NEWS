@@ -32,6 +32,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously such arguments were accepted as value 0.
   [bug introduced in coreutils-9.8]
 
+  'stty' no longer treats the maximum value representable by the speed_t type as
+  an invalid baud rate.  Previously, attempting to set the baud rate to this
+  value would mistakenly fail on platforms that support it, e.g., GNU/Linux and
+  GNU/Hurd with glibc-2.42 or newer.
+  [bug introduced with arbitrary baud rate support in coreutils-9.8]
+
   'unexpand' no longer overflows a heap buffer on non-GLIBC platforms,
   given whitespace characters whose display width is negative.  E.g.,
   this edge case can occur with \u0085 (next line) characters on musl.

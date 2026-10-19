@@ -433,6 +433,17 @@ static struct control_info const control_info[] =
   {NULL, 0, 0}
 };
 
+/* This struct is needed because some systems, e.g., GNU/Linux,
+   support baud rates equal to (speed_t) -1.  */
+struct speed_desc
+{
+  /* The baud rate.  */
+  speed_t baud;
+
+  /* True if the baud member is valid and did not overflow.  */
+  bool valid;
+};
+
 static char const *visible (cc_t ch);
 static unsigned long int baud_to_value (speed_t speed);
 static bool recover_mode (char const *arg, struct termios *mode);
@@ -444,7 +455,7 @@ static bool eq_mode (struct termios const *mode1,
 static bool speed_matches (struct termios const *mode1,
                            struct termios const *mode2);
 static uintmax_t integer_arg (char const *s, uintmax_t max);
-static speed_t string_to_baud (char const *arg);
+static struct speed_desc string_to_baud (char const *arg);
 static tcflag_t *mode_type_flag (enum mode_type type, struct termios *mode);
 static void display_all (struct termios *mode, char const *device_name);
 static void display_changed (struct termios *mode);
@@ -460,7 +471,7 @@ static void set_control_char (struct control_info const *info,
                               char const *arg,
                               struct termios *mode);
 static void set_speed (enum speed_setting type, char const *arg,
-                       speed_t const baud, struct termios *mode);
+                       struct speed_desc const speed, struct termios *mode);
 static void set_window_size (int rows, int cols, char const *device_name);
 
 /* The width of the screen, for output wrapping. */
@@ -476,8 +487,10 @@ static int tcsetattr_options = TCSADRAIN;
 static bool dev_debug;
 
 /* Record last speed set for correlation.  */
-static speed_t last_ibaud = (speed_t) -1;
-static speed_t last_obaud = (speed_t) -1;
+static struct speed_desc last_ibaud =
+  { .baud = (speed_t) -1, .valid = false };
+static struct speed_desc last_obaud =
+  { .baud = (speed_t) -1, .valid = false };
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -1176,8 +1189,8 @@ apply_settings (bool checking, char const *device_name,
             {
               check_argument (arg);
               ++k;
-              speed_t const ispeed = string_to_baud (settings[k]);
-              if (ispeed == (speed_t) -1)
+              struct speed_desc const ispeed = string_to_baud (settings[k]);
+              if (! ispeed.valid)
                 {
                   error (0, 0, _("invalid ispeed %s"), quote (settings[k]));
                   usage (EXIT_FAILURE);
@@ -1191,8 +1204,8 @@ apply_settings (bool checking, char const *device_name,
             {
               check_argument (arg);
               ++k;
-              speed_t const ospeed = string_to_baud (settings[k]);
-              if (ospeed == (speed_t) -1)
+              struct speed_desc const ospeed = string_to_baud (settings[k]);
+              if (! ospeed.valid)
                 {
                   error (0, 0, _("invalid ospeed %s"), quote (settings[k]));
                   usage (EXIT_FAILURE);
@@ -1267,8 +1280,8 @@ apply_settings (bool checking, char const *device_name,
             }
           else
             {
-              speed_t const speed = string_to_baud (arg);
-              if (speed != (speed_t) -1)
+              struct speed_desc const speed = string_to_baud (arg);
+              if (speed.valid)
                 {
                   set_speed (both_speeds, arg, speed, mode);
                   if (checking)
@@ -1748,25 +1761,25 @@ set_control_char (struct control_info const *info, char const *arg,
 }
 
 static void
-set_speed (enum speed_setting type, char const *arg, speed_t const baud,
-           struct termios *mode)
+set_speed (enum speed_setting type, char const *arg,
+           struct speed_desc const speed, struct termios *mode)
 {
   /* Note cfset[io]speed(), do not check with the device,
      and only check whether the system logic supports the specified speed.
      Therefore we don't report the device name in any errors.  */
 
-  affirm (baud != (speed_t) -1);
+  affirm (speed.valid);
 
   if (type == input_speed || type == both_speeds)
     {
-      last_ibaud = baud;
-      if (cfsetispeed (mode, baud))
+      last_ibaud = speed;
+      if (cfsetispeed (mode, speed.baud))
         error (EXIT_FAILURE, 0, _("unsupported ispeed %s"), quoteaf (arg));
     }
   if (type == output_speed || type == both_speeds)
     {
-      last_obaud = baud;
-      if (cfsetospeed (mode, baud))
+      last_obaud = speed;
+      if (cfsetospeed (mode, speed.baud))
         error (EXIT_FAILURE, 0, _("unsupported ospeed %s"), quoteaf (arg));
     }
 }
@@ -2108,13 +2121,14 @@ display_all (struct termios *mode, char const *device_name)
 static void
 check_speed (struct termios *mode)
 {
-  if (last_ibaud != -1 && last_obaud != -1)
+  if (last_ibaud.valid && last_obaud.valid)
     {
-      if (cfgetispeed (mode) != last_ibaud
-          || cfgetospeed (mode) != last_obaud)
+      if (cfgetispeed (mode) != last_ibaud.baud
+          || cfgetospeed (mode) != last_obaud.baud)
         error (EXIT_FAILURE, 0,
                _("asymmetric input (%lu), output (%lu) speeds not supported"),
-               baud_to_value (last_ibaud), baud_to_value (last_obaud));
+               baud_to_value (last_ibaud.baud),
+               baud_to_value (last_obaud.baud));
     }
 }
 
@@ -2258,7 +2272,7 @@ speed_matches (struct termios const *mode1, struct termios const *mode2)
 }
 
 ATTRIBUTE_PURE
-static speed_t
+static struct speed_desc
 string_to_baud (char const *arg)
 {
   char *ep;
@@ -2269,11 +2283,11 @@ string_to_baud (char const *arg)
   while (c_isspace (*arg))
     arg++;
   if (*arg == '-')
-    return (speed_t) -1;
+    goto invalid;
 
   /* Empty does not mean 0.  */
   if (! *arg)
-    return (speed_t) -1;
+    goto invalid;
 
   value = strtoul (arg, &ep, 10);
 
@@ -2302,21 +2316,24 @@ string_to_baud (char const *arg)
             c = *ep++;
 
           if (c)
-            return (speed_t) -1; /* Garbage after otherwise valid number */
+            goto invalid; /* Garbage after otherwise valid number */
         }
     }
   else if (c)
     {
       /* Not a valid number; check for legacy aliases "exta" and "extb" */
       if (streq (arg, "exta"))
-        return B19200;
+        return (struct speed_desc) { .baud = B19200, .valid = true };
       else if (streq (arg, "extb"))
-        return B38400;
+        return (struct speed_desc) { .baud = B38400, .valid = true };
       else
-        return (speed_t) -1;
+        goto invalid;
     }
 
   return value_to_baud (value);
+
+ invalid:
+  return (struct speed_desc) { .baud = (speed_t) -1, .valid = false };
 }
 
 static void
