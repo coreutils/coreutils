@@ -2650,14 +2650,14 @@ and @option{-i} are on for multiple text-column output.  Together with
 Since spaces are converted to TABs in multicolumn output, they can be converted
 back by further processing through @command{pr -t -e} or @command{expand}.
 Lines of full length are joined in a free field format and @option{-S}
-option may set field separators.  @option{-@var{column}} may not be used
+option may set field separators.  @option{--columns} may not be used
 with the @option{-m} option.
 
 @optItem{pr,-a,}
 @optItemx{pr,--across,}
 @cindex across columns
 With each single @var{file}, print columns across rather than down.  The
-@option{-@var{column}} option must be given with @var{column} greater than one.
+@option{--columns} option must be given with @var{column} greater than one.
 If a line is too long to fit in a column, it is truncated.
 
 @optItem{pr,-c,}
@@ -2728,7 +2728,7 @@ is 8).
 @optItem{pr,-J,}
 @optItemx{pr,--join-lines,}
 Merge lines of full length.  Used together with the column options
-@option{-@var{column}}, @option{-a -@var{column}} or @option{-m}.  Turns off
+@option{--columns}, @option{-a --columns} or @option{-m}.  Turns off
 @option{-W/-w} line truncation;
 no column alignment used; may be used with
 @option{--sep-string[=@var{string}]}.  @option{-J} has been introduced
@@ -2855,7 +2855,7 @@ Set the page width to @var{page_width} characters, honored with and
 without a column option.  With a column option, the specified @var{page_width}
 is rounded down so that columns have equal width.  Text lines are truncated,
 unless @option{-J} is used. Together with one of the three column options
-(@option{-@var{column}}, @option{-a -@var{column}} or @option{-m}) column
+(@option{--columns}, @option{-a --columns} or @option{-m}) column
 alignment is always used.  The separator options @option{-S} or @option{-s}
 don't disable the @option{-W} option.  Default is 72 characters.  Without
 @option{-W @var{page_width}} and without any of the column options NO line
