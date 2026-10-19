@@ -24,13 +24,12 @@ test -f /proc/self/comm || skip_ '/proc/self/comm is required'
 # Set up variables to execute 'cat' from its absolute path and,
 # if available, through the single binary.
 abs_cat=$(cmd_exe cat) || framework_failure_
-single_binary=$(cmd_exe coreutils) &&
-  single_binary_cat="$single_binary --coreutils-prog=cat"
+single_binary=$(cmd_exe coreutils)
 
-if test -n "$single_binary_cat" && ! $single_binary_cat /dev/null 2>err; then
+if test -n "$single_binary" &&
+    ! "$single_binary" --coreutils-prog=cat /dev/null 2>err; then
   grep "^coreutils: unknown program 'cat'$" err || framework_failure_
   single_binary=
-  single_binary_cat=
 fi
 
 mkdir dir || framework_failure_
@@ -39,7 +38,7 @@ mkdir dir || framework_failure_
 # up a symlink in the test directory to ensure this gets tested.
 if test -n "$single_binary" && ! test -L "$abs_cat"; then
   ln -s "$single_binary" dir/cat || framework_failure_
-  symlink_cat='env PATH='"$(pwd)/dir:$PATH"' cat'
+  symlink_cat=dir/cat
   # If we are using --enable-single-binary=shebangs, create a
   # binary to pretend we are using --program-prefix=g.
   if test $(wc -l < "$abs_cat") = 1; then
@@ -50,11 +49,17 @@ fi
 
 echo 'cat' >cat-exp || framework_failure_
 echo 'gcat' >gcat-exp || framework_failure_
-for prog in cat "$abs_cat" "$single_binary_cat" "$symlink_cat" "$gcat"; do
+for prog in cat "$abs_cat" "$single_binary" "$symlink_cat" "$gcat"; do
   test -z "$prog" && continue
   exp=cat-exp
   test "$prog" = "$gcat" && exp=gcat-exp
-  $prog /proc/self/comm >out 2>err || fail=1
+  single_binary_opt=
+  test "$prog" = "$single_binary" && single_binary_opt=--coreutils-prog=cat
+  if test "$prog" = "$symlink_cat"; then
+    env PATH="$(pwd)/dir:$PATH" cat /proc/self/comm >out 2>err || fail=1
+  else
+    "$prog" $single_binary_opt /proc/self/comm >out 2>err || fail=1
+  fi
   compare $exp out || fail=1
   compare /dev/null err || fail=1
 done
