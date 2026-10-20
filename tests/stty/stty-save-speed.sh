@@ -44,6 +44,26 @@ state=$(stty -g) || framework_failure_
 test "$(echo "$state" | tr -cd : | wc -c)" = "$fields" || fail=1
 stty "$state" || fail=1
 
+# Restore standard speeds after changing them, including in one invocation.
+for prefix in '' 19200; do
+  stty 19200 || fail=1
+  stty $prefix "$state9600" || fail=1
+  stty speed > out || fail=1
+  echo 9600 > exp || framework_failure_
+  compare exp out || fail=1
+done
+
+# Restore distinct standard input and output speeds where supported.
+if stty ospeed 9600 ispeed 19200 2>/dev/null; then
+  state=$(stty -g) || framework_failure_
+  stty speed > exp || fail=1
+  stty 9600 || fail=1
+  stty "$state" || fail=1
+  stty speed > out || fail=1
+  compare exp out || fail=1
+fi
+stty 19200 || fail=1
+
 # On BSD, verify standard rates are restored after a speed change too.
 # Retain an old-format string to test backward compatibility below.
 legacy=$state9600
@@ -74,6 +94,15 @@ for speeds in '51 51' '51 9600' '9600 51'; do
   stty "$state" || fail=1
   stty speed > out || fail=1
   compare exp out || fail=1
+
+  # Restore a standard-speed state directly after an arbitrary speed.
+  stty "$state9600" || fail=1
+  stty speed > out || fail=1
+  echo 9600 > exp-standard || framework_failure_
+  compare exp-standard out || fail=1
+  stty "$state" "$state9600" || fail=1
+  stty speed > out || fail=1
+  compare exp-standard out || fail=1
 
   # The last specified speed takes precedence
   stty 19200 "$state" || fail=1

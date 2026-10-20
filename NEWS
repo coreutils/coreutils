@@ -38,6 +38,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   GNU/Hurd with glibc-2.42 or newer.
   [bug introduced with arbitrary baud rate support in coreutils-9.8]
 
+  'stty' consistently supports restoring the last specified speed.
+  Previously on GNU/Linux and GNU/Hurd with glibc-2.42 or newer,
+  and restoring a saved speed after a specified but different speed,
+  it would have failed if the control flag encoding was different.
+  [This bug was present in "the beginning".]
+
   'unexpand' no longer overflows a heap buffer on non-GLIBC platforms,
   given whitespace characters whose display width is negative.  E.g.,
   this edge case can occur with \u0085 (next line) characters on musl.

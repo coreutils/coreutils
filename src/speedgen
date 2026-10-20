@@ -100,5 +100,37 @@ cat >> "$out" <<'EOF'
 # endif
 }
 
+#if defined CBAUD && defined TERMIOS_SPEED_T_SANE
+/* Decode baud bits without assuming their platform-specific encoding.  */
+static struct speed_desc
+cbaud_to_speed (tcflag_t cbaud)
+{
+  static speed_t const speeds[] =
+    {
+EOF
+
+while read n; do
+  printf '# ifdef B%s\n      B%s,\n# endif\n' "$n" "$n"
+done < "$tmp" >> "$out"
+
+cat >> "$out" <<'EOF'
+    };
+
+# ifdef BOTHER
+  if (cbaud == BOTHER)
+    return (struct speed_desc) { .valid = false };
+# endif
+
+  for (idx_t i = 0; i < countof (speeds); i++)
+    {
+      struct termios mode = { 0 };
+      if (cfsetospeed (&mode, speeds[i]) == 0
+          && (mode.c_cflag & CBAUD) == cbaud)
+        return (struct speed_desc) { .baud = speeds[i], .valid = true };
+    }
+  return (struct speed_desc) { .valid = false };
+}
+#endif
+
 #endif
 EOF
