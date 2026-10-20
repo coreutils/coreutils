@@ -21,12 +21,7 @@ print_ver_ stdbuf
 
 # stdbuf fails when the absolute top build dir name contains e.g.,
 # space, TAB, NL
-lf='
-'
-case $abs_top_builddir in
-  *[\\\"\#\$\&\'\`$lf\ \	]*)
-    skip_ "unsafe absolute build directory name: $abs_top_builddir";;
-esac
+require_safe_builddir_
 
 stdbuf -oL true || skip_ 'stdbuf not supported'
 

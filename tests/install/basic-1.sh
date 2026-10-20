@@ -54,17 +54,15 @@ dd2=dd2$EXEEXT
 
 just_built_dd=$abs_top_builddir/src/$dd
 
-test -r "$just_built_dd" \
-  || warn_ "WARNING!!! Your just-built dd binary, $just_built_dd
-is not readable, so skipping the remaining tests in this file."
+test -r "$just_built_dd" || skip_ "Missing $just_built_dd binary"
 
-cp "$just_built_dd" . || fail=1
-cp $dd $dd2 || fail=1
+cp "$just_built_dd" . &&
+cp $dd $dd2 || framework_failure_
 
 strip=-s
 if ! strip $dd2; then
-  ! test -e $abs_top_builddir/src/coreutils \
-    && warn_ "WARNING!!! Your strip command doesn't seem to work,
+  ! single_binary_build_ \
+    && warn_ "Warning: Your strip command doesn't seem to work,
 so skipping the test of install's --strip option."
   strip=
 fi

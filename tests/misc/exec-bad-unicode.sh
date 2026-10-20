@@ -27,9 +27,10 @@ printf '#!%s\n' "$(cmd_exe echo)" >"$script" ||
   skip_ 'bad unicode not supported in shell or file system'
 chmod u+x "$script" || framework_failure_
 
-# Check that it can be executed, which is not the case if there are
-# spaces in $abs_top_builddir.  Such spaces also preclude stdbuf's
-# LD_PRELOAD from operating correctly.
+# Check that it can be executed, which is also not the case if
+# spaces in the path.  Such spaces also preclude stdbuf's
+# LD_PRELOAD from operating correctly.  This is a more direct
+# check than using require_safe_builddir_.
 ./"$script" "$script" >exp \
   || skip_ 'cannot execute a file name with invalid unicode'
 

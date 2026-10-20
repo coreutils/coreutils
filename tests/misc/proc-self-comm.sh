@@ -24,13 +24,10 @@ test -f /proc/self/comm || skip_ '/proc/self/comm is required'
 # Set up variables to execute 'cat' from its absolute path and,
 # if available, through the single binary.
 abs_cat=$(cmd_exe cat) || framework_failure_
-single_binary="$abs_top_builddir/src/coreutils$EXEEXT"
+single_binary=$(cmd_exe coreutils)
 
-if ! test -x "$single_binary"; then
-  single_binary=
-elif test -n "$single_binary" &&
-    ! "$single_binary" --coreutils-prog=cat /dev/null 2>err; then
-  grep "^coreutils: unknown program 'cat'$" err || framework_failure_
+if test -n "$single_binary" && ! single_binary_build_; then
+  warn_ "Warning: ignoring single binary dispatcher: $single_binary"
   single_binary=
 fi
 

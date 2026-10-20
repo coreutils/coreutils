@@ -23,12 +23,7 @@ getlimits_
 
 # stdbuf fails when the absolute top build dir name contains e.g.,
 # space, TAB, NL
-lf='
-'
-case $abs_top_builddir in
-  *[\\\"\#\$\&\'\`$lf\ \	]*)
-    skip_ "unsafe absolute build directory name: $abs_top_builddir";;
-esac
+require_safe_builddir_
 
 # Use a fifo rather than a pipe in the tests below
 # so that the producer (uniq) will wait until the
