@@ -2156,35 +2156,45 @@ display_recoverable (struct termios *mode)
           (unsigned long int) mode->c_lflag);
   for (size_t i = 0; i < NCCS; ++i)
     printf (":%lx", (unsigned long int) mode->c_cc[i]);
+
+  /* Without CBAUD, speeds are stored separately from c_cflag (e.g.,
+     on BSD).  Otherwise preserve the old format unless BOTHER is used.  */
+  bool separate_speeds = true;
+#ifdef CBAUD
+  separate_speeds = false;
+# ifdef BOTHER
+  separate_speeds = (mode->c_cflag & CBAUD) == BOTHER;
+#  if defined CIBAUD && defined IBSHIFT
+  separate_speeds |= ((mode->c_cflag & CIBAUD) >> IBSHIFT) == BOTHER;
+#  endif
+# endif
+#endif
+  if (separate_speeds)
+    printf (":%lx:%lx", (unsigned long int) cfgetispeed (mode),
+            (unsigned long int) cfgetospeed (mode));
+
   putchar ('\n');
 }
 
-/* NOTE: identical to below, modulo use of tcflag_t */
-static int
-strtoul_tcflag_t (char const *s, int base, char **p, tcflag_t *result,
-                  char delim)
-{
-  unsigned long ul;
-  errno = 0;
-  ul = strtoul (s, p, base);
-  if (errno || **p != delim || *p == s || (tcflag_t) ul != ul)
-    return -1;
-  *result = ul;
-  return 0;
-}
+/* Define a strtoul wrapper that checks the delimiter and result range.  */
+#define STRTOUL_TYPE(TYPE)                                               \
+  static int                                                             \
+  strtoul_##TYPE (char const *s, int base, char **p, TYPE *result,       \
+                  char delim)                                            \
+  {                                                                      \
+    unsigned long ul;                                                    \
+    errno = 0;                                                           \
+    ul = strtoul (s, p, base);                                           \
+    if (errno || **p != delim || *p == s || (TYPE) ul != ul)             \
+      return -1;                                                         \
+    *result = ul;                                                        \
+    return 0;                                                            \
+  }
 
-/* NOTE: identical to above, modulo use of cc_t */
-static int
-strtoul_cc_t (char const *s, int base, char **p, cc_t *result, char delim)
-{
-  unsigned long ul;
-  errno = 0;
-  ul = strtoul (s, p, base);
-  if (errno || **p != delim || *p == s || (cc_t) ul != ul)
-    return -1;
-  *result = ul;
-  return 0;
-}
+STRTOUL_TYPE (tcflag_t)
+STRTOUL_TYPE (cc_t)
+STRTOUL_TYPE (speed_t)
+#undef STRTOUL_TYPE
 
 /* Parse the output of display_recoverable.
    Return false if any part of it is invalid.  */
@@ -2208,12 +2218,33 @@ recover_mode (char const *arg, struct termios *mode)
   for (size_t i = 0; i < NCCS; ++i)
     {
       char *p;
-      char delim = i < NCCS - 1 ? ':' : '\0';
+      char delim = i < NCCS - 1 || strchr (s, ':') ? ':' : '\0';
       if (strtoul_cc_t (s, 16, &p, mode->c_cc + i, delim) != 0)
         return false;
+      /* Accept the old format, which has no separate speed fields.  */
+      if (! *p)
+        return true;
       s = p + 1;
     }
 
+  speed_t speed[2];
+  for (size_t i = 0; i < 2; i++)
+    {
+      char *p;
+      char delim = i == 0 ? ':' : '\0';
+      if (strtoul_speed_t (s, 16, &p, speed + i, delim) != 0)
+        return false;
+      s = p + (i == 0);
+    }
+
+  /* Set output first, since an input speed of zero can mean to use
+     the output speed.  */
+  if (cfsetospeed (mode, speed[1]) != 0
+      || cfsetispeed (mode, speed[0]) != 0)
+    return false;
+
+  last_ibaud.baud = speed[0] == 0 ? cfgetispeed (mode) : speed[0];
+  last_obaud.baud = speed[1];
   return true;
 }
 

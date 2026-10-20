@@ -87,6 +87,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   whole width of a previous character, unless the --characters option is used.
   This aligns with POSIX and terminal behavior.
 
+  'stty -g' now saves input and output speeds explicitly on systems
+  that store them separately from the control flags, such as BSD,
+  or on GNU/Linux with non-standard speeds.
+
 ** Improvements
 
   'basenc --base58' encoding speed is 20x faster when built without libgmp.

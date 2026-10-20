@@ -504,6 +504,7 @@ all_tests =					\
   tests/stty/stty-invalid.sh			\
   tests/stty/stty-pairs.sh			\
   tests/stty/stty-row-col.sh			\
+  tests/stty/stty-save-speed.sh			\
   tests/cksum/sum.pl				\
   tests/cksum/sum-sysv.sh			\
   tests/misc/sync.sh				\
