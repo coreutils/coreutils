@@ -1635,7 +1635,9 @@ mp_factor (mpz_t t)
 }
 
 /* Convert to *U the value represented by S, and return LONGINT_OK.
-   However, on error simply return a value other than LONGINT_OK.  */
+   Return LONGINT_OVERFLOW if S is composed of all digits but is too
+   large to fit in *U, otherwise LONGINT_INVALID if S is not a valid
+   positive integer.  */
 static strtol_error
 strtouuint (uuint *u, char const *s)
 {
@@ -1647,7 +1649,7 @@ strtouuint (uuint *u, char const *s)
   for (; LIKELY (0 <= *s - '0' && *s - '0' <= 9); s++)
     {
       if (UNLIKELY (ckd_mul (&hi, hi, 10)))
-        return LONGINT_OVERFLOW;
+        goto overflow;
 
       int lo_carry = (lo >> (W_TYPE_SIZE - 3)) + (lo >> (W_TYPE_SIZE - 1));
       lo_carry += 10 * lo < 2 * lo;
@@ -1655,7 +1657,7 @@ strtouuint (uuint *u, char const *s)
       lo = 10 * lo;
       lo_carry += ckd_add (&lo, lo, *s - '0');
       if (UNLIKELY (ckd_add (&hi, hi, lo_carry)))
-        return LONGINT_OVERFLOW;
+        goto overflow;
     }
 
   if (UNLIKELY (*s))
@@ -1663,6 +1665,11 @@ strtouuint (uuint *u, char const *s)
 
   *u = make_uuint (hi, lo);
   return LONGINT_OK;
+
+ overflow:
+  /* Since s[0] caused the overflow, we know it is a valid integer.  */
+  s++;
+  return s[strspn (s, "0123456789")] ? LONGINT_INVALID : LONGINT_OVERFLOW;
 }
 
 /* FACTOR_PIPE_BUF is chosen to give good performance,
@@ -1892,6 +1899,7 @@ print_factors (char const *input)
      way.  */
   uuint u;
   strtol_error err = strtouuint (&u, str);
+  mpz_t t;
 
   switch (err)
     {
@@ -1905,7 +1913,9 @@ print_factors (char const *input)
       FALLTHROUGH;
     case LONGINT_OVERFLOW:
       /* Try GMP.  */
-      break;
+      if (0 <= mpz_init_set_str (t, str, 10))
+        break;
+      FALLTHROUGH;
 
     case LONGINT_INVALID:
     case LONGINT_INVALID_SUFFIX_CHAR:
@@ -1916,8 +1926,6 @@ print_factors (char const *input)
     }
 
   devmsg ("[using arbitrary-precision arithmetic] ");
-  mpz_t t;
-  mpz_init_set_str (t, str, 10);
   if (MP_FACTOR_USING_POLLARD_RHO_N_MAX < mp_size (t))
     xalloc_die ();
 
