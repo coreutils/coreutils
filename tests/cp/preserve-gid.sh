@@ -110,13 +110,19 @@ cleanup_() { rm -rf "$tmp_path"; }
 # is not readable by our nameless IDs.
 test -d /tmp && TMPDIR=/tmp
 tmp_path=$(mktemp -d) || fail_ "failed to create temporary directory"
-if test -x "$abs_path_dir_/coreutils" &&
-   { test -L "$abs_path_dir_/cp" ||
-     test $(wc -l < "$abs_path_dir_/cp") = 1; } then
+single_binary=$(cmd_exe coreutils)
+if test -n "$single_binary" && ! single_binary_build_; then
+  warn_ "Warning: ignoring single binary dispatcher: $single_binary"
+  single_binary=
+fi
+abs_cp=$(cmd_exe cp)
+if test -n "$single_binary" &&
+   { test -L "$abs_cp" ||
+     test $(wc -l < "$abs_cp") = 1; } then
   # if configured with --enable-single-binary we need to use the single binary
-  cp "$abs_path_dir_/coreutils" "$tmp_path/cp" || framework_failure_
+  cp "$single_binary" "$tmp_path/cp" || framework_failure_
 else
-  cp "$abs_path_dir_/cp" "$tmp_path"
+  cp "$abs_cp" "$tmp_path"
 fi
 chmod -R a+rx "$tmp_path"
 
