@@ -115,6 +115,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   'wc -m' counts ASCII up to 14x faster, and UTF-8 up to 7x faster.
 
+  Commands that support hardware acceleration like 'cksum' and 'wc',
+  have stricter validation of the $GLIBC_TUNABLES environment variable
+  that is now more aligned with GLIBC's handling.
+
 ** Build-related
 
   gzip-compressed tarballs are no longer distributed,
