@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  'basenc --base32hex' no longer decodes BASE32 only characters "WXYZ".
+  [bug introduced with the basenc program in coreutils-8.31]
+
   'chroot --userspec=USER' now uses the primary group of USER as looked up
   inside the chroot.  Previously the group looked up outside the chroot
   was used, even when the look-up inside the chroot succeeded.

@@ -645,6 +645,8 @@ base32hex_decode_ctx_wrapper (struct base_decode_context *ctx,
     {
       if (isubase32hex (*in))
         *p = base32_hex_to_norm[*in - 0x30];
+      else if (isubase32 (*in))
+        *p = '0'; /* Ensure base32 rejects non hex variant.  */
       else
         *p = *in;
       ++p;
