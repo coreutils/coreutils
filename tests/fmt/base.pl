@@ -58,6 +58,21 @@ my @Tests =
      ['pfx-of-pfx', qw (-p 'foo'),
       {IN=>  "fo\n"},
       {OUT=> "fo\n"}],
+
+     # With --prefix=P, a last line lacking the prefix is copied as is,
+     # without adding a missing newline.
+     ['pfx-no-nl-1', "-p '#'", {IN=> "x"}, {OUT=> "x"}],
+     ['pfx-no-nl-2', "-p '#'", {IN=> "  x"}, {OUT=> "  x"}],
+     ['pfx-no-nl-3', "-p '#'", {IN=> "a\nmixed"}, {OUT=> "a\nmixed"}],
+     ['pfx-no-nl-4', "-s -p '#'", {IN=> "a\nmixed"}, {OUT=> "a\nmixed"}],
+     # A last line with the prefix is reformatted and gets a newline.
+     ['pfx-no-nl-5', "-p '#'", {IN=> "# hi"}, {OUT=> "# hi\n"}],
+     ['pfx-no-nl-6', "-p '#'", {IN=> "x\n# hi"}, {OUT=> "x\n# hi\n"}],
+     ['pfx-no-nl-7', "-p '#'", {IN=> "x\n#"}, {OUT=> "x\n#\n"}],
+     # So with several files, that line runs into the next file.
+     ['pfx-no-nl-8', "-p '#'",
+      {IN=> {f1=> "a\nmixed"}}, {IN=> {f2=> "hello\n"}},
+      {OUT=> "a\nmixedhello\n"}],
 );
 
 my $save_temps = $ENV{DEBUG};
