@@ -1766,6 +1766,15 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
       ev = void_ev;
       evbuf_off += sizeof (*ev) + ev->len;
 
+      /* If the kernel discarded events for any of the watched files
+         or directories, so we can no longer depend on our view of them.
+         Revert to polling now.  */
+      if (ev->mask & IN_Q_OVERFLOW)
+        {
+          error (0, 0, _("inotify event queue overflowed"));
+          return;
+        }
+
       /* If a directory is deleted, IN_DELETE_SELF is emitted
          with ev->name of length 0.
          We need to catch it, otherwise it would wait forever,

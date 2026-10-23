@@ -52,6 +52,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   it would have failed if the control flag encoding was different.
   [This bug was present in "the beginning".]
 
+  'tail --follow' no longer ignores an overflow of the inotify event queue,
+  and now reverts to polling in that case.  Previously tail could fail
+  to notice new data, or that a file followed by name was replaced,
+  if events arrived faster than tail could process them.
+  [bug introduced in coreutils-7.5]
+
   'unexpand' no longer overflows a heap buffer on non-GLIBC platforms,
   given whitespace characters whose display width is negative.  E.g.,
   this edge case can occur with \u0085 (next line) characters on musl.
