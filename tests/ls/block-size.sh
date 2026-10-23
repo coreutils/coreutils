@@ -206,4 +206,31 @@ for loc in sv_SE.UTF-8 $LOCALE_FR_UTF8; do
          done | uniq | wc -l) = 1 || fail=1
 done
 
+# A block that is only partly used still occupies a whole block,
+# so scaling an allocation to the block size rounds up.  The total
+# scales the sum of the allocations once, rather than adding up the
+# rounded per-file figures.
+cd .. || framework_failure_
+mkdir round || framework_failure_
+for f in a b c; do
+  echo x > round/$f || framework_failure_
+done
+total=0
+suitable=1
+for f in a b c; do
+  bytes=$(stat -c '%b * %B' round/$f) || framework_failure_
+  bytes=$(($bytes))
+  # An allocation that is a whole number of blocks, or none at all,
+  # cannot tell rounding up from rounding down.
+  test $bytes -ne 0 && test $(($bytes % 1000)) -ne 0 || suitable=0
+  total=$(($total + $bytes))
+  printf '%d %s\n' $((($bytes + 999) / 1000)) $f >> exp-round
+done
+if test $suitable = 1; then
+  { printf 'total %d\n' $((($total + 999) / 1000)) && cat exp-round; } \
+    > exp || framework_failure_
+  ls -s --block-size=1000 round > out || fail=1
+  compare exp out || fail=1
+fi
+
 Exit $fail
