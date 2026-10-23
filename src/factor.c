@@ -1122,7 +1122,7 @@ mulredc2 (mp_limb_t *r1p,
   q = mi * t0;
   umul_ppmm (p1, p0, q, m0);
   umul_ppmm (s1, s0, q, m1);
-  r0 += (t0 != 0); /* Carry */
+  p1 += (t0 != 0); /* Carry */
   add_ssaaaa (r1, r0, r1, r0, 0, p1);
   add_ssaaaa (r1, r0, r1, r0, 0, t1);
   add_ssaaaa (r1, r0, r1, r0, s1, s0);
@@ -1149,7 +1149,7 @@ mulredc2 (mp_limb_t *r1p,
   add_ssaaaa (r1, r0, s1, s0, 0, r1);
   umul_ppmm (p1, p0, q, m0);
   umul_ppmm (s1, s0, q, m1);
-  r0 += (t0 != 0); /* Carry */
+  p1 += (t0 != 0); /* Carry */
   add_ssaaaa (r1, r0, r1, r0, 0, p1);
   add_ssaaaa (r1, r0, r1, r0, 0, t1);
   add_ssaaaa (r1, r0, r1, r0, s1, s0);

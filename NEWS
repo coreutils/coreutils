@@ -21,6 +21,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   non-space characters, or the number itself when followed by spaces.
   [bugs introduced in coreutils-9.8]
 
+  'factor' no longer infinite loops with certain large numbers, e.g.,
+  146077762747232966952776282887314548659.
+  [bugs introduced in coreutils-8.20]
+
   'fold' no longer prematurely wraps lines with a wide character towards
   the start of a line, followed by multiple backspaces.  Also backspaces
   after a tab character are accounted for correctly.

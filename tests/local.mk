@@ -376,6 +376,7 @@ all_tests =					\
   tests/expr/expr-multibyte.pl			\
   tests/factor/factor.pl			\
   tests/factor/factor-parallel.sh		\
+  tests/factor/mulredc2-infloop.sh		\
   tests/misc/false-status.sh			\
   tests/fold/fold-characters.sh			\
   tests/fold/fold-nbsp.sh			\
