@@ -1623,9 +1623,10 @@ main (int argc, char **argv)
 #endif
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
       case 'l':
-        digest_length = xnumtoimax (optarg, 10, 0, IDX_MAX, "",
+        /* Suppress range errors, but clamp to values that error later.  */
+        digest_length = xnumtoimax (optarg, 10, -1, IDX_MAX, "",
                                     _("invalid length"), 0,
-                                    XTOINT_MAX_QUIET);
+                                    XTOINT_MIN_QUIET | XTOINT_MAX_QUIET);
         digest_length_str = optarg;
         break;
 #endif
