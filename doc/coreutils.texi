@@ -8611,9 +8611,10 @@ eval "$(dircolors [@var{option}]@dots{} [@var{file}])"
 @end example
 
 If @var{file} is specified, @command{dircolors} reads it to determine which
-colors to use for which file types and extensions.  Otherwise, a
-precompiled database is used.  For details on the format of these files,
-run @samp{dircolors --print-database}.
+colors to use for which file types and extensions.  If @var{file} is
+@samp{-}, @command{dircolors} from standard input.  If @var{file} is
+not specified, a precompiled database is used.  For details on the format
+of these files, run @samp{dircolors --print-database}.
 
 To make @command{dircolors} read a @file{~/.dircolors} file if it
 exists, you can put the following lines in your @file{~/.bashrc} (or

@@ -102,6 +102,12 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... [FILE]\n"), program_name);
       fputs (_("\
 Output commands to set the LS_COLORS environment variable.\n\
+"), stdout);
+      fputs (_("\
+\n\
+When FILE is -, read standard input.\n\
+"), stdout);
+      fputs (_("\
 \n\
 Determine format of output:\n\
 "), stdout);
