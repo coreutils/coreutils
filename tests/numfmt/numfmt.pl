@@ -424,6 +424,32 @@ my @Tests =
      # but if there is whitespace, assume auto-padding is desired.
      ['whitespace-6', '--to=si " 6000000"', {OUT=>"    6.0M"}],
 
+     # The first blank after a field is written as a space,
+     # any further blanks are kept as they are.
+     ['blank-sep-1', '', {IN_PIPE=>"1\t2\n"}, {OUT=>"1 2"}],
+     ['blank-sep-2', '', {IN_PIPE=>"1\t2\t3\n"}, {OUT=>"1 2 3"}],
+     ['blank-sep-3', '', {IN_PIPE=>"1\t\t2\n"}, {OUT=>"1 \t2"}],
+     ['blank-sep-4', '', {IN_PIPE=>"1 \t2\n"}, {OUT=>"1 \t2"}],
+     ['blank-sep-5', '', {IN_PIPE=>"1\t2\t\n"}, {OUT=>"1 2 "}],
+     ['blank-sep-6', '--to=si', {IN_PIPE=>"1000\t2\n"}, {OUT=>"1.0k 2"}],
+     ['blank-sep-7', '--field=2 --to=si', {IN_PIPE=>"1000\t2000\n"},
+             {OUT=>"1000 2.0k"}],
+     ['blank-sep-8', '--field=- --to=si', {IN_PIPE=>"1000\t2000\n"},
+             {OUT=>"1.0k 2.0k"}],
+     # Blanks before the first field are kept.
+     ['blank-sep-9', '', {IN_PIPE=>"  1\t 2000\n"}, {OUT=>"  1  2000"}],
+     ['blank-sep-10', '--field=2', {IN_PIPE=>"\t1\t2\n"}, {OUT=>"\t1 2"}],
+     # An invalid line is echoed with the same blanks.
+     ['blank-sep-11', '--invalid=ignore', {IN_PIPE=>"a\tb\n"}, {OUT=>"a b"}],
+     ['blank-sep-12', '--invalid=ignore', {IN_PIPE=>"a\t\tb\n"},
+             {OUT=>"a \tb"}],
+     ['blank-sep-13', '--invalid=warn', {IN_PIPE=>"a\tb\n"}, {OUT=>"a b"},
+             {ERR=>"$prog: invalid number: 'a'\n"}],
+     # An explicit delimiter leaves the input alone.
+     ['blank-sep-14', "-d '\t'", {IN_PIPE=>"1\t2\n"}, {OUT=>"1\t2"}],
+     ['blank-sep-15', "-d '\t' --invalid=ignore", {IN_PIPE=>"a\t\tb\n"},
+             {OUT=>"a\t\tb"}],
+
      # auto-padding - lines have same padding-width
      #  (padding_buffer will be alloc'd just once)
      ['whitespace-7', '--to=si --field 2',
