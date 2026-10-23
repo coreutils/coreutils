@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ chmod
+getlimits_
 
 touch file || framework_failure_
 returns_ 1 chmod 0 missing_file file || fail=1
@@ -26,6 +27,29 @@ touch unreadable || framework_failure_
 chmod 0 unreadable || framework_failure_
 if ! test -r unreadable; then
   test -r file && fail=1
+fi
+
+# Ensure a name that is too long is diagnosed, and later operands
+# are still processed, also with -R.
+# We apply a limit since AIX returns 2^32-1 which would trigger resource issues.
+name_max=$(stat -f -c %l .) && test "$name_max" -lt $((1024*1024)) ||
+  name_max=
+if test -n "$name_max"; then
+  long_name=$(printf '%*s' $(($name_max + 1)) | tr ' ' '0')
+  cat <<EOF > exp || framework_failure_
+chmod: cannot access '$long_name': $ENAMETOOLONG
+EOF
+  for opt in '' -R; do
+    chmod 600 file || framework_failure_
+    returns_ 1 chmod $opt 700 "$long_name" file 2> err || fail=1
+    compare exp err || fail=1
+    test "$(stat -c %a file)" = 700 || fail=1
+  done
+  cat <<EOF > exp || framework_failure_
+chmod: failed to get attributes of '$long_name': $ENAMETOOLONG
+EOF
+  returns_ 1 chmod --reference="$long_name" file 2> err || fail=1
+  compare exp err || fail=1
 fi
 
 Exit $fail
