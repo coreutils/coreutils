@@ -33,7 +33,7 @@ check_tail_output()
 grep_timeout() { tail_re="$1" retry_delay_ check_tail_output .1 8; }
 
 # Terminate any background tail process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 cleanup_fail()
 {

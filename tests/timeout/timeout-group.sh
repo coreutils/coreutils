@@ -84,7 +84,7 @@ check_timeout_cmd_exiting()
 }
 
 # Terminate any background processes
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 # Start above script in its own group.
 # We could use timeout for this, but that assumes an implementation.

@@ -29,7 +29,7 @@ touch here || framework_failure_
 { touch unreadable && chmod a-r unreadable; } || framework_failure_
 
 # Terminate any background tail process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 # speedup non inotify case
 fastpoll='-s.1 --max-unchanged-stats=1'

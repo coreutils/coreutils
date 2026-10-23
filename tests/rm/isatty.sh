@@ -26,7 +26,7 @@ ls /dev/stdin >/dev/null 2>&1 \
   || skip_ 'there is no /dev/stdin file'
 
 # Terminate any background processes
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 touch f
 chmod 0 f

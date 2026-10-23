@@ -28,7 +28,7 @@ check_tail_output()
     { sleep $delay; return 1; }
 }
 
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 cleanup_fail()
 {

@@ -20,7 +20,7 @@
 print_ver_ tail
 
 # Terminate any background tail process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 cleanup_fail_ ()
 {

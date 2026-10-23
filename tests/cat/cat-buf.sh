@@ -27,7 +27,7 @@ print_ver_ cat
 mkfifo_or_skip_ fifo
 
 # Terminate any background cp process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 echo 1 > exp
 

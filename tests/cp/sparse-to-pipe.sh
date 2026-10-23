@@ -22,7 +22,7 @@ print_ver_ cp
 require_sparse_support_
 
 # Terminate any background cp process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 mkfifo_or_skip_ pipe
 timeout 10 cat pipe > copy & pid=$!

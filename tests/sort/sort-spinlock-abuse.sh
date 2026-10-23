@@ -30,7 +30,7 @@ grep '^#define HAVE_PTHREAD_T 1' "$CONFIG_HEADER" > /dev/null ||
   skip_ 'requires pthreads'
 
 # Terminate any background processes
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 seq 100000 > in || framework_failure_
 mkfifo_or_skip_ fifo

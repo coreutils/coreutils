@@ -72,7 +72,7 @@ for i in $(seq 99); do
 done
 
 # Terminate any background cp process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 # Prohibit suspension, which could otherwise cause a timeout-induced FP failure.
 trap '' TSTP

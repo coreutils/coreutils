@@ -100,7 +100,7 @@ mkfifo_or_skip_ fifo
 
 # Ensure tee handles nonblocking output correctly
 # Terminate any background processes
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 read_fifo_delayed() {
   { sleep .1; timeout 10 dd of=/dev/null status=none; } <fifo
 }

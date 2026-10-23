@@ -51,7 +51,7 @@ returns_ 126 env . && { returns_ 126 stdbuf -o1 . || fail=1; } # invalid command
 returns_ 127 stdbuf -o1 no_such || fail=1 # no such command
 
 # Terminate any background processes
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 # Ensure line buffering stdout takes effect
 stdbuf_linebuffer()

@@ -21,7 +21,7 @@
 print_ver_ tail
 
 # Terminate any background tail process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 # Speedup the non inotify case
 fastpoll='-s.1 --max-unchanged-stats=1'

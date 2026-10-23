@@ -20,7 +20,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 
 # Terminate any background processes
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 expected_failure_status_chroot=125
 expected_failure_status_env=125

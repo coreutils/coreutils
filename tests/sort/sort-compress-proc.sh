@@ -21,7 +21,7 @@ print_ver_ sort
 expensive_
 
 # Terminate any background processes
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 SORT_FAILURE=2
 

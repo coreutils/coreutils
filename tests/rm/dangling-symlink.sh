@@ -26,7 +26,7 @@ ln -s no-file dangle
 ln -s / symlink
 
 # Terminate any background processes
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 rm ---presume-input-tty dangle symlink & pid=$!
 # The buggy rm (fileutils-4.1.9) would hang here, waiting for input.
@@ -41,6 +41,5 @@ check_files_removed() {
 }
 retry_delay_ check_files_removed .1 6 || fail=1
 
-cleanup_
 
 Exit $fail

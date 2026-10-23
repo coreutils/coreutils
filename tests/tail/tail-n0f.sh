@@ -36,7 +36,7 @@ tail -c0 unreadable || fail=1
 tail -n0 unreadable || fail=1
 
 # Terminate any background tail process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 for mode in '' '---disable-inotify'; do
   for file in empty nonempty; do

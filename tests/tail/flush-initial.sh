@@ -23,7 +23,7 @@ print_ver_ tail
 fastpoll='-s.1 --max-unchanged-stats=1'
 
 # Terminate any background tail process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 echo line > in || framework_failure_
 # Output should be buffered since we're writing to file
@@ -39,6 +39,5 @@ tail_flush()
 }
 retry_delay_ tail_flush .1 5 || fail=1
 
-cleanup_
 
 Exit $fail

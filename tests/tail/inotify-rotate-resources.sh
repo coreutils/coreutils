@@ -48,7 +48,7 @@ cleanup_fail()
 }
 
 # Terminate any background tail process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill $pid 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 fastpoll='-s.1 --max-unchanged-stats=1'
 
@@ -99,6 +99,5 @@ for i in $(seq 2); do
     >out && >strace.out || framework_failure_ 'failed to reset output files'
 done
 
-cleanup_
 
 Exit $fail

@@ -32,7 +32,7 @@ compare exp err || fail=1
 # Between coreutils 8.34 and 9.5 inclusive, with inotify, tail would
 # have waited indefinitely when a file was moved to the same file system.
 # Also without inotify tail would have exited with success.
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 fastpoll='-s.1 --max-unchanged-stats=1'  # speedup non inotify systems
 for inotify in '' '---disable-inotify'; do
   touch file || framework_failure_

@@ -28,7 +28,7 @@ chmod g+s d 2>/dev/null # The cp test is valid either way.
 
 # Terminate any background cp process.
 pid=
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 for attr in mode ownership
 do

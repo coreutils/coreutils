@@ -40,7 +40,7 @@ test -r "$tty" 2>&1 \
   || skip_ '/dev/stdin is not readable'
 
 # Terminate any background processes
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 mv f g < $tty > out 2>&1 & pid=$!
 

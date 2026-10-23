@@ -26,7 +26,7 @@ umask 022
 mkfifo_or_skip_ fifo
 
 # Terminate any background cp process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 # Copy a fifo's contents.  That way, we can examine the
 # destination permissions before they're finalized.

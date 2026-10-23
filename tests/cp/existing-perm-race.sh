@@ -40,7 +40,7 @@ chgrp $g2 fifo-copy &&
 chmod g+r fifo-copy || framework-failure
 
 # Terminate any background cp process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 # Copy a fifo's contents.  That way, we can examine the
 # destination permissions before they're finalized.

@@ -56,7 +56,7 @@ trap_sigpipe_or_skip_
 export MALLOC_PERTURB_=0
 
 # Terminate any background process
-cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 
 head -c 10 fifo > out & pid=$!
 
