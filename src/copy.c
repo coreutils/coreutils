@@ -2569,7 +2569,7 @@ skip:
               && ! chown_failure_ok (x))
             {
               error (0, errno, _("failed to preserve ownership for %s"),
-                     dst_name);
+                     quoteaf (dst_name));
               if (x->require_preserve)
                 goto un_backup;
             }

@@ -18,6 +18,8 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
+getlimits_
+uses_strace_
 
 ln -s no-such-file dangling-slink || framework_failure_
 
@@ -25,5 +27,20 @@ ln -s no-such-file dangling-slink || framework_failure_
 # Prior to coreutils-6.0, this would fail on non-Linux kernels,
 # with link being applied to the dangling symlink.
 cp --link --no-dereference dangling-slink d2 || fail=1
+
+NL='
+'
+chowns=chown,lchown,fchownat
+if strace --quiet=all -o /dev/null -P foo \
+          -e inject=$chowns:error=EPERM true 2>/dev/null; then
+  echo "cp: failed to preserve ownership for ''\$'\\n': $ENOSYS" >exp \
+    || framework_failure_
+  touch file && ln -s file slink || framework_failure_
+  returns_ 1 strace --quiet=all -o /dev/null -P "$NL" \
+    -e inject=$chowns:error=ENOSYS cp -P --preserve=ownership slink "$NL" \
+    >out 2>err || fail=1
+  compare exp err || fail=1
+  compare /dev/null out || fail=1
+fi
 
 Exit $fail
