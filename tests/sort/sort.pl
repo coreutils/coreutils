@@ -426,6 +426,17 @@ my @Tests =
 ['nonblank-sep-k1', '-k2', {IN=>"a\f\nb\n"}, {OUT=>"a\f\nb\n"}],
 ['nonblank-leading-n1', '-n', {IN=>"a\n\f1\n"}, {OUT=>"\f1\na\n"}],
 ['nonblank-leading-d1', '-d', {IN=>"\fb\na\n"}, {OUT=>"a\n\fb\n"}],
+
+# A key's own 'r' applies even when the key covers the whole line,
+# and a key with options of its own does not inherit the global -r.
+['key-own-r-1', '-k1r', {IN=>"a\nb\n"}, {OUT=>"b\na\n"}],
+['key-own-r-2', '-k1.1r', {IN=>"a\nb\n"}, {OUT=>"b\na\n"}],
+['key-own-r-3', '-f -k1fr', {IN=>"a\nb\n"}, {OUT=>"b\na\n"}],
+['key-own-r-4', '-c -k1r', {IN=>"a\nb\n"}, {EXIT=>1},
+ {ERR=>"$prog: -:2: disorder: b\n"}, $normalize_filename],
+['key-own-r-5', '-f -r -k1f', {IN=>"b\na\n"}, {OUT=>"a\nb\n"}],
+['key-own-r-6', '-r -n -k1n', {IN=>"10\n2\n"}, {OUT=>"2\n10\n"}],
+
 );
 
 # Add _POSIX2_VERSION=199209 to the environment of each test
