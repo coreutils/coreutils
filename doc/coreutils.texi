@@ -8621,8 +8621,7 @@ exists, you can put the following lines in your @file{~/.bashrc} (or
 adapt them to your favorite shell):
 
 @example
-d=.dircolors
-test -r $d && eval "$(dircolors $d)"
+test -r ~/.dircolors && eval "$(dircolors ~/.dircolors)"
 @end example
 
 @vindex LS_COLORS
