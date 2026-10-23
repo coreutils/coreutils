@@ -437,6 +437,13 @@ my @Tests =
 ['key-own-r-5', '-f -r -k1f', {IN=>"b\na\n"}, {OUT=>"a\nb\n"}],
 ['key-own-r-6', '-r -n -k1n', {IN=>"10\n2\n"}, {OUT=>"2\n10\n"}],
 
+# Only space and tab are skipped by -b and -M; a leading \f or \r
+# stays part of the key.
+['nonblank-leading-b1', '-k1b', {IN=>"a\n\fb\n"}, {OUT=>"\fb\na\n"}],
+['nonblank-leading-b2', '-k1b', {IN=>"a\n\rb\n"}, {OUT=>"\rb\na\n"}],
+['nonblank-leading-M1', '-M', {IN=>"\fFEB\nJAN\n"}, {OUT=>"\fFEB\nJAN\n"}],
+['nonblank-leading-M2', '-M', {IN=>"\rFEB\nJAN\n"}, {OUT=>"\rFEB\nJAN\n"}],
+['blank-leading-M1', '-M', {IN=>" \tFEB\nJAN\n"}, {OUT=>"JAN\n \tFEB\n"}],
 );
 
 # Add _POSIX2_VERSION=199209 to the environment of each test
