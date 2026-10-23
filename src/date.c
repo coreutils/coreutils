@@ -107,6 +107,12 @@ static struct option const long_options[] =
 /* flags for parse_datetime2 */
 static unsigned int parse_datetime_flags;
 
+#if LOCALTIME_CACHE
+# define TZSET tzset ()
+#else
+# define TZSET /* empty */
+#endif
+
 #ifdef _DATE_FMT
 # define DATE_FMT_LANGINFO() nl_langinfo (_DATE_FMT)
 #else
@@ -570,7 +576,7 @@ main (int argc, char **argv)
   char *reference = NULL;
   bool discarded_datestr = false;
   bool discarded_set_datestr = false;
-  char const *tzstring = NULL;
+  bool utc = false;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -647,13 +653,22 @@ main (int argc, char **argv)
           set_date = true;
           break;
         case 'u':
-          tzstring = "UTC0";
+          utc = true;
           break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
         default:
           usage (EXIT_FAILURE);
         }
+    }
+
+  if (utc)
+    {
+      /* POSIX says that 'date -u' is equivalent to setting the TZ
+         environment variable, so this option should do nothing other
+         than setting TZ.  */
+      xsetenv ("TZ", "UTC0", 1);
+      TZSET;
     }
 
   int option_specified_date = (!!datestr + !!batch_file + !!reference
@@ -726,8 +741,7 @@ main (int argc, char **argv)
 
   char *format_copy = adjust_resolution (format);
   char const *format_res = format_copy ? format_copy : format;
-  if (!tzstring)
-    tzstring = getenv ("TZ");
+  char const *tzstring = getenv ("TZ");
   timezone_t tz = tzalloc (tzstring);
 
   bool ok = true;
