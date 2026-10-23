@@ -248,7 +248,7 @@ size_opt (char const *opt, char const *msgid)
   intmax_t size;
   if (LONGINT_OVERFLOW < xstrtoimax (opt, NULL, 10, &size, "")
       || size < 0)
-    error (EXIT_FAILURE, 0, "%s: %s", opt, _(msgid));
+    error (EXIT_FAILURE, 0, "%s: %s", quote (opt), _(msgid));
   return MIN (size, IDX_MAX);
 }
 

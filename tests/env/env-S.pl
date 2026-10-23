@@ -229,16 +229,17 @@ my @Tests =
      ['err5', q[-S'A=B\\q'], {EXIT=>125},
       {ERR=>"$prog: invalid sequence '\\q' in -S\n"}],
      ['err6', q[-S'A=$B'], {EXIT=>125},
-      {ERR=>"$prog: only \${VARNAME} expansion is supported, error at: \$B\n"}],
+      {ERR=>"$prog: only \${VARNAME} expansion is supported, " .
+           "error at: '\$B'\n"}],
      ['err7', q[-S'A=${B'], {EXIT=>125},
       {ERR=>"$prog: only \${VARNAME} expansion is supported, " .
-           "error at: \${B\n"}],
+           "error at: '\${B'\n"}],
      ['err8', q[-S'A=${B%B}'], {EXIT=>125},
       {ERR=>"$prog: only \${VARNAME} expansion is supported, " .
-           "error at: \${B%B}\n"}],
+           "error at: '\${B%B}'\n"}],
      ['err9', q[-S'A=${9B}'], {EXIT=>125},
       {ERR=>"$prog: only \${VARNAME} expansion is supported, " .
-           "error at: \${9B}\n"}],
+           "error at: '\${9B}'\n"}],
 
      # Test incorrect shebang usage (extraneous whitespace).
      ['err_sp2', q['-v -S cat -n'], {EXIT=>125},

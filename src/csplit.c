@@ -1087,7 +1087,7 @@ extract_regexp (int argnum, bool ignore, char const *str)
   closing_delim = strrchr (str + 1, delim);
   if (closing_delim == NULL)
     error (EXIT_FAILURE, 0,
-           _("%s: closing delimiter '%c' missing"), str, delim);
+           _("%s: closing delimiter '%c' missing"), quote (str), delim);
 
   len = closing_delim - str - 1;
   p = new_control_record ();

@@ -736,7 +736,7 @@ build_argv (char const *str, int extra_argc, int *argc)
             if (!n)
               error (EXIT_CANCELED, 0,
                      _("only ${VARNAME} expansion is supported, error at: %s"),
-                     str);
+                     quote (str));
 
             char *v = getenv (n);
             if (v)

@@ -609,7 +609,7 @@ create (char const *name)
                             (char * const *) argv, environ);
       if (result != 0)
         error (EXIT_FAILURE, errno, _("failed to run command: \"%s -c %s\""),
-               shell_prog, filter_command);
+               quotef (shell_prog), quoteaf_n (1, filter_command));
 
       posix_spawnattr_destroy (&attr);
       posix_spawn_file_actions_destroy (&actions);
@@ -665,7 +665,7 @@ closeout (FILE *fp, int fd, pid_t pid, char const *name)
                 sprintf (signame, "%d", sig);
               error (sig + 128, 0,
                      _("with FILE=%s, signal %s from command: %s"),
-                     quotef (name), signame, filter_command);
+                     quotef (name), signame, quoteaf_n (1, filter_command));
             }
         }
       else if (WIFEXITED (wstatus))
@@ -673,7 +673,7 @@ closeout (FILE *fp, int fd, pid_t pid, char const *name)
           int ex = WEXITSTATUS (wstatus);
           if (ex != 0)
             error (ex, 0, _("with FILE=%s, exit %d from command: %s"),
-                   quotef (name), ex, filter_command);
+                   quotef (name), ex, quoteaf_n (1, filter_command));
         }
       else
         {

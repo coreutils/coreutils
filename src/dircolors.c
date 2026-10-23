@@ -392,7 +392,7 @@ dc_parse_stream (FILE *fp, char const *filename)
         {
           error (0, 0, _("%s:%td: unrecognized keyword %s"),
                  (filename ? quotef (filename) : _("<internal>")),
-                 line_number, keywd);
+                 line_number, quote (keywd));
           ok = false;
         }
 
