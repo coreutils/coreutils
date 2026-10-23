@@ -167,6 +167,13 @@ my @tv = (
 ['multi-o-auto-mixed', '-o auto -o 1.3',
  ["k p q\n", "k y z\n"], "q\n", 0],
 
+# With -i, keys that differ only in case match, but each output line
+# shows the key of its own file-1 line.
+['ignore-case-1', '-i',
+ ["B x\nb y\n", "b z\n"], "B x z\nb y z\n", 0],
+['ignore-case-2', '-i -o 0',
+ ["B\nb\n", "B\n"], "B\nb\n", 0],
+
 # For -v2, print the match field correctly with the default output format,
 # when that match field is different between file 1 and file 2.  Fixed in 8.10
 ['v2-order', '-v2 -2 2', ["", "2 1\n"], "1 2\n", 0],
