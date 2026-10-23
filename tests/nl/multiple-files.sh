@@ -30,4 +30,15 @@ EOF
 compare exp-out out || fail=1
 compare exp-err err || fail=1
 
+# The input files are a single document, so a section goes on
+# into the next file: a footer started in a goes on in b, and a
+# header started in b goes on in stdin.
+printf 'a\n\\:\n' > a || framework_failure_
+printf 'b\n\\:\\:\\:\n' > b || framework_failure_
+printf '\\:\\:\nd\n' > c || framework_failure_
+printf 'c\n' | nl -h a a b - c > out || fail=1
+printf '     1\ta\n\n       b\n\n     1\tc\n\n     1\td\n' > exp \
+  || framework_failure_
+compare exp out || fail=1
+
 Exit $fail
