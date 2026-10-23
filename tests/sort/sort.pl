@@ -35,6 +35,12 @@ my $normalize_filename = {ERR_SUBST => 's/^$prog: .*?:/$prog: -:/'};
 
 my $no_file = "$prog: cannot read: no-file: No such file or directory\n";
 
+# Lines much longer than the buffer, in an unsorted order, so that
+# an external sort writes them to temporary files and merges them back.
+my @long_lines = map { sprintf ("%04d", $_ * 7 % 24) . 'x' x 19996 } 0..23;
+my $long_in = join ('', map { "$_\n" } @long_lines);
+my $long_out = join ('', map { "$_\n" } sort @long_lines);
+
 my @Tests =
 (
 ["n1", '-n', {IN=>".01\n0\n"}, {OUT=>"0\n.01\n"}],
@@ -391,6 +397,7 @@ my @Tests =
 # Exercise the code that enlarges the line buffer.
 ['realloc-buf', '-S1', {IN=>'a'x4000 ."\n"}, {OUT=>'a'x4000 ."\n"}],
 ['realloc-buf-2', '-S1', {IN=>'a'x5 ."\n"}, {OUT=>'a'x5 ."\n"}],
+['long-lines-ext', '-S1K', {IN=>$long_in}, {OUT=>$long_out}],
 
 ["sort-numeric", '--sort=numeric', {IN=>".01\n0\n"}, {OUT=>"0\n.01\n"}],
 ["sort-gennum", '--sort=general-numeric',
