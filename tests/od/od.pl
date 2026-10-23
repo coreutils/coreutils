@@ -107,6 +107,14 @@ my @Tests =
       {ERR=>"$prog: invalid -j argument 'a\\t'\n"}],
      ['bad-j-quote-2', "-j '1\t'", {IN=>""}, {EXIT=>1},
       {ERR=>"$prog: invalid suffix in -j argument '1\\t'\n"}],
+
+     # With -S, offsets use the same width as in the normal dump.
+     ['S-Ax', '-Ax -S3', {IN=>"\001hello\000world\000ab\000"},
+      {OUT=>"000001 hello\n000007 world\n"}],
+     ['S-Ad', '-Ad -S3', {IN=>"\001hello\000world\000ab\000"},
+      {OUT=>"0000001 hello\n0000007 world\n"}],
+     ['S-Ao', '-Ao -S3', {IN=>"\001hello\000world\000ab\000"},
+      {OUT=>"0000001 hello\n0000007 world\n"}],
     );
 
 push @Tests,
