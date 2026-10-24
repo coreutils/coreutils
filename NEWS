@@ -16,6 +16,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   the \u0085 (next line) character as a separator on non-GLIBC platforms.
   [bug introduced in coreutils-9.11]
 
+  'date -u MMDDhhmm' no longer uses the local time zone's UTC offset when
+  setting the date and time.
+  [bug introduced in coreutils-9.11]
+
   'factor' no longer treats inputs requiring the use of arbitrary-precision
   integers followed by a non-numeric suffix as zero if the suffix includes
   non-space characters, or the number itself when followed by spaces.
