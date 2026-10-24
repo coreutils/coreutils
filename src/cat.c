@@ -549,6 +549,38 @@ copy_cat (void)
       }
 }
 
+#if HAVE_SPLICE
+
+/* If PIPEFD[0] is a non-negative value, we have an open pipe from a
+   previous call to splice_cat.  At the start of splice_cat the pipe
+   will always be empty.  Use splice_cat_close on error or end of
+   program.  */
+static int pipefd[2] = { -1, -1 };
+
+/* The size of the pipe referred to by PIPEFD.  */
+static idx_t pipefd_pipe_size = 0;
+
+/* Close PIDEFD[0] and PIPEFD[1] if not -1, reset pipefd_pipe_size.  */
+static void
+splice_cat_close (void)
+{
+  if (pipefd[0] >= 0)
+    {
+      close (pipefd[0]);
+      close (pipefd[1]);
+    }
+
+  pipefd[0] = pipefd[1] = -1;
+  pipefd_pipe_size = 0;
+}
+
+#else
+
+/* No splice no close.  */
+static void splice_cat_close (void) { }
+
+#endif
+
 /* Copy data from input to output using splice if possible.
    Return 1 if successful, 0 if ordinary read+write should be tried,
    -1 if a serious problem has been diagnosed.  */
@@ -561,14 +593,6 @@ splice_cat (void)
   bool out_ok = true;
 
 #if HAVE_SPLICE
-
-  /* If PIPEFD[0] is a non-negative value, we have an open pipe from a
-     previous call to this function.  At the start of this function the
-     pipe will always be empty.  */
-  static int pipefd[2] = { -1, -1 };
-
-  /* The size of the pipe referred to by PIPEFD.  */
-  static idx_t pipefd_pipe_size = 0;
 
   /* Create an intermediate pipe if it is not already open.
      Even if both input and output are pipes,
@@ -645,11 +669,8 @@ splice_cat (void)
     {
       /* Recreate the pipe on internal error.  */
       int saved_errno = errno;
-      close (pipefd[0]);
-      close (pipefd[1]);
+      splice_cat_close ();
       errno = saved_errno;
-      pipefd[0] = pipefd[1] = -1;
-      pipefd_pipe_size = 0;
       error (0, errno, "%s", _("splice error"));
     }
   else if (! in_ok)
@@ -967,6 +988,8 @@ main (int argc, char **argv)
   alignfree (outbuf);
   alignfree (inbuf);
 #endif
+
+  splice_cat_close ();  /* Avoid warnings from FD trackers.  */
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, _("closing standard input"));
