@@ -202,7 +202,7 @@ restorecon_private (struct selabel_handle *selabel_handle, char const *path)
       return rc;
     }
 
-  fd = open (path, O_RDONLY | O_NOFOLLOW);
+  fd = open (path, O_RDONLY | O_NOFOLLOW | O_NOCTTY | O_NONBLOCK);
   if (fd == -1 && (errno != ELOOP))
     goto quit;
 

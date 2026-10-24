@@ -62,4 +62,6 @@ for i in d f p; do
   c=$(stat --printf %C s2/$i); test x$c = x$ctx || fail=1
 done
 
+timeout 10 mv -Z s2/p s1 || fail=1
+
 Exit $fail

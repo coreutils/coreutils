@@ -39,6 +39,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   lookup on a file without an ACL.
   [bug introduced in coreutils-9.6]
 
+  'mv -Z' no longer blocks when setting the SELinux security context of a
+  just-moved FIFO.
+  [bug introduced with SELinux support in coreutils-8.22]
+
   'realpath' without -s, or 'readlink' with -e,-f,-m no longer
   loop infinitely when resolving a symbolic link which
   resolves to a path beginning with the symbolic link itself.
