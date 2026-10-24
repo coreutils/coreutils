@@ -2286,7 +2286,7 @@ parse_options (int argc, char **argv,
             xnumtoimax (optarg, 10, 0, COUNT_MAX, "",
                         _("invalid maximum number of unchanged stats"
                           " between opens"),
-                        0, XTOINT_MAX_QUIET);
+                        0, XTOINT_MIN_RANGE | XTOINT_MAX_QUIET);
           break;
 
         case DEBUG_PROGRAM_OPTION:
