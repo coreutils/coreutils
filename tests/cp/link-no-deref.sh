@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ cp
+print_ver_ cp printf
 getlimits_
 uses_strace_
 
@@ -28,17 +28,23 @@ ln -s no-such-file dangling-slink || framework_failure_
 # with link being applied to the dangling symlink.
 cp --link --no-dereference dangling-slink d2 || fail=1
 
+fail_chown() {
+  chowns=chown,lchown,fchownat
+  eval "file=\${$#}"
+  strace --quiet=all -o fc.strace -P "$file" -e inject=$chowns:error=ENOSYS "$@"
+}
+
 NL='
 '
-chowns=chown,lchown,fchownat
-if strace --quiet=all -o /dev/null -P foo \
-          -e inject=$chowns:error=EPERM true 2>/dev/null; then
-  echo "cp: failed to preserve ownership for ''\$'\\n': $ENOSYS" >exp \
-    || framework_failure_
+if fail_chown true foo; then
+  env printf 'cp: %s %q: %s\n' \
+   'failed to preserve ownership for' "$NL" "$ENOSYS" >exp &&
   touch file && ln -s file slink || framework_failure_
-  returns_ 1 strace --quiet=all -o /dev/null -P "$NL" \
-    -e inject=$chowns:error=ENOSYS cp -P --preserve=ownership slink "$NL" \
+
+  returns_ 1 fail_chown cp -P --preserve=ownership slink "$NL" \
     >out 2>err || fail=1
+
+  grep 'chown.*INJECTED' fc.strace || { cat fc.strace; framework_failure_; }
   compare exp err || fail=1
   compare /dev/null out || fail=1
 fi
