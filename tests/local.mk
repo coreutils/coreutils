@@ -620,6 +620,7 @@ all_tests =					\
   tests/cp/preserve-slink-time.sh		\
   tests/cp/proc-short-read.sh			\
   tests/cp/proc-zero-len.sh			\
+  tests/cp/r-T-symlink.sh			\
   tests/cp/r-vs-symlink.sh			\
   tests/cp/readonly-dir.sh			\
   tests/cp/reflink-auto.sh			\
