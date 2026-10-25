@@ -39,4 +39,20 @@ compare exp-2 xab || fail=1
 compare exp-3 xac || fail=1
 test -f xad && fail=1
 
+# The line count is a plain decimal number: a leading zero is not octal,
+# and neither the obsolete -N form nor -l accepts size suffixes or hex.
+seq 10 > in10 || framework_failure_
+for opt in '-l 010' '-010' '-l +10' "-l ' 10'"; do
+  rm -f x?? || framework_failure_
+  eval split $opt in10 || fail=1
+  compare in10 xaa || fail=1
+  test -f xab && fail=1
+done
+
+for n in 1k 1K 0x10 1e2 5b; do
+  returns_ 1 split -l $n in10 2>err || fail=1
+  echo "split: invalid number of lines: '$n'" > exp-err || framework_failure_
+  compare exp-err err || fail=1
+done
+
 Exit $fail
