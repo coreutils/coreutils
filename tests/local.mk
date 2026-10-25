@@ -211,6 +211,7 @@ all_tests =					\
   tests/tail/quote-headers.sh			\
   tests/chmod/no-x.sh				\
   tests/chgrp/basic.sh				\
+  tests/chgrp/verbose-dangling-symlink.sh	\
   tests/rm/dangling-symlink.sh			\
   tests/rm/dash-hint.sh				\
   tests/ls/ls-time.sh				\
@@ -575,6 +576,7 @@ all_tests =					\
   tests/chown/deref.sh				\
   tests/chown/preserve-root.sh			\
   tests/chown/separator.sh			\
+  tests/chown/verbose-dangling-symlink.sh	\
   tests/cp/abuse.sh				\
   tests/cp/acl.sh				\
   tests/cp/attr-existing.sh			\

@@ -384,7 +384,9 @@ change_file_owner (FTS *fts, FTSENT *ent,
          stat it to get info on the referent.  */
       if (chopt->affect_symlink_referent && S_ISLNK (file_stats->st_mode))
         {
-          if (fstatat (fts->fts_cwd_fd, file, &stat_buf, 0) != 0)
+          if (0 <= fstatat (fts->fts_cwd_fd, file, &stat_buf, 0))
+            file_stats = &stat_buf;
+          else
             {
               if (ignore_missing
                   && ignorable_traversal_errno (errno))
@@ -393,9 +395,8 @@ change_file_owner (FTS *fts, FTSENT *ent,
                 error (0, errno, _("cannot dereference %s"),
                        quoteaf (file_full_name));
               ok = false;
+              file_stats = NULL;
             }
-
-          file_stats = &stat_buf;
         }
 
       do_chown = (ok
