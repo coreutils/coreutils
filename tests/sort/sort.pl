@@ -382,6 +382,17 @@ my @Tests =
 ['nul-tab', "-k2,2 -t '\\0'",
  {IN=>"a\0z\01\nb\0y\02\n"}, {OUT=>"b\0y\02\na\0z\01\n"}],
 
+# Differing -t separators are rejected, while repeating one is accepted.
+['tab-dup1', '-t: -t: -k2', {IN=>"b:1\na:2\n"}, {OUT=>"b:1\na:2\n"}],
+['tab-dup2', "-t '\\0' -t '\\0' -k2",
+ {IN=>"a\0z\nb\0y\n"}, {OUT=>"b\0y\na\0z\n"}],
+['tab-incompat1', '-t@ -t!', {EXIT=>2},
+ {ERR=>"$prog: incompatible tabs\n"}],
+['tab-incompat2', '--field-separator=@ -t !', {EXIT=>2},
+ {ERR=>"$prog: incompatible tabs\n"}],
+['tab-incompat3', "-t '\\0' -t@", {EXIT=>2},
+ {ERR=>"$prog: incompatible tabs\n"}],
+
 # fields > SIZE_MAX are silently interpreted as SIZE_MAX
 ["bigfield1", "-k $limits->{UINTMAX_OFLOW}",
  {IN=>"2\n1\n"}, {OUT=>"1\n2\n"}],
