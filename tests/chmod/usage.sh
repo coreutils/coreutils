@@ -52,6 +52,10 @@ cases='
   f f        :
   u+gr f     :
   ug,+x f    :
+  -=r f      : f
+  -+x f      : f
+  -,u+x f    : f
+  -, f       :
 '
 
 all_files=$(echo "$cases" | sed 's/.*://'|sort -u)
@@ -81,6 +85,19 @@ for case in $cases; do
     done
     ;;
   esac
+done
+
+# Modes starting with an operator or a comma are also taken as modes,
+# not as options.  Check the resulting permissions too.
+umask 022
+touch g || framework_failure_
+for spec in '-=r:-r--r--r--' '-+x:-rwx--x--x' '-,u+x:-rwx------'; do
+  mode=${spec%%:*}
+  expected=${spec#*:}
+  chmod 600 g || framework_failure_
+  chmod $mode g || fail=1
+  got=$(ls -l g | cut -c1-10)
+  test "$got" = "$expected" || { echo "chmod $mode: got $got" >&2; fail=1; }
 done
 
 Exit $fail
