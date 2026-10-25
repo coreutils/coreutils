@@ -615,6 +615,7 @@ all_tests =					\
   tests/cp/no-deref-link3.sh			\
   tests/cp/parent-perm.sh			\
   tests/cp/parent-perm-race.sh			\
+  tests/cp/verbose-parents-quote.sh		\
   tests/cp/perm.sh				\
   tests/cp/preserve-2.sh			\
   tests/cp/preserve-link.sh			\

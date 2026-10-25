@@ -580,7 +580,8 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
               else
                 {
                   if (verbose_fmt_string != NULL)
-                    printf (verbose_fmt_string, src, dir);
+                    printf (verbose_fmt_string, quoteaf_n (0, src),
+                            quoteaf_n (1, dir));
                 }
 
               /* We need search and write permissions to the new directory
