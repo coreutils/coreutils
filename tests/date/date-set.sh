@@ -18,8 +18,20 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ date
-skip_if_root_
+skip_if_root_  # Just in case
 getlimits_
+uses_strace_
+
+# Explicitly block in case CAP_SYS_TIME is set
+
+block_settime() {
+  settime_calls=clock_settime,clock_settime64,settimeofday,stime
+  strace --quiet=all --kill-on-exit -o settime.strace \
+   -e inject=$settime_calls:error=EPERM "$@"
+}
+
+block_settime true ||
+  skip_ 'strace does not support the required options'
 
 # In coreutils-9.11 and coreutils-9.12, TZ="..." date -u MMDDhhmm
 # would use the UTC offset from $TZ instead of UTC0.  While we are
@@ -32,8 +44,15 @@ for opt in '' -s --set; do
   else
     date_str='2026-01-01 12:00'
   fi
-  returns_ 1 env TZ='America/Los_Angeles' date -u $opt "$date_str" >out 2>err \
-    || fail=1
+  returns_ 1 block_settime \
+   env TZ='America/Los_Angeles' \
+   date -u $opt "$date_str" >out 2>err || fail=1
+  grep 'EPERM .*INJECTED' settime.strace >/dev/null || {
+    cat settime.strace
+    test "$fail" = 1 \
+     && framework_failure_ 'Possibly incorrect system time set!' \
+     || framework_failure_ 'strace failed to intercept "settime" syscall'
+  }
   compare exp-out out || fail=1
   compare exp-err err || fail=1
 done
