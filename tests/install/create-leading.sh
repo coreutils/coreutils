@@ -39,4 +39,16 @@ touch dir1/file1 || framework_failure_
 ginstall -D "$PWD/dir1/file1" $file -t "$PWD/no-dir2/" || fail=1
 test -r no-dir2/$file && test -r no-dir2/file1 || fail=1
 
+# Leading directories are created with mode 755 regardless of the umask,
+# while --mode applies only to the final component.
+(umask 077 &&
+ ginstall -D -m 700 $file um-D1/um-D2/dest &&
+ ginstall -d -m 700 um-d1/um-d2/um-d3) || fail=1
+for d in um-D1 um-D1/um-D2 um-d1 um-d1/um-d2; do
+  test "$(stat --printf=%a $d)" = 755 || fail=1
+done
+for f in um-D1/um-D2/dest um-d1/um-d2/um-d3; do
+  test "$(stat --printf=%a $f)" = 700 || fail=1
+done
+
 Exit $fail
