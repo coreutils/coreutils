@@ -69,6 +69,7 @@
  * #ifdef (TYPE##_MIN) in function macro below.  */
 #define SIZE_MIN 0
 #define UCHAR_MIN 0
+#define USHRT_MIN 0
 #define UINT_MIN 0
 #define ULONG_MIN 0
 #define UINTMAX_MIN 0
@@ -178,6 +179,7 @@ main (int argc, char **argv)
   print_int (SCHAR);
   print_int (UCHAR);
   print_int (SHRT);
+  print_int (USHRT);
   print_int (INT);
   print_int (UINT);
   print_int (LONG);
