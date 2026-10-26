@@ -51,6 +51,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   just-moved FIFO.
   [bug introduced with SELinux support in coreutils-8.22]
 
+  od now exits gracefully when offsets overflow integer limits.
+  [This bug was present in "the beginning".]
+
   'realpath' without -s, or 'readlink' with -e,-f,-m no longer
   loop infinitely when resolving a symbolic link which
   resolves to a path beginning with the symbolic link itself.

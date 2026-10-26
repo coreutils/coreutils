@@ -1242,6 +1242,8 @@ format_address_std (intmax_t address, char c)
   char *p = buf + sizeof buf;
   char const *pbound;
 
+  affirm (0 <= address);
+
   *--p = '\0';
   *--p = c;
   pbound = p - address_pad_len;
@@ -1499,6 +1501,17 @@ parse_old_offset (char *str, intmax_t *offset)
   return s_err == LONGINT_OK;
 }
 
+/* Add COUNT to OFFSET, and return the result.
+   If an overflow occurs, exit the program with an error message.  */
+
+static intmax_t
+offset_add (intmax_t offset, intmax_t const count)
+{
+  if (ckd_add (&offset, offset, count))
+    error (EXIT_FAILURE, 0, _("offset overflow"));
+  return offset;
+}
+
 /* Read a chunk of size BYTES_PER_BLOCK from the input files, write the
    formatted block to standard output, and repeat until the specified
    maximum number of bytes has been read or until all input has been
@@ -1542,7 +1555,7 @@ dump (void)
                    block[!idx], block[idx]);
       if (ferror (stdout))
         ok = false;
-      current_offset += n_bytes_read;
+      current_offset = offset_add (current_offset, n_bytes_read);
       idx = !idx;
     }
   while (ok);
@@ -1558,7 +1571,7 @@ dump (void)
 
       memset (block[idx] + n_bytes_read, 0, bytes_to_write - n_bytes_read);
       write_block (current_offset, n_bytes_read, block[!idx], block[idx]);
-      current_offset += n_bytes_read;
+      current_offset = offset_add (current_offset, n_bytes_read);
     }
 
   if (ok || current_offset)
@@ -1606,7 +1619,7 @@ dump_strings (void)
               free (buf);
               return ok;
             }
-          address++;
+          address = offset_add (address, 1);
           buf[i++] = c;
           if (c == '\0')
             break;		/* Print this string.  */
