@@ -12,6 +12,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   was used, even when the look-up inside the chroot succeeded.
   [bug introduced in coreutils-8.23]
 
+  'cksum --check -a sha2' now verifies all lines in a checksum file that
+  mixes SHA2 digest lengths.  Previously only lines with the same length
+  as the first tagged line were verified, with other lines being treated
+  as invalid, and thus, without --strict, not impacting the exit status.
+  [bug introduced in coreutils-9.9]
+
   cut, expand, fold, join, numfmt, unexpand, and uniq, no longer consider
   the \u0085 (next line) character as a separator on non-GLIBC platforms.
   [bug introduced in coreutils-9.11]

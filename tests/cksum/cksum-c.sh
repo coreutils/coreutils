@@ -37,6 +37,20 @@ for file in sha384-tag.sum sha2-tag.sum; do
   done
 done
 
+# Ensure -a sha2 checks all lines in a file with mixed SHA2 lengths.
+# coreutils-9.9 to 9.12 only checked lines with the first tagged length.
+cksum -a sha2 -l 224 input > sha2-mixed.sum &&
+cksum -a sha2 -l 512 input >> sha2-mixed.sum &&
+cksum -a sha2 -l 256 --untagged input >> sha2-mixed.sum &&
+cksum -a sha2 -l 384 input >> sha2-mixed.sum || framework_failure_
+cksum -a sha2 --strict --check sha2-mixed.sum || fail=1
+# A mismatch in a line of a different length than the first must be detected
+cksum -a sha2 -l 224 input > sha2-mixed-bad.sum &&
+echo "SHA512 (input) = $(printf '%0128d' 0)" >> sha2-mixed-bad.sum \
+  || framework_failure_
+returns_ 1 cksum -a sha2 --check sha2-mixed-bad.sum > out 2>&1 || fail=1
+grep 'input: FAILED' out || fail=1
+
 # Ensure invalid length is handled appropriately
 # coreutils-9.8 had undefined behavior with the following:
 printf '%s\n' 'SHA2-128 (/dev/null) = 38b060a751ac96384cd9327eb1b1e36a' \

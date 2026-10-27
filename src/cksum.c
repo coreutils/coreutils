@@ -373,6 +373,7 @@ static int const algorithm_bits[] =
 static_assert (countof (algorithm_bits) == countof (algorithm_args));
 
 static bool algorithm_specified = false;
+static bool sha2_specified = false;
 static bool legacy_mode = false;
 enum Algorithm cksum_algorithm = crc;
 
@@ -925,6 +926,8 @@ split_3 (char *s, idx_t s_len,
   /* Check for BSD-style checksum line. */
 
 #if HASH_ALGO_CKSUM
+  if (sha2_specified)
+    cksum_algorithm = sha2;  /* Recheck for specific variant.  */
   if (! algorithm_specified || cksum_algorithm == sha2)
     {
       ptrdiff_t algo_tag = algorithm_from_tag (s + i);
@@ -1615,6 +1618,7 @@ main (int argc, char **argv)
         cksum_algorithm = XARGMATCH_EXACT ("--algorithm", optarg,
                                            algorithm_args, algorithm_types);
         algorithm_specified = true;
+        sha2_specified = cksum_algorithm == sha2;
         break;
 
       case DEBUG_PROGRAM_OPTION:
