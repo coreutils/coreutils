@@ -115,4 +115,12 @@ test -e kill.missed && fail=1
 echo 137 > kill.exp || framework_failure_
 compare kill.exp kill.status || fail=1
 
+# --kill-after must interrupt a blocked diagnostic for the initial signal.
+file=kill-after.status
+{ timeout -v -k .1 .1 sh -c 'trap "" TERM; exec yes >&2' 2>&1
+  echo $? >kill-after.status; } |
+  { retry_delay_ file_seen .1 6 || touch kill-after.missed; }
+test -e kill-after.missed && fail=1
+compare kill.exp kill-after.status || fail=1
+
 Exit $fail

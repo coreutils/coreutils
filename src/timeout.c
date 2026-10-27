@@ -258,8 +258,19 @@ cleanup (int sig)
           char signame[MAX (SIG2STR_MAX, INT_BUFSIZE_BOUND (int))];
           if (sig == 0 || sig2str (sig, signame) != 0)
             snprintf (signame, sizeof signame, "%d", sig);
+
+          /* Let --kill-after interrupt a blocked diagnostic.  Without -f,
+             its group-wide SIGKILL terminates us before diagnosing again.  */
+          sigset_t alarm_set, old_set;
+          sigemptyset (&alarm_set);
+          sigaddset (&alarm_set, SIGALRM);
+          bool restore_mask = (!foreground
+                               && sigprocmask (SIG_UNBLOCK, &alarm_set,
+                                               &old_set) == 0);
           error (0, 0, _("sending signal %s to command %s"),
                  signame, quote (command));
+          if (restore_mask)
+            sigprocmask (SIG_SETMASK, &old_set, NULL);
         }
     }
   else if (monitored_pid == -1)
