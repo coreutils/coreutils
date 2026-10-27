@@ -18,6 +18,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   This also applies to the md5sum, sha*sum, and b2sum utilities.
   [bug introduced in coreutils-8.14]
 
+  'cksum --check' now accepts 16- and 32-bit hexadecimal BLAKE2b checksums,
+  and untagged BLAKE2b base64 checksums whose characters before the padding
+  are all hexadecimal digits.  Previously these could be rejected as
+  improperly formatted due to confusion between hex and base64 encodings.
+  [bugs introduced in coreutils-9.10]
+
   'cksum --check' now rejects length suffixes on fixed-length algorithm tags,
   such as SHA256-8.  Previously these caused only part of the digest to be
   checked, and could cause subsequent full-length untagged checksums to be

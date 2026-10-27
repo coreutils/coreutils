@@ -47,4 +47,23 @@ for length in 8 216 224 232 248 256 264 376 384 392 504 512; do
   compare expout out || fail=1
 done
 
+# Hex and base64 lengths coincide for 16- and 32-bit digests.
+# These inputs also produce base64 digests with only hex digits before
+# the padding: "26" at 16 bits gives f20=, "1027" at 32 bits gives c3ADDA==.
+for text in 26 1027; do
+  for length in 16 32; do
+    for encoding in '' --base64; do
+      for format in --tag --untagged; do
+        printf %s "$text" > inp || framework_failure_
+        cksum -a blake2b -l $length $encoding $format inp > check || fail=1
+        cksum -a blake2b --strict --check check > out || fail=1
+        compare expout out || fail=1
+        # Ensure the selected encoding is also used for comparison.
+        echo changed > inp || framework_failure_
+        returns_ 1 cksum -a blake2b --status --check check || fail=1
+      done
+    done
+  done
+done
+
 Exit $fail

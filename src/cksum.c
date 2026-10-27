@@ -784,7 +784,10 @@ static bool
 valid_digits (unsigned char const *s, idx_t len)
 {
 #if HASH_ALGO_CKSUM
-  if (len == BASE64_LENGTH (digest_length >> 3))
+  /* For 16- and 32-bit digests, hex and base64 lengths coincide,
+     but base64 requires padding.  */
+  if (len == BASE64_LENGTH (digest_length >> 3)
+      && (len != digest_hex_bytes || s[len - 1] == '='))
     {
       idx_t i;
       for (i = 0; i < len - digest_length % 3; i++)
@@ -1069,7 +1072,7 @@ split_3 (char *s, idx_t s_len,
         return false;
     }
   else if (cksum_algorithm == blake2b
-           && digest_hex_bytes < digest_base64_bytes)
+           && (digest_hex_bytes < digest_base64_bytes || trailing_equals))
     {
       for (int j = 8; j <= DIGEST_MAX_LEN * 8; j += 8)
         {
@@ -1472,7 +1475,8 @@ digest_check (char const *checkfile_name)
             {
               bool match = false;
 #if HASH_ALGO_CKSUM
-              if (d_len == BASE64_LENGTH (digest_length >> 3))
+              if (d_len == BASE64_LENGTH (digest_length >> 3)
+                  && (d_len != digest_hex_bytes || digest[d_len - 1] == '='))
                 match = b64_equal (digest, bin_buffer);
               else
 #endif
