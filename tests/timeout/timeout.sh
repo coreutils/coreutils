@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ timeout
+print_ver_ timeout env
 require_trap_signame_
 
 # no timeout
@@ -46,6 +46,16 @@ returns_ 124 timeout --preserve-status .1 sleep 10 && fail=1
 returns_ 124 timeout -s0 -k1 .1 sleep 10 && fail=1
 # Ensure a consistent exit status with --foreground
 returns_ 124 timeout --foreground -s0 -k1 .1 sleep 10 && fail=1
+
+# Keep handling SIGALRM after sending it to the process group.
+# Also use a tiny kill delay to check that its SIGALRM is not discarded.
+for delay in .1 1e-9; do
+  returns_ 137 timeout -s ALRM -k $delay .1 \
+    env --ignore-signal=ALRM sleep 10 || fail=1
+done
+
+# Keep handling SIGCHLD so the command's exit wakes the monitor.
+returns_ 124 timeout -s KILL 10 timeout -s CHLD .1 sleep .5 || fail=1
 
 # Ensure 'timeout' is immune to parent's SIGCHLD handler
 # Use a subshell and an exec to work around a bug in FreeBSD 5.0 /bin/sh.

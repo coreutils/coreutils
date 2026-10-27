@@ -187,10 +187,30 @@ send_sig (pid_t where, int sig)
      propagate the first one, which hopefully won't be an issue.  Note this
      process can be implicitly multithreaded due to some timer_settime()
      implementations, therefore a signal sent to the group, can be sent
-     multiple times to this process.  */
-  if (where == 0)
-    signal (sig, SIG_IGN);
-  return kill (where, sig);
+     multiple times to this process.  SIGCHLD is not ignored though,
+     as it's needed to notice the command exiting, and its handler
+     doesn't send signals so there is no loop to avoid.  */
+  struct sigaction old_sa;
+  bool ignore = where == 0 && sig != SIGCHLD;
+  if (ignore)
+    {
+      sigaction (sig, NULL, &old_sa);
+      signal (sig, SIG_IGN);
+    }
+
+  int ret = kill (where, sig);
+
+  /* SIGALRM is needed to notice the --kill-after timeout, so restore its
+     handler.  First discard the copy sent to ourselves above, which may
+     be pending rather than ignored, as SIGALRM is blocked while in the
+     SIGALRM handler.  */
+  if (ignore && sig == SIGALRM)
+    {
+      signal (sig, SIG_IGN);
+      sigaction (sig, &old_sa, NULL);
+    }
+
+  return ret;
 }
 
 /* Signal handler which is required for sigsuspend() to be interrupted
@@ -222,16 +242,6 @@ cleanup (int sig)
     }
   if (0 < monitored_pid)
     {
-      if (kill_after)
-        {
-          int saved_errno = errno; /* settimeout may reset.  */
-          /* Start a new timeout after which we'll send SIGKILL.  */
-          term_signal = SIGKILL;
-          settimeout (kill_after, false);
-          kill_after = 0; /* Don't let later signals reset kill alarm.  */
-          errno = saved_errno;
-        }
-
       /* Send the signal directly to the monitored child,
          in case it has itself become group leader,
          or is not running in a separate group.  */
@@ -247,6 +257,18 @@ cleanup (int sig)
               send_sig (monitored_pid, SIGCONT);
               send_sig (0, SIGCONT);
             }
+        }
+
+      /* Do this after send_sig() so the new SIGALRM can't be discarded,
+         but before diagnosing, as the diagnostic could block.  */
+      if (kill_after)
+        {
+          int saved_errno = errno; /* settimeout may reset.  */
+          /* Start a new timeout after which we'll send SIGKILL.  */
+          term_signal = SIGKILL;
+          settimeout (kill_after, false);
+          kill_after = 0; /* Don't let later signals reset kill alarm.  */
+          errno = saved_errno;
         }
 
       /* Diagnose only after sending signals, since stderr could block.
