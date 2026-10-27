@@ -60,6 +60,25 @@ echo 'cksum: sha2-bad-length.sum: no properly formatted checksum lines found' \
   > experr || framework_failure_
 compare experr err || fail=1
 
+# Ensure a length is only accepted for length adjustable algorithms.
+# coreutils 9.0 - 9.12 inclusive only compared LENGTH bits of the digest,
+# and then ignored any following full length untagged checksums.
+for algo in md5 sha1 sha224 sha256 sha384 sha512 sm3; do
+  cksum -a $algo input | sed 's/ (/-8 (/; s/\( = ..\).*/\1/' > trunc.sum \
+    || framework_failure_
+  for spec in '' "-a $algo"; do
+    returns_ 1 cksum --check $spec trunc.sum 2>err || fail=1
+    echo 'cksum: trunc.sum: no properly formatted checksum lines found' \
+      > experr || framework_failure_
+    compare experr err || fail=1
+  done
+  cksum -a $algo --untagged input >> trunc.sum || framework_failure_
+  cksum --check -a $algo trunc.sum 2>err || fail=1
+  echo 'cksum: WARNING: 1 line is improperly formatted' \
+    > experr || framework_failure_
+  compare experr err || fail=1
+done
+
 # Ensure base64 in untagged format that matches tags is supported
 # From coreutils 9.2 - 9.8 inclusive this was not supported
 echo 'SHA1+++++++++++++++++++++++=  /dev/null' > tag-prefix.sum \

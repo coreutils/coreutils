@@ -985,6 +985,8 @@ split_3 (char *s, idx_t s_len,
                   && length != SHA512_DIGEST_SIZE * 8)
                 return false;
             }
+          else if (cksum_algorithm != blake2b)
+            return false;  /* Not a length adjustable algorithm.  */
 # endif
           else if (!(0 < length && length <= digest_length && length % 8 == 0))
             return false;
