@@ -178,7 +178,7 @@ FUNC_NAME (char const *s)						 \
          printf is ignoring those characters.  If POSIXLY_CORRECT *is*	 \
          set, then don't give the warning.  */				 \
       if (*++s != 0 && !posixly_correct)				 \
-        error (0, 0, _(cfcc_msg), s);					 \
+        error (0, 0, _(cfcc_msg), quote (s));				 \
     }									 \
   else									 \
     {									 \
