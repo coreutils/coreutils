@@ -203,6 +203,12 @@ chld (MAYBE_UNUSED int sig)
 static void
 cleanup (int sig)
 {
+  /* Don't diagnose signals that the diagnostic itself could generate.  */
+  bool diagnose = verbose && sig != SIGPIPE;
+#ifdef SIGXFSZ
+  diagnose &= sig != SIGXFSZ;
+#endif
+
   if (sig == SIGALRM)
     {
       timed_out = 1;
@@ -229,14 +235,6 @@ cleanup (int sig)
       /* Send the signal directly to the monitored child,
          in case it has itself become group leader,
          or is not running in a separate group.  */
-      if (verbose)
-        {
-          char signame[MAX (SIG2STR_MAX, INT_BUFSIZE_BOUND (int))];
-          if (sig == 0 || sig2str (sig, signame) != 0)
-            snprintf (signame, sizeof signame, "%d", sig);
-          error (0, 0, _("sending signal %s to command %s"),
-                 signame, quote (command));
-        }
       send_sig (monitored_pid, sig);
 
       /* The normal case is the job has remained in our
@@ -249,6 +247,19 @@ cleanup (int sig)
               send_sig (monitored_pid, SIGCONT);
               send_sig (0, SIGCONT);
             }
+        }
+
+      /* Diagnose only after sending signals, since stderr could block.
+         Note this implies we don't diagnose a --kill-after without -f,
+         but being killed will be apparent in the exit status and
+         corresponding shell diagnostic at least.  */
+      if (diagnose)
+        {
+          char signame[MAX (SIG2STR_MAX, INT_BUFSIZE_BOUND (int))];
+          if (sig == 0 || sig2str (sig, signame) != 0)
+            snprintf (signame, sizeof signame, "%d", sig);
+          error (0, 0, _("sending signal %s to command %s"),
+                 signame, quote (command));
         }
     }
   else if (monitored_pid == -1)

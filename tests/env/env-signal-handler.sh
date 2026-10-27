@@ -89,7 +89,8 @@ env_ignore_delay_()
   local delay="$1"
 
   # The first 'env' is just to ensure timeout is not a shell built-in.
-  env timeout --verbose --kill-after=.1 --signal=$timeout_sig $delay \
+  env timeout --foreground --verbose --kill-after=.1 \
+    --signal=$timeout_sig $delay \
     env $env_opt sleep 10 > /dev/null 2>outt
   # check only the first two lines from stderr, which are printed by timeout.
   # (operating systems might add more messages, like "killed").

@@ -81,6 +81,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   if events arrived faster than tail could process them.
   [bug introduced in coreutils-7.5]
 
+  'timeout --verbose' no longer hangs or loops forever in the edge case
+  where writing the diagnostics would block or generate a signal respectively.
+  Instead these edge cases will not have a corresponding diagnostic issued.
+  Also --kill-after without --foreground, will not have a diagnostic issued.
+  [hang bug introduced in coreutils-8.29, and loop bug in coreutils 9.10]
+
   'unexpand' no longer overflows a heap buffer on non-GLIBC platforms,
   given whitespace characters whose display width is negative.  E.g.,
   this edge case can occur with \u0085 (next line) characters on musl.

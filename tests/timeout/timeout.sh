@@ -71,7 +71,7 @@ timeout: sending signal 0 to command 'sleep'
 timeout: sending signal KILL to command 'sleep'
 EOF
 for opt in -v --verbose; do
-  timeout $opt -s0 -k .1 .1 sleep 10 2> errt
+  timeout --foreground $opt -s0 -k .1 .1 sleep 10 2> errt
   sed '/^Killed/d' < errt > err || framework_failure_
   compare exp err || fail=1
 done
@@ -81,10 +81,38 @@ done
 # I.e., that we're not killed by the SIGPIPE (and leave the sleep running).
 # timeout would exit with 141 usually if SIGPIPE wasn't being handled.
 echo 124 > timeout.exp || framework_failure_
-{ timeout -v .1 sleep 10 2>&1; echo $? >timeout.status; } | :
-compare timeout.exp timeout.status || fail=1
+for opt in '' '--foreground'; do
+  { timeout -s KILL 10 timeout $opt -v .1 sleep 10 2>&1
+    echo $? >timeout.status; } | :
+  compare timeout.exp timeout.status || fail=1
+done
 # Ensure we don't catch/propagate ignored signals
 (trap '' PIPE && timeout 10 yes |:) 2>&1 |
   grep 'Broken pipe' >/dev/null || fail=1
+
+# A diagnostic exceeding the file-size limit must not loop on SIGXFSZ.
+if (trap - XFSZ && ulimit -f 0) 2>/dev/null; then
+  returns_ 124 timeout -s KILL 10 sh -c '
+    trap - XFSZ
+    ulimit -f 0 || exit 1
+    exec timeout --foreground -v .1 sleep 10 2>err
+  ' || fail=1
+fi
+
+# Signal the command and its group before writing to a blocked stderr.
+file_seen() { sleep "$1"; test -s "$file"; }
+file=term.seen
+timeout -v .1 sh -c 'trap "echo 1 >term.seen" TERM; yes >&2' 2>&1 |
+  { retry_delay_ file_seen .1 6 || touch term.missed; }
+test -e term.missed && fail=1
+
+# A group-wide SIGKILL must not wait for the verbose diagnostic either.
+file=kill.status
+{ timeout -v -s KILL .1 yes 2>&1
+  echo $? >kill.status; } |
+  { retry_delay_ file_seen .1 6 || touch kill.missed; }
+test -e kill.missed && fail=1
+echo 137 > kill.exp || framework_failure_
+compare kill.exp kill.status || fail=1
 
 Exit $fail
