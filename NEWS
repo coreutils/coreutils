@@ -76,6 +76,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   just-moved FIFO.
   [bug introduced with SELinux support in coreutils-8.22]
 
+  'nl -d ""' no longer mistakenly treats empty lines as headers.
+  [bugs introduced in coreutils-9.11]
+
   od now exits gracefully when offsets overflow integer limits.
   [This bug was present in "the beginning".]
 

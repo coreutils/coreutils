@@ -124,4 +124,11 @@ EOF
 compare exp-out out || fail=1
 compare exp-err err || fail=1
 
+printf 'a\n\nb\n\nc' >inp || framework_failure_
+nl -d '' inp >out 2>err || fail=1
+printf '     1\ta\n       \n     2\tb\n       \n     3\tc\n' >exp \
+  || framework_failure_
+compare exp out || fail=1
+compare /dev/null err || fail=1
+
 Exit $fail

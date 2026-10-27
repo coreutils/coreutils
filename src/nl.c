@@ -408,7 +408,8 @@ check_section (void)
 {
   size_t len = line_buf.length - 1;
 
-  if (len < section_del_len || footer_del_len < section_del_len
+  if (section_del_len == 0 || len < section_del_len
+      || footer_del_len < section_del_len
       || !memeq (line_buf.buffer, section_del, section_del_len))
     return Text;
   if (len == header_del_len
