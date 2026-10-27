@@ -12,6 +12,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   was used, even when the look-up inside the chroot succeeded.
   [bug introduced in coreutils-8.23]
 
+  'cksum' now detects GNU and BSD reversed formats for each checksum file.
+  Previously mixing these formats across files could reject valid checksums
+  or incorrectly interpret a space as part of a file name.
+  This also applies to the md5sum, sha*sum, and b2sum utilities.
+  [bug introduced in coreutils-8.14]
+
   'cksum --check' now rejects length suffixes on fixed-length algorithm tags,
   such as SHA256-8.  Previously these caused only part of the digest to be
   checked, and could cause subsequent full-length untagged checksums to be

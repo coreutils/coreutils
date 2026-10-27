@@ -1397,6 +1397,7 @@ digest_check (char const *checkfile_name)
         }
     }
 
+  bsd_reversed = -1;
   line_number = 0;
   line = NULL;
   line_chars_allocated = 0;

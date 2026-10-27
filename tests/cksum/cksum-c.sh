@@ -22,6 +22,12 @@ uses_strace_
 
 shuf -i 1-10 > input || framework_failure_
 
+# Detect GNU and BSD reversed formats independently for each checksum file.
+cksum -a sha256 --untagged input > standard.sum || framework_failure_
+sed 's/  input$/ input/' standard.sum > reversed.sum || framework_failure_
+cksum -a sha256 --strict --check standard.sum reversed.sum || fail=1
+cksum -a sha256 --strict --check reversed.sum standard.sum || fail=1
+
 for args in '-a sha2 -l 384' '-a blake2b' '-a blake2b -l 384' '-a sm3'; do
   cksum $args 'input' >> CHECKSUMS || fail=1
 done

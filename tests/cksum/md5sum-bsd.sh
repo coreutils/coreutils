@@ -32,9 +32,13 @@ for i in 'a' ' b' '*c' 'dd' ' '; do
 done
 sed 's/  / /' check.md5sum > check.md5
 
-# Note only a single format is supported per run
+# Note only a single untagged format is supported per checksum file.
 md5sum --strict -c check.md5sum || fail=1
 md5sum --strict -c check.md5 || fail=1
+
+# The format of one checksum file must not affect parsing of the next.
+md5sum --strict -c check.md5sum check.md5 || fail=1
+md5sum --strict -c check.md5 check.md5sum || fail=1
 
 # Ensure we don't trigger BSD reversed format with GPG headers etc.
 { echo '____not_all_hex_so_no_match_____ blah';
