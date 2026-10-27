@@ -59,9 +59,10 @@ is in texinfo form in the doc directory.
 
 
 ***************
-Feature requests:
+General requests:
 ---------------
 
+Send feature requests, questions, and comments etc. to coreutils@gnu.org.
 If you would like to add a new feature, please try to get some sort of
 consensus that it is a worthwhile change.  One way to do that is to send
 mail to coreutils@gnu.org including as much description and justification
@@ -72,21 +73,22 @@ https://www.gnu.org/software/coreutils/rejected_requests.html
 
 
 ***************
+Security issues:
+---------------
+
+Send security sensitive reports to coreutils-security@gnu.org.
+That is monitored by all maintainers and should be responded to promptly.
+
+***************
 Reporting bugs:
 ---------------
 
-Send bug reports, questions, comments, etc. to bug-coreutils@gnu.org.
+Send bug reports to bug-coreutils@gnu.org.
 To suggest a patch, see the files README-hacking and HACKING for tips.
 
 All of these programs except 'test' recognize the '--version' option.
 When reporting bugs, please include in the subject line both the package
 name/version and the name of the program for which you found a problem.
-
-If you have a problem with 'sort', try running 'sort --debug', as it
-can often help find and fix problems without having to wait for an
-answer to a bug report.  If the debug output does not suffice to fix
-the problem on your own, please compress and attach it to the rest of
-your bug report.
 
 IMPORTANT: if you take the time to report a test failure,
 please be sure to include the output of running 'make check'

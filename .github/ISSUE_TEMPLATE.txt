@@ -1,5 +1,6 @@
-The preferred process for sending suggestions or bugs
-is to email coreutils@gnu.org or bug-coreutils@gnu.org respectively.
+You can also email coreutils@gnu.org for features/improvements
+or bug-coreutils@gnu.org to discuss and track bugs.
+Security sensitive issues should be sent to coreutils-security@gnu.org
 
 Before reporting a new bug, please check the following resources:
 

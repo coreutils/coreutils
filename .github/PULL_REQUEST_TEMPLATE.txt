@@ -1,5 +1,6 @@
-The preferred process for sending changes
-is to email coreutils@gnu.org or bug-coreutils@gnu.org respectively.
+You can also send patches to coreutils@gnu.org for features/improvements
+or bug-coreutils@gnu.org for bug fixes.
+Security sensitive patches should be sent to coreutils-security@gnu.org
 
 ## Developer resources
 
