@@ -20,6 +20,8 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp mv ginstall
+getlimits_
+uses_strace_
 
 touch src dest || framework_failure_
 cp --preserve=xattr -n src dest \
@@ -126,6 +128,41 @@ $0: WARNING!!!
 failed to set xattr of file $b_other
 =================================================================
 EOF
+fi
+
+block_setxattr ()
+{
+  setxattr_calls=setxattr,lsetxattr,fsetxattr
+  strace --quiet=all -o /dev/null -e inject=$setxattr_calls:error=EIO "$@"
+}
+
+if block_setxattr true; then
+  echo a >a &&
+  cp a exp-b &&
+  setfattr -n "$xattr_name" -v "$xattr_value" a || framework_failure_
+  returns_ 1 block_setxattr cp --preserve=xattr a b >out 2>err-t || fail=1
+  # The source file may have other extended attributes other than the
+  # one we have specified that cannot be set, e.g., "security.selinux".
+  # Ignore them for the purposes of this test.
+  echo "cp: setting attribute '$xattr_name' for 'b': $EIO" >exp-err \
+    || framework_failure_
+  grep -F "$xattr_name" err-t >err || fail=1
+  compare exp-err err || fail=1
+  compare /dev/null out || fail=1
+  compare exp-b b || fail=1
+  returns_ 1 getfattr -n "$xattr_name" b || fail=1
+  # The same warning is printed for 'mv', when it is unable to use rename.
+  if test $test_mv -eq 1; then
+    rm -f "$b_other" || framework_failure_
+    block_setxattr mv a "$b_other" >out 2>err-t || fail=1
+    echo "mv: setting attribute '$xattr_name' for '$b_other': $EIO" >exp-err \
+      || framework_failure_
+    grep -F "$xattr_name" err-t >err || fail=1
+    compare exp-err err || fail=1
+    compare /dev/null out || fail=1
+    compare exp-b "$b_other" || fail=1
+    returns_ 1 getfattr -n "$xattr_name" "$b_other" || fail=1
+  fi
 fi
 
 Exit $fail

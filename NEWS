@@ -45,6 +45,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   operating on dangling symbolic links.
   [bug introduced in coreutils-5.3.0]
 
+  'cp --preserve=xattr' and 'mv' now refer to the destination file name in error
+  and warning messages when setting an extended attribute fails.  Previously,
+  they would mistakenly print the extended attribute name in its place.
+  [bug introduced with extended attribute support in coreutils-7.1]
+
   'cp --verbose --parents' now quotes the names of the parent directories that
   it creates and their sources.
   [This bug was present in "the beginning".]

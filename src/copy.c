@@ -287,13 +287,16 @@ copy_attr_allerror (MAYBE_UNUSED struct error_context *ctx,
 static char const *
 copy_attr_quote (MAYBE_UNUSED struct error_context *ctx, char const *str)
 {
-  return quoteaf (str);
+  int const saved_errno = errno;
+  char *result = xstrdup (quoteaf (str));
+  errno = saved_errno;
+  return result;
 }
 
 static void
-copy_attr_free (MAYBE_UNUSED struct error_context *ctx,
-                MAYBE_UNUSED char const *str)
+copy_attr_free (MAYBE_UNUSED struct error_context *ctx, char const *str)
 {
+  free (bad_cast (str));
 }
 
 /* Exclude SELinux extended attributes that are otherwise handled,
