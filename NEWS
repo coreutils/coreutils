@@ -67,6 +67,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   after a tab character are accounted for correctly.
   [bugs introduced in coreutils-9.8]
 
+  'install --strip' sets the umask to the initial umask specified by the user
+  before invoking 'strip' instead of using a umask of zero.
+  [This bug was present in "the beginning".]
+
   'ls' no longer omits ACL indicators or capability coloring for subsequent
   files on the same file system after an unsupported security context
   lookup on a file without an ACL.

@@ -102,6 +102,9 @@ static bool dir_arg;
 /* Program used to strip binaries, "strip" is default */
 static char const *strip_program = "strip";
 
+/* The umask specified the user before we set it to zero.  */
+static mode_t initial_umask;
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -509,10 +512,19 @@ strip (char const *name)
     safe_name = concat_name = file_name_concat (".", name, NULL);
   char const *const argv[] = { strip_program, safe_name, NULL };
 
+  /* Reset the umask to the one specified by the user, since some
+     'strip' implementations create files that can be read and/or
+     written to by other users.  */
+  umask (initial_umask);
+
   /* Run 'strip'.  */
   pid_t pid;
   int result = posix_spawnp (&pid, strip_program, NULL, attrp,
                              (char * const *) argv, environ);
+
+  /* Restore the umask to zero now that the child process has
+     inherited the initial umask.  */
+  umask (0);
 
   bool ok = false;
   if (result != 0)
@@ -863,7 +875,7 @@ main (int argc, char **argv)
 
   cp_option_init (&x);
 
-  umask (0);
+  initial_umask = umask (0);
 
   int optc;
   while ((optc = getopt_long (argc, argv, "bcCsDdg:m:o:pt:TvS:Z", long_options,

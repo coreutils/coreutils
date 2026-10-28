@@ -32,6 +32,17 @@ echo aBc > exp || framework_failure_
 ginstall src dest -s --strip-program=./b || fail=1
 compare exp dest || fail=1
 
+cat <<EOF >getumask || framework_failure_
+#!$SHELL
+umask > \$1
+EOF
+chmod a+x getumask || framework_failure_
+
+for u in 2 4 7 22 44 77; do
+  (umask $u && ginstall src dest -s --strip-program=./getumask) || fail=1
+  test "$(sed 's/^0*//' dest)" = $u || fail=1
+done
+
 # Check that install cleans up properly if strip fails.
 returns_ 1 ginstall src dest2 -s --strip-program=./FOO || fail=1
 test -e dest2 && fail=1
