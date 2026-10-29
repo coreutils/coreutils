@@ -88,4 +88,11 @@ for file in input /proc/version /sys/kernel/profiling; do
   done
 done
 
+# A leading '+' is accepted in the number of chunks.
+rm -f x?? || framework_failure_
+printf 'a\nb\n' > in || framework_failure_
+split -n +2 in || fail=1
+test -f xaa && test -f xab || fail=1
+test -f xac && fail=1
+
 Exit $fail
