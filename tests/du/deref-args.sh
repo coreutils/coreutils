@@ -45,4 +45,9 @@ EOF
 
 compare exp out || fail=1
 
+# A later -P overrides --dereference-args, and vice versa.
+ln -s missing dangling || framework_failure_
+du --dereference-args -P dangling > out || fail=1
+returns_ 1 du -P --dereference-args dangling > out 2> err || fail=1
+
 Exit $fail
