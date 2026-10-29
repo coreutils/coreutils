@@ -163,6 +163,16 @@ my @Tests =
      ['v9', q[-i -S'A="${F_OO}" ]."$env'",   {ENV=>"F_OO=BAR"}, {OUT=>"A=BAR"}],
      ['v10', q[-i -S'A="${FOO1}" ]."$env'",  {ENV=>"FOO1=BAR"}, {OUT=>"A=BAR"}],
 
+     # An unset variable on its own adds no argument,
+     # but next to other text or inside quotes, the word is kept.
+     ['unset1', q[-S'printf "[%s]\n" a ${UNSET_VAR}'],     {OUT=>"[a]"}],
+     ['unset2', q[-S'${UNSET_VAR} printf "%s\n" hi'],      {OUT=>"hi"}],
+     ['unset3', q[-S'printf "[%s]\n" a ${UNSET_VAR}#c d'], {OUT=>"[a]"}],
+     ['unset4', q[-S'printf "[%s]\n" a ${UNSET_VAR}\_b'],  {OUT=>"[a]\n[b]"}],
+     ['unset5', q[-S'printf "[%s]\n" a ${UNSET_VAR}\c d'], {OUT=>"[a]"}],
+     ['unset6', q[-S'printf "[%s]\n" x${UNSET_VAR} "${UNSET_VAR}"'],
+      {OUT=>"[x]\n[]"}],
+
      # Test end-of-string '#" and '\c'
      ['d1', q[-i -S'A=B #C=D'    ]."$env",  {OUT=>"A=B"}],
      ['d2', q[-i -S'#A=B C=D'   ]."$env",   {OUT=>""}],
