@@ -101,4 +101,14 @@ for p in "" "$pwd/$tmp/"; do
   test -z "$v" || fail=1
 done
 
+# The last of -e, -f and -m wins.
+readlink -e -f missing > out || fail=1
+echo "$my_pwd/$tmp/missing" > exp || framework_failure_
+compare exp out || fail=1
+returns_ 1 readlink -f -e missing > out || fail=1
+compare /dev/null out || fail=1
+readlink -e -m missing/sub > out || fail=1
+echo "$my_pwd/$tmp/missing/sub" > exp || framework_failure_
+compare exp out || fail=1
+
 Exit $fail
