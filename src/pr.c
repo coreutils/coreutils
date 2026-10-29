@@ -456,7 +456,7 @@ static char *buff;
 
 /* Index of the position in buff where the next character
    will be stored. */
-static unsigned int buff_current;
+static idx_t buff_current;
 
 /* The number of characters in buff.
    Used for allocation of buff and to detect overflow of buff. */
@@ -466,7 +466,7 @@ static idx_t buff_allocated;
    Each entry is an index of the first character of a line.
    This is used when storing lines to facilitate shuffling when
    we do column balancing on the last page. */
-static int *line_vector;
+static idx_t *line_vector;
 
 /* Array of horizontal positions.
    For each line in line_vector, end_vector[line] is the horizontal
@@ -1955,7 +1955,7 @@ store_columns (void)
 {
   int i, j;
   unsigned int line = 0;
-  unsigned int buff_start;
+  idx_t buff_start;
   int last_col;		/* The rightmost column which will be saved in buff */
   COLUMN *p;
 

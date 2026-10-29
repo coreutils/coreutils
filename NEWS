@@ -96,6 +96,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   od now exits gracefully when offsets overflow integer limits.
   [This bug was present in "the beginning".]
 
+  'pr' no longer reads past its internal buffer and crashes when it reads more
+  than INT_MAX bytes of column data for a single page.
+  [This bug was present in "the beginning".]
+
   'realpath' without -s, or 'readlink' with -e,-f,-m no longer
   loop infinitely when resolving a symbolic link which
   resolves to a path beginning with the symbolic link itself.
