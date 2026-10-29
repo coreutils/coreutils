@@ -76,6 +76,12 @@ my @Tests =
   # --zero-terminated
   ['zero-1', '-z -n 1',  {IN=>"x\0y"}, {OUT=>"x\0"}],
   ['zero-2', '-z -n 2',  {IN=>"x\0y"}, {OUT=>"x\0y"}],
+
+  # Ensure a count is validated even when a later option overrides it.
+  ['overridden-c', '-c 1-3 -n 1', {IN=>"a\n"}, {OUT=>''}, {EXIT=>1},
+   {ERR=>"$prog: invalid number of bytes: '1-3'\n"}],
+  ['overridden-n', '-n 1-3 -c 1', {IN=>"a\n"}, {OUT=>''}, {EXIT=>1},
+   {ERR=>"$prog: invalid number of lines: '1-3'\n"}],
 );
 
 @Tests = triple_test \@Tests;
