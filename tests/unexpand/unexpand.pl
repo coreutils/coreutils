@@ -136,6 +136,13 @@ my @Tests =
      ['ts1', '-t8,9', {IN=>"x\t \t y\n"},    {OUT=>"x\t\t\t y\n"}],
      # There is no ambiguity here. This should always be the output.
      ['ts2', '-t5,8', {IN=>"x\t \t y\n"},    {OUT=>"x\t\t y\n"}],
+
+     # A bare '-' is standard input, not an obsolete -N tab stop list.
+     ['stdin-dash', '-', {IN_PIPE=>"stdin\n"}, {IN=>{f=>"file\n"}},
+      {OUT=>"stdin\nfile\n"}],
+     ['stdin-dash-t', '-t 3 -', {IN_PIPE=>"a  b\n"}, {OUT=>"a\tb\n"}],
+     ['stdin-dash-f', '--first-only -', {IN_PIPE=>"        A     B\n"},
+      {OUT=>"\tA     B\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
