@@ -67,6 +67,10 @@ my @Tests =
      # and --format adds no trailing newline when it stops early.
      ['err-6', "--format=a%9 .",       {OUT=>"a"}, {EXIT => 1},
          {ERR=>"$prog: '%9': invalid directive\n"}],
+
+     # The last of --printf and --format wins.
+     ['format-last', "--printf=X --format=Y .", {OUT=>"Y\n"}],
+     ['printf-last', "--format=Y --printf=X .", {OUT=>"X"}],
     );
 
 my $save_temps = $ENV{DEBUG};
