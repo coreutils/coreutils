@@ -102,6 +102,10 @@ my @tv = (
 # --zero-terminated
 ['zero-1', '-z -n 1', "x\0y", "y", 0],
 ['zero-2', '-z -n 2', "x\0y", "x\0y", 0],
+
+# A huge --max-unchanged-stats value is accepted.
+['max-unchanged-stats-huge', '--max-unchanged-stats=99999999999999999999',
+ "a\n", "a\n", 0],
 );
 
 my @Tests;
