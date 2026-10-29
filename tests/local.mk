@@ -793,6 +793,7 @@ all_tests =					\
   tests/mkdir/parents.sh			\
   tests/mkdir/perm.sh				\
   tests/mkdir/selinux.sh			\
+  tests/mkdir/context-optional.sh		\
   tests/mkdir/restorecon.sh			\
   tests/mkdir/special-1.sh			\
   tests/mkdir/t-slash.sh			\
