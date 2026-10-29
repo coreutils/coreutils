@@ -135,6 +135,13 @@ push @Tests,
         {IN_PIPE=>""}, {EXIT=>1},
         {ERR=>"od: -$_ argument '$INTMAX_OFLOW' too large\n"}]} qw(j N S w);
 
+# Ensure an output type cannot be combined with --strings.
+push @Tests,
+  map {(my $name = $_) =~ tr/- //d;
+       ["S-type-$name", "--strings=1 $_", {IN=>"a\n"}, {EXIT=>1},
+        {ERR=>"$prog: no type may be specified when dumping strings\n"}]}
+    ('-b', '-c', '-d', '-i', '-l', '-o', '-s', '-x', '-t x1');
+
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 
