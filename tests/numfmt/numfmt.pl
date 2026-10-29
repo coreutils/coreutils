@@ -42,6 +42,9 @@ my @Tests =
      ['5', '--from=auto 1Ki',  {OUT => "1024"}],
      ['5.1', '--from=iec-i 1Ki',  {OUT => "1024"}],
      ['5.2', '--from=iec-i 1',  {OUT => "1"}],
+     # Unambiguous abbreviations of option values are accepted.
+     ['abbrev-from', '--from=a 5',     {OUT => "5"}],
+     ['abbrev-invalid', '--invalid=a 5', {OUT => "5"}],
 
      ['6', {IN_PIPE => "1234\n"},              {OUT => "1234"}],
      ['6nul', {IN_PIPE => "1234\000foo bar\n"},{OUT => "1234"}],
