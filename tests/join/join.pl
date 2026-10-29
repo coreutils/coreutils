@@ -264,6 +264,13 @@ my @tv = (
 ['chkodr-6', '--nocheck-order',
  [" b 1\n a 2\n", " b Y\n c Z\n"], "b 1 Y\n", 0],
 
+# The last of --check-order and --nocheck-order wins.
+['chkodr-last-1', '--check-order --nocheck-order',
+ [" b 1\n a 2\n", " b Y\n a Z\n"], "b 1 Y\na 2 Z\n", 0],
+['chkodr-last-2', '--nocheck-order --check-order',
+ [" b 1\n a 2\n", " b Y\n a Z\n"], "", 1,
+ "$prog: chkodr-last-2.1:2: is not sorted:  a 2\n"],
+
 # Before 6.10.143, this would mistakenly fail with the diagnostic:
 # join: File 1 is not in sorted order
 ['chkodr-7', '-12', ["2 a\n1 b\n", "2 c\n1 d"], "", 0],
