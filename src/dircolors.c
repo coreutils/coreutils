@@ -44,6 +44,9 @@ enum Shell_syntax
   SHELL_SYNTAX_UNKNOWN
 };
 
+/* The shell syntax being used.  */
+static enum Shell_syntax syntax = SHELL_SYNTAX_UNKNOWN;
+
 #define APPEND_CHAR(C) obstack_1grow (&lsc_obstack, C)
 
 /* Accumulate in this obstack the value for the LS_COLORS environment
@@ -233,6 +236,13 @@ append_quoted (char const *str)
           case '\\':
           case '^':
             need_backslash = !need_backslash;
+            break;
+
+          case '!':
+            /* Prevent 'csh' from doing history substitution.  */
+            if (syntax == SHELL_SYNTAX_C)
+              APPEND_CHAR ('\\');
+            need_backslash = true;
             break;
 
           case ':':
@@ -436,7 +446,6 @@ main (int argc, char **argv)
 {
   bool ok = true;
   int optc;
-  enum Shell_syntax syntax = SHELL_SYNTAX_UNKNOWN;
   bool print_database = false;
 
   initialize_main (&argc, &argv);

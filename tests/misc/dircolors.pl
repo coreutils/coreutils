@@ -66,6 +66,11 @@ my @Tests =
      ['print-ls-colors', '--print-ls-colors', {IN => "OWT 40;33\n"},
       {OUT => "\x1B[40;33mtw\t40;33\x1B[0m\n"}],
 
+     ['csh-history-sub', '-c',
+      {IN => "*.a!#^:s\\LS_COLORS\\' ; touch ./a; echo '\n"},
+      {OUT => ("setenv LS_COLORS '*.a\\!#^:s\\LS_COLORS\\'\\''=; "
+               . "touch ./a; echo '\\'':'\n")}],
+
      # CAREFUL: always specify the -b option, unless explicitly testing
      # for csh syntax output, or --print-ls-color output.
     );

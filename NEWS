@@ -71,6 +71,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   oflag=seek_bytes, and when N is smaller than the output block size.
   [bug introduced with oflag=seek_bytes in coreutils-8.16]
 
+  'dircolors --csh' now escapes '!' characters in its output.  Previously, csh
+  would perform history substitution on the output when evaluated, which would
+  fail or execute arbitrary commands depending on the contents of the database
+  file.
+  [This bug was present in "the beginning".]
+
   'factor' no longer treats inputs requiring the use of arbitrary-precision
   integers followed by a non-numeric suffix as zero if the suffix includes
   non-space characters, or the number itself when followed by spaces.
