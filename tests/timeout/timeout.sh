@@ -30,7 +30,7 @@ timeout 1d true || fail=1
 timeout 0 true || fail=1
 
 # exit status propagation
-returns_ 2 timeout 10 sh -c 'exit 2' || fail=1
+returns_ 2 timeout 10 $SHELL -c 'exit 2' || fail=1
 
 # timeout
 returns_ 124 timeout .1 sleep 10 || fail=1
@@ -70,7 +70,7 @@ returns_ 124 timeout -s KILL 10 timeout -s CHLD .1 sleep .5 || fail=1
 # upon reparenting it can trigger an orphaned process group SIGHUP
 # (if there were stopped processes like in tests/tail/overlay-headers.sh).
 if setsid true; then
-  out=$(setsid sleep .1 & exec timeout .5 sh -c 'sleep 2; echo foo')
+  out=$(setsid sleep .1 & exec timeout .5 $SHELL -c 'sleep 2; echo foo')
   status=$?
   test "$out" = "" && test $status = 124 || fail=1
 fi
@@ -102,7 +102,7 @@ done
 
 # A diagnostic exceeding the file-size limit must not loop on SIGXFSZ.
 if (trap - XFSZ && ulimit -f 0) 2>/dev/null; then
-  returns_ 124 timeout -s KILL 10 sh -c '
+  returns_ 124 timeout -s KILL 10 $SHELL -c '
     trap - XFSZ
     ulimit -f 0 || exit 1
     exec timeout --foreground -v .1 sleep 10 2>err
@@ -112,7 +112,11 @@ fi
 # Signal the command and its group before writing to a blocked stderr.
 file_seen() { sleep "$1"; test -s "$file"; }
 file=term.seen
-timeout -v .1 sh -c 'trap "echo 1 >term.seen" TERM; yes >&2' 2>&1 |
+timeout -v .1 $SHELL -c '
+  exec 2>/dev/null  # ensure no "Terminated" message blocks the trap
+  trap "echo 1 >term.seen" TERM
+  yes  # Fill the pipe
+' 2>&1 |
   { retry_delay_ file_seen .1 6 || touch term.missed; }
 test -e term.missed && fail=1
 
@@ -127,7 +131,7 @@ compare kill.exp kill.status || fail=1
 
 # --kill-after must interrupt a blocked diagnostic for the initial signal.
 file=kill-after.status
-{ timeout -v -k .1 .1 sh -c 'trap "" TERM; exec yes >&2' 2>&1
+{ timeout -v -k .1 .1 $SHELL -c 'trap "" TERM; exec yes >&2' 2>&1
   echo $? >kill-after.status; } |
   { retry_delay_ file_seen .1 6 || touch kill-after.missed; }
 test -e kill-after.missed && fail=1
