@@ -74,6 +74,12 @@ my @tv = (
 
 ['big-c', '-c99999999999999999999', '', '', 0],
 
+# Ensure a count is validated even when a later option overrides it.
+['overridden-c', '-c 1,2 -n 2', "a\n", '', 1,
+ "$prog: invalid number of bytes: '1,2'\n"],
+['overridden-n', '-n 1,2 -c 2', "a\n", '', 1,
+ "$prog: invalid number of lines: '1,2'\n"],
+
 # Same as -n 10
 ['minus-1', '-', '', '', 0],
 ['minus-2', '-', "x\n" . ("y\n" x 10) . 'z', ("y\n" x 9) . 'z', 0],
