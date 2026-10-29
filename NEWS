@@ -58,6 +58,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   setting the date and time.
   [bug introduced in coreutils-9.11]
 
+  'dd seek=N' no longer replaces the first N bytes of the file with a hole when
+  N is measured in bytes, i.e., when N ends with a 'B' suffix or
+  oflag=seek_bytes, and when N is smaller than the output block size.
+  [bug introduced with oflag=seek_bytes in coreutils-8.16]
+
   'factor' no longer treats inputs requiring the use of arbitrary-precision
   integers followed by a non-numeric suffix as zero if the suffix includes
   non-space characters, or the number itself when followed by spaces.

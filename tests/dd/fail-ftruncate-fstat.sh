@@ -21,30 +21,40 @@ print_ver_ dd
 uses_strace_
 getlimits_
 
-# Setup the file "out" and preserve it's original contents in "exp-out".
-yes | head -n 2048 | tr -d '\n' > out || framework_failure_
-cp out exp-out || framework_failure_
+fail_ftruncate_fstat ()
+{
+  ftruncate_fstat_syscalls=ftruncate,fstat,fstat64
+  strace -o strace.out -e fault=$ftruncate_fstat_syscalls:error=EPERM \
+    -P out -e quiet=path-resolution "$@" 2>err
+}
 
-strace -o strace.out \
-  -e fault=ftruncate:error=EPERM \
-  -e fault=fstat:error=EPERM \
-  -P out \
-  -e quiet=path-resolution \
-  dd if=/dev/zero of=out count=1 seek=1 status=none 2>err
+for seek_arg in seek=1 seek=1B 'seek=1 oflag=seek_bytes'; do
+  # Setup the file "out" and preserve it's original contents in "exp-out".
+  yes | head -n 2048 | tr -d '\n' > out || framework_failure_
+  cp out exp-out || framework_failure_
 
-ret=$?
+  fail_ftruncate_fstat dd if=/dev/zero of=out count=1 $seek_arg status=none
+  ret=$?
 
-# This also implicitly checks for strace invocation issues
-grep -E '^(fstat|ftruncate).*INJECTED' strace.out ||
-  skip_ 'ftruncate or fstat are not intercepted'
+  # Verify interception using record seeking before checking byte seeking,
+  # which did not call ftruncate in coreutils-9.12 and earlier.
+  for syscall in ftruncate fstat; do
+    grep "^$syscall.*INJECTED" strace.out ||
+      {
+        test "$seek_arg" = seek=1 &&
+          skip_ 'cannot intercept ftruncate or fstat'
+        fail=1
+      }
+  done
 
-# After ftruncate fails, we use fstat to get the file type.
-echo "dd: cannot fstat 'out': $EPERM" > exp
-compare exp err || fail=1
+  # After ftruncate fails, we use fstat to get the file type.
+  echo "dd: cannot fstat 'out': $EPERM" > exp
+  compare exp err || fail=1
 
-# coreutils 9.1 to 9.9 would mistakenly continue copying after ftruncate
-# failed and exit successfully.
-test "$ret" = 1 || fail=1
-compare exp-out out || fail=1
+  # coreutils 9.1 to 9.9 would mistakenly continue copying after ftruncate
+  # failed and exit successfully.
+  test "$ret" = 1 || fail=1
+  compare exp-out out || fail=1
+done
 
 Exit $fail

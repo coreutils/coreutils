@@ -2482,11 +2482,12 @@ main (int argc, char **argv)
   else
     {
       mode_t perms = MODE_RW_UGO;
+      bool const seeking = seek_records || seek_bytes;
       int opts
         = (output_flags
            | (conversions_mask & C_NOCREAT ? 0 : O_CREAT)
            | (conversions_mask & C_EXCL ? O_EXCL : 0)
-           | (seek_records || (conversions_mask & C_NOTRUNC) ? 0 : O_TRUNC));
+           | (seeking || (conversions_mask & C_NOTRUNC) ? 0 : O_TRUNC));
 
       off_t size;
       if ((ckd_mul (&size, seek_records, output_blocksize)
@@ -2501,14 +2502,14 @@ main (int argc, char **argv)
       /* Open the output file with *read* access only if we might
          need to read to satisfy a 'seek=' request.  If we can't read
          the file, go ahead with write-only access; it might work.  */
-      if ((! seek_records
+      if ((! seeking
            || ifd_reopen (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)
           && (ifd_reopen (STDOUT_FILENO, output_file, O_WRONLY | opts, perms)
               < 0))
         error (EXIT_FAILURE, errno, _("failed to open %s"),
                quoteaf (output_file));
 
-      if (seek_records != 0 && !(conversions_mask & C_NOTRUNC))
+      if (seeking && !(conversions_mask & C_NOTRUNC))
         {
           if (iftruncate (STDOUT_FILENO, size) != 0)
             {

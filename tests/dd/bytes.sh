@@ -80,4 +80,15 @@ fi
 for count in B B1 Bx1 KBB BB KBb KBx x1 1x 1xx1; do
   returns_ 1 dd count=$count </dev/null >/dev/null || fail=1
 done
+
+printf abcdefghijklnopqrstuvwxyz >exp || framework_failure_
+for seek_arg in seek=12B 'seek=12 oflag=seek_bytes'; do
+  for bs_arg in '' bs=13 obs=13; do
+    printf abcdefghijklm >out &&
+    printf nopqrstuvwxyz >in || framework_failure_
+    dd if=in of=out $bs_arg $seek_arg status=none || fail=1
+    compare exp out || fail=1
+  done
+done
+
 Exit $fail
