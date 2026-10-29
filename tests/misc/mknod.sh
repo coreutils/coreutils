@@ -44,6 +44,10 @@ mkfifo --mode='ug+rw,o+r' f5 || fail=1
 mode=$(ls -dgo f5 | cut -b-10)
 test "$mode" = prw-rw-rw- || fail=1
 
+# A -m value starting with '-' is accepted.
+mkfifo -m -1 f7 || fail=1
+test -p f7 || fail=1
+
 if ! test -g .; then
   mkdir --mode='ug+rw,o+r' f6 || fail=1
   mode=$(ls -dgo f6 | cut -b-10)
