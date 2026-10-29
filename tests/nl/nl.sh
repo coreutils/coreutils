@@ -142,4 +142,13 @@ printf '     1\ta\n       \n     2\tb\n       \n     3\tc\n' >exp \
 compare exp out || fail=1
 compare /dev/null err || fail=1
 
+# Negative -v and -i values are accepted.
+printf 'a\nb\n' > inp || framework_failure_
+nl -v -1 inp > out || fail=1
+printf '    -1\ta\n     0\tb\n' > exp || framework_failure_
+compare exp out || fail=1
+nl -v 5 -i -1 inp > out || fail=1
+printf '     5\ta\n     4\tb\n' > exp || framework_failure_
+compare exp out || fail=1
+
 Exit $fail
