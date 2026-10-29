@@ -573,6 +573,7 @@ all_tests =					\
   tests/chmod/octal.sh				\
   tests/chmod/only-op.sh			\
   tests/chmod/partial-fail.sh			\
+  tests/chmod/reference-order.sh		\
   tests/chmod/setgid.sh				\
   tests/chmod/silent.sh				\
   tests/chmod/thru-dangling.sh			\
