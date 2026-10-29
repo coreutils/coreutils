@@ -189,6 +189,12 @@ EOF
 compare err_exp err || fail=1
 done
 
+# --argv0 requires a command.
+returns_ 125 env -a foo > out 2> err || fail=1
+compare /dev/null out || fail=1
+returns_ 125 env --argv0=foo > out 2> err || fail=1
+compare /dev/null out || fail=1
+
 # QUOTING_STYLE does not affect redirected output.
 # --quoting-style does affect redirected output.
 cat <<\EOF >exp-noargs-literal || framework_failure_
