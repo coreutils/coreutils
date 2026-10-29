@@ -156,4 +156,9 @@ realpath -ms loop >out 2>err || fail=1
 compare exp out || fail=1
 compare /dev/null err || fail=1
 
+# -e must check existence even when not resolving symlinks.
+ln -s missing dangling || framework_failure_
+returns_ 1 realpath --no-symlinks -e dangling > out 2> err || fail=1
+compare /dev/null out || fail=1
+
 Exit $fail
