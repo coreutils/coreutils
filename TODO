@@ -59,7 +59,7 @@ sort: Investigate better sorting algorithms; see Knuth vol. 3.
   should do fewer comparisons, so perhaps this should be revisited.
   List merge sort was implemented in the style of Knuth algorithm
   5.2.4L, with the optimization suggested by exercise 5.2.4-22.  The
-  test case was 140,213,394 bytes, 426,4424 lines, text taken from the
+  test case was 140,213,394 bytes, 4,264,424 lines, text taken from the
   GCC 3.3 distribution, sort.c compiled with GCC 2.95.4 and running on
   Debian 3.0r1 GNU/Linux, 2.4GHz Pentium 4, single pass with no
   temporary files and plenty of RAM.
