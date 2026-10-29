@@ -365,6 +365,18 @@ my @Tests =
  ['ctx_mixed_pad2', '--base64 --decode', {IN=>"QWI=\nQWI="}, {OUT=>"AbAb"}],
  ['ctx_mixed_pad3', '--base32 --decode', {IN=>"IFBA====\nIE"}, {OUT=>"ABA"}],
  ['ctx_mixed_pad4', '--base32 -d', {IN=>"IFBA====\nIFBA===="}, {OUT=>"ABAB"}],
+
+ # base64url input need not be padded, but encoding still pads.
+ ['b64u_nopad1', '--base64url -d', {IN=>'dG8-YmU'},  {OUT=>'to>be'}],
+ ['b64u_nopad2', '--base64url -d', {IN=>'dG8-YmU='}, {OUT=>'to>be'}],
+ ['b64u_nopad3', '--base64url -d', {IN=>'dG8_'},     {OUT=>'to?'}],
+ ['b64u_nopad4', '--base64url -d', {IN=>'Pz8=Pz8'},  {OUT=>'????'}],
+ ['b64u_nopad5', '--base64url',    {IN=>'to>be'},    {OUT=>'dG8-YmU='}],
+ # The standard alphabet's '+' and '/' are not valid base64url.
+ ['b64u_inval1', '--base64url -d', {IN=>'dG8+YmU='}, {OUT=>''}, {EXIT=>1},
+  {ERR=>"$prog: invalid input\n"}],
+ ['b64u_inval2', '--base64url -d', {IN=>'dG8/'}, {OUT=>''}, {EXIT=>1},
+  {ERR=>"$prog: invalid input\n"}],
 );
 
 # Prepend the command line argument and append a newline to end
