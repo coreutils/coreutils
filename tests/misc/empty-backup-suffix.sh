@@ -18,7 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ cp ginstall mv
+print_ver_ cp ginstall ln mv
 
 # Setup the files we expect to see.
 echo a > exp-a || framework_failure_
@@ -87,6 +87,16 @@ for prog in cp ginstall mv; do
       done
     done
   done
+done
+
+# An empty --backup= argument acts like --backup.
+for prog in cp ginstall ln mv; do
+  reset_files
+  $prog --backup= a b || fail=1
+  test -f b~ || { echo "$prog: missing b~"; fail=1; }
+  reset_files
+  VERSION_CONTROL=numbered $prog --backup= a b || fail=1
+  test -f b.~1~ || { echo "$prog: missing b.~1~"; fail=1; }
 done
 
 Exit $fail
