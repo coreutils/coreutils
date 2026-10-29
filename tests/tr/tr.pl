@@ -162,6 +162,27 @@ my @Tests =
   # Reject unknown character class name.
   ['invalid-class', qw('[:fooclass:]' x), {IN=>'abc'}, {OUT=>''}, {EXIT=>1},
    {ERR=>"$prog: invalid character class 'fooclass'\n"}],
+
+  # [c*] in string2 is only valid when translating,
+  # though a repeat count is fine with -d -s.
+  ['s2-star-ds', qw(-ds a '[b*]'), {IN=>"xaab\n"}, {OUT=>''}, {EXIT=>1},
+   {ERR=>"$prog: the [c*] construct may appear in string2 only"
+         . " when translating\n"}],
+  ['s2-star0-ds', qw(-ds a '[b*0]'), {IN=>"xaab\n"}, {OUT=>''}, {EXIT=>1},
+   {ERR=>"$prog: the [c*] construct may appear in string2 only"
+         . " when translating\n"}],
+  ['s2-rep-ds', qw(-ds a '[b*2]'), {IN=>"xaab\n"}, {OUT=>"xb\n"}],
+  ['s2-star-s', qw(-s a '[b*]'), {IN=>"xaab\n"}, {OUT=>"xb\n"}],
+  ['s2-star', qw(a '[b*]'), {IN=>"xaab\n"}, {OUT=>"xbbb\n"}],
+
+  # [=c=] in string2 is only valid with both -d and -s.
+  ['s2-equiv', qw(a '[=b=]'), {IN=>"xaab\n"}, {OUT=>''}, {EXIT=>1},
+   {ERR=>"$prog: [=c=] expressions may not appear in string2"
+         . " when translating\n"}],
+  ['s2-equiv-s', qw(-s a '[=b=]'), {IN=>"xaab\n"}, {OUT=>''}, {EXIT=>1},
+   {ERR=>"$prog: [=c=] expressions may not appear in string2"
+         . " when translating\n"}],
+  ['s2-equiv-ds', qw(-ds a '[=b=]'), {IN=>"xaab\n"}, {OUT=>"xb\n"}],
 );
 
 @Tests = triple_test \@Tests;
