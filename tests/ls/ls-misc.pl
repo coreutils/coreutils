@@ -355,6 +355,12 @@ my @Tests =
              {ERR => "$prog: invalid tab size: '$_'\n"},
              {EXIT => 2},
             ] } qw(-9 zz 0.5)),
+
+     # --block-size=0 is invalid, even if a later option overrides it.
+     (map { ["block-size-zero$_", "--block-size=0 $_",
+             {ERR => "$prog: invalid --block-size argument '0'\n"},
+             {EXIT => 2},
+            ] } ('', '--si', '-h')),
     );
 
 umask 022;
