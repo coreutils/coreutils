@@ -107,6 +107,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   'nl -d ""' no longer mistakenly treats empty lines as headers.
   [bugs introduced in coreutils-9.11]
 
+  'nl -d C' now works when a longer --section-delimiter was given earlier
+  on the command line.  Previously the new delimiter was written through
+  the earlier argument, which could corrupt following command line arguments.
+  [bug introduced in coreutils-9.0]
+
   od now exits gracefully when offsets overflow integer limits.
   [This bug was present in "the beginning".]
 

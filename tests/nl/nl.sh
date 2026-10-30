@@ -110,6 +110,17 @@ cat <<EOF > exp
 EOF
 compare exp out || fail=1
 
+# Ensure a single char delimiter is handled after a longer one.
+# coreutils 9.0 to 9.12 wrote the new delimiter through the previous argument.
+printf '%s\n' a x:x: c > in.txt || framework_failure_
+nl -d foo -d x in.txt > out || fail=1
+cat <<EOF > exp
+     1	a
+
+     1	c
+EOF
+compare exp out || fail=1
+
 # Test that all files are processed.
 echo a > file1
 echo b > file2
