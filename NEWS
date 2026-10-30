@@ -129,7 +129,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   and now reverts to polling in that case.  Previously tail could fail
   to notice new data, or that a file followed by name was replaced,
   if events arrived faster than tail could process them.
-  [bug introduced in coreutils-7.5]
+  [bug introduced with inotify support added in coreutils-7.5]
+
+  'tail -F' no longer fails with "error reading inotify event" when a separate
+  file with a longer name is created, removed, or renamed in the directory
+  of a followed file.
+  [bug introduced with inotify support added in coreutils-7.5]
 
   'timeout --signal=ALRM -k' again honors the -k option.
   Similarly 'timeout --signal=CHLD' no longer reports "No child processes",

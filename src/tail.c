@@ -1534,9 +1534,6 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
   bool found_unwatchable_dir = false;
   bool no_inotify_resources = false;
   struct File_spec *prev_fspec;
-  idx_t evlen = 0;
-  char *evbuf;
-  idx_t evbuf_off = 0;
 
   *parent_by_namep = NULL;
 
@@ -1569,10 +1566,6 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
     {
       if (!f[i].ignore)
         {
-          idx_t fnlen = strlen (f[i].name);
-          if (evlen < fnlen)
-            evlen = fnlen;
-
           f[i].wd = -1;
 
           if (follow_mode == Follow_name)
@@ -1680,8 +1673,13 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
   if (debug)
     error (0, 0, "%s", _("using notification mode"));
 
-  evlen += sizeof (struct inotify_event) + 1;
-  evbuf = ximalloc (evlen);
+  idx_t evbuf_off = 0;
+
+  /* NAME_MAX covers that max length of all file systems
+     that might be mounted in the parent dir, and the define
+     should be available any where that inotify is.  */
+  idx_t evlen = sizeof (struct inotify_event) + NAME_MAX + 1;
+  char *evbuf = ximalloc (evlen);
 
   /* Wait for inotify events and handle them.  Events on directories
      ensure that watched files can be re-added when following by name.

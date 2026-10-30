@@ -207,6 +207,7 @@ all_tests =					\
   tests/tail/inotify-rotate.sh			\
   tests/tail/inotify-rotate-resources.sh	\
   tests/tail/inotify-dir-recreate.sh		\
+  tests/tail/inotify-long-name.sh		\
   tests/tail/inotify-only-regular.sh		\
   tests/tail/inotify-overflow.sh		\
   tests/tail/quote-headers.sh			\
