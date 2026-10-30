@@ -121,8 +121,10 @@ timeout -v .1 $SHELL -c '
 test -e term.missed && fail=1
 
 # A group-wide SIGKILL must not wait for the verbose diagnostic either.
+# Redirect in a subshell so a waiting shell's "Killed" diagnostic
+# cannot block on the filled pipe before recording the exit status.
 file=kill.status
-{ timeout -v -s KILL .1 yes 2>&1
+{ (exec timeout -v -s KILL .1 yes 2>&1)
   echo $? >kill.status; } |
   { retry_delay_ file_seen .1 6 || touch kill.missed; }
 test -e kill.missed && fail=1
@@ -131,7 +133,7 @@ compare kill.exp kill.status || fail=1
 
 # --kill-after must interrupt a blocked diagnostic for the initial signal.
 file=kill-after.status
-{ timeout -v -k .1 .1 $SHELL -c 'trap "" TERM; exec yes >&2' 2>&1
+{ (exec timeout -v -k .1 .1 $SHELL -c 'trap "" TERM; exec yes >&2' 2>&1)
   echo $? >kill-after.status; } |
   { retry_delay_ file_seen .1 6 || touch kill-after.missed; }
 test -e kill-after.missed && fail=1
