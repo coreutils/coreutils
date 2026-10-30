@@ -138,7 +138,8 @@ compare exp_err err || fail=1
 NL='
 '
 echo 97 > exp || framework_failure_
-echo "printf: warning: 'b\nc': $ignore" >exp-err || framework_failure_
+printf 'printf: warning: %s: %s\n' "'b\\nc'" "$ignore" \
+ >exp-err || framework_failure_
 $prog '%d\n' '"ab'"$NL"'c' >out 2>err || fail=1
 compare exp out || fail=1
 compare exp-err err || fail=1
