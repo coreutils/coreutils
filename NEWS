@@ -153,6 +153,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   into a seekable file whose size is a multiple of the page size.
   [bug introduced in coreutils-8.24]
 
+  Utilities that accept user supplied date formatting;
+  'date', 'du', 'dir', 'vdir', 'ls', and 'pr' no longer have buffer overflows
+  when processing padding or recursive formats in gnulib's strftime replacement.
+  [bugs introduced in coreutils-8.32 and coreutils-9.9]
+
   When configured with both --disable-bold-man-page-references and
   --disable-manual-url, 'chroot', 'head', 'shred', 'sort', 'split', and 'tail'
   no longer use an uninitialized va_list when printing --help.  Previously, they
