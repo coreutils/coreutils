@@ -54,4 +54,15 @@ test_nl_multibyte '\uB250\uB250' '\uB250\uB250' || fail=1
 test_nl_multibyte '\uB250\uB250\uB250' '\uB250\uB250\uB250' || fail=1
 test_nl_multibyte "$(bad_unicode)" "$(bad_unicode)" || fail=1
 
+# Ensure a single character delimiter is handled after a longer one.
+# coreutils 9.11 and 9.12 wrote the new delimiter through the previous
+# argument, corrupting the following command line arguments.
+{
+  export LC_ALL="$LOCALE_FR_UTF8"
+  env printf '\uB250:\uB250:\uB250:\na\n\uB250:\uB250:\nb\n\uB250:\nc\n' > inp \
+    || framework_failure_
+  nl -p -ha -fa -d '' inp -d "$(env printf '\uB250')" > out || fail=1
+}
+compare exp out || fail=1
+
 Exit $fail

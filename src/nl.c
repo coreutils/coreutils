@@ -589,14 +589,22 @@ main (int argc, char **argv)
               for (; p < lim && n_chars < 2; ++n_chars)
                   p += mcel_scan (p, lim).len;
               if (n_chars == 1)
-                memcpy (mempcpy (section_del, optarg, len),  ":", sizeof ":");
+                {
+                  /* Build the delimiter in the static buffer, as
+                     section_del may point to a previous -d argument.  */
+                  section_del = DEFAULT_SECTION_DELIMITERS;
+                  memcpy (mempcpy (section_del, optarg, len), ":", sizeof ":");
+                }
               else
                 section_del = optarg;
             }
           else
             {
               if (len == 1)
-                *section_del = *optarg;
+                {
+                  section_del = DEFAULT_SECTION_DELIMITERS;
+                  *section_del = *optarg;
+                }
               else
                 section_del = optarg;
             }
