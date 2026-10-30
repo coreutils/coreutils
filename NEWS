@@ -7,6 +7,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'basenc --base32hex' no longer decodes BASE32 only characters "WXYZ".
   [bug introduced with the basenc program in coreutils-8.31]
 
+  'chcon' now emits the entire file name in error messages when setting the
+  security context fails instead of the basename.
+  [bug introduced with the chcon program in coreutils-6.9.90]
+
   'chroot --userspec=USER' now uses the primary group of USER as looked up
   inside the chroot.  Previously the group looked up outside the chroot
   was used, even when the look-up inside the chroot succeeded.

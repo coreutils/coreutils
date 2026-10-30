@@ -138,7 +138,8 @@ compute_context_from_mask (char const *context, context_t *ret)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_file_context (int fd, char const *file, bool ignore_missing)
+change_file_context (char const *file_full_name, int fd, char const *file,
+                     bool ignore_missing)
 {
   char *file_context = NULL;
   context_t context IF_LINT (= NULL);
@@ -156,7 +157,7 @@ change_file_context (int fd, char const *file, bool ignore_missing)
           if (ignore_missing && ignorable_traversal_errno (errno))
             return 0;
           error (0, errno, _("failed to get security context of %s"),
-                 quoteaf (file));
+                 quoteaf (file_full_name));
           return 1;
         }
 
@@ -166,7 +167,7 @@ change_file_context (int fd, char const *file, bool ignore_missing)
       if (file_context == NULL)
         {
           error (0, 0, _("can't apply partial context to unlabeled file %s"),
-                 quoteaf (file));
+                 quoteaf (file_full_name));
           return 1;
         }
 
@@ -195,7 +196,8 @@ change_file_context (int fd, char const *file, bool ignore_missing)
             {
               errors = 1;
               error (0, errno, _("failed to change context of %s to %s"),
-                     quoteaf_n (0, file), quote_n (1, context_string));
+                     quoteaf_n (0, file_full_name),
+                     quote_n (1, context_string));
             }
         }
     }
@@ -305,7 +307,8 @@ process_file (FTS *fts, FTSENT *ent)
         printf (_("changing security context of %s\n"),
                 quoteaf (file_full_name));
 
-      if (change_file_context (fts->fts_cwd_fd, file, ignore_missing) != 0)
+      if (change_file_context (file_full_name, fts->fts_cwd_fd, file,
+                               ignore_missing) != 0)
         ok = false;
     }
 
