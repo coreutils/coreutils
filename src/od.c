@@ -1675,6 +1675,8 @@ dump_strings (void)
             }
         }
       putchar ('\n');
+      if (ferror (stdout))
+        write_error ();
     }
 
   /* We reach this point only if we search through

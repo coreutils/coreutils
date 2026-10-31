@@ -55,6 +55,7 @@ join -a 1 -z /dev/zero /dev/null
 nl --version; yes | nl
 numfmt --version; yes 1 | numfmt
 od -v /dev/zero
+od --version; yes abc | tr '\\\\n' '\\\\0' | od -S3
 paste /dev/zero
 pr /dev/zero
 pr --version; yes 1 | pr
