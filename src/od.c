@@ -1537,7 +1537,7 @@ dump (void)
 
   intmax_t current_offset = n_bytes_to_skip;
 
-  do
+  while (true)
     {
       intmax_t needed_bound
         = end_offset < 0 ? INTMAX_MAX : end_offset - current_offset;
@@ -1554,11 +1554,10 @@ dump (void)
       write_block (current_offset, n_bytes_read,
                    block[!idx], block[idx]);
       if (ferror (stdout))
-        ok = false;
+        write_error ();
       current_offset = offset_add (current_offset, n_bytes_read);
       idx = !idx;
     }
-  while (ok);
 
   if (n_bytes_read > 0)
     {

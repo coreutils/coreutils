@@ -115,6 +115,14 @@ my @Tests =
       {OUT=>"0000001 hello\n0000007 world\n"}],
      ['S-Ao', '-Ao -S3', {IN=>"\001hello\000world\000ab\000"},
       {OUT=>"0000001 hello\n0000007 world\n"}],
+
+     # Ensure that all remaining input is output following an input error.
+     # From coreutils-9.4 through coreutils-9.12, od would stop after the
+     # block being read, and then output an uninitialized or stale block.
+     ['read-err-1', '-An -c -w4', {IN=>{g=>'a'}}, 'missing',
+      {IN=>{h=>'bcdefghij'}}, {EXIT=>1},
+      {OUT=>"   a   b   c   d\n   e   f   g   h\n   i   j\n"},
+      {ERR=>"$prog: missing: $limits->{ENOENT}\n"}],
     );
 
 push @Tests,

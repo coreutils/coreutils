@@ -100,6 +100,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   od now exits gracefully when offsets overflow integer limits.
   [This bug was present in "the beginning".]
 
+  od now continues to process inputs upon read error.
+  Previously it would stop after the block being read, and then output
+  a block of uninitialized or previously output data.
+  [bug introduced in coreutils-9.4]
+
   'pr' no longer reads past its internal buffer and crashes when it reads more
   than INT_MAX bytes of column data for a single page.
   [This bug was present in "the beginning".]
