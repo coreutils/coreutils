@@ -23,6 +23,7 @@
 #include <selinux/label.h>
 
 #include "system.h"
+#include "fcntl--.h"
 #include "modechange.h"
 #include "quote.h"
 #include "selinux.h"
@@ -209,6 +210,7 @@ main (int argc, char **argv)
      'mknod /dev/rst0 character 18 0'. */
 
   mode_t node_type;
+  dev_t device;
   switch (argv[optind + 1][0])
     {
     case 'b':			/* 'block' or 'buffered' */
@@ -244,26 +246,17 @@ main (int argc, char **argv)
           error (EXIT_FAILURE, 0,
                  _("invalid minor device number %s"), quote (s_minor));
 
-        dev_t device = makedev (i_major, i_minor);
+        device = makedev (i_major, i_minor);
 #ifdef NODEV
         if (device == NODEV)
           error (EXIT_FAILURE, 0, _("invalid device %s %s"),
                  s_major, s_minor);
 #endif
-
-        if (set_security_context)
-          defaultcon (set_security_context, argv[optind], node_type);
-
-        if (mknod (argv[optind], newmode | node_type, device) != 0)
-          error (EXIT_FAILURE, errno, "%s", quotef (argv[optind]));
       }
       break;
 
     case 'p':			/* 'pipe' */
-      if (set_security_context)
-        defaultcon (set_security_context, argv[optind], S_IFIFO);
-      if (mkfifo (argv[optind], newmode) != 0)
-        error (EXIT_FAILURE, errno, "%s", quotef (argv[optind]));
+      node_type = S_IFIFO;
       break;
 
     default:
@@ -271,9 +264,54 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (specified_mode && lchmod (argv[optind], newmode) != 0)
-    error (EXIT_FAILURE, errno, _("cannot set permissions of %s"),
-           quoteaf (argv[optind]));
+  char const *const name = argv[optind];
 
-  return EXIT_SUCCESS;
+  if (set_security_context)
+    defaultcon (set_security_context, name, node_type);
+
+  int dirfd = AT_FDCWD;
+  char const *relname = name;
+  char const *base;
+
+  /* When a mode is specified, open a file descriptor to the parent
+     and create the special file relative to that.  This allows us to
+     call lchmodat instead of lchmod, which would follow leading path
+     components in NAME.  The lchmodat call is necessary to set
+     the mode in the presence of default ACLs, where we may have
+     mode different than the one the user specified without it.  */
+  if (specified_mode && (base = last_component (name)) != name && *base)
+    {
+      char *dir = dir_name (name);
+
+      dirfd = open (dir, O_PATHSEARCH | O_DIRECTORY);
+      free (dir);
+
+      /* We lie about the error here, since the reason for opening the
+         parent is not intuitive, and a mkfifo(3) or mknodat(2) call
+         would most likely fail for the same reason.  */
+      if (dirfd < 0)
+        error (EXIT_FAILURE, errno, "%s", quotef (name));
+
+      relname = base;
+    }
+
+  bool ok = true;
+  if ((node_type == S_IFIFO
+       ? mkfifoat (dirfd, relname, newmode)
+       : mknodat (dirfd, relname, newmode | node_type, device)) < 0)
+    {
+      error (0, errno, "%s", quotef (name));
+      ok = false;
+    }
+  else if (specified_mode && lchmodat (dirfd, relname, newmode) < 0)
+    {
+      error (EXIT_FAILURE, errno, _("cannot set permissions of %s"),
+             quoteaf (name));
+      ok = false;
+    }
+
+  if (dirfd != AT_FDCWD)
+    close (dirfd);
+
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

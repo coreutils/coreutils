@@ -90,6 +90,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   lookup on a file without an ACL.
   [bug introduced in coreutils-9.6]
 
+  'mkfifo' and 'mknod' no longer have a race when setting the mode specified by
+  --mode.  Previously, they used lchmod, which follows symbolic links in the
+  leading path components, to ensure the mode was properly set in the presence
+  of default ACLs.
+  [bug introduced in coreutils-8.22]
+
   'mv -Z' no longer blocks when setting the SELinux security context of a
   just-moved FIFO.
   [bug introduced with SELinux support in coreutils-8.22]
