@@ -211,6 +211,7 @@
 /src/single-binary.mk
 /src/version.c
 /src/version.h
+/src/vg/
 /stamp-h1
 /tests/*/*.log
 /tests/*/*.trs
