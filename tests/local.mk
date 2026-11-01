@@ -791,6 +791,7 @@ all_tests =					\
   tests/mkdir/special-1.sh			\
   tests/mkdir/t-slash.sh			\
   tests/mkdir/smack-no-root.sh			\
+  tests/mkfifo/basic.sh				\
   tests/mv/acl.sh				\
   tests/mv/atomic.sh				\
   tests/mv/atomic2.sh				\
