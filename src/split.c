@@ -480,7 +480,8 @@ new_name:
           /* Update the suffix index.  */
           idx_t *sufindex_end = sufindex + suffix_length;
           while (i-- != 0)
-            *--sufindex_end = numeric_suffix_start[i] - '0';
+            *--sufindex_end = (strchr (suffix_alphabet, numeric_suffix_start[i])
+                               - suffix_alphabet);
         }
 
 #if ! _POSIX_NO_TRUNC && HAVE_PATHCONF && defined _PC_NAME_MAX
@@ -1665,6 +1666,17 @@ main (int argc, char **argv)
   if (optind < argc)
     {
       error (0, 0, _("extra operand %s"), quote (argv[optind]));
+      usage (EXIT_FAILURE);
+    }
+
+  /* A start value given with --hex-suffixes may be invalid
+     for a later --numeric-suffixes.  */
+  if (numeric_suffix_start
+      && (strlen (numeric_suffix_start)
+          != strspn (numeric_suffix_start, suffix_alphabet)))
+    {
+      error (0, 0, _("%s: invalid start value for numerical suffix"),
+             quote (numeric_suffix_start));
       usage (EXIT_FAILURE);
     }
 

@@ -48,4 +48,14 @@ for mode in 'numeric' 'hex'; do
   returns_ 1 split --$mode-suffixes=one in 2> /dev/null || fail=1
 done
 
+# Check hexadecimal start values that are not decimal digits
+rm -f x?? || framework_failure_
+split --hex-suffixes=f --lines=2 in || fail=1
+compare exp-0 x0f || fail=1
+compare exp-1 x10 || fail=1
+compare exp-2 x11 || fail=1
+
+# A hexadecimal start value is invalid for a later --numeric-suffixes
+returns_ 1 split --hex-suffixes=a --numeric-suffixes in 2> /dev/null || fail=1
+
 Exit $fail

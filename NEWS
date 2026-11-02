@@ -148,6 +148,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   environment.
   [bug introduced in coreutils-9.9]
 
+  'split --hex-suffixes=FROM' no longer reads past the end of its suffix
+  alphabet when FROM contains the digits a-f, which resulted in garbage
+  output file names, e.g., x0f followed by x0s instead of x10.
+  Also 'split --hex-suffixes=FROM --numeric-suffixes' now rejects such FROM.
+  [bug introduced with the --hex-suffixes option in coreutils-8.28]
+
   'stty' again rejects empty speed arguments.
   Previously such arguments were accepted as value 0.
   [bug introduced in coreutils-9.8]
