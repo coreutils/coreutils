@@ -134,6 +134,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   For example with 'seq -w 1e40 1e40' or 'seq 1 1e-40 1'.
   [This bug was present in "the beginning".]
 
+  'seq' no longer treats operands using the decimal point of the current locale
+  like "0,5", or hexadecimal operands with an upper case exponent like "0x1P-1",
+  as integers.  Previously 'seq 1,5 3' would output 2 and 3, and with
+  coreutils-8.32 or later 'seq 0 0,5 2' would output 0 indefinitely.
+  Also negative operands like "-,5" are no longer treated as options.
+  [bugs introduced in coreutils-8.24 and coreutils-8.31]
+
   'sort --compress-program=PROG' no longer treats an unset PATH environment
   variable as equivalent to a PATH environment variable defined to an empty
   string.  On typical platforms, that would result in PROG being executed from

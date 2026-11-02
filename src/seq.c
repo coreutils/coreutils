@@ -51,6 +51,9 @@
 /* True if the locale settings were honored.  */
 static bool locale_ok;
 
+/* The locale's decimal point, or "." if it is empty.  */
+static char const *locale_point;
+
 /* If true print all number with equal width.  */
 static bool equal_width;
 
@@ -179,9 +182,17 @@ scan_arg (char const *arg)
   ret.width = 0;
   ret.precision = INT_MAX;
 
-  /* Use no precision (and possibly fast generation) for integers.  */
+  /* Like cl_strtold, accept '.' or the current locale's decimal point.  */
   char const *decimal_point = strchr (arg, '.');
-  if (! decimal_point && ! strchr (arg, 'p') /* not a hex float */)
+  idx_t decimal_point_len = 1;
+  if (! decimal_point)
+    {
+      decimal_point = strstr (arg, locale_point);
+      decimal_point_len = strlen (locale_point);
+    }
+
+  /* Use no precision (and possibly fast generation) for integers.  */
+  if (! decimal_point && ! strpbrk (arg, "pP") /* not a hex float */)
     ret.precision = 0;
 
   /* auto set width and precision for decimal inputs.  */
@@ -192,9 +203,11 @@ scan_arg (char const *arg)
 
       if (decimal_point)
         {
-          fraction_len = strcspn (decimal_point + 1, "eE");
+          fraction_len = strcspn (decimal_point + decimal_point_len, "eE");
           if (fraction_len <= INT_MAX)
             ret.precision = fraction_len;
+          /* printf counts a multi-byte decimal point as a single column.  */
+          ret.width -= decimal_point_len - 1;
           ret.width += (fraction_len == 0                       /* #.  -> #   */
                         ? -1
                         : (decimal_point == arg                 /* .#  -> 0.# */
@@ -215,7 +228,7 @@ scan_arg (char const *arg)
             {
               if (decimal_point)
                 {
-                  if (e == decimal_point + 1) /* undo #. -> # above  */
+                  if (fraction_len == 0) /* undo #. -> # above  */
                     ret.width++;
                 }
               else
@@ -565,6 +578,9 @@ main (int argc, char **argv)
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   locale_ok = !!setlocale (LC_ALL, "");
+  locale_point = localeconv ()->decimal_point;
+  if (! *locale_point)
+    locale_point = ".";
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
@@ -577,7 +593,8 @@ main (int argc, char **argv)
     {
       int optc;
       if (argv[optind][0] == '-'
-          && ((optc = argv[optind][1]) == '.' || c_isdigit (optc)))
+          && ((optc = argv[optind][1]) == '.' || c_isdigit (optc)
+              || STRPREFIX (&argv[optind][1], locale_point)))
         {
           /* means negative number */
           break;
