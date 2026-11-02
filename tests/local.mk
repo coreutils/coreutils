@@ -282,6 +282,7 @@ all_tests =					\
   tests/seq/seq-io-errors.sh			\
   tests/seq/seq-locale.sh			\
   tests/seq/seq-long-double.sh			\
+  tests/seq/seq-no-progress.sh			\
   tests/seq/seq-precision.sh			\
   tests/head/head.pl				\
   tests/head/head-elide-tail.pl			\

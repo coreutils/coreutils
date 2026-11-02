@@ -313,12 +313,22 @@ print_numbers (char const *fmt, struct layout layout,
             write_error ();
           if (out_of_range)
             break;
+          if (i + 1 == i)
+            error (EXIT_FAILURE, EOVERFLOW, _("sequence counter exhausted"));
 
           /* Mathematically equivalent to 'x += step;', and typically
              less subject to rounding error.  */
           x = first + i * step;
 
-          out_of_range = (step < 0 ? x < last : last < x);
+          /* If STEP is too small to change X, then X might never pass LAST,
+             so compare the offsets from FIRST, which are not so rounded.  */
+          if (x == x0
+              && ! (step < 0
+                    ? last - first <= i * step : i * step <= last - first))
+            break;
+
+          /* Also treat NaN, from "seq -- -inf inf 0", as out of range.  */
+          out_of_range = ! (step < 0 ? last <= x : x <= last);
 
           if (out_of_range)
             {
