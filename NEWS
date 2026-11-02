@@ -11,6 +11,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   security context fails instead of the basename.
   [bug introduced with the chcon program in coreutils-6.9.90]
 
+  'chcon' avoids a race between getting and setting security contexts of a file
+  when only a partial context is specified.
+  [bug introduced with the chcon program in coreutils-6.9.90]
+
   'chroot --userspec=USER' now uses the primary group of USER as looked up
   inside the chroot.  Previously the group looked up outside the chroot
   was used, even when the look-up inside the chroot succeeded.

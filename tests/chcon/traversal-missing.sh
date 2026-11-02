@@ -20,22 +20,25 @@
 print_ver_ chcon
 require_strace_ getxattr
 
-mkdir d || framework_failure_
-touch d/foo || framework_failure_
+mkdir -p d/foo || framework_failure_
+touch d/foo/bar || framework_failure_
+opens=open,openat
 xattrs=getxattr,lgetxattr,setxattr,lsetxattr
 
 (cd d && chcon -R -t user_tmp_t . > /dev/null 2>&1) \
   || skip_ 'chcon does not work on the test file system'
 
 # Skip if strace does not support path-filtered syscall injection.
-strace --quiet=all -o /dev/null -P /proc/self/fd/4/foo \
-  -e inject=$xattrs:error=ENOENT true 2> /dev/null \
+strace --quiet=all -o /dev/null -P d/foo -P d/foo/bar \
+  -e inject=$opens,$xattrs:error=ENOENT true 2> /dev/null \
   || skip_ 'strace does not support the required options and syscalls'
 
+# Test traversal using a partial context, where we use openat to
+# avoid races.
 for errnum in ENOENT; do
   rm -f err trace
-  (cd d && strace --quiet=all -o ../trace -P /proc/self/fd/4/foo \
-     -e inject=$xattrs:error=$errnum chcon -R -t user_tmp_t . \
+  (cd d && strace --quiet=all -o ../trace -P foo -P foo/bar \
+     -e inject=$opens,$xattrs:error=$errnum chcon -R -t user_tmp_t . \
      > /dev/null 2> ../err)
   status=$?
 
@@ -44,5 +47,23 @@ for errnum in ENOENT; do
   test $status -eq 0 || fail=1
   test ! -s err || { cat err; fail=1; }
 done
+
+# Test traversal on a complete context, where getfileconat
+# or lgetfileconat are used.  This requires root, and we use
+# root:object_r:tmp_t:s0 since it works without mcstransd running.
+if uid_is_privileged_; then
+  for errnum in ENOENT; do
+    rm -f err trace
+    (cd d && strace --quiet=all -o ../trace -P /proc/self/fd/4/foo \
+       -P /proc/self/fd/5/bar -e inject=$xattrs:error=$errnum \
+       chcon -R root:object_r:tmp_t:s0 . > /dev/null 2> ../err)
+    status=$?
+
+    grep ' (INJECTED)' trace > /dev/null 2>&1 \
+      || skip_ 'strace did not inject the requested failure'
+    test $status -eq 0 || fail=1
+    test ! -s err || { cat err; fail=1; }
+  done
+fi
 
 Exit $fail

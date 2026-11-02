@@ -22,6 +22,7 @@
 
 #include "system.h"
 #include "dev-ino.h"
+#include "fcntl--.h"
 #include "fts-missing.h"
 #include "ignore-value.h"
 #include "quote.h"
@@ -133,32 +134,61 @@ compute_context_from_mask (char const *context, context_t *ret)
   return 0;
 }
 
-/* Change the context of FILE, using specified components.
+/* Change the context of FILE relative to DIRFD, using specified components.
    If it is a directory and -R is given, recurse.
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_file_context (char const *file_full_name, int fd, char const *file,
-                     bool ignore_missing)
+change_file_context (char const *file_full_name, int const dirfd,
+                     char const *file, bool ignore_missing)
 {
   char *file_context = NULL;
   context_t context IF_LINT (= NULL);
   char const * context_string;
   int errors = 0;
+  int file_fd = -1;
 
   if (specified_context == NULL)
     {
-      int status = (affect_symlink_referent
-                    ? getfileconat (fd, file, &file_context)
-                    : lgetfileconat (fd, file, &file_context));
-
-      if (status < 0 && errno != ENODATA)
+      int status;
+#ifdef O_PATH
+      /* Pin the file while deriving and applying a partial context.
+         O_PATH also works for symlinks and unreadable files.  */
+      file_fd = openat (dirfd, file,
+                        (O_PATH | (affect_symlink_referent ? 0 : O_NOFOLLOW)));
+      if (file_fd < 0)
         {
           if (ignore_missing && ignorable_traversal_errno (errno))
             return 0;
-          error (0, errno, _("failed to get security context of %s"),
-                 quoteaf (file_full_name));
+          error (0, errno, _("failed to open %s"), quoteaf (file_full_name));
           return 1;
+        }
+
+      status = fgetfilecon (file_fd, &file_context);
+      if (status < 0 && errno == EBADF)
+        {
+          /* libselinux before 3.4, or an unavailable /proc/self/fd,
+             cannot handle O_PATH descriptors, so fall back to
+             potentially racy behavior with partial contexts.  */
+          close (file_fd);
+          file_fd = -1;
+        }
+#endif
+      if (file_fd < 0)
+        status = (affect_symlink_referent
+                  ? getfileconat (dirfd, file, &file_context)
+                  : lgetfileconat (dirfd, file, &file_context));
+
+      if (status < 0 && errno != ENODATA)
+        {
+          if (! (file_fd < 0 && ignore_missing
+                 && ignorable_traversal_errno (errno)))
+            {
+              error (0, errno, _("failed to get security context of %s"),
+                     quoteaf (file_full_name));
+              errors = 1;
+            }
+          goto done;
         }
 
       /* If the file doesn't have a context, and we're not setting all of
@@ -168,13 +198,15 @@ change_file_context (char const *file_full_name, int fd, char const *file,
         {
           error (0, 0, _("can't apply partial context to unlabeled file %s"),
                  quoteaf (file_full_name));
-          return 1;
+          errors = 1;
+          goto done;
         }
 
       if (compute_context_from_mask (file_context, &context))
         {
           freecon (file_context);
-          return 1;
+          errors = 1;
+          goto done;
         }
 
       context_string = context_str (context);
@@ -186,13 +218,16 @@ change_file_context (char const *file_full_name, int fd, char const *file,
 
   if (file_context == NULL || ! streq (context_string, file_context))
     {
-      int fail = (affect_symlink_referent
-                  ?  setfileconat (fd, file, context_string)
-                  : lsetfileconat (fd, file, context_string));
+      int fail = (0 <= file_fd
+                  ? fsetfilecon (file_fd, context_string)
+                  : affect_symlink_referent
+                  ? setfileconat (dirfd, file, context_string)
+                  : lsetfileconat (dirfd, file, context_string));
 
       if (fail)
         {
-          if (! (ignore_missing && ignorable_traversal_errno (errno)))
+          if (! (file_fd < 0 && ignore_missing
+                 && ignorable_traversal_errno (errno)))
             {
               errors = 1;
               error (0, errno, _("failed to change context of %s to %s"),
@@ -208,6 +243,9 @@ change_file_context (char const *file_full_name, int fd, char const *file,
       freecon (file_context);
     }
 
+ done:
+  if (0 <= file_fd)
+    close (file_fd);
   return errors;
 }
 
