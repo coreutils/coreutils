@@ -51,6 +51,39 @@ compare exp out || fail=1
 test -f ok || fail=1
 rm -f ok
 
+# Test that an unset PATH is not treated the same as an empty
+# PATH, i.e., PATH=''.  On GNU/Linux, an unset PATH searches
+# the default path, but an empty PATH searches the current working
+# directory.  Since the behavior may differ on other platforms, we
+# check it using 'env' first.  In coreutils-9.9 to coreutils-9.12,
+# an unset PATH was turned into an empty PATH.
+sort=$(cmd_exe sort) || framework_failure_
+env -u PATH gzip </dev/null >/dev/null 2>&1
+if test $? -eq 0 && ! test -f ok; then
+  env -u PATH $sort -S 1k --compress-program=gzip in >out || fail=1
+  compare exp out || fail=1
+  test -f ok && fail=1
+fi
+rm -f ok || framework_failure_
+
+# Also test the behavior with PATH set to an empty string.
+tr=$(cmd_exe tr) &&
+touch=$(cmd_exe touch) &&
+cat <<EOF >abs-gzip &&
+#!$SHELL
+$tr 41 14
+$touch ok
+EOF
+chmod +x abs-gzip || framework_failure_
+env PATH= abs-gzip </dev/null >/dev/null 2>&1
+if test $? -eq 0 && test -f ok; then
+  rm -f ok || framework_failure_
+  env PATH= $sort -S 1k --compress-program=abs-gzip in >out || fail=1
+  compare exp out || fail=1
+  test -f ok || fail=1
+fi
+rm -f ok || framework_failure_
+
 # This is to make sure it works with no compression.
 PATH=.:$PATH sort -S 1k in > out || fail=1
 compare exp out || fail=1

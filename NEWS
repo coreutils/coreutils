@@ -129,6 +129,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   resolves to a path beginning with the symbolic link itself.
   [bug introduced in coreutils-9.0]
 
+  'sort --compress-program=PROG' no longer treats an unset PATH environment
+  variable as equivalent to a PATH environment variable defined to an empty
+  string.  On typical platforms, that would result in PROG being executed from
+  the current working directory, if it existed, when PATH was not defined in the
+  environment.
+  [bug introduced in coreutils-9.9]
+
   'stty' again rejects empty speed arguments.
   Previously such arguments were accepted as value 0.
   [bug introduced in coreutils-9.8]
