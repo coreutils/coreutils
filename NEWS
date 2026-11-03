@@ -141,6 +141,17 @@ GNU coreutils NEWS                                    -*- outline -*-
   Also negative operands like "-,5" are no longer treated as options.
   [bugs introduced in coreutils-8.24 and coreutils-8.31]
 
+  'shred --force' no longer has races when opening non-writable files.
+  Previously, upon failing to open a writable file descriptor, it would
+  change its permissions before reopening it, following symbolic links in the
+  leading path components each time.
+  [This bug was present in "the beginning".]
+
+  'shred --remove' no longer has races when renaming or unlinking files.
+  Previously, symbolic links in the leading path components were followed each
+  time the file was renamed and/or unlinked.
+  [This bug was present in "the beginning".]
+
   'sort --compress-program=PROG' no longer treats an unset PATH environment
   variable as equivalent to a PATH environment variable defined to an empty
   string.  On typical platforms, that would result in PROG being executed from

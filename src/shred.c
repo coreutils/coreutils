@@ -1058,18 +1058,21 @@ incname (char *name, size_t len)
  * file system with synchronous metadata updates, this is unnecessary.
  */
 static bool
-wipename (char *oldname, char const *qoldname, struct Options const *flags)
+wipename (int const dirfd, char *oldname, char const *qoldname,
+          struct Options const *flags)
 {
   char *newname = xstrdup (oldname);
   char *base = last_component (newname);
+  char *oldbase = oldname + (base - newname);
   char *dir = dir_name (newname);
   char *qdir = xstrdup (quotef (dir));
   bool first = true;
   bool ok = true;
-  int dir_fd = -1;
+  int readable_dirfd = -1;
 
   if (flags->remove_file == remove_wipesync)
-    dir_fd = open (dir, O_RDONLY | O_DIRECTORY | O_NOCTTY | O_NONBLOCK);
+    readable_dirfd = openat (dirfd, ".",
+                             O_RDONLY | O_DIRECTORY | O_NOCTTY | O_NONBLOCK);
 
   if (flags->verbose)
     error (0, 0, _("%s: removing"), qoldname);
@@ -1080,14 +1083,14 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
         memset (base, nameset[0], len);
         base[len] = 0;
         bool rename_ok;
-        while (! (rename_ok = (renameatu (AT_FDCWD, oldname, AT_FDCWD, newname,
+        while (! (rename_ok = (renameatu (dirfd, oldbase, dirfd, base,
                                           RENAME_NOREPLACE)
                                == 0))
                && errno == EEXIST && incname (base, len))
           continue;
         if (rename_ok)
           {
-            if (0 <= dir_fd && dosync (dir_fd, qdir) != 0)
+            if (0 <= readable_dirfd && dosync (readable_dirfd, qdir) != 0)
               ok = false;
             if (flags->verbose)
               {
@@ -1100,22 +1103,22 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
                        _("%s: renamed to %s"), old, newname);
                 first = false;
               }
-            memcpy (oldname + (base - newname), base, len + 1);
+            memcpy (oldbase, base, len + 1);
           }
       }
 
-  if (unlink (oldname) != 0)
+  if (unlinkat (dirfd, oldbase, 0) < 0)
     {
       error (0, errno, _("%s: failed to remove"), qoldname);
       ok = false;
     }
   else if (flags->verbose)
     error (0, 0, _("%s: removed"), qoldname);
-  if (0 <= dir_fd)
+  if (0 <= readable_dirfd)
     {
-      if (dosync (dir_fd, qdir) != 0)
+      if (dosync (readable_dirfd, qdir) != 0)
         ok = false;
-      if (close (dir_fd) != 0)
+      if (close (readable_dirfd) < 0)
         {
           error (0, errno, _("%s: failed to close"), qdir);
           ok = false;
@@ -1143,11 +1146,38 @@ static bool
 wipefile (char *name, char const *qname,
           struct randint_source *s, struct Options const *flags)
 {
-  int fd = open (name, O_WRONLY | O_NOCTTY | O_NONBLOCK | O_BINARY);
+
+  int dirfd = AT_FDCWD;
+  char const *relname = name;
+  char const *base;
+
+  /* If we are using --force, we may need to change the permissions of NAME.
+     If we are using --remove, we will need to unlink or rename NAME.
+     In both cases, avoid following leading symbolic links, which may change
+     as 'shred' is executing.  */
+  if ((flags->force || flags->remove_file)
+      && (base = last_component (name)) != name && *base)
+    {
+      char *dir = dir_name (name);
+
+      dirfd = open (dir, O_PATHSEARCH | O_DIRECTORY);
+      free (dir);
+
+      if (dirfd < 0)
+        {
+          error (0, errno, _("%s: failed to open for writing"), qname);
+          return false;
+        }
+
+      relname = base;
+    }
+
+  bool ok = true;
+  int fd = openat (dirfd, relname, O_WRONLY | O_NOCTTY | O_NONBLOCK | O_BINARY);
   if (fd < 0
       && (errno == EACCES && flags->force)
-      && chmod (name, S_IWUSR) == 0)
-    fd = open (name, O_WRONLY | O_NOCTTY | O_NONBLOCK | O_BINARY);
+      && fchmodat (dirfd, relname, S_IWUSR, 0) == 0)
+    fd = openat (dirfd, relname, O_WRONLY | O_NOCTTY | O_NONBLOCK | O_BINARY);
   if (fd < 0)
     {
       struct stat st;
@@ -1155,18 +1185,19 @@ wipefile (char *name, char const *qname,
 
       /* Try to give a more meaningful error message if we attempt to
          open a FIFO with no readers.  */
-      if (open_errno == ENXIO && 0 <= stat (name, &st)
+      if (open_errno == ENXIO && 0 <= fstatat (dirfd, relname, &st, 0)
           && S_ISFIFO (st.st_mode))
         error (0, 0, _("%s: invalid file type"), qname);
       else
         error (0, open_errno, _("%s: failed to open for writing"), qname);
-      return false;
+      ok = false;
+      goto done;
     }
 
   /* We used O_NONBLOCK to prevent blocking when opening a FIFO.
      Reset that here.  */
   int fd_flags = fcntl (fd, F_GETFL);
-  bool ok = 0 <= fd_flags && 0 <= fcntl (fd, F_SETFL, fd_flags & ~O_NONBLOCK);
+  ok = 0 <= fd_flags && 0 <= fcntl (fd, F_SETFL, fd_flags & ~O_NONBLOCK);
   if (ok)
     ok = do_wipefd (fd, qname, s, flags);
   else
@@ -1178,7 +1209,11 @@ wipefile (char *name, char const *qname,
       ok = false;
     }
   if (ok && flags->remove_file)
-    ok = wipename (name, qname, flags);
+    ok = wipename (dirfd, name, qname, flags);
+
+ done:
+  if (dirfd != AT_FDCWD)
+    close (dirfd);
   return ok;
 }
 
