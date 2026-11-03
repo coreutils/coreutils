@@ -60,7 +60,7 @@ rm -f ok
 sort=$(cmd_exe sort) || framework_failure_
 env -u PATH gzip </dev/null >/dev/null 2>&1
 if test $? -eq 0 && ! test -f ok; then
-  env -u PATH $sort -S 1k --compress-program=gzip in >out || fail=1
+  env -u PATH "$sort" -S 1k --compress-program=gzip in >out || fail=1
   compare exp out || fail=1
   test -f ok && fail=1
 fi
@@ -78,7 +78,7 @@ chmod +x abs-gzip || framework_failure_
 env PATH= abs-gzip </dev/null >/dev/null 2>&1
 if test $? -eq 0 && test -f ok; then
   rm -f ok || framework_failure_
-  env PATH= $sort -S 1k --compress-program=abs-gzip in >out || fail=1
+  env PATH= "$sort" -S 1k --compress-program=abs-gzip in >out || fail=1
   compare exp out || fail=1
   test -f ok || fail=1
 fi
