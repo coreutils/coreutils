@@ -48,4 +48,27 @@ for mode in 'numeric' 'hex'; do
   returns_ 1 split --$mode-suffixes=one in 2> /dev/null || fail=1
 done
 
+# Check hexadecimal start values that are not decimal digits
+rm -f x?? || framework_failure_
+split --hex-suffixes=f --lines=2 in || fail=1
+compare exp-0 x0f || fail=1
+compare exp-1 x10 || fail=1
+compare exp-2 x11 || fail=1
+
+# A hexadecimal start value is invalid for a later --numeric-suffixes
+returns_ 1 split --hex-suffixes=a --numeric-suffixes in 2> /dev/null || fail=1
+
+# Only the final alphabet needs to accommodate the retained start value.
+split --hex-suffixes=a -d -x --lines=2 in || fail=1
+compare exp-0 x0a || fail=1
+compare exp-1 x0b || fail=1
+compare exp-2 x0c || fail=1
+
+# Interpret the start value as hex when determining the suffix length.
+# 0x10 + 241 - 1 = 0x100, which requires three digits.
+split --hex-suffixes=10 --number=r/241 in || fail=1
+test -f x010 && test -f x100 || fail=1
+returns_ 1 split -a2 --hex-suffixes=10 --number=r/241 in 2>/dev/null \
+  || fail=1
+
 Exit $fail

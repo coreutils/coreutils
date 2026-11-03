@@ -148,6 +148,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   environment.
   [bug introduced in coreutils-9.9]
 
+  'split --hex-suffixes=FROM' now generates consecutive suffixes when FROM
+  contains any of the digits a to f.  Previously it read beyond the suffix
+  alphabet, giving arbitrary and repeated file names, thus losing output.
+  [bug introduced with the --hex-suffixes option in coreutils-8.28]
+
   'stty' again rejects empty speed arguments.
   Previously such arguments were accepted as value 0.
   [bug introduced in coreutils-9.8]

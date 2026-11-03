@@ -186,10 +186,11 @@ set_suffix_length (intmax_t n_units, enum Split_type split_type)
       || split_type == type_rr)
     {
       intmax_t n_units_end = n_units - 1;
+      idx_t alphabet_len = strlen (suffix_alphabet);
       if (numeric_suffix_start)
         {
           intmax_t n_start;
-          strtol_error e = xstrtoimax (numeric_suffix_start, NULL, 10,
+          strtol_error e = xstrtoimax (numeric_suffix_start, NULL, alphabet_len,
                                        &n_start, "");
           if (e == LONGINT_OK && n_start < n_units)
             {
@@ -202,7 +203,6 @@ set_suffix_length (intmax_t n_units, enum Split_type split_type)
             }
 
         }
-      idx_t alphabet_len = strlen (suffix_alphabet);
       do
         suffix_length_needed++;
       while (n_units_end /= alphabet_len);
@@ -480,7 +480,8 @@ new_name:
           /* Update the suffix index.  */
           idx_t *sufindex_end = sufindex + suffix_length;
           while (i-- != 0)
-            *--sufindex_end = numeric_suffix_start[i] - '0';
+            *--sufindex_end = (strchr (suffix_alphabet, numeric_suffix_start[i])
+                               - suffix_alphabet);
         }
 
 #if ! _POSIX_NO_TRUNC && HAVE_PATHCONF && defined _PC_NAME_MAX
@@ -1665,6 +1666,17 @@ main (int argc, char **argv)
   if (optind < argc)
     {
       error (0, 0, _("extra operand %s"), quote (argv[optind]));
+      usage (EXIT_FAILURE);
+    }
+
+  /* A start value given with --hex-suffixes may be invalid
+     for a later --numeric-suffixes.  */
+  if (numeric_suffix_start
+      && (strlen (numeric_suffix_start)
+          != strspn (numeric_suffix_start, suffix_alphabet)))
+    {
+      error (0, 0, _("%s: invalid start value for numerical suffix"),
+             quote (numeric_suffix_start));
       usage (EXIT_FAILURE);
     }
 
