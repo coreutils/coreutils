@@ -3397,6 +3397,10 @@ minimum suffix length required is automatically determined.
 @optItem{split,-x,}
 @optItemx{split,--hex-suffixes,[=@var{from}]}
 Like @option{--numeric-suffixes}, but use hexadecimal numbers (in lower case).
+The starting value @var{from}, if specified, is also hexadecimal.
+If hexadecimal or numeric suffix options are repeated, the last option
+determines both the suffix type and the starting value, which defaults to zero
+when @var{from} is omitted.
 
 @optItem{split,--additional-suffix,=@var{suffix}}
 Append an additional @var{suffix} to output file names.  @var{suffix}

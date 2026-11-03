@@ -1596,9 +1596,9 @@ main (int argc, char **argv)
                   /* Skip any leading zero.  */
                   while (*optarg == '0' && *(optarg + 1) != '\0')
                     optarg++;
-                  numeric_suffix_start = optarg;
                 }
             }
+          numeric_suffix_start = optarg;
           break;
 
         case 'e':
@@ -1666,17 +1666,6 @@ main (int argc, char **argv)
   if (optind < argc)
     {
       error (0, 0, _("extra operand %s"), quote (argv[optind]));
-      usage (EXIT_FAILURE);
-    }
-
-  /* A start value given with --hex-suffixes may be invalid
-     for a later --numeric-suffixes.  */
-  if (numeric_suffix_start
-      && (strlen (numeric_suffix_start)
-          != strspn (numeric_suffix_start, suffix_alphabet)))
-    {
-      error (0, 0, _("%s: invalid start value for numerical suffix"),
-             quote (numeric_suffix_start));
       usage (EXIT_FAILURE);
     }
 
