@@ -69,8 +69,19 @@ sort: Investigate better sorting algorithms; see Knuth vol. 3.
   5.3.1, who credits Lester Ford, Jr. and Selmer Johnson, American
   Mathematical Monthly 66 (1959), 387-389.
 
-shred: Update shred as described here to conform to DoD 5220 rules:
-https://lists.gnu.org/r/bug-coreutils/2007-05/msg00075.html
+shred: Update shred as described here to conform to DoD 5220 rules.
+
+  This idea was originally proposed on the mailing list here:
+
+    https://lists.gnu.org/r/bug-coreutils/2007-05/msg00075.html
+
+  Note that the DoD removed the overwriting specifications from the
+  National Industrial Security Program Operating Manual in 2006.  NIST
+  SP 800-88 Rev. 2, published in September 2025, warns that this method
+  should be avoided on some storage media, e.g., SSDs with
+  overprovisioning, where overwriting offers very little confidentiality
+  protection.  NIST SP 800-88 Rev. 2 does not prescribe a specific
+  pattern or number of passes.
 
 Remove suspicious uses of alloca (ones that may allocate more than
    about 4k)
