@@ -8124,7 +8124,7 @@ except that it has no effect if long format is also in effect.
 @itemx --format=vertical
 @opindex --format
 @opindex vertical @r{sorted files in columns}
-List files in columns, sorted vertically, with no other information.
+List file names in columns, sorted vertically, with no other information.
 This is the default for @command{ls} if standard output is a terminal.
 It is always the default for the @command{dir} program.
 GNU @command{ls} uses variable width columns to display as many files as

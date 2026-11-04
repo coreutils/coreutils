@@ -5461,9 +5461,21 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
          with -l: show ctime and sort by name;\n\
          otherwise: sort by ctime, newest first\n\
 "));
+if (ls_mode == LS_LS)
       oputs (_("\
   -C\n\
-         list entries by columns\n\
+         list file names by columns, sorted vertically;\n\
+         the default format if standard output is a terminal\n\
+"));
+else if (ls_mode == LS_MULTI_COL)
+      oputs (_("\
+  -C\n\
+         list file names by columns, sorted vertically; the default format\n\
+"));
+else
+      oputs (_("\
+  -C\n\
+         list file names by columns, sorted vertically\n\
 "));
       oputs (_("\
       --color[=WHEN]\n\
@@ -5553,6 +5565,12 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
          default to 1024-byte blocks for file system usage;\n\
          used only with -s and per directory totals\n\
 "));
+if (ls_mode == LS_LONG_FORMAT)
+      oputs (_("\
+  -l\n\
+         use a long listing format; the default\n\
+"));
+else
       oputs (_("\
   -l\n\
          use a long listing format\n\
@@ -5681,9 +5699,16 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
       --zero\n\
          end each output line with NUL, not newline\n\
 "));
+if (ls_mode == LS_LS)
       oputs (_("\
   -1\n\
-         list one file per line\n\
+         list one file name per line;\n\
+         the default format if standard output is not a terminal\n\
+"));
+else
+      oputs (_("\
+  -1\n\
+         list one file name per line\n\
 "));
       oputs (HELP_OPTION_DESCRIPTION);
       oputs (VERSION_OPTION_DESCRIPTION);
