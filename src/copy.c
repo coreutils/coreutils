@@ -1748,7 +1748,14 @@ copy_internal (char const *src_name, char const *dst_name,
               rename_errno = EEXIST;
             }
           else if (errno == ENOENT)
-            new_dst = true;
+            {
+              /* Using RENAME_EXCHANGE would fail with ENOENT as well,
+                 so set RENAME_ERRNO accordingly for that implied but
+                 skipped renamatu().  */
+              if (x->exchange)
+                rename_errno = ENOENT;
+              new_dst = true;
+            }
           else if (errno == ELOOP && !use_lstat
                    && x->unlink_dest_after_failed_open)
             {

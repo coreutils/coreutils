@@ -110,6 +110,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   just-moved FIFO.
   [bug introduced with SELinux support in coreutils-8.22]
 
+  'mv --exchange A B' now emits a more meaningful error message when file B does
+  not exist.  Previously, it would print the error message as if errno were set
+  to -1, e.g., "Unknown error -1" on glibc.
+  [bug introduced with the --exchange option in coreutils-9.5]
+
   'nl -d ""' no longer mistakenly treats empty lines as headers.
   [bugs introduced in coreutils-9.11]
 

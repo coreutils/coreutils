@@ -36,7 +36,25 @@ touch c || framework_failure_
 returns_ 1 mv --exchange a 2>/dev/null || fail=1
 returns_ 1 mv --exchange a b c 2>/dev/null || fail=1
 
-# Both files must exist.
-returns_ 1 mv --exchange a d 2>/dev/null || fail=1
+# Both files must exist.  Check the behavior with a missing destination.
+echo "mv: cannot exchange 'b' and 'd': $ENOENT" >exp-err || framework_failure_
+returns_ 1 mv --exchange b d >out 2>err || fail=1
+compare /dev/null out || fail=1
+compare exp-err err || fail=1
+
+# Check the behavior with a missing source.
+echo "mv: cannot stat 'd': $ENOENT" >exp-err || framework_failure_
+returns_ 1 mv --exchange d b >out 2>err || fail=1
+compare /dev/null out || fail=1
+compare exp-err err || fail=1
+
+# Test the behavior with a missing destination in a target directory.
+mkdir d || framework_failure_
+echo "mv: cannot exchange 'b' and 'd/b': $ENOENT" >exp-err || framework_failure_
+for opt in '' --target-directory=; do
+  returns_ 1 mv --exchange b ${opt}d >out 2>err || fail=1
+  compare /dev/null out || fail=1
+  compare exp-err err || fail=1
+done
 
 Exit $fail
