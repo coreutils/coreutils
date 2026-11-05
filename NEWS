@@ -95,6 +95,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   before invoking 'strip' instead of using a umask of zero.
   [This bug was present in "the beginning".]
 
+  'install -D --strip' now runs the strip program based in the initial working
+  directory, even when the source and destination are absolute paths.
+  Previously, it would run the strip program from the parent directory of the
+  destination file, which could execute the incorrect program if $PATH allowed
+  the current directory, or if --strip-program specified a relative path.
+  [bug introduced in coreutils-6.2]
+
   'ls' no longer omits ACL indicators or capability coloring for subsequent
   files on the same file system after an unsupported security context
   lookup on a file without an ACL.

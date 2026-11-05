@@ -763,8 +763,8 @@ mkancesdirs_safe_wd (char const *from, char *to, struct cp_options *x,
                      bool save_always)
 {
   bool save_working_directory =
-    save_always
-    || ! (IS_ABSOLUTE_FILE_NAME (from) && IS_ABSOLUTE_FILE_NAME (to));
+    (save_always || strip_files /* strip may be, or access relative files.  */
+     || ! (IS_ABSOLUTE_FILE_NAME (from) && IS_ABSOLUTE_FILE_NAME (to)));
 
   struct savewd wd;
   savewd_init (&wd);
