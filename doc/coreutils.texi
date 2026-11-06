@@ -17390,6 +17390,8 @@ and therefore is mostly useful together with the @option{--groups} and
 The user and group name look-up performed by the @option{--userspec}
 and @option{--groups} options, is done both outside and inside
 the chroot, with successful look-ups inside the chroot taking precedence.
+These options should not be relied on as a mechanism to drop privileges
+when working with untrusted @var{newroot}s.
 If the specified user or group items are intended to represent a numeric ID,
 then a name to ID resolving step is avoided by specifying a leading @samp{+}.
 @xref{Disambiguating names and IDs}.
