@@ -288,6 +288,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   'basenc --base58' encoding speed is 20x faster when built without libgmp.
 
+  'cksum' when generating checksums to tty, uses shell quoting when required,
+  to more robustly escape presented file names, honoring $QUOTING_STYLE to
+  adjust or disable quoting. This also affects md5sum, sha*sum, b2sum, and sum.
+
   'cut -c' is up to 10x faster in UTF-8 locales, and
   'cut -f -w' is up to 10x faster in uni-byte locales.
 

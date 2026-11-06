@@ -3882,6 +3882,8 @@ sum [@var{option}]@dots{} [@var{file}]@dots{}
 @command{sum} prints the checksum for each @var{file} followed by the
 number of blocks in the file (rounded up).  If at least one @var{file}
 is given, file names are also printed.
+When standard output is a terminal, file names are quoted
+as described for @command{cksum}.  @xref{cksum output modes}.
 
 By default, GNU @command{sum} computes checksums using an algorithm
 compatible with BSD @command{sum} and prints file sizes in units of
@@ -3984,12 +3986,84 @@ otherwise text mode is the default.
 @end table
 
 Without @option{--zero}, and with non legacy output formats,
-if @var{file} contains a backslash, newline, or carriage return,
+and when not outputting to a terminal or if terminal quoting has been disabled,
+the following quoting mode is in effect.
+If @var{file} contains a backslash, newline, or carriage return,
 the line is started with a backslash, and each problematic character
 in the file name is escaped with a backslash, making the output unambiguous
 even in the presence of arbitrary file names.
 Since the backslash character itself is escaped, any other backslash
 escape sequences are reserved for future use.
+
+@macro quotingStyles
+@table @samp
+@item literal
+Output strings as-is;
+@ifset LS_COMMAND
+this is the same as the @option{--literal} (@option{-N}) option.
+@end ifset
+@item shell
+Quote strings for the shell if they contain shell metacharacters or would
+cause ambiguous output.
+The quoting is suitable for POSIX-compatible shells like
+@command{bash}, but it does not always work for incompatible shells
+like @command{csh}.
+@item shell-always
+Quote strings for the shell, even if they would normally not require quoting.
+@item shell-escape
+Like @samp{shell}, but also quote non-printable characters using the POSIX
+@samp{$''} syntax suitable for most shells. This is the most general format
+as any file name is represented unambiguously and safely.  I.e., the full
+quoted string can be pasted back to the shell to refer to any file.
+@ifset LS_COMMAND
+Consequently, this is the default format used when @command{ls}
+is outputting to a tty.
+@end ifset
+Note also that specifying the C locale with @code{LC_ALL=C} can be useful
+with this output format, to avoid character set conversion issues
+with some terminals; e.g., xterm always converting to unicode composed form.
+See also
+@uref{https://www.gnu.org/software/coreutils/quotes.html, Quoting file names}.
+@item shell-escape-always
+Like @samp{shell-escape}, but quote strings even if they would
+normally not require quoting.
+@item c
+Quote strings as for C character string literals, including the
+surrounding double-quote characters;
+@ifset LS_COMMAND
+this is the same as the @option{--quote-name} (@option{-Q}) option.
+@end ifset
+@item c-maybe
+Quote strings as for C character string literals, except omit the
+surrounding double-quote if no escaping is required.
+@item escape
+Quote strings as for C character string literals, except omit the
+surrounding double-quote characters;
+@ifset LS_COMMAND
+this is the same as the @option{--escape} (@option{-b}) option.
+@end ifset
+@item clocale
+Quote strings as for C character string literals, except use
+surrounding quotation marks appropriate for the
+locale.
+@item locale
+@c Use @t instead of @samp to avoid duplicate quoting in some output styles.
+Quote strings as for C character string literals, except use
+surrounding quotation marks appropriate for the locale, and quote
+@t{'like this'} instead of @t{"like
+this"} in the default C locale.  This looks nicer on many displays.
+@end table
+@end macro
+
+@macro terminalQuoted
+Without @option{--zero} and when standard output is a terminal,
+file names are quoted using the @samp{shell-escape} style.
+The environment variable @env{QUOTING_STYLE} specifies the quoting style.
+Valid quoting styles are:
+@quotingStyles
+@end macro
+
+@terminalQuoted
 
 @node cksum general options
 @subsection cksum general options
@@ -8503,65 +8577,6 @@ Use style @var{word} to quote file names and other strings that may
 contain arbitrary characters.  The @var{word} should
 be one of the following:
 
-@macro quotingStyles
-@table @samp
-@item literal
-Output strings as-is;
-@ifset LS_COMMAND
-this is the same as the @option{--literal} (@option{-N}) option.
-@end ifset
-@item shell
-Quote strings for the shell if they contain shell metacharacters or would
-cause ambiguous output.
-The quoting is suitable for POSIX-compatible shells like
-@command{bash}, but it does not always work for incompatible shells
-like @command{csh}.
-@item shell-always
-Quote strings for the shell, even if they would normally not require quoting.
-@item shell-escape
-Like @samp{shell}, but also quote non-printable characters using the POSIX
-@samp{$''} syntax suitable for most shells. This is the most general format
-as any file name is represented unambiguously and safely.  I.e., the full
-quoted string can be pasted back to the shell to refer to any file.
-@ifset LS_COMMAND
-Consequently, this is the default format used when @command{ls}
-is outputting to a tty.
-@end ifset
-Note also that specifying the C locale with @code{LC_ALL=C} can be useful
-with this output format, to avoid character set conversion issues
-with some terminals; e.g., xterm always converting to unicode composed form.
-See also
-@uref{https://www.gnu.org/software/coreutils/quotes.html, Quoting file names}.
-@item shell-escape-always
-Like @samp{shell-escape}, but quote strings even if they would
-normally not require quoting.
-@item c
-Quote strings as for C character string literals, including the
-surrounding double-quote characters;
-@ifset LS_COMMAND
-this is the same as the @option{--quote-name} (@option{-Q}) option.
-@end ifset
-@item c-maybe
-Quote strings as for C character string literals, except omit the
-surrounding double-quote if no escaping is required.
-@item escape
-Quote strings as for C character string literals, except omit the
-surrounding double-quote characters;
-@ifset LS_COMMAND
-this is the same as the @option{--escape} (@option{-b}) option.
-@end ifset
-@item clocale
-Quote strings as for C character string literals, except use
-surrounding quotation marks appropriate for the
-locale.
-@item locale
-@c Use @t instead of @samp to avoid duplicate quoting in some output styles.
-Quote strings as for C character string literals, except use
-surrounding quotation marks appropriate for the locale, and quote
-@t{'like this'} instead of @t{"like
-this"} in the default C locale.  This looks nicer on many displays.
-@end table
-@end macro
 @set LS_COMMAND
 @quotingStyles
 @clear LS_COMMAND
@@ -11114,14 +11129,6 @@ variable is set.
 
 @end table
 
-@c This is also used by basename and dirname.
-@macro terminalQuoted
-When standard output is a terminal, output is quoted using the
-@samp{shell-escape} style.  The environment variable
-@env{QUOTING_STYLE} specifies the quoting style.  Valid quoting styles
-are:
-@quotingStyles
-@end macro
 @terminalQuoted
 
 The @command{readlink} utility first appeared in OpenBSD 2.1.
@@ -14629,10 +14636,7 @@ only on the file name, and does not touch any actual file.
 
 @end table
 
-When standard output is a terminal, file names are quoted using
-the @samp{shell-escape} style.  The environment variable
-@env{QUOTING_STYLE} can select the quoting style.  Valid quoting styles are:
-@quotingStyles
+@terminalQuoted
 
 @cindex exit status of @command{realpath}
 Exit status:

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ basename dirname du ls readlink realpath printf test
+print_ver_ basename cksum dirname du ls readlink realpath printf test
 require_strace_ ioctl
 
 touch 'b ar' || framework_failure_
@@ -65,6 +65,20 @@ for cmd in basename du dirname 'ls -w0' readlink 'realpath --relative-to=.' \
   env printf '%q\n' "$(cat unquoted)" >printf_quoted || framework_failure_
 
   compare quoted printf_quoted || fail=1
+done
+
+for cmd in 'cksum -a sha1 --untagged' 'cksum -a sha1'; do
+  file='f oo'
+
+  run_tty_ $cmd "$file" >full_quoted || fail=1
+
+  # Ensure shell quoting found
+  cut -d "'" -f2 full_quoted >unquoted || framework_failure_
+  test "$file" = "$(cat unquoted)" || fail=1
+
+  # Ensure unquoted doesn't match quoted
+  QUOTING_STYLE=literal run_tty_ $cmd "$file" >full_unquoted || fail=1
+  compare full_quoted full_unquoted && fail=1
 done
 
 Exit $fail

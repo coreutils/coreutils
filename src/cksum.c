@@ -21,9 +21,9 @@
 #include <getopt.h>
 #include <sys/types.h>
 
+#include "argmatch.h"
 #include "assure.h"
 #include "system.h"
-#include "argmatch.h"
 #include "c-ctype.h"
 #include "quote.h"
 #include "xdectoint.h"
@@ -230,6 +230,9 @@ static bool base64_digest = false;
 
 /* If true, print binary digests, not hex.  */
 static bool raw_digest = false;
+
+/* If true, quote output names according to the selected quoting style.  */
+static bool quote_output;
 
 /* blake2b and sha3 allow the -l option.  Luckily they both have the same
    maximum digest size.  */
@@ -1271,8 +1274,10 @@ output_file (char const *file, int binary_file, void const *digest,
 
   unsigned char const *bin_buffer = digest;
 
-  /* Output a leading backslash if the file name contains problematic chars.  */
-  bool needs_escape = delim == '\n' && problematic_chars (file);
+  /* Output a leading backslash if the file name contains problematic chars,
+     unless we're already quoting output.  */
+  bool needs_escape = (! quote_output && delim == '\n'
+                       && problematic_chars (file));
 
   if (needs_escape)
     putchar ('\\');
@@ -1870,6 +1875,18 @@ main (int argc, char **argv)
   else if (prefix_tag)
     binary = 1;
 
+  if (!do_check && digest_delim == '\n' && isatty (STDOUT_FILENO))
+    {
+      int qs = getenv_quoting_style ();
+      if (qs < 0)
+        qs = shell_escape_quoting_style;
+      if (qs != literal_quoting_style)
+        {
+          set_quoting_style (NULL, qs);
+          quote_output = true;
+        }
+    }
+
   char **operand_lim = argv + argc;
   if (optind == argc)
     *operand_lim++ = bad_cast ("-");
@@ -1892,7 +1909,8 @@ main (int argc, char **argv)
             ok = false;
           else
             {
-              DIGEST_OUT (file, binary_file, bin_buffer, raw_digest, prefix_tag,
+              DIGEST_OUT (quote_output ? quoteN (file) : file, binary_file,
+                          bin_buffer, raw_digest, prefix_tag,
                           digest_delim, optind != argc, length);
               if (ferror (stdout))
                 write_error ();
