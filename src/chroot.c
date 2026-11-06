@@ -315,7 +315,9 @@ main (int argc, char **argv)
                   gid = pwd->pw_gid;
                   gid_inferred = true;
                 }
-              username = pwd->pw_name;
+              /* Copy, as the look-up inside the chroot reuses PWD's
+                 storage, even when it fails.  */
+              username = xstrdup (pwd->pw_name);
             }
         }
 
