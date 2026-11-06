@@ -170,6 +170,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   time the file was renamed and/or unlinked.
   [This bug was present in "the beginning".]
 
+  'shred --verbose' now quotes file names in its output when renaming files.
+  I.e., when invoked with either --remove=wipe or --remove=wipesync.
+  [This bug was present in "the beginning".]
+
   'sort --compress-program=PROG' no longer treats an unset PATH environment
   variable as equivalent to a PATH environment variable defined to an empty
   string.  On typical platforms, that would result in PROG being executed from

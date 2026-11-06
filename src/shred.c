@@ -1066,7 +1066,6 @@ wipename (int const dirfd, char *oldname, char const *qoldname,
   char *oldbase = oldname + (base - newname);
   char *dir = dir_name (newname);
   char *qdir = xstrdup (quotef (dir));
-  bool first = true;
   bool ok = true;
   int readable_dirfd = -1;
 
@@ -1095,13 +1094,9 @@ wipename (int const dirfd, char *oldname, char const *qoldname,
             if (flags->verbose)
               {
                 /* People seem to understand this better than talking
-                   about renaming OLDNAME.  NEWNAME doesn't need
-                   quoting because we picked it.  OLDNAME needs to be
-                   quoted only the first time.  */
-                char const *old = first ? qoldname : oldname;
-                error (0, 0,
-                       _("%s: renamed to %s"), old, newname);
-                first = false;
+                   about renaming OLDNAME.  */
+                error (0, 0, _("%s: renamed to %s"), quotef_n (0, oldname),
+                       quotef_n (1, newname));
               }
             memcpy (oldbase, base, len + 1);
           }

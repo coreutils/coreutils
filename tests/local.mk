@@ -455,6 +455,7 @@ all_tests =					\
   tests/shred/shred-remove.sh			\
   tests/shred/shred-size.sh			\
   tests/shred/unlink-race.sh			\
+  tests/shred/verbose-quote.sh			\
   tests/shuf/shuf.sh				\
   tests/shuf/shuf-reservoir.sh			\
   tests/misc/sleep.sh				\
