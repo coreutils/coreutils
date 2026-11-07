@@ -377,6 +377,8 @@ my @Tests =
  {ERR=>"$prog: options '-cC' are incompatible\n"}],
 ["incompat7", qw(--sort=random -n), {EXIT=>2},
  {ERR=>"$prog: options '-nR' are incompatible\n"}],
+["incompat8", qw(-o /dev/null --debug), {EXIT=>2},
+ {ERR=>"$prog: options '-o --debug' are incompatible\n"}],
 
 # -t '\0' is accepted, as of coreutils-5.0.91
 ['nul-tab', "-k2,2 -t '\\0'",
