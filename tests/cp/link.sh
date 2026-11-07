@@ -28,4 +28,10 @@ touch dest2 || framework_failure_
 cp -f --link src dest || fail=1
 cp -f --symbolic-link src dest2 || fail=1
 
+# --link and --symbolic-link are mutually exclusive.
+returns_ 1 cp -s -l src new 2> err || fail=1
+test -e new && fail=1
+returns_ 1 cp --link --symbolic-link src new 2> err || fail=1
+test -e new && fail=1
+
 Exit $fail
