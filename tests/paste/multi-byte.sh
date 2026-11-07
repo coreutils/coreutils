@@ -32,6 +32,11 @@ delim_euro=$(env printf '\xe2\x82\xac')
 # UTF-8 test: 4-byte character (e.g., emoji: U+1F600)
 delim_emoji=$(env printf '\xf0\x9f\x98\x80')
 
+# dash 0.5.13 corrupts UTF-8 bytes during variable assignment.
+test "$delim_cent$delim_euro$delim_emoji" = \
+  "$(env printf '\xc2\xa2\xe2\x82\xac\xf0\x9f\x98\x80')" ||
+  skip_ 'shell cannot preserve UTF-8 delimiters'
+
 printf '1\n2\n' > f1 || framework_failure_
 printf 'a\nb\n' > f2 || framework_failure_
 

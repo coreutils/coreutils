@@ -60,6 +60,9 @@ test_unit ()
     { test -z "$loc" || test "$loc" = none; } && continue
     if test $loc != C; then
       thousands_sep=$(LC_ALL=$loc locale thousands_sep)
+      # dash 0.5.13 corrupts non-ASCII bytes during variable assignment.
+      test "$thousands_sep" = "$(LC_ALL=$loc locale thousands_sep)" ||
+        skip_ 'shell cannot preserve locale thousands separator'
       grouping=$(LC_ALL=$loc locale grouping)
       test -z "$thousands_sep" && continue
       test "$grouping" != 3 && continue
