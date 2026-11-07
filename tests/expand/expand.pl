@@ -184,6 +184,10 @@ my @Tests =
     {ERR => "$prog: '/' specifier only allowed with the last value\n"}],
    ['e7', '--tabs=3/', {IN=>''}, {OUT=>''}, {EXIT=>1},
     {ERR => "$prog: '/' specifier not at start of number: '/'\n"}],
+
+   # A bare '-' is standard input.
+   ['stdin-dash', '-', {IN_PIPE=>"stdin\n"}, {IN=>{f=>"file\n"}},
+    {OUT=>"stdin\nfile\n"}],
   );
 
 my $save_temps = $ENV{DEBUG};
