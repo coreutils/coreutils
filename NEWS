@@ -142,6 +142,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   than INT_MAX bytes of column data for a single page.
   [This bug was present in "the beginning".]
 
+  'pr' no longer loops infinitely when the first character of each line in a row
+  is wider than a column.  E.g., previously, "yes $'\t' | head -n 56 | pr -W 7'"
+  would loop infinitely instead of printing an empty page.
+  [This bug was present in "the beginning".]
+
   'realpath' without -s, or 'readlink' with -e,-f,-m no longer
   loop infinitely when resolving a symbolic link which
   resolves to a path beginning with the symbolic link itself.

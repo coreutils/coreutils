@@ -2477,11 +2477,13 @@ read_line (COLUMN *p)
       chars = char_to_clump (c);
     }
 
-  if (truncate_lines && input_position > chars_per_column)
-    {
-      input_position = last_input_position;
-      return false;
-    }
+  /* If the first clump does not fit in the column, account for it but do
+     not print it.  We must still handle headers, line numbers, etc., so
+     continue instead of returning.  */
+  bool const first_clump_fits = ! (truncate_lines
+                                   && chars_per_column < input_position);
+  if (! first_clump_fits)
+    input_position = last_input_position;
 
   if (p->char_func != store_char)
     {
@@ -2524,6 +2526,9 @@ read_line (COLUMN *p)
   empty_line = false;
   if (c == '\n')
     return true;
+
+  if (! first_clump_fits)
+    return false;
 
   print_clump (p, chars, clump_buff);
 
