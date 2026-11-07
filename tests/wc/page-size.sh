@@ -48,4 +48,13 @@ for multiple in $(seq 3); do
   compare /dev/null err || fail=1
 done
 
+# Ensure 'wc -c FILE' reports the whole size of a page-multiple file
+# when no descriptors are left for other ways of counting.
+if (ulimit -n 4 && cat file > /dev/null) 2> /dev/null; then
+  (ulimit -n 4 && wc -c file > out 2> err) || fail=1
+  echo "$file_size file" > exp || framework_failure_
+  compare exp out || fail=1
+  compare /dev/null err || fail=1
+fi
+
 Exit $fail
