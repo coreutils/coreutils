@@ -229,6 +229,7 @@ all_tests =					\
   tests/rm/empty-inacc.sh			\
   tests/rm/empty-name.pl			\
   tests/rm/f-1.sh				\
+  tests/rm/f-then-i-no-operand.sh		\
   tests/rm/fail-eacces.sh			\
   tests/tail/assert.sh				\
   tests/rm/hash.sh				\
