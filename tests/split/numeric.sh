@@ -42,6 +42,12 @@ for mode in 'numeric' 'hex'; do
   # Check that split failed when suffix length is not large enough for
   # the numerical suffix start value
   returns_ 1 split -a 3 --$mode-suffixes=1000 in 2>/dev/null || fail=1
+  # Likewise with empty input, and before the input is opened.
+  returns_ 1 split -a 3 --$mode-suffixes=1000 </dev/null 2>/dev/null \
+    || fail=1
+  returns_ 1 split -a 3 --$mode-suffixes=1000 missing 2>err || fail=1
+  grep 'suffix start value is too large' err || fail=1
+  grep 'missing' err && fail=1
 
   # check invalid --$mode-suffixes start values are flagged
   returns_ 1 split --$mode-suffixes=-1 in 2> /dev/null || fail=1
