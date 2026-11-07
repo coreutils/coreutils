@@ -174,6 +174,13 @@ my @tv = (
 ['ignore-case-2', '-i -o 0',
  ["B\nb\n", "B\n"], "B\nb\n", 0],
 
+# With -i, keys are ordered as by 'sort -f', which folds to upper case,
+# so '_' sorts after the letters.
+['ignore-case-sort-f-1', '-i --check-order',
+ ["svcabc m\nsvc_backup m\n", "SVC_BACKUP\n"], "svc_backup m\n", 0],
+['ignore-case-sort-f-2', '-i -v1 --check-order',
+ ["svcabc m\nsvc_backup m\n", "SVC_BACKUP\n"], "svcabc m\n", 0],
+
 # For -v2, print the match field correctly with the default output format,
 # when that match field is different between file 1 and file 2.  Fixed in 8.10
 ['v2-order', '-v2 -2 2', ["", "2 1\n"], "1 2\n", 0],
