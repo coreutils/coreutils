@@ -125,6 +125,9 @@ my @Tests =
      ['u7', '-a -3,9',  {IN=>"a  b     c"}, {OUT=>"a\tb\tc"}],
      # Default (without -a) is --first-only:
      ['u8', '-3',  {IN=>"   a   b"}, {OUT=>"\ta   b"}],
+     # --first-only may be given more than once.
+     ['first-only-twice', '--first-only --first-only',
+      {IN=>"        a       b\n"}, {OUT=>"\ta       b\n"}],
 
      # Arguably this should minimize translation as is done on Solaris.
      # I.e., not modify the input.  But since the result is equivalent,
