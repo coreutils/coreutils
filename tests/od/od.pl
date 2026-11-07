@@ -123,6 +123,11 @@ my @Tests =
       {IN=>{h=>'bcdefghij'}}, {EXIT=>1},
       {OUT=>"   a   b   c   d\n   e   f   g   h\n   i   j\n"},
       {ERR=>"$prog: missing: $limits->{ENOENT}\n"}],
+
+     # Ensure the final offset is still printed after an input fails.
+     ['read-err-offset', '-c', {IN=>{g=>"a\n"}}, '.', {EXIT=>1},
+      {OUT=>"0000000   a  \\n\n0000002\n"},
+      {ERR=>"$prog: .: $limits->{EISDIR}\n"}],
     );
 
 push @Tests,
