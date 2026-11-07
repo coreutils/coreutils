@@ -162,5 +162,14 @@ echo y | ln -sfi a b || fail=1
 test -L b || fail=1
 
 # ===================================================
+# --verbose uses '=>' for hard links and '->' for symlinks.
+rm -f a hard soft
+touch a || framework_failure_
+ln -v a hard > out || fail=1
+echo "'hard' => 'a'" > exp || framework_failure_
+compare exp out || fail=1
+ln -sv a soft > out || fail=1
+echo "'soft' -> 'a'" > exp || framework_failure_
+compare exp out || fail=1
 
 Exit $fail
