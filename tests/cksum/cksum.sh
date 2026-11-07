@@ -22,6 +22,14 @@ print_ver_ cksum printf
 
 returns_ 1 cksum missing 2> /dev/null || fail=1
 
+# An explicit '-' operand is printed as the file name.
+cksum - < /dev/null > out || fail=1
+printf '%s\n' '4294967295 0 -' > exp || framework_failure_
+compare exp out || fail=1
+cksum < /dev/null > out || fail=1
+printf '%s\n' '4294967295 0' > exp || framework_failure_
+compare exp out || fail=1
+
 GLIBC_TUNABLES='glibc.cpu.hwcaps=-AVX512F,-AVX2,-AVX,-PMULL' \
  cksum --debug /dev/null 2>debug || fail=1
 grep 'using.*hardware support' debug && fail=1
