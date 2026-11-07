@@ -44,12 +44,15 @@ if test -n "$LOCALE_FR_UTF8" && test "$LOCALE_FR_UTF8" != "none"; then
    LC_ALL=$f $prog '%q\n' 'áḃç' > out
    #non-printable multi-byte
    LC_ALL=$f $prog '%q\n' "$($prog '\xc2\x81')" >> out
+   #non-printable multi-byte in a name with an apostrophe
+   LC_ALL=$f $prog '%q\n' "$($prog "it's\\xc2\\x9bhere")" >> out
    #printable multi-byte in C locale
    LC_ALL=C $prog '%q\n' 'áḃç' >> out
   )
   cat <<\EOF > exp || framework_failure_
 áḃç
 ''$'\302\201'
+'it'\''s'$'\302\233''here'
 ''$'\303\241\341\270\203\303\247'
 EOF
   compare exp out || fail=1
