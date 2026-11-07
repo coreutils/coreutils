@@ -50,4 +50,10 @@ if ! test -g .; then
   test "$mode" = drwxrwxrwx || fail=1
 fi
 
+# A numeric mode followed by ',' is invalid.
+returns_ 1 mkdir -m 1,2 d 2> /dev/null || fail=1
+test -e d && fail=1
+returns_ 1 mkfifo --mode=1,2 f 2> /dev/null || fail=1
+test -e f && fail=1
+
 Exit $fail
