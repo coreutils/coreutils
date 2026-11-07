@@ -160,4 +160,24 @@ EOF
   done
 fi
 
+# Ensure -z does not remove an existing file that csplit did not create,
+# such as the input itself when a pattern is rejected.
+rm -f xx?? || framework_failure_
+echo 'original data' > xx00 || framework_failure_
+cp xx00 exp || framework_failure_
+for opt in '' '-k'; do
+  returns_ 1 csplit -z $opt xx00 '/[/' > out 2> err || fail=1
+  compare exp xx00 || fail=1
+done
+# or an output file it could not open.
+if ! uid_is_privileged_; then
+  printf 'a\nb\n' > in || framework_failure_
+  chmod a-w xx00 || framework_failure_
+  for opt in '' '-k'; do
+    returns_ 1 csplit -z $opt in 2 > out 2> err || fail=1
+    compare exp xx00 || fail=1
+  done
+  chmod u+w xx00 || framework_failure_
+fi
+
 Exit $fail
