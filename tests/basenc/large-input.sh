@@ -24,4 +24,11 @@ truncate -s20MiB file.zeros || framework_failure_
 
 test $(basenc --base58 file.zeros | wc -c) = 21247462 || fail=1
 
+# Ensure base58 input of more than 1024 digits is decoded as one number.
+seq 300 > nums || framework_failure_
+basenc --base58 -w0 nums > nums.b58 || fail=1
+test $(wc -c < nums.b58) -gt 1024 || framework_failure_
+basenc --base58 -d nums.b58 > back || fail=1
+compare nums back || fail=1
+
 Exit $fail
