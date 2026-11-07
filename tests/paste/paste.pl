@@ -24,6 +24,7 @@ use strict;
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my $prog = 'paste';
+my $limits = getlimits ();
 my $msg = "$prog: delimiter list ends with an unescaped backslash: ";
 
 my @Tests =
@@ -85,6 +86,12 @@ my @Tests =
    ['delim-esc-r', q{-s -d '\r'},   {IN=>"1\n2\n"}, {OUT=>"1\r2\n"}],
    ['delim-esc-v', q{-s -d '\v'},   {IN=>"1\n2\n"}, {OUT=>"1\0132\n"}],
    ['delim-esc-foo', q{-s -d '\q'}, {IN=>"1\n2\n"}, {OUT=>"1q2\n"}],
+
+   # Ensure the file name is diagnosed on open and read errors.
+   ['err-name-read', {IN=>"a\n"}, '.', {OUT=>"a\t\n"}, {EXIT=>1},
+    {ERR=>"$prog: .: $limits->{EISDIR}\n"}],
+   ['err-name-open', '-s missing', {EXIT=>1},
+    {ERR=>"$prog: missing: $limits->{ENOENT}\n"}],
   );
 
 my $save_temps = $ENV{DEBUG};
