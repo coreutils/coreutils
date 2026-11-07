@@ -19,6 +19,7 @@
 use strict;
 
 my $prog = 'md5sum';
+my $limits = getlimits ();
 
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
@@ -168,6 +169,17 @@ my @Tests =
                                 {IN=> {'f.md5' =>
                                     "006999e6df389641adf1fa3a74801d9d  f\n"}},
                                 {OUT=>"f: OK\n"}],
+     # --ignore-missing ignores only files that do not exist,
+     # not those that cannot be opened for another reason.
+     ['check-ignore-missing-7', '--check', '--ignore-missing',
+                                {AUX=> {f=> ''}},
+                                {IN=> {'f.md5' => "$degenerate  f\n".
+                                                  "$degenerate  f/x\n"}},
+                                {OUT=>"f: OK\nf/x: FAILED open or read\n"},
+                                {ERR=>"$prog: f/x: $limits->{ENOTDIR}\n".
+                                   "$prog: WARNING: 1 listed file could not".
+                                   " be read\n"},
+                                {EXIT=> 1}],
      ['bsd-segv', '--check', {IN=> {'z' => "MD5 ("}}, {EXIT=> 1},
       {ERR=> "$prog: z: no properly formatted checksum lines found\n"}],
 
