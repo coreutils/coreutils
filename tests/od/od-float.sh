@@ -105,4 +105,15 @@ od -An -t fF --endian=little > out || fail=1
 printf '               1               2\n' > exp || framework_failure_
 compare exp out || fail=1
 
+# Ensure %g-style output with two-digit exponents.
+env printf '\x00\x00\x80\x3f\x0a\xd7\x23\x3c\xac\xc5\x27\x37\x00\x00\x20\x41' |
+od -An -t f4 --endian=little > out || fail=1
+printf '%16s%16s%16s%16s\n' 1 0.01 1e-05 10 > exp || framework_failure_
+compare exp out || fail=1
+
+env printf '\x9a\x99\x99\x99\x99\x99\xb9\x3f' |
+od -An -t f8 --endian=little > out || fail=1
+printf '%25s\n' 0.1 > exp || framework_failure_
+compare exp out || fail=1
+
 Exit $fail
