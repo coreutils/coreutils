@@ -335,6 +335,21 @@ my @Tests =
      # Test plus flag without width (should not add sign for 4-digit year)
      ['plus-no-width-1', '-d 1999-06-01 +%+Y', {OUT=>'1999'}],
      ['plus-no-width-2', '-d 1999-06-01 +%+6Y', {OUT=>'+01999'}],
+     # '+' adds a sign only to year conversions wider than their usual width;
+     # elsewhere it zero-pads like '0'.  A later padding flag overrides it.
+     ['plus-natural-width-Y', '-d 2020-01-05 +%+4Y', {OUT=>'2020'}],
+     ['plus-wide-Y', '-d 2020-01-05 +%+5Y', {OUT=>'+2020'}],
+     ['plus-wide-y', '-d 2020-01-05 +%+3y', {OUT=>'+20'}],
+     ['plus-natural-width-y', '-d 2020-01-05 +%+2y', {OUT=>'20'}],
+     ['plus-wide-C', '-d 2020-01-05 +%+3C', {OUT=>'+20'}],
+     ['plus-no-width-G', '-d 2020-01-05 +%+G', {OUT=>'2020'}],
+     ['plus-no-width-F', '-d 2020-01-05 +%+F', {OUT=>'2020-01-05'}],
+     ['plus-wide-F', '-d 2020-01-05 +%+12F', {OUT=>'+02020-01-05'}],
+     ['plus-month', '-d 2020-01-05 +%+3m', {OUT=>'001'}],
+     ['plus-day', '-d 2020-01-05 +%+3d', {OUT=>'005'}],
+     ['plus-then-underscore', '-d 2020-01-05 +%+_5Y', {OUT=>' 2020'}],
+     ['plus-then-zero', '-d 2020-01-05 +%+05Y', {OUT=>'02020'}],
+     ['dash-then-plus', '-d 2020-01-05 +%-+6Y', {OUT=>'+02020'}],
 
      # Test the combination of the to-upper-case modifier (^) and a conversion
      # specifier that expands to a string containing lower case characters.
@@ -475,6 +490,9 @@ my @Tests =
 
 $limits->{TIME_T_MAX} == $limits->{INTMAX_MAX}
   and push @Tests,
+    ['plus-5-digit-year', '-d 12020-01-05 +%+Y', {OUT=>'+12020'}],
+    ['plus-then-dash-5-digit', '-d 12020-01-05 +%+-Y', {OUT=>'12020'}],
+    ['plus-5-digit-F', '-d 12020-01-05 +%+F', {OUT=>'+12020-01-05'}],
     ['large-year', "-d '$large_year-01-01' +'%Y-%m-%d'",
      {OUT=>"$large_year-01-01"}];
 
