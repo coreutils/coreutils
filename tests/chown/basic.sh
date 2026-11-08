@@ -20,6 +20,13 @@
 print_ver_ chown
 require_root_
 
+# Numeric user names must not resolve to different user IDs.
+for user in 0 2 42 43; do
+  uid=$(id -u "$user" 2>/dev/null) || continue
+  test "$uid" = "$user" ||
+    skip_ "user name '$user' resolves to UID $uid"
+done
+
 touch f || framework_failure_
 
 chown -R --preserve-root 0:1 f

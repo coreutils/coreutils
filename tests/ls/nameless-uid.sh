@@ -31,7 +31,7 @@ if test x$nameless_uid = x; then
 fi
 
 touch f || framework_failure_
-chown $nameless_uid f || framework_failure_
+chown +$nameless_uid f || framework_failure_
 
 
 set -- $(ls -o f) || fail=1

@@ -60,8 +60,8 @@ for errnum in ENOENT EIO; do
   run_injected_ foo "$stats" ls -l .
   run_injected_ foo "$stats" du -a .
   run_injected_ foo "$chmods" chmod -R 0700 .
-  run_injected_ foo "$chowns" chown -R "$uid" .
-  run_injected_ foo "$chowns" chgrp -R "$gid" .
+  run_injected_ foo "$chowns" chown -R "+$uid" .
+  run_injected_ foo "$chowns" chgrp -R "+$gid" .
 done
 
 Exit $fail

@@ -23,7 +23,7 @@ unshare -U unshare --version || skip_ 'unshare -U is unavailable'
 overflow_uid=$(cat /proc/sys/kernel/overflowuid) ||
  skip_ 'overflow uid is unavailable'
 
-test "$(unshare -U whoami)" = "$(id -un $overflow_uid)" || fail=1
+test "$(unshare -U whoami)" = "$(id -un "+$overflow_uid")" || fail=1
 
 # The "</dev/null" disables a fallback lookup via utmp/utmpx,
 # that existed in glibc < 2.28 and exists again in glibc >= 2.38.

@@ -23,10 +23,10 @@ print_ver_ chown
 ln -s no-such dangle || framework_failure_
 
 
-set _ $(ls -ldo dangle); shift; user=$3
+user=$(stat -c %u dangle) || framework_failure_
 
 # With 5.2.1 and earlier, this command would mistakenly succeed.
-chown --dereference $user dangle 2> out1 && fail=1
+chown --dereference "+$user" dangle 2> out1 && fail=1
 sed 's/: [^:]*$//' out1 > out
 
 cat <<\EOF > exp || framework_failure_
@@ -40,7 +40,7 @@ compare exp out || fail=1
 # rather than descend into it forever.
 mkdir -p cyc/b/c || framework_failure_
 ln -s "$(pwd)/cyc" cyc/b/c/d || framework_failure_
-chown -vRL $user cyc > out2 2>&1 || fail=1
+chown -vRL "+$user" cyc > out2 2>&1 || fail=1
 # The symlinked directory is visited exactly once...
 grep -F "'cyc/b/c/d'" out2 > /dev/null || { cat out2; fail=1; }
 # ...and recursion does not re-enter it through the cycle.

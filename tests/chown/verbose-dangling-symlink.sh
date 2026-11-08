@@ -22,7 +22,8 @@ getlimits_
 
 ln -s missing dangling-slink || framework_failure_
 
-set _ $(ls -ld dangling-slink); shift; user="$3"; group="$4"
+user=$(stat -c %u dangling-slink) &&
+group=$(stat -c %g dangling-slink) || framework_failure_
 
 # From coreutils-5.3.0 to coreutils-9.12, this would use an
 # uninitialized struct stat.  Commonly, this would lead to the
@@ -38,7 +39,7 @@ echo "chown: cannot dereference 'dangling-slink': $ENOENT" >exp-err \
   || framework_failure_
 echo "failed to change ownership of 'dangling-slink' to $user:$group" \
   >exp-out || framework_failure_
-returns_ 1 chown -v "$user":"$group" dangling-slink >out 2>err || fail=1
+returns_ 1 chown -v "+$user:+$group" dangling-slink >out 2>err || fail=1
 compare exp-out out || fail=1
 compare exp-err err || fail=1
 

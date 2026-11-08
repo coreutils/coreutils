@@ -38,8 +38,8 @@ if test $chattr_i_works = 0; then
   skip_ "chattr +i doesn't work on this file system"
 fi
 
-u1=1
-g1=1
+u1=+1
+g1=+1
 
 echo test > a || framework_failure_
 

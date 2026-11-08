@@ -22,7 +22,7 @@ require_root_
 
 touch f || framework_failure_
 
-chgrp -R --preserve-root 1 f
+chgrp -R --preserve-root +1 f
 
 # Make sure the owner and group are 0 and 1 respectively.
 set _ $(ls -n f); shift; test ":$4" = ':1' || fail=1

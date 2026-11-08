@@ -43,13 +43,13 @@ chmod -R --preserve-root u+r / >> out 2>&1 && fail=1
 # since the symlink in question is not a command line argument.
 # Contrary to the above commands, these two should succeed.
 echo '==== test -RHh' >> out || framework_failure_
-chown -RHh --preserve-root $(id -u) d >> out 2>&1 || fail=1
-test -z "$id_g" || chgrp -RHh --preserve-root "$id_g" d >> out 2>&1 || fail=1
+chown -RHh --preserve-root "+$(id -u)" d >> out 2>&1 || fail=1
+test -z "$id_g" || chgrp -RHh --preserve-root "+$id_g" d >> out 2>&1 || fail=1
 
 # These must fail.
 echo '==== test -RLh' >> out || framework_failure_
-chown -RLh --preserve-root $(id -u) d >> out 2>&1 && fail=1
-test -n "$id_g" && chgrp -RLh --preserve-root "$id_g" d >> out 2>&1 && fail=1
+chown -RLh --preserve-root "+$(id -u)" d >> out 2>&1 && fail=1
+test -n "$id_g" && chgrp -RLh --preserve-root "+$id_g" d >> out 2>&1 && fail=1
 
 (
  cat <<\EOF &&

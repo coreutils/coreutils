@@ -22,10 +22,10 @@ require_root_
 skip_if_setgid_
 skip_if_nondefault_group_
 
-u1=1
-u2=2
-g1=1
-g2=2
+u1=+1
+u2=+2
+g1=+1
+g2=+2
 
 
 echo test > a || framework_failure_

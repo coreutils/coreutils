@@ -34,7 +34,7 @@ chmod g+s d 2> /dev/null && env -- test -g d ||
 
     for id_g in $(id -g) $(id -G) ''; do
       test -n "$id_g" || break
-      chgrp "$id_g" d && chmod g+s d && env -- test -g d && break
+      chgrp "+$id_g" d && chmod g+s d && env -- test -g d && break
     done
     test -n "$id_g"
   } ||
