@@ -171,6 +171,22 @@ exp=$(cd empty && env pwd) || framework_failure_
 got=$(env --chdir=empty pwd) || fail=1
 test "$exp" = "$got" || fail=1
 
+# A leading '=' in a value attached to a short option is part of the value.
+mkdir -p =/d || framework_failure_
+exp=$(cd =/d && env pwd) || framework_failure_
+got=$(env -C=/d pwd) || fail=1
+test "$exp" = "$got" || fail=1
+got=$(env -vC=/d pwd 2>/dev/null) || fail=1
+test "$exp" = "$got" || fail=1
+got=$(env -S'-C=/d pwd') || fail=1
+test "$exp" = "$got" || fail=1
+exp=$(cd = && env pwd) || framework_failure_
+got=$(env -C= pwd) || fail=1
+test "$exp" = "$got" || fail=1
+test "$(env -a=name sh -c 'echo "$0"')" = '=name' || fail=1
+returns_ 125 env -u=FOO true || fail=1
+returns_ 125 env -vu=FOO true 2>/dev/null || fail=1
+
 # Verify argv0 overriding
 cat <<EOF > truetrue || framework_failure_
 #!$SHELL
