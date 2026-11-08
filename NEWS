@@ -62,6 +62,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   it creates and their sources.
   [This bug was present in "the beginning".]
 
+  'cp', 'mv', and 'install' no longer exit successfully when they fail to create
+  a hole in the destination file.
+  [bug introduced in coreutils-9.8]
+
   'date -u MMDDhhmm' no longer uses the local time zone's UTC offset when
   setting the date and time.
   [bug introduced in coreutils-9.11]

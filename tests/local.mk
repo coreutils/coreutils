@@ -607,6 +607,7 @@ all_tests =					\
   tests/cp/dir-vs-file.sh			\
   tests/cp/existing-perm-dir.sh			\
   tests/cp/existing-perm-race.sh		\
+  tests/cp/fail-create-hole.sh			\
   tests/cp/fail-perm.sh				\
   tests/cp/keep-directory-symlink.sh		\
   tests/cp/sparse-extents.sh			\

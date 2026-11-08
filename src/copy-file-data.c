@@ -236,7 +236,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, idx_t buf_size,
               else if (prev_hole)
                 {
                   if (create_hole (dest_fd, dst_name, psize) < 0)
-                    return false;
+                    return -1;
                   pbuf = cbuf;
                   psize = csize;
                 }
