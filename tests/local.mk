@@ -145,6 +145,7 @@ all_root_tests =				\
   tests/split/l-chunk-root.sh			\
   tests/tac/tac-continue.sh			\
   tests/tail/append-only.sh			\
+  tests/tail/append-to-input.sh			\
   tests/tail/end-of-device.sh			\
   tests/touch/now-owned-by-other.sh
 
