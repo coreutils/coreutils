@@ -464,6 +464,9 @@ my @Tests =
 ['nonblank-leading-M1', '-M', {IN=>"\fFEB\nJAN\n"}, {OUT=>"\fFEB\nJAN\n"}],
 ['nonblank-leading-M2', '-M', {IN=>"\rFEB\nJAN\n"}, {OUT=>"\rFEB\nJAN\n"}],
 ['blank-leading-M1', '-M', {IN=>" \tFEB\nJAN\n"}, {OUT=>"JAN\n \tFEB\n"}],
+
+# An operand after "--" is a file name, even if it looks like -t.
+['dash-dash-t', '--', {IN=>{'-t='=>"b\na\n"}}, {OUT=>"a\nb\n"}],
 );
 
 # Add _POSIX2_VERSION=199209 to the environment of each test
@@ -485,7 +488,9 @@ foreach my $t (@Tests)
 # due to a race condition about 1 in 20 times.
 # Remove the IN_PIPE version of the "output-is-input" test above.
 # The others aren't susceptible because they have three inputs each.
-@Tests = grep {$_->[0] ne 'output-is-input.p'} @Tests;
+# Likewise, the IN_PIPE version of "dash-dash-t" has no file named -t=.
+@Tests = grep {$_->[0] ne 'output-is-input.p'
+               && $_->[0] ne 'dash-dash-t.p'} @Tests;
 
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
