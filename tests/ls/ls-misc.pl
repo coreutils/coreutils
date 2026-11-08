@@ -349,6 +349,15 @@ my @Tests =
       $rmdir_reg,
       {EXIT => 2},
      ],
+
+     # A file name component that is too long is reported like any other
+     # file that cannot be accessed.
+     do { my $long = 'x' x 1000;
+       ['name-too-long', $long,
+        {ERR_SUBST=>"s/'$long':.*/'$long':/"},
+        {ERR => "$prog: cannot access '$long':\n"},
+        {EXIT => 2},
+       ] },
     );
 
 umask 022;
