@@ -43,7 +43,7 @@ timeout --foreground 1700 sort --compress-program=./compress -S 1k in > out \
 
 compare exp out || fail=1
 test -f ok || fail=1
-rm -f compress ok
+rm -f ok || framework_failure_
 
 # If $TMPDIR is relative, give subprocesses time to react when 'sort' exits.
 # Otherwise, under NFS, when 'sort' unlinks the temp files and they
@@ -53,5 +53,24 @@ case $TMPDIR in
 /*) ;;
 *) sleep 1;;
 esac
+
+# Make sure that 'sort' doesn't hang when the output file is given as
+# the input multiple times.
+# FIXME: This assumes the input file is larger than the default pipe size.
+seq -w 100000 >exp1 &&
+sed p exp1 >exp2 &&
+cp exp1 inp || framework_failure_
+timeout 60 sort -m --compress-program=./compress -o inp inp inp >out 2>err \
+  || fail=1
+compare exp2 inp || fail=1
+compare /dev/null out || fail=1
+compare /dev/null errr || fail=1
+cp exp1 inp || framework_failure_
+timeout 60 sort -m --compress-program=./compress -o inp - - <inp >out 2>err \
+  || fail=1
+compare exp2 inp || fail=1
+compare /dev/null out || fail=1
+compare /dev/null err || fail=1
+rm -f compress ok || framework_failure_
 
 Exit $fail

@@ -190,6 +190,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   environment.
   [bug introduced in coreutils-9.9]
 
+  'sort -m --compress-program=PROG -o FILE' no longer hangs when given
+  the same input file more than once.
+  [bug introduced in coreutils-8.8]
+
   'split --hex-suffixes=FROM' now generates consecutive suffixes when FROM
   contains any of the digits a to f.  Previously it read beyond the suffix
   alphabet, giving arbitrary and repeated file names, thus losing output.

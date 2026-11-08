@@ -4103,9 +4103,10 @@ sortlines (struct line *restrict lines, size_t nthreads,
 /* Scan through FILES[NTEMPS .. NFILES-1] looking for files that are
    the same as OUTFILE.  If found, replace each with the same
    temporary copy that can be merged into OUTFILE without destroying
-   OUTFILE before it is completely read.  This temporary copy does not
-   count as a merge temp, so don't worry about incrementing NTEMPS in
-   the caller; final cleanup will remove it, not zaptemp.
+   OUTFILE before it is completely read, or with its own file if
+   temporary files are compressed.  This temporary copy does not count
+   as a merge temp, so don't worry about incrementing NTEMPS in the
+   caller; final cleanup will remove it, not zaptemp.
 
    This test ensures that an otherwise-erroneous use like
    "sort -m -o FILE ... FILE ..." copies FILE before writing to it.
@@ -4146,11 +4147,21 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
 
       if (same)
         {
-          if (! tempcopy)
+          if (! tempcopy || tempcopy->state != UNCOMPRESSED)
             {
               FILE *tftp;
+              struct sortfile src = files[i];
+
+              /* Don't share compressed temporary files when the same input
+                 file is given multiple times since each tempnode only
+                 tracks a single PID.  */
+              if (tempcopy)
+                {
+                  src.name = tempcopy->name;
+                  src.temp = tempcopy;
+                }
               tempcopy = create_temp (&tftp);
-              mergefiles (&files[i], 0, 1, tftp, tempcopy->name);
+              mergefiles (&src, 0, 1, tftp, tempcopy->name);
             }
 
           files[i].name = tempcopy->name;
