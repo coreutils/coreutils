@@ -760,6 +760,7 @@ all_tests =					\
   tests/ls/hex-option.sh			\
   tests/ls/hyperlink.sh				\
   tests/ls/infloop.sh				\
+  tests/ls/line-separator.sh			\
   tests/ls/inode.sh				\
   tests/ls/m-option.sh				\
   tests/ls/w-option.sh				\
