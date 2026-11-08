@@ -506,6 +506,7 @@ lcm (size_t u, size_t v)
    PTR) through ((char *) PTR + ALIGNMENT - 1) to be addressable
    locations.  */
 
+ATTRIBUTE_ACCESS_NONE ((1))
 static inline void *
 ptr_align (void const *ptr, size_t alignment)
 {
