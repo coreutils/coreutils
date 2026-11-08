@@ -126,4 +126,37 @@ printf '5' > exp
 split -n l/7/7 in > out
 compare exp out || fail=1
 
+# In coreutils-9.2 through coreutils-9.12, this would exit with a failure
+# upon exhausting output files, overwriting them if they exist.
+printf 'a\n' >in &&
+printf 'b\n' >out.af &&
+cp out.af exp-out.af &&
+truncate -s 0 exp || framework_failure_
+split -n l/5 in out. >out 2>err || fail=1
+compare /dev/null out || fail=1
+compare /dev/null err || fail=1
+set -- out.*
+files="$*"
+exp_files='out.aa out.ab out.ac out.ad out.ae out.af'
+test "$files" = "$exp_files" || fail=1
+for file in $exp_files; do
+  exp=exp
+  if test $file = out.aa; then
+    exp=in
+  elif test $file = out.af; then
+    exp=exp-out.af
+  fi
+  compare $exp $file || fail=1
+done
+rm -f $exp_files || framework_failure_
+
+# In coreutils-9.2 through coreutils-9.12, this would loop infinitely.
+printf 'a\n' >in || fail=1
+timeout 10 split -e -n l/5 in out. >out 2>err || fail=1
+compare /dev/null out || fail=1
+compare /dev/null err || fail=1
+set -- out.*
+test "$*" = out.aa || fail=1
+compare in out.aa || fail=1
+
 Exit $fail

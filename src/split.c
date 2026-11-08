@@ -1052,7 +1052,7 @@ lines_chunk_split (intmax_t k, intmax_t n, char *buf, idx_t bufsize,
                 return;
               chunk_end += chunk_size + (chunk_no < rem_bytes);
               chunk_no++;
-              if (chunk_end <= n_written)
+              if (chunk_no <= n && chunk_end <= n_written)
                 {
                   if (! k)
                     cwrite (true, NULL, 0);
