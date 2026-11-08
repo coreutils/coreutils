@@ -361,7 +361,17 @@ my @Tests =
              {ERR => "$prog: invalid --block-size argument '0'\n"},
              {EXIT => 2},
             ] } ('', '--si', '-h')),
-    );
+
+     # A file name component that is too long is reported like any other
+     # file that cannot be accessed.  ERR_SUBST avoids false ENOENT failures
+     # where the long name might be allowed.
+     do { my $long = 'x' x 1000;
+       ['name-too-long', $long,
+        {ERR_SUBST=>"s/'$long':.*/'$long':/"},
+        {ERR => "$prog: cannot access '$long':\n"},
+        {EXIT => 2},
+       ] },
+   );
 
 umask 022;
 
