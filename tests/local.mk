@@ -573,6 +573,7 @@ all_tests =					\
   tests/chmod/equals.sh				\
   tests/chmod/ignore-symlink.sh			\
   tests/chmod/inaccessible.sh			\
+  tests/chmod/mode-whitespace.sh		\
   tests/chmod/octal.sh				\
   tests/chmod/only-op.sh			\
   tests/chmod/partial-fail.sh			\
