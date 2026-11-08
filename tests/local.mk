@@ -580,6 +580,7 @@ all_tests =					\
   tests/chmod/umask-x.sh			\
   tests/chmod/usage.sh				\
   tests/chmod/symlinks.sh			\
+  tests/chown/cannot-access.sh			\
   tests/chown/deref.sh				\
   tests/chown/preserve-root.sh			\
   tests/chown/separator.sh			\
