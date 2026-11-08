@@ -54,6 +54,13 @@ printf '\001%10s\000%10s\000' | od -S10 > out || fail=1
 printf '%07o %10s\n' 1 '' 12 '' > exp || framework_failure_
 compare exp out || fail=1
 
+# Ensure T, P and E suffixes work after a 0 or 0x prefix
+od -An -c in > exp || framework_failure_
+for n in 01T 01P 01E 01TB 01PB 01EB 0x1T 0x1P; do
+  od -An -c -N$n in > out || fail=1
+  compare exp out || fail=1
+done
+
 # Ensure no address output for read error
 # (Users may use -N0 -j... to do base conversion)
 if ! cat . >/dev/null 2>&1; then
