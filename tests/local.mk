@@ -195,6 +195,7 @@ all_tests =					\
   tests/misc/uname-labeled.sh			\
   tests/misc/warning-errors.sh			\
   tests/misc/write-errors.sh			\
+  tests/tail/append-to-input.sh			\
   tests/tail/basic-seek.sh			\
   tests/tail/inotify-hash-abuse.sh		\
   tests/tail/inotify-hash-abuse2.sh		\
