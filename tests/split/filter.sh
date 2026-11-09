@@ -71,6 +71,20 @@ for mode in '' 'r/'; do
   done
 done
 
+seq 100 >in &&
+echo 1 >exp-xaa &&
+sed -n 'n;p' in >exp-xab || framework_failure_
+for mode in '' -u; do
+  rm -f x?? || framework_failure_
+  split $mode -n r/2 \
+    --filter='case $FILE in xaa) head -n1 ;; *) cat ;; esac >$FILE' in \
+    >out 2>err || fail=1
+  compare /dev/null out || fail=1
+  compare /dev/null err || fail=1
+  compare exp-xaa xaa || fail=1
+  compare exp-xab xab || fail=1
+done
+
 # Ensure that "endless" input _is_ processed for unbounded number of filters
 for buf in 1000 1000000; do
   returns_ 124 timeout .5 sh -c \

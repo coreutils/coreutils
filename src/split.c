@@ -1131,6 +1131,9 @@ typedef struct of_info
   int ofd;
   FILE *ofile;
   pid_t opid;
+
+  /* True if the filter no longer accepts input.  */
+  bool done;
 } of_t;
 
 enum
@@ -1250,6 +1253,7 @@ lines_rr (intmax_t k, intmax_t n, char *buf, idx_t bufsize, of_t **filesp)
           files[i_file].ofd = OFD_NEW;
           files[i_file].ofile = NULL;
           files[i_file].opid = 0;
+          files[i_file].done = false;
         }
       i_file = 0;
       file_limit = false;
@@ -1299,22 +1303,20 @@ lines_rr (intmax_t k, intmax_t n, char *buf, idx_t bufsize, of_t **filesp)
             {
               /* Secure file descriptor. */
               file_limit |= ofile_open (files, i_file, n);
-              if (unbuffered)
+              if (! files[i_file].done)
                 {
                   /* Note writing to fd, rather than flushing the FILE gives
                      an 8% performance benefit, due to reduced data copying.  */
-                  if (full_write (files[i_file].ofd, bp, to_write) != to_write
-                      && ! ignorable (errno))
+                  if (unbuffered
+                      ? full_write (files[i_file].ofd, bp, to_write) == to_write
+                      : fwrite (bp, to_write, 1, files[i_file].ofile) == 1)
+                    wrote = true;
+                  else if (ignorable (errno))
+                    files[i_file].done = true;
+                  else
                     error (EXIT_FAILURE, errno, "%s",
                            quotef (files[i_file].of_name));
                 }
-              else if (fwrite (bp, to_write, 1, files[i_file].ofile) != 1
-                       && ! ignorable (errno))
-                error (EXIT_FAILURE, errno, "%s",
-                       quotef (files[i_file].of_name));
-
-              if (! ignorable (errno))
-                wrote = true;
 
               if (file_limit)
                 {
