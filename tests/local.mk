@@ -319,6 +319,7 @@ all_tests =					\
   tests/misc/coreutils.sh			\
   tests/cut/cut.pl				\
   tests/cut/mb-non-utf8.sh			\
+  tests/cut/mb-short-read.sh			\
   tests/cut/bounded-memory.sh			\
   tests/cut/cut-huge-range.sh			\
   tests/wc/mb-non-utf8.sh			\

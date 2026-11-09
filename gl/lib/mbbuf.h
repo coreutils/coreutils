@@ -76,7 +76,8 @@ mbbuf_init (mbbuf_t *mbbuf, char *buffer, idx_t size, FILE *fp)
   mbbuf->eof = false;
 }
 
-/* Fill the input buffer with at least MCEL_LEN_MAX bytes if possible.
+/* Fill the input buffer with at least MCEL_LEN_MAX bytes if possible,
+   though don't wait/retry if less than that are available.
    Return the number of bytes available from the current offset.
    At end of file, MBBUF.EOF is set, and zero will eventually be returned.
    Note feof() will _NOT_ be set on the MBBUF.FP.  */
@@ -123,15 +124,25 @@ mbbuf_fill (mbbuf_t *mbbuf)
 {
   idx_t available = mbbuf_avail (mbbuf);
 
-  if (available == 0)
-    return mbbuf_topup (mbbuf);
+  /* Short-circuit the common case.  */
+  if (MCEL_LEN_MAX <= available)
+    return available;
 
-  if (available < MCEL_LEN_MAX && ! mbbuf->eof)
+  if (available == 0)
+    available = mbbuf_topup (mbbuf);
+
+  /* A single read() may return only part of a character, e.g., from a pipe
+     or terminal.  Keep reading until the character at the current offset
+     is complete, or enough bytes are available to decide, or at EOF.
+     Note mcel_scan does not distinguish invalid from incomplete sequences,
+     so invalid bytes can also cause further reads and delay output.  */
+  while (0 < available && available < MCEL_LEN_MAX && ! mbbuf->eof)
     {
       mcel_t g = mcel_scan (mbbuf->buffer + mbbuf->offset,
                             mbbuf->buffer + mbbuf->length);
-      if (g.err)
-        return mbbuf_topup (mbbuf);
+      if (! g.err)
+        break;
+      available = mbbuf_topup (mbbuf);
     }
 
   return available;

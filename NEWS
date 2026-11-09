@@ -95,6 +95,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   146077762747232966952776282887314548659.
   [bugs introduced in coreutils-8.20]
 
+  cut, expand, fold, and unexpand no longer treat a multi-byte character
+  as separate bytes when a read() from a pipe or terminal returns only
+  part of the character.
+  [bug introduced in coreutils-9.11]
+
   'fold' no longer prematurely wraps lines with a wide character towards
   the start of a line, followed by multiple backspaces.  Also backspaces
   after a tab character are accounted for correctly.
