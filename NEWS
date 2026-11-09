@@ -49,6 +49,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   the \u0085 (next line) character as a separator on non-GLIBC platforms.
   [bug introduced in coreutils-9.11]
 
+  'cut -w', and 'cut -d' in some multi-byte locales, no longer delay output
+  of an already read line until more input arrives, when fewer than 4 bytes
+  follow the last selected field.
+  [bug introduced in coreutils-9.12]
+
   'chown -v' and 'chgrp -v' no longer emit uninitialized user and group IDs when
   operating on dangling symbolic links.
   [bug introduced in coreutils-5.3.0]

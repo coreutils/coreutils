@@ -442,6 +442,18 @@ search_bytes (char const *buf, int c, size_t n_bytes)
   return 2 < n_bytes ? (char *) memchr (buf + 2, c, n_bytes - 2) : NULL;
 }
 
+/* Consume buffered bytes through the next line delimiter, if present.
+   Return whether a delimiter was consumed.  Do not refill the buffer.  */
+
+static inline bool
+skip_buffered_line (mbbuf_t *mbbuf, idx_t available)
+{
+  char *p = mbbuf->buffer + mbbuf->offset;
+  char *end = search_bytes (p, line_delim, available);
+  mbbuf_advance (mbbuf, end ? end - p + 1 : available);
+  return end != NULL;
+}
+
 static inline void
 write_line_delim (void)
 {
@@ -591,14 +603,13 @@ scan_mb_line_end (mbbuf_t *mbbuf, struct mbfield_parser *parser,
 
   while (true)
     {
-      idx_t available = mbbuf_topup (mbbuf);
+      idx_t available = mbbuf_avail (mbbuf);
+      if (available == 0)
+        available = mbbuf_topup (mbbuf);
       if (available == 0)
         return FIELD_EOF;
 
-      char *buffer = mbbuf->buffer + mbbuf->offset;
-      char *line_end = search_bytes (buffer, line_delim, available);
-      idx_t n = line_end ? line_end - buffer + 1 : available;
-      mbbuf_advance (mbbuf, n);
+      bool line_end = skip_buffered_line (mbbuf, available);
       *have_pending_line = true;
 
       if (line_end)
@@ -929,11 +940,10 @@ cut_characters_mode (FILE *stream, bool byte_mode)
       /* Skip unselected line suffixes without decoding each character.  */
       if (idx && field_selection_exhausted (idx))
         {
-          idx_t available = mbbuf_topup (&mbbuf);
-          char *p = mbbuf.buffer + mbbuf.offset;
-          char *end = search_bytes (p, line_delim, available);
-          mbbuf_advance (&mbbuf, end ? end - p : available);
-          if (!end && available)
+          idx_t available = mbbuf_avail (&mbbuf);
+          if (skip_buffered_line (&mbbuf, available))
+            reset_item_line (&idx, &print_delimiter);
+          if (available)
             continue;
         }
 
