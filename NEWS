@@ -20,6 +20,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   or reads freed memory, when the USER ID is only known outside the chroot.
   [bug introduced in coreutils-8.23]
 
+  'chown -v' and 'chgrp -v' no longer emit uninitialized user and group IDs
+  when operating on dangling symbolic links.
+  [bug introduced in coreutils-5.3.0]
+
   'cksum' now detects GNU and BSD reversed formats for each checksum file.
   Previously mixing these formats across files could reject valid checksums
   or incorrectly interpret a space as part of a file name.
@@ -45,19 +49,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   as invalid, and thus, without --strict, not impacting the exit status.
   [bug introduced in coreutils-9.9]
 
-  cut, expand, fold, join, numfmt, unexpand, and uniq, no longer consider
-  the \u0085 (next line) character as a separator on non-GLIBC platforms.
-  [bug introduced in coreutils-9.11]
-
-  'cut -w', and 'cut -d' in some multi-byte locales, no longer delay output
-  of an already read line until more input arrives, when fewer than 4 bytes
-  follow the last selected field.
-  [bug introduced in coreutils-9.12]
-
-  'chown -v' and 'chgrp -v' no longer emit uninitialized user and group IDs when
-  operating on dangling symbolic links.
-  [bug introduced in coreutils-5.3.0]
-
   'cp --preserve=xattr' and 'mv' now refer to the destination file name in error
   and warning messages when setting an extended attribute fails.  Previously,
   they would mistakenly print the extended attribute name in its place.
@@ -70,6 +61,20 @@ GNU coreutils NEWS                                    -*- outline -*-
   'cp', 'mv', and 'install' no longer exit successfully when they fail to create
   a hole in the destination file.
   [bug introduced in coreutils-9.8]
+
+  'cut', 'expand', 'fold', 'join', 'numfmt', 'unexpand', and 'uniq', no longer
+  consider the \u0085 (next line) character a separator on non-GLIBC platforms.
+  [bug introduced in coreutils-9.11]
+
+  'cut', 'expand', 'fold', and 'unexpand', no longer treat a multi-byte
+  character as separate bytes when a read() from a pipe or terminal returns
+  only part of the character.
+  [bug introduced in coreutils-9.11]
+
+  'cut -w', and 'cut -d' in some multi-byte locales, no longer delay output
+  of an already read line until more input arrives, when fewer than 4 bytes
+  follow the last selected field.
+  [bug introduced in coreutils-9.12]
 
   'date -u MMDDhhmm' no longer uses the local time zone's UTC offset when
   setting the date and time.
@@ -94,11 +99,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   'factor' no longer infinite loops with certain large numbers, e.g.,
   146077762747232966952776282887314548659.
   [bugs introduced in coreutils-8.20]
-
-  cut, expand, fold, and unexpand no longer treat a multi-byte character
-  as separate bytes when a read() from a pipe or terminal returns only
-  part of the character.
-  [bug introduced in coreutils-9.11]
 
   'fold' no longer prematurely wraps lines with a wide character towards
   the start of a line, followed by multiple backspaces.  Also backspaces
@@ -144,10 +144,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   the earlier argument, which could corrupt following command line arguments.
   [bug introduced in coreutils-9.0]
 
-  od now exits gracefully when offsets overflow integer limits.
+  'od' now exits gracefully when offsets overflow integer limits.
   [This bug was present in "the beginning".]
 
-  od now continues to process inputs upon read error.
+  'od' now continues to process inputs upon read error.
   Previously it would stop after the block being read, and then output
   a block of uninitialized or previously output data.
   [bug introduced in coreutils-9.4]
