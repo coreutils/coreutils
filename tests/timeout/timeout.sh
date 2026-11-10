@@ -116,6 +116,7 @@ timeout -v .1 $SHELL -c '
   exec 2>/dev/null  # ensure no "Terminated" message blocks the trap
   trap "echo 1 >term.seen" TERM
   yes  # Fill the pipe
+  :    # Prevent shell exec optimization from discarding traps
 ' 2>&1 |
   { retry_delay_ file_seen .1 6 || touch term.missed; }
 test -e term.missed && fail=1
