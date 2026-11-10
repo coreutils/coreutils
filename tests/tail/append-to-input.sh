@@ -22,8 +22,8 @@ print_ver_ tail seq
 # Cap the file size so a runaway tail cannot fill the file system.
 (ulimit -f 10000) 2>/dev/null || skip_ 'unable to limit file size'
 
-# A file larger than a buffer, read from the end.
-for opt in -n1 -c4; do
+# A file larger than a buffer, so self-appending cannot rely on buffering.
+for opt in -n1 -c4 -n+2 -c+3; do
   seq 100000 > in || framework_failure_
   cp in exp || framework_failure_
   tail $opt in >> exp || framework_failure_

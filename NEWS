@@ -345,6 +345,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   'tail -F' is more responsive to changes when following many file names,
   when using inotify.
 
+  'tail -n+...' and 'tail -c+...', i.e., when tailing based from the start
+  of a file, now limit output to the original file contents if appending
+  output to the same file.  This is consistent with the existing bounded
+  operation when tailing based from the end of a file.
+
   'wc -m' counts ASCII up to 14x faster, and UTF-8 up to 7x faster.
 
   Commands that support hardware acceleration like 'cksum' and 'wc',

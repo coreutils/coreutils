@@ -1906,6 +1906,23 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files,
 }
 #endif
 
+/* When copying a regular file to itself, stop at its original end recorded
+   in ST rather than reading our own output.  Otherwise, copy until EOF.  */
+static count_t
+remaining_input (int fd, struct stat const *st)
+{
+  struct stat out;
+  if (S_ISREG (st->st_mode)
+      && fstat (STDOUT_FILENO, &out) == 0
+      && SAME_INODE (*st, out))
+    {
+      off_t pos = lseek (fd, 0, SEEK_CUR);
+      if (0 <= pos)
+        return pos < st->st_size ? st->st_size - pos : 0;
+    }
+  return COPY_TO_EOF;
+}
+
 /* Output the last bytes of the file PRETTYNAME open for reading
    in FD and with status ST.  Output the last N_BYTES bytes.
    Return (-1 - errno) on failure, otherwise the resulting file offset
@@ -1928,7 +1945,7 @@ tail_bytes (char const *prettyname, int fd, struct stat const *st,
           if (t < 0)
             return t;
         }
-      n_bytes = COPY_TO_EOF;
+      n_bytes = remaining_input (fd, st);
     }
   else
     {
@@ -2011,7 +2028,7 @@ tail_lines (char const *prettyname, int fd, struct stat const *st,
       int t = start_lines (prettyname, fd, n_lines);
       if (t < 0)
         return t;
-      dump_remainder (false, prettyname, fd, COPY_TO_EOF);
+      dump_remainder (false, prettyname, fd, remaining_input (fd, st));
       return -1;
     }
   else
