@@ -2584,19 +2584,6 @@ print_stored (COLUMN *p)
   COLUMN *q;
 
   int line = p->current_line++;
-  char *first = &buff[line_vector[line]];
-  /* FIXME
-     UMR: Uninitialized memory read:
-     * This is occurring while in:
-     print_stored   [pr.c:2239]
-     * Reading 4 bytes from 0x5148c in the heap.
-     * Address 0x5148c is 4 bytes into a malloc'd block at 0x51488 of 676 bytes
-     * This block was allocated from:
-     malloc         [rtlib.o]
-     xmalloc        [xmalloc.c:94]
-     init_store_cols [pr.c:1648]
-     */
-  char *last = &buff[line_vector[line + 1]];
 
   pad_vertically = true;
 
@@ -2625,6 +2612,8 @@ print_stored (COLUMN *p)
   if (use_col_separator)
     print_sep_string ();
 
+  char *first = &buff[line_vector[line]];
+  char *last = &buff[line_vector[line + 1]];
   while (first != last)
     print_char (*first++);
 
