@@ -17,15 +17,25 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ ls
+print_ver_ ls printf
 
 { test -n "$LOCALE_FR_UTF8" && test "$LOCALE_FR_UTF8" != none; } ||
   skip_ "French UTF-8 locale not available"
 LC_ALL=$LOCALE_FR_UTF8
 export LC_ALL
 
-# U+2028 LINE SEPARATOR and U+2029 PARAGRAPH SEPARATOR are not printable,
-# while U+00E9 is printed as is.
+printable() {
+  test "$(env printf '%q' "$(env printf "$1")")" = "$(env printf "$1")"
+}
+
+# GLIBC currently considers LINE and PARAGRAPH SEPARATOR as non-printable
+# while many other systems do not.  This is not particularly problematic
+# on other systems as terminals generally render these horizontally anyway,
+# rather than as ambiguous line feeds.  Note all known systems consider
+# U+000A (LINE FEED) and U+0085 (NEXT LINE) as non-printable.
+{ printable '\u2028' || printable '\u2029'; } &&
+  skip_ 'vertical separators are considered printable'
+
 e=$(printf 'a\303\251')
 mkdir d || framework_failure_
 touch "d/$e" "d/$(printf 'p\342\200\251q')" "d/$(printf 'x\342\200\250y')" ||
@@ -41,8 +51,8 @@ printf '%s\n' "\"$e\"" '"p\342\200\251q"' '"x\342\200\250y"' > exp ||
 ls --quoting-style=c d > out || fail=1
 compare exp out || fail=1
 
-printf '%s\n' "$e" "'p'\$'\\342\\200\\251''q'" \
-  "'x'\$'\\342\\200\\250''y'" > exp || framework_failure_
+env printf '%q\n' "$e" "$(printf 'p\342\200\251q')" \
+  "$(printf 'x\342\200\250y')"  > exp || framework_failure_
 ls --quoting-style=shell-escape d > out || fail=1
 compare exp out || fail=1
 
