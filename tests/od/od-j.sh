@@ -40,18 +40,21 @@ for file in ${srcdir=.}/tests/init.sh /proc/version /sys/kernel/profiling; do
 done
 
 # Test that offset overflows are properly diagnosed.
+# Use two inputs since macOS stops reading /dev/zero at OFF_T_MAX.
 OFFSET=$(expr $INTMAX_MAX - 1) || framework_failure_
 
 printf '%o 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n' $OFFSET \
   >exp-out || framework_failure_
 echo 'od: offset overflow' >exp-err || framework_failure_
 for opt in '' -v; do
-  returns_ 1 timeout 10 od $opt -t x1 -j $OFFSET /dev/zero >out 2>err || fail=1
+  returns_ 1 timeout 10 od $opt -t x1 -j $OFFSET /dev/zero /dev/zero \
+    >out 2>err || fail=1
   compare exp-out out || fail=1
   compare exp-err err || fail=1
 done
 
-returns_ 1 timeout 10 od -S 1 -j $OFFSET /dev/zero >out 2>err || fail=1
+returns_ 1 timeout 10 od -S 1 -j $OFFSET /dev/zero /dev/zero \
+  >out 2>err || fail=1
 compare /dev/null out || fail=1
 compare exp-err err || fail=1
 
