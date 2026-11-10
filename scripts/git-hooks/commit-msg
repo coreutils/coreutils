@@ -78,7 +78,7 @@ sub bad_first_line($)
   # The token(s) before the colon on the first line must be on our list
   # Tokens may be space- or comma-separated.
   (my $pre_colon = $line) =~ s/:.*//;
-  my @word = split (/[ ,]/, $pre_colon);
+  my @word = split /(?:, ?| )/, $pre_colon;
   my @bad = grep !/$valid_regex/, @word;
   @bad
     and return 'invalid first word(s) of summary line: ' . join (', ', @bad);
