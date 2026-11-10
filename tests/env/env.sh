@@ -186,7 +186,6 @@ test "$exp" = "$got" || fail=1
 exp=$(cd = && env pwd) || framework_failure_
 got=$(env -C= pwd) || fail=1
 test "$exp" = "$got" || fail=1
-test "$(env -a=name sh -c 'echo "$0"')" = '=name' || fail=1
 returns_ 125 env -u=FOO true || fail=1
 returns_ 125 env -vu=FOO true 2>/dev/null || fail=1
 
@@ -195,7 +194,7 @@ cat <<EOF > truetrue || framework_failure_
 #!$SHELL
 EOF
 chmod +x truetrue || framework_failure_
-for arg in 'argv0' ''; do
+for arg in 'argv0' '' '=name'; do
 env -v -a short --argv0=$arg ./truetrue 2>err || fail=1
 cat <<EOF >err_exp || framework_failure_
 argv0:     '$arg'
