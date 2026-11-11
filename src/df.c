@@ -288,10 +288,10 @@ static struct option const long_options[] =
 static int
 automount_stat_err (char const *file, struct stat *st)
 {
-  int fd = open (file, O_RDONLY | O_NOCTTY | O_NONBLOCK);
+  int fd = open (file, O_RDONLY | O_DIRECTORY | O_NOCTTY | O_NONBLOCK);
   if (fd < 0)
     {
-      if (errno == ENOENT || errno == ENOTDIR)
+      if (errno == ENOENT)
         return errno;
       return stat (file, st) == 0 ? 0 : errno;
     }

@@ -89,6 +89,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   oflag=seek_bytes, and when N is smaller than the output block size.
   [bug introduced with oflag=seek_bytes in coreutils-8.16]
 
+  'df' no longer opens non-directory operands.  Previously, it would open and
+  subsequently close them, which may lead to unintended behavior when the
+  operand is a device or a symbolic link to a device.
+  [bug introduced in coreutils-7.3]
+
   'dircolors --csh' now escapes '!' characters in its output.  Previously, csh
   would perform history substitution on the output when evaluated, which would
   fail or execute arbitrary commands depending on the contents of the database
