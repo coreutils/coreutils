@@ -27,6 +27,7 @@
 #include "filemode.h"
 #include "fts-missing.h"
 #include "ignore-value.h"
+#include "issymlinkat.h"
 #include "modechange.h"
 #include "quote.h"
 #include "root-dev-ino.h"
@@ -329,13 +330,26 @@ process_file (FTS *fts, FTSENT *ent)
         ch.status = CH_SUCCEEDED;
       else
         {
+          int chmod_errno = errno;
           if (ignore_missing
-              && ignorable_traversal_errno (errno))
+              && ignorable_traversal_errno (chmod_errno))
             return true;
-          if (! is_ENOTSUP (errno))
+          /* Ignore unsupported changes only for symlinks themselves.
+             Older systems (without /proc) may return ENOTSUP for non symlinks.
+             FTS may have supplied referent metadata, so check again.  */
+          bool unsupported_symlink = false;
+          if (is_ENOTSUP (chmod_errno) && ! follow_symlink)
+            {
+              int is_symlink = issymlinkat (fts->fts_cwd_fd, file);
+              if (is_symlink < 0 && ignore_missing
+                  && ignorable_traversal_errno (errno))
+                return true;
+              unsupported_symlink = is_symlink == 1;
+            }
+          if (! unsupported_symlink)
             {
               if (! force_silent)
-                error (0, errno, _("changing permissions of %s"),
+                error (0, chmod_errno, _("changing permissions of %s"),
                        quoteaf (file_full_name));
 
               ch.status = CH_FAILED;

@@ -15,6 +15,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   when only a partial context is specified.
   [bug introduced with the chcon program in coreutils-6.9.90]
 
+  'chmod -R' and 'chmod -h' no longer silently skip permission changes on
+  files and directories on Linux kernels before 6.6 when /proc is unavailable.
+  If built on older systems with glibc < 2.39 these operations now retry
+  after checking that the file is not a symlink, but otherwise
+  these operations now diagnose the unsupported changes and exit with failure.
+  [bug introduced in coreutils-9.5]
+
   'chmod -R --dereference --preserve-root' no longer silently skips the
   entry following a symbolic link to '/' encountered during traversal.
   [bug introduced in coreutils-9.5]
