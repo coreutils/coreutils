@@ -84,6 +84,27 @@ for deref in '' '--deref' '-R'; do
   returns_ 1 chmod 755 $deref a/dangle 2>err || fail=1
 done
 
+# From 9.5 to 9.12 when -R --preserve-root --dereference
+# encountered a symlink to /, the following entry was skipped.
+if ! uid_is_privileged_; then  # Just in case
+  root_mode=$(stat -c %a /) || framework_failure_  # Just in case
+  case $root_mode in  # Just in case
+    555|755)
+      mkdir r || framework_failure_
+      for i in 1 2 3 4; do
+        touch r/f$i && ln -s / r/l$i || framework_failure_
+      done
+      chmod 600 r/f? || framework_failure_
+      returns_ 1 chmod -R --dereference --preserve-root "$root_mode" r \
+        2>err || fail=1
+      for i in 1 2 3 4; do
+        test "$(stat -c %a r/f$i)" = "$root_mode" || { ls -l r; fail=1; }
+      done
+      test "$(grep -c 'dangerous to operate' err)" = 4 || { cat err; fail=1; }
+      ;;
+  esac
+fi
+
 # A symlink pointing back to an ancestor forms a cycle.  With -L, chmod
 # follows symlinks while recursing, so it must detect the cycle and stop
 # rather than descend into it forever.

@@ -306,10 +306,13 @@ process_file (FTS *fts, FTSENT *ent)
       && ROOT_DEV_INO_CHECK (root_dev_ino, file_stats))
     {
       ROOT_DEV_INO_WARN (file_full_name);
-      /* Tell fts not to traverse into this hierarchy.  */
-      fts_set (fts, ent, FTS_SKIP);
-      /* Ensure that we do not process "/" on the second visit.  */
-      ignore_value (fts_read (fts));
+      if (ent->fts_info == FTS_D)  /* preorder directory.  */
+        {
+          /* Tell fts not to traverse into this hierarchy.  */
+          fts_set (fts, ent, FTS_SKIP);
+          /* Ensure that we do not process "/" on the second visit.  */
+          ignore_value (fts_read (fts));
+        }
       return false;
     }
 
