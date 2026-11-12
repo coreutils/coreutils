@@ -742,10 +742,15 @@ bytes_split (intmax_t n_bytes, intmax_t rem_bytes,
         }
       else
         {
-          if (! filter_ok
+          /* If the filter for the current chunk has stopped reading,
+             skip the rest of that chunk.  If the failed write is at
+             the end of a chunk, NEW_FILE_FLAG will be true.  In that
+             case the lseek is not needed and TO_WRITE refers to the
+             next chunk.  */
+          if (! filter_ok && ! new_file_flag
               && 0 <= lseek (STDIN_FILENO, to_write, SEEK_CUR))
             {
-              to_write = n_bytes + (opened + 1 < rem_bytes);
+              to_write = n_bytes + (opened < rem_bytes);
               new_file_flag = true;
             }
 

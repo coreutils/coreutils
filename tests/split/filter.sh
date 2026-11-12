@@ -84,6 +84,30 @@ for mode in '' -u; do
   compare exp-xaa xaa || fail=1
   compare exp-xab xab || fail=1
 done
+rm -f x?? || framework_failure_
+
+# Make sure chunks aren't skipped if a filter exits early at the end
+# of an input buffer.
+# Using 256K which is usually enough to fill a pipe buffer so
+# that split(1) has to handle the EPIPE.  FIXME: It may be worth
+# adding a function in init.cfg to determine the default pipe size
+# or provide a reasonable guess.
+for c in a b c d e f g; do
+  yes $c | tr -d '\n' | head -c 256k || framework_failure_
+done >in
+split --bytes 256k ---io-blksize=256k --filter='head -c1 >$FILE' in || fail=1
+# coreutils-8.28 to coreutils-9.12 would produce "aceg" here.
+test "$(cat x??)" = abcdefg || fail=1
+rm -f x?? || framework_failure_
+
+# Make sure that --number chunk sizes aren't affected by a filter exiting early.
+{ yes a | tr -d '\n' | head -c 300001 &&
+  yes b | tr -d '\n' | head -c 300001 &&
+  yes c | tr -d '\n' | head -c 300000; } >in || framework_failure_
+split --number 3 ---io-blksize=256k --filter='head -c1 >$FILE' in || fail=1
+# coreutils-9.2 to coreutils-9.12 would produce "abb" here.
+test "$(cat x??)" = abc || fail=1
+rm -f x?? || framework_failure_
 
 # Ensure that "endless" input _is_ processed for unbounded number of filters
 for buf in 1000 1000000; do

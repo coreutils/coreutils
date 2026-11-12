@@ -229,6 +229,15 @@ GNU coreutils NEWS                                    -*- outline -*-
   accepting input or the entire input is processed.
   [bug introduced with --filter option in coreutils-8.13]
 
+  'split --bytes N --filter' no longer skips a whole chunk of input when a
+  filter exits without reading all of a chunk ending at an internal buffer
+  boundary.
+  [bug introduced in coreutils-8.28]
+
+  'split -n N' no longer shortens subsequent chunks by one byte after a filter
+  exits before it finishes reading all of its input.
+  [bug introduced in coreutils-9.2]
+
   'stty' again rejects empty speed arguments.
   Previously such arguments were accepted as value 0.
   [bug introduced in coreutils-9.8]
