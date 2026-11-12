@@ -125,6 +125,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   the current directory, or if --strip-program specified a relative path.
   [bug introduced in coreutils-6.2]
 
+  'install' now avoids races when setting the default SELinux context if leading
+  path components for an install file are replaced with symlinks.
+  [bug introduced in coreutils-6.12]
+
   'ls' no longer omits ACL indicators or capability coloring for subsequent
   files on the same file system after an unsupported security context
   lookup on a file without an ACL.

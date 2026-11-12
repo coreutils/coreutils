@@ -40,6 +40,7 @@
 #include "quote.h"
 #include "savewd.h"
 #include "selinux.h"
+#include "selinux-at.h"
 #include "stat-time.h"
 #include "targetdir.h"
 #include "utimens.h"
@@ -166,11 +167,10 @@ extra_mode (mode_t input)
   return !! (input & ~ mask);
 }
 
-/* Return true if copy of file SRC_NAME to file DEST_NAME aka
-   DEST_DIRFD+DEST_RELNAME is necessary. */
+/* Return true if a copy of file SRC_NAME to file DEST_RELNAME, relative
+   to DEST_DIRFD, is necessary.  */
 static bool
-need_copy (char const *src_name, char const *dest_name,
-           int dest_dirfd, char const *dest_relname,
+need_copy (char const *src_name, int const dest_dirfd, char const *dest_relname,
            const struct cp_options *x)
 {
   if (extra_mode (mode))
@@ -221,7 +221,7 @@ need_copy (char const *src_name, char const *dest_name,
         return true;
 
       char *to_scontext_raw = NULL;
-      if (getfilecon_raw (dest_name, &to_scontext_raw) == -1)
+      if (lgetfileconat_raw (dest_dirfd, dest_relname, &to_scontext_raw) == -1)
         {
           freecon (file_scontext_raw);
           return true;
@@ -318,9 +318,9 @@ get_labeling_handle (void)
 /* Modify file context to match the specified policy.
    If an error occurs the file will remain with the default directory
    context.  Note this sets the context to that returned by selabel_lookup
-   and thus discards MLS levels and user identity of the FILE.  */
+   and thus discards MLS levels and user identity of the NAME.  */
 static void
-setdefaultfilecon (char const *file)
+setdefaultfilecon (char const *name, int const dirfd, char const *relname)
 {
   if (selinux_enabled != 1)
     {
@@ -329,7 +329,7 @@ setdefaultfilecon (char const *file)
     }
 
   struct stat st;
-  if (lstat (file, &st) != 0)
+  if (fstatat (dirfd, relname, &st, AT_SYMLINK_NOFOLLOW) < 0)
     return;
 
   struct selabel_handle *hnd = get_labeling_handle ();
@@ -337,18 +337,18 @@ setdefaultfilecon (char const *file)
     return;
 
   char *scontext_raw = NULL;
-  if (selabel_lookup_raw (hnd, &scontext_raw, file, st.st_mode) != 0)
+  if (selabel_lookup_raw (hnd, &scontext_raw, name, st.st_mode) != 0)
     {
       if (errno != ENOENT && ! ignorable_ctx_err (errno))
         error (0, errno, _("warning: %s: context lookup failed"),
-               quotef (file));
+               quotef (name));
       return;
     }
 
-  if (lsetfilecon_raw (file, scontext_raw) < 0 && errno != ENOTSUP)
+  if (lsetfileconat_raw (dirfd, relname, scontext_raw) < 0 && errno != ENOTSUP)
     error (0, errno,
            _("warning: %s: failed to change context to %s"),
-           quotef_n (0, file), quote_n (1, scontext_raw));
+           quotef_n (0, name), quote_n (1, scontext_raw));
 
   freecon (scontext_raw);
 }
@@ -419,7 +419,7 @@ static enum copy_status
 copy_file (char const *from, char const *to,
            int to_dirfd, char const *to_relname, const struct cp_options *x)
 {
-  if (copy_only_if_needed && !need_copy (from, to, to_dirfd, to_relname, x))
+  if (copy_only_if_needed && !need_copy (from, to_dirfd, to_relname, x))
     return COPY_SKIPPED;
 
   /* Allow installing from non-regular files like /dev/null.
@@ -461,7 +461,7 @@ change_attributes (char const *name, int dirfd, char const *relname)
     ok = true;
 
   if (use_default_selinux_context)
-    setdefaultfilecon (name);
+    setdefaultfilecon (name, dirfd, relname);
 
   return ok;
 }
