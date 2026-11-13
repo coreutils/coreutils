@@ -57,6 +57,13 @@ printf '%s\n' "pr: '-e' extra characters or $INV in the argument: '=-1'" \
  >exp || framework_failure_
 compare exp err || fail=1
 
+# Ensure the line number width plus its separator does not overflow
+for n in -n$INT_MAX -n:$INT_MAX; do
+  returns_ 1 pr $n 2>err </dev/null || fail=1
+  printf '%s\n' "pr: integer overflow" > exp || framework_failure_
+  compare exp err || fail=1
+done
+
 # Ensure we exit gracefully upon internal overflow limits
 # Tag as expensive as it uses little mem, but about 10s on a 2020 class machine.
 if { test "$RUN_VERY_EXPENSIVE_TESTS" = yes ||
@@ -64,6 +71,17 @@ if { test "$RUN_VERY_EXPENSIVE_TESTS" = yes ||
    test "$INT_MAX" = 2147483647; then  # restrict to usual 32 bit limits
   head -c1M /dev/zero | tr '\0' '\t' |
   returns_ 1 pr -t -e$(($INT_MAX/(1024*1024) + 1)) 2>err >/dev/null || fail=1
+  printf '%s\n' "pr: integer overflow" > exp || framework_failure_
+  compare exp err || fail=1
+fi
+
+# Ensure a line number after a tab doesn't overflow the input position,
+# which would expand the next tab past the end of its buffer.
+# Tag as very expensive as it uses about 2GiB of memory and output.
+if test "$RUN_VERY_EXPENSIVE_TESTS" = yes &&
+   test "$INT_MAX" = 2147483647; then  # restrict to usual 32 bit limits
+  printf '\t\t\n' |
+  returns_ 1 pr -t -e -W$INT_MAX -n:$(($INT_MAX - 4)) 2>err >/dev/null || fail=1
   printf '%s\n' "pr: integer overflow" > exp || framework_failure_
   compare exp err || fail=1
 fi
