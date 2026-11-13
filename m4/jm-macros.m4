@@ -67,6 +67,7 @@ AC_DEFUN([coreutils_MACROS],
     fallocate
     fchown
     fchmod
+    ptrace
     setgroups
     sethostname
     siginterrupt

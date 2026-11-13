@@ -52,6 +52,9 @@
 #if HAVE_PRCTL
 # include <sys/prctl.h>
 #endif
+#if HAVE_PTRACE && (defined __linux__ || defined __ANDROID__)
+# include <sys/ptrace.h>
+#endif
 #include <sys/wait.h>
 
 #include "system.h"
@@ -105,6 +108,35 @@ static struct option const long_options[] =
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
+
+
+/* Resume the monitored command that was stopped with signal SIG.
+   This applies to child processes on Linux who use PTRACE_TRACEME
+   to turn us into their tracer.
+   Return true if we should continue waiting for the command.  */
+static bool
+handle_ptrace_stop (MAYBE_UNUSED int sig)
+{
+#if HAVE_PTRACE && (defined __linux__ || defined __ANDROID__)
+  siginfo_t si;
+
+  /* If stopped by SIGTRAP, it may be because the monitored command made a
+     successful call to execve(2).  If that is not the case, or if SIG is
+     not SIGTRAP, we want to send the signal to the monitored command.
+     XXX: Note we drop the TRAP signal in the very unlikely edge case
+     where a command is sending TRAP to itself and using PTRACE_TRACEME.  */
+  if (sig == SIGTRAP
+      && ptrace (PTRACE_GETSIGINFO, monitored_pid, NULL, &si) == 0
+      && si.si_code == SI_USER && si.si_pid == monitored_pid)
+    sig = 0;
+
+  /* Restart the monitored command, send signal SIG, and detach from it.  */
+  (void) ptrace (PTRACE_DETACH, monitored_pid, NULL, sig);
+  return true;
+#else
+  return false;
+#endif
+}
 
 /* Start the timeout after which we'll receive a SIGALRM.
    Round DURATION up to the next representable value.
@@ -686,10 +718,18 @@ main (int argc, char **argv)
 
       /* Note signals remain blocked in parent here, to ensure
          we don't cleanup() after waitpid() reaps the child,
-         to avoid sending signals to a possibly different process.  */
+         to avoid sending signals to a possibly different process.
 
-      while ((wait_result = waitpid (monitored_pid, &status, WNOHANG)) == 0)
-        sigsuspend (&orig_set);  /* Wait with cleanup signals unblocked.  */
+         Note we only get stopped status for traced processes,
+         as we're not using WUNTRACED.  */
+
+      while ((wait_result = waitpid (monitored_pid, &status, WNOHANG)) == 0
+             || (0 < wait_result && WIFSTOPPED (status)
+                 && handle_ptrace_stop (WSTOPSIG (status))))
+        {
+          if (wait_result == 0)
+            sigsuspend (&orig_set);  /* Wait with cleanup signals unblocked.  */
+        }
 
       if (wait_result < 0)
         {

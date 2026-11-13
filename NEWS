@@ -372,6 +372,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   output to the same file.  This is consistent with the existing bounded
   operation when tailing based from the end of a file.
 
+  'timeout' no longer leaves commands running, even with --kill-after,
+  in the unusual case where they turn 'timeout' into their tracer
+  using ptrace with the PTRACE_TRACEME option.
+
   'wc -m' counts ASCII up to 14x faster, and UTF-8 up to 7x faster.
 
   Commands that support hardware acceleration like 'cksum' and 'wc',
