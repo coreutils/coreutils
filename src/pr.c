@@ -1276,11 +1276,12 @@ init_parameters (int number_of_files)
              + TAB_WIDTH (chars_per_input_tab, chars_per_number);   */
 
       /* Estimate chars_per_text without any margin and keep it constant. */
-      if (number_separator == '\t')
-        number_width = (chars_per_number
-                        + TAB_WIDTH (chars_per_default_tab, chars_per_number));
-      else
-        number_width = chars_per_number + 1;
+      int separator_width = (number_separator == '\t'
+                             ? TAB_WIDTH (chars_per_default_tab,
+                                          chars_per_number)
+                             : 1);
+      if (ckd_add (&number_width, chars_per_number, separator_width))
+        integer_overflow ();
 
       /* The number is part of the column width unless we are
          printing files in parallel. */
@@ -2074,8 +2075,9 @@ add_line_number (COLUMN *p)
                           output_position);
     }
 
-  if (truncate_lines && !parallel_files)
-    input_position += number_width;
+  if (truncate_lines && !parallel_files
+      && ckd_add (&input_position, input_position, number_width))
+    integer_overflow ();
 }
 
 /* Print (or store) padding until the current horizontal position

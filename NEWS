@@ -192,6 +192,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   would loop infinitely instead of printing an empty page.
   [This bug was present in "the beginning".]
 
+  'pr -n' now exits gracefully when the line number width overflows internal
+  accounting limits.  Previously, with -e and a very wide -n, the input
+  position could wrap negative and a following tab would be expanded past
+  the end of a heap buffer.
+  [This bug was present in "the beginning".]
+
   'realpath' without -s, or 'readlink' with -e,-f,-m no longer
   loop infinitely when resolving a symbolic link which
   resolves to a path beginning with the symbolic link itself.
