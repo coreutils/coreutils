@@ -287,6 +287,12 @@ cp_option_init (struct cp_options *x)
      would fail.  */
   x->set_mode = true;
   x->mode = S_IRUSR | S_IWUSR;
+
+  /* May be overridden by --owner.  */
+  x->owner = (uid_t) -1;
+  /* May be overridden by --group.  */
+  x->group = (gid_t) -1;
+
   x->stdin_tty = false;
 
   x->open_dangling_dest_symlink = false;
@@ -452,10 +458,14 @@ change_attributes (char const *name, int dirfd, char const *relname)
      If the file doesn't end up with the group they asked for, they'll
      want to know.  */
 
-  if (! (owner_id == (uid_t) -1 && group_id == (gid_t) -1)
-      && lchownat (dirfd, relname, owner_id, group_id) != 0)
+  /* If we aren't using 'strip', then the copy function set the
+     ownership and permissions for us.  */
+  if (! strip_files)
+    ok = true;
+  else if (! (owner_id == (uid_t) -1 && group_id == (gid_t) -1)
+           && lchownat (dirfd, relname, owner_id, group_id) != 0)
     error (0, errno, _("cannot change ownership of %s"), quoteaf (name));
-  else if (chmodat (dirfd, relname, mode) != 0)
+  else if (lchmodat (dirfd, relname, mode) != 0)
     error (0, errno, _("cannot change permissions of %s"), quoteaf (name));
   else
     ok = true;
@@ -476,7 +486,7 @@ change_timestamps (struct stat const *src_sb, char const *dest,
   struct timespec timespec[2] = { get_stat_atime (src_sb),
                                   get_stat_mtime (src_sb) };
 
-  if (utimensat (dirfd, relname, timespec, 0))
+  if (utimensat (dirfd, relname, timespec, AT_SYMLINK_NOFOLLOW) < 0)
     {
       error (0, errno, _("cannot set timestamps for %s"), quoteaf (dest));
       return false;
@@ -1080,7 +1090,17 @@ main (int argc, char **argv)
     error (0, 0, _("the --compare (-C) option is ignored when you"
                    " specify a mode with non-permission bits"));
 
+  /* Initialize OWNER_ID and GROUP_ID from the given names.  */
   get_ids ();
+
+  /* If we are not stripping the file, set up the copy options so that
+     the copy function sets the mode and ownership using file descriptors.  */
+  if (! strip_files)
+    {
+      x.mode = mode;
+      x.owner = owner_id;
+      x.group = group_id;
+    }
 
   int exit_status = EXIT_SUCCESS;
   if (dir_arg)

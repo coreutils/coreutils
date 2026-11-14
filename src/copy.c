@@ -852,8 +852,10 @@ copy_reg (char const *src_name, char const *dst_name,
          Use CLONE_NOFOLLOW to avoid security issues that could occur
          if writing through dangling symlinks.  Although the circa
          2023 macOS documentation doesn't say so, CLONE_NOFOLLOW
-         affects the destination file too.  */
-      if (data_copy_required && x->reflink_mode
+         affects the destination file too.  Also, avoid using
+         fclonefileat when we need to set the mode of the file, to
+         avoid the race when using chown and/or chmod.  */
+      if (data_copy_required && x->reflink_mode && ! x->set_mode
           && (CLONE_NOOWNERCOPY || x->preserve_ownership))
         {
           /* Try fclonefileat so long as it won't create the
@@ -863,7 +865,6 @@ copy_reg (char const *src_name, char const *dst_name,
           mode_t cloned_mode = src_mode & cloned_mode_bits;
           mode_t desired_mode
             = (x->preserve_mode ? src_mode & CHMOD_MODE_BITS
-               : x->set_mode ? x->mode
                : ((x->explicit_no_preserve_mode ? MODE_RW_UGO : dst_mode)
                   & ~ cached_umask ()));
           if (! (cloned_mode & ~desired_mode))
@@ -1098,7 +1099,17 @@ set_dest_mode:
     }
   else if (x->set_mode)
     {
-      if (xset_acl (dst_name, dest_desc, x->mode) != 0)
+      /* Set the ownership with chown before chmod since on some systems
+         chown clears the set[ug]id bits.  */
+      if (! (x->owner == (uid_t) -1 && x->group == (gid_t) -1)
+          && fchown_or_lchown (dest_desc, dst_dirfd, dst_relname,
+                               x->owner, x->group) < 0)
+        {
+          error (0, errno, _("cannot change ownership of %s"),
+                 quoteaf (dst_name));
+          return_val = false;
+        }
+      else if (xset_acl (dst_name, dest_desc, x->mode) != 0)
         return_val = false;
     }
   else if (x->explicit_no_preserve_mode && *new_dst)
@@ -2294,7 +2305,7 @@ skip:
   dst_mode_bits = (x->set_mode ? x->mode : src_mode) & CHMOD_MODE_BITS;
   omitted_permissions =
     (dst_mode_bits
-     & (x->preserve_ownership ? S_IRWXG | S_IRWXO
+     & (x->preserve_ownership || x->set_mode ? S_IRWXG | S_IRWXO
         : S_ISDIR (src_mode) ? S_IWGRP | S_IWOTH
         : 0));
 

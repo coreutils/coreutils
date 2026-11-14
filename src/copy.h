@@ -131,6 +131,12 @@ struct cp_options
      if SET_MODE is nonzero.  */
   mode_t mode;
 
+  /* Set the ownership of the destination file to OWNER:GROUP if
+     SET_MODE is true.  Either or both values can be set to -1 to
+     leave that ID unchanged.  */
+  uid_t owner;
+  gid_t group;
+
   /* If true, copy all files except directories (and, if not dereferencing
      them, symbolic links) as if they were regular files.  */
   bool copy_as_regular;

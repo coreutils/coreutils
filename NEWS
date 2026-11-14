@@ -140,6 +140,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   path components for an install file are replaced with symlinks.
   [bug introduced in coreutils-6.12]
 
+  'install' no longer follows symbolic links in the last component of
+  destination files when setting their permissions.  Previously, a newly
+  created file could be replaced with a symbolic link by the owner of
+  its parent directory to change the permissions of the file it
+  referenced.
+  [This bug was present in "the beginning".]
+
   'ls' no longer omits ACL indicators or capability coloring for subsequent
   files on the same file system after an unsupported security context
   lookup on a file without an ACL.

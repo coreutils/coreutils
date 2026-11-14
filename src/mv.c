@@ -151,6 +151,8 @@ cp_option_init (struct cp_options *x)
   x->symbolic_link = false;
   x->set_mode = false;
   x->mode = 0;
+  x->owner = (uid_t) -1;
+  x->group = (gid_t) -1;
   x->stdin_tty = isatty (STDIN_FILENO);
 
   x->open_dangling_dest_symlink = false;
