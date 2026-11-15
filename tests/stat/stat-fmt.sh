@@ -119,6 +119,16 @@ printf '    0012|00000012|      12|      12|    0644|%8.4x|    0001|' \
   || framework_failure_
 compare exp out-0 || fail=1
 
+# %#a adds a single leading 0.
+touch f z || framework_failure_
+chmod 644 f && chmod 0 z || framework_failure_
+stat -c '%#a|%#.4a|%#.5a|%#.2a|%#8.4a' f z > out || fail=1
+cat <<\EOF >exp
+0644|0644|00644|0644|    0644
+0|0000|00000|00|    0000
+EOF
+compare exp out || fail=1
+
 # ensure %H and %L modifiers are handled
 stat -c '%r %R %Hd,%Ld %Hr,%Lr' . > out || fail=1
 grep -F '?' out && fail=1
