@@ -341,9 +341,11 @@ tac_seekable (int input_fd, char const *file, off_t file_pos)
              The source and destination regions probably overlap.  */
           memmove (G_buffer + read_size, G_buffer, saved_record_size);
           past_end = G_buffer + read_size + saved_record_size;
-          /* For non-regexp searches, avoid unnecessary scanning. */
+          /* For non-regexp searches, avoid unnecessary scanning,
+             but don't match past the end of the pending data.  */
           if (sentinel_length)
-            match_start = G_buffer + read_size;
+            match_start = MIN (G_buffer + read_size,
+                               past_end - match_length1);
           else
             match_start = past_end;
 

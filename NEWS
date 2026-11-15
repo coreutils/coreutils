@@ -305,6 +305,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   it would have failed if the control flag encoding was different.
   [This bug was present in "the beginning".]
 
+  'tac -s SEP' with a multi-byte separator no longer matches a separator
+  that extends past the end of the data pending output, after reading a
+  new block.  Previously the comparison could use stale or uninitialized
+  buffer contents, e.g., 'tac -b -s ab' could output a lone 'a' at the
+  end of a block as a separate record.
+  [This bug was present in "the beginning".]
+
   'tail --follow' no longer ignores an overflow of the inotify event queue,
   and now reverts to polling in that case.  Previously tail could fail
   to notice new data, or that a file followed by name was replaced,
