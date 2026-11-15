@@ -52,6 +52,15 @@ my @Tests =
       {IN => "COLORTERM ?*\nowt 40;33\n"},
       {OUT => "LS_COLORS='';\nexport LS_COLORS\n"}],
 
+     # The built-in database is filtered by TERM and COLORTERM too.
+     ['builtin-no-term', '-b', {ENV => 'COLORTERM='},
+      {OUT => "LS_COLORS='';\nexport LS_COLORS\n"}],
+     ['builtin-unknown-term', '-c',
+      {ENV => 'TERM=no-such-terminal COLORTERM='},
+      {OUT => "setenv LS_COLORS ''\n"}],
+     ['builtin-unknown-term-ls', '--print-ls-colors',
+      {ENV => 'TERM=no-such-terminal COLORTERM='}, {OUT => ""}],
+
      ['print-clash1', '-p', '--print-ls',
       {ERR => "dircolors: options --print-database and --print-ls-colors " .
               "are mutually exclusive\n" .
