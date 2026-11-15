@@ -45,6 +45,12 @@ my @Tests =
      # With --format, there *is* a trailing newline.
      ['f-nl', "--format=%n .",          {OUT=>".\n"}],
      ['f-nl2', "--format=%n . .",       {OUT=>".\n.\n"}],
+     # An empty format is used, not the default one.
+     ['f-empty', "--format='' .",       {OUT=>"\n"}],
+     ['f-empty2', "-c '' . .",          {OUT=>"\n\n"}],
+     ['f-empty-terse', "-t -c '' .",    {OUT=>"\n"}],
+     ['p-empty', "--printf='' .",       {OUT=>""}],
+     ['fs-empty', "-f -c '' .",         {OUT=>"\n"}],
 
      ['end-pct', "--printf=% .",       {OUT=>"%"}],
      ['pct-pct', "--printf=%% .",      {OUT=>"%"}],
