@@ -73,6 +73,20 @@ my @Tests =
      ['pfx-no-nl-8', "-p '#'",
       {IN=> {f1=> "a\nmixed"}}, {IN=> {f2=> "hello\n"}},
       {OUT=> "a\nmixedhello\n"}],
+
+     # With -t, the indent of a one-line paragraph's continuation lines
+     # differs from that of its first line.
+     ['tagged-1', '-t -w10', {IN=> "ab cd ef gh ij kl mn\n"},
+      {OUT=> "ab cd ef\n   gh ij\n   kl mn\n"}],
+     ['tagged-2', '-t -w10', {IN=> "  ab cd ef gh ij kl mn\n"},
+      {OUT=> "  ab cd\nef gh ij\nkl mn\n"}],
+     ['tagged-3', "-t -w10 -p '#'", {IN=> "#ab cd ef gh ij kl mn\n"},
+      {OUT=> "#ab cd\n#ef gh ij\n#kl mn\n"}],
+     ['tagged-4', "-t -w12 -p '# '", {IN=> "# ab cd ef gh ij kl mn\n"},
+      {OUT=> "# ab cd ef\n#gh ij kl mn\n"}],
+     # A second line sets the indent.
+     ['tagged-5', '-t -w10', {IN=> "ab cd ef gh\n  ij kl mn op qr\n"},
+      {OUT=> "ab cd ef\n  gh ij kl\n  mn op qr\n"}],
 );
 
 my $save_temps = $ENV{DEBUG};
