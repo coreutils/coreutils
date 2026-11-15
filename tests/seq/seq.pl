@@ -83,6 +83,8 @@ my @Tests =
    # then misalignment would occur if the sequence narrowed.
    ['eq-wid-14',qw(-w -1 1.0 0),  {OUT => [qw(-1.0 00.0)]}],
    ['eq-wid-15',qw(-w 10 -.1 9.9),  {OUT => [qw(10.0 09.9)]}],
+   ['eq-wid-16',qw(-w -1e1 1e1 1e2),
+    {OUT => [qw(-10 000 010 020 030 040 050 060 070 080 090 100)]}],
 
    # Prior to coreutils-4.5.11, some of these were not accepted.
    ['fmt-1',	qw(-f %2.1f 1.5 .5 2),{OUT => [qw(1.5 2.0)]}],
