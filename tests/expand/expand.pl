@@ -19,6 +19,7 @@
 use strict;
 
 my $limits = getlimits ();
+my $IO_BUFSIZE = $limits->{IO_BUFSIZE};
 my $UINTMAX_OFLOW = $limits->{UINTMAX_OFLOW};
 
 (my $program_name = $0) =~ s|.*/||;
@@ -75,6 +76,19 @@ my @Tests =
    ['f3', '--tabs=4',
     {IN=>{"in1" => "a\tb\n"}}, {IN=>{"in2" => ""}},
     {OUT=>"a   b\n"}],
+   # A line continues into the next file.
+   ['f4', '',
+    {IN=>{"in1" => "a"}}, {IN=>{"in2" => "\tb\n"}},
+    {OUT=>"a       b\n"}],
+   ['f5', '-i',
+    {IN=>{"in1" => "a"}}, {IN=>{"in2" => "\tb\n"}},
+    {OUT=>"a\tb\n"}],
+   # The column is kept across read buffers.
+   ['long-1', '-t3', {IN=>("a" x $IO_BUFSIZE) . "bcd\tx\n"},
+    {OUT=>("a" x $IO_BUFSIZE) . "bcd"
+          . (" " x (3 - $IO_BUFSIZE % 3)) . "x\n"}],
+   ['long-2', '-i', {IN=>"a" . (" " x ($IO_BUFSIZE - 1)) . "\tx\n"},
+    {OUT=>"a" . (" " x ($IO_BUFSIZE - 1)) . "\tx\n"}],
 
 
    # Test '\b' (back-space) - subtract one column.
