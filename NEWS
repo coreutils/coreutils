@@ -147,6 +147,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   referenced.
   [This bug was present in "the beginning".]
 
+  'ln' now avoids races that could lose backup data in unlikely circumstances,
+  on systems providing support for atomic rename.
+  [This bug was present in "the beginning".]
+
   'ls' no longer omits ACL indicators or capability coloring for subsequent
   files on the same file system after an unsupported security context
   lookup on a file without an ACL.
@@ -2370,13 +2374,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   mv would leave such symlinks behind in the source file system.
   [the bug dates back to the initial implementation]
 
-  When creating numbered backups, cp, install, ln, and mv now avoid
+  When creating numbered backups, cp, install, and mv now avoid
   races that could lose backup data in unlikely circumstances.  Since
   the fix relies on the renameat2 system call of Linux kernel 3.15 and
   later, the races are still present on other platforms.
   [the bug dates back to the initial implementation]
 
-  cp, install, ln, and mv no longer lose data when asked to copy a
+  cp, install, and mv no longer lose data when asked to copy a
   backup file to its original via a differently-spelled file name.
   E.g., 'rm -f a a~; : > a; echo data > a~; cp --backup=simple a~ ./a'
   now fails instead of losing the data.

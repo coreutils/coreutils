@@ -60,7 +60,7 @@ export XZ_OPT = -8e
 #   done; done
 export ZSTD_OPT = -T0 -18
 
-old_NEWS_hash = 078ebe66312fe06ceac192cd5a8423ec
+old_NEWS_hash = e5b3fbccdfc6532ed730d73ee198db29
 
 # Add an exemption for sc_makefile_at_at_check.
 _makefile_at_at_check_exceptions = \

@@ -285,19 +285,13 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
 
                   if (backup_type != no_backups)
                     {
-                      backup_base = find_backup_file_name (destdir_fd,
-                                                           dest_base,
-                                                           backup_type);
-                      if (renameat (destdir_fd, dest_base,
-                                    destdir_fd, backup_base)
-                          != 0)
+                      backup_base = backup_file_rename (destdir_fd, dest_base,
+                                                        backup_type);
+                      if (! backup_base)
                         {
-                          int rename_errno = errno;
-                          free (backup_base);
-                          backup_base = NULL;
-                          if (rename_errno != ENOENT)
+                          if (errno != ENOENT)
                             {
-                              error (0, rename_errno, _("cannot backup %s"),
+                              error (0, errno, _("cannot backup %s"),
                                      quoteaf (dest));
                               goto fail;
                             }
