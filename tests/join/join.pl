@@ -400,6 +400,13 @@ push @Tests,
   ['o-sep-space-enoent', '-o 1.1 1.2 2.2 f1', {EXIT=>1},
    {ERR=>"$prog: 2.2: $limits->{ENOENT}\n"}];
 
+# A separate -o field is only taken while a file operand still follows.
+push @Tests,
+  ['o-after-files-1', 'f1 f2 -o 1.1 1.2', {EXIT=>1},
+   {ERR=>"$prog: extra operand '1.2'\n$try"}],
+  ['o-after-files-2', 'f1 f2 -o 1.1 2.2 1.2', {EXIT=>1},
+   {ERR=>"$prog: extra operand '2.2'\n$try"}];
+
 if ($mb_locale ne 'C')
   {
     # Duplicate each test vector, appending "-mb" to the test name and
