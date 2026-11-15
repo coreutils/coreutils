@@ -151,4 +151,19 @@ nl -v 5 -i -1 inp > out || fail=1
 printf '     5\ta\n     4\tb\n' > exp || framework_failure_
 compare exp out || fail=1
 
+# Option values may start with a hyphen.
+echo a | nl -s -z > out || fail=1
+echo a | nl -s -- >> out || fail=1
+echo a | nl --number-separator -x >> out || fail=1
+printf 'a\n-z\nb\n' | nl -d -z >> out || fail=1
+printf 'a\n----\nb\n' | nl -d -- >> out || fail=1
+printf '     1-za\n     1--a\n     1-xa\n     1\ta\n\n       b\n' > exp \
+  || framework_failure_
+printf '     1\ta\n\n     1\tb\n' >> exp || framework_failure_
+compare exp out || fail=1
+for opt in -b -h -f -n; do
+  returns_ 1 nl $opt -x </dev/null 2>err || fail=1
+  grep -F -- "'-x'" err || { cat err; fail=1; }
+done
+
 Exit $fail
