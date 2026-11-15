@@ -491,6 +491,22 @@ push @Tests,
     {IN=>{2=>"m\tn\to\n"}},
      {OUT=>join("\t", qw(a b c m n o)) . "\n"} ];
 
+# With -m, -s joins the lines unpadded, unless a width is given.
+# -S keeps the padding, and -W wins over -w.
+push @Tests,
+   ['merge-sep', '-m -t -s,',
+    {IN=>{1=>"line one\n2\n"}}, {IN=>{2=>"x\ny\n"}},
+    {OUT=>"line one,x\n2,y\n"} ],
+   ['merge-sep-w', '-m -t -s, -w 10',
+    {IN=>{1=>"line one\n2\n"}}, {IN=>{2=>"x\ny\n"}},
+    {OUT=>"line,x\n2   ,y\n"} ],
+   ['merge-Sep-w', '-m -t -S, -w 10',
+    {IN=>{1=>"line one\n2\n"}}, {IN=>{2=>"x\ny\n"}},
+    {OUT=>"line,x\n2   ,y\n"} ],
+   ['merge-sep-W', '-m -t -s, -W 10 -w 20',
+    {IN=>{1=>"line one\n2\n"}}, {IN=>{2=>"x\ny\n"}},
+    {OUT=>"line,x\n2   ,y\n"} ];
+
 # This resulted in reading invalid memory before coreutils-8.26
 push @Tests,
    ['asan1', "-m -S'\t\t\t' -t",
