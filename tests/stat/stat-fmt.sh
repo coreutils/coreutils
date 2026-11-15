@@ -107,6 +107,18 @@ abc%Ndef'\''
 EOF
 compare exp out || fail=1
 
+# An integer conversion with a precision ignores the 0 flag.
+printf 'hello world\n' > f || framework_failure_
+chmod 644 f || framework_failure_
+mode=$(stat -c %f f) || framework_failure_
+for fmt in %08.4s %08s %08.0s %08.s %08.4a %08.4f %08.4h; do
+  stat --printf="$fmt|" f >> out-0 || fail=1
+done
+printf '    0012|00000012|      12|      12|    0644|%8.4x|    0001|' \
+  "0x$mode" > exp \
+  || framework_failure_
+compare exp out-0 || fail=1
+
 # ensure %H and %L modifiers are handled
 stat -c '%r %R %Hd,%Ld %Hr,%Lr' . > out || fail=1
 grep -F '?' out && fail=1
