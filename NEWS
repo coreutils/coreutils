@@ -69,6 +69,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   it creates and their sources.
   [This bug was present in "the beginning".]
 
+  'cp', 'mv', and 'install' no longer loop indefinitely when creating a
+  numbered backup in an unreadable directory if the guessed backup name
+  already exists.  They now diagnose the failure and leave the files intact.
+  [bug introduced in coreutils-8.28]
+
   'cp', 'mv', and 'install' no longer exit successfully when they fail to create
   a hole in the destination file.
   [bug introduced in coreutils-9.8]

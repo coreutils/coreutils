@@ -600,6 +600,7 @@ all_tests =					\
   tests/cp/backup-1.sh				\
   tests/cp/backup-dir.sh			\
   tests/cp/backup-is-src.sh			\
+  tests/cp/backup-unreadable.sh			\
   tests/cp/cp-HL.sh				\
   tests/cp/cp-deref.sh				\
   tests/cp/cp-i.sh				\
