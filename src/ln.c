@@ -207,8 +207,9 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
           return false;
         }
 
+      /* Determine REL_SOURCE before any backup of DEST.  */
       if (relative)
-        source = rel_source = convert_abs_rel (source, dest);
+        rel_source = convert_abs_rel (source, dest);
 
       bool force = (remove_existing_files || interactive
                     || backup_type != no_backups);
@@ -301,6 +302,12 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
                 }
             }
         }
+
+      /* The above backup checks interpret SOURCE relative to the current
+         working directory.  Now that they are done, we can update SOURCE
+         to REL_SOURCE.  */
+      if (rel_source)
+        source = rel_source;
 
       /* If the attempt to create a link fails and we are removing or
          backing up destinations, unlink the destination and try again.

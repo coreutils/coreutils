@@ -45,6 +45,26 @@ mkdir web
 ln -sr latest web/latest
 test $(readlink web/latest) = '../release2' || fail=1
 
+# This would replace d/a with a symbolic link to itself with coreutils-8.31
+# through coreutils-9.12.
+echo a >exp-a &&
+mkdir d &&
+cp exp-a d/a &&
+echo "ln: 'd/a' and 'd/a' are the same file" >exp-err || framework_failure_
+returns_ 1 ln -srf d/a d/a >out 2>err || fail=1
+compare /dev/null out || fail=1
+compare exp-err err || fail=1
+compare exp-a d/a || fail=1
+
+# Likewise, using a symbolic link target directory.
+ln -s d d-slink &&
+echo "ln: 'd/a' and 'd-slink/a' are the same file" >exp-err \
+  || framework_failure_
+returns_ 1 ln -srf d/a d-slink >out 2>err || fail=1
+compare /dev/null out || fail=1
+compare exp-err err || fail=1
+compare exp-a d/a || fail=1
+
 # Expect this to fail with exit status 1, or to succeed quietly (freebsd).
 # Prior to coreutils-8.23, it would segfault.
 ln -sr '' F
