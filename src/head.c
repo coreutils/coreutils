@@ -409,7 +409,7 @@ elide_tail_bytes_pipe (char const *filename, int fd, uintmax_t n_elide,
         }
 
       /* Output the remainder: rem bytes from b[i] + n_read.  */
-      idx_t rem = READ_BUFSIZE - remainder;
+      idx_t const rem = remainder ? READ_BUFSIZE - remainder : 0;
       if (buffered_enough)
         {
           idx_t n_bytes_left_in_b_i = READ_BUFSIZE - n_read;
@@ -424,7 +424,7 @@ elide_tail_bytes_pipe (char const *filename, int fd, uintmax_t n_elide,
               xwrite_stdout (b[i_next], rem - n_bytes_left_in_b_i);
             }
         }
-      else if (i + 1 == n_bufs)
+      else if (i + 1 == n_bufs && READ_BUFSIZE - rem < n_read)
         {
           /* This happens when
              n_elide < file_size < (n_bufs - 1) * READ_BUFSIZE.

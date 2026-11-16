@@ -130,6 +130,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   after a tab character are accounted for correctly.
   [bugs introduced in coreutils-9.8]
 
+  'head --bytes=-N' no longer elides BUFSIZ fewer bytes from a pipe when
+  N exceeds 1 MiB and is a multiple of BUFSIZ.
+  [bugs introduced in coreutils-9.6]
+
+  'head --bytes=-N' no longer fails with a write error when N exceeds 1 MiB
+  and the input is a pipe slightly smaller than N.
+  [bugs introduced in coreutils-5.0.1]
+
   'install --strip' sets the umask to the initial umask specified by the user
   before invoking 'strip' instead of using a umask of zero.
   [This bug was present in "the beginning".]

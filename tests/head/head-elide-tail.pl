@@ -25,9 +25,15 @@ $ENV{PROG} = 'head';
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
-# This should match the definition in head.c.
+# These should match the definitions in head.c.
 my $limits = getlimits ();
 my $READ_BUFSIZE = $limits->{BUFSIZ};
+my $HEAD_TAIL_PIPE_BYTECOUNT_THRESHOLD = 1024 * 1024;
+
+# Constants larger than $HEAD_TAIL_PIPE_BYTECOUNT_THRESHOLD, both a multiple
+# and a fraction of $READ_BUFSIZE.
+my $MULTIPLE = $HEAD_TAIL_PIPE_BYTECOUNT_THRESHOLD + $READ_BUFSIZE;
+my $FRACTION = $HEAD_TAIL_PIPE_BYTECOUNT_THRESHOLD + 2;
 
 my @Tests =
   (
@@ -47,6 +53,27 @@ my @Tests =
    ['elide-b5', "--bytes=-2",
     {IN=> 'a' x (2 * $READ_BUFSIZE - 2) . 'bcd'},
     {OUT=>'a' x (2 * $READ_BUFSIZE - 2) . 'b'}],
+
+   # coreutils-9.6 through coreutils-9.12 would emit an extra
+   # $READ_BUFSIZE bytes when eliding a multiple of $READ_BUFSIZE
+   # from a pipe.
+   ['elide-b6', "--bytes=-$MULTIPLE ---presume-input-pipe",
+    {IN=> 'a' x ($MULTIPLE - 1)}, {OUT=>''}],
+   ['elide-b7', "--bytes=-$MULTIPLE ---presume-input-pipe",
+    {IN=> 'a' x $MULTIPLE}, {OUT=>''}],
+   ['elide-b8', "--bytes=-$MULTIPLE ---presume-input-pipe",
+    {IN=> 'bcd' . 'a' x $MULTIPLE}, {OUT=>'bcd'}],
+   ['elide-b9', "--bytes=-$MULTIPLE ---presume-input-pipe",
+    {IN=> 'bcd' . 'a' x ($MULTIPLE + $READ_BUFSIZE)},
+    {OUT=>'bcd' . 'a' x $READ_BUFSIZE}],
+
+   # coreutils-5.0.1 through coreutils-9.12 would fail with a write error here.
+   ['elide-b10', "--bytes=-$FRACTION ---presume-input-pipe",
+    {IN=> 'a' x ($FRACTION - 1)}, {OUT=>''}],
+   ['elide-b11', "--bytes=-$FRACTION ---presume-input-pipe",
+    {IN=> 'a' x ($FRACTION - 2)}, {OUT=>''}],
+   ['elide-b12', "--bytes=-$FRACTION ---presume-input-pipe",
+    {IN=> 'bcd' . 'a' x $FRACTION}, {OUT=>'bcd'}],
 
    ['elide-l0', "--lines=-1", {IN=>''}, {OUT=>''}],
    ['elide-l1', "--lines=-1", {IN=>"a\n"}, {OUT=>''}],
