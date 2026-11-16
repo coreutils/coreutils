@@ -22,7 +22,7 @@ require_strace_ getxattr
 
 mkdir -p d/foo || framework_failure_
 touch d/foo/bar || framework_failure_
-opens=open,openat
+opens=$(get_open_syscalls_)
 xattrs=getxattr,lgetxattr,setxattr,lsetxattr
 
 (cd d && chcon -R -t user_tmp_t . > /dev/null 2>&1) \

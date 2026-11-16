@@ -22,10 +22,11 @@ getlimits_
 uses_strace_
 
 stats=$(get_stat_syscalls_)
+opens=$(get_open_syscalls_)
 
 open_stat_fail ()
 {
-  strace --quiet=all -o /dev/null -P file -e inject=open,openat:error=ENXIO \
+  strace --quiet=all -o /dev/null -P file -e inject=$opens:error=ENXIO \
     -e inject=$stats:error=ENOSYS "$@"
 }
 

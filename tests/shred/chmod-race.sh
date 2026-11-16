@@ -20,6 +20,8 @@
 print_ver_ shred timeout
 require_strace_ openat
 
+opens=$(get_open_syscalls_)
+
 mkdir d1 d2 &&
 echo shred >d1/f &&
 echo saved >d2/f &&
@@ -31,7 +33,7 @@ chmod 400 d1/f d2/f || framework_failure_
 # Note we wrap with timeout as strace ignores SIGTERM with -o.
 # Also even with --interruptible=wait strace might not handle
 # stopped tracee's appropriately.
-inject=open,openat:error=EACCES:signal=SIGSTOP:when=1
+inject=$opens:error=EACCES:signal=SIGSTOP:when=1
 timeout -k 1 60 strace --quiet=all -o /dev/null -P d1/f -P f \
   -e inject=$inject true 2>/dev/null \
   || skip_ 'strace does not support the required injection options'
