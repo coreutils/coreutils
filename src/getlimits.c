@@ -203,6 +203,7 @@ main (int argc, char **argv)
   /* Other useful constants */
   printf ("SIGRTMIN=%jd\n", (intmax_t) {SIGRTMIN});
   printf ("SIGRTMAX=%jd\n", (intmax_t) {SIGRTMAX});
+  printf ("BUFSIZ=%ju\n", (uintmax_t) {BUFSIZ});
   printf ("IO_BUFSIZE=%ju\n", (uintmax_t) {IO_BUFSIZE});
 
   /* Errnos */
