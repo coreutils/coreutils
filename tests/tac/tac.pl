@@ -27,10 +27,14 @@ my $bad_dir = 'no/such/dir';
 # This must be longer than 16KiB to trigger the double free in coreutils-8.5.
 my $long_line = 'o' x (16 * 1024 + 1);
 
-# Blocks for checking multi-byte separators at 8KiB read boundaries.
-my $sep_x = 'x' x 8191 . 'a';
-my $sep_y = 'y' x 8190;
-my $sep_z = 'z' x 8191;
+# Keep in sync with the definition from src/tac.c.
+my $limits = getlimits ();
+my $INITIAL_READSIZE = $limits->{BUFSIZ};
+
+# Blocks for checking multi-byte separators at read boundaries.
+my $sep_x = 'x' x ($INITIAL_READSIZE - 1) . 'a';
+my $sep_y = 'y' x ($INITIAL_READSIZE - 2);
+my $sep_z = 'z' x ($INITIAL_READSIZE - 1);
 
 my @Tests =
 (
@@ -90,7 +94,7 @@ my @Tests =
 
   # tac would match a multi-byte separator against stale buffer contents
   # past the end of the pending data, splitting off the trailing "a" of
-  # the first 8KiB block as a separate record.
+  # the first block as a separate record.
   ['sep-past-end', qw(-b -s ab),
    {IN=>$sep_x . 'ab' . $sep_y . 'b' . $sep_z},
    {OUT=>'ab' . $sep_y . 'b' . $sep_z . $sep_x}],

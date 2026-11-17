@@ -58,7 +58,7 @@ tac -r -s '.\|
 
 
 /* The number of bytes per atomic read. */
-#define INITIAL_READSIZE 8192
+#define INITIAL_READSIZE BUFSIZ
 
 /* The number of bytes per atomic write. */
 #define WRITESIZE 8192
