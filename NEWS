@@ -76,6 +76,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   it creates and their sources.
   [This bug was present in "the beginning".]
 
+  'cp -p --parents' now clears special mode bits on the parent directories it
+  creates when their ownership cannot be preserved, as is done for 'cp -p -R'.
+  [This bug was present in "the beginning".]
+
   'cp', 'mv', and 'install' no longer loop indefinitely when creating a
   numbered backup in an unreadable directory if the guessed backup name
   already exists.  They now diagnose the failure and leave the files intact.

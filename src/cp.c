@@ -404,6 +404,8 @@ re_protect (char const *const_dst_name, char const *dst_src_name,
             }
         }
 
+      mode_t src_mode = p->st.st_mode;
+
       if (x->preserve_ownership)
         {
           if (lchownat (dst_dirfd, relname, p->st.st_uid, p->st.st_gid)
@@ -418,12 +420,16 @@ re_protect (char const *const_dst_name, char const *dst_src_name,
               /* Failing to preserve ownership is OK. Still, try to preserve
                  the group, but ignore the possible error. */
               ignore_value (lchownat (dst_dirfd, relname, -1, p->st.st_gid));
+
+              /* Clear special mode bits, as is done in copy_internal
+                 and copy_reg.  */
+              src_mode &= ~ (S_ISUID | S_ISGID | S_ISVTX);
             }
         }
 
       if (x->preserve_mode)
         {
-          if (xcopy_acl (src_name, -1, dst_name, -1, p->st.st_mode) != 0)
+          if (xcopy_acl (src_name, -1, dst_name, -1, src_mode) != 0)
             return false;
         }
       else if (p->restore_mode)
