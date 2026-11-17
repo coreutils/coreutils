@@ -10019,13 +10019,12 @@ is a terminal, and the @option{-f} or @option{--force} option is not given,
 own the file, or have write permission on its directory.)  If the
 response is not affirmative, the file is skipped.
 
-Avoid specifying a source name with a trailing slash,
-when it might be a symlink to a directory.
-Otherwise, @command{mv} may do something very surprising, since
-its behavior depends on the underlying rename system call.
-On a system with a modern Linux-based kernel, it fails with
-@code{errno=ENOTDIR}@.
-However, on other systems (at least FreeBSD 6.1 and Solaris 10) it silently
+Avoid specifying a source name with a trailing slash
+when the unslashed name might be that of a symbolic link to a directory.
+Otherwise, @command{mv} may do something surprising,
+since its behavior depends on the platform.
+On a Linux-based kernels @command{mv} fails with a diagnostic;
+on BSDish kernels it silently
 renames not the symlink but rather the directory referenced by the symlink.
 @xref{Trailing slashes}.
 
@@ -10245,6 +10244,16 @@ remove all the files on your computer.
 @optItemx{rm,--recursive,}
 @cindex directories, removing (recursively)
 Remove the listed directories and their contents recursively.
+
+When using this option, avoid specifying a file name with a trailing slash
+when the unslashed name might be that of a symbolic link to a directory.
+Otherwise, @command{rm} may do something surprising
+after it removes all files under the directory,
+since the behavior depends on the platform.
+On a Linux-based kernel, @command{rm} fails with a diagnostic;
+on BSDish kernels it silently removes not the symlink but rather the
+directory referenced by the symlink.
+@xref{Trailing slashes}.
 
 @optItem{rm,-v,}
 @optItemx{rm,--verbose,}
@@ -11154,6 +11163,15 @@ rmdir [@var{option}]@dots{} @var{directory}@dots{}
 
 If any @var{directory} argument does not refer to an existing empty
 directory, it is an error.
+
+Avoid specifying a file name with a trailing slash
+when the unslashed name might be that of a symbolic link to a directory.
+Otherwise, @command{rmdir} may do something surprising,
+since the behavior depends on the platform.
+On a Linux-based kernel, @command{rmdir} fails with a diagnostic;
+on BSDish kernels it silently removes not the symlink but rather the
+directory referenced by the symlink.
+@xref{Trailing slashes}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
