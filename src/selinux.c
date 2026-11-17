@@ -308,7 +308,8 @@ restorecon (struct selabel_handle *selabel_handle,
     }
 
   char const *ftspath[2] = { path, NULL };
-  FTS *fts = xfts_open ((char *const *) ftspath, FTS_PHYSICAL, NULL);
+  FTS *fts = xfts_open ((char *const *) ftspath, FTS_PHYSICAL | FTS_NOSTAT,
+                        NULL);
 
   int err = 0;
   for (FTSENT *ent; (ent = fts_read (fts)); )

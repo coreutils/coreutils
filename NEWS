@@ -402,6 +402,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'cut -c' is up to 10x faster in UTF-8 locales, and
   'cut -f -w' is up to 10x faster in uni-byte locales.
 
+  'mv -Z' no longer performs an extra fstatat call for each directory entry
+  located under a moved directory.
+
   'od' allocates half the memory when -v,--output-duplicates is specified.
 
   'od --strings' exits promptly upon receiving a write error,
