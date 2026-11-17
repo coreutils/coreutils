@@ -50,6 +50,9 @@
   proper_name_lite ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
   proper_name ("Richard M. Stallman")
 
+/* Initial read size for small files.  */
+#define INITIAL_READ_SIZE 4096
+
 /* Name of input file.  May be "-".  */
 static char const *infile;
 
@@ -168,10 +171,11 @@ next_line_num (void)
 
 /* Plain cat.  Copy the file behind 'input_desc' to STDOUT_FILENO.
    BUF (of size BUFSIZE) is the I/O buffer, used by reads and writes.
-   Return true if successful.  */
+   If INITIAL, return after a full buffer.
+   Return 1 at EOF, 0 to try bulk copying, -1 on error.  */
 
-static bool
-simple_cat (char *buf, idx_t bufsize)
+static int
+simple_cat (char *buf, idx_t bufsize, bool initial)
 {
   /* Loop until the end of the file.  */
 
@@ -183,18 +187,21 @@ simple_cat (char *buf, idx_t bufsize)
       if (n_read < 0)
         {
           error (0, errno, "%s", quotef (infile));
-          return false;
+          return -1;
         }
 
       /* End of this file?  */
 
       if (n_read == 0)
-        return true;
+        return 1;
 
       /* Write this block out.  */
 
       if (full_write (STDOUT_FILENO, buf, n_read) != n_read)
         write_error ();
+
+      if (initial && n_read == bufsize)
+        return 0;
     }
 }
 
@@ -905,8 +912,19 @@ main (int argc, char **argv)
       if (! (number || show_ends || show_nonprinting
              || show_tabs || squeeze_blank))
         {
-          int copy_cat_status =
-            out_isreg && S_ISREG (istat_buf.st_mode) ? copy_cat () : 0;
+          int copy_cat_status = 0;
+          if (usable_st_size (&istat_buf)
+              && istat_buf.st_size <= INITIAL_READ_SIZE)
+            {
+              /* Use smaller buf as read(,,large) can induce large allocations
+                 with /proc/sys files files as of Linux 7.2 at least.
+                 Use a page aligned buffer to better support direct I/O.  */
+              inbuf = ensure_buf_size (inbuf, &inbuf_alloc,
+                                       page_size, INITIAL_READ_SIZE);
+              copy_cat_status = simple_cat (inbuf, INITIAL_READ_SIZE, true);
+            }
+          if (copy_cat_status == 0 && out_isreg && S_ISREG (istat_buf.st_mode))
+            copy_cat_status = copy_cat ();
           if (copy_cat_status != 0)
             ok &= 0 < copy_cat_status;
           else
@@ -925,7 +943,7 @@ main (int argc, char **argv)
                   insize = MAX (insize, outsize);
                   inbuf = ensure_buf_size (inbuf, &inbuf_alloc,
                                            page_size, insize);
-                  ok &= simple_cat (inbuf, insize);
+                  ok &= 0 < simple_cat (inbuf, insize, false);
                 }
             }
         }
