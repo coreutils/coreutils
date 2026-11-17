@@ -28,6 +28,10 @@ printable() {
   test "$(env printf '%q' "$(env printf "$1")")" = "$(env printf "$1")"
 }
 
+valid_width() {
+  test "$(env printf "$1\t" | expand | wc -L)" -ne 7
+}
+
 # GLIBC currently considers LINE and PARAGRAPH SEPARATOR as non-printable
 # while many other systems do not.  This is not particularly problematic
 # on other systems as terminals generally render these horizontally anyway,
@@ -35,6 +39,10 @@ printable() {
 # U+000A (LINE FEED) and U+0085 (NEXT LINE) as non-printable.
 { printable '\u2028' || printable '\u2029'; } &&
   skip_ 'vertical separators are considered printable'
+
+# Ensure these non-printable vertical separators have negative width.
+{ valid_width '\u2028' || valid_width '\u2029'; } &&
+  skip_ 'non-printable separators have a defined width'
 
 e=$(printf 'a\303\251')
 mkdir d || framework_failure_
