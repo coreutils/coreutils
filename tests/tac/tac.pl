@@ -104,6 +104,12 @@ my @Tests =
    do { my $sep_x = 'x' x ($INITIAL_READSIZE - 1);
         ({IN=>$sep_x . 'aaa'},
          {OUT=>$sep_x . 'aaa'}); }],
+  ['buf-sep-4', '-b -s ab',
+   do { my $sep_x = 'x' x ($INITIAL_READSIZE - 1) . 'a';
+        my $sep_y = 'y' x ($INITIAL_READSIZE - 2);
+        my $sep_z = 'z' x ($INITIAL_READSIZE - 1);
+        ({IN=>$sep_x . 'ab' . $sep_y . 'b' . $sep_z},
+        {OUT=>'ab' . $sep_y . 'b' . $sep_z . $sep_x}); }],
 );
 
 @Tests = triple_test \@Tests;
