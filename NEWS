@@ -312,6 +312,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   their contents, or the edge case of seekable files that return short reads.
   [bug introduced in coreutils-8.24]
 
+  'tac -s SEP' with a multi-byte SEP no longer reads past the end of an internal
+  buffer.  Previously, it could result in incorrect output or a crash when given
+  multiple inputs.
+  [This bug was present in "the beginning".]
+
   'tail -f F' now correctly detect truncation and file replacement.
   Previously -f could miss file truncation, and when polling,
   -F could miss file replacement.

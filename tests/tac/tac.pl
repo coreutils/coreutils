@@ -27,6 +27,9 @@ my $bad_dir = 'no/such/dir';
 # This must be longer than 16KiB to trigger the double free in coreutils-8.5.
 my $long_line = 'o' x (16 * 1024 + 1);
 
+# Keep in sync with the definition from src/tac.c.
+my $INITIAL_READSIZE = 8192;
+
 my @Tests =
 (
   ['segfault', '-r', {IN=>"a\n"}, {IN=>"b\n"}, {OUT=>"a\nb\n"}],
@@ -82,6 +85,25 @@ my @Tests =
 
   # coreutils-8.5's tac would double-free its primary buffer.
   ['double-free', {IN=>$long_line}, {OUT=>$long_line}],
+
+  # coreutils-9.13 and earlier would crash due to a heap over-read.
+  ['buf-sep-1', '-s abc',
+   do { my $sep_x = 'x' x $INITIAL_READSIZE;
+        my $sep_y = 'x' x ($INITIAL_READSIZE - 1);
+        ({IN=>$sep_x . '?c'},
+         {IN=>$sep_y . 'ab'},
+         {OUT=>$sep_x . '?c' . $sep_y . 'ab'}); }],
+
+  # coreutils-9.13 and earlier would give invalid output.
+  ['buf-sep-2', '-b -s ab',
+   do { my $sep_x1 = 'x' x ($INITIAL_READSIZE - 1);
+        my $sep_x2 = 'x' x ($INITIAL_READSIZE - 2);
+        ({IN=>$sep_x1  . 'a' . 'ab' . $sep_x2 . 'byy'},
+         {OUT=>'ab' . $sep_x2 . 'byy' . $sep_x1 . 'a'}); }],
+  ['buf-sep-3', '-s aa',
+   do { my $sep_x = 'x' x ($INITIAL_READSIZE - 1);
+        ({IN=>$sep_x . 'aaa'},
+         {OUT=>$sep_x . 'aaa'}); }],
 );
 
 @Tests = triple_test \@Tests;
