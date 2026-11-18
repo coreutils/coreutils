@@ -289,6 +289,7 @@ all_tests =					\
   tests/head/head.pl				\
   tests/head/head-elide-tail.pl			\
   tests/tail/tail-sysfs.sh			\
+  tests/tail/short-read.sh			\
   tests/tail/tail-n0f.sh			\
   tests/ls/ls-misc.pl				\
   tests/date/date.pl				\

@@ -37,6 +37,7 @@
 #include "cl-strtod.h"
 #include "dtimespec-bound.h"
 #include "fcntl--.h"
+#include "full-read.h"
 #include "iopoll.h"
 #include "isapipe.h"
 #include "issymlink.h"
@@ -572,8 +573,8 @@ file_lines (char const *prettyname, int fd, struct stat const *sb,
   /* Make 'pos' a multiple of 'bufsize' (0 if the file is short), so that all
      reads will be on block boundaries, which might increase efficiency.  */
   pos = xlseek (fd, -bytes_to_read, SEEK_CUR, prettyname);
-  ssize_t bytes_read = read (fd, buffer, bytes_to_read);
-  if (bytes_read < 0)
+  idx_t bytes_read = full_read (fd, buffer, bytes_to_read);
+  if (bytes_read < bytes_to_read && errno != 0)
     {
       pos = -1 - errno;
       error (0, errno, _("error reading %s"), quoteaf (prettyname));
@@ -619,8 +620,8 @@ file_lines (char const *prettyname, int fd, struct stat const *sb,
         }
 
       pos = xlseek (fd, -(bufsize + bytes_read), SEEK_CUR, prettyname);
-      bytes_read = read (fd, buffer, bufsize);
-      if (bytes_read < 0)
+      bytes_read = full_read (fd, buffer, bufsize);
+      if (bytes_read < bufsize && errno != 0)
         {
           pos = -1 - errno;
           error (0, errno, _("error reading %s"), quoteaf (prettyname));
