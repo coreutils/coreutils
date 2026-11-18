@@ -666,8 +666,9 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
   pos -= bytes_read;
   if (elseek (fd, pos, SEEK_SET, pretty_filename) < 0)
     return false;
-  bytes_read = read (fd, buffer, bytes_read);
-  if (bytes_read < 0)
+  idx_t n_to_read = bytes_read;
+  bytes_read = full_read (fd, buffer, n_to_read);
+  if (bytes_read < n_to_read && errno != 0)
     {
       diagnose_read_failure (pretty_filename);
       return false;
@@ -735,8 +736,8 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
       if (elseek (fd, pos, SEEK_SET, pretty_filename) < 0)
         return false;
 
-      bytes_read = read (fd, buffer, BUFSIZ);
-      if (bytes_read < 0)
+      bytes_read = full_read (fd, buffer, BUFSIZ);
+      if (bytes_read < BUFSIZ && errno != 0)
         {
           diagnose_read_failure (pretty_filename);
           return false;
