@@ -7,6 +7,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   'basenc --base32hex' no longer decodes BASE32 only characters "WXYZ".
   [bug introduced with the basenc program in coreutils-8.31]
 
+  'basenc --z85 --ignore-garbage' now correctly ignores NUL bytes.
+  [bug introduced with the basenc program in coreutils-8.31]
+
   'chcon' now emits the entire file name in error messages when setting the
   security context fails instead of the basename.
   [bug introduced with the chcon program in coreutils-6.9.90]

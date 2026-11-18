@@ -242,6 +242,7 @@ my @Tests =
  ['z85_4', '--z85 -d -i',  {IN=>' '. $z85_out},  {OUT=>$z85_in}],
  ['z85_5', '--z85 -d',     {IN=>'%j$qP'},  {OUT=>"\xFF\xDD\xBB\x99"}],
  ['z85_6', '--z85 -d -i',  {IN=>'%j~$qP'}, {OUT=>"\xFF\xDD\xBB\x99"}],
+ ['z85_7i', '--z85 -d -i', {IN=>"%j\0\$qP"}, {OUT=>"\xFF\xDD\xBB\x99"}],
 
  # z85 encoding require input to be multiple of 5 octets
  ['z85_7', '--z85 -d',  {IN=>'hello'},   {OUT=>"5jXu"}],

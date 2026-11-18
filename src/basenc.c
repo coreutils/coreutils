@@ -850,7 +850,8 @@ z85_length (idx_t len)
 static bool
 isuz85 (unsigned char ch)
 {
-  return c_isalnum (ch) || strchr (".-:+=^!/*?&<>()[]{}@%$#", ch) != NULL;
+  return c_isalnum (ch)
+         || (ch && strchr (".-:+=^!/*?&<>()[]{}@%$#", ch) != NULL);
 }
 
 static char const z85_encoding[85] ATTRIBUTE_NONSTRING =
