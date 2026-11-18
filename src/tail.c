@@ -615,7 +615,7 @@ file_lines (char const *prettyname, int fd, struct stat const *sb,
           /* Not enough lines in the file; print everything from
              start_pos to the end.  */
           xwrite_stdout (buffer, bytes_read);
-          dump_remainder (false, prettyname, fd, end_pos - pos);
+          pos += dump_remainder (false, prettyname, fd, end_pos - pos);
           goto free_buffer;
         }
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Ensure all logs are output upon file truncation
+# Ensure tail follows files across truncation and replacement.
 
 # Copyright (C) 2015-2026 Free Software Foundation, Inc.
 
@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
+getlimits_
 
 check_tail_output()
 {
@@ -32,16 +33,33 @@ cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
 # Speedup the non inotify case
 fastpoll='-s.1 --max-unchanged-stats=1'
 
+# Start with fewer than 10 lines. Pick a larger size to ensure
+# we test multiple reads.  Note BUFSIZ currently suffices but we
+# use IO_BUFSIZE to decouple from the implementation somewhat.
+printf '%*s\n10\n' "$(($IO_BUFSIZE * 2))" '' > big || framework_failure_
+
 for follow in '-f' '-F'; do
   for mode in '' '---disable-inotify'; do
     rm -f out
-    seq 10 > f || framework_failure_
+    cp big f || framework_failure_
 
     tail $follow $mode $fastpoll f > out 2>&1 & pid=$!
 
     # Wait up to 12.7s for tail to start
     tail_re='^10$' retry_delay_ check_tail_output .1 7 ||
       { cat out; fail=1; }
+
+    # coreutils 9.9-9.12 had a stale read position in the first buffer
+    # which hid truncation, and also kept polling tail -F from rechecking
+    # the file name, so check that also.
+    if test "$follow" = '-f'; then
+      truncate -s "$IO_BUFSIZE" f || framework_failure_
+    else
+      printf '%*s' "$IO_BUFSIZE" '' > new && mv -f new f || framework_failure_
+    fi
+    printf '\nchanged\n' >> f || framework_failure_
+    tail_re='^changed$' retry_delay_ check_tail_output .1 7 ||
+      { tail -c 256 out; fail=1; }
 
     seq 11 15 > f || framework_failure_
 
