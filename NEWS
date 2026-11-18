@@ -308,6 +308,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   it would have failed if the control flag encoding was different.
   [This bug was present in "the beginning".]
 
+  'tac' no longer silently drops data from files that report a size smaller than
+  their contents, or the edge case of seekable files that return short reads.
+  [bug introduced in coreutils-8.24]
+
   'tail -f F' now correctly detect truncation and file replacement.
   Previously -f could miss file truncation, and when polling,
   -F could miss file replacement.

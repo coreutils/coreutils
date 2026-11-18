@@ -25,8 +25,9 @@ compare exp out || fail=1
 compare /dev/null err || fail=1
 
 # Make sure it works on funny files in /proc and /sys.
+# The BTF file can return a short read before EOF.
 
-for file in /proc/version /sys/kernel/profiling; do
+for file in /proc/version /sys/kernel/profiling /sys/kernel/btf/vmlinux; do
   if test -r $file; then
     cp -f $file copy &&
     tac copy > exp1 || framework_failure_
@@ -35,6 +36,17 @@ for file in /proc/version /sys/kernel/profiling; do
     compare exp1 out1 || fail=1
   fi
 done
+
+# On Linux, SEEK_END on /proc/self/environ returns 0.
+# Give tac an environment entry likely to span a full read buffer.
+if test -r /proc/self/environ; then
+  tac_exe=$(cmd_exe tac) &&
+  entry=$(printf 'PAD=%09000d' 0) || framework_failure_
+
+  env -i "$entry" "$tac_exe" /proc/self/environ > out || fail=1
+  # Count the entry and its terminating NUL, allowing extras added on exec.
+  test "$(wc -c < out)" -ge "$(printf '%s\0' "$entry" | wc -c)" || fail=1
+fi
 
 # Assume timeout is due to failure to close stdin with <&-
 # which was seen on NetBSD 7.1 / x86_64

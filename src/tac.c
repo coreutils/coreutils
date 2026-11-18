@@ -222,8 +222,8 @@ tac_seekable (int input_fd, char const *file, off_t file_pos)
 
   /* Scan backward, looking for end of file.  This caters to proc-like
      file systems where the file size is just an estimate.  */
-  while ((saved_record_size = read (input_fd, G_buffer, read_size)) == 0
-         && file_pos != 0)
+  while ((saved_record_size = full_read (input_fd, G_buffer, read_size)) == 0
+         && errno == 0 && file_pos != 0)
     {
       off_t rsize = read_size;
       if (lseek (input_fd, -rsize, SEEK_CUR) < 0)
@@ -234,16 +234,15 @@ tac_seekable (int input_fd, char const *file, off_t file_pos)
   /* Now scan forward, looking for end of file.  */
   while (saved_record_size == read_size)
     {
-      ssize_t nread = read (input_fd, G_buffer, read_size);
+      idx_t nread = full_read (input_fd, G_buffer, read_size);
       if (nread == 0)
         break;
+      file_pos += read_size;
       saved_record_size = nread;
-      if (saved_record_size < 0)
-        break;
-      file_pos += nread;
     }
 
-  if (saved_record_size < 0)
+  /* The last full_read was short.  errno distinguishes EOF from error.  */
+  if (errno != 0)
     {
       error (0, errno, _("%s: read error"), quotef (file));
       return false;
