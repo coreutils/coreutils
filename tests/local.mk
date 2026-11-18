@@ -402,6 +402,7 @@ all_tests =					\
   tests/head/head-pos.sh			\
   tests/head/head-write-error.sh		\
   tests/head/quote-headers.sh			\
+  tests/head/short-read.sh			\
   tests/misc/kill.sh				\
   tests/cksum/b2sum.sh				\
   tests/cksum/md5sum.pl				\
