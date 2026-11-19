@@ -118,6 +118,7 @@ errnoize (int status)
 }
 
 /* Return FROM represented as relative to the dir of TARGET.
+   Fall back to an absolute name, or return NULL with errno set.
    The result is malloced.  */
 
 static char *
@@ -145,6 +146,8 @@ convert_abs_rel (char const *from, char const *target)
 
   free (targetdir);
   free (realdest);
+  if (!relative_from && !IS_ABSOLUTE_FILE_NAME (from))
+    return realfrom;
   free (realfrom);
 
   return relative_from ? relative_from : xstrdup (from);
@@ -208,8 +211,16 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
         }
 
       /* Determine REL_SOURCE before any backup of DEST.  */
-      if (relative)
-        rel_source = convert_abs_rel (source, dest);
+      if (relative && *source)
+        {
+          rel_source = convert_abs_rel (source, dest);
+          if (!rel_source)
+            {
+              error (0, errno, _("failed to create symbolic link %s -> %s"),
+                     quoteaf_n (0, dest), quoteaf_n (1, source));
+              return false;
+            }
+        }
 
       bool force = (remove_existing_files || interactive
                     || backup_type != no_backups);

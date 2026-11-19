@@ -175,6 +175,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   on systems providing support for atomic rename.
   [This bug was present in "the beginning".]
 
+  'ln -sr' with a relative target operand now uses an absolute path or reports
+  failure if it cannot generate a path relative to the link's directory.
+  Previously it could create a link pointing to the wrong file.
+  [bug introduced with the --relative feature in coreutils-8.16]
+
   'ln -srf' no longer replaces files with a symbolic link to itself when the
   target and link are the same and reside in a directory that is not the current
   working directory.  E.g., 'ln -srf d/f d/f' now fails like 'ln -sf d/f d/f'
