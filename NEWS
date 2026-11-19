@@ -10,6 +10,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'basenc --z85 --ignore-garbage' now correctly ignores NUL bytes.
   [bug introduced with the basenc program in coreutils-8.31]
 
+  'cat -n' with -v, -e, -t, or -A no longer writes beyond the end of its
+  internal buffer when processing more than 10 billion lines.
+  [bug introduced in coreutils-9.1]
+
   'chcon' now emits the entire file name in error messages when setting the
   security context fails instead of the basename.
   [bug introduced with the chcon program in coreutils-6.9.90]

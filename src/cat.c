@@ -954,7 +954,7 @@ main (int argc, char **argv)
                                    page_size, insize + 1);
 
           /* Why are
-             (OUTSIZE - 1 + INSIZE * 4 + LINE_COUNTER_BUF_LEN)
+             (OUTSIZE - 1 + INSIZE * 4 + LINE_COUNTER_BUF_LEN * 2)
              bytes allocated for the output buffer?
 
              A test whether output needs to be written is done when the input
@@ -968,8 +968,12 @@ main (int argc, char **argv)
              newline, a line number may be written (according to the given
              options) as the first thing in the output buffer. (Done after the
              new input is read, but before processing of the input begins.)
-             A line number requires seldom more than LINE_COUNTER_BUF_LEN
-             positions.
+
+             If the current buffered input starts with an empty line, its line
+             number, a '$' if -E is in use, and a new line are written, then the
+             number of the subsequent line, and then the (INSIZE - 1) remaining
+             buffered characters.  Therefore, we may have two line numbers
+             pending, each requiring (LINE_COUNTER_BUF_LEN - 1) bytes.
 
              Align the output buffer to a page size boundary, for efficiency
              on some paging implementations.  */
@@ -977,7 +981,7 @@ main (int argc, char **argv)
           idx_t bufsize;
           if (ckd_mul (&bufsize, insize, 4)
               || ckd_add (&bufsize, bufsize, outsize)
-              || ckd_add (&bufsize, bufsize, LINE_COUNTER_BUF_LEN - 1))
+              || ckd_add (&bufsize, bufsize, LINE_COUNTER_BUF_LEN * 2 - 1))
             xalloc_die ();
           outbuf = ensure_buf_size (outbuf, &outbuf_alloc,
                                     page_size, bufsize);
