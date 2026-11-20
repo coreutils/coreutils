@@ -215,9 +215,10 @@ describe_change (char const *file, struct change_status const *ch)
    the referent's mode to compute the symlink's new mode if FTS followed
    the link.  This matters on systems that can change symlink permissions.
    If the change succeeds through a descriptor, return it in *CHANGED_FD
-   for the caller to close.  Return 0 on success, or an errno value.  */
+   for the caller to close.  Return 0 on success, -1 for an unsupported
+   change to a symlink itself, or an errno value for other failures.  */
 static int
-adjust_file_mode (int dirfd, char const *file, bool follow,
+adjust_file_mode (int dirfd, char const *file, bool follow, bool ignore_missing,
                   struct stat const *st, struct change_status *ch,
                   int *changed_fd)
 {
@@ -251,13 +252,27 @@ adjust_file_mode (int dirfd, char const *file, bool follow,
     }
   if (0 <= fd)
     close (fd);
+  if (! stat_errno && is_ENOTSUP (err) && ! follow && S_ISLNK (st->st_mode))
+    return -1;
   if (stat_errno || (err != EINVAL && err != ENOSYS && err != ENOENT))
     return err;
 #endif
 
   /* Older systems may require a second lookup of the name.  */
-  return (fchmodat (dirfd, file, ch->new_mode,
-                    follow ? 0 : AT_SYMLINK_NOFOLLOW) < 0 ? errno : 0);
+  if (fchmodat (dirfd, file, ch->new_mode,
+                follow ? 0 : AT_SYMLINK_NOFOLLOW) == 0)
+    return 0;
+  int chmod_errno = errno;
+  if (is_ENOTSUP (chmod_errno) && ! follow)
+    {
+      /* The pathname write can fail with ENOTSUP even on a regular file.  */
+      int is_symlink = issymlinkat (dirfd, file);
+      if (is_symlink < 0 && ignore_missing && ignorable_traversal_errno (errno))
+        return errno;
+      if (is_symlink == 1)
+        return -1;
+    }
+  return chmod_errno;
 }
 
 /* Change the mode of FILE.
@@ -376,7 +391,7 @@ process_file (FTS *fts, FTSENT *ent)
         follow_symlink = ent->fts_level == FTS_ROOTLEVEL;
       int fd;
       int chmod_errno = adjust_file_mode (fts->fts_cwd_fd, file, follow_symlink,
-                                          file_stats, &ch, &fd);
+                                          ignore_missing, file_stats, &ch, &fd);
       if (! chmod_errno)
         {
           bool file_missing = false;
@@ -391,32 +406,15 @@ process_file (FTS *fts, FTSENT *ent)
           if (file_missing)
             return true;
         }
-      else
+      else if (0 < chmod_errno)
         {
           if (ignore_missing
               && ignorable_traversal_errno (chmod_errno))
             return true;
-          /* Ignore unsupported changes only for symlinks themselves.
-             Older systems (without /proc) may return ENOTSUP for non symlinks.
-             FTS may have supplied referent metadata, so check again.  */
-          bool unsupported_symlink = false;
-          if (is_ENOTSUP (chmod_errno) && ! follow_symlink)
-            {
-              int is_symlink = issymlinkat (fts->fts_cwd_fd, file);
-              if (is_symlink < 0 && ignore_missing
-                  && ignorable_traversal_errno (errno))
-                return true;
-              unsupported_symlink = is_symlink == 1;
-            }
-          if (! unsupported_symlink)
-            {
-              if (! force_silent)
-                error (0, chmod_errno, _("changing permissions of %s"),
-                       quoteaf (file_full_name));
-
-              ch.status = CH_FAILED;
-            }
-          /* else treat not supported as not applied.  */
+          if (! force_silent)
+            error (0, chmod_errno, _("changing permissions of %s"),
+                   quoteaf (file_full_name));
+          ch.status = CH_FAILED;
         }
     }
 

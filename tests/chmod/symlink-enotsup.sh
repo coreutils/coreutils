@@ -34,6 +34,9 @@ for deref in --dereference --no-dereference; do
     strace --quiet=all -o trace -e inject="$inject" \
       chmod "$deref" u+w "$file" >out 2>err
     status=$?
+    # After a descriptor write fails, the name may refer to a different file.
+    sed -n '/^fchmodat.*AT_EMPTY_PATH.*(INJECTED)/,$p' trace |
+      grep -F "\"$file\"" && fail=1
     # Only unsupported changes to the symlink itself may be ignored.
     # Emulation may reject symlinks without making a chmod syscall.
     if test "$deref:$file" = --no-dereference:link; then
