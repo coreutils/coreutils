@@ -208,6 +208,48 @@ describe_change (char const *file, struct change_status const *ch)
   printf (fmt, quoted_file, old_m, &old_perms[1], m, &perms[1]);
 }
 
+/* Compute and apply FILE's new mode on the same object when possible.
+   ST is the status from FTS.  Without descriptor support, -Rh can use
+   the referent's mode to compute the symlink's new mode if FTS followed
+   the link.  This matters on systems that can change symlink permissions.
+   Return 0 on success, or an errno value.  */
+static int
+adjust_file_mode (int dirfd, char const *file, bool follow,
+                  struct stat const *st, struct change_status *ch)
+{
+#if defined O_PATH && defined AT_EMPTY_PATH && HAVE_WORKING_O_NOFOLLOW
+  int fd = openat (dirfd, file, O_PATH | O_CLOEXEC | (follow ? 0 : O_NOFOLLOW));
+  struct stat fd_st;
+  int stat_errno = (fd < 0 || fstat (fd, &fd_st) < 0) ? errno : 0;
+  if (! stat_errno)
+    st = &fd_st;
+#endif
+
+  /* Note without descriptor support, -Rh can use the target's mode
+     to compute the symlink's new mode if FTS followed the link.
+     Given this only matters on older systems, and then only on systems
+     that can change the permissions of a symlink, we ignore for now.  */
+
+  ch->old_mode = st->st_mode;
+  ch->new_mode = mode_adjust (ch->old_mode, S_ISDIR (ch->old_mode),
+                              umask_value, change, NULL);
+
+#if defined O_PATH && defined AT_EMPTY_PATH && HAVE_WORKING_O_NOFOLLOW
+  int err = stat_errno;
+  if (! err && fchmodat (fd, "", ch->new_mode,
+                         AT_EMPTY_PATH | AT_SYMLINK_NOFOLLOW) < 0)
+    err = errno;
+  if (0 <= fd)
+    close (fd);
+  if (stat_errno || (err != EINVAL && err != ENOSYS && err != ENOENT))
+    return err;
+#endif
+
+  /* Older systems may require a second lookup of the name.  */
+  return (fchmodat (dirfd, file, ch->new_mode,
+                    follow ? 0 : AT_SYMLINK_NOFOLLOW) < 0 ? errno : 0);
+}
+
 /* Change the mode of FILE.
    Return true if successful.  This function is called
    once for every file system object that fts encounters.  */
@@ -319,18 +361,15 @@ process_file (FTS *fts, FTSENT *ent)
 
   if (ch.status == CH_NOT_APPLIED)
     {
-      ch.old_mode = file_stats->st_mode;
-      ch.new_mode = mode_adjust (ch.old_mode, S_ISDIR (ch.old_mode) != 0,
-                                 umask_value, change, NULL);
       bool follow_symlink = !!dereference;
       if (dereference == -1) /* -H with/without -R, -P without -R.  */
         follow_symlink = ent->fts_level == FTS_ROOTLEVEL;
-      if (fchmodat (fts->fts_cwd_fd, file, ch.new_mode,
-                    follow_symlink ? 0 : AT_SYMLINK_NOFOLLOW) == 0)
+      int chmod_errno = adjust_file_mode (fts->fts_cwd_fd, file, follow_symlink,
+                                          file_stats, &ch);
+      if (! chmod_errno)
         ch.status = CH_SUCCEEDED;
       else
         {
-          int chmod_errno = errno;
           if (ignore_missing
               && ignorable_traversal_errno (chmod_errno))
             return true;

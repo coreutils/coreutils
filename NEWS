@@ -436,6 +436,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'cat' uses a simple copy for inputs with a defined size of up to 4 KiB.
   This avoids large buffer allocations, e.g. with Linux sysctl reads.
 
+  'chmod' ensures modes are read and updated on the same file, even if
+  the file is being replaced during the operation. This assurance is dependent
+  on newer systems like glibc >= 2.39 on Linux >= 6.6, or FreeBSD >= 13.1.
+
   'basenc --base58' encoding speed is 20x faster when built without libgmp.
 
   'cksum' when generating checksums to tty, uses shell quoting when required,
