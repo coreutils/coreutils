@@ -232,7 +232,11 @@ adjust_file_mode (int dirfd, char const *file, bool follow, bool ignore_missing,
                   int *changed_fd)
 {
   *changed_fd = -1;
-  if (ROOT_DEV_INO_CHECK (root_dev_ino, st))
+  /* FTS supplies full stat information for directories even with FTS_NOSTAT.
+     We do this separate --preserve-root check as it may be different with -H,-L
+     (where FTS follows a symlink to '/'), while -h would select the link
+     itself for the fstat below.  Check the directory so FTS skips it.  */
+  if (S_ISDIR (st->st_mode) && ROOT_DEV_INO_CHECK (root_dev_ino, st))
     return ROOT_PRESERVED;
 #if defined O_PATH && defined AT_EMPTY_PATH && HAVE_WORKING_O_NOFOLLOW
   int fd = openat (dirfd, file, O_PATH | O_CLOEXEC | (follow ? 0 : O_NOFOLLOW));
@@ -307,12 +311,18 @@ process_file (FTS *fts, FTSENT *ent)
   struct change_status ch = {0};
   ch.status = CH_NO_STAT;
   struct stat stat_buf;
-  bool ignore_missing = ignore_missing_fts_entry (ent);
+
+  /* Adjust so a symlink identified by readdir
+     or by FTS' stat() are handled consistently.  */
+  int fts_info = ent->fts_info;
+  if (fts_info == FTS_NSOK && S_ISLNK (file_stats->st_mode))
+    fts_info = FTS_SL;
+  bool ignore_missing = fts_info != FTS_SL && ignore_missing_fts_entry (ent);
 
   if (ignore_missing && ignorable_fts_error (ent))
     return true;
 
-  switch (ent->fts_info)
+  switch (fts_info)
     {
     case FTS_DP:
       return true;
@@ -766,6 +776,12 @@ main (int argc, char **argv)
     }
 
   bit_flags |= FTS_DEFER_STAT;
+#if defined O_PATH && defined AT_EMPTY_PATH && HAVE_WORKING_O_NOFOLLOW
+  /* fstat supplies the mode, except when -v reports a failure to open
+     or stat the file.  */
+  if (verbosity != V_high)
+    bit_flags |= FTS_NOSTAT;
+#endif
   ok = process_files (argv + optind, bit_flags);
 
   main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
