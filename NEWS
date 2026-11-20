@@ -48,6 +48,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously, renaming the file could cause an incorrect or spurious diagnostic.
   [bug introduced in fileutils-4.0.33]
 
+  'chmod -R --preserve-root' now checks the opened file against '/' before
+  changing permissions through its descriptor.  Previously a concurrent
+  rename could cause chmod to operate on '/' itself.
+  [bug introduced with the --preserve-root option in coreutils-5.1.0]
+
   'chmod -R --dereference --preserve-root' no longer silently skips the
   entry following a symbolic link to '/' encountered during traversal.
   [bug introduced in coreutils-9.5]

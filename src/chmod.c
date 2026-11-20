@@ -210,25 +210,42 @@ describe_change (char const *file, struct change_status const *ch)
   printf (fmt, quoted_file, old_m, &old_perms[1], m, &perms[1]);
 }
 
+enum
+{
+  ROOT_PRESERVED = -2,
+  SYMLINK_MODE_UNSUPPORTED = -1
+};
+
 /* Compute and apply FILE's new mode on the same object when possible.
    ST is the status from FTS.  Without descriptor support, -Rh can use
    the referent's mode to compute the symlink's new mode if FTS followed
    the link.  This matters on systems that can change symlink permissions.
    If the change succeeds through a descriptor, return it in *CHANGED_FD
-   for the caller to close.  Return 0 on success, -1 for an unsupported
-   change to a symlink itself, or an errno value for other failures.  */
+   for the caller to close.  Return 0 on success, SYMLINK_MODE_UNSUPPORTED
+   for an unsupported change to a symlink itself, ROOT_PRESERVED for '/',
+   or an errno value for other failures.  */
 static int
 adjust_file_mode (int dirfd, char const *file, bool follow, bool ignore_missing,
                   struct stat const *st, struct change_status *ch,
                   int *changed_fd)
 {
   *changed_fd = -1;
+  if (ROOT_DEV_INO_CHECK (root_dev_ino, st))
+    return ROOT_PRESERVED;
 #if defined O_PATH && defined AT_EMPTY_PATH && HAVE_WORKING_O_NOFOLLOW
   int fd = openat (dirfd, file, O_PATH | O_CLOEXEC | (follow ? 0 : O_NOFOLLOW));
   struct stat fd_st;
   int stat_errno = (fd < 0 || fstat (fd, &fd_st) < 0) ? errno : 0;
   if (! stat_errno)
-    st = &fd_st;
+    {
+      /* The name may have changed since FTS examined it.  */
+      if (ROOT_DEV_INO_CHECK (root_dev_ino, &fd_st))
+        {
+          close (fd);
+          return ROOT_PRESERVED;
+        }
+      st = &fd_st;
+    }
 #endif
 
   /* Note without descriptor support, -Rh can use the target's mode
@@ -253,7 +270,7 @@ adjust_file_mode (int dirfd, char const *file, bool follow, bool ignore_missing,
   if (0 <= fd)
     close (fd);
   if (! stat_errno && is_ENOTSUP (err) && ! follow && S_ISLNK (st->st_mode))
-    return -1;
+    return SYMLINK_MODE_UNSUPPORTED;
   if (stat_errno || (err != EINVAL && err != ENOSYS && err != ENOENT))
     return err;
 #endif
@@ -270,7 +287,7 @@ adjust_file_mode (int dirfd, char const *file, bool follow, bool ignore_missing,
       if (is_symlink < 0 && ignore_missing && ignorable_traversal_errno (errno))
         return errno;
       if (is_symlink == 1)
-        return -1;
+        return SYMLINK_MODE_UNSUPPORTED;
     }
   return chmod_errno;
 }
@@ -370,20 +387,6 @@ process_file (FTS *fts, FTSENT *ent)
       break;
     }
 
-  if (ch.status == CH_NOT_APPLIED
-      && ROOT_DEV_INO_CHECK (root_dev_ino, file_stats))
-    {
-      ROOT_DEV_INO_WARN (file_full_name);
-      if (ent->fts_info == FTS_D)  /* preorder directory.  */
-        {
-          /* Tell fts not to traverse into this hierarchy.  */
-          fts_set (fts, ent, FTS_SKIP);
-          /* Ensure that we do not process "/" on the second visit.  */
-          ignore_value (fts_read (fts));
-        }
-      return false;
-    }
-
   if (ch.status == CH_NOT_APPLIED)
     {
       bool follow_symlink = !!dereference;
@@ -392,6 +395,17 @@ process_file (FTS *fts, FTSENT *ent)
       int fd;
       int chmod_errno = adjust_file_mode (fts->fts_cwd_fd, file, follow_symlink,
                                           ignore_missing, file_stats, &ch, &fd);
+      if (chmod_errno == ROOT_PRESERVED)
+        {
+          ROOT_DEV_INO_WARN (file_full_name);
+          if (ent->fts_info == FTS_D)  /* preorder directory.  */
+            {
+              fts_set (fts, ent, FTS_SKIP);
+              /* Consume the postorder visit.  */
+              ignore_value (fts_read (fts));
+            }
+          return false;
+        }
       if (! chmod_errno)
         {
           bool file_missing = false;
