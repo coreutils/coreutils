@@ -42,9 +42,9 @@ cleanup_()
 }
 
 # Stop after opening file.  Its new name is the only one left when chmod
-# resumes, and the descriptor must suffice to read and change its mode.
+# resumes.  Request the sticky bit so -c also verifies the resulting mode.
 timeout -k 1 60 strace --quiet=all -o trace -P file -e inject=$inject \
-  $SHELL -c 'echo $$ >pid; exec chmod g+r file' 2>err & tracer=$!
+  $SHELL -c 'echo $$ >pid; exec chmod -c g+r,o+t file' >out 2>err & tracer=$!
 stopped_() { sleep "$1"; grep 'stopped by SIGSTOP' trace >/dev/null; }
 retry_delay_ stopped_ .1 6 || { cat trace; Exit 1; }
 
@@ -53,6 +53,8 @@ kill -CONT "$(cat pid)" || framework_failure_
 wait "$tracer" || { cat err; fail=1; }
 tracer=
 rm -f pid
-test "$(stat -c %a moved)" = 640 || fail=1
+case $(stat -c %a moved) in 640|1640) ;; *) fail=1 ;; esac
+grep -F "mode of 'file' changed from 0600 " out >/dev/null || fail=1
+compare /dev/null err || fail=1
 
 Exit $fail

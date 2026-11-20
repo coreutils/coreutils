@@ -123,10 +123,10 @@ static struct option const long_options[] =
 };
 
 /* Return true if the chmodable permission bits of FILE changed.
-   The old mode was OLD_MODE, but it was changed to NEW_MODE.  */
+   FD, if nonnegative, is the descriptor used to set NEW_MODE.  */
 
 static bool
-mode_changed (int dir_fd, char const *file, char const *file_full_name,
+mode_changed (int fd, int dir_fd, char const *file, char const *file_full_name,
               mode_t old_mode, mode_t new_mode, bool follow,
               bool ignore_missing, bool *file_missing)
 {
@@ -138,8 +138,9 @@ mode_changed (int dir_fd, char const *file, char const *file_full_name,
 
       struct stat new_stats;
 
-      if (fstatat (dir_fd, file, &new_stats,
-                   follow ? 0 : AT_SYMLINK_NOFOLLOW) != 0)
+      if ((0 <= fd ? fstat (fd, &new_stats)
+           : fstatat (dir_fd, file, &new_stats,
+                      follow ? 0 : AT_SYMLINK_NOFOLLOW)) < 0)
         {
           *file_missing = (ignore_missing
                            && ignorable_traversal_errno (errno));
@@ -213,11 +214,14 @@ describe_change (char const *file, struct change_status const *ch)
    ST is the status from FTS.  Without descriptor support, -Rh can use
    the referent's mode to compute the symlink's new mode if FTS followed
    the link.  This matters on systems that can change symlink permissions.
-   Return 0 on success, or an errno value.  */
+   If the change succeeds through a descriptor, return it in *CHANGED_FD
+   for the caller to close.  Return 0 on success, or an errno value.  */
 static int
 adjust_file_mode (int dirfd, char const *file, bool follow,
-                  struct stat const *st, struct change_status *ch)
+                  struct stat const *st, struct change_status *ch,
+                  int *changed_fd)
 {
+  *changed_fd = -1;
 #if defined O_PATH && defined AT_EMPTY_PATH && HAVE_WORKING_O_NOFOLLOW
   int fd = openat (dirfd, file, O_PATH | O_CLOEXEC | (follow ? 0 : O_NOFOLLOW));
   struct stat fd_st;
@@ -240,6 +244,11 @@ adjust_file_mode (int dirfd, char const *file, bool follow,
   if (! err && fchmodat (fd, "", ch->new_mode,
                          AT_EMPTY_PATH | AT_SYMLINK_NOFOLLOW) < 0)
     err = errno;
+  if (! err)
+    {
+      *changed_fd = fd;
+      return 0;
+    }
   if (0 <= fd)
     close (fd);
   if (stat_errno || (err != EINVAL && err != ENOSYS && err != ENOENT))
@@ -360,15 +369,28 @@ process_file (FTS *fts, FTSENT *ent)
       return false;
     }
 
-  bool follow_symlink = !!dereference;
-  if (dereference == -1) /* -H with/without -R, -P without -R.  */
-    follow_symlink = ent->fts_level == FTS_ROOTLEVEL;
   if (ch.status == CH_NOT_APPLIED)
     {
+      bool follow_symlink = !!dereference;
+      if (dereference == -1) /* -H with/without -R, -P without -R.  */
+        follow_symlink = ent->fts_level == FTS_ROOTLEVEL;
+      int fd;
       int chmod_errno = adjust_file_mode (fts->fts_cwd_fd, file, follow_symlink,
-                                          file_stats, &ch);
+                                          file_stats, &ch, &fd);
       if (! chmod_errno)
-        ch.status = CH_SUCCEEDED;
+        {
+          bool file_missing = false;
+          ch.status = CH_SUCCEEDED;
+          if (verbosity != V_off
+              && !mode_changed (fd, fts->fts_cwd_fd, file, file_full_name,
+                                ch.old_mode, ch.new_mode, follow_symlink,
+                                ignore_missing, &file_missing))
+            ch.status = CH_NO_CHANGE_REQUESTED;
+          if (0 <= fd)
+            close (fd);
+          if (file_missing)
+            return true;
+        }
       else
         {
           if (ignore_missing
@@ -398,22 +420,9 @@ process_file (FTS *fts, FTSENT *ent)
         }
     }
 
-  if (verbosity != V_off)
-    {
-      bool file_missing;
-      if (ch.status == CH_SUCCEEDED
-          && !mode_changed (fts->fts_cwd_fd, file, file_full_name,
-                            ch.old_mode, ch.new_mode, follow_symlink,
-                            ignore_missing, &file_missing))
-        {
-          if (file_missing)
-            return true;
-          ch.status = CH_NO_CHANGE_REQUESTED;
-        }
-
-      if (ch.status == CH_SUCCEEDED || verbosity == V_high)
-        describe_change (file_full_name, &ch);
-    }
+  if (verbosity == V_high
+      || (verbosity == V_changes_only && ch.status == CH_SUCCEEDED))
+    describe_change (file_full_name, &ch);
 
   if (CH_NO_CHANGE_REQUESTED <= ch.status && diagnose_surprises)
     {
