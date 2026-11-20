@@ -123,15 +123,16 @@ static struct option const long_options[] =
 };
 
 /* Return true if the chmodable permission bits of FILE changed.
-   FD, if nonnegative, is the descriptor used to set NEW_MODE.  */
+   FD, if nonnegative, is the descriptor used to set *NEW_MODE.
+   Update *NEW_MODE if the resulting mode is read back.  */
 
 static bool
 mode_changed (int fd, int dir_fd, char const *file, char const *file_full_name,
-              mode_t old_mode, mode_t new_mode, bool follow,
+              mode_t old_mode, mode_t *new_mode, bool follow,
               bool ignore_missing, bool *file_missing)
 {
   *file_missing = false;
-  if (new_mode & (S_ISUID | S_ISGID | S_ISVTX))
+  if (*new_mode & (S_ISUID | S_ISGID | S_ISVTX))
     {
       /* The new mode contains unusual bits that the call to chmod may
          have silently cleared.  Check whether they actually changed.  */
@@ -150,17 +151,18 @@ mode_changed (int fd, int dir_fd, char const *file, char const *file_full_name,
           return false;
         }
 
-      new_mode = new_stats.st_mode;
+      *new_mode = new_stats.st_mode;
     }
 
-  return ((old_mode ^ new_mode) & CHMOD_MODE_BITS) != 0;
+  return ((old_mode ^ *new_mode) & CHMOD_MODE_BITS) != 0;
 }
 
 /* Tell the user how/if the MODE of FILE has been changed.
    CH describes what (if anything) has happened. */
 
 static void
-describe_change (char const *file, struct change_status const *ch)
+describe_change (char const *file, struct change_status const *ch,
+                 mode_t new_mode)
 {
   char perms[12];		/* "-rwxrwxrwx" ls-style modes. */
   char old_perms[12];
@@ -184,9 +186,9 @@ describe_change (char const *file, struct change_status const *ch)
 
   unsigned long int
     old_m = ch->old_mode & CHMOD_MODE_BITS,
-    m = ch->new_mode & CHMOD_MODE_BITS;
+    m = new_mode & CHMOD_MODE_BITS;
 
-  strmode (ch->new_mode, perms);
+  strmode (new_mode, perms);
   perms[10] = '\0';		/* Remove trailing space.  */
 
   strmode (ch->old_mode, old_perms);
@@ -387,6 +389,7 @@ process_file (FTS *fts, FTSENT *ent)
       break;
     }
 
+  mode_t reported_mode = 0;
   if (ch.status == CH_NOT_APPLIED)
     {
       bool follow_symlink = !!dereference;
@@ -395,6 +398,7 @@ process_file (FTS *fts, FTSENT *ent)
       int fd;
       int chmod_errno = adjust_file_mode (fts->fts_cwd_fd, file, follow_symlink,
                                           ignore_missing, file_stats, &ch, &fd);
+      reported_mode = ch.new_mode;
       if (chmod_errno == ROOT_PRESERVED)
         {
           ROOT_DEV_INO_WARN (file_full_name);
@@ -412,7 +416,7 @@ process_file (FTS *fts, FTSENT *ent)
           ch.status = CH_SUCCEEDED;
           if (verbosity != V_off
               && !mode_changed (fd, fts->fts_cwd_fd, file, file_full_name,
-                                ch.old_mode, ch.new_mode, follow_symlink,
+                                ch.old_mode, &reported_mode, follow_symlink,
                                 ignore_missing, &file_missing))
             ch.status = CH_NO_CHANGE_REQUESTED;
           if (0 <= fd)
@@ -434,7 +438,7 @@ process_file (FTS *fts, FTSENT *ent)
 
   if (verbosity == V_high
       || (verbosity == V_changes_only && ch.status == CH_SUCCEEDED))
-    describe_change (file_full_name, &ch);
+    describe_change (file_full_name, &ch, reported_mode);
 
   if (CH_NO_CHANGE_REQUESTED <= ch.status && diagnose_surprises)
     {

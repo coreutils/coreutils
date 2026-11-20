@@ -46,7 +46,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   'chmod -v' and 'chmod -c' now more robustly verify set-ID and sticky bits.
   Previously, renaming the file could cause an incorrect or spurious diagnostic.
-  [bug introduced in fileutils-4.0.33]
+  Also if these requested bits are ignored, an inaccurate mode was diagnosed.
+  [This bug was present in "the beginning".]
 
   'chmod -R --preserve-root' now checks the opened file against '/' before
   changing permissions through its descriptor.  Previously a concurrent

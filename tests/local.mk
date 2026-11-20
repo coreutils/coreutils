@@ -107,6 +107,7 @@ EXTRA_DIST +=			\
   $(pr_data)
 
 all_root_tests =				\
+  tests/chmod/report-setgid.sh			\
   tests/chown/basic.sh				\
   tests/chgrp/from.sh				\
   tests/cp/cp-a-selinux.sh			\
