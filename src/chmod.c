@@ -640,6 +640,8 @@ main (int argc, char **argv)
           dereference = 0;
         }
     }
+  else
+    bit_flags = FTS_PHYSICAL | (dereference ? FTS_COMFOLLOW : 0);
 
   if (dereference == -1 && bit_flags == FTS_LOGICAL)
     dereference = 1;

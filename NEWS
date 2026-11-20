@@ -22,6 +22,16 @@ GNU coreutils NEWS                                    -*- outline -*-
   when only a partial context is specified.
   [bug introduced with the chcon program in coreutils-6.9.90]
 
+  'chmod -P' without -R now correctly ignores the -P option.
+  Previously it used a symbolic link's mode, which could grant unintended
+  permissions on the target.
+  [bug introduced with the -P option in coreutils-9.5]
+
+  'chmod -h' without -R now uses the symlink's own mode to compute its
+  new permissions on systems that support changing symlink permissions.
+  Previously it used the target's mode.
+  [bug introduced with the -h option in coreutils-9.5]
+
   'chmod -R' and 'chmod -h' no longer silently skip permission changes on
   files and directories on Linux kernels before 6.6 when /proc is unavailable.
   If built on older systems with glibc < 2.39 these operations now retry

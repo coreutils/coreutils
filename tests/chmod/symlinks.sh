@@ -75,6 +75,11 @@ chmod 755 --no-dereference a/c/link 2>err || fail=1
 ls -l a/b > out || framework_failure_
 count_755 0
 
+# Without -R, -P applies the symbolic mode to the command-line link's target.
+chmod 640 a/b/file || framework_failure_
+chmod -P g+w a/c/link || fail=1
+test "$(stat -c %a a/b/file)" = 660 || fail=1
+
 # Dangling links should not induce an error if not dereferencing
 for noderef in '-h' '-RP' '-P'; do
   chmod 755 --no-dereference $noderef a/dangle 2>err || fail=1
