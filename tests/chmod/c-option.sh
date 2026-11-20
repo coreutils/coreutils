@@ -48,4 +48,12 @@ chmod g+s a/b
 chmod -c -R g+w a 2>err
 compare /dev/null err || fail=1
 
+# Verify special bits on the link itself, even when its target is missing.
+ln -s missing link || framework_failure_
+if chmod -h 1755 link 2>/dev/null; then
+  chmod -ch 1755 link >out 2>err || fail=1
+  compare /dev/null out || fail=1
+  compare /dev/null err || fail=1
+fi
+
 Exit $fail

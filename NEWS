@@ -32,6 +32,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously it used the target's mode.
   [bug introduced with the -h option in coreutils-9.5]
 
+  'chmod -hv' and 'chmod -hc' now check the symlink itself when verifying
+  set-ID or sticky bits on systems that support changing symlink permissions.
+  Previously they could misreport a change or warn about a dangling symlink.
+  [bug introduced with the -h option in coreutils-9.5]
+
   'chmod -R' and 'chmod -h' no longer silently skip permission changes on
   files and directories on Linux kernels before 6.6 when /proc is unavailable.
   If built on older systems with glibc < 2.39 these operations now retry

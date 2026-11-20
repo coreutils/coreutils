@@ -127,8 +127,8 @@ static struct option const long_options[] =
 
 static bool
 mode_changed (int dir_fd, char const *file, char const *file_full_name,
-              mode_t old_mode, mode_t new_mode, bool ignore_missing,
-              bool *file_missing)
+              mode_t old_mode, mode_t new_mode, bool follow,
+              bool ignore_missing, bool *file_missing)
 {
   *file_missing = false;
   if (new_mode & (S_ISUID | S_ISGID | S_ISVTX))
@@ -138,7 +138,8 @@ mode_changed (int dir_fd, char const *file, char const *file_full_name,
 
       struct stat new_stats;
 
-      if (fstatat (dir_fd, file, &new_stats, 0) != 0)
+      if (fstatat (dir_fd, file, &new_stats,
+                   follow ? 0 : AT_SYMLINK_NOFOLLOW) != 0)
         {
           *file_missing = (ignore_missing
                            && ignorable_traversal_errno (errno));
@@ -359,11 +360,11 @@ process_file (FTS *fts, FTSENT *ent)
       return false;
     }
 
+  bool follow_symlink = !!dereference;
+  if (dereference == -1) /* -H with/without -R, -P without -R.  */
+    follow_symlink = ent->fts_level == FTS_ROOTLEVEL;
   if (ch.status == CH_NOT_APPLIED)
     {
-      bool follow_symlink = !!dereference;
-      if (dereference == -1) /* -H with/without -R, -P without -R.  */
-        follow_symlink = ent->fts_level == FTS_ROOTLEVEL;
       int chmod_errno = adjust_file_mode (fts->fts_cwd_fd, file, follow_symlink,
                                           file_stats, &ch);
       if (! chmod_errno)
@@ -402,8 +403,8 @@ process_file (FTS *fts, FTSENT *ent)
       bool file_missing;
       if (ch.status == CH_SUCCEEDED
           && !mode_changed (fts->fts_cwd_fd, file, file_full_name,
-                            ch.old_mode, ch.new_mode, ignore_missing,
-                            &file_missing))
+                            ch.old_mode, ch.new_mode, follow_symlink,
+                            ignore_missing, &file_missing))
         {
           if (file_missing)
             return true;
