@@ -103,6 +103,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   output.
   [This bug was present in "the beginning".]
 
+  'csplit' no longer fails with a "memory exhausted" error when reading from a
+  pipe or other source that returns short reads, or when reading a long line
+  that requires multiple reads.
+  [This bug was present in "the beginning".]
+
   'cut', 'expand', 'fold', 'join', 'numfmt', 'unexpand', and 'uniq', no longer
   consider the \u0085 (next line) character a separator on non-GLIBC platforms.
   [bug introduced in coreutils-9.11]

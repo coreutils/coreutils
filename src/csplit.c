@@ -479,7 +479,19 @@ load_buffer (void)
           hold_count = 0;
         }
 
-      b->bytes_used += read_input (p, bytes_avail - 1);
+      /* Continue reading if we have space and no newlines are found in the
+         current read.  Otherwise, each read without a newline will cause a
+         new allocation in record_line_starts, which can exhaust memory with
+         a slow pipe, for example.  */
+      while (1 < bytes_avail)
+        {
+          idx_t const bytes_read = read_input (p, bytes_avail - 1);
+          b->bytes_used += bytes_read;
+          bytes_avail -= bytes_read;
+          if (bytes_read == 0 || memchr (p, '\n', bytes_read))
+            break;
+          p += bytes_read;
+        }
 
       if (record_line_starts (b) != 0)
         {

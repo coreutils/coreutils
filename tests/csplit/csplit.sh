@@ -180,4 +180,21 @@ if ! uid_is_privileged_; then
   chmod u+w xx00 || framework_failure_
 fi
 
+rm -f xx?? &&
+printf 'a\nb\n' >f || framework_failure_
+vm=$(get_min_ulimit_v_ csplit -z f %b%1) && {
+  printf '0\n50\n' >exp-out &&
+  yes a | tr -d '\n' | head -c 50 > exp-xx01 || framework_failure_
+  (ulimit -v $(($vm + 40000)) && touch ulimit-worked &&
+     for i in $(seq 50); do printf 'a'; sleep .01; done | csplit - 1 >out 2>err)
+  if test $? -ne 0; then
+    test -f ulimit-worked && fail=1
+  else
+    compare exp-out out || fail=1
+    compare /dev/null err || fail=1
+    compare /dev/null xx00 || fail=1
+    compare exp-xx01 xx01 || fail=1
+  fi
+}
+
 Exit $fail
