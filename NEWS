@@ -27,15 +27,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   permissions on the target.
   [bug introduced with the -P option in coreutils-9.5]
 
-  'chmod -h' without -R now uses the symlink's own mode to compute its
-  new permissions on systems that support changing symlink permissions.
-  Previously it used the target's mode.
-  [bug introduced with the -h option in coreutils-9.5]
-
-  'chmod -hv' and 'chmod -hc' now check the symlink itself when verifying
-  set-ID or sticky bits on systems that support changing symlink permissions.
-  Previously they could misreport a change or warn about a dangling symlink.
-  [bug introduced with the -h option in coreutils-9.5]
+  'chmod -h' on systems that support changing symlink permissions,
+  now ensures operations are restricted to the symlink.  Previously
+  without -R, or with -v or -c, the target's mode was incorrectly inspected.
+  [bugs introduced with the -h option in coreutils-9.5]
 
   'chmod -R' and 'chmod -h' no longer silently skip permission changes on
   files and directories on Linux kernels before 6.6 when /proc is unavailable.
@@ -43,16 +38,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   after checking that the file is not a symlink, but otherwise
   these operations now diagnose the unsupported changes and exit with failure.
   [bug introduced in coreutils-9.5]
-
-  'chmod -v' and 'chmod -c' now more robustly verify set-ID and sticky bits.
-  Previously, renaming the file could cause an incorrect or spurious diagnostic.
-  Also if these requested bits are ignored, an inaccurate mode was diagnosed.
-  [This bug was present in "the beginning".]
-
-  'chmod -R --preserve-root' now checks the opened file against '/' before
-  changing permissions through its descriptor.  Previously a concurrent
-  rename could cause chmod to operate on '/' itself.
-  [bug introduced with the --preserve-root option in coreutils-5.1.0]
 
   'chmod -R --dereference --preserve-root' no longer silently skips the
   entry following a symbolic link to '/' encountered during traversal.
@@ -448,14 +433,15 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  'basenc --base58' encoding speed is 20x faster when built without libgmp.
+
   'cat' uses a simple copy for inputs with a defined size of up to 4 KiB.
   This avoids large buffer allocations, e.g. with Linux sysctl reads.
 
-  'chmod' ensures modes are read and updated on the same file, even if
-  the file is being replaced during the operation. This assurance is dependent
+  'chmod' now operates more robustly in the presence of replaced files,
   on newer systems like glibc >= 2.39 on Linux >= 6.6, or FreeBSD >= 13.1.
-
-  'basenc --base58' encoding speed is 20x faster when built without libgmp.
+  This ensures modes are always read and updated on the same file, and that the
+  -v and --preserve-root options operate more robustly with concurrent renames.
 
   'cksum' when generating checksums to tty, uses shell quoting when required,
   to more robustly escape presented file names, honoring $QUOTING_STYLE to
