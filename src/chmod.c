@@ -373,9 +373,6 @@ process_file (FTS *fts, FTSENT *ent)
         {
           if (fstatat (fts->fts_cwd_fd, file, &stat_buf, 0) != 0)
             {
-              if (ignore_missing
-                  && ignorable_traversal_errno (errno))
-                return true;
               if (! force_silent)
                 error (0, errno, _("cannot dereference %s"),
                        quoteaf (file_full_name));
