@@ -40,6 +40,13 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Jim Meyering")
 
+#if defined AT_EMPTY_PATH \
+    && HAVE_WORKING_O_NOFOLLOW && HAVE_WORKING_FSTAT_O_PATH
+# define USE_DESCRIPTOR_CHMOD 1
+#else
+# define USE_DESCRIPTOR_CHMOD 0
+#endif
+
 struct change_status
 {
   enum
@@ -238,7 +245,7 @@ adjust_file_mode (int dirfd, char const *file, bool follow, bool ignore_missing,
      itself for the fstat below.  Check the directory so FTS skips it.  */
   if (S_ISDIR (st->st_mode) && ROOT_DEV_INO_CHECK (root_dev_ino, st))
     return ROOT_PRESERVED;
-#if defined O_PATH && defined AT_EMPTY_PATH && HAVE_WORKING_O_NOFOLLOW
+#if USE_DESCRIPTOR_CHMOD
   int fd = openat (dirfd, file, O_PATH | O_CLOEXEC | (follow ? 0 : O_NOFOLLOW));
   struct stat fd_st;
   int stat_errno = (fd < 0 || fstat (fd, &fd_st) < 0) ? errno : 0;
@@ -263,7 +270,7 @@ adjust_file_mode (int dirfd, char const *file, bool follow, bool ignore_missing,
   ch->new_mode = mode_adjust (ch->old_mode, S_ISDIR (ch->old_mode),
                               umask_value, change, NULL);
 
-#if defined O_PATH && defined AT_EMPTY_PATH && HAVE_WORKING_O_NOFOLLOW
+#if USE_DESCRIPTOR_CHMOD
   int err = stat_errno;
   if (! err && fchmodat (fd, "", ch->new_mode,
                          AT_EMPTY_PATH | AT_SYMLINK_NOFOLLOW) < 0)
@@ -773,7 +780,7 @@ main (int argc, char **argv)
     }
 
   bit_flags |= FTS_DEFER_STAT;
-#if defined O_PATH && defined AT_EMPTY_PATH && HAVE_WORKING_O_NOFOLLOW
+#if USE_DESCRIPTOR_CHMOD
   /* fstat supplies the mode, except when -v reports a failure to open
      or stat the file.  */
   if (verbosity != V_high)

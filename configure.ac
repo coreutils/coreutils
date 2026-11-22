@@ -401,6 +401,9 @@ fi
 # glibc >= 2.28 and linux kernel >= 4.11, Android API level 30.
 gl_CHECK_FUNCS_ANDROID([statx], [[#include <sys/stat.h>]])
 
+# chmod uses O_PATH descriptors even when openat is native.
+gl_WORKING_FSTAT_O_PATH
+
 # SCO-ODT-3.0 is reported to need -los to link programs using initgroups
 AC_CHECK_FUNCS([initgroups])
 if test $ac_cv_func_initgroups = no; then
