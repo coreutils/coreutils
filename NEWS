@@ -361,6 +361,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   of a followed file.
   [bug introduced with inotify support added in coreutils-7.5]
 
+  'tee' no longer infinite loops when the reader of a full non-blocking output
+  pipe exits.
+  [bug introduced in coreutils-9.2]
+
   'timeout --signal=ALRM -k' again honors the -k option.
   Similarly 'timeout --signal=CHLD' no longer reports "No child processes",
   or hangs as it has done since coreutils-8.27, once the command exits.

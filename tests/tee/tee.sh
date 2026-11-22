@@ -120,6 +120,15 @@ read_fifo
 yes >fifo
 pipe_status=$?
 
+# Make sure that tee doesn't enter an infinite loop when a full
+# nonblocking pipe exits.
+yes |
+{
+  dd count=0 oflag=nonblock status=none
+  returns_ $pipe_status timeout 10 tee || touch tee.fail
+} | sleep .5
+test -f tee.fail && fail=1
+
 # Default operation is to continue on output errors but exit silently on SIGPIPE
 read_fifo
 yes | returns_ $pipe_status timeout 10 tee ./e/noent 2>err >fifo || fail=1

@@ -55,7 +55,8 @@
    to wait for an event, otherwise return the status immediately.
    Return 0 if not BLOCKing and there is no event on the requested descriptors.
    Return 0 if FDIN can be read() without blocking, or IOPOLL_BROKEN_OUTPUT if
-   FDOUT becomes a broken pipe. If !BROKEN_OUTPUT return 0 if FDOUT writable.
+   FDOUT becomes a broken pipe. If !BROKEN_OUTPUT return 0 if FDOUT writable,
+   or has an error that would cause a subsequent write to fail without blocking.
    Otherwise return IOPOLL_ERROR if there is a poll() or select() error.  */
 
 static int
@@ -74,7 +75,7 @@ iopoll_internal (int fdin, int fdout, bool block, bool broken_output)
   if (! broken_output)
     {
       pfds[0].events = pfds[1].events = POLLOUT;
-      check_out_events = POLLOUT;
+      check_out_events |= POLLOUT;
     }
 
   while (0 <= ret || errno == EINTR)
