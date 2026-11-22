@@ -24,23 +24,19 @@ cleanup_() { rm -rf "$other_partition_tmpdir"; }
 a="$other_partition_tmpdir/a"
 a2="$other_partition_tmpdir/a~"
 
-rm -f "$a" "$a2" || framework_failure_
-echo a > "$a" || framework_failure_
-echo a2 > "$a2" || framework_failure_
-
-# This mv command should exit nonzero.
-mv --b=simple "$a2" "$a" > out 2>&1 && fail=1
-
-sed \
-   -e "s,mv:,XXX:," \
-   -e "s,$a,YYY," \
-   -e "s,$a2,ZZZ," \
-  out > out2
-
-cat > exp <<\EOF
-XXX: backing up 'YYY' might destroy source;  'ZZZ' not moved
+echo a >exp-a &&
+echo a2 >exp-a2 &&
+cp exp-a "$a" &&
+cp exp-a2 "$a2" &&
+cat >exp <<EOF || framework_failure_
+mv: backing up '$a' might destroy source;  '$a2' not moved
 EOF
 
-compare exp out2 || fail=1
+# This mv command should exit nonzero.
+returns_ 1 mv --b=simple "$a2" "$a" >out 2>err || fail=1
+compare /dev/null out || fail=1
+compare exp err || fail=1
+compare exp-a "$a" || fail=1
+compare exp-a2 "$a2" || fail=1
 
 Exit $fail
