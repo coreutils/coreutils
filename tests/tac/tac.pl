@@ -86,7 +86,7 @@ my @Tests =
   # coreutils-8.5's tac would double-free its primary buffer.
   ['double-free', {IN=>$long_line}, {OUT=>$long_line}],
 
-  # coreutils-9.13 and earlier would crash due to a heap over-read.
+  # coreutils-9.12 and earlier would crash due to a heap over-read.
   ['buf-sep-1', '-s abc',
    do { my $sep_x = 'x' x $INITIAL_READSIZE;
         my $sep_y = 'x' x ($INITIAL_READSIZE - 1);
@@ -94,7 +94,7 @@ my @Tests =
          {IN=>$sep_y . 'ab'},
          {OUT=>$sep_x . '?c' . $sep_y . 'ab'}); }],
 
-  # coreutils-9.13 and earlier would give invalid output.
+  # coreutils-9.12 and earlier would give invalid output.
   ['buf-sep-2', '-b -s ab',
    do { my $sep_x1 = 'x' x ($INITIAL_READSIZE - 1);
         my $sep_x2 = 'x' x ($INITIAL_READSIZE - 2);
