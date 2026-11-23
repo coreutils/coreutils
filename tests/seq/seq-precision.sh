@@ -82,6 +82,13 @@ compare exp out || fail=1
 seq 1e$LONG_MIN 2> err || fail=1
 compare /dev/null err || fail=1
 
+# The precision implied by an INT_MIN exponent exceeds INT_MAX.
+# Use -w to exercise the width calculation that could overflow.
+seq -w 1e$INT_MIN 2 > out 2> err || fail=1
+printf '%s\n' 0 1 2 > exp || framework_failure_
+compare exp out || fail=1
+compare /dev/null err || fail=1
+
 # Ensure a large format precision is fully honored
 seq -f '%.70000f' 1 > out || fail=1
 test "$(wc -c < out)" = 70003 || fail=1
