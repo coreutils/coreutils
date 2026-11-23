@@ -157,12 +157,15 @@ unexpand (void)
       /* If true, the first pending blank came just before a tab stop.  */
       bool one_blank_before_tab_stop = false;
 
+      /* Number of bytes in that first pending blank.  */
+      idx_t first_blank_len = 0;
+
       /* If true, the previous input character was a blank.  This is
          initially true, since initial strings of blanks are treated
          as if the line was preceded by a blank.  */
       bool prev_blank = true;
 
-      /* Number of pending columns of blanks.  */
+      /* Number of pending bytes of blanks.  */
       idx_t pending = 0;
 
 
@@ -207,7 +210,10 @@ unexpand (void)
                               /* It is not yet known whether the pending blanks
                                  will be replaced by tabs.  */
                               if (column == next_tab_column)
-                                one_blank_before_tab_stop = true;
+                                {
+                                  one_blank_before_tab_stop = true;
+                                  first_blank_len = g.len;
+                                }
                               memcpy (pending_blank + pending,
                                       mbbuf_char_offset (&mbbuf, g), g.len);
                               pending += g.len;
@@ -244,9 +250,17 @@ unexpand (void)
 
               if (pending)
                 {
-                  if (pending > 1 && one_blank_before_tab_stop)
-                    pending_blank[0] = '\t';
-                  if (fwrite (pending_blank, 1, pending, stdout) != pending)
+                  char const *p = pending_blank;
+                  if (first_blank_len < pending && one_blank_before_tab_stop)
+                    {
+                      /* More blanks followed the first one, so replace
+                         all of its bytes with a tab.  */
+                      if (putc ('\t', stdout) < 0)
+                        write_error ();
+                      p += first_blank_len;
+                      pending -= first_blank_len;
+                    }
+                  if (fwrite (p, 1, pending, stdout) != pending)
                     write_error ();
                   pending = 0;
                   one_blank_before_tab_stop = false;

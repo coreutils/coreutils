@@ -93,6 +93,25 @@ exp=' 　  ö	     ü	     ß'
 unexpand -a < in > out || fail=1
 compare exp out > /dev/null 2>&1 || fail=1
 
+# Test that a multi-byte blank ending on a tab is kept intact when it is
+# the only blank.  coreutils-9.11 and coreutils-9.12 would replace the
+# first byte of the blank with a tab and emit the rest of the bytes
+# unchanged.  Also, check that all bytes of a multi-byte blank are
+# replaced when more blanks follow it.
+env printf 'xxxxxx\u3000|
+xxxxxxx\u2003|
+xxxxxx\u3000 |
+xxxxxx\u3000\u3000|
+' > in &&
+env printf 'xxxxxx\u3000|
+xxxxxxx\u2003|
+xxxxxx\t |
+xxxxxx\t\u3000|
+' > exp || framework_failure_
+
+unexpand -a < in > out || fail=1
+compare exp out || fail=1
+
 #non-Unicode characters interspersed between Unicode ones
 env printf '12345678
         \xFF|
