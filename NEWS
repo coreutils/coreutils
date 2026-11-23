@@ -269,6 +269,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   Also negative operands like "-,5" are no longer treated as options.
   [bugs introduced in coreutils-8.24 and coreutils-8.31]
 
+  'seq' no longer outputs an incorrect precision or width, or has undefined
+  behavior, with an operand whose exponent is less than -2147483647.
+  For example 'seq 1e-4294967301 1' now outputs 0 and 1, not 0.00000 and
+  1.00000.
+  [bug introduced in coreutils-6.10]
+
   'shred --force' no longer has races when opening non-writable files.
   Previously, upon failing to open a writable file descriptor, it would
   change its permissions before reopening it, following symbolic links in the

@@ -219,8 +219,10 @@ scan_arg (char const *arg)
       if (e)
         {
           long exponent = MAX (strtol (e + 1, NULL, 10), -LONG_MAX);
-          ret.precision += exponent < 0 ? -exponent
-                                        : - MIN (ret.precision, exponent);
+          /* Saturate at INT_MAX, i.e., treat the precision as unknown.  */
+          ret.precision += (exponent < 0
+                            ? MIN (-exponent, INT_MAX - ret.precision)
+                            : - MIN (ret.precision, exponent));
           /* Don't account for e.... in the width since this is not output.  */
           ret.width -= strlen (arg) - (e - arg);
           /* Adjust the width as per the exponent.  */

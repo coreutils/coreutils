@@ -82,6 +82,19 @@ compare exp out || fail=1
 seq 1e$LONG_MIN 2> err || fail=1
 compare /dev/null err || fail=1
 
+# Ensure no undefined behavior or incorrect precision with exponents
+# less than INT_MIN.  These would output "0.00000" and "00" respectively
+# in coreutils 9.12 and earlier, as the precision wrapped around.
+seq 1e-4294967301 1 > out 2> err || fail=1
+printf '%s\n' 0 1 > exp || framework_failure_
+compare exp out || fail=1
+compare /dev/null err || fail=1
+
+seq -w 1e$INT_MIN 2 > out 2> err || fail=1
+printf '%s\n' 0 1 2 > exp || framework_failure_
+compare exp out || fail=1
+compare /dev/null err || fail=1
+
 # Ensure a large format precision is fully honored
 seq -f '%.70000f' 1 > out || fail=1
 test "$(wc -c < out)" = 70003 || fail=1
