@@ -637,8 +637,8 @@ main (int argc, char **argv)
     {
       if (target_directory)
         error (EXIT_FAILURE, 0,
-               _("cannot combine --target-directory "
-                 "and --no-target-directory"));
+               _("cannot combine --target-directory (-t) "
+                 "and --no-target-directory (-T)"));
       if (n_files != 2)
         {
           if (n_files < 2)
