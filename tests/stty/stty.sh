@@ -95,6 +95,17 @@ for W in $(seq 80 90); do
   test "$output_width" -le "$W" || fail=1
 done
 
+# Probe with the aliases so a numeric parsing failure is detected.
+if stty exta 2>/dev/null; then
+  stty 19200 || fail=1
+  stty ispeed 19200 ospeed 19200 || fail=1
+fi
+if stty extb 2>/dev/null; then
+  stty 38400 || fail=1
+  stty ispeed 38400 ospeed 38400 || fail=1
+fi
+stty "$(cat "$saved_state")" || fail=1
+
 # Ensure we support varied numeric forms
 # with appropriate rounding
 if stty ispeed '9600'; then

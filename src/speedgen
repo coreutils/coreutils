@@ -89,7 +89,7 @@ EOF
 while read n; do
   printf '#  ifdef B%s\n'\
 '    case %s:\n'\
-'      return (struct speed_desc) { .baud = B%s, .valid = false };\n'\
+'      return (struct speed_desc) { .baud = B%s, .valid = true };\n'\
 '#  endif\n' "$n" "$n" "$n"
 done < "$tmp" >> "$out"
 
