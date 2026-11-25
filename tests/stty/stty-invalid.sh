@@ -54,10 +54,13 @@ fi
 # coreutils >= 9.8 supports arbitrary speeds on some systems
 # so restrict tests here to invalid numbers
 # We simulate unsupported numbers in a separate "LD_PRELOAD" test.
+# Note $ULONG_MAX is odd, so $ULONG_MAX.5 rounds to $ULONG_OFLOW.
 WRAP_9600="$(expr $ULONG_OFLOW - 9600)"
 for speed in 9599.. 9600.. 9600.5. 9600.50. 9600.0. ++9600 \
-             -$WRAP_9600 --$WRAP_9600 0x2580 96E2 9600,0 '9600.0 ' '' ' '; do
-  returns_ 1 stty ispeed "$speed" || fail=1
+             -$WRAP_9600 --$WRAP_9600 0x2580 96E2 9600,0 '9600.0 ' '' ' ' '.' \
+             "$ULONG_MAX.5" "$ULONG_MAX.6" "$ULONG_OFLOW" "$ULONG_OFLOW.6"; do
+  returns_ 1 stty ispeed "$speed" </dev/null 2>err || fail=1
+  grep 'invalid ispeed' err || fail=1
 done
 
 # Just in case either of the above mistakenly succeeds (and changes

@@ -2322,13 +2322,10 @@ speed_matches (struct termios const *mode1, struct termios const *mode2)
   return true;
 }
 
-ATTRIBUTE_PURE
 static struct speed_desc
 string_to_baud (char const *arg)
 {
   char *ep;
-  unsigned long value;
-  unsigned char c;
 
   /* Explicitly disallow negative numbers.  */
   while (c_isspace (*arg))
@@ -2336,50 +2333,39 @@ string_to_baud (char const *arg)
   if (*arg == '-')
     goto invalid;
 
-  /* Empty does not mean 0.  */
-  if (! *arg)
+  errno = 0;
+  unsigned long value = strtoul (arg, &ep, 10);
+  if (errno == ERANGE)
     goto invalid;
-
-  value = strtoul (arg, &ep, 10);
-
-  c = *ep++;
-  if (c == '.')
+  if (ep == arg)
     {
-      /* Number includes a fraction. Round it to nearest-even.
-         Note in particular that 134.5 must round to 134! */
-      c = *ep++;
-      if (c)
-        {
-          unsigned char d = c - '0';
-          if (d > 5)
-            value++;
-          else if (d == 5)
-            {
-              while ((c = *ep++) == '0'); /* Skip zeroes after .5 */
-
-              if (c)
-                value++;                /* Nonzero, round up */
-              else
-                value += (value & 1);   /* Exactly in the middle, round even */
-            }
-
-          while (c_isdigit (c)) /* Skip remaining digits.  */
-            c = *ep++;
-
-          if (c)
-            goto invalid; /* Garbage after otherwise valid number */
-        }
-    }
-  else if (c)
-    {
-      /* Not a valid number; check for legacy aliases "exta" and "extb" */
       if (streq (arg, "exta"))
         return (struct speed_desc) { .baud = B19200, .valid = true };
-      else if (streq (arg, "extb"))
+      if (streq (arg, "extb"))
         return (struct speed_desc) { .baud = B38400, .valid = true };
-      else
+      if (*ep != '.' || !c_isdigit (ep[1]))
         goto invalid;
     }
+
+  if (*ep == '.')
+    {
+      /* Round to nearest, ties to even (e.g., 134.5 rounds to 134).  */
+      ep++;
+      bool round_up = '5' < *ep;
+      if (*ep == '5')
+        {
+          ep++;
+          while (*ep == '0')
+            ep++;
+          round_up = (value & 1) || c_isdigit (*ep);
+        }
+      while (c_isdigit (*ep))
+        ep++;
+      if (round_up && ckd_add (&value, value, 1))
+        goto invalid;
+    }
+  if (*ep)
+    goto invalid;
 
   return value_to_baud (value);
 
