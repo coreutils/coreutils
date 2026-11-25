@@ -433,6 +433,7 @@ all_tests =					\
   tests/od/od-x8.sh				\
   tests/misc/pathchk.sh				\
   tests/paste/paste.pl				\
+  tests/paste/closed-stdio.sh			\
   tests/paste/multi-byte.sh			\
   tests/printf/printf.sh			\
   tests/printf/printf-cov.pl			\

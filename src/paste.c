@@ -37,12 +37,12 @@
 
 #include <config.h>
 
-#include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
 #include "fadvise.h"
 #include "mcel.h"
+#include "stdio--.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "paste"
@@ -198,8 +198,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
   /* Number of files still open to process.  */
   size_t files_open;
 
-  /* True if any fopen got fd == STDIN_FILENO.  */
-  bool opened_stdin = false;
+  size_t nstdin = 0;
 
   /* Attempt to open all files.  This could be expanded to an infinite
      number of files, but at the (considerable) expense of remembering
@@ -209,7 +208,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
     {
       if (streq (fnamptr[files_open], "-"))
         {
-          have_read_stdin = true;
+          nstdin++;
           fileptr[files_open] = stdin;
         }
       else
@@ -217,13 +216,14 @@ paste_parallel (size_t nfiles, char **fnamptr)
           fileptr[files_open] = fopen (fnamptr[files_open], "r");
           if (fileptr[files_open] == NULL)
             error (EXIT_FAILURE, errno, "%s", quotef (fnamptr[files_open]));
-          else if (fileno (fileptr[files_open]) == STDIN_FILENO)
-            opened_stdin = true;
           fadvise (fileptr[files_open], FADVISE_SEQUENTIAL);
         }
     }
 
-  if (opened_stdin && have_read_stdin)
+  /* Diagnose a closed stdin before writing any columns from named files.  */
+  have_read_stdin = nstdin != 0;
+  if (have_read_stdin && nstdin < nfiles
+      && fcntl (STDIN_FILENO, F_GETFD) < 0 && errno == EBADF)
     error (EXIT_FAILURE, 0, _("standard input is closed"));
 
   /* Read a line from each file and output it to stdout separated by a
