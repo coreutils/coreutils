@@ -50,4 +50,17 @@ if test "$(TZ=America/Belize date +%z)" = '-0600'; then
 
 fi
 
+# A TZ lookup through /dev/stdin must not reopen the -f FIFO on fd 0.
+# glibc at least supports the rule in TZ="rule" being an absolute
+# path to a compiled timezone file.
+date_line='TZ="/dev/stdin" 1970-01-01'
+if timeout 10 date -d "$date_line" +%s <&- >exp 2>/dev/null &&
+   mkfifo dates; then
+  cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
+  # Omit the newline so date sees EOF before it looks up the time zone.
+  printf %s "$date_line" >dates & pid=$!
+  timeout 10 date -f dates +%s <&- >out || fail=1
+  compare exp out || fail=1
+fi
+
 Exit $fail

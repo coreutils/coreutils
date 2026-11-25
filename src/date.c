@@ -17,7 +17,6 @@
    David MacKenzie <djm@gnu.ai.mit.edu> */
 
 #include <config.h>
-#include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
 #if HAVE_LANGINFO_CODESET
@@ -31,6 +30,7 @@
 #include "quote.h"
 #include "show-date.h"
 #include "stat-time.h"
+#include "stdio--.h"
 #include "xsetenv.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
