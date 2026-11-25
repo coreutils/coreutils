@@ -19,7 +19,6 @@
 
 #include <config.h>
 
-#include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
 
@@ -40,6 +39,7 @@
 #include "assure.h"
 #include "cpu-supports.h"
 #include "ioblksize.h"
+#include "stdio--.h"
 #include "wc.h"
 #include "utf8.h"
 

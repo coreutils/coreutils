@@ -59,4 +59,13 @@ cat <<\EOF > exp || framework_failure_
 EOF
 compare exp out || fail=1
 
+# Ensure closed stdin is handled robustly
+# Using a fifo to ensure input isn't closed immediately.
+# The same issue would apply for larger normal files.
+if mkfifo names.fifo; then
+  cleanup_() { kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; pid=; }
+  printf '%s\0' - >names.fifo & pid=$!
+  returns_ 1 wc -c --files0-from=names.fifo <&- || fail=1
+fi
+
 Exit $fail
