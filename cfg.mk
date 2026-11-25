@@ -588,11 +588,11 @@ sc_prohibit_short_facl_mode_spec:
 	halt='setfacl mode string length < 3; extend with hyphen(s)'	\
 	  $(_sc_search_regexp)
 
-# Ensure that "stdio--.h" is used where appropriate.
+# Require "stdio--.h" for the fopen-safer and freopen-safer modules.
 sc_require_stdio_safer:
 	@if $(VC_LIST_EXCEPT) | grep -l '\.[ch]$$' > /dev/null; then	\
-	  files=$$(grep -El '$(begword)freopen ?\(' $$($(VC_LIST_EXCEPT)\
-	      | grep '\.[ch]$$'));					\
+	  files=$$(grep -El '$(begword)f(re)?open *\('			\
+	      $$($(VC_LIST_EXCEPT) | grep '\.[ch]$$'));			\
 	  test -n "$$files" && grep -LE 'include "stdio--.h"' $$files	\
 	      | grep . &&						\
 	  { echo '$(ME): the above files should use "stdio--.h"'	\
