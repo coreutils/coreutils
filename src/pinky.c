@@ -19,7 +19,6 @@
 #include <config.h>
 #include <getopt.h>
 #include <pwd.h>
-#include <stdio.h>
 
 #include <sys/types.h>
 #include "system.h"
@@ -31,6 +30,7 @@
 #include "hard-locale.h"
 #include "ioblksize.h"
 #include "readutmp.h"
+#include "stdio--.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "pinky"

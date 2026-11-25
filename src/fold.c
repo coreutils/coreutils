@@ -18,7 +18,6 @@
 
 #include <config.h>
 
-#include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
 
@@ -27,6 +26,7 @@
 #include "ioblksize.h"
 #include "mcel.h"
 #include "mbbuf.h"
+#include "stdio--.h"
 #include "xdectoint.h"
 
 #define TAB_WIDTH 8

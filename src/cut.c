@@ -24,7 +24,6 @@
 
 #include <config.h>
 
-#include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
@@ -38,6 +37,7 @@
 #include "memchr2.h"
 
 #include "set-fields.h"
+#include "stdio--.h"
 #include "utf8.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */

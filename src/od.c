@@ -20,7 +20,6 @@
 
 #include <endian.h>
 #include <float.h>
-#include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
@@ -30,6 +29,7 @@
 #include "ftoastr.h"
 #include "quote.h"
 #include "stat-size.h"
+#include "stdio--.h"
 #include "xbinary-io.h"
 #include "xprintf.h"
 #include "xstrtol.h"

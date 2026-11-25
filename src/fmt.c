@@ -17,7 +17,6 @@
 /* Written by Ross Paterson <rap@doc.ic.ac.uk>.  */
 
 #include <config.h>
-#include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
 
@@ -28,6 +27,7 @@
 #include "c-ctype.h"
 #include "system.h"
 #include "fadvise.h"
+#include "stdio--.h"
 #include "xdectoint.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */

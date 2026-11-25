@@ -19,7 +19,6 @@
 
 #include <config.h>
 
-#include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
 
@@ -31,6 +30,7 @@
 #include "linebuffer.h"
 #include "mcel.h"
 #include "quote.h"
+#include "stdio--.h"
 #include "xdectoint.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */

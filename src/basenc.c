@@ -18,7 +18,6 @@
 
 #include <config.h>
 
-#include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include <gmp.h>
@@ -28,6 +27,7 @@
 #include "c-ctype.h"
 #include "fadvise.h"
 #include "quote.h"
+#include "stdio--.h"
 #include "xstrtol.h"
 #include "xbinary-io.h"
 
