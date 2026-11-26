@@ -77,6 +77,18 @@ for opt in --recursive --parents; do
   case $p3 in dr-xr-xr-x*) ;; *) fail=1 ;; esac
 done
 
+# Test whether the mkdir system call sets the sticky bit when given
+# in the mode argument.
+have_perl_ && $PERL -e 'umask 0; mkdir "sticky", 01777 or die "$!\n"' && {
+  if test -k sticky; then
+    sticky=t
+  else
+    sticky=x
+  fi
+}
+test -z "$sticky" && sticky=[xt]
+rm -rf sticky || framework_failure_
+
 # Test the behavior when --preserve=ownership is used.
 for opt in --recursive --parents; do
   rm -rf dst dst2 &&
@@ -89,15 +101,15 @@ for opt in --recursive --parents; do
   cp --preserve=ownership $opt $src dst || fail=1
   set _ $(ls -ld dst/d); shift; p2=$1
   set _ $(ls -ld dst/d/e); shift; p3=$1
-  case $p2 in dr-xr-xr-t*) ;; *) fail=1 ;; esac
-  case $p3 in dr-xr-xr-t*) ;; *) fail=1 ;; esac
+  case $p2 in dr-xr-xr-$sticky*) ;; *) fail=1 ;; esac
+  case $p3 in dr-xr-xr-$sticky*) ;; *) fail=1 ;; esac
 
   chroot --skip-chdir --user=$NON_ROOT_USERNAME / env PATH="$PATH" \
     cp --preserve=ownership $opt $src dst2 || fail=1
   set _ $(ls -ld dst2/d); shift; p2=$1
   set _ $(ls -ld dst2/d/e); shift; p3=$1
-  case $p2 in dr-xr-xr-t*) ;; *) fail=1 ;; esac
-  case $p3 in dr-xr-xr-t*) ;; *) fail=1 ;; esac
+  case $p2 in dr-xr-xr-$sticky*) ;; *) fail=1 ;; esac
+  case $p3 in dr-xr-xr-$sticky*) ;; *) fail=1 ;; esac
 done
 
 Exit $fail
