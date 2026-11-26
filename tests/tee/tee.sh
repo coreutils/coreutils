@@ -125,7 +125,8 @@ pipe_status=$?
 yes |
 {
   dd count=0 oflag=nonblock status=none
-  returns_ $pipe_status timeout 10 tee || touch tee.fail
+  timeout 10 tee
+  case $? in 0|$pipe_status) ;; *) touch tee.fail ;; esac
 } | sleep .5
 test -f tee.fail && fail=1
 
